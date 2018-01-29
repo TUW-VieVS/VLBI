@@ -1,0 +1,6 @@
+*
+!.gitignore
+!auto_azel_30.mat
+!auto_int_v30.mat
+!auto_std_v30.mat
+!ivstrop_30.mat

@@ -1,0 +1,10 @@
+*
+* snrmin.txt - minimum SNR information
+*
+* NOTE: Use this file for schedules to specify the minimum SNR 
+*       of each band at stations.
+*
+* Name      SNR_min(X)   SNR_min(S)
+* 
+*TIGO       18           12
+*TIGOCONC   18           12  

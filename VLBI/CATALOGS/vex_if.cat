@@ -1,0 +1,505 @@
+* ###################################################################################### 
+* #          VEX -   IF (Intermdiate Frequency) Catalog File                           #
+* ######################################################################################
+*
+* ---- Format: ----
+* Catalog Entry Label
+*		Format: ><Catalog Entry label>
+* Parameter
+*		Format: <Parameter name>(<Index for multiple parameters>)= <Parameter Value>
+*
+* One Parameter/Parameterset Label per line
+* White space (\t, \b) between "=" and <Parameter_Value> is not considered.
+* Use "*" in front of a line to specify a comment
+*
+* ------------------ 2020MHz_2N_R_U_1MHz ------------------------------------------------
+>2020MHz_2N_R_U_1MHz
+* if_note(1)=		
+* if_note(2)=		
+* Required parameters:
+if_id=														&IF_2N
+physical_if_name=									2N
+polarization= 										R
+total_effective_lo_of_if=					2020.0 MHz
+net_sideband_of_if= 							U
+* Optional parameters:
+phase_cal_frequ_interva=					1 MHz
+* phase_cal_base_frequency=					0
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ 1400MHz_1A2N_R_U_1MHz ----------------------------------------------
+>1400MHz_1A2N_R_U_1MHz
+if_note(1)=		Onsala85 L-Band Receiver.
+* if_note(2)=		
+*
+* --- Physical IF = 1A ---
+* Required parameters:
+if_id(1)=														&IF_1A
+physical_if_name(1)=								1A
+polarization(1)= 										R
+total_effective_lo_of_if(1)=				1400.0 MHz
+net_sideband_of_if(1)= 							U
+* Optional parameters:
+phase_cal_frequ_interva(1)=					1 MHz
+phase_cal_base_frequency(1)=				0
+*
+* --- Physical IF = 2N ---
+* Required parameters:
+if_id(2)=														&IF_2N
+physical_if_name(2)=								2N
+polarization(2)= 										R
+total_effective_lo_of_if(2)=				1400.0 MHz
+net_sideband_of_if(2)= 							U
+* Optional parameters:
+phase_cal_frequ_interva(2)=					1 MHz
+phase_cal_base_frequency(2)=				0
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ 1220MHz_1A2N_R_U_1MHz ----------------------------------------------
+* IF LO Frequ set to 1220 MHz (Rüdiger Haas)
+* Onsala85 has a flexibly setable IF LO!
+>1220MHz_1A2N_R_U_1MHz
+if_note(1)=		Onsala85 L-Band Receiver.
+* if_note(2)=		TEST_2
+*
+* --- Physical IF = 1A ---
+* Required parameters:
+if_id(1)=														&IF_1A
+physical_if_name(1)=								1A
+polarization(1)= 										R
+total_effective_lo_of_if(1)=				1220.0 MHz
+net_sideband_of_if(1)= 							U
+* Optional parameters:
+phase_cal_frequ_interva(1)=					1 MHz
+phase_cal_base_frequency(1)=
+*
+* --- Physical IF = 2N ---
+* Required parameters:
+if_id(2)=														&IF_2N
+physical_if_name(2)=								2N
+polarization(2)= 										R
+total_effective_lo_of_if(2)=				1220.0 MHz
+net_sideband_of_if(2)= 							U
+* Optional parameters:
+phase_cal_frequ_interva(2)=					1 MHz
+phase_cal_base_frequency(2)=
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ 1200MHz_1A2N_R_U_1MHz ----------------------------------------------
+* IF LO Frequ set to 1200 MHz (Rüdiger Haas)
+* Onsala85 has a flexibly setable IF LO!
+>1200MHz_1A2N_R_U_1MHz
+if_note(1)=		Onsala85 L-Band Receiver.
+* if_note(2)=		TEST_2
+*
+* --- Physical IF = 1A ---
+* Required parameters:
+if_id(1)=														&IF_1A
+physical_if_name(1)=								1A
+polarization(1)= 										R
+total_effective_lo_of_if(1)=				1200.0 MHz
+net_sideband_of_if(1)= 							U
+* Optional parameters:
+phase_cal_frequ_interva(1)=					1 MHz
+phase_cal_base_frequency(1)=
+*
+* --- Physical IF = 2N ---
+* Required parameters:
+if_id(2)=														&IF_2N
+physical_if_name(2)=								2N
+polarization(2)= 										R
+total_effective_lo_of_if(2)=				1200.0 MHz
+net_sideband_of_if(2)= 							U
+* Optional parameters:
+phase_cal_frequ_interva(2)=					1 MHz
+phase_cal_base_frequency(2)=
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ 1200MHz_1A3N_R_U_1MHz ------------------------------------------------
+* Satellite Obs. IF setup according to personal communication with Wettzell (A. Neidhardt, C. Plötz, J. Kodet)
+* Used for satellite observations in January 2014 
+*
+>1200MHz_1A3N_R_U_1MHz
+if_note(1)=											Station Wettzell; LO-IF: 1200 MHz
+* if_note(2)=	
+*
+* --- Physical IF = 1A ---
+* Required parameters:
+if_id(1)=														&IF_1A
+physical_if_name(1)=								1A
+polarization(1)= 										R
+total_effective_lo_of_if(1)=				1200.0 MHz
+net_sideband_of_if(1)= 							U
+* Optional parameters:
+phase_cal_frequ_interva(1)=					1 MHz
+* phase_cal_base_frequency(1)=			  0 Hz
+*
+* --- Physical IF = 3N ---
+* IF3 is required to generate the "if3=..." snap command in the PRC File
+* The "if3=..." command is required to choose the right frequ.-subband (HI) for BBC 3.
+* Required parameters:
+if_id(2)=														&IF_3N
+physical_if_name(2)=								3N
+polarization(2)= 										R
+total_effective_lo_of_if(2)=				1200.0 MHz
+net_sideband_of_if(2)= 							U
+* Optional parameters:
+phase_cal_frequ_interva(2)=					1 MHz
+* phase_cal_base_frequency(2)=				0 Hz
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ GEOSX_SX03 ------------------------------------------------
+* Obs. mode for SX taken from VEX file "k15152.vex" (provided by A. Neidhardt), Intensive Session
+* Station: TTW1 (Wn)
+*
+>GEOSX_SX03
+if_note(1)=											Station TTW1; LO-IF: 8080 MHz and 2020 MHz, 4 IF
+* if_note(2)=	
+*
+* --- Physical IF = A1 ---
+* Required parameters:
+if_id(1)=											&IF_A1
+physical_if_name(1)=								A1
+polarization(1)= 									R
+total_effective_lo_of_if(1)=						8080.0 MHz
+net_sideband_of_if(1)= 								U
+* Optional parameters:
+phase_cal_frequ_interva(1)=							1 MHz
+phase_cal_base_frequency(1)=			  			0 Hz
+*
+* --- Physical IF = B1 ---
+* Required parameters:
+if_id(2)=											&IF_B1
+physical_if_name(2)=								B1
+polarization(2)= 									R
+total_effective_lo_of_if(2)=						8080.0 MHz
+net_sideband_of_if(2)= 								U
+* Optional parameters:
+phase_cal_frequ_interva(2)=							1 MHz
+phase_cal_base_frequency(2)=			  			0 Hz
+*
+* --- Physical IF = C1 ---
+* Required parameters:
+if_id(3)=											&IF_C1
+physical_if_name(3)=								C1
+polarization(3)= 									R
+total_effective_lo_of_if(3)=						2020.0 MHz
+net_sideband_of_if(3)= 								U
+* Optional parameters:
+phase_cal_frequ_interva(3)=							1 MHz
+phase_cal_base_frequency(3)=			  			0 Hz
+*
+* --- Physical IF = D1 ---
+* Required parameters:
+if_id(4)=											&IF_D1
+physical_if_name(4)=								D1
+polarization(4)= 									R
+total_effective_lo_of_if(4)=						2020.0 MHz
+net_sideband_of_if(4)= 								U
+* Optional parameters:
+phase_cal_frequ_interva(4)=							1 MHz
+phase_cal_base_frequency(4)=			  			0 Hz
+*
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ 2LO7000MHzRPolNoTone_Ho ------------------------------------------------
+* Taken from C-band obs. (wark_1.vex), provided by Jamie McCallum, June 2015
+* Phase Call. off!
+>2LO7000MHzRPolNoTone_Ho
+if_note(1)=											Station HOBART26, 2 LO@7000MHz, no PCall
+* if_note(2)=	
+*
+* --- Physical IF = 1N ---
+* Required parameters:
+if_id(1)=											&IF_1N
+physical_if_name(1)=								1N
+polarization(1)= 									R
+total_effective_lo_of_if(1)=						7000.0 MHz
+net_sideband_of_if(1)= 								L
+* Optional parameters:
+* phase_cal_frequ_interva(1)=							1 MHz
+* phase_cal_base_frequency(1)=			  			0 Hz
+*
+* --- Physical IF = 2N ---
+* Required parameters:
+if_id(2)=											&IF_2N
+physical_if_name(2)=								2N
+polarization(2)= 									R
+total_effective_lo_of_if(2)=						7000.0 MHz
+net_sideband_of_if(2)= 								L
+* Optional parameters:
+* phase_cal_frequ_interva(2)=							1 MHz
+* phase_cal_base_frequency(2)=						0 Hz
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ 2LO1100MHzRPolNoTone_Ho ------------------------------------------------
+* Provided by Jamie McCallum per mail, June 9 2015
+* Phase Call. off!
+* Used for test obs. on 2015-06-28 (baseline: Cd-Ho)
+>2LO1100MHzRPolNoTone_Ho
+if_note(1)=											Station HOBART26, 2 LO@1100MHz, no PCall, USB
+* if_note(2)=	
+*
+* --- Physical IF = 1N ---
+* Required parameters:
+if_id(1)=											&IF_1N
+physical_if_name(1)=								1N
+polarization(1)= 									R
+total_effective_lo_of_if(1)=						1100.0 MHz
+net_sideband_of_if(1)= 								U
+* Optional parameters:
+* phase_cal_frequ_interva(1)=						1 MHz
+* phase_cal_base_frequency(1)=			  			0 Hz
+*
+* --- Physical IF = 2N ---
+* Required parameters:
+if_id(2)=											&IF_2N
+physical_if_name(2)=								2N
+polarization(2)= 									R
+total_effective_lo_of_if(2)=						1100.0 MHz
+net_sideband_of_if(2)= 								U
+* Optional parameters:
+* phase_cal_frequ_interva(2)=						1 MHz
+* phase_cal_base_frequency(2)=						0 Hz
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ 2LO2150MHzRPolNoTone_Cd ------------------------------------------------
+* Provided by Jamie McCallum per mail, June 9 2015
+* 2015-06-16: Physical if names (and IDs) changed: 1N => A1; 2N => B1
+* Phase Call. off!
+* Used for test obs. on 2015-06-28 (baseline: Cd-Ho)
+>2LO2150MHzRPolNoTone_Cd
+if_note(1)=											Station CEDUNA, 2 LO@2150MHz, no PCall, LSB
+* if_note(2)=	
+*
+* --- Physical IF = A1 ---
+* Required parameters:
+if_id(1)=											&IF_A1
+physical_if_name(1)=								A1
+polarization(1)= 									R
+total_effective_lo_of_if(1)=						2150.0 MHz
+net_sideband_of_if(1)= 								L
+* Optional parameters:
+* phase_cal_frequ_interva(1)=						1 MHz
+* phase_cal_base_frequency(1)=			  			0 Hz
+*
+* --- Physical IF = B1 ---
+* Required parameters:
+if_id(2)=											&IF_B1
+physical_if_name(2)=								B1
+polarization(2)= 									R
+total_effective_lo_of_if(2)=						2150.0 MHz
+net_sideband_of_if(2)= 								L
+* Optional parameters:
+* phase_cal_frequ_interva(2)=						1 MHz
+* phase_cal_base_frequency(2)=						0 Hz
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ 2LO1100MHzXYPolNoTone_Ho ------------------------------------------------
+* Provided by Jamie McCallum per mail, 2015-08-04
+* Phase Call. off!
+* Dual Polarization
+>2LO1100MHzXYPolNoTone_Ho
+if_note(1)=											Station HOBART26, 2 LO@1100MHz, no PCall, USB, Dual Pol.
+* if_note(2)=	
+*
+* --- Physical IF = 1N ---
+* Required parameters:
+if_id(1)=											&IF_1N
+physical_if_name(1)=								1N
+polarization(1)= 									X
+total_effective_lo_of_if(1)=						1100.0 MHz
+net_sideband_of_if(1)= 								U
+* Optional parameters:
+* phase_cal_frequ_interva(1)=						1 MHz
+* phase_cal_base_frequency(1)=			  			0 Hz
+*
+* --- Physical IF = 2N ---
+* Required parameters:
+if_id(2)=											&IF_2N
+physical_if_name(2)=								2N
+polarization(2)= 									Y
+total_effective_lo_of_if(2)=						1100.0 MHz
+net_sideband_of_if(2)= 								U
+* Optional parameters:
+* phase_cal_frequ_interva(2)=						1 MHz
+* phase_cal_base_frequency(2)=						0 Hz
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ 2LO2150MHzXYPolNoTone_Cd ------------------------------------------------
+* Provided by Jamie McCallum per mail, 2015-08-04
+* Phase Call. off!
+* Dual Polarization
+>2LO2150MHzXYPolNoTone_Cd
+if_note(1)=											Station CEDUNA, 2 LO@2150MHz, no PCall, LSB, Dual Pol.
+* if_note(2)=	
+*
+* --- Physical IF = A1 ---
+* Required parameters:
+if_id(1)=											&IF_A1
+physical_if_name(1)=								A1
+polarization(1)= 									X
+total_effective_lo_of_if(1)=						2150.0 MHz
+net_sideband_of_if(1)= 								L
+* Optional parameters:
+* phase_cal_frequ_interva(1)=						1 MHz
+* phase_cal_base_frequency(1)=			  			0 Hz
+*
+* --- Physical IF = B1 ---
+* Required parameters:
+if_id(2)=											&IF_B1
+physical_if_name(2)=								B1
+polarization(2)= 									Y
+total_effective_lo_of_if(2)=						2150.0 MHz
+net_sideband_of_if(2)= 								L
+* Optional parameters:
+* phase_cal_frequ_interva(2)=						1 MHz
+* phase_cal_base_frequency(2)=						0 Hz
+* ---------------------------------------------------------------------------------------
+* ------------------ 1LO1200MHz_R_U_1MHz_Wn ------------------------------------------------
+* Provided by Jan Kodet per mail, June 22 2015
+* Stations: WETTZ13N & WETTDBBC
+>1LO1200MHz_R_U_1MHz_Wn
+if_note(1)=											1 LO@1200MHz, USB, IF A2
+* if_note(2)=	
+*
+* --- Physical IF = A2 ---
+* Required parameters:
+if_id(1)=											&IF_A2
+physical_if_name(1)=								A2
+polarization(1)= 									R
+total_effective_lo_of_if(1)=						1200.0 MHz
+net_sideband_of_if(1)= 								U
+* Optional parameters:
+phase_cal_frequ_interva(1)=							1 MHz
+* phase_cal_base_frequency(1)=			  			0 Hz
+*
+* ---------------------------------------------------------------------------------------
+*################################### 144 ##################################################################################################
+* IF definitions for the 144a experiment (MEDICINA, ONSALA85, SARDINIA)
+*
+* ------------------ 2LO1245_Mc ------------------------------------------------
+* Provided by V. Tornatore per mail, 2016-05-17
+* Phase Call. off!
+* Dual Polarization
+>2LO1245_Mc
+if_note(1)=											MEDICINA, Setup 1: LO@1245MHz, no PCall, USB, Dual Pol.
+* if_note(2)=	
+*
+* --- Physical IF = A1 ---
+* Required parameters:
+if_id(1)=											&IF_A1
+physical_if_name(1)=								A1
+polarization(1)= 									R
+total_effective_lo_of_if(1)=						1245.0 MHz
+net_sideband_of_if(1)= 								U
+*
+* --- Physical IF = C1 ---
+* Required parameters:
+if_id(2)=											&IF_C1
+physical_if_name(2)=								C1
+polarization(2)= 									L
+total_effective_lo_of_if(2)=						1245.0 MHz
+net_sideband_of_if(2)= 								U
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ 2LO9228_Mc ------------------------------------------------
+* Provided by V. Tornatore per mail, 2016-05-17
+* Phase Call. off!
+* Dual Polarization
+>2LO9228_Mc
+if_note(1)=											MEDICINA, Setup 2: LO@922.8MHz, no PCall, USB, Dual Pol.
+* if_note(2)=	
+*
+* --- Physical IF = A1 ---
+* Required parameters:
+if_id(1)=											&IF_A1
+physical_if_name(1)=								A1
+polarization(1)= 									R
+total_effective_lo_of_if(1)=						922.8 MHz
+net_sideband_of_if(1)= 								U
+*
+* --- Physical IF = C1 ---
+* Required parameters:
+if_id(2)=											&IF_C1
+physical_if_name(2)=								C1
+polarization(2)= 									L
+total_effective_lo_of_if(2)=						922.8 MHz
+net_sideband_of_if(2)= 								U
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ 2LO2300_Sr ------------------------------------------------
+* Provided by V. Tornatore per mail, 2016-05-17
+* Phase Call. off!
+* Dual Polarization
+>2LO2300_Sr
+if_note(1)=											SARDINIA, Setup 1: LO@2300MHz, no PCall, USB, Dual Pol.
+* if_note(2)=	
+*
+* --- Physical IF = A2 ---
+* Required parameters:
+if_id(1)=											&IF_A2
+physical_if_name(1)=								A2
+polarization(1)= 									R
+total_effective_lo_of_if(1)=						2300 MHz
+net_sideband_of_if(1)= 								U
+*
+* --- Physical IF = C2 ---
+* Required parameters:
+if_id(2)=											&IF_C2
+physical_if_name(2)=								C2
+polarization(2)= 									L
+total_effective_lo_of_if(2)=						2300 MHz
+net_sideband_of_if(2)= 								U
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ 2LO2200_Sr ------------------------------------------------
+* Provided by V. Tornatore per mail, 2016-05-17
+* Phase Call. off!
+* Dual Polarization
+>2LO2200_Sr
+if_note(1)=											SARDINIA, Setup 2: LO@2200MHz, no PCall, USB, Dual Pol.
+* if_note(2)=	
+*
+* --- Physical IF = A2 ---
+* Required parameters:
+if_id(1)=											&IF_A2
+physical_if_name(1)=								A2
+polarization(1)= 									R
+total_effective_lo_of_if(1)=						2200 MHz
+net_sideband_of_if(1)= 								U
+*
+* --- Physical IF = C2 ---
+* Required parameters:
+if_id(2)=											&IF_C2
+physical_if_name(2)=								C2
+polarization(2)= 									L
+total_effective_lo_of_if(2)=						2200 MHz
+net_sideband_of_if(2)= 								U
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ 2LO_O8 ------------------------------------------------
+* Provided by V. Tornatore per mail, 2016-05-17
+* Phase Call. off!
+* Dual Polarization
+>2LO_O8
+if_note(1)=											Onsala85, LO@1245MHz, no PCall, USB, Dual Pol.
+* if_note(2)=	
+*
+* --- Physical IF = A1 ---
+* Required parameters:
+if_id(1)=											&IF_A1
+physical_if_name(1)=								A1
+polarization(1)= 									R
+total_effective_lo_of_if(1)=						1245.0 MHz
+net_sideband_of_if(1)= 								U
+*
+* --- Physical IF = C1 ---
+* Required parameters:
+if_id(2)=											&IF_C1
+physical_if_name(2)=								C1
+polarization(2)= 									L
+total_effective_lo_of_if(2)=						1245.0 MHz
+net_sideband_of_if(2)= 								U
+* ---------------------------------------------------------------------------------------
+

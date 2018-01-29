@@ -1,0 +1,454 @@
+## Master file format version 1.0           2001.08.21 CCT&NRV
+
+                         1987 MULTI-AGENCY SCHEDULE
+
+                     Last Updated - June 25, 2002 - CCT
+
+
+  SESSION  SESSION DATE  DOY TIME  DUR       STATIONS               SKED CORR STATUS  PF   DBC  SUBM  DEL  MK4
+    NAME     CODE  mondd ddd hh:mm hr                                         yymondd      CODE       days NUM
+----------------------------------------------------------------------------------------------------------------
+|INT87-001 |I87001|JAN01|1  |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A371 |IA371 |JAN03|3  |     |  |WfHrWzRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-004 |I87004|JAN04|4  |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-005 |I87005|JAN05|5  |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-006 |I87006|JAN06|6  |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-007 |I87007|JAN07|7  |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A372 |IA372 |JAN08|8  |     |  |WfWzHrRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-011 |I87011|JAN11|11 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-012 |I87012|JAN12|12 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A373 |IA373 |JAN13|13 |     |  |WfWzHr                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|ATD-1     |ATD871|JAN14|14 |     |  |GcWfMoHr                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-014 |I87014|JAN14|14 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-015 |I87015|JAN15|15 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-016 |I87016|JAN16|16 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-017 |I87017|JAN17|17 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A374 |IA374 |JAN18|18 |     |  |WfHrWz                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-019 |I87019|JAN19|19 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-S07  |IS8707|JAN19|19 |     |  |OnHhWf                       |NOAA|BONN|       |    |XH  |NASA|     |    |
+|TRANS-PAC1|XPC871|JAN20|20 |     |  |GcKaKu                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-021 |I87021|JAN21|21 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-022 |I87022|JAN22|22 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A375 |IA375 |JAN23|23 |     |  |WfWzHrRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-024 |I87024|JAN24|24 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-025 |I87025|JAN25|25 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-026 |I87026|JAN26|26 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-027 |I87027|JAN27|27 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A376 |IA376 |JAN28|28 |     |  |WfHrWzRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|CDP-87A   |CDP87A|JAN28|28 |     |  |MoPbVb                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-S08  |IS8708|JAN29|29 |     |  |HhWzWfRi                     |NOAA|BONN|       |    |XH  |NASA|     |    |
+|INT87-031 |I87031|JAN31|31 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87B   |CDP87B|JAN31|31 |     |  |MoVbPn                       |NASA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT87-032 |I87032|FEB01|32 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A377 |IA377 |FEB02|33 |     |  |WfRiWz                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|TRANS-ATL1|XAT871|FEB03|34 |     |  |OnWfWz                       |NASA|HAYS|       |    |XA  |NASA|     |    |
+|INT87-034 |I87034|FEB03|34 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87C   |CDP87C|FEB03|34 |     |  |MoPrHcBbVb                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-035 |I87035|FEB04|35 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-S09  |IS8709|FEB04|35 |     |  |WfRiOnHh                     |NOAA|BONN|       |    |XH  |NASA|     |    |
+|INT87-037 |I87037|FEB06|37 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87D   |CDP87D|FEB06|37 |     |  |PfHcHrVbMoYu                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A378 |IA378 |FEB07|38 |     |  |HrWzWf                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-038 |I87038|FEB07|38 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-S10  |IS8710|FEB08|39 |     |  |HhWzWfRi                     |NOAA|BONN|       |    |XH  |NASA|     |    |
+|CDP-87E   |CDP87E|FEB09|40 |     |  |MoFoVbHcMeHr                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-041 |I87041|FEB10|41 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-042 |I87042|FEB11|42 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A379 |IA379 |FEB12|43 |     |  |WfHrWz                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-043 |I87043|FEB12|43 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|ASTROM-S1 |AS87S1|FEB13|44 |     |  |RiWzHhWf                     |NASA|HAYS|       |    |XA  |NASA|     |    |
+|INT87-045 |I87045|FEB14|45 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-046 |I87046|FEB15|46 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-047 |I87047|FEB16|47 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|TRANS-PAC2|XPC872|FEB17|48 |     |  |GcKaKu                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A380 |IA380 |FEB17|48 |     |  |WfWzRiHr                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-048 |I87048|FEB17|48 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-S11  |IS8711|FEB18|49 |     |  |RiHrWfHhWz                   |NOAA|BONN|       |    |XH  |NASA|     |    |
+|INT87-051 |I87051|FEB20|51 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-052 |I87052|FEB21|52 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A381 |IA381 |FEB22|53 |     |  |WfWzHrRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-053 |I87053|FEB22|53 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|GSI-1     |GSI871|FEB23|54 |     |  |KaTk                         |GSI |HAYS|       |    |DX  |NASA|     |    |
+|IRIS-S12  |IS8712|FEB23|54 |     |  |HhWzWfRi                     |NOAA|BONN|       |    |XH  |NASA|     |    |
+|ATD-2     |ATD872|FEB24|55 |     |  |GcMoWf                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-056 |I87056|FEB25|56 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A382 |IA382 |FEB27|58 |     |  |WfHrWzRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-058 |I87058|FEB27|58 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT87-060 |I87060|MAR01|60 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-061 |I87061|MAR02|61 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-062 |I87062|MAR03|62 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A383 |IA383 |MAR04|63 |     |  |WfHrWzRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-065 |I87065|MAR06|65 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-066 |I87066|MAR07|66 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-067 |I87067|MAR08|67 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A384 |IA384 |MAR09|68 |     |  |WfWzHrRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-068 |I87068|MAR09|68 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|SURVEY    |SVY871|MAR10|69 |     |  |GcKuMo                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-070 |I87070|MAR11|70 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-071 |I87071|MAR12|71 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-072 |I87072|MAR13|72 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A385 |IA385 |MAR14|73 |     |  |WfHrWzRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-073 |I87073|MAR14|73 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-075 |I87075|MAR16|75 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-076 |I87076|MAR17|76 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-077 |I87077|MAR18|77 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A386 |IA386 |MAR19|78 |     |  |HrRiWzWf                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-078 |I87078|MAR19|78 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|ASTROM-S2 |AS87S2|MAR20|79 |     |  |HhWzRiWf                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-080 |I87080|MAR21|80 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-081 |I87081|MAR22|81 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87F   |CDP87F|MAR22|81 |     |  |VbHrMeHcYuMo                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-082 |I87082|MAR23|82 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NORTH-PAC1|NPC871|MAR24|83 |     |  |GcHcKaVbMoKu                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A387 |IA387 |MAR24|83 |     |  |RiWzWfHr                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-083 |I87083|MAR24|83 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|TRANS-ATL2|XAT872|MAR25|84 |     |  |WfWzOn                       |NASA|HAYS|       |    |XA  |NASA|     |    |
+|CDP-87G   |CDP87G|MAR25|84 |     |  |PvPnMoVb                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|ATD-3     |ATD873|MAR26|85 |     |  |WfMoGcHr                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-085 |I87085|MAR26|85 |     |  |WfWz                         |NOAA|WASH|       |    |XR  |NASA|     |    |
+|INT87-086 |I87086|MAR27|86 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-087 |I87087|MAR28|87 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87H   |CDP87H|MAR28|87 |     |  |MoVbDmSp                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A388 |IA388 |MAR29|88 |     |  |WfWzHrRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-088 |I87088|MAR29|88 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-090 |I87090|MAR31|90 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT87-091 |I87091|APR01|91 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-092 |I87092|APR02|92 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A389 |IA389 |APR03|93 |     |  |RiWzMcHrWf                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-094 |I87094|APR04|94 |     |  |WfWz                         |NOAA|WASH|       |    |XR  |NASA|     |    |
+|INT87-095 |I87095|APR05|95 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-096 |I87096|APR06|96 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-097 |I87097|APR07|97 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A390 |IA390 |APR08|98 |     |  |WfOnWzRiHr                   |NOAA|BONN|       |    |XI  |NASA|     |    |
+|NORTH-ATL1|NAT871|APR09|99 |     |  |HrMoOnWfWz                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-100 |I87100|APR10|100|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-101 |I87101|APR11|101|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-102 |I87102|APR12|102|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A391 |IA391 |APR13|103|     |  |WfRiHrWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|ATD-4     |ATD874|APR14|104|     |  |WfHrMoGc                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-104 |I87104|APR14|104|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-105 |I87105|APR15|105|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-106 |I87106|APR16|106|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-107 |I87107|APR17|107|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A392 |IA392 |APR18|108|     |  |WfWzRiHr                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-110 |I87110|APR20|110|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|TRANS-PAC3|XPC873|APR21|111|     |  |KuKaGc                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-111 |I87111|APR21|111|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A393 |IA393 |APR23|113|     |  |WfWzHrRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-114 |I87114|APR24|114|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-115 |I87115|APR25|115|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-116 |I87116|APR26|116|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-117 |I87117|APR27|117|     |  |WfWz                         |NOAA|WASH|       |    |XR  |NASA|     |    |
+|IRIS-A394 |IA394 |APR28|118|     |  |WfHrWzRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|IRIS-P119 |IP7119|APR29|119|     |  |KaHrGcRi                     |NOAA|WASH|       |    |XP  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|NAPS-AA   |NAP87A|MAY01|121|     |  |GcOoWfHcPlHrMo               |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-121 |I87121|MAY01|121|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAPS-AB   |NAP87B|MAY02|122|     |  |HrHcGcWfPlOoMo               |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-122 |I87122|MAY02|122|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A395 |IA395 |MAY03|123|     |  |WfHrWzOnRiMc                 |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NORTH-ATL2|NAT872|MAY04|124|     |  |MoWzOnHrWf                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-124 |I87124|MAY04|124|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-125 |I87125|MAY05|125|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-126 |I87126|MAY06|126|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87I   |CDP87I|MAY06|126|     |  |MoFlVeHcHr                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|TRANS-PAC4|XPC874|MAY07|127|     |  |KuKaGc                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-127 |I87127|MAY07|127|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A396 |IA396 |MAY08|128|     |  |WfHrWzRi                     |NOAA|BONN|       |    |XI  |NASA|     |    |
+|INT87-129 |I87129|MAY09|129|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-130 |I87130|MAY10|130|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87J   |CDP87J|MAY10|130|     |  |MoElYuHrHcVb                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-131 |I87131|MAY11|131|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-132 |I87132|MAY12|132|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A397 |IA397 |MAY13|133|     |  |WfHrRiWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-133 |I87133|MAY13|133|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87K   |CDP87K|MAY14|134|     |  |VbOoMoQuMeHr                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-135 |I87135|MAY15|135|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-136 |I87136|MAY16|136|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-137 |I87137|MAY17|137|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87L   |CDP87L|MAY17|137|     |  |VbPfBbMoHc                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A398 |IA398 |MAY18|138|     |  |WfHrWzRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-138 |I87138|MAY18|138|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-140 |I87140|MAY20|140|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-141 |I87142|MAY21|141|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87M   |CDP87M|MAY21|141|     |  |VbPrFoMoHc                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-142 |I87142|MAY22|142|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A399 |IA399 |MAY23|143|     |  |HrWzWfRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-143 |I87143|MAY23|143|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|ATD-5     |ATD875|MAY24|144|     |  |GcMoWfHr                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-145 |I87145|MAY25|145|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-146 |I87146|MAY26|146|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-147 |I87147|MAY27|147|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A400 |IA400 |MAY28|148|     |  |WfHrWzRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-148 |I87148|MAY28|148|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-P149 |IP7149|MAY29|149|     |  |GcHrKaRi                     |NOAA|WASH|       |    |XP  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|IRIS-A401 |IA401 |JUN02|153|     |  |WfRiHrWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-153 |I87153|JUN02|153|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-155 |I87155|JUN04|155|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-156 |I87156|JUN05|156|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A402 |IA402 |JUN06|157|     |  |WfHrRiWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-159 |I87159|JUN08|159|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|HH-45TIE  |HH45ti|JUN08|159|     |  |Hh45                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|TRANS-PAC5|XPC875|JUN09|160|     |  |KaKuGc                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-160 |I87160|JUN09|160|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-161 |I87161|JUN10|161|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-162 |I87162|JUN11|162|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A403 |IA403 |JUN12|163|     |  |WfRiWzHr                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-163 |I87163|JUN12|163|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-165 |I87165|JUN14|165|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-166 |I87166|JUN15|166|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-167 |I87167|JUN16|167|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A404 |IA404 |JUN17|168|     |  |WfHrRiWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-168 |I87168|JUN17|168|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|ATD-6     |ATD876|JUN18|169|     |  |GcWfMoHr                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-170 |I87170|JUN19|170|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-171 |I87171|JUN20|171|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-172 |I87172|JUN21|172|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A405 |IA405 |JUN22|173|     |  |WfWzHrOnRi                   |NOAA|BONN|       |    |XI  |NASA|     |    |
+|INT87-173 |I87173|JUN22|173|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|TRANS-ATL3|XAT873|JUN23|174|     |  |WfOnWz                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|POLAR-1   |POL871|JUN24|175|     |  |KaOnMoWfGcWz                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-175 |I87175|JUN24|175|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-176 |I87176|JUN25|176|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-177 |I87177|JUN26|177|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A406 |IA406 |JUN27|178|     |  |WfHrRiWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|IRIS-P179 |IP7179|JUN28|179|     |  |KaGcHrRi                     |NOAA|WASH|       |    |XP  |NASA|     |    |
+|ASTROM-1  |AST871|JUN29|180|     |  |GcHsMo                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|ASTROM-2  |AST872|JUN30|181|     |  |GcHsMo                       |NASA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|IRIS-A407 |IA407 |JUL02|183|     |  |WfRiWz                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-184 |I87184|JUL03|184|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-185 |I87185|JUL04|185|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-186 |I87186|JUL05|186|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-187 |I87187|JUL06|187|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A408 |IA408 |JUL07|188|     |  |WfWzHrRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|ATD-7     |ATD877|JUL08|189|     |  |WfHrGcMo                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-189 |I87189|JUL08|189|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-191 |I87191|JUL10|191|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NCMN-1    |NCM871|JUL11|192|     |  |HrRiAuWf                     |NASA|HAYS|       |    |XM  |NASA|     |    |
+|IRIS-A409 |IA409 |JUL12|193|     |  |WfHrRiWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-194 |I87194|JUL13|194|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-195 |I87195|JUL14|195|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-196 |I87196|JUL15|196|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87NA  |CD87NA|JUL15|196|     |  |GcMoHcKo                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-197 |I87197|JUL16|197|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A410 |IA410 |JUL17|198|     |  |WfHrWz                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|CDP-87NB  |CD87NB|JUL17|198|     |  |KoMoHcGc                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|EAST-PAC1 |EPC871|JUL18|199|     |  |GcMoKuKaHcVb                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|NCMN-2    |NCM872|JUL18|199|     |  |RiCgHrWf                     |NASA|HAYS|       |    |XM  |NASA|     |    |
+|INT87-201 |I87201|JUL20|201|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-202 |I87202|JUL21|202|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-P202 |IP7202|JUL21|202|     |  |GcHrRiKa                     |NOAA|WASH|       |    |XP  |NASA|     |    |
+|IRIS-A411 |IA411 |JUL22|203|     |  |WfWzHr                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|WEST-PAC1 |WPC871|JUL23|204|     |  |GcKuKaMoVbHc                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-204 |I87204|JUL23|204|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-205 |I87205|JUL24|205|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-206 |I87206|JUL25|206|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87O   |CDP87O|JUL25|206|     |  |SnMoGcHc                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-207 |I87207|JUL26|207|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A412 |IA412 |JUL27|208|     |  |WfHrWz                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|REFRAME-1 |FRM871|JUL28|209|     |  |GcHcMd                       |NRL |WASH|       |    |X   |NASA|     |    |
+|INT87-210 |I87210|JUL29|210|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-211 |I87211|JUL30|211|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-212 |I87212|JUL31|212|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|EAST-PAC2 |EPC872|AUG01|213|     |  |GcMoHcVbKuKa                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A413 |IA413 |AUG01|213|     |  |WfWzHr                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-213 |I87213|AUG01|213|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|BERM-1    |BRM871|AUG02|214|     |  |RiBeWf                       |NASA|HAYS|       |    |XM  |NASA|     |    |
+|REFRAME-2 |FRM872|AUG03|215|     |  |HcMdGc                       |NRL |WASH|       |    |XN  |NASA|     |    |
+|INT87-216 |I87216|AUG04|216|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|BERM-2    |BRM872|AUG04|216|     |  |WfBeRiMd                     |NASA|HAYS|       |    |XM  |NASA|     |    |
+|INT87-217 |I87217|AUG05|217|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|BERM-3    |BRM873|AUG05|217|     |  |WfRiBeMd                     |NASA|HAYS|       |    |XM  |NASA|     |    |
+|IRIS-A414 |IA414 |AUG06|218|     |  |WfWzHr                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-218 |I87218|AUG06|218|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87P   |CDP87P|AUG07|219|     |  |YaHcGc                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-220 |I87220|AUG08|220|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|BERM-4    |BRM874|AUG08|220|     |  |RiMdWfBe                     |NASA|HAYS|       |    |XM  |NASA|     |    |
+|WEST-PAC2 |WPC872|AUG09|221|     |  |GcHcKuKaVb                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-221 |I87221|AUG09|221|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-222 |I87222|AUG10|222|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A415 |IA415 |AUG11|223|     |  |WfHrWz                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-223 |I87223|AUG11|223|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|REFRAME-3 |FRM873|AUG11|223|     |  |HcMdGc                       |NRL |WASH|       |    |X   |NASA|     |    |
+|INT87-225 |I87225|AUG13|225|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87PB  |CD87PB|AUG13|225|     |  |GcMoYaHc                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|CDP-87PC  |CD87PC|AUG14|226|     |  |GcYaMoHc                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-227 |I87227|AUG15|227|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|REFRAME-4 |FRM874|AUG15|227|     |  |GcMdHc                       |NRL |WASH|       |    |XN  |NASA|     |    |
+|IRIS-A416 |IA416 |AUG16|228|     |  |WfWzHr                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-228 |I87228|AUG16|228|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-230 |I87230|AUG18|230|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-231 |I87231|AUG19|231|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NCMN-3    |NCM873|AUG19|231|     |  |HrBoWf                       |NASA|HAYS|       |    |XM  |NASA|     |    |
+|INT87-232 |I87232|AUG20|232|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87QA  |CD87QA|AUG20|232|     |  |GcSoMo                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A417 |IA417 |AUG21|233|     |  |WfHrWz                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-233 |I87233|AUG21|233|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87QB  |CD87QB|AUG21|233|     |  |GcSoMo                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|ATD-8     |ATD878|AUG22|234|     |  |WfMoHrGc                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-235 |I87235|AUG23|235|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-236 |I87236|AUG24|236|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NCMN-4    |NCM874|AUG24|236|     |  |HrRiLeWf                     |NASA|HAYS|       |    |XM  |NASA|     |    |
+|TRANS-ATL4|XAT874|AUG25|237|     |  |WfWzOn                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-237 |I87237|AUG25|237|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A418 |IA418 |AUG26|238|     |  |WfWzOnRiHr                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-238 |I87238|AUG26|238|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-P239 |IP7239|AUG27|239|     |  |RiHrGcKa                     |NOAA|WASH|       |    |XP  |NASA|     |    |
+|INT87-240 |I87240|AUG28|240|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-241 |I87241|AUG29|241|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-242 |I87242|AUG30|242|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A419 |IA419 |AUG31|243|     |  |WfHrWzRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-243 |I87243|AUG31|243|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT87-247 |I87247|SEP04|247|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A420 |IA420 |SEP05|248|     |  |WfWzHrRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-248 |I87248|SEP05|248|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-250 |I87250|SEP07|250|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A421 |IA421 |SEP10|253|     |  |WfHrWzRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-253 |I87253|SEP10|253|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|ATD-9     |ATD879|SEP11|254|     |  |GcWfMoHr                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-255 |I87255|SEP12|255|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-256 |I87256|SEP13|256|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-257 |I87257|SEP14|257|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A422 |IA422 |SEP15|258|     |  |WzOnWfHrRi                   |NOAA|BONN|       |    |XI  |NASA|     |    |
+|INT87-258 |I87258|SEP15|258|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|TRANS-ATL5|XAT875|SEP16|259|     |  |WfOnWz                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-260 |I87260|SEP17|260|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-261 |I87261|SEP18|261|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-262 |I87262|SEP19|262|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A423 |IA423 |SEP20|263|     |  |WfHrWz                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-263 |I87263|SEP20|263|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-265 |I87265|SEP22|265|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|TRANS-PAC6|XPC876|SEP23|266|     |  |GcKuKa                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-267 |I87267|SEP24|267|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A424 |IA424 |SEP25|268|     |  |WfHrWzRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-268 |I87268|SEP25|268|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-P269 |IP7269|SEP26|269|     |  |GcHrKaRi                     |NOAA|WASH|       |    |XP  |NASA|     |    |
+|INT87-270 |I87270|SEP27|270|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-271 |I87271|SEP28|271|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-272 |I87272|SEP29|272|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A425 |IA425 |SEP30|273|     |  |WfHrWz                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-273 |I87273|SEP30|273|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT87-275 |I87275|OCT02|275|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-276 |I87276|OCT03|276|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-277 |I87277|OCT04|277|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A426 |IA4260|OCT05|278|     |  |HrWzWf                       |NOAA|BONN|       |    |XI  |NASA|     |    |
+|INT87-280 |I87280|OCT07|280|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-281 |I87281|OCT08|281|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A427 |IA427 |OCT10|283|     |  |HrWzRiWf                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-283 |I87283|OCT10|283|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-285 |I87285|OCT12|285|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-286 |I87286|OCT13|286|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-287 |I87287|OCT14|287|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A428 |IA428 |OCT15|288|     |  |WfHrRiWzOn                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-288 |I87288|OCT15|288|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87R   |CDP87R|OCT15|288|     |  |PbMoOoVb                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|NORTH-ATL3|NAT873|OCT16|289|     |  |WfOoMoHrOnWz                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-289 |I87289|OCT16|289|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-290 |I87290|OCT17|290|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-291 |I87291|OCT18|291|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87S   |CDP87S|OCT18|291|     |  |MoHrOoFoJ1HcVb               |NASA|HAYS|       |    |X   |NASA|     |    |
+|NORTH-PAC2|NPC872|OCT19|292|     |  |GcMoHcKuKaVb                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-292 |I87292|OCT19|292|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A429 |IA429 |OCT20|293|     |  |WfHrRiWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-294 |I87294|OCT21|294|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-P294 |IP7294|OCT21|294|     |  |GcHrRiKa                     |NOAA|WASH|       |    |XP  |NASA|     |    |
+|CDP-87T   |CDP87T|OCT21|294|     |  |MoVbBbOoPfHc                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|ATD-10    |AT8710|OCT22|295|     |  |GcMoWfHr                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-295 |I87295|OCT22|295|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-296 |I87296|OCT23|296|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87U   |CDP87U|OCT24|297|     |  |VbPrMoYuHcOo                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A430 |IA430 |OCT25|298|     |  |HrRiWzWf                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-299 |I87299|OCT26|299|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-300 |I87300|OCT27|300|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|PHSEDLY-HQ|PD87HQ|OCT27|300|     |  |MoQuOoHc                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-301 |I87301|OCT28|301|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87V   |CDP87V|OCT28|301|     |  |VbMeMoQuOoHr                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-302 |I87302|OCT29|302|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|REFRAME-6 |FRM876|OCT29|302|     |  |GcMd                         |NRL |WASH|       |    |XN  |NASA|     |    |
+|IRIS-A431 |IA431 |OCT30|303|     |  |WfWzHrRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAPS-D    |NAP87D|OCT31|304|     |  |WfHrMoOoGc                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-304 |I87304|OCT31|304|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT87-305 |I87305|NOV01|305|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|MO-TIES   |MOTIE1|NOV01|305|     |  |OoMqOrGvMo15                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-306 |I87306|NOV02|306|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|TRANS-ATL6|XAT876|NOV03|307|     |  |WfOnWz                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-307 |I87307|NOV03|307|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A432 |IA432 |NOV04|308|     |  |WfHrWzOnRi                   |NOAA|BONN|       |    |XI  |NASA|     |    |
+|POLAR-2   |POL872|NOV05|309|     |  |WfWzGcKaOn                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-309 |I87309|NOV05|309|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-310 |I87310|NOV06|310|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|DSN-1     |DSN871|NOV07|311|     |  |15Ro                         |JPL |HAYS|       |    |D   |NASA|     |    |
+|INT87-311 |I87311|NOV07|311|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-312 |I87312|NOV08|312|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A433 |IA433 |NOV09|313|     |  |WfWzHrRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|ATD-11    |AT8711|NOV10|314|     |  |GcMoWf                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-314 |I87314|NOV10|314|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-315 |I87315|NOV11|315|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-316 |I87316|NOV12|316|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-317 |I87317|NOV13|317|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A434 |IA434 |NOV14|318|     |  |WfWzHrRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-319 |I87319|NOV15|319|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-321 |I87321|NOV17|321|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|GSI-2     |GSI872|NOV18|322|     |  |KaTj                         |GSI |HAYS|       |    |DX  |NASA|     |    |
+|INT87-322 |I87322|NOV18|322|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A435 |IA435 |NOV19|323|     |  |WfWzHrRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-324 |I87324|NOV20|324|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-325 |I87325|NOV21|325|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-326 |I87326|NOV22|326|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|TRANS-PAC7|XPC877|NOV23|327|     |  |GcKuKa                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-327 |I87327|NOV23|327|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A436 |IA436 |NOV24|328|     |  |WfHrWz                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|GSI-3     |GSI873|NOV25|329|     |  |KaTj                         |GSI |HAYS|       |    |DX  |NASA|     |    |
+|INT87-329 |I87329|NOV25|329|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-331 |I87331|NOV27|331|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-332 |I87332|NOV28|332|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A437 |IA437 |NOV29|333|     |  |WfHrRiWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-334 |I87334|NOV30|334|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-P334 |IP7334|NOV30|334|     |  |KaGcHrRi                     |NOAA|WASH|       |    |XP  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT87-335 |I87335|DEC01|335|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-336 |I87336|DEC02|336|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-337 |I87337|DEC03|337|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A438 |IA438 |DEC04|338|     |  |WfRiWzHr                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-339 |I87339|DEC05|339|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87W   |CDP87W|DEC05|339|     |  |MoYuHrMe                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-340 |I87340|DEC06|340|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|TRANS-PAC8|XPC878|DEC07|341|     |  |GcKaKu                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-341 |I87341|DEC07|341|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|TRANS-ATL7|XAT877|DEC08|342|     |  |OnWzMcWf                     |NASA|HAYS|       |    |XA  |NASA|     |    |
+|INT87-342 |I87342|DEC08|342|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87X   |CDP87X|DEC08|342|     |  |MoVbPnPv                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A439 |IA439 |DEC09|343|     |  |OnRiMcHrWfWz                 |NOAA|BONN|       |    |XI  |NASA|     |    |
+|INT87-343 |I87343|DEC09|343|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-345 |I87345|DEC11|345|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87Y   |CDP87Y|DEC11|345|     |  |MoDmSpVb                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-346 |I87346|DEC12|346|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-347 |I87347|DEC13|347|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A440 |IA440 |DEC14|348|     |  |HrRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-348 |I87348|DEC14|348|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-87Z   |CDP87Z|DEC14|348|     |  |MoPbJ1Vb                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|ATD-12    |AT8712|DEC15|349|     |  |WfMoGc                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT87-351 |I87351|DEC17|351|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-S13  |IS8713|DEC18|352|     |  |WfHhRiMc                     |NOAA|BONN|       |    |XH  |NASA|     |    |
+|IRIS-A441 |IA441 |DEC19|353|     |  |HrRiWf                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-353 |I87353|DEC19|353|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-P354 |IP7354|DEC20|354|     |  |KaGcHrRi                     |NOAA|WASH|       |    |XP  |NASA|     |    |
+|IRIS-S14  |IS8714|DEC21|355|     |  |WfHhWzRi                     |BONN|BONN|       |    |XH  |NASA|     |    |
+|IRIS-A442 |IA442 |DEC23|357|     |  |WfHrWzRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-360 |I87360|DEC26|360|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-361 |I87361|DEC27|361|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-362 |I87362|DEC28|362|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A443 |IA443 |DEC29|363|     |  |WfWzRiHr                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT87-363 |I87363|DEC29|363|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT87-365 |I87365|DEC31|365|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+## Master file format version 1.0           2001.08.21 CCT&NRV

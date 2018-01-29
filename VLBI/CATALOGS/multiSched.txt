@@ -1,0 +1,51 @@
+% In this file, you can specify if you want do use the multi scheduling 
+% tool. 
+%
+% If you use this, VieVS will run multiple schedules. Therefore VieVS
+% creates new subfolders "v1", "v2", ... "vn" in your output directory. In
+% these subfolders the results from the different schedules are saved. 
+%  
+% A "#" at the start of a line means, that you start a new schedule. After
+% your "#"-Line you can specify different parameters. By default VieVS will
+% use the standard parameters from the param.m file and the catalogs, but
+% you can override these parameters here. Keep in mind, that you override
+% this parameter ONLY FOR THIS SCHEDULE!
+%  
+% A "%" starts a comment
+%  
+% Everything under your "#"-Line is interpreted as MATLAB code. 
+% In theory you can change every parameter in the "station", "twin", 
+% "source" and "PARA" structures. 
+%  
+% If you just want to change some minor parameters you only have to write:
+% "PARA.PARAMETER = 1;" (check the param.txt file for a list of parameters)
+% If you want to change something in the other structures you need some 
+% more knowlege of our VieVS_Sched structure fields. 
+% Just write your code the same way you would add it in our *.m functions. 
+%  
+% Because this is interpreted as MATLAB code don't forget to put a ";" at
+% the end of your expression. Also keep in mind that MATLAB normally 
+% compiles code the first time you run it to enhance performance for  
+% furture runs. However, because this code can change at runtime it is not 
+% compiled! If ther is a syntax error, this line is ignored!
+%
+% Defining start- and end-index (use endIdx Inf to use all schedules up to the end)
++	start_index		1	
++	end_index 		Inf
+%
+#
+PARA.WEIGHT_NUMBER_OF_OBS =1.5;
+PARA.WEIGHT_SKY_COVERAGE  =1.0;
+PARA.WEIGHT_SCAN_END_TIME =0.5;
+##
+PARA.WEIGHT_NUMBER_OF_OBS =1.5;
+PARA.WEIGHT_SKY_COVERAGE  =1.5;
+PARA.WEIGHT_SCAN_END_TIME =0.5;
+##
+PARA.WEIGHT_NUMBER_OF_OBS =1.5;
+PARA.WEIGHT_SKY_COVERAGE  =1.5;
+PARA.WEIGHT_SCAN_END_TIME =1.5;
+##
+PARA.WEIGHT_NUMBER_OF_OBS =1.5;
+PARA.WEIGHT_SKY_COVERAGE  =1.5;
+PARA.WEIGHT_SCAN_END_TIME =1.0;

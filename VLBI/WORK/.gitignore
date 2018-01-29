@@ -1,0 +1,10 @@
+*
+!.gitignore
+!PARAMETERS
+!PROCESSLIST
+!STATIONLIST
+!exclude_reference_frame.txt
+!exclude_vievs.txt
+!tropo_tie.dat
+!vgosdb_input_settings.txt
+!vievs.m

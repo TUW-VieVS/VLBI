@@ -1,0 +1,24 @@
+## Master file format version 1.0           2001.08.21 CCT&NRV
+
+                         1979 MULTI-AGENCY SCHEDULE
+
+                     Last Updated - June 25, 2002 - CCT
+
+
+  SESSION  SESSION DATE  DOY TIME  DUR       STATIONS               SKED CORR STATUS  PF   DBC  SUBM  DEL  MK4
+    NAME     CODE  mondd ddd hh:mm hr                                         yymondd      CODE       days NUM
+----------------------------------------------------------------------------------------------------------------
+|X-US      |XUS79C|AUG03|215|     |  |HsG3Oo                       |NASA|HAYS|       |    | XX |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|DSN-SEP18 |DSN791|SEP18|261|     |  |Gv14                         |NASA|HAYS|       |    | D  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|DSN-NOV23 |DSN792|NOV23|327|     |  |14Ti                         |NASA|HAYS|       |    | D  |NASA|     |    |
+|DSN-NOV25 |DSN793|NOV25|329|     |  |14Ro                         |NASA|HAYS|       |    | D  |NASA|     |    |
+|XATL      |XATL79|NOV25|329|     |  |EbGbOoHs                     |NASA|HAYS|       |    | X  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|DSN-DEC20 |DSN794|DEC20|354|     |  |14Ti                         |NASA|HAYS|       |    | D  |NASA|     |    |
+|DSN-DEC21 |DSN795|DEC21|355|     |  |14Ro                         |NASA|HAYS|       |    | D  |NASA|     |    |
+|DSN-DEC27 |DSN796|DEC27|361|     |  |14Ro                         |NASA|HAYS|       |    | D  |NASA|     |    |
+|DSN-DEC29 |DSN797|DEC29|363|     |  |14Ti                         |NASA|HAYS|       |    | D  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+## Master file format version 1.0           2001.08.21 CCT&NRV

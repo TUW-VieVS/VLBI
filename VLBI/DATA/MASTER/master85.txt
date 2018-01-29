@@ -1,0 +1,316 @@
+## Master file format version 1.0           2001.08.21 CCT&NRV
+
+                         1985 MULTI-AGENCY SCHEDULE
+
+                     Last Updated - June 25, 2002 - CCT
+
+
+  SESSION  SESSION DATE  DOY TIME  DUR       STATIONS               SKED CORR STATUS  PF   DBC  SUBM  DEL  MK4
+    NAME     CODE  mondd ddd hh:mm hr                                         yymondd      CODE       days NUM
+----------------------------------------------------------------------------------------------------------------
+|IRIS-A225 |IA225 |JAN03|3  |     |  |HrWzRiWf                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A226 |IA226 |JAN08|8  |     |  |WfHrWzRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|CDP-85A   |CDP85A|JAN09|9  |     |  |VbSpMoDm                     |JPL |HAYS|       |    |X   |NASA|     |    |
+|DSN-1     |DSN851|JAN11|11 |     |  |14Gv                         |JPL |HAYS|       |    |D   |NASA|     |    |
+|CDP-85B   |CDP85B|JAN12|12 |     |  |VbMoMeBb                     |JPL |HAYS|       |    |X   |NASA|     |    |
+|IRIS-A227 |IA227 |JAN13|13 |     |  |WzRiWf                       |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|CDP-85C   |CDP85C|JAN15|15 |     |  |MoOcVbBb                     |JPL |HAYS|       |    |X   |NASA|     |    |
+|IRIS-A228 |IA228 |JAN18|18 |     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XA  |NASA|     |    |
+|CDP-85D   |CDP85D|JAN18|18 |     |  |VbMoPnJ1                     |JPL |HAYS|       |    |X   |NASA|     |    |
+|IRIS-A229 |IA229 |JAN23|23 |     |  |WfHrOnWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|TRANS-ATL1|XAT851|JAN24|24 |     |  |OnHsWz                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|LOW-ELEV3 |LEL853|JAN25|25 |     |  |HsMo                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A230 |IA230 |JAN28|28 |     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XA  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|IRIS-A231 |IA231 |FEB02|33 |     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A232 |IA232 |FEB07|38 |     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XB  |NASA|     |    |
+|IRIS-A233 |IA233 |FEB12|43 |     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A234 |IA234 |FEB17|48 |     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A235 |IA235 |FEB22|53 |     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A236 |IA236 |FEB27|58 |     |  |WfWzHrRiOn                   |NOAA|BONN|       |    |XI  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|CDP-85E   |CDP85E|MAR01|60 |     |  |MeYuMoVbHrHcOo               |JPL |HAYS|       |    |X   |NASA|     |    |
+|IRIS-A237 |IA237 |MAR04|63 |     |  |OnWzWfHr                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|CDP-85F   |CDP85F|MAR04|63 |     |  |PvVbMoOcOo                   |JPL |HAYS|       |    |X   |NASA|     |    |
+|NORTH-ATL1|NAT851|MAR05|64 |     |  |MoOoWzHrOnHs                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|CDP-85G   |CDP85G|MAR07|66 |     |  |J1OoMoPbVb                   |JPL |HAYS|       |    |X   |NASA|     |    |
+|PHSE-DELY1|PD851 |MAR08|67 |     |  |HcMoOo                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A238 |IA238 |MAR09|68 |     |  |HrWz                         |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|CDP-85H   |CDP85H|MAR10|69 |     |  |FoOoHcHrMoVb                 |JPL |HAYS|       |    |X   |NASA|     |    |
+|CDP-85I   |CDP85I|MAR13|72 |     |  |PrHrOoMoVbPf                 |JPL |HAYS|       |    |XR  |NASA|     |    |
+|IRIS-A239 |IA239 |MAR14|73 |     |  |WfHrWz                       |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A240 |IA240 |MAR19|78 |     |  |WfHrWz                       |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|LOW-ELEV4 |LEL854|MAR20|79 |     |  |MoWf                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A241 |IA241 |MAR24|83 |     |  |WfWzRiHr                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A242 |IA242 |MAR29|88 |     |  |WfWzRiHr                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|KASH-NOBEY|KSHNOB|MAR30|89 |     |  |Ka                           |NASA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT85-091 |I85091|APR01|91 |     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-092 |I85092|APR02|92 |     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A243 |IA243 |APR03|93 |     |  |WfRiHrWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-094 |I85094|APR04|94 |     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-095 |I85095|APR05|95 |     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-096 |I85096|APR06|96 |     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A344 |IA244 |APR08|98 |     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-099 |I85099|APR09|99 |     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-100 |I85100|APR10|100|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-101 |I85101|APR11|101|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-102 |I85102|APR12|102|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A245 |IA245 |APR13|103|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-104 |I85104|APR14|104|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-106 |I85106|APR16|106|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-107 |I85107|APR17|107|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A246 |IA246 |APR18|108|     |  |HrRiWfWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-109 |I85109|APR19|109|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-110 |I85110|APR20|110|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-111 |I85111|APR21|111|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-112 |I85112|APR22|112|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A247 |IA247 |APR23|113|     |  |WfWzHrRiOn                   |NOAA|BONN|       |    |XI  |NASA|     |    |
+|TRANS-ATL2|XAT852|APR24|114|     |  |OnHsWz                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT85-114 |I85114|APR24|114|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-117 |I85117|APR27|117|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A248 |IA248 |APR28|118|     |  |HrWzWfRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|CDP-85J   |CDP85J|MAY02|122|     |  |MoPlHcFlHr                   |JPL |HAYS|       |    |X   |NASA|     |    |
+|IRIS-A249 |IA249 |MAY03|123|     |  |WfWzHr                       |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-124 |I85124|MAY04|124|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-125 |I85125|MAY05|125|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-126 |I85126|MAY06|126|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|CDP-85K   |CDP85K|MAY06|126|     |  |HcMoPlHr                     |JPL |HAYS|       |    |X   |NASA|     |    |
+|NAPS-A1   |NPA851|MAY07|127|     |  |HrGcOoWfPlMoHc               |NASA|HAYS|       |    |XA  |NASA|     |    |
+|IRIS-A250 |IA250 |MAY08|128|     |  |WfOnWzHr                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|NORTH-ATL2|NAT852|MAY09|129|     |  |WfOoWzOnMoHr                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT85-129 |I85129|MAY09|129|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-131 |I85131|MAY11|131|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-132 |I85132|MAY12|132|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|CDP-85L   |CDP85L|MAY12|132|     |  |MoOoQuMeHrHcVb               |JPL |HAYS|       |    |X   |NASA|     |    |
+|IRIS-A251 |IA251 |MAY13|133|     |  |WfHrWzRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|CDP-85M   |CDP85M|MAY13|133|     |  |HcMeMoQuOo                   |JPL |HAYS|       |    |X   |NASA|     |    |
+|INT85-134 |I85134|MAY14|134|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|CDP-85N   |CDP85N|MAY14|134|     |  |QuHrOoMeMo                   |JPL |HAYS|       |    |X   |NASA|     |    |
+|TRANS-PAC1|XPC851|MAY15|135|     |  |KuHcMoGcKaVb                 |NASA|HAYS|       |    |XG  |NASA|     |    |
+|INT85-135 |I85135|MAY15|135|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-136 |I85136|MAY16|136|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-137 |I85137|MAY17|137|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A252 |IA252 |MAY18|138|     |  |WfRiWzHr                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-138 |I85138|MAY18|138|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-140 |I85140|MAY20|140|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-141 |I85141|MAY21|141|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-142 |I85142|MAY22|142|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A253 |IA253 |MAY23|143|     |  |RiWzWfHr                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-143 |I85143|MAY23|143|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-145 |I85145|MAY25|145|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-146 |I85146|MAY26|146|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A254 |IA254 |MAY28|148|     |  |WfRiWzHr                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-148 |I85148|MAY28|148|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|LOW-ELEV5 |LEL855|MAY30|150|     |  |WfMo                         |NASA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT85-152 |I85152|JUN01|152|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A255 |IA255 |JUN02|153|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-153 |I85153|JUN02|153|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-156 |I85156|JUN05|156|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A256 |IA256 |JUN07|158|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-158 |I85158|JUN07|158|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A257 |IA257 |JUN12|163|     |  |RiWzWfMo                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A258 |IA258 |JUN17|168|     |  |WfWzOnHrRi                   |NOAA|BONN|       |    |XI  |NASA|     |    |
+|TRANS-ATL3|XAT853|JUN18|169|     |  |WfOnWz                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|POLAR-1   |POL851|JUN19|170|     |  |WfOnWzGcMoKa                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT85-172 |I85172|JUN21|172|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A259 |IA259 |JUN22|173|     |  |WfRiWzHr                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-173 |I85173|JUN22|173|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-176 |I85176|JUN25|176|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-177 |I85177|JUN26|177|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A260 |IA260 |JUN27|178|     |  |WfHrWzRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-179 |I85179|JUN28|179|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-180 |I85180|JUN29|180|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT85-182 |I85182|JUL01|182|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A261 |IA261 |JUL02|183|     |  |HrRiWzWf                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-184 |I85184|JUL03|184|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-185 |I85185|JUL04|185|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-186 |I85186|JUL05|186|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|EAST-PAC1 |EPC851|JUL06|187|     |  |KuMoVbGcKwKa                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT85-187 |I85187|JUL06|187|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A262 |IA262 |JUL07|188|     |  |WfWzRiHr                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-189 |I85189|JUL08|189|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-191 |I85191|JUL10|191|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-192 |I85192|JUL11|192|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A263 |IA263 |JUL12|193|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-194 |I85194|JUL13|194|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-195 |I85195|JUL14|195|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-197 |I85197|JUL16|197|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A264 |IA264 |JUL17|198|     |  |WfHrWzRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-199 |I85199|JUL18|199|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|CDP-85O   |CDP85O|JUL18|199|     |  |GcNmKoVb                     |JPL |HAYS|       |    |X   |NASA|     |    |
+|INT85-200 |I85200|JUL19|200|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|TRANS-PAC2|XPC852|JUL20|201|     |  |GcKwKuKaVbMo                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT85-201 |I85201|JUL20|201|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-202 |I85202|JUL21|202|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A265 |IA265 |JUL22|203|     |  |WfHrWzRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-204 |I85204|JUL23|204|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-205 |I85205|JUL24|205|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|CDP-85P   |CDP85P|JUL25|206|     |  |GcVbNmSn                     |JPL |HAYS|       |    |X   |NASA|     |    |
+|INT85-207 |I85207|JUL26|207|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|EAST-PAC2 |EPC852|JUL27|208|     |  |KuVbKaKwGcMo                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A266 |IA266 |JUL27|208|     |  |WfHrWzRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-208 |I85208|JUL27|208|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-210 |I85210|JUL29|210|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-211 |I85211|JUL30|211|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-212 |I85212|JUL31|212|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|IRIS-A267 |IA267 |AUG01|213|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-213 |I85213|AUG01|213|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-215 |I85215|AUG03|215|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-217 |I85217|AUG05|217|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|CDP-85Q   |CDP85Q|AUG05|217|     |  |GcVbYaSo                     |JPL |HAYS|       |    |X   |NASA|     |    |
+|IRIS-A268 |IA268 |AUG06|218|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-218 |I85218|AUG06|218|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|GSI-1     |GSI851|AUG08|220|     |  |TkKa                         |GSI |HAYS|       |    |DX  |NASA|     |    |
+|INT85-220 |I85220|AUG08|220|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-221 |I85221|AUG09|221|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|TRANS-PAC3|XPC853|AUG10|222|     |  |KaGcMoVbKuKw                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT85-222 |I85222|AUG10|222|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A269 |IA269 |AUG11|223|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-223 |I85223|AUG11|223|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|CDP-85R   |CDP85R|AUG12|224|     |  |GcVbSo                       |JPL |HAYS|       |    |X   |NASA|     |    |
+|LOW-ELEV6 |LEL856|AUG13|225|     |  |WfMo                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT85-225 |I85225|AUG13|225|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A270 |IA270 |AUG16|228|     |  |RiWzHrWfOn                   |NOAA|BONN|       |    |X   |NASA|     |    |
+|INT85-231 |I85231|AUG19|231|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-232 |I85232|AUG20|232|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A271 |IA271 |AUG21|233|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-233 |I85233|AUG21|233|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-235 |I85235|AUG23|235|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|NAPS-C1   |NPC851|AUG24|236|     |  |HrGcApWfMo                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A272 |IA272 |AUG26|238|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-238 |I85238|AUG26|238|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-240 |I85240|AUG28|240|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-241 |I85241|AUG29|241|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-242 |I85242|AUG30|242|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A273 |IA273 |AUG31|243|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-243 |I85243|AUG31|243|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|NAPS-BS   |NP85BS|SEP01|244|     |  |HrPeAp                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT85-246 |I85246|SEP03|246|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|NAPS-B1   |NPB851|SEP04|247|     |  |ApHrYkGcPe                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT85-247 |I85247|SEP04|247|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A274 |IA274 |SEP05|248|     |  |RiWzWfHr                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-248 |I85248|SEP05|248|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-250 |I85250|SEP07|250|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-251 |I85251|SEP08|251|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-252 |I85252|SEP09|252|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A275 |IA275 |SEP10|253|     |  |WfHrWzOnRi                   |NOAA|BONN|       |    |XI  |NASA|     |    |
+|INT85-253 |I85253|SEP10|253|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|TRAS-ATL4 |XAT854|SEP11|254|     |  |WfOnWz                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|LOW-ELEV7 |LEL857|SEP12|255|     |  |WfMo                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT85-255 |I85255|SEP12|255|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-257 |I85257|SEP14|257|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A276 |IA276 |SEP15|258|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-258 |I85258|SEP15|258|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-261 |I85261|SEP18|261|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-262 |I85262|SEP19|262|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A277 |IA277 |SEP20|263|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-263 |I85263|SEP20|263|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-265 |I85265|SEP22|265|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-267 |I85267|SEP24|267|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A278 |IA278 |SEP25|268|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-270 |I85270|SEP27|270|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|DSN-2     |DSN852|SEP28|271|     |  |RoGv14                       |JPL |HAYS|       |    |DD  |NASA|     |    |
+|DSN-3     |DSN853|SEP29|272|     |  |TiGv14                       |JPL |HAYS|       |    |DD  |NASA|     |    |
+|NORTH-PAC2|NPC852|SEP30|273|     |  |GcVbKuHcMoKa                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A279 |IA279 |SEP30|273|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|LOW-ELEV8 |LEL858|OCT02|275|     |  |WfMo                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT85-275 |I85275|OCT02|275|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-277 |I85277|OCT04|277|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A280 |IA280 |OCT05|278|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-278 |I85278|OCT05|278|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-280 |I85280|OCT07|280|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-281 |I85281|OCT08|281|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A281 |IA281 |OCT10|283|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-283 |I85283|OCT10|283|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-285 |I85285|OCT12|285|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-286 |I85286|OCT13|286|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-287 |I85287|OCT14|287|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A282 |IA282 |OCT15|288|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-288 |I85288|OCT15|288|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-290 |I85290|OCT17|290|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-291 |I85291|OCT18|291|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-292 |I85292|OCT19|292|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|CDP-85T   |CDP85T|OCT19|292|     |  |MoPrHcPfOoVbHr               |JPL |HAYS|       |    |X   |NASA|     |    |
+|IRIS-A283 |IA283 |OCT20|293|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-294 |I85294|OCT21|294|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-295 |I85295|OCT22|295|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|CDP-85U   |CDP85U|OCT23|296|     |  |MoFoHcPfOoVbHr               |JPL |HAYS|       |    |X   |NASA|     |    |
+|INT85-297 |I85297|OCT24|297|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|PHSE-DELY2|PD852 |OCT25|298|     |  |MoOo                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A284 |IA284 |OCT25|298|     |  |WfOnWzRiHr                   |NOAA|BONN|       |    |XI  |NASA|     |    |
+|INT85-299 |I85299|OCT26|299|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-300 |I85300|OCT27|300|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|CDP-85V   |CDP85V|OCT27|300|     |  |MoVbJ1OoPb                   |JPL |HAYS|       |    |X   |NASA|     |    |
+|INT85-301 |I85301|OCT28|301|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|NORTH-ATL3|NAT853|OCT29|302|     |  |MoOoWzOnHrWf                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A285 |IA285 |OCT30|303|     |  |WfWzHr                       |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|CDP-85W   |CDP85W|OCT30|303|     |  |MoJ1OoVbPn                   |JPL |HAYS|       |    |X   |NASA|     |    |
+|INT85-304 |I85304|OCT31|304|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT85-306 |I85306|NOV02|306|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|CDP-85X   |CDP85X|NOV02|306|     |  |MoPnVbYuHr                   |JPL |HAYS|       |    |X   |NASA|     |    |
+|INT85-307 |I85307|NOV03|307|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A286 |IA286 |NOV04|308|     |  |WfHrWz                       |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-309 |I85309|NOV05|309|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|YUMP-1    |YMP851|NOV05|309|     |  |MoMeVbHrYu                   |JPL |HAYS|       |    |X   |NASA|     |    |
+|INT85-310 |I85310|NOV06|310|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|LOW-ELEV9 |LEL859|NOV07|311|     |  |WfMo                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT85-312 |I85312|NOV08|312|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A287 |IA287 |NOV09|313|     |  |WfRiHrWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-314 |I85314|NOV10|314|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-315 |I85315|NOV11|315|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-316 |I85316|NOV12|316|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-317 |I85317|NOV13|317|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A288 |IA288 |NOV14|318|     |  |WfHrWzRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-319 |I85319|NOV15|319|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-320 |I85320|NOV16|320|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-321 |I85321|NOV17|321|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-322 |I85322|NOV18|322|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A289 |IA289 |NOV19|323|     |  |WfOnHrWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|TRANS-ATL5|XAT855|NOV20|324|     |  |OnWzWf                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|POLAR-2   |POL852|NOV21|325|     |  |WfWzOnGcKaMo                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT85-327 |I85327|NOV23|327|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A290 |IA290 |NOV24|328|     |  |WfWzHr                       |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-329 |I85329|NOV25|329|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-330 |I85330|NOV26|330|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-331 |I85331|NOV27|331|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-332 |I85332|NOV28|332|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A291 |IA291 |NOV29|333|     |  |WfHrWzRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-334 |I85334|NOV30|334|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT85-336 |I85336|DEC02|336|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-337 |I85337|DEC03|337|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A292 |IA292 |DEC04|338|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-339 |I85339|DEC05|339|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-340 |I85340|DEC06|340|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-341 |I85341|DEC07|341|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-342 |I85342|DEC08|342|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A293 |IA293 |DEC09|343|     |  |WfOnWzRiHr                   |NOAA|BONN|       |    |XI  |NASA|     |    |
+|TRANS-ATL6|XAT856|DEC10|344|     |  |WfWzOn                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT85-344 |I85344|DEC10|344|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-346 |I85346|DEC12|346|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|YUMP-2    |YMP852|DEC12|346|     |  |MoVbHrHcMe                   |JPL |HAYS|       |    |X   |NASA|     |    |
+|LOW-ELEV10|LE8510|DEC13|347|     |  |MoWf                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT85-347 |I85347|DEC13|347|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A294 |IA294 |DEC14|348|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-348 |I85348|DEC14|348|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-350 |I85350|DEC16|350|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-351 |I85351|DEC17|351|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-352 |I85352|DEC18|352|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A295 |IA295 |DEC19|353|     |  |WfWzRiHr                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-353 |I85353|DEC19|353|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-355 |I85355|DEC21|355|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-356 |I85356|DEC22|356|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A296 |IA296 |DEC23|357|     |  |WfWz                         |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT85-361 |I85361|DEC27|361|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT85-362 |I85362|DEC28|362|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A297 |IA297 |DEC29|363|     |  |WfWzHr                       |NOAA|HAYS|       |    |XI  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+## Master file format version 1.0           2001.08.21 CCT&NRV

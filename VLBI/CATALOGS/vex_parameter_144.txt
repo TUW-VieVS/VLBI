@@ -1,0 +1,197 @@
+* ###################################################################################### 
+* #          VEX Parameter File for VieVS Satellite Scheduling                         #
+* ######################################################################################
+*
+* Format: <Paraemter name>=<Parameter Value>
+* White space (\t, \b) between "=" and <Parameter_Value> is not considered.
+*
+* Use "*" in front of a line to specify a comment
+*
+*
+* ###### General settings ######
+* Select, if the "pointsectr" parameter in $SCHED block and the "pointing_sector" line in $ANTENNA block should be written for AZEL mount antennas:
+write_cable_wrap_sector= 	1
+*
+* Decide, if a combined VEX file, which can be used as correlator input, should be written: 
+write_combined_vex_file=    0
+* Select the station (8 char. station name!), where the $SCHED block (station dependent!) should be taken from.  
+comb_vex_file_ref_station= MEDICINA
+*
+* ###### Header #######
+*
+VEX_rev=				1.5
+vievs_version=	    3.0_sat_sched
+header_note=		VieVS Satellite Scheduling Module
+* tle_epoch= 
+* tle_filename= 
+*
+*
+* ###### $GLOBAL ######
+*
+*
+* ###### $EXPER ######
+*
+* All setable parameters are of the type char.
+* If a char string contains white space, the characters have to be within quotes ("...")!
+* Experiment description: Max. 128 characters long!
+exper_description=	"Multi GNSS test observations"
+PI_name= 				"Vincenza Tornatore"
+PI_email= 				vincenza.tornatore@polimi.it
+contact_name= 			"Vincenza Tornatore"
+contact_email= 			vincenza.tornatore@polimi.it
+scheduler_name= 		"Andreas Hellerschmied"
+scheduler_email= 		andreas.hellerschmied@geo.tuwien.ac.at
+target_correlator= 	DiFX 
+*
+*
+* ###### $SITE ######
+*
+* Get site data from catalog file "position.cat"
+site_type= 					fixed
+* site_position_epoch=
+*
+*
+* ###### $ANTENNA ######
+* 
+* Get antenna data from catalog file "antenna.cat"
+* antenna_note=
+*
+*
+* ###### $DAS ######
+*
+>WETTZELL.das(1)= 								DBBC_Mark5C
+>ONSALA85.das(1)= 								DBBC_Mark5C
+>MEDICINA.das(1)= 								DBBC_Mark5C
+>SARDINIA.das(1)= 								DBBC_Mark5C
+* das_note=
+*
+*
+* ###### $STATION ######
+*
+* Reference to $SITE, $DAS and $ANTENNA Blocks.
+* station_note=
+*
+*
+* ###### $SOURCE ######
+*
+ref_coord_frame=		J2000
+* source_notation - Defines the notation of the source labels. Availabe options:
+*										(doy = days oy year; d = day, h = hour, m = min, s = sec)
+*  									1 = <satellite_label>_<hhmmss>
+* 									2 = <satellite_label>_<hhmmss.ss>
+* 									3 = <satellite_label>_<doyhhmmss>
+* 									4 = <hhmmss>
+* 									5 = <doyhhmmss>
+*
+source_notation=		4
+* source_note=
+*
+*
+* ###### $PROCEDURES ######
+*
+* Use "= none" to skip the $PROCEDURES block in the VEX file
+*
+>WETTZELL.procedures(1)= 								mode_01
+>ONSALA85.procedures(1)= 								mode_01
+>MEDICINA.procedures(1)= 								mode_01
+>SARDINIA.procedures(1)= 								mode_01
+* procedures_note= 				
+*
+*
+* ###### $PHASE_CAL_DETECT ######
+*
+>WETTZELL.phase_cal_detect(1)= 		NoDetect
+>ONSALA85.phase_cal_detect(1)= 		NoDetect
+>MEDICINA.phase_cal_detect(1)= 		NoDetect
+>SARDINIA.phase_cal_detect(1)= 		NoDetect
+* phase_cal_detect_note=
+*
+*
+* ###### $IF ######
+*
+>WETTZELL.if(1)= 								    2LO_O8
+>ONSALA85.if(1)= 									2LO_O8
+>MEDICINA.if(1)= 									2LO1245_Mc
+>MEDICINA.if(2)= 									2LO9228_Mc
+>SARDINIA.if(1)= 									2LO2300_Sr
+>SARDINIA.if(2)= 									2LO2200_Sr
+* if_note=
+*
+*
+* ###### $BBC ######
+*
+>WETTZELL.bbc(1)= 								2BBCs_O8
+>ONSALA85.bbc(1)= 								2BBCs_O8
+>MEDICINA.bbc(1)= 								2BBCs_Mc
+>SARDINIA.bbc(1)= 								2BBCs_Sr
+* bbc_note=
+*
+*
+* ###### $TRACKS ######
+*
+>WETTZELL.tracks(1)= 							VDIF8032_2
+>ONSALA85.tracks(1)= 							VDIF8032_2
+>MEDICINA.tracks(1)= 							VDIF8032_2
+>SARDINIA.tracks(1)= 							VDIF8032_2
+* tracks_note=
+*
+*
+* ###### $FREQ ######
+* ><STATION_NAME>.freq(1)= <satellite frequency setup>
+* ><STATION_NAME>.freq(2)= <quasar frequency setup>
+*
+>WETTZELL.freq(1)= 							setup1
+>WETTZELL.freq(2)= 							setup1
+>ONSALA85.freq(1)= 							setup1
+>ONSALA85.freq(2)= 							setup1
+>MEDICINA.freq(1)= 							setup1
+>MEDICINA.freq(2)= 							setup1
+>SARDINIA.freq(1)= 							setup1
+>SARDINIA.freq(2)= 							setup1
+* freq_note=
+*
+*
+* ###### $MODE ######
+* ><STATION_NAME>.mode(1)= <satellite mode setup>
+* ><STATION_NAME>.mode(2)= <quasar mode setup>
+*
+>WETTZELL.mode(1)= 							mode1_O8
+>WETTZELL.mode(2)= 							mode1_O8
+>ONSALA85.mode(1)= 							mode1_O8
+>ONSALA85.mode(2)= 							mode1_O8
+>MEDICINA.mode(1)= 							mode1_Mc
+>MEDICINA.mode(2)= 							mode1_Mc
+>SARDINIA.mode(1)= 							mode1_Sr
+>SARDINIA.mode(2)= 							mode1_Sr
+* mode_note=
+*
+*
+* ###### $ROLL ######
+*
+>WETTZELL.roll(1)= 								No_Roll
+>ONSALA85.roll(1)= 								No_Roll
+>MEDICINA.roll(1)= 								No_Roll
+>SARDINIA.roll(1)= 								No_Roll
+* roll_note=
+*
+*
+* ###### $SCHED ######
+*
+* mode = "as definded above in $MODE section, parameter: ><station_name>.mode(1)"
+*
+data_start=												0 sec
+* data_stop = "equal to delta_t (= antenna repositioning interval)."	
+*											
+* Info for calculation of recording rate:
+* Sampling rate [MHz]
+sampling_rate=										64
+* Data resolution [bit]
+data_resolution=									2
+* Number of recorded channels:
+number_of_channels=								4
+*
+* pass=
+* pointsectr= "Not necessary to define the cable wrap here."
+* drive= "Parameter is set in Command Window Input!"
+* sched_note=
+*

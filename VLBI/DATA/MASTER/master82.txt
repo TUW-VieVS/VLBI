@@ -1,0 +1,90 @@
+## Master file format version 1.0           2001.08.21 CCT&NRV
+
+                         1982 MULTI-AGENCY SCHEDULE
+
+                     Last Updated - June 25, 2002 - CCT
+
+
+  SESSION  SESSION DATE  DOY TIME  DUR       STATIONS               SKED CORR STATUS  PF   DBC  SUBM  DEL  MK4
+    NAME     CODE  mondd ddd hh:mm hr                                         yymondd      CODE       days NUM
+----------------------------------------------------------------------------------------------------------------
+|POLA-0040 |POL040|JAN06|6  |     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0041 |POL041|JAN13|13 |     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0042 |POL042|JAN20|20 |     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0043 |POL043|JAN27|27 |     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|POLA-0044 |POL044|FEB01|32 |     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0045 |POL045|FEB10|41 |     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0046 |POL046|FEB17|48 |     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0047 |POL047|FEB24|55 |     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|DSN-FEB25 |DSN821|FEB25|56 |     |  |Gv14                         |JPL |HAYS|       |    |D   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|POLA-0048 |POL048|MAR03|62 |     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0049 |POL049|MAR10|69 |     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0050 |POL050|MAR17|76 |     |  |WfHrOn                       |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0051 |POL051|MAR24|83 |     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0052 |POL052|MAR29|88 |     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|POLA-0053 |POL053|APR07|97 |     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0054 |POL054|APR13|103|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0055 |POL055|APR19|109|     |  |WfHrOn                       |NOAA|HAYS|       |    |XA  |NASA|     |    |
+|POLA-0056 |POL056|APR26|116|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|POLA-0057 |POL057|MAY03|123|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0058 |POL058|MAY10|130|     |  |WfHr                         |NOAA|HAYS|       |    |XA  |NASA|     |    |
+|POLA-0059 |POL059|MAY17|137|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|POLA-0061 |POL061|JUN02|153|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0062 |POL062|JUN07|158|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|X-ATLNTIC1|XAL821|JUN16|167|     |  |OoWfOnGv                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|ASTROM-1  |AST821|JUN17|168|     |  |WfOoOn                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|X-ATLNTIC2|XAL822|JUN18|169|     |  |MdWfHsOnOo                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|X-ATLNTIC3|XAL823|JUN19|170|     |  |HsMdWfOoOn                   |NASA|HAYS|       |    |XA  |NASA|     |    |
+|X-ATLNTIC4|XAL824|JUN20|171|     |  |WfHrOoOnHs                   |NASA|HAYS|       |    |XA  |NASA|     |    |
+|X-ATLNTIC5|XAL825|JUN21|172|     |  |WfHrGvOoOn                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0065 |POL065|JUN28|179|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|DSN-JUL01 |DSN822|JUL01|182|     |  |GvTiRo                       |JPL |HAYS|       |    |D   |NASA|     |    |
+|POLA-0066 |POL066|JUL06|187|     |  |WfHr                         |NOAA|HAYS|       |    |XA  |NASA|     |    |
+|POLA-0067 |POL067|JUL12|193|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0068 |POL068|JUL19|200|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0069 |POL069|JUL26|207|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|POLA-0070 |POL070|AUG04|216|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0071 |POL071|AUG09|221|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|DSN-AUG14 |DSN823|AUG14|226|     |  |GvTiRo                       |JPL |HAYS|       |    |D   |NASA|     |    |
+|POLA-0072 |POL072|AUG16|228|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0073 |POL073|AUG23|235|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0074 |POL074|AUG30|242|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|POLA-0075 |POL075|SEP07|250|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0076 |POL076|SEP13|256|     |  |WfOnHr                       |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0077 |POL077|SEP20|263|     |  |WfOnHr                       |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0078 |POL078|SEP27|270|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|DSN-OCT01 |DSN824|OCT01|274|     |  |GvTi1461                     |JPL |HAYS|       |    |D   |NASA|     |    |
+|POLA-0079 |POL079|OCT04|277|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0080 |POL080|OCT13|286|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+|CALIFRNIA1|MOB821|OCT16|289|     |  |J1MeHrOo                     |JPL |HAYS|       |    |XA  |NASA|     |    |
+|CALIFRNIA2|MOB822|OCT17|290|     |  |MeOoHr                       |JPL |HAYS|       |    |XA  |NASA|     |    |
+|X-US      |XUS821|OCT18|291|     |  |OoOnWfHrMd                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|CALIFRNIA3|MOB823|OCT21|294|     |  |OoJ1Qu                       |JPL |HAYS|       |    |XA  |NASA|     |    |
+|CALIFRNIA4|MOB824|OCT23|296|     |  |HrGvOoQu                     |JPL |HAYS|       |    |XA  |NASA|     |    |
+|POLA-0082 |POL082|OCT25|298|     |  |WfHrOo                       |NOAA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|POLA-0083 |POL083|NOV01|305|     |  |WfHr                         |NOAA|HAYS|       |    |XA  |NASA|     |    |
+|POLA-0084 |POL084|NOV08|312|     |  |WfHr                         |NOAA|HAYS|       |    |XA  |NASA|     |    |
+|POLA-0085 |POL085|NOV15|319|     |  |WfHrOn                       |NOAA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0086 |POL086|NOV22|326|     |  |WfHr                         |NOAA|HAYS|       |    |XA  |NASA|     |    |
+|DSN-NOV27 |DSN825|NOV27|331|     |  |14RoTi                       |JPL |HAYS|       |    |D   |NASA|     |    |
+|POLA-0087 |POL087|NOV29|333|     |  |WfHr                         |NOAA|HAYS|       |    |XA  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|POLA-0088 |POL088|DEC06|340|     |  |WfHr                         |NOAA|HAYS|       |    |XA  |NASA|     |    |
+|X-ATLNTIC6|XAL826|DEC15|349|     |  |HrOoWfGbOn                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|X-ATLNTIC7|XAL827|DEC16|350|     |  |HrOoWfGbOn                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|ASTROM-2  |AST822|DEC17|351|     |  |WfOnHsHrOo                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|ASTROM-3  |AST823|DEC18|352|     |  |WfOnOoHrHs                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|POLA-0090 |POL090|DEC20|354|     |  |WfHr                         |NOAA|HAYS|       |    |XA  |NASA|     |    |
+|POLA-0091 |POL091|DEC27|361|     |  |WfHr                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+## Master file format version 1.0           2001.08.21 CCT&NRV

@@ -1,0 +1,1571 @@
+* ###################################################################################### 
+* #          VEX - $FREQ  (Frequency) - Catalog File                                   #
+* ######################################################################################
+*
+* ---- Format: ----
+* Parameterset Label
+*		Format: ><Paraemter-set label>
+* Parameter
+*		Format: <Parameter name>(<Index for multiple parameters>)= <Parameter Value>
+*
+* One Parameter/Parameterset Label per line
+* White space (\t, \b) between "=" and <Parameter_Value> is not considered.
+* Use "*" in front of a line to specify a comment
+*
+*
+* !! "bbc_chan_bandwidth" parameter !! 	=> Bandwidth value in [MHz]!
+*																				=> Only the numeric value, without "MHz"!
+*
+* ------------------ CHAN4_BW8MHz_SR16MHz_O8 ---------------------------------------------------------
+>CHAN4_BW8MHz_SR16MHz_O8
+*
+freq_note(1)=		Sampling rate: 16 MHz, 4 Channels, Bandwidth: 8 MHz
+* freq_note(2)=		
+*
+sampling_rate= 							16.000 Ms/sec
+*
+* --- chan_def 1: ---
+* band_id(1)=											<optional>
+* rf_sky_freq(1)=									<Sky Frequ. is set in "sat_frequ.txt"-file.>
+sideband_bbc_chan(1)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(1)=						8.00
+chan_id(1)=												&CH01
+phase_cal_id(1)=									&U_Cal
+bbc_id(1)=												&BBC01
+*
+* --- chan_def 2: ---
+* band_id(2)=											<optional>
+* rf_sky_freq(2)=									<Sky Frequ. is set in "sat_frequ.txt"-file.>
+sideband_bbc_chan(2)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(2)=						8.00
+chan_id(2)=												&CH02
+phase_cal_id(2)=									&U_Cal
+bbc_id(2)=												&BBC02
+*
+* --- chan_def 3: ---
+* band_id(3)=											<optional>
+* rf_sky_freq(3)=									<Sky Frequ. is set in "sat_frequ.txt"-file.>
+sideband_bbc_chan(3)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(3)=						8.00
+chan_id(3)=												&CH03
+phase_cal_id(3)=									&U_Cal
+bbc_id(3)=												&BBC03
+*
+* --- chan_def 4: ---
+* band_id(4)=											<optional>
+* rf_sky_freq(4)=									<Sky Frequ. is set in "sat_frequ.txt"-file.>
+sideband_bbc_chan(4)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(4)=						8.00
+chan_id(4)=												&CH04
+phase_cal_id(4)=									&U_Cal
+bbc_id(4)=												&BBC04
+* -------------------------------------------------------------------------------------
+*
+* ------------------ CHAN4_BW8MHz_SR16MHz_Wz ---------------------------------------------------------
+* Satellite Obs. FREQ Setup according to personal communication with Wettzell (A. Neidhardt, C. Plötz, J. Kodet)
+>CHAN4_BW8MHz_SR16MHz_Wz
+*
+freq_note(1)=		Sampling rate: 16 MHz, 4 Channels, Bandwidth: 8 MHz
+* freq_note(2)=		
+*
+sampling_rate= 							16.000 Ms/sec
+*
+* --- chan_def 1: ---
+* band_id(1)=											<optional>
+* rf_sky_freq(1)=									<Sky Frequ. is set in "sat_frequ.txt"-file.>
+sideband_bbc_chan(1)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(1)=						8.00
+chan_id(1)=												&CH01
+phase_cal_id(1)=									&U_Cal
+bbc_id(1)=												&BBC03
+*
+* --- chan_def 2: ---
+* band_id(2)=											<optional>
+* rf_sky_freq(2)=									<Sky Frequ. is set in "sat_frequ.txt"-file.>
+sideband_bbc_chan(2)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(2)=						8.00
+chan_id(2)=												&CH02
+phase_cal_id(2)=									&U_Cal
+bbc_id(2)=												&BBC04
+*
+* --- chan_def 3: ---
+* band_id(3)=											<optional>
+* rf_sky_freq(3)=									<Sky Frequ. is set in "sat_frequ.txt"-file.>
+sideband_bbc_chan(3)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(3)=						8.00
+chan_id(3)=												&CH03
+phase_cal_id(3)=									&U_Cal
+bbc_id(3)=												&BBC05
+*
+* --- chan_def 4: ---
+* band_id(4)=											<optional>
+* rf_sky_freq(4)=									<Sky Frequ. is set in "sat_frequ.txt"-file.>
+sideband_bbc_chan(4)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(4)=						8.00
+chan_id(4)=												&CH04
+phase_cal_id(4)=									&U_Cal
+bbc_id(4)=												&BBC06
+* -------------------------------------------------------------------------------------
+*
+* ------------------ GEOSX_SX01 ---------------------------------------------------------
+* Obs. mode for SX taken from VEX file "k15152.vex" (provided by A. Neidhardt), Intensive Session
+>GEOSX_SX01
+*
+* freq_note(1)=
+* freq_note(2)=		
+*
+sampling_rate= 							16.000 Ms/sec
+*
+* --- chan_def 1: ---
+band_id(1)=									&X
+rf_sky_freq(1)=							    8212.99
+sideband_bbc_chan(1)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(1)=						8.00
+chan_id(1)=									&CH01
+bbc_id(1)=									&BBC01
+phase_cal_id(1)=							&U_cal
+*
+* --- chan_def 2: ---
+band_id(2)=									&X
+rf_sky_freq(2)=								8212.99
+sideband_bbc_chan(2)= 						L
+* Bandwith in [MHz]
+bbc_chan_bandwidth(2)=						8.00
+chan_id(2)=									&CH02
+bbc_id(2)=									&BBC01
+phase_cal_id(2)=							&U_cal
+*
+* --- chan_def 3: ---
+band_id(3)=									&X
+rf_sky_freq(3)=								8252.99
+sideband_bbc_chan(3)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(3)=						8.00
+chan_id(3)=									&CH03
+bbc_id(3)=									&BBC02
+phase_cal_id(3)=							&U_cal
+*
+* --- chan_def 4: ---
+band_id(4)=									&X
+rf_sky_freq(4)=								8352.99
+sideband_bbc_chan(4)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(4)=						8.00
+chan_id(4)=									&CH04
+bbc_id(4)=									&BBC03
+phase_cal_id(4)=							&U_cal
+*
+* --- chan_def 5: ---
+band_id(5)=									&X
+rf_sky_freq(5)=							    8512.99
+sideband_bbc_chan(5)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(5)=						8.00
+chan_id(5)=									&CH05
+bbc_id(5)=									&BBC04
+phase_cal_id(5)=							&U_cal
+*
+* --- chan_def 6: ---
+band_id(6)=									&X
+rf_sky_freq(6)=								8732.99
+sideband_bbc_chan(6)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(6)=						8.00
+chan_id(6)=									&CH06
+bbc_id(6)=									&BBC05
+phase_cal_id(6)=							&U_cal
+*
+* --- chan_def 7: ---
+band_id(7)=									&X
+rf_sky_freq(7)=								8852.99
+sideband_bbc_chan(7)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(7)=						8.00
+chan_id(7)=									&CH07
+bbc_id(7)=									&BBC06
+phase_cal_id(7)=							&U_cal
+*
+* --- chan_def 8: ---
+band_id(8)=									&X
+rf_sky_freq(8)=								8912.99
+sideband_bbc_chan(8)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(8)=						8.00
+chan_id(8)=									&CH08
+bbc_id(8)=									&BBC07
+phase_cal_id(8)=							&U_cal
+*
+* --- chan_def 9: ---
+band_id(9)=									&X
+rf_sky_freq(9)=							    8932.99
+sideband_bbc_chan(9)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(9)=						8.00
+chan_id(9)=									&CH09
+bbc_id(9)=									&BBC08
+phase_cal_id(9)=							&U_cal
+*
+* --- chan_def 10: ---
+band_id(10)=								&X
+rf_sky_freq(10)=							8932.99
+sideband_bbc_chan(10)= 						L
+* Bandwith in [MHz]
+bbc_chan_bandwidth(10)=						8.00
+chan_id(10)=								&CH10
+bbc_id(10)=									&BBC08
+phase_cal_id(10)=							&U_cal
+*
+* --- chan_def 11: ---
+band_id(11)=								&S
+rf_sky_freq(11)=							2225.99
+sideband_bbc_chan(11)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(11)=						8.00
+chan_id(11)=								&CH11
+bbc_id(11)=									&BBC09
+phase_cal_id(11)=							&U_cal
+*
+* --- chan_def 12: ---
+band_id(12)=								&S
+rf_sky_freq(12)=							2245.99
+sideband_bbc_chan(12)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(12)=						8.00
+chan_id(12)=								&CH12
+bbc_id(12)=									&BBC10
+phase_cal_id(12)=							&U_cal
+*
+* --- chan_def 13: ---
+band_id(13)=								&S
+rf_sky_freq(13)=							2265.99
+sideband_bbc_chan(13)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(13)=						8.00
+chan_id(13)=								&CH13
+bbc_id(13)=									&BBC11
+phase_cal_id(13)=							&U_cal
+*
+* --- chan_def 14: ---
+band_id(14)=								&S
+rf_sky_freq(14)=							2295.99
+sideband_bbc_chan(14)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(14)=						8.00
+chan_id(14)=								&CH14
+bbc_id(14)=									&BBC12
+phase_cal_id(14)=							&U_cal
+*
+* --- chan_def 15: ---
+band_id(15)=								&S
+rf_sky_freq(15)=							2345.99
+sideband_bbc_chan(15)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(15)=						8.00
+chan_id(15)=								&CH15
+bbc_id(15)=									&BBC13
+phase_cal_id(15)=							&U_cal
+*
+* --- chan_def 16: ---
+band_id(16)=								&S
+rf_sky_freq(16)=							2365.99
+sideband_bbc_chan(16)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(16)=						8.00
+chan_id(16)=								&CH16
+bbc_id(16)=									&BBC14
+phase_cal_id(16)=							&U_cal
+* -------------------------------------------------------------------------------------
+*
+* ------------------ Cband_CHAN16_BW16MHz_SR32MHz_Ho ---------------------------------------------------------
+* Adapted from C-band obs. (wark_1.vex), provided by Jamie McCallum, June 2015
+* Channel frequencies not assigned here!
+>Cband_CHAN16_BW16MHz_SR32MHz_Ho
+*
+freq_note(1)= 								Station: HOBART26
+* freq_note(2)=								2 bit/sample => 32 Ms/sec
+*
+sampling_rate= 								32.000 Ms/sec
+*
+* --- chan_def 1: ---
+* band_id(1)=								
+* rf_sky_freq(1)=							
+sideband_bbc_chan(1)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(1)=						16.00
+chan_id(1)=									&CH01
+bbc_id(1)=									&BBC01
+phase_cal_id(1)=							&NoCal
+*
+* --- chan_def 2: ---
+* band_id(2)=								
+* rf_sky_freq(2)=							
+sideband_bbc_chan(2)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(2)=						16.00
+chan_id(2)=									&CH02
+bbc_id(2)=									&BBC02
+phase_cal_id(2)=							&NoCal
+*
+* --- chan_def 3: ---
+* band_id(3)=								
+* rf_sky_freq(3)=							
+sideband_bbc_chan(3)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(3)=						16.00
+chan_id(3)=									&CH03
+bbc_id(3)=									&BBC03
+phase_cal_id(3)=							&NoCal
+*
+* --- chan_def 4: ---
+* band_id(4)=								
+* rf_sky_freq(4)=							
+sideband_bbc_chan(4)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(4)=						16.00
+chan_id(4)=									&CH04
+bbc_id(4)=									&BBC04
+phase_cal_id(4)=							&NoCal
+*
+* --- chan_def 5: ---
+* band_id(5)=								
+* rf_sky_freq(5)=							
+sideband_bbc_chan(5)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(5)=						16.00
+chan_id(5)=									&CH05
+bbc_id(5)=									&BBC11
+phase_cal_id(5)=							&NoCal
+*
+* --- chan_def 6: ---
+* band_id(6)=								
+* rf_sky_freq(6)=							
+sideband_bbc_chan(6)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(6)=						16.00
+chan_id(6)=									&CH06
+bbc_id(6)=									&BBC12
+phase_cal_id(6)=							&NoCal
+*
+* --- chan_def 7: ---
+* band_id(7)=								
+* rf_sky_freq(7)=							
+sideband_bbc_chan(7)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(7)=						16.00
+chan_id(7)=									&CH07
+bbc_id(7)=									&BBC13
+phase_cal_id(7)=							&NoCal
+*
+* --- chan_def 8: ---
+* band_id(8)=								
+* rf_sky_freq(8)=							
+sideband_bbc_chan(8)= 						U
+* Bandwith in [MHz]
+bbc_chan_bandwidth(8)=						16.00
+chan_id(8)=									&CH08
+bbc_id(8)=									&BBC14
+phase_cal_id(8)=							&NoCal
+*
+* --- chan_def 9: ---
+* band_id(9)=								
+* rf_sky_freq(9)=							
+sideband_bbc_chan(9)= 						L
+* Bandwith in [MHz]
+bbc_chan_bandwidth(9)=						16.00
+chan_id(9)=									&CH09
+bbc_id(9)=									&BBC01
+phase_cal_id(9)=							&NoCal
+*
+* --- chan_def 10: ---
+* band_id(10)=								
+* rf_sky_freq(10)=							
+sideband_bbc_chan(10)= 						L
+* Bandwith in [MHz]
+bbc_chan_bandwidth(10)=						16.00
+chan_id(10)=								&CH10
+bbc_id(10)=									&BBC02
+phase_cal_id(10)=							&NoCal
+*
+* --- chan_def 11: ---
+* band_id(11)=								
+* rf_sky_freq(11)=							
+sideband_bbc_chan(11)= 						L
+* Bandwith in [MHz]
+bbc_chan_bandwidth(11)=						16.00
+chan_id(11)=								&CH11
+bbc_id(11)=									&BBC03
+phase_cal_id(11)=							&NoCal
+*
+* --- chan_def 12: ---
+* band_id(12)=								
+* rf_sky_freq(12)=							
+sideband_bbc_chan(12)= 						L
+* Bandwith in [MHz]
+bbc_chan_bandwidth(12)=						16.00
+chan_id(12)=								&CH12
+bbc_id(12)=									&BBC04
+phase_cal_id(12)=							&NoCal
+*
+* --- chan_def 13: ---
+* band_id(13)=								
+* rf_sky_freq(13)=							
+sideband_bbc_chan(13)= 						L
+* Bandwith in [MHz]
+bbc_chan_bandwidth(13)=						16.00
+chan_id(13)=								&CH13
+bbc_id(13)=									&BBC11
+phase_cal_id(13)=							&NoCal
+*
+* --- chan_def 14: ---
+* band_id(14)=								
+* rf_sky_freq(14)=							
+sideband_bbc_chan(14)= 						L
+* Bandwith in [MHz]
+bbc_chan_bandwidth(14)=						16.00
+chan_id(14)=								&CH14
+bbc_id(14)=									&BBC12
+phase_cal_id(14)=							&NoCal
+*
+* --- chan_def 15: ---
+* band_id(15)=								
+* rf_sky_freq(15)=							
+sideband_bbc_chan(15)= 						L
+* Bandwith in [MHz]
+bbc_chan_bandwidth(15)=						16.00
+chan_id(15)=								&CH15
+bbc_id(15)=									&BBC13
+phase_cal_id(15)=							&NoCal
+*
+* --- chan_def 16: ---
+* band_id(16)=								
+* rf_sky_freq(16)=							
+sideband_bbc_chan(16)= 						L
+* Bandwith in [MHz]
+bbc_chan_bandwidth(16)=						16.00
+chan_id(16)=								&CH16
+bbc_id(16)=									&BBC14
+phase_cal_id(16)=							&NoCal
+* -------------------------------------------------------------------------------------
+*
+* ------------------ Lband_CHAN08_BW16MHz_SR32MHz_Ho ---------------------------------------------------------
+* Provided by Jamie McCallum per mail, June 9 2015
+* Channel frequencies not assigned here!
+* bbc_chan_bandwidth & rf_sky_freq in [MHz]
+>Lband_CHAN08_BW16MHz_SR32MHz_Ho
+*
+freq_note(1)= 								Station: HOBART26
+* freq_note(2)=								2 bit/sample => 32 Ms/sec
+*
+sampling_rate= 								32.000 Ms/sec
+*
+* --- chan_def 1: ---
+* band_id(1)=								
+rf_sky_freq(1)=								1200.00	
+sideband_bbc_chan(1)= 						U
+bbc_chan_bandwidth(1)=						16.00
+chan_id(1)=									&CH01
+bbc_id(1)=									&BBC01
+phase_cal_id(1)=							&NoCal
+*
+* --- chan_def 2: ---
+* band_id(2)=								
+rf_sky_freq(2)=								1310.00							
+sideband_bbc_chan(2)= 						U
+bbc_chan_bandwidth(2)=						16.00
+chan_id(2)=									&CH02
+bbc_id(2)=									&BBC02
+phase_cal_id(2)=							&NoCal
+*
+* --- chan_def 3: ---
+* band_id(3)=								
+rf_sky_freq(3)=								1450.00
+sideband_bbc_chan(3)= 						U
+bbc_chan_bandwidth(3)=						16.00
+chan_id(3)=									&CH03
+bbc_id(3)=									&BBC03
+phase_cal_id(3)=							&NoCal
+*
+* --- chan_def 4: ---
+* band_id(4)=								
+rf_sky_freq(4)=		   					    1592.00	
+sideband_bbc_chan(4)= 						U
+bbc_chan_bandwidth(4)=						16.00
+chan_id(4)=									&CH04
+bbc_id(4)=									&BBC04
+phase_cal_id(4)=							&NoCal
+*
+* --- chan_def 5: ---
+* band_id(5)=								
+rf_sky_freq(5)=							    1592.00
+sideband_bbc_chan(5)= 						U
+bbc_chan_bandwidth(5)=						16.00
+chan_id(5)=									&CH05
+bbc_id(5)=									&BBC11
+phase_cal_id(5)=							&NoCal
+*
+* --- chan_def 6: ---
+* band_id(6)=								
+rf_sky_freq(6)=								1370.00						
+sideband_bbc_chan(6)= 						U
+bbc_chan_bandwidth(6)=						16.00
+chan_id(6)=									&CH06
+bbc_id(6)=									&BBC12
+phase_cal_id(6)=							&NoCal
+*
+* --- chan_def 7: ---
+* band_id(7)=								
+rf_sky_freq(7)=								1400.00			
+sideband_bbc_chan(7)= 						U
+bbc_chan_bandwidth(7)=						16.00
+chan_id(7)=									&CH07
+bbc_id(7)=									&BBC13
+phase_cal_id(7)=							&NoCal
+*
+* --- chan_def 8: ---
+* band_id(8)=								
+rf_sky_freq(8)=								1420.00
+sideband_bbc_chan(8)= 						U
+bbc_chan_bandwidth(8)=						16.00
+chan_id(8)=									&CH08
+bbc_id(8)=									&BBC14
+phase_cal_id(8)=							&NoCal
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ L1L2band_CHAN08_BW16MHz_SR32MHz_Cd ---------------------------------------------------------
+* Provided by Jamie McCallum per mail, June 15 2015
+* bbc_chan_bandwidth & rf_sky_freq in [MHz]
+>L1L2band_CHAN08_BW16MHz_SR32MHz_Cd
+*
+freq_note(1)= 								Station: CEDUNA, L1 and L2 band
+* freq_note(2)=								2 bit/sample => 32 Ms/sec
+*
+sampling_rate= 								32.000 Ms/sec
+round_sky_frequ= 							1e-0
+*
+* --- chan_def 1: ---
+* band_id(1)=								
+rf_sky_freq(1)=								f2
+rf_sky_freq_offset(1)=						+0.00
+sideband_bbc_chan(1)= 						U
+bbc_chan_bandwidth(1)=						16.00
+chan_id(1)=									&CH01
+bbc_id(1)=									&BBC01
+phase_cal_id(1)=							&NoCal
+*
+* --- chan_def 2: ---
+* band_id(2)=								
+rf_sky_freq(2)=								1310.00							
+sideband_bbc_chan(2)= 						U
+bbc_chan_bandwidth(2)=						16.00
+chan_id(2)=									&CH02
+bbc_id(2)=									&BBC02
+phase_cal_id(2)=							&NoCal
+*
+* --- chan_def 3: ---
+* band_id(3)=								
+rf_sky_freq(3)=								1490.00
+sideband_bbc_chan(3)= 						U
+bbc_chan_bandwidth(3)=						16.00
+chan_id(3)=									&CH03
+bbc_id(3)=									&BBC03
+phase_cal_id(3)=							&NoCal
+*
+* --- chan_def 4: ---
+* band_id(4)=								
+rf_sky_freq(4)=		   					    f1	
+rf_sky_freq_offset(4)=						+0.00
+sideband_bbc_chan(4)= 						U
+bbc_chan_bandwidth(4)=						16.00
+chan_id(4)=									&CH04
+bbc_id(4)=									&BBC04
+phase_cal_id(4)=							&NoCal
+*
+* --- chan_def 5: ---
+* band_id(5)=								
+rf_sky_freq(5)=							    f2
+rf_sky_freq_offset(5)=						+0.10
+sideband_bbc_chan(5)= 						U
+bbc_chan_bandwidth(5)=						16.00
+chan_id(5)=									&CH05
+bbc_id(5)=									&BBC05
+phase_cal_id(5)=							&NoCal
+*
+* --- chan_def 6: ---
+* band_id(6)=								
+rf_sky_freq(6)=								1370.00						
+sideband_bbc_chan(6)= 						U
+bbc_chan_bandwidth(6)=						16.00
+chan_id(6)=									&CH06
+bbc_id(6)=									&BBC06
+phase_cal_id(6)=							&NoCal
+*
+* --- chan_def 7: ---
+* band_id(7)=								
+rf_sky_freq(7)=							    f1		
+rf_sky_freq_offset(7)=						+0.10	
+sideband_bbc_chan(7)= 						U
+bbc_chan_bandwidth(7)=						16.00
+chan_id(7)=									&CH07
+bbc_id(7)=									&BBC07
+phase_cal_id(7)=							&NoCal
+*
+* --- chan_def 8: ---
+* band_id(8)=								
+rf_sky_freq(8)=								1420.00
+sideband_bbc_chan(8)= 						U
+bbc_chan_bandwidth(8)=						16.00
+chan_id(8)=									&CH08
+bbc_id(8)=									&BBC08
+phase_cal_id(8)=							&NoCal
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ Lband_CHAN08_BW16MHz_SR32MHz_Cd ---------------------------------------------------------
+* Provided by Jamie McCallum per mail, June 15 2015
+* bbc_chan_bandwidth & rf_sky_freq in [MHz]
+>Lband_CHAN08_BW16MHz_SR32MHz_Cd
+*
+freq_note(1)= 								Station: CEDUNA, L1 and L2 band
+* freq_note(2)=								2 bit/sample => 32 Ms/sec
+*
+sampling_rate= 								32.000 Ms/sec
+* round_sky_frequ= 							1e-0
+*
+* --- chan_def 1: ---
+* band_id(1)=								
+rf_sky_freq(1)=								1200
+sideband_bbc_chan(1)= 						U
+bbc_chan_bandwidth(1)=						16.00
+chan_id(1)=									&CH01
+bbc_id(1)=									&BBC01
+phase_cal_id(1)=							&NoCal
+*
+* --- chan_def 2: ---
+* band_id(2)=								
+rf_sky_freq(2)=								1310.00							
+sideband_bbc_chan(2)= 						U
+bbc_chan_bandwidth(2)=						16.00
+chan_id(2)=									&CH02
+bbc_id(2)=									&BBC02
+phase_cal_id(2)=							&NoCal
+*
+* --- chan_def 3: ---
+* band_id(3)=								
+rf_sky_freq(3)=								1490.00
+sideband_bbc_chan(3)= 						U
+bbc_chan_bandwidth(3)=						16.00
+chan_id(3)=									&CH03
+bbc_id(3)=									&BBC03
+phase_cal_id(3)=							&NoCal
+*
+* --- chan_def 4: ---
+* band_id(4)=								
+rf_sky_freq(4)=		   					    1592
+sideband_bbc_chan(4)= 						U
+bbc_chan_bandwidth(4)=						16.00
+chan_id(4)=									&CH04
+bbc_id(4)=									&BBC04
+phase_cal_id(4)=							&NoCal
+*
+* --- chan_def 5: ---
+* band_id(5)=								
+rf_sky_freq(5)=							    1592
+sideband_bbc_chan(5)= 						U
+bbc_chan_bandwidth(5)=						16.00
+chan_id(5)=									&CH05
+bbc_id(5)=									&BBC05
+phase_cal_id(5)=							&NoCal
+*
+* --- chan_def 6: ---
+* band_id(6)=								
+rf_sky_freq(6)=								1370.00						
+sideband_bbc_chan(6)= 						U
+bbc_chan_bandwidth(6)=						16.00
+chan_id(6)=									&CH06
+bbc_id(6)=									&BBC06
+phase_cal_id(6)=							&NoCal
+*
+* --- chan_def 7: ---
+* band_id(7)=								
+rf_sky_freq(7)=							    1400	
+sideband_bbc_chan(7)= 						U
+bbc_chan_bandwidth(7)=						16.00
+chan_id(7)=									&CH07
+bbc_id(7)=									&BBC07
+phase_cal_id(7)=							&NoCal
+*
+* --- chan_def 8: ---
+* band_id(8)=								
+rf_sky_freq(8)=								1420.00
+sideband_bbc_chan(8)= 						U
+bbc_chan_bandwidth(8)=						16.00
+chan_id(8)=									&CH08
+bbc_id(8)=									&BBC08
+phase_cal_id(8)=							&NoCal
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ L1L2band_CHAN08_BW16MHz_SR32MHz_Ho ---------------------------------------------------------
+* Provided by Jamie McCallum per mail, June 15 2015
+* bbc_chan_bandwidth & rf_sky_freq in [MHz]
+>L1L2band_CHAN08_BW16MHz_SR32MHz_Ho
+*
+freq_note(1)= 								Station: HOBART26, L1 and L2 band
+* freq_note(2)=								2 bit/sample => 32 Ms/sec
+*
+sampling_rate= 								32.000 Ms/sec
+round_sky_frequ= 							1e-0
+*
+* --- chan_def 1: ---
+* band_id(1)=								
+rf_sky_freq(1)=								f2
+rf_sky_freq_offset(1)=						+0.00
+sideband_bbc_chan(1)= 						U
+bbc_chan_bandwidth(1)=						16.00
+chan_id(1)=									&CH01
+bbc_id(1)=									&BBC01
+phase_cal_id(1)=							&NoCal
+*
+* --- chan_def 2: ---
+* band_id(2)=								
+rf_sky_freq(2)=								1310.00							
+sideband_bbc_chan(2)= 						U
+bbc_chan_bandwidth(2)=						16.00
+chan_id(2)=									&CH02
+bbc_id(2)=									&BBC02
+phase_cal_id(2)=							&NoCal
+*
+* --- chan_def 3: ---
+* band_id(3)=								
+rf_sky_freq(3)=								1490.00
+sideband_bbc_chan(3)= 						U
+bbc_chan_bandwidth(3)=						16.00
+chan_id(3)=									&CH03
+bbc_id(3)=									&BBC03
+phase_cal_id(3)=							&NoCal
+*
+* --- chan_def 4: ---
+* band_id(4)=								
+rf_sky_freq(4)=		   					    f1
+rf_sky_freq_offset(4)=						+0.00
+sideband_bbc_chan(4)= 						U
+bbc_chan_bandwidth(4)=						16.00
+chan_id(4)=									&CH04
+bbc_id(4)=									&BBC04
+phase_cal_id(4)=							&NoCal
+*
+* --- chan_def 5: ---
+* band_id(5)=								
+rf_sky_freq(5)=								f2
+rf_sky_freq_offset(5)=						+0.10
+sideband_bbc_chan(5)= 						U
+bbc_chan_bandwidth(5)=						16.00
+chan_id(5)=									&CH05
+bbc_id(5)=									&BBC09
+phase_cal_id(5)=							&NoCal
+*
+* --- chan_def 6: ---
+* band_id(6)=								
+rf_sky_freq(6)=								1370.00						
+sideband_bbc_chan(6)= 						U
+bbc_chan_bandwidth(6)=						16.00
+chan_id(6)=									&CH06
+bbc_id(6)=									&BBC10
+phase_cal_id(6)=							&NoCal
+*
+* --- chan_def 7: ---
+* band_id(7)=								
+rf_sky_freq(7)=							    f1		
+rf_sky_freq_offset(7)=						+0.10	
+sideband_bbc_chan(7)= 						U
+bbc_chan_bandwidth(7)=						16.00
+chan_id(7)=									&CH07
+bbc_id(7)=									&BBC11
+phase_cal_id(7)=							&NoCal
+*
+* --- chan_def 8: ---
+* band_id(8)=								
+rf_sky_freq(8)=								1420.00
+sideband_bbc_chan(8)= 						U
+bbc_chan_bandwidth(8)=						16.00
+chan_id(8)=									&CH08
+bbc_id(8)=									&BBC12
+phase_cal_id(8)=							&NoCal
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ Lband_CHAN08_BW16MHz_SR32MHz_Ho ---------------------------------------------------------
+* Provided by Jamie McCallum per mail, June 15 2015
+* Set up (A. Hellerschmied), 2015-06-24
+* For Quasar observations with fixed frequencies for each channel
+* bbc_chan_bandwidth & rf_sky_freq in [MHz]
+>Lband_CHAN08_BW16MHz_SR32MHz_Ho
+*
+freq_note(1)= 								Station: HOBART26, L-Band Quasar obs.
+* freq_note(2)=								2 bit/sample => 32 Ms/sec
+*
+sampling_rate= 								32.000 Ms/sec
+*round_sky_frequ= 							1e-0
+*
+* --- chan_def 1: ---
+* band_id(1)=								
+rf_sky_freq(1)=								1200
+sideband_bbc_chan(1)= 						U
+bbc_chan_bandwidth(1)=						16.00
+chan_id(1)=									&CH01
+bbc_id(1)=									&BBC01
+phase_cal_id(1)=							&NoCal
+*
+* --- chan_def 2: ---
+* band_id(2)=								
+rf_sky_freq(2)=								1310.00							
+sideband_bbc_chan(2)= 						U
+bbc_chan_bandwidth(2)=						16.00
+chan_id(2)=									&CH02
+bbc_id(2)=									&BBC02
+phase_cal_id(2)=							&NoCal
+*
+* --- chan_def 3: ---
+* band_id(3)=								
+rf_sky_freq(3)=								1490.00
+sideband_bbc_chan(3)= 						U
+bbc_chan_bandwidth(3)=						16.00
+chan_id(3)=									&CH03
+bbc_id(3)=									&BBC03
+phase_cal_id(3)=							&NoCal
+*
+* --- chan_def 4: ---
+* band_id(4)=								
+rf_sky_freq(4)=		   					    1592
+sideband_bbc_chan(4)= 						U
+bbc_chan_bandwidth(4)=						16.00
+chan_id(4)=									&CH04
+bbc_id(4)=									&BBC04
+phase_cal_id(4)=							&NoCal
+*
+* --- chan_def 5: ---
+* band_id(5)=								
+rf_sky_freq(5)=								1592
+sideband_bbc_chan(5)= 						U
+bbc_chan_bandwidth(5)=						16.00
+chan_id(5)=									&CH05
+bbc_id(5)=									&BBC09
+phase_cal_id(5)=							&NoCal
+*
+* --- chan_def 6: ---
+* band_id(6)=								
+rf_sky_freq(6)=								1370					
+sideband_bbc_chan(6)= 						U
+bbc_chan_bandwidth(6)=						16.00
+chan_id(6)=									&CH06
+bbc_id(6)=									&BBC10
+phase_cal_id(6)=							&NoCal
+*
+* --- chan_def 7: ---
+* band_id(7)=								
+rf_sky_freq(7)=								1400		
+sideband_bbc_chan(7)= 						U
+bbc_chan_bandwidth(7)=						16.00
+chan_id(7)=									&CH07
+bbc_id(7)=									&BBC11
+phase_cal_id(7)=							&NoCal
+*
+* --- chan_def 8: ---
+* band_id(8)=								
+rf_sky_freq(8)=								1420.00
+sideband_bbc_chan(8)= 						U
+bbc_chan_bandwidth(8)=						16.00
+chan_id(8)=									&CH08
+bbc_id(8)=									&BBC12
+phase_cal_id(8)=							&NoCal
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ TEST_SAT_Wz ---------------------------------------------------------
+* Test setup, 2015-06-18, satellites
+>TEST_SAT_Wz
+*
+freq_note(1)=		Sampling rate: 16 MHz, 4 Channels, Bandwidth: 8 MHz
+* freq_note(2)=		
+round_sky_frequ= 										1e-1
+*
+sampling_rate= 							16.000 Ms/sec
+*
+* --- chan_def 1: ---
+* band_id(1)=											<optional>
+rf_sky_freq(1)=											f1
+sideband_bbc_chan(1)= 									U
+bbc_chan_bandwidth(1)=									8.00
+chan_id(1)=												&CH01
+phase_cal_id(1)=										&U_Cal
+bbc_id(1)=												&BBC03
+*
+* --- chan_def 2: ---
+* band_id(2)=											<optional>
+rf_sky_freq(2)=											f2
+sideband_bbc_chan(2)= 									U
+bbc_chan_bandwidth(2)=									8.00
+chan_id(2)=												&CH02
+phase_cal_id(2)=										&U_Cal
+bbc_id(2)=												&BBC04
+*
+* --- chan_def 3: ---
+* band_id(3)=											<optional>
+rf_sky_freq(3)=											f1
+rf_sky_freq_offset(3)=									+0.1
+sideband_bbc_chan(3)= 									U
+bbc_chan_bandwidth(3)=									8.00
+chan_id(3)=												&CH03
+phase_cal_id(3)=										&U_Cal
+bbc_id(3)=												&BBC05
+*
+* --- chan_def 4: ---
+* band_id(4)=											<optional>
+rf_sky_freq(4)=											f2
+rf_sky_freq_offset(4)=									+0.1
+sideband_bbc_chan(4)= 									U
+bbc_chan_bandwidth(4)=									8.00
+chan_id(4)=												&CH04
+phase_cal_id(4)=										&U_Cal
+bbc_id(4)=												&BBC06
+* -------------------------------------------------------------------------------------
+*
+* ------------------ TEST_QUA_Wz ---------------------------------------------------------
+* Test setup, 2015-06-18
+>TEST_QUA_Wz
+*
+freq_note(1)=		Sampling rate: 16 MHz, 4 Channels, Bandwidth: 8 MHz
+* freq_note(2)=		
+round_sky_frequ= 										1e-0
+*
+sampling_rate= 							16.000 Ms/sec
+*
+* --- chan_def 1: ---
+* band_id(1)=											<optional>
+rf_sky_freq(1)=											9999.99
+sideband_bbc_chan(1)= 									U
+bbc_chan_bandwidth(1)=									8.00
+chan_id(1)=												&CH01
+phase_cal_id(1)=										&U_Cal
+bbc_id(1)=												&BBC03
+*
+* --- chan_def 2: ---
+* band_id(2)=											<optional>
+rf_sky_freq(2)=											8888.88
+sideband_bbc_chan(2)= 									U
+bbc_chan_bandwidth(2)=									8.00
+chan_id(2)=												&CH02
+phase_cal_id(2)=										&U_Cal
+bbc_id(2)=												&BBC04
+*
+* --- chan_def 3: ---
+* band_id(3)=											<optional>
+rf_sky_freq(3)=											7777.77
+rf_sky_freq_offset(3)=									+0.1
+sideband_bbc_chan(3)= 									U
+bbc_chan_bandwidth(3)=									8.00
+chan_id(3)=												&CH03
+phase_cal_id(3)=										&U_Cal
+bbc_id(3)=												&BBC05
+*
+* --- chan_def 4: ---
+* band_id(4)=											<optional>
+rf_sky_freq(4)=											6666.66
+rf_sky_freq_offset(4)=									+0.1
+sideband_bbc_chan(4)= 									U
+bbc_chan_bandwidth(4)=									8.00
+chan_id(4)=												&CH04
+phase_cal_id(4)=										&U_Cal
+bbc_id(4)=												&BBC06
+* -------------------------------------------------------------------------------------
+*
+* ------------------ L1L2band_CHAN04_SR32MHz_Wn ---------------------------------------------------------
+* test setup for TTW1
+* See mail from Jan Kodet, 2015-07-01
+* bbc_chan_bandwidth & rf_sky_freq in [MHz]
+>L1L2band_CHAN04_SR32MHz_Wn
+*
+freq_note(1)= 								L1 and L2 band, !!! TEST SETUP !!!
+* freq_note(2)=								2 bit/sample => 32 Ms/sec
+*
+sampling_rate= 								32.000 Ms/sec
+*
+* --- chan_def 1: ---
+* band_id(1)=								
+rf_sky_freq(1)=								f1
+rf_sky_freq_offset(1)=						+0.00
+sideband_bbc_chan(1)= 						U
+bbc_chan_bandwidth(1)=						16.00
+chan_id(1)=									&CH01
+bbc_id(1)=									&BBC01
+phase_cal_id(1)=							&U_cal
+*
+* --- chan_def 2: ---
+* band_id(2)=								
+rf_sky_freq(2)=								f1		
+rf_sky_freq_offset(2)=						+0.00				
+sideband_bbc_chan(2)= 						U
+bbc_chan_bandwidth(2)=						16.00
+chan_id(2)=									&CH02
+bbc_id(2)=									&BBC02
+phase_cal_id(2)=							&U_cal
+*
+* --- chan_def 3: ---
+* band_id(3)=								
+rf_sky_freq(3)=								f2
+rf_sky_freq_offset(3)=						+220
+sideband_bbc_chan(3)= 						U
+bbc_chan_bandwidth(3)=						16.00
+chan_id(3)=									&CH03
+bbc_id(3)=									&BBC03
+phase_cal_id(3)=							&U_cal
+*
+* --- chan_def 4: ---
+* band_id(4)=								
+rf_sky_freq(4)=		   						f2	
+rf_sky_freq_offset(4)=						+220
+sideband_bbc_chan(4)= 						U
+bbc_chan_bandwidth(4)=						16.00
+chan_id(4)=									&CH04
+bbc_id(4)=									&BBC04
+phase_cal_id(4)=							&U_cal
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ L1L2band_CHAN04_SR32MHz_Wz ---------------------------------------------------------
+* Test setup, 2015-08-17, satellites
+>L1L2band_CHAN04_SR32MHz_Wz
+*
+freq_note(1)=		Sampling rate: 32 MHz, 4 Channels, Bandwidth: 16 MHz
+* freq_note(2)=		
+*
+sampling_rate= 											32.000 Ms/sec
+*
+* --- chan_def 1: ---
+* band_id(1)=											<optional>
+rf_sky_freq(1)=											f1
+rf_sky_freq_offset(1)=									+0.00
+sideband_bbc_chan(1)= 									U
+bbc_chan_bandwidth(1)=									16.00
+chan_id(1)=												&CH01
+phase_cal_id(1)=										&U_Cal
+bbc_id(1)=												&BBC03
+*
+* --- chan_def 2: ---
+* band_id(2)=											<optional>
+rf_sky_freq(2)=											f1
+rf_sky_freq_offset(2)=									+0.00
+sideband_bbc_chan(2)= 									U
+bbc_chan_bandwidth(2)=									16.00
+chan_id(2)=												&CH02
+phase_cal_id(2)=										&U_Cal
+bbc_id(2)=												&BBC04
+*
+* --- chan_def 3: ---
+* band_id(3)=											<optional>
+rf_sky_freq(3)=											f2
+rf_sky_freq_offset(3)=									+220
+sideband_bbc_chan(3)= 									U
+bbc_chan_bandwidth(3)=									16.00
+chan_id(3)=												&CH03
+phase_cal_id(3)=										&U_Cal
+bbc_id(3)=												&BBC05
+*
+* --- chan_def 4: ---
+* band_id(4)=											<optional>
+rf_sky_freq(4)=											f2
+rf_sky_freq_offset(4)=									+220
+sideband_bbc_chan(4)= 									U
+bbc_chan_bandwidth(4)=									16.00
+chan_id(4)=												&CH04
+phase_cal_id(4)=										&U_Cal
+bbc_id(4)=												&BBC06
+* -------------------------------------------------------------------------------------
+*
+*
+* ------------------ Lband_fixed_frequ_Ho ---------------------------------------------------------
+* Provided by Jamie McCallum per mail, 2015-08-04
+* Changed: 2015-08-25, for the experiment on 2015-08-26
+* For quasar and satellite observations with fixed frequencies for each channel, L band
+* bbc_chan_bandwidth & rf_sky_freq in [MHz]
+>Lband_fixed_frequ_Ho
+*
+freq_note(1)= 								Station: HOBART26, L1/L2-band quasar/satellite obs.
+* freq_note(2)=								2 bit/sample => 32 Ms/sec
+*
+sampling_rate= 								32.000 Ms/sec
+*round_sky_frequ= 							1e-0
+* If "flag_center_sky_frequ" = 1, or if it is not available, the sky frequ. is centered within the channel (channel_frequ = rf_sky_freq - (bbc_chan_bandwidth / 2))  
+* If "flag_center_sky_frequ" = 0, channel_frequ = rf_sky_freq
+flag_center_sky_frequ= 						0
+*
+* --- chan_def 1: ---
+* band_id(1)=								
+rf_sky_freq(1)=								1219.00
+sideband_bbc_chan(1)= 						U
+bbc_chan_bandwidth(1)=						16.00
+chan_id(1)=									&CH01
+bbc_id(1)=									&BBC01
+phase_cal_id(1)=							&NoCal
+*
+* --- chan_def 2: ---
+* band_id(2)=								
+rf_sky_freq(2)=								1238.00							
+sideband_bbc_chan(2)= 						U
+bbc_chan_bandwidth(2)=						16.00
+chan_id(2)=									&CH02
+bbc_id(2)=									&BBC02
+phase_cal_id(2)=							&NoCal
+*
+* --- chan_def 3: ---
+* band_id(3)=								
+rf_sky_freq(3)=								1567.00
+sideband_bbc_chan(3)= 						U
+bbc_chan_bandwidth(3)=						16.00
+chan_id(3)=									&CH03
+bbc_id(3)=									&BBC03
+phase_cal_id(3)=							&NoCal
+*
+* --- chan_def 4: ---
+* band_id(4)=								
+rf_sky_freq(4)=		   					    1594.00
+sideband_bbc_chan(4)= 						U
+bbc_chan_bandwidth(4)=						16.00
+chan_id(4)=									&CH04
+bbc_id(4)=									&BBC04
+phase_cal_id(4)=							&NoCal
+*
+* --- chan_def 5: ---
+* band_id(5)=								
+rf_sky_freq(5)=								1219.00
+sideband_bbc_chan(5)= 						U
+bbc_chan_bandwidth(5)=						16.00
+chan_id(5)=									&CH05
+bbc_id(5)=									&BBC09
+phase_cal_id(5)=							&NoCal
+*
+* --- chan_def 6: ---
+* band_id(6)=								
+rf_sky_freq(6)=								1238.00					
+sideband_bbc_chan(6)= 						U
+bbc_chan_bandwidth(6)=						16.00
+chan_id(6)=									&CH06
+bbc_id(6)=									&BBC10
+phase_cal_id(6)=							&NoCal
+*
+* --- chan_def 7: ---
+* band_id(7)=								
+rf_sky_freq(7)=								1567.00		
+sideband_bbc_chan(7)= 						U
+bbc_chan_bandwidth(7)=						16.00
+chan_id(7)=									&CH07
+bbc_id(7)=									&BBC11
+phase_cal_id(7)=							&NoCal
+*
+* --- chan_def 8: ---
+* band_id(8)=								
+rf_sky_freq(8)=								1594.00
+sideband_bbc_chan(8)= 						U
+bbc_chan_bandwidth(8)=						16.00
+chan_id(8)=									&CH08
+bbc_id(8)=									&BBC12
+phase_cal_id(8)=							&NoCal
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ Lband_fixed_frequ_Cd ---------------------------------------------------------
+* Provided by Jamie McCallum per mail, 2015-08-04
+* Changed: 2015-08-25, for the experiment on 2015-08-26
+* For quasar and satellite observations with fixed frequencies for each channel, L band
+* bbc_chan_bandwidth & rf_sky_freq in [MHz]
+>Lband_fixed_frequ_Cd
+*
+freq_note(1)= 								Station: CEDUNA, L1/L2-band quasar/satellite obs.
+* freq_note(2)=								2 bit/sample => 32 Ms/sec
+*
+sampling_rate= 								32.000 Ms/sec
+* round_sky_frequ= 							1e-0
+* If "flag_center_sky_frequ" = 1, or if it is not available, the sky frequ. is centered within the channel (channel_frequ = rf_sky_freq - (bbc_chan_bandwidth / 2))  
+* If "flag_center_sky_frequ" = 0, channel_frequ = rf_sky_freq
+flag_center_sky_frequ= 						0
+*
+* --- chan_def 1: ---
+* band_id(1)=								
+rf_sky_freq(1)=								1219.00
+sideband_bbc_chan(1)= 						U
+bbc_chan_bandwidth(1)=						16.00
+chan_id(1)=									&CH01
+bbc_id(1)=									&BBC01
+phase_cal_id(1)=							&NoCal
+*
+* --- chan_def 2: ---
+* band_id(2)=								
+rf_sky_freq(2)=								1238.00							
+sideband_bbc_chan(2)= 						U
+bbc_chan_bandwidth(2)=						16.00
+chan_id(2)=									&CH02
+bbc_id(2)=									&BBC02
+phase_cal_id(2)=							&NoCal
+*
+* --- chan_def 3: ---
+* band_id(3)=								
+rf_sky_freq(3)=								1567.00
+sideband_bbc_chan(3)= 						U
+bbc_chan_bandwidth(3)=						16.00
+chan_id(3)=									&CH03
+bbc_id(3)=									&BBC03
+phase_cal_id(3)=							&NoCal
+*
+* --- chan_def 4: ---
+* band_id(4)=								
+rf_sky_freq(4)=		   					    1594.00
+sideband_bbc_chan(4)= 						U
+bbc_chan_bandwidth(4)=						16.00
+chan_id(4)=									&CH04
+bbc_id(4)=									&BBC04
+phase_cal_id(4)=							&NoCal
+*
+* --- chan_def 5: ---
+* band_id(5)=								
+rf_sky_freq(5)=							    1219.00
+sideband_bbc_chan(5)= 						U
+bbc_chan_bandwidth(5)=						16.00
+chan_id(5)=									&CH05
+bbc_id(5)=									&BBC05
+phase_cal_id(5)=							&NoCal
+*
+* --- chan_def 6: ---
+* band_id(6)=								
+rf_sky_freq(6)=								1238.00						
+sideband_bbc_chan(6)= 						U
+bbc_chan_bandwidth(6)=						16.00
+chan_id(6)=									&CH06
+bbc_id(6)=									&BBC06
+phase_cal_id(6)=							&NoCal
+*
+* --- chan_def 7: ---
+* band_id(7)=								
+rf_sky_freq(7)=							    1567.00	
+sideband_bbc_chan(7)= 						U
+bbc_chan_bandwidth(7)=						16.00
+chan_id(7)=									&CH07
+bbc_id(7)=									&BBC07
+phase_cal_id(7)=							&NoCal
+*
+* --- chan_def 8: ---
+* band_id(8)=								
+rf_sky_freq(8)=								1594.00
+sideband_bbc_chan(8)= 						U
+bbc_chan_bandwidth(8)=						16.00
+chan_id(8)=									&CH08
+bbc_id(8)=									&BBC08
+phase_cal_id(8)=							&NoCal
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ L1L2_Cd ---------------------------------------------------------
+* Provided by Jamie McCallum per mail, 2016-05-03
+* For quasar and satellite observations with fixed frequencies for each channel, L band
+* bbc_chan_bandwidth & rf_sky_freq in [MHz]
+>L1L2_Cd
+*
+freq_note(1)= 								Station: CEDUNA, L1/L2-band quasar/satellite obs.
+* freq_note(2)=								2 bit/sample => 32 Ms/sec
+*
+sampling_rate= 								32.000 Ms/sec
+* round_sky_frequ= 							1e-0
+* If "flag_center_sky_frequ" = 1, or if it is not available, the sky frequ. is centered within the channel (channel_frequ = rf_sky_freq - (bbc_chan_bandwidth / 2))  
+* If "flag_center_sky_frequ" = 0, channel_frequ = rf_sky_freq
+flag_center_sky_frequ= 						0
+* If "flag_use_static_freq_setup" = 1, only one common frequency setup is defined for satellite observations.
+* Therefore, static RF sky freqeuncies have to be defined in this file.
+flag_use_static_freq_setup=             1
+*
+* --- chan_def 1: ---
+* band_id(1)=								
+rf_sky_freq(1)=								1219.00
+sideband_bbc_chan(1)= 						U
+bbc_chan_bandwidth(1)=						16.00
+chan_id(1)=									&CH01
+bbc_id(1)=									&BBC01
+phase_cal_id(1)=							&NoCal
+*
+* --- chan_def 2: ---
+* band_id(2)=								
+rf_sky_freq(2)=								1376.00							
+sideband_bbc_chan(2)= 						U
+bbc_chan_bandwidth(2)=						16.00
+chan_id(2)=									&CH02
+bbc_id(2)=									&BBC02
+phase_cal_id(2)=							&NoCal
+*
+* --- chan_def 3: ---
+* band_id(3)=								
+rf_sky_freq(3)=								1410.00
+sideband_bbc_chan(3)= 						U
+bbc_chan_bandwidth(3)=						16.00
+chan_id(3)=									&CH03
+bbc_id(3)=									&BBC03
+phase_cal_id(3)=							&NoCal
+*
+* --- chan_def 4: ---
+* band_id(4)=								
+rf_sky_freq(4)=		   					    1567.00
+sideband_bbc_chan(4)= 						U
+bbc_chan_bandwidth(4)=						16.00
+chan_id(4)=									&CH04
+bbc_id(4)=									&BBC04
+phase_cal_id(4)=							&NoCal
+*
+* --- chan_def 5: ---
+* band_id(5)=								
+rf_sky_freq(5)=							    1219.00
+sideband_bbc_chan(5)= 						U
+bbc_chan_bandwidth(5)=						16.00
+chan_id(5)=									&CH05
+bbc_id(5)=									&BBC05
+phase_cal_id(5)=							&NoCal
+*
+* --- chan_def 6: ---
+* band_id(6)=								
+rf_sky_freq(6)=								1376.00						
+sideband_bbc_chan(6)= 						U
+bbc_chan_bandwidth(6)=						16.00
+chan_id(6)=									&CH06
+bbc_id(6)=									&BBC06
+phase_cal_id(6)=							&NoCal
+*
+* --- chan_def 7: ---
+* band_id(7)=								
+rf_sky_freq(7)=							    1410.00	
+sideband_bbc_chan(7)= 						U
+bbc_chan_bandwidth(7)=						16.00
+chan_id(7)=									&CH07
+bbc_id(7)=									&BBC07
+phase_cal_id(7)=							&NoCal
+*
+* --- chan_def 8: ---
+* band_id(8)=								
+rf_sky_freq(8)=								1567.00
+sideband_bbc_chan(8)= 						U
+bbc_chan_bandwidth(8)=						16.00
+chan_id(8)=									&CH08
+bbc_id(8)=									&BBC08
+phase_cal_id(8)=							&NoCal
+*
+* -------------------------------------------------------------------------------------
+*
+*
+* ------------------ L1L2_Ho ---------------------------------------------------------
+* Provided by Jamie McCallum per mail, 2016-05-03
+* For quasar and satellite observations with fixed frequencies for each channel, L band
+* bbc_chan_bandwidth & rf_sky_freq in [MHz]
+>L1L2_Ho
+*
+freq_note(1)= 								Station: HOBART26, L1/L2-band quasar/satellite obs.
+* freq_note(2)=								2 bit/sample => 32 Ms/sec
+*
+sampling_rate= 								32.000 Ms/sec
+*round_sky_frequ= 							1e-0
+* If "flag_center_sky_frequ" = 1, or if it is not available, the sky frequ. is centered within the channel (channel_frequ = rf_sky_freq - (bbc_chan_bandwidth / 2))  
+* If "flag_center_sky_frequ" = 0, channel_frequ = rf_sky_freq
+flag_center_sky_frequ= 						0
+* If "flag_use_static_freq_setup" = 1, only one common frequency setup is defined for satellite observations.
+* Therefore, stati RF sky freqeuncies have to be defined in this file.
+flag_use_static_freq_setup=             1
+*
+* --- chan_def 1: ---
+* band_id(1)=								
+rf_sky_freq(1)=								1219.00
+sideband_bbc_chan(1)= 						U
+bbc_chan_bandwidth(1)=						16.00
+chan_id(1)=									&CH01
+bbc_id(1)=									&BBC01
+phase_cal_id(1)=							&NoCal
+*
+* --- chan_def 2: ---
+* band_id(2)=								
+rf_sky_freq(2)=								1376.00							
+sideband_bbc_chan(2)= 						U
+bbc_chan_bandwidth(2)=						16.00
+chan_id(2)=									&CH02
+bbc_id(2)=									&BBC02
+phase_cal_id(2)=							&NoCal
+*
+* --- chan_def 3: ---
+* band_id(3)=								
+rf_sky_freq(3)=								1410.00
+sideband_bbc_chan(3)= 						U
+bbc_chan_bandwidth(3)=						16.00
+chan_id(3)=									&CH03
+bbc_id(3)=									&BBC03
+phase_cal_id(3)=							&NoCal
+*
+* --- chan_def 4: ---
+* band_id(4)=								
+rf_sky_freq(4)=		   					    1567.00
+sideband_bbc_chan(4)= 						U
+bbc_chan_bandwidth(4)=						16.00
+chan_id(4)=									&CH04
+bbc_id(4)=									&BBC04
+phase_cal_id(4)=							&NoCal
+*
+* --- chan_def 5: ---
+* band_id(5)=								
+rf_sky_freq(5)=								1219.00
+sideband_bbc_chan(5)= 						U
+bbc_chan_bandwidth(5)=						16.00
+chan_id(5)=									&CH05
+bbc_id(5)=									&BBC09
+phase_cal_id(5)=							&NoCal
+*
+* --- chan_def 6: ---
+* band_id(6)=								
+rf_sky_freq(6)=								1376.00					
+sideband_bbc_chan(6)= 						U
+bbc_chan_bandwidth(6)=						16.00
+chan_id(6)=									&CH06
+bbc_id(6)=									&BBC10
+phase_cal_id(6)=							&NoCal
+*
+* --- chan_def 7: ---
+* band_id(7)=								
+rf_sky_freq(7)=								1410.00		
+sideband_bbc_chan(7)= 						U
+bbc_chan_bandwidth(7)=						16.00
+chan_id(7)=									&CH07
+bbc_id(7)=									&BBC11
+phase_cal_id(7)=							&NoCal
+*
+* --- chan_def 8: ---
+* band_id(8)=								
+rf_sky_freq(8)=								1567.00
+sideband_bbc_chan(8)= 						U
+bbc_chan_bandwidth(8)=						16.00
+chan_id(8)=									&CH08
+bbc_id(8)=									&BBC12
+phase_cal_id(8)=							&NoCal
+*
+* -------------------------------------------------------------------------------------
+*
+*################################### 144 ##################################################################################################
+* IF definitions for the 144a experiment (MEDICINA, ONSALA85, SARDINIA)
+*
+* ------------------ setup1 ---------------------------------------------------------
+* Provided by V. Tornatore per mail, 2016-05-17
+* bbc_chan_bandwidth & rf_sky_freq in [MHz]
+>setup1
+*
+freq_note(1)= 								Setup 1 (1575.37 MHz): GPS L1 - GLONASS G1 - GALILEO E1 - Beidou B1
+*
+sampling_rate= 								64.000 Ms/sec
+*round_sky_frequ= 							1e-0
+* If "flag_center_sky_frequ" = 1, or if it is not available, the sky frequ. is centered within the channel (channel_frequ = rf_sky_freq - (bbc_chan_bandwidth / 2))  
+* If "flag_center_sky_frequ" = 0, channel_frequ = rf_sky_freq
+flag_center_sky_frequ= 						0
+* If "flag_use_static_freq_setup" = 1, only one common frequency setup is defined for satellite observations.
+* Therefore, stati RF sky freqeuncies have to be defined in this file.
+flag_use_static_freq_setup=             1
+*
+* --- chan_def 1: ---
+* band_id(1)=								
+rf_sky_freq(1)=								1575.37
+sideband_bbc_chan(1)= 						L
+bbc_chan_bandwidth(1)=						32.00
+chan_id(1)=									&CH01
+bbc_id(1)=									&BBC02
+phase_cal_id(1)=							&NoCal
+*
+* --- chan_def 2: ---
+* band_id(2)=								
+rf_sky_freq(2)=								1575.37							
+sideband_bbc_chan(2)= 						L
+bbc_chan_bandwidth(2)=						32.00
+chan_id(2)=									&CH02
+bbc_id(2)=									&BBC10
+phase_cal_id(2)=							&NoCal
+*
+* --- chan_def 3: ---
+* band_id(3)=								
+rf_sky_freq(3)=								1575.37
+sideband_bbc_chan(3)= 						U
+bbc_chan_bandwidth(3)=						32.00
+chan_id(3)=									&CH03
+bbc_id(3)=									&BBC02
+phase_cal_id(3)=							&NoCal
+*
+* --- chan_def 4: ---
+* band_id(4)=								
+rf_sky_freq(4)=		   					    1575.37
+sideband_bbc_chan(4)= 						U
+bbc_chan_bandwidth(4)=						32.00
+chan_id(4)=									&CH04
+bbc_id(4)=									&BBC10
+phase_cal_id(4)=							&NoCal
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ setup2 ---------------------------------------------------------
+* Provided by V. Tornatore per mail, 2016-05-17
+* bbc_chan_bandwidth & rf_sky_freq in [MHz]
+>setup2
+*
+freq_note(1)= 								Setup 2 (1252.80 MHz): GPS L2  - GLONASS G2  - GALILEO E6 - Beidou B3 and B3-BOC
+*
+sampling_rate= 								64.000 Ms/sec
+*round_sky_frequ= 							1e-0
+* If "flag_center_sky_frequ" = 1, or if it is not available, the sky frequ. is centered within the channel (channel_frequ = rf_sky_freq - (bbc_chan_bandwidth / 2))  
+* If "flag_center_sky_frequ" = 0, channel_frequ = rf_sky_freq
+flag_center_sky_frequ= 						0
+* If "flag_use_static_freq_setup" = 1, only one common frequency setup is defined for satellite observations.
+* Therefore, stati RF sky freqeuncies have to be defined in this file.
+flag_use_static_freq_setup=             1
+*
+* --- chan_def 1: ---
+* band_id(1)=								
+rf_sky_freq(1)=								1252.80
+sideband_bbc_chan(1)= 						L
+bbc_chan_bandwidth(1)=						32.00
+chan_id(1)=									&CH01
+bbc_id(1)=									&BBC01
+phase_cal_id(1)=							&NoCal
+*
+* --- chan_def 2: ---
+* band_id(2)=								
+rf_sky_freq(2)=								1252.80							
+sideband_bbc_chan(2)= 						L
+bbc_chan_bandwidth(2)=						32.00
+chan_id(2)=									&CH02
+bbc_id(2)=									&BBC09
+phase_cal_id(2)=							&NoCal
+*
+* --- chan_def 3: ---
+* band_id(3)=								
+rf_sky_freq(3)=								1252.80
+sideband_bbc_chan(3)= 						U
+bbc_chan_bandwidth(3)=						32.00
+chan_id(3)=									&CH03
+bbc_id(3)=									&BBC01
+phase_cal_id(3)=							&NoCal
+*
+* --- chan_def 4: ---
+* band_id(4)=								
+rf_sky_freq(4)=		   					    1252.80
+sideband_bbc_chan(4)= 						U
+bbc_chan_bandwidth(4)=						32.00
+chan_id(4)=									&CH04
+bbc_id(4)=									&BBC09
+phase_cal_id(4)=							&NoCal
+*
+* -------------------------------------------------------------------------------------
+*

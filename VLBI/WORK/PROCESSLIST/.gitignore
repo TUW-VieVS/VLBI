@@ -1,0 +1,14 @@
+*
+!.gitignore
+!ERP_process_list.mat
+!process_list_cont02.mat
+!process_list_cont05.mat
+!process_list_cont08.mat
+!process_list_cont11.mat
+!process_list_cont94_NAVYEX_G.mat
+!process_list_cont94_RD.mat
+!process_list_cont94_VLBA.mat
+!process_list_cont95.mat
+!process_list_cont96.mat
+!vie_itrf2014.mat
+!vie_process_list_2015a.mat

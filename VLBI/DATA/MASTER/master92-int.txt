@@ -1,0 +1,250 @@
+## Master file format version 1.0           2001.08.21 CCT&NRV
+
+                    1992 MULTI-AGENCY INTENSIVES SCHEDULE
+
+                     Last Updated - June 17, 2002 - CCT
+
+
+  SESSION      SESSION DATE  DOY TIME DUR        STATIONS                SKED CORR STATUS  PF  DBC SUBM DEL  MK4
+    NAME        CODE   mondd ddd hh:mm hr                                          yymondd     CODE     days NUM
+------------------------------------------------------------------------------------------------------------------
+|INT92-002     |I92002|JAN02|  2|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-003     |I92003|JAN03|  3|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-004     |I92004|JAN04|  4|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-005     |I92005|JAN05|  5|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-011     |I92011|JAN11| 11|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-012     |I92012|JAN12| 12|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-014     |I92014|JAN14| 14|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-015     |I92015|JAN15| 15|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-016     |I92016|JAN16| 16|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-017     |I92017|JAN17| 17|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-019     |I92019|JAN19| 19|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-023     |I92023|JAN23| 23|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-024     |I92024|JAN24| 24|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-025     |I92025|JAN25| 25|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-026     |I92026|JAN26| 26|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-028     |I92028|JAN28| 28|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-029     |I92029|JAN29| 29|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-031     |I92031|JAN31| 31|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT92-032     |I92032|FEB01| 32|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-033     |I92033|FEB02| 33|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-034     |J92034|FEB03| 34|     |   |KuG3                         |NOAA|WASH|       |    |XJ|NASA|   0|    |
+|INT92-039     |I92039|FEB08| 39|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-040     |I92040|FEB09| 40|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-050     |I92050|FEB19| 50|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-051     |I92051|FEB20| 51|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-052     |I92052|FEB21| 52|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-054     |I92054|FEB23| 54|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-055     |J92055|FEB24| 55|     |   |GcG3                         |NOAA|WASH|       |    |XJ|NASA|   0|    |
+|INT92-056     |I92056|FEB25| 56|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-060     |I92060|FEB29| 60|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT92-061     |I92061|MAR01| 61|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-063     |I92063|MAR03| 63|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-065     |I92065|MAR05| 65|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-066     |I92066|MAR06| 66|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-067     |I92067|MAR07| 67|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-068     |I92068|MAR08| 68|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-070     |I92070|MAR10| 70|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-071     |I92071|MAR11| 71|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-072     |I92072|MAR12| 72|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-073     |I92073|MAR13| 73|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-075     |I92075|MAR15| 75|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-077     |I92077|MAR17| 77|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-078     |I92078|MAR18| 78|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-079     |I92079|MAR19| 79|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-080     |I92080|MAR20| 80|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-082     |I92082|MAR22| 82|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-084     |I92084|MAR24| 84|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-085     |I92085|MAR25| 85|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-086     |I92086|MAR26| 86|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-087     |I92087|MAR27| 87|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-088     |I92088|MAR28| 88|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-089     |I92089|MAR29| 89|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-091     |I92091|MAR31| 91|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT92-092     |I92092|APR01| 92|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-093     |I92093|APR02| 93|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-095     |I92095|APR04| 95|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-096     |I92096|APR05| 96|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-098     |J92098|APR07| 98|     |   |KuG3                         |NOAA|WASH|       |    |XJ|NASA|   0|    |
+|INT92-108     |I92108|APR17|108|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-109     |I92109|APR18|109|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-110     |I92110|APR19|110|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-113     |I92113|APR22|113|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-114     |I92114|APR23|114|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-115     |I92115|APR24|115|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-116     |I92116|APR25|116|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-117     |I92117|APR26|117|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-121     |I92121|APR30|121|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT92-122     |I92122|MAY01|122|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-123     |I92123|MAY02|123|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-126     |I92126|MAY05|126|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-127     |I92127|MAY06|127|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-130     |I92130|MAY09|130|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-136     |I92136|MAY15|136|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-137     |I92137|MAY16|137|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-138     |I92138|MAY17|138|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-140     |I92140|MAY19|140|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-141     |I92141|MAY20|141|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-142     |I92142|MAY21|142|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-143     |I92143|MAY22|143|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-144     |I92144|MAY23|144|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-145     |I92145|MAY24|145|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-147     |I92147|MAY26|147|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-147     |J92147|MAY26|147|     |   |GcG3                         |NOAA|WASH|       |    |XJ|NASA|   0|    |
+|INT92-148     |I92148|MAY27|148|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-149     |I92149|MAY28|149|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-150     |I92150|MAY29|150|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-151     |I92151|MAY30|151|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-152     |I92152|MAY31|152|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT92-154     |I92154|JUN02|154|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-155     |I92155|JUN03|155|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-156     |I92156|JUN04|156|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-157     |I92157|JUN05|157|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-158     |I92158|JUN06|158|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-159     |I92159|JUN07|159|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-161     |I92161|JUN09|161|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-162     |I92162|JUN10|162|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-163     |I92163|JUN11|163|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-164     |I92164|JUN12|164|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-165     |I92165|JUN13|165|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-166     |I92166|JUN14|166|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-168     |I92168|JUN16|168|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-171     |I92171|JUN19|171|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-172     |I92172|JUN20|172|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-175     |I92175|JUN23|175|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-176     |I92176|JUN24|176|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-177     |I92177|JUN25|177|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-178     |I92178|JUN26|178|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-179     |I92179|JUN27|179|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-180     |I92180|JUN28|180|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-182     |I92182|JUN30|182|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT92-184     |I92184|JUL02|184|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-186     |I92186|JUL04|186|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-187     |I92187|JUL05|187|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-189     |I92189|JUL07|189|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-191     |I92191|JUL09|191|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-192     |I92192|JUL10|192|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-193     |I92193|JUL11|193|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-194     |I92194|JUL12|194|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-196     |I92196|JUL14|196|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-197     |I92197|JUL15|197|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-198     |I92198|JUL16|198|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-199     |I92199|JUL17|199|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-200     |I92200|JUL18|200|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-201     |I92201|JUL19|201|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-207     |I92207|JUL25|207|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-208     |I92208|JUL26|208|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-209     |I92209|JUL27|209|     |   |MaG3                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-210     |I92210|JUL28|210|     |   |MaG3                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-211     |I92211|JUL29|211|     |   |MaG3                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-212     |I92212|JUL30|212|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-213     |I92213|JUL31|213|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT92-214     |I92214|AUG01|214|     |   |MaG3                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-215     |I92215|AUG02|215|     |   |MaG3                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-216     |I92216|AUG03|216|     |   |MaG3                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-217     |I92217|AUG04|217|     |   |MaG3                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-218     |I92218|AUG05|218|     |   |MaG3                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-219     |I92219|AUG06|219|     |   |MaG3                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-220     |I92220|AUG07|220|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-221     |I92221|AUG08|221|     |   |MaG3                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-222     |I92222|AUG09|222|     |   |MaG3                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-225     |I92225|AUG12|225|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-226     |I92226|AUG13|226|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-227     |I92227|AUG14|227|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-228     |I92228|AUG15|228|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-229     |I92229|AUG16|229|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-231     |I92231|AUG18|231|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-232     |I92232|AUG19|232|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-233     |I92233|AUG20|233|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-234     |I92234|AUG21|234|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-235     |I92235|AUG22|235|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-236     |I92236|AUG23|236|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-239     |I92239|AUG26|239|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-240     |I92240|AUG27|240|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-241     |I92241|AUG28|241|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT92-245     |I92245|SEP01|245|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-247     |I92247|SEP03|247|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-248     |I92248|SEP04|248|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-249     |I92249|SEP05|249|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-250     |I92250|SEP06|250|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-252     |I92252|SEP08|252|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-253     |I92253|SEP09|253|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-254     |I92254|SEP10|254|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-255     |I92255|SEP11|255|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-256     |I92256|SEP12|256|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-257     |I92257|SEP13|257|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-259     |I92259|SEP15|259|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-262     |I92262|SEP18|262|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-263     |I92263|SEP19|263|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-264     |I92264|SEP20|264|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-266     |I92266|SEP22|266|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-267     |I92267|SEP23|267|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-269     |I92269|SEP25|269|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-270     |I92270|SEP26|270|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-271     |I92271|SEP27|271|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT92-283     |I92283|OCT09|283|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-284     |I92284|OCT10|284|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-285     |I92285|OCT11|285|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-288     |I92288|OCT14|288|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-290     |I92290|OCT16|290|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-291     |I92291|OCT17|291|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-292     |I92292|OCT18|292|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-294     |I92294|OCT20|294|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-295     |I92295|OCT21|295|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-297     |I92297|OCT23|297|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-298     |I92298|OCT24|298|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-299     |I92299|OCT25|299|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-301     |I92301|OCT27|301|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-302     |I92302|OCT28|302|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-304     |I92304|OCT30|304|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-305     |I92305|OCT31|305|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT92-308     |I92308|NOV03|308|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-312     |I92312|NOV07|312|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-313     |I92313|NOV08|313|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-315     |I92315|NOV10|315|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-316     |I92316|NOV11|316|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-317     |I92317|NOV12|317|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-318     |I92318|NOV13|318|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-319     |I92319|NOV14|319|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-320     |I92320|NOV15|320|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-322     |I92322|NOV17|322|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-323     |I92323|NOV18|323|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-325     |I92325|NOV20|325|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-329     |I92329|NOV24|329|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-330     |I92330|NOV25|330|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-331     |I92331|NOV26|331|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-332     |I92332|NOV27|332|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-333     |I92333|NOV28|333|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-334     |I92334|NOV29|334|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT92-336     |I92336|DEC01|336|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-336     |J92336|DEC01|336|     |   |GcG3                         |NOAA|WASH|       |    |XJ|NASA|   0|    |
+|INT92-338     |I92338|DEC03|338|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-339     |I92339|DEC04|339|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-340     |I92340|DEC05|340|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-341     |I92341|DEC06|341|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-346     |I92346|DEC11|346|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-348     |I92348|DEC13|348|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-350     |I92350|DEC15|350|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-351     |I92351|DEC16|351|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-352     |I92352|DEC17|352|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-353     |I92353|DEC18|353|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-354     |I92354|DEC19|354|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-355     |I92355|DEC20|355|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-358     |I92358|DEC23|358|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-361     |I92361|DEC26|361|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-362     |I92362|DEC27|362|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-364     |I92364|DEC29|364|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+|INT92-366     |I92366|DEC31|366|     |   |WfWz                         |NOAA|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+## Master file format version 1.0           2001.08.21 CCT&NRV

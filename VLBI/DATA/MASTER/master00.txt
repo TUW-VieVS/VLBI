@@ -1,0 +1,155 @@
+## Master file format version 1.0           2001.08.21 CCT&NRV
+
+                         2000 MULTI-AGENCY SCHEDULE
+
+                     Last Updated - August 8, 2006 - CCT
+
+
+  SESSION  SESSION DATE  DOY TIME  DUR       STATIONS               SKED CORR STATUS  PF   DBC  SUBM  DEL  MK4
+    NAME     CODE  mondd ddd hh:mm hr                                         yymondd      CODE       days NUM
+----------------------------------------------------------------------------------------------------------------
+|NEOS-A349 |NA349 |JAN04|  4|18:00|24|FtGcGnKkMaWz                 |USNO|WASH|00MAY09|    | XE |USNO|     |    |
+|IRIS-S146 |IS146 |JAN10| 10|14:00|24|FtGcHhWfWz                   |BONN|BONN|00MAR14|4.0 | XH |BONN|     |    |
+|CORE-A079 |CA079 |JAN11| 11|18:00|24|ApGcHhMaTsWf                 |NASA|WASH|00MAR09|    | XA |NASA|     |    |
+|NEOS-A350 |NA350 |JAN11| 11|18:00|24|FtGnKkNyWz                   |USNO|WASH|00SEP27|    | XE |USNO|     |    |
+|CORE-B801 |CB801 |JAN12| 12|18:30|24|GnKkNtNyShUrYb               |NASA|HAYS|00MAY19|    | XA |NASA|     |    |
+|NEOS-A351 |NA351 |JAN18| 18|18:00|24|FtGcGnKkTsWz                 |USNO|WASH|00APR25|    | XE |USNO|     |    |
+|CORE-A080 |CA080 |JAN25| 25|18:00|24|ApGcHhMaTsWf                 |NASA|WASH|00APR24|    | XA |NASA|     |    |
+|NEOS-A352 |NA352 |JAN25| 25|18:00|24|FtGnKkNyWz                   |USNO|WASH|00JUL24|    | XE |USNO|     |    |
+|EUROPE-53 |EURO53|JAN27| 27|12:00|24|MaMcNtNyOnTgWzYb             |BONN|BONN|00MAR20|4.2 | XA |BONN|     |    |
+|VLBA19    |RDV19 |JAN31| 31|14:00|24|GcHhKkMaMcNyOnTsVaWfWz       |NASA|VLBA|00MAR07|0.6 | XB |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|NEOS-A353 |NA353 |FEB01| 32|18:00|24|ApFtGcGnKkWz                 |USNO|WASH|00FEB17|    | XE |USNO|     |    |
+|SYOWA-08  |SYW008|FEB02| 33|08:00|24|HhHoSy                       |JARE|MITA| Ready |    | XX |NIPR|     |    |
+|COR-OHG10 |COHG10|FEB03| 34|12:00|24|FtHhHoKkOh                   |BONN|BONN|00JUL24|3.6 | XA |BONN|     |    |
+|EUROPE-54 |EURO54|FEB07| 38|12:00|24|MaMcNtNyOnTgWzYb             |BONN|BONN|00APR20|6.5 | XA |BONN|     |    |
+|COR-OHG11 |COHG11|FEB07| 38|14:00|24|FtHhHoKkOh                   |BONN|BONN|00JUL24|3.3 | XB |BONN|     |    |
+|CORE-A081 |CA081 |FEB08| 39|18:00|24|ApGcHhMaTsWf                 |NASA|WASH|00MAR28|    | XA |NASA|     |    |
+|NEOS-A354 |NA354 |FEB08| 39|18:00|24|FtGnKkNyWz                   |USNO|WASH|00APR18|    | XE |USNO|     |    |
+|COR-OHG12 |COHG12|FEB10| 41|12:00|24|FtHhHoKkOhSy                 |BONN|BONN|00JUL24|6.5 | XA |BONN|     |    |
+|IRIS-S147 |IS147 |FEB14| 45|14:00|24|FtGcHhHoOhWfWz               |BONN|BONN|00MAY15|5.9 | XH |BONN|     |    |
+|NEOS-A355 |NA355 |FEB15| 46|18:00|24|ApFtGcGnKkWz                 |USNO|WASH|00MAR01|    | XE |USNO|     |    |
+|NEOS-A356 |NA356 |FEB22| 53|18:00|24|FtGnKkNyWz                   |USNO|WASH|00MAR07|    | XE |USNO|     |    |
+|JADE-0001 |JD0001|FEB28| 59|05:00|24|AiCcKaTs                     |GSI |GSI |00JUN22|    | XF |GSI |     |    |
+|NEOS-A357 |NA357 |FEB29| 60|18:00|24|FtGcGnKkMaWz                 |USNO|WASH|00MAR13|    | XE |USNO|     |    |
+----------------------------------------------------------------------------------------------------------------
+|JPN-TIES2 |JPNTI2|MAR06| 66|05:00|24|K1KaKbKgMuTaTs               |GSI |CRL |00APR05|    | XX |GSI |     |    |
+|NEOS-A358 |NA358 |MAR07| 67|18:00|24|FtGnKkNyWz                   |USNO|WASH|00MAR20|    | XE |USNO|     |    |
+|VLBA20    |RDV20 |MAR13| 73|14:00|24|GcHhKkMaMcNyOnTsVaWfWz       |NASA|VLBA|00MAY09|0.5 | XA |NASA|     |    |
+|NEOS-A359 |NA359 |MAR14| 74|18:00|24|ApFtGcGnKkWz                 |USNO|WASH|00MAR27|    | XE |USNO|     |    |
+|EUROPE-55 |EURO55|MAR16| 76|12:00|24|MaMcNyOnWz                   |BONN|BONN|00MAY08|1.8 | XA |BONN|     |    |
+|SYOWA-09  |SYW009|MAR20| 80|08:00|24|HhHoSy                       |JARE|MITA|Wt_set |    | XX |NIPR|     |    |
+|NEOS-A360 |NA360 |MAR21| 81|18:00|24|FtGnKkNyWz                   |USNO|WASH|00APR04|    | XE |USNO|     |    |
+|CORE-A082 |CA082 |MAR21| 81|18:00|24|ApGcHhHoMaTs                 |NASA|HAYS|00JUN23|    | XA |NASA|     |    |
+|IRIS-S148 |IS148 |MAR27| 87|14:00|24|FtHhWfWz                     |BONN|BONN|00MAY15|2.2 | XH |BONN|     |    |
+|NEOS-A361 |NA361 |MAR28| 88|18:00|24|FtGcGnKkWfWz                 |USNO|WASH|00APR11|    | XE |USNO|     |    |
+----------------------------------------------------------------------------------------------------------------
+|NEOS-A362 |NA362 |APR04| 95|18:00|24|FtGnKkNyWz                   |USNO|WASH|00APR17|    | XE |USNO|     |    |
+|NEOS-A363 |NA363 |APR11|102|18:00|24|GcGnKkMaWz                   |USNO|WASH|00APR25|    | XE |USNO|     |    |
+|NEOS-A364 |NA364 |APR18|109|18:00|24|GnKkNyWz                     |USNO|WASH|00MAY03|    | XE |USNO|     |    |
+|CORE-A083 |CA083 |APR18|109|18:00|24|ApGcHhHoMaTs                 |NASA|HAYS|00JUN15|    | XA |NASA|     |    |
+|IRIS-S149 |IS149 |APR24|115|14:00|24|GcHhWfWz                     |BONN|BONN|00MAY29|2.1 | XH |BONN|     |    |
+|NEOS-A365 |NA365 |APR25|116|18:00|24|ApGcGnKkWz                   |USNO|WASH|00MAY08|    | XE |USNO|     |    |
+----------------------------------------------------------------------------------------------------------------
+|NEOS-A366 |NA366 |MAY02|123|18:00|24|GnKkNyWz                     |USNO|WASH|00MAY15|    | XE |USNO|     |    |
+|IRIS-S150 |IS150 |MAY08|129|14:00|24|FtGcHhWfWz                   |BONN|BONN|00JUN16|4.3 | XH |BONN|     |    |
+|NEOS-A367 |NA367 |MAY09|130|18:00|24|ApFtGcGnKkWz                 |USNO|WASH|00JUN01|    | XE |USNO|     |    |
+|CORE-B701 |CB701 |MAY10|131|18:30|24|ApFtNySmTsYk                 |NASA|HAYS|00AUG03|    | XA |NASA|     |    |
+|EUROPE-56 |EURO56|MAY15|136|12:00|24|MaMcNtOnTgWzYb               |BONN|BONN|00AUG07|4.4 | XA |BONN|     |    |
+|NEOS-A368 |NA368 |MAY16|137|18:00|24|FtGnKkWz                     |USNO|WASH|00MAY23|    | XE |USNO|     |    |
+|VLBA21    |RDV21 |MAY22|143|14:00|24|GcGgHhKkMaMcNyTsVaWfWz       |NASA|VLBA|00JUL21|0.5 | XA |NASA|     |    |
+|NEOS-A369 |NA369 |MAY23|144|18:00|24|FtGcGnKkWzYk                 |USNO|WASH|00JUN06|    | XE |USNO|     |    |
+|KSP00148  |K00148|MAY27|148|02:00|24|K1KgMuTa                     |CRL |CRL |Cleanup|    | XX |NASA|     |    |
+|NEOS-A370 |NA370 |MAY30|151|18:00|24|FtGnKkNyWz                   |USNO|WASH|00JUN12|    | XE |USNO|     |    |
+----------------------------------------------------------------------------------------------------------------
+|NEOS-A371 |NA371 |JUN06|158|18:00|24|FtGcGnKkWfWz                 |USNO|WASH|00JUN16|    | XE |USNO|     |    |
+|SURVEY-001|SUR001|JUN08|160|12:00|24|GcKkTs                       |NASA|WASH|00NOV28|    | XA |NASA|     |    |
+|JPN-TIES3 |JPNTI3|JUN13|165|05:00|24|K1KaKgMuTaTs                 |GSI |CRL |00JUL13|    | XX |GSI |     |    |
+|NEOS-A372 |NA372 |JUN13|165|18:00|24|FtGnKkNy                     |USNO|WASH|00JUN25|    | XE |USNO|     |    |
+|CG019     |CG019 |JUN15|167|17:15|24|ApPe                         |CANA|PENT|00JUL18|    | XG |CANA|     |    |
+|IRIS-S151 |IS151 |JUN19|171|14:00|24|FtGcWfWz                     |BONN|BONN|00AUG28|4.4 | XH |BONN|     |    |
+|JADE-0002 |JD0002|JUN20|172|05:00|24|AiCcS3Ts                     |GSI |GSI |00AUG08|    | XF |GSI |     |    |
+|NEOS-A373 |NA373 |JUN20|172|18:00|24|ApFtGcGnKkWz                 |USNO|WASH|00JUL03|    | XE |USNO|     |    |
+|KSP-00178 |K00178|JUN26|178|02:00|24|K1KgMuTa                     |CRL |CRL |Cleanup|    | XX |NASA|     |    |
+|CORE-A084 |CA084 |JUN27|179|18:00|24|ApGcHhHoMaTs                 |NASA|HAYS|01JUN21|    | XA |NASA|     |    |
+|NEOS-A374 |NA374 |JUN27|179|18:00|24|FtGnKkNyWz                   |USNO|WASH|00JUL11|    | XE |USNO|     |    |
+----------------------------------------------------------------------------------------------------------------
+|SYOWA-10  |SYW010|JUL03|185|08:00|24|HhHoSy                       |JARE|MITA|Wt_set |    | XX |NIPR|     |    |
+|NEOS-A375 |NA375 |JUL05|187|18:00|24|ApFtGcKkWz                   |USNO|WASH|00JUL19|    | XE |USNO|     |    |
+|VLBA22    |RDV22 |JUL06|188|19:00|24|GcGgHhKkMaNyTsVaWfWz         |NASA|VLBA|00JUL31|0.5 | XA |NASA|     |    |
+|CORE-1001 |C1001 |JUL10|192|17:30|24|ApGcHhHoMaTs                 |NASA|HAYS|00SEP26|    | XA |NASA|     |    |
+|NEOS-A376 |NA376 |JUL11|193|18:00|24|ApFtKkNyWz                   |USNO|WASH|00JUL26|    | XE |USNO|     |    |
+|CORE-3001 |C3001 |JUL12|194|18:30|24|KkMaOnWfWz                   |NASA|HAYS|00SEP25|    | XA |NASA|     |    |
+|NEOS-A377 |NA377 |JUL18|200|18:00|24|ApFtGcKkWz                   |USNO|WASH|00JUL31|    | XE |USNO|     |    |
+|IRIS-S152 |IS152 |JUL24|206|14:00|24|FtGcHhTgWfWz                 |BONN|BONN|01JAN05|    | XH |BONN|     |    |
+|NEOS-A378 |NA378 |JUL25|207|18:00|24|ApFtKkNyWz                   |USNO|WASH|00AUG08|    | XE |USNO|     |    |
+----------------------------------------------------------------------------------------------------------------
+|NEOS-A379 |NA379 |AUG01|214|18:00|24|ApFtGcKkWzYk                 |USNO|WASH|00AUG15|    | XE |USNO|     |    |
+|EUROPE-57 |EURO57|AUG07|220|12:00|24|MaNtNyOnWz                   |BONN|BONN|01JAN10|    | XA |BONN|     |    |
+|SYOWA-11  |SYW011|AUG08|221|08:00|24|HhHoSy                       |JARE|MITA|Wt_set |    | XX |NIPR|     |    |
+|NEOS-A380 |NA380 |AUG08|221|18:00|24|ApFtKkNyWz                   |USNO|WASH|00AUG22|    | XE |USNO|     |    |
+|CG022     |CG022 |AUG10|223|02:00|24|ApPeYk                       |CANA|PENT|00AUG18|    | XG |CANA|     |    |
+|IRIS-S153 |IS153 |AUG14|227|14:00|24|FtHhWfWz                     |BONN|BONN|01JAN08|    | XH |BONN|     |    |
+|NEOS-A381 |NA381 |AUG15|228|18:00|24|ApFtKkWz                     |USNO|WASH|00AUG25|    | XE |USNO|     |    |
+|CRF-MS4   |BF43C |AUG17|230|16:00|24|ApFtGcKkKpSc                 |USNO|WASH|01JUN27|    | XN |USNO|     |    |
+|CORE-1002 |C1002 |AUG21|234|17:30|24|ApGcHhHoMaTs                 |NASA|HAYS|01FEB10|    | XA |NASA|     |    |
+|NEOS-A382 |NA382 |AUG22|235|18:00|24|ApFtKkNyWz                   |USNO|WASH|00SEP07|    | XE |USNO|     |    |
+|CORE-3002 |C3002 |AUG23|236|18:30|24|GcKkMaWfWz                   |NASA|HAYS|01APR20|    | XA |NASA|     |    |
+|NEOS-A383 |NA383 |AUG29|242|18:00|24|ApFtGcKkMaWz                 |USNO|WASH|00SEP14|    | XE |USNO|     |    |
+|CRF-9     |CRF09 |AUG30|243|20:00|24|HoKkTs                       |USNO|WASH|01MAR02|    | XN |USNO|     |    |
+----------------------------------------------------------------------------------------------------------------
+|EUROPE-58 |EURO58|SEP04|248|12:00|24|65MaNtNyOnWz                 |BONN|BONN|01JAN10|    | XA |BONN|     |    |
+|NEOS-A384 |NA384 |SEP05|249|18:00|24|FtKkNyWz                     |USNO|WASH|00SEP25|    | XE |USNO|     |    |
+|JADE-0003 |JD0003|SEP07|251|05:00|24|AiCcGiKaS3Ts                 |GSI |GSI |  IP   |    | XF |GSI |     |    |
+|SYOWA-12  |SYW012|SEP11|255|08:00|24|HhHoSy                       |JARE|MITA|Wt_set |    | XX |NIPR|     |    |
+|JPN-TIES4 |JPNTI4|SEP12|256|05:00|24|K1KaKbKgMuTaTs               |GSI |CRL |Wt_set |    | XX |GSI |     |    |
+|NEOS-A385 |NA385 |SEP12|256|18:00|24|ApGcKkWz                     |USNO|WASH|00SEP21|    | XE |USNO|     |    |
+|IRIS-S154 |IS154 |SEP14|258|14:00|24|GcHhWfWz                     |BONN|BONN|01JAN08|    | XH |BONN|     |    |
+|CORE-1003 |C1003 |SEP18|262|17:30|24|ApGcHhHoMaTs                 |NASA|HAYS|01FEB23|    | XA |NASA|     |    |
+|NEOS-A386 |NA386 |SEP19|263|18:00|24|ApFtKkNyWz                   |USNO|WASH|00SEP29|    | XE |USNO|     |    |
+|CORE-3003 |C3003 |SEP20|264|18:30|24|GcKkMaNyWfWz                 |NASA|HAYS|01MAY17|    | XA |NASA|     |    |
+|CG026     |CG026 |SEP20|264|23:30|24|ApPeYk                       |CANA|PENT|00OCT10|    | XG |CANA|     |    |
+|CORE-1004 |C1004 |SEP25|269|17:30|24|ApGcHhHoMaShTs               |NASA|HAYS|01JUL19|    | XA |NASA|     |    |
+|NEOS-A387 |NA387 |SEP26|270|18:00|24|ApFtGcKkWzYk                 |USNO|WASH|00OCT10|    | XE |USNO|     |    |
+----------------------------------------------------------------------------------------------------------------
+|APSG-7    |APSG7 |OCT02|276|16:00|24|GcKkShTs                     |NASA|WASH|01FEB26|    | XA |NASA|     |    |
+|NEOS-A388 |NA388 |OCT03|277|18:00|24|ApFtKkNyWz                   |USNO|WASH|00OCT18|    | XE |USNO|     |    |
+|SYOWA-13  |SYW013|OCT05|279|08:00|24|HhHoSy                       |JARE|MITA|Wt_set |    | XX |NIPR|     |    |
+|COR-OHG13 |COHG13|OCT09|283|14:00|24|FtHhHoKkOhSy                 |BONN|BONN|01JUN15|    | XA |BONN|     |    |
+|NEOS-A389 |NA389 |OCT10|284|18:00|24|ApFtGcKkWz                   |USNO|WASH|00OCT23|    | XE |USNO|     |    |
+|JPN-TIES5 |JPNTI5|OCT11|285|05:00|24|K1KaKbKgMuTaTs               |GSI |CRL |Wt_set |    | XX |GSI |     |    |
+|IRIS-S155 |IS155 |OCT11|285|18:30|24|FtGcHhOhWfWz                 |BONN|BONN|01JAN29|    | XH |BONN|     |    |
+|CORE-B702 |CB702 |OCT16|290|16:00|24|65ApFtNySmTs                 |NASA|HAYS|00DEC29|    | XA |NASA|     |    |
+|NEOS-A390 |NA390 |OCT17|291|18:00|24|ApFtKkNyWz                   |USNO|WASH|00NOV01|    | XE |USNO|     |    |
+|CORE-3004 |C3004 |OCT18|292|18:30|24|GcKkMaOnWfWz                 |NASA|HAYS|01MAY17|    | XA |NASA|     |    |
+|VLBA23    |RDV23 |OCT23|297|14:00|24|GcGgHhKkMaMcNyTsVaWfWz       |NASA|VLBA|00DEC04|    | XB |NASA|     |    |
+|NEOS-A391 |NA391 |OCT24|298|18:00|24|ApFtGcKkWfWz                 |USNO|WASH|00NOV08|    | XE |USNO|     |    |
+|CG027     |CG027 |OCT25|299|19:00|24|ApPeYk                       |CANA|PENT|00NOV23|    | XG |CANA|     |    |
+|CORE-1005 |C1005 |OCT30|304|17:30|24|ApGcHhHoMaTs                 |NASA|HAYS|01APR05|    | XA |NASA|     |    |
+|NEOS-A392 |NA392 |OCT31|305|18:00|24|ApFtKkNyWz                   |USNO|WASH|00NOV13|    | XE |USNO|     |    |
+----------------------------------------------------------------------------------------------------------------
+|CORE-3005 |C3005 |NOV01|306|18:30|24|GcKkMaOnWz                   |NASA|HAYS|01MAY18|    | XA |NASA|     |    |
+|CORE-B802 |CB802 |NOV02|307|19:00|24|ApKkNtNyShUrYb               |NASA|HAYS|01JUL20|    | XA |NASA|     |    |
+|JPN-TIES6 |JPNTI6|NOV07|312|05:00|24|K1KaKbKgMuTaTs               |GSI |CRL |Wt_set |    | XX |GSI |     |    |
+|NEOS-A393 |NA393 |NOV07|312|18:00|24|ApGcWz                       |USNO|WASH|00NOV16|    | XE |USNO|     |    |
+|JADE-0004 |JD0004|NOV13|318|05:00|24|AiCcGiKaS3Ts                 |GSI |GSI |Wt_set |    | XF |GSI |     |    |
+|IRIS-S156 |IS156 |NOV13|318|14:00|24|FtGcTgWfWz                   |BONN|BONN|01FEB06|    | XH |BONN|     |    |
+|NEOS-A394 |NA394 |NOV14|319|18:00|24|ApFtKkNyWz                   |USNO|WASH|00NOV29|    | XE |USNO|     |    |
+|SYOWA-14  |SYW014|NOV20|325|08:00|24|HhHoSy                       |JARE|MITA|Wt_set |    | XX |NIPR|     |    |
+|NEOS-A395 |NA395 |NOV21|326|18:00|24|ApFtGcKkMaWz                 |USNO|WASH|00DEC18|    | XE |USNO|     |    |
+|CORE-1006 |C1006 |NOV27|332|17:30|24|ApGcHhHoMaTs                 |NASA|HAYS|01APR12|    | XA |NASA|     |    |
+|NEOS-A396 |NA396 |NOV28|333|18:00|24|ApFtKkNyWz                   |USNO|WASH|00DEC11|    | XE |USNO|     |    |
+----------------------------------------------------------------------------------------------------------------
+|VLBA24    |RDV24 |DEC04|339|14:00|24|GcGgHhKkMaMcNyTsVaWfWz       |NASA|VLBA|01FEB12|    | XB |NASA|     |    |
+|NEOS-A397 |NA397 |DEC05|340|18:00|24|ApFtGcKkWz                   |USNO|WASH|00DEC13|    | XE |USNO|     |    |
+|CG028     |CG028 |DEC06|341|19:00|24|ApPe                         |CANA|PENT|00DEC28|    | XG |CANA|     |    |
+|EUROPE-59 |EURO59|DEC07|342|12:00|24|65EbMcNyOnWz                 |BONN|BONN|01JAN12|    | XA |BONN|     |    |
+|SYOWA-15  |SYW015|DEC07|342|08:00|24|HhHoSy                       |JARE|MITA|Wt_set |    | XX |NIPR|     |    |
+|CORE-1007 |C1007 |DEC11|346|17:30|24|ApGcHhHoMaTs                 |NASA|HAYS|01APR23|    | XA |NASA|     |    |
+|NEOS-A398 |NA398 |DEC12|347|18:00|24|ApFtKkNyWz                   |USNO|WASH|00DEC26|    | XE |USNO|     |    |
+|CORE-3006 |C3006 |DEC13|348|18:30|24|GcKkMaOnWfWz                 |NASA|HAYS|01JUN22|    | XA |NASA|     |    |
+|IRIS-S157 |IS157 |DEC18|353|14:00|24|FtGcHhTgWfWz                 |BONN|BONN|01FEB02|    | XH |BONN|     |    |
+|NEOS-A399 |NA399 |DEC19|354|18:00|24|ApFtGcKkWfWz                 |USNO|WASH|01JAN05|    | XE |USNO|     |    |
+|NEOS-A400 |NA400 |DEC27|362|18:00|24|ApFtKkWz                     |USNO|WASH|01JAN09|    | XE |USNO|     |    |
+----------------------------------------------------------------------------------------------------------------
+## Master file format version 1.0           2001.08.21 CCT&NRV

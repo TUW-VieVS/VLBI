@@ -1,0 +1,5 @@
+SITE               VLBI1   VLBI2[m]  (VLBI1-VLBI2) delta_ZTD[mm] delta_ZHD[mm] delta_ZWD[mm]  % Teke et al.(2011)
+HOBART12 HOBART26     41.39   65.51                     7.56        6.62       0.94
+HART15M  HARTRAO    1409.82 1416.11                     1.67        1.45       0.21
+WETTZ13N WETTZELL    673.02  669.55                    -1.03       -0.90      -0.13
+RAEGYEB  YEBES40M    977.38  989.35                     3.34        2.95       0.39

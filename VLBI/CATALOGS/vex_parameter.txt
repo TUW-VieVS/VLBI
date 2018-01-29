@@ -1,0 +1,234 @@
+* ###################################################################################### 
+* #          VEX Parameter File for VieVS Satellite Scheduling                         #
+* ######################################################################################
+*
+* Format: <Paraemter name>=<Parameter Value>
+* White space (\t, \b) between "=" and <Parameter_Value> is not considered.
+*
+* Use "*" in front of a line to specify a comment
+*
+*
+* ###### General settings ######
+* Select, if the "pointsectr" parameter in $SCHED block and the "pointing_sector" line in $ANTENNA block should be written for AZEL mount antennas:
+write_cable_wrap_sector= 	1
+*
+* Decide, if a combined VEX file, which can be used as correlator input (vex2difx), should be written: 
+write_combined_vex_file=    0
+* Select the station (8 char. station name!), where the $SCHED block (station dependent!) should be taken from.  
+comb_vex_file_ref_station= CEDUNA
+*
+* ###### Header #######
+*
+VEX_rev=				1.5
+vievs_version=	    3.0_sat_sched
+header_note=		VieVS Satellite Scheduling Module
+* tle_epoch= 
+* tle_filename= 
+*
+*
+* ###### $GLOBAL ######
+*
+*
+* ###### $EXPER ######
+*
+* All setable parameters are of the type char.
+* If a char string contains white space, the characters have to be within quotes ("...")!
+* Experiment description: Max. 128 characters long!
+exper_description=	"GNSS test observations"
+PI_name= 				"dummy"
+PI_email= 				dummy@.dummy.net
+contact_name= 			"dummy"
+contact_email= 			dummy@.dummy.net
+scheduler_name= 		"dummy"
+scheduler_email= 		dummy@.dummy.net
+target_correlator= 	DiFX 
+*
+*
+* ###### $SITE ######
+*
+* Get site data from catalog file "position.cat"
+site_type= 					fixed
+* site_position_epoch=
+*
+*
+* ###### $ANTENNA ######
+* 
+* Get antenna data from catalog file "antenna.cat"
+* antenna_note=
+*
+*
+* ###### $DAS ######
+*
+>WETTZELL.das(1)= 								Mark5A_Mark4
+>ONSALA85.das(1)= 								Mark5A_Mark4
+>ONSALA60.das(1)= 								Mark5A_Mark4
+>WETTZ13N.das(1)= 								DBBC_Mark5B
+>WETTDBBC.das(1)= 								DBBC_Mark5B
+>HOBART26.das(1)= 								Mark5A_Mark4_Ho
+>CEDUNA.das(1)= 								DBBC_Mark5B_Cd
+* das_note=
+*
+*
+* ###### $STATION ######
+*
+* Reference to $SITE, $DAS and $ANTENNA Blocks.
+* station_note=
+*
+*
+* ###### $SOURCE ######
+*
+ref_coord_frame=		J2000
+* source_notation - Defines the notation of the source labels. Availabe options:
+*										(doy = days oy year; d = day, h = hour, m = min, s = sec)
+*  									1 = <satellite_label>_<hhmmss>
+* 									2 = <satellite_label>_<hhmmss.ss>
+* 									3 = <satellite_label>_<doyhhmmss>
+* 									4 = <hhmmss>
+* 									5 = <doyhhmmss>
+*
+source_notation=		4
+* source_note=
+*
+*
+* ###### $PROCEDURES ######
+*
+* Use "= none" to skip the $PROCEDURES block in the VEX file
+*
+>WETTZELL.procedures(1)= 					mode_01
+>ONSALA85.procedures(1)= 					mode_01
+>ONSALA60.procedures(1)= 					mode_01
+>WETTZ13N.procedures(1)= 					mode_01
+>WETTDBBC.procedures(1)= 					mode_01
+>HOBART26.procedures(1)= 					mode_01
+>CEDUNA.procedures(1)= 						mode_01
+* procedures_note= 				
+*
+*
+* ###### $PHASE_CAL_DETECT ######
+*
+>WETTZELL.phase_cal_detect(1)= 		UsbDetect
+>ONSALA85.phase_cal_detect(1)= 		UsbDetect
+>ONSALA60.phase_cal_detect(1)= 		UsbDetect
+>WETTZ13N.phase_cal_detect(1)= 		Standard
+>WETTDBBC.phase_cal_detect(1)= 		Standard
+>HOBART26.phase_cal_detect(1)= 		NoDetect
+>CEDUNA.phase_cal_detect(1)= 		NoDetect
+* phase_cal_detect_note=
+*
+*
+* ###### $IF ######
+*
+>WETTZELL.if(1)= 									1200MHz_1A3N_R_U_1MHz
+>ONSALA85.if(1)= 									1220MHz_1A2N_R_U_1MHz
+>ONSALA60.if(1)= 									1220MHz_1A2N_R_U_1MHz
+*>ONSALA85.if(1)= 									1400MHz_1A2N_R_U_1MHz
+>WETTZ13N.if(1)= 									1LO1200MHz_R_U_1MHz_Wn
+>WETTDBBC.if(1)= 									1LO1200MHz_R_U_1MHz_Wn
+>HOBART26.if(1)= 									2LO1100MHzXYPolNoTone_Ho
+>CEDUNA.if(1)= 										2LO2150MHzXYPolNoTone_Cd
+* if_note=
+*
+*
+* ###### $BBC ######
+*
+>WETTZELL.bbc(1)= 								4BBC_Sat_Wz
+>ONSALA85.bbc(1)= 								4BBCs_On
+>ONSALA60.bbc(1)= 								4BBCs_On
+>WETTZ13N.bbc(1)= 								4BBCs_Wn
+>WETTDBBC.bbc(1)= 								4BBCs_Wn
+>HOBART26.bbc(1)= 								8BBCs_Ho
+>CEDUNA.bbc(1)= 								8BBCs_Cd
+* bbc_note=
+*
+*
+* ###### $TRACKS ######
+*
+>WETTZELL.tracks(1)= 							MK4_4Ch_2bit_1to4
+* >WETTZELL.tracks(1)= 							Mk4_4Ch_2bit_1to1
+>ONSALA85.tracks(1)= 							MK4_4Ch_2bit_1to4
+>ONSALA60.tracks(1)= 							MK4_4Ch_2bit_1to4
+>WETTZ13N.tracks(1)= 							Mk5B_4Ch_2bit_1to1
+>WETTDBBC.tracks(1)= 							Mk5B_4Ch_2bit_1to1
+>HOBART26.tracks(1)= 							Mk4_8Ch_2bit_1to1_Ho
+>CEDUNA.tracks(1)= 								Mk5B_08Ch_2bit_1to1_Cd
+* tracks_note=
+*
+*
+* ###### $FREQ ######
+* ><STATION_NAME>.freq(1)= <satellite frequency setup>
+* ><STATION_NAME>.freq(2)= <quasar frequency setup>
+*
+* >WETTZELL.freq(1)= 						CHAN4_BW8MHz_SR16MHz_Wz
+* >WETTZELL.freq(1)= 							TEST_SAT_Wz
+>WETTZELL.freq(1)= 							L1L2band_CHAN04_SR32MHz_Wz
+>WETTZELL.freq(2)= 							TEST_QUA_Wz
+>ONSALA85.freq(1)= 							TEST_SAT_Wz
+* >ONSALA85.freq(2)= 							TEST_QUA_Wz
+>ONSALA60.freq(1)= 							TEST_SAT_Wz
+>ONSALA60.freq(2)= 							TEST_QUA_Wz
+* >ONSALA85.freq(1)= 						CHAN4_BW8MHz_SR16MHz_O8
+>WETTZ13N.freq(1)= 							L1L2band_CHAN04_SR32MHz_Wn
+>WETTDBBC.freq(1)= 							L1L2band_CHAN04_SR32MHz_Wn
+>HOBART26.freq(1)= 							L1L2_Ho
+>HOBART26.freq(2)= 							L1L2_Ho
+>CEDUNA.freq(1)= 							L1L2_Cd
+>CEDUNA.freq(2)= 							L1L2_Cd
+* freq_note=
+*
+*
+* ###### $MODE ######
+* ><STATION_NAME>.mode(1)= <satellite mode setup>
+* ><STATION_NAME>.mode(2)= <quasar mode setup>
+*
+* >WETTZELL.mode(1)= 							GNSS_Wz
+* >WETTZELL.mode(1)= 							SAT_TEST
+>WETTZELL.mode(1)= 								L1L2_Wz
+>WETTZELL.mode(2)= 								QUASAR_TEST
+>ONSALA85.mode(1)= 								SAT_TEST
+* >ONSALA85.mode(2)= 							QUASAR_TEST
+>ONSALA60.mode(2)= 								QUASAR_TEST
+* >ONSALA85.mode(1)= 							GNSS_On
+>WETTZ13N.mode(1)= 								L1L2_Wn
+>WETTDBBC.mode(1)= 								L1L2_Wd
+>HOBART26.mode(1)= 								L1L2_Ho
+>HOBART26.mode(2)= 								L1L2_Ho
+>CEDUNA.mode(1)= 								L1L2_Cd
+>CEDUNA.mode(2)= 								L1L2_Cd
+* mode_note=
+*
+*
+* ###### $ROLL ######
+*
+>WETTZELL.roll(1)= 								No_Roll
+>ONSALA85.roll(1)= 								No_Roll
+>ONSALA60.roll(1)= 								No_Roll
+>WETTZ13N.roll(1)= 								No_Roll
+>WETTDBBC.roll(1)= 								No_Roll
+>HOBART26.roll(1)= 								No_Roll
+>CEDUNA.roll(1)= 								No_Roll
+* roll_note=
+*
+*
+* ###### $SCHED ######
+*
+* mode = "as definded above in $MODE section, parameter: ><station_name>.mode(1)"
+*
+* Flag to define, if stepwise satellite tracking should be used:
+flag_not_use_stepwise_sat_tracking=   0
+*
+data_start=												0 sec
+* data_stop = "equal to delta_t (= antenna repositioning interval)."	
+*											
+* Info for calculation of recording rate:
+* Sampling rate [MHz]
+sampling_rate=										32
+* Data resolution [bit]
+data_resolution=									2
+* Number of recorded channels:
+number_of_channels=								8
+*
+* pass=
+* pointsectr= "Not necessary to define the cable wrap here."
+* drive= "Parameter is set in Command Window Input!"
+* sched_note=
+*

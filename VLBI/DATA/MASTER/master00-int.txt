@@ -1,0 +1,290 @@
+## Master file format version 1.0           2001.08.21 CCT&NRV
+
+                    2000 MULTI-AGENCY INTENSIVES SCHEDULE
+
+                     Last Updated - June 22, 2004 - CCT
+
+
+  SESSION      SESSION DATE  DOY TIME DUR        STATIONS      
+   SKED CORR STATUS  PF  DBC SUBM DEL  MK4
+    NAME        CODE   mondd ddd hh:mm hr                                                      yymondd     CODE     days NUM
+------------------------------------------------------------------------------------------------------------------------------
+|INT00-001     |I00001|JAN01|  1|17:55|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-001     |J00001|JAN01|  1|19:55|1  |GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-003     |I00003|JAN03|  3|17:47|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-005     |I00005|JAN05|  5|04:39|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-005     |J00005|JAN05|  5|04:40|1.5|KkWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-006     |I00006|JAN06|  6|17:35|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-007     |I00007|JAN07|  7|17:31|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-008     |I00008|JAN08|  8|17:27|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-008     |J00008|JAN08|  8|21:27|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-010     |I00010|JAN10| 10|17:19|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-013     |I00013|JAN13| 13|17:07|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-014     |I00014|JAN14| 14|17:04|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-015     |I00015|JAN15| 15|17:00|1  |GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-015     |J00015|JAN15| 15|21:12|1  |GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-017     |I00017|JAN17| 17|16:52|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-019     |I00019|JAN19| 19|03:47|2  |GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-019     |J00019|JAN19| 19|03:48|1.5|Wz -Kk                                   |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-020     |I00020|JAN20| 20|16:40|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-021     |I00021|JAN21| 21|16:36|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-022     |I00022|JAN22| 22|16:32|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-022     |J00022|JAN22| 22|20:33|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-024     |I00024|JAN24| 24|16:24|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-027     |I00027|JAN27| 27|16:12|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-028     |I00028|JAN28| 28|16:09|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-029     |I00029|JAN29| 29|16:05|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-029     |J00029|JAN29| 29|20:04|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-031     |I00031|JAN31| 31|15:57|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT00-032     |I00032|FEB01| 32|15:53|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-033     |J00033|FEB02| 33|02:54|1.5|KkWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-034     |I00034|FEB03| 34|15:45|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-035     |I00035|FEB04| 35|15:41|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-036     |I00036|FEB05| 36|15:37|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-036     |J00036|FEB05| 36|19:38|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-038     |I00038|FEB07| 38|15:29|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-039     |I00039|FEB08| 39|15:25|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-040     |I00040|FEB09| 40|02:25|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-040     |I00040|FEB09| 40|02:25|1.5|KkWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-041     |I00041|FEB10| 41|15:17|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-042     |I00042|FEB11| 42|15:13|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-043     |I00043|FEB12| 43|15:10|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-043     |J00043|FEB12| 43|19:09|1.5|KkWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-045     |I00045|FEB14| 45|15:02|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-046     |I00046|FEB15| 46|14:58|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-048     |I00048|FEB17| 48|14:50|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-049     |I00049|FEB18| 49|14:46|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-050     |I00050|FEB19| 50|14:42|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-050     |J00050|FEB19| 50|18:43|1  |GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-052     |I00052|FEB21| 52|14:34|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-053     |I00053|FEB22| 53|14:30|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-054     |J00054|FEB23| 54|01:33|1  |KkWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-055     |I00055|FEB24| 55|14:22|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-056     |I00056|FEB25| 56|14:18|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-057     |I00057|FEB26| 57|14:14|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-057     |J00057|FEB26| 57|18:14|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-059     |I00059|FEB28| 59|14:07|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-060     |I00060|FEB29| 60|14:03|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT00-061     |I00061|MAR01| 61|01:02|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-061     |J00061|MAR01| 61|01:03|1.5|KkWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-062     |I00062|MAR02| 62|17:55|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-063     |I00063|MAR03| 63|17:51|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-064     |I00064|MAR04| 64|17:47|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-064     |J00064|MAR04| 64|21:27|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-066     |I00066|MAR06| 66|17:39|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-069     |I00069|MAR09| 69|17:27|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-070     |I00070|MAR10| 70|17:23|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-071     |I00071|MAR11| 71|17:19|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-071     |J00071|MAR11| 71|21:20|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-073     |I00073|MAR13| 73|17:12|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-075     |J00075|MAR15| 75|00:12|1.5|KkWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-076     |I00076|MAR16| 76|17:00|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-077     |I00077|MAR17| 77|16:56|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-078     |I00078|MAR18| 78|16:52|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-078     |J00078|MAR18| 78|20:52|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-080     |I00080|MAR20| 80|16:44|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-083     |I00083|MAR23| 83|16:32|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-084     |I00084|MAR24| 84|16:28|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-085     |I00085|MAR25| 85|16:24|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-085     |J00085|MAR25| 85|20:25|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-087     |I00087|MAR27| 87|16:17|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-088     |I00088|MAR28| 88|16:13|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-088     |J00088|MAR28| 88|23:17|1.5|KkWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-090     |I00090|MAR30| 90|16:05|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-091     |I00091|MAR31| 91|16:01|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT00-092     |I00092|APR01| 92|15:57|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-092     |J00092|APR01| 92|17:57|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-094     |I00094|APR03| 94|15:49|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-095     |I00095|APR04| 95|15:45|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-095     |J00095|APR04| 95|22:49|1.5|KkWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-097     |I00097|APR06| 97|15:37|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-098     |I00098|APR07| 98|15:33|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-000     |I00099|APR08| 99|13:29|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-000     |J00099|APR08| 99|15:29|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-101     |I00101|APR10|101|15:21|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-102     |I00102|APR11|102|15:18|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-102     |J00102|APR11|102|22:18|1.5|KkWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-104     |I00104|APR13|104|15:10|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-105     |I00105|APR14|105|15:06|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-106     |I00106|APR15|106|15:02|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-106     |J00106|APR15|106|19:02|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-108     |I00108|APR17|108|14:54|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-109     |I00109|APR18|109|14:50|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-109     |J00109|APR18|109|21:50|1.5|KkWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-111     |I00111|APR20|111|14:42|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-112     |I00112|APR21|112|14:38|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-113     |I00113|APR22|113|14:34|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-113     |J00113|APR22|113|16:34|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-115     |I00115|APR24|115|14:26|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-116     |I00116|APR25|116|14:23|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-116     |J00116|APR25|116|21:26|1.5|KkWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-118     |I00118|APR27|118|14:15|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-119     |I00119|APR28|119|14:11|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-120     |I00120|APR29|120|14:07|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-120     |J00120|APR29|120|18:08|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT00-122     |I00122|MAY01|122|17:59|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-123     |I00123|MAY02|123|20:50|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-123     |J00123|MAY02|123|20:50|1.5|KkWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-125     |I00125|MAY04|125|17:47|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-126     |I00126|MAY05|126|17:43|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-127     |I00127|MAY06|127|15:39|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-127     |J00127|MAY06|127|17:39|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-129     |I00129|MAY08|129|17:31|1  |GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-130     |I00130|MAY09|130|20:31|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-130     |J00130|MAY09|130|20:31|1.5|KkWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-132     |I00132|MAY11|132|17:20|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-133     |I00133|MAY12|133|17:16|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-134     |I00134|MAY13|134|17:12|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-134     |J00134|MAY13|134|21:01|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-136     |I00136|MAY15|136|17:04|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-137     |J00137|MAY16|137|20:06|1.5|KkWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-139     |I00139|MAY18|139|16:52|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-140     |I00140|MAY19|140|16:48|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-141     |I00141|MAY20|141|16:44|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-141     |J00141|MAY20|141|20:45|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-143     |I00143|MAY22|143|16:36|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-146     |I00146|MAY25|146|16:25|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-147     |I00147|MAY26|147|16:21|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-148     |I00148|MAY27|148|16:17|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-148     |J00148|MAY27|148|20:17|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-150     |I00150|MAY29|150|16:09|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-151     |I00151|MAY30|151|16:05|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT00-153     |I00153|JUN01|153|15:57|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-154     |I00154|JUN02|154|15:53|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-155     |I00155|JUN03|155|15:49|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-155     |J00155|JUN03|155|19:50|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-157     |I00157|JUN05|157|15:41|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-158     |I00158|JUN06|158|15:37|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-160     |I00160|JUN08|160|15:30|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-161     |I00161|JUN09|161|15:26|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-162     |I00162|JUN10|162|15:22|5  |GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-162     |J00162|JUN10|162|19:21|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-164     |I00164|JUN12|164|15:14|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-165     |I00165|JUN13|165|15:10|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-167     |I00167|JUN15|167|15:02|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-168     |I00168|JUN16|168|14:58|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-169     |I00169|JUN17|169|14:54|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-169     |J00169|JUN17|169|18:55|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-171     |I00171|JUN19|171|14:46|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-172     |I00172|JUN20|172|14:42|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-174     |I00174|JUN22|174|14:34|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-175     |I00175|JUN23|175|14:31|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-176     |I00176|JUN24|176|14:27|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-176     |J00176|JUN24|176|18:26|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-178     |I00178|JUN26|178|14:19|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-179     |I00179|JUN27|179|14:15|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-181     |I00181|JUN29|181|14:07|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-182     |I00182|JUN30|182|14:03|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT00-183     |I00183|JUL01|183|15:59|1.5|GnWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-183     |J00183|JUL01|183|17:59|1.5|GnWz                                     |USNO|WASH|       |    |XT|USNO|   0|    |
+|INT00-185     |I00185|JUL03|185|20:55|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-187     |I00187|JUL05|187|20:47|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-188     |I00188|JUL06|188|20:43|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-189     |I00189|JUL07|189|20:39|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-192     |I00192|JUL10|192|20:27|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-194     |I00194|JUL12|194|20:19|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-195     |I00195|JUL13|195|20:15|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-196     |I00196|JUL14|196|20:11|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-199     |I00199|JUL17|199|20:00|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-201     |I00201|JUL19|201|19:52|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-202     |I00202|JUL20|202|19:48|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-203     |I00203|JUL21|203|19:44|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-206     |I00206|JUL24|206|19:32|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-208     |I00208|JUL26|208|19:24|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-209     |I00209|JUL27|209|19:20|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-210     |I00210|JUL28|210|19:16|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-213     |I00213|JUL31|213|19:05|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT00-215     |I00215|AUG02|215|18:57|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-216     |I00216|AUG03|216|18:53|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-217     |I00217|AUG04|217|18:49|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-220     |I00220|AUG07|220|18:37|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-223     |I00223|AUG10|223|18:25|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-224     |I00224|AUG11|224|18:21|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-227     |I00227|AUG14|227|18:10|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-230     |I00230|AUG17|230|21:58|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-231     |I00231|AUG18|231|21:54|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-234     |I00234|AUG21|234|21:42|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-236     |I00236|AUG23|236|21:34|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-237     |I00237|AUG24|237|21:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-238     |I00238|AUG25|238|21:26|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-241     |I00241|AUG28|241|21:15|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-243     |I00243|AUG30|243|21:07|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-244     |I00244|AUG31|244|21:03|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT00-245     |I00245|SEP01|245|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-250     |I00250|SEP06|250|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-251     |I00251|SEP07|251|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-252     |I00252|SEP08|252|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-255     |I00255|SEP11|255|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-257     |I00257|SEP13|257|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-258     |I00258|SEP14|258|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-259     |I00259|SEP15|259|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-262     |I00262|SEP18|262|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-264     |I00264|SEP20|264|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-265     |I00265|SEP21|265|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-266     |I00266|SEP22|266|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-269     |I00269|SEP25|269|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-271     |I00271|SEP27|271|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-272     |I00272|SEP28|272|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-273     |I00273|SEP29|273|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT00-276     |I00276|OCT02|276|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-278     |I00278|OCT04|278|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-279     |I00279|OCT05|279|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-280     |I00280|OCT06|280|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-283     |I00283|OCT09|283|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-285     |I00285|OCT11|285|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-286     |I00286|OCT12|286|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-287     |I00287|OCT13|287|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-290     |I00290|OCT16|290|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-292     |I00292|OCT18|292|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-293     |I00293|OCT19|293|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-294     |I00294|OCT20|294|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-297     |I00297|OCT23|297|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-299     |I00299|OCT25|299|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-300     |I00300|OCT26|300|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-301     |I00301|OCT27|301|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-304     |I00304|OCT30|304|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT00-306     |I00306|NOV01|306|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-307     |I00307|NOV02|307|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-308     |I00308|NOV03|308|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-311     |I00311|NOV06|311|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-313     |I00313|NOV08|313|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-314     |I00314|NOV09|314|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-315     |I00315|NOV10|315|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-318     |I00318|NOV13|318|19:02|1  |KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-320     |I00320|NOV15|320|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-321     |I00321|NOV16|321|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-322     |I00322|NOV17|322|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-325     |I00325|NOV20|325|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-327     |I00327|NOV22|327|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-332     |I00332|NOV27|332|18:30|2  |KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-334     |I00334|NOV29|334|18:30|2  |KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-335     |I00335|NOV30|335|18:30|2  |KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT00-336     |I00336|DEC01|336|18:30|2  |KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-339     |I00339|DEC04|339|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-341     |I00341|DEC06|341|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-342     |I00342|DEC07|342|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-343     |I00343|DEC08|343|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-346     |I00346|DEC11|346|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-348     |I00348|DEC13|348|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-349     |I00349|DEC14|349|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-350     |I00350|DEC15|350|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-353     |I00353|DEC18|353|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-355     |I00355|DEC20|355|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-356     |I00356|DEC21|356|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-357     |I00357|DEC22|357|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-362     |I00362|DEC27|362|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-363     |I00363|DEC28|363|18:30|1.5|KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+|INT00-364     |I00364|DEC29|364|18:30|2  |KkWz                                     |USNO|WASH|       |    |XU|USNO|   0|    |
+------------------------------------------------------------------------------------------------------------------------------
+## Master file format version 1.0           2001.08.21 CCT&NRV

@@ -1,0 +1,42 @@
+## Master file format version 1.0           2001.08.21 CCT&NRV
+
+                         1980 MULTI-AGENCY SCHEDULE
+
+                     Last Updated - June 25, 2002 - CCT
+
+
+  SESSION  SESSION DATE  DOY TIME  DUR       STATIONS               SKED CORR STATUS  PF   DBC  SUBM  DEL  MK4
+    NAME     CODE  mondd ddd hh:mm hr                                         yymondd      CODE       days NUM
+----------------------------------------------------------------------------------------------------------------
+|DSN-JAN12 |DSN801|JAN12|12 |     |  |14Ti                         |JPL |HAYS|       |    |D   |NASA|     |    |
+|DSN-JAN25 |DSN802|JAN25|25 |     |  |14RoTi                       |JPL |HAYS|       |    |D   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|X-US      |XUS801|APR11|102|     |  |HrOoHsGb                     |NASA|HAYS|       |    |XQ  |NASA|     |    |
+|HD-SURVEY |HDSRVY|APR13|104|     |  |HrOoHsGb                     |NASA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|MERIT-1   |MERT01|JUL26|208|     |  |HrOoHsEbOn                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|MERIT-2   |MERT02|JUL27|209|     |  |HsHrEbOoOn                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|MERIT-3   |MERT03|JUL28|210|     |  |HrOoHsEbOn                   |NASA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|MERIT-4   |MERT04|SEP26|270|     |  |EbOoHrHsOn                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|MERIT-5   |MERT05|SEP27|271|     |  |HrEbOoHsOn                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|MERIT-6   |MERT06|SEP28|272|     |  |HsOoHrEbOn                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|MERIT-7   |MERT07|SEP29|273|     |  |HsHrOoOn                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|MERIT-8   |MERT08|SEP30|274|     |  |HrOoHsOn                     |NASA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|MERIT-9   |MERT09|OCT01|275|     |  |HrOoHsOn                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|MERIT-10  |MERT10|OCT02|276|     |  |HrOoHsOn                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|MERIT-11  |MERT11|OCT16|290|     |  |OnChHsHrOo                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|MERIT-12  |MERT12|OCT17|291|     |  |HsChHrOnOo                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|MERIT-13  |MERT13|OCT18|292|     |  |HsOnHrOoCh                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|MERIT-14  |MERT14|OCT19|293|     |  |HsChHrOn                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|MERIT-15  |MERT15|OCT20|294|     |  |HsChHrOoOn                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|MERIT-16  |MERT16|OCT21|295|     |  |HsChHrOoOn                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|MERIT-17  |MERT17|OCT22|296|     |  |HsChHrOoOn                   |NASA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|POLA-001  |POL001|NOV03|308|     |  |HsHr                         |NOAA|HAYS|       |    |XA  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|POLA-003  |POL003|DEC01|336|     |  |HsHrOn                       |NOAA|HAYS|       |    |XA  |NASA|     |    |
+|POLA-004  |POL004|DEC19|354|     |  |HrHsOn                       |NOAA|HAYS|       |    |XA  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+## Master file format version 1.0           2001.08.21 CCT&NRV

@@ -1,0 +1,183 @@
+## Master file format version 1.0           2001.08.21 CCT&NRV
+
+                         1995 MULTI-AGENCY SCHEDULE
+
+                     Last Updated - December 27, 2007 - CCT
+
+
+  SESSION  SESSION DATE  DOY TIME  DUR       STATIONS               SKED CORR STATUS  PF   DBC  SUBM  DEL  MK4
+    NAME     CODE  mondd ddd hh:mm hr                                         yymondd      CODE       days NUM
+----------------------------------------------------------------------------------------------------------------
+|NEOS-A088 |NA088 |JAN03|  3|18:00|24|FtG3KkWz                     |USNO|WASH|       |    |XE  |NASA|     |    |
+|IRIS-S86  |IS086 |JAN09|  9|13:00|24|FtHhWfWz                     |BONN|BONN|       |    |XH  |NASA|     |    |
+|NEOS-A089 |NA089 |JAN10| 10|18:00|24|FtG3GcKkWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|NEOS-A090 |NA090 |JAN17| 17|18:00|24|FtG3KkWz                     |USNO|WASH|       |    |XE  |NASA|     |    |
+|KSP-95017 |K95017|JAN17| 17|08:00|22|KbKz                         |CRL |CRL |       |    |XX  |NASA|     |    |
+|CRF-N1    |CRFN1 |JAN18| 18|20:00|24|ApG3GcWz                     |USNO|WASH|       |    |XN  |NASA|     |    |
+|KSP-95019 |K95019|JAN19| 19|00:00|24|K3Kb                         |CRL |CRL |       |    |XX  |NASA|     |    |
+|R&D-1     |RD9501|JAN23| 23|16:00|24|FdGcKkLaOnWfWz               |NASA|HAYS|       |    |XC  |NASA|     |    |
+|NAPS-1    |NAP951|JAN23| 23|16:00|24|ApBrHnKpOv                   |NASA|HAYS|       |    |XB  |NASA|     |    |
+|GLOBL-TRF1|RDGTR1|JAN23| 23|16:00|24|FtG3HhHoMaMkPtScSmSt         |USNO|WASH|       |    |XA  |NASA|     |    |
+|NEOS-A091 |NA091 |JAN24| 24|18:00|24|FtG3GcKkWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|STH-TRF-01|STRF01|JAN26| 26|14:00|24|FtHhHoKkOhSt                 |BONN|BONN|       |    |XA  |NASA|     |    |
+|POLAR-S1  |PL95S1|JAN30| 30|14:00|24|HhHoOhSt                     |NASA|WASH|       |    |XA  |NASA|     |    |
+|NEOS-A092 |NA092 |JAN31| 31|18:00|24|FtG3KkWz                     |USNO|WASH|       |    |XE  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|POLRZATON1|PLZ951|FEB01| 32|20:00|24|FdHnKpLa                     |NASA|HAYS|       |    |XE  |NASA|     |    |
+|NAPS-2    |NAP952|FEB01| 32|20:00|24|ApBrNlOvWf                   |NASA|WASH|       |    |XA  |NASA|     |    |
+|EUROPE-23 |EURO23|FEB01| 32|20:00|24|65MaMcNtNyOnSmWz             |BONN|BONN|       |    |XC  |NASA|     |    |
+|GEOCAT-N1 |GC95N1|FEB01| 32|20:00|24|GcMkPt                       |NASA|HAYS|       |    |XB  |NASA|     |    |
+|GEOCAT-S  |GC95S |FEB01| 32|20:00|24|FtHhScSt                     |NASA|HAYS|       |    |XD  |NASA|     |    |
+|R&D-2     |RD9502|FEB02| 33|22:00|24|FdGcKkLaNyOnWfWz             |NASA|HAYS|       |    |XB  |NASA|     |    |
+|GGAO-RD-21|RDGG21|FEB02| 33|22:00|24|ApGgHnNlSc                   |NASA|HAYS|       |    |XA  |NASA|     |    |
+|PHSE-DELY1|PD9501|FEB02| 33|22:00|24|BrKpMkOvPt                   |NASA|HAYS|       |    |XC  |NASA|     |    |
+|NEOS-A093 |NA093 |FEB07| 38|18:00|24|FtG3GcGnKkWz                 |USNO|WASH|       |    |XE  |NASA|     |    |
+|POLAR-S2  |PL95S2|FEB13| 44|14:00|24|45HhHoOhSt                   |NASA|WASH|       |    |XA  |NASA|     |    |
+|NEOS-A094 |NA094 |FEB14| 45|18:00|24|FtG3GnKkWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|IRIS-S87  |IS087 |FEB15| 46|20:00|24|FtHhWfWz                     |BONN|BONN|       |    |XH  |NASA|     |    |
+|NEOS-A095 |NA095 |FEB21| 52|18:00|24|FtG3GcGnWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|GB-TIES1  |GBTIE1|FEB22| 53|20:00|24|G3GbGn                       |NASA|WASH|       |    |XA  |NASA|     |    |
+|KSP-95053 |K95053|FEB22| 53|00:00|24|K1Kg                         |CRL |CRL |       |    |XX  |NASA|     |    |
+|STH-TRF-02|STRF02|FEB23| 54|14:00|24|45FtHhHoOhSt                 |NASA|WASH|       |    |XA  |NASA|     |    |
+|NEOS-A096 |NA096 |FEB28| 59|18:00|24|FtG3Wz                       |USNO|WASH|       |    |XE  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|IRIS-S88  |IS088 |MAR02| 61|13:00|24|FtHhWfWz                     |BONN|BONN|       |    |XH  |NASA|     |    |
+|GLOBL-TRF2|GTRF2 |MAR06| 65|14:00|24|45FtGcKbKkNySmWfWz           |NASA|WASH|       |    |XA  |NASA|     |    |
+|NEOS-A097 |NA097 |MAR07| 66|18:00|24|FtG3GcKkWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|GGAO-RD-22|RDGG22|MAR13| 72|16:00|24|ApGgHnNlSc                   |NASA|HAYS|       |    |XA  |NASA|     |    |
+|R&D-3     |RD9503|MAR13| 72|16:00|24|FdKkLaOnOvWfWz               |NASA|HAYS|       |    |XB  |NASA|     |    |
+|CRF-MSW1  |RDMSW1|MAR13| 72|16:00|24|HoKbMk                       |USNO|WASH|       |    |XN  |NASA|     |    |
+|X-Atlantic|XTL951|MAR13| 72|16:00|24|65BrKpMaNyPt                 |NASA|WASH|       |    |XC  |NASA|     |    |
+|NEOS-A098 |NA098 |MAR14| 73|18:00|24|FtG3KkWz                     |USNO|WASH|       |    |XE  |NASA|     |    |
+|NEOS-A099 |NA099 |MAR21| 80|18:00|24|FtG3GcKkWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|PPM-S1    |PM95S1|MAR23| 82|22:00|24|45GcHoKbKkSh                 |NASA|WASH|       |    |XA  |NASA|     |    |
+|STH-TRF-03|STRF03|MAR27| 86|14:00|24|FtHhHoKkSt                   |BONN|BONN|       |    |XA  |NASA|     |    |
+|NEOS-A100 |NA100 |MAR28| 87|18:00|24|FtG3KkWz                     |USNO|WASH|       |    |XE  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|IRIS-S89  |IS089 |APR03| 93|13:00|24|FtHhWfWz                     |BONN|BONN|       |    |XH  |NASA|     |    |
+|NEOS-A101 |NA101 |APR04| 94|18:00|24|FtG3GcKkWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|STH-TRF-04|STRF04|APR10|100|14:00|24|FtHhHoKkSt                   |NASA|HAYS|       |    |XA  |NASA|     |    |
+|NEOS-A102 |NA102 |APR11|101|18:00|24|FtG3KkWz                     |USNO|WASH|       |    |XE  |NASA|     |    |
+|VLBA-BR25 |BR9525|APR12|102|11:00|24|BrFdHnKpLaMkNlOvPtSc         |VLBA|VLBA|       |    |XV  |NASA|     |    |
+|EUROPE-24 |EURO24|APR12|102|20:00|24|65EbMaMcNtNyOnSmWz           |BONN|BONN|       |    |XA  |NASA|     |    |
+|C-ASIA1   |CAS951|APR13|103|22:00|24|GcKaNyShSmUr                 |NASA|WASH|       |    |XA  |NASA|     |    |
+|NEOS-A103 |NA103 |APR18|108|18:00|24|FtG3GcKkNyWz                 |USNO|WASH|       |    |XE  |NASA|     |    |
+|BB023B    |BB023B|APR19|109|11:00|24|Va                           |VLBA|VLBA|       |    |XV  |NASA|     |    |
+|POLAR-N1  |PL95N1|APR19|109|20:00|24|15GcKaMcNyOnUrWfYk           |NASA|WASH|       |    |XA  |NASA|     |    |
+|GGAO-RD-23|RDGG23|APR20|110|22:00|24|ApGgHnNlSc                   |NASA|HAYS|       |    |XA  |NASA|     |    |
+|R&D-4     |RD9504|APR20|110|22:00|24|FdGcKkLaOnPtWfWz             |NASA|HAYS|       |    |XB  |NASA|     |    |
+|X-PAC1    |XPC951|APR20|110|22:00|24|BrKaKpMkOvShUr               |NASA|WASH|       |    |XC  |NASA|     |    |
+|XASIA-1   |XAS951|APR24|114|12:00|24|45HhHoKaShSmWz               |NASA|HAYS|       |    |XA  |NASA|     |    |
+|NEOS-A104 |NA104 |APR25|115|18:00|24|FtG3KkWz                     |USNO|WASH|       |    |XE  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|IRIS-S90  |IS090 |MAY01|121|13:00|24|FtHhWfWz                     |BONN|BONN|       |    |XH  |NASA|     |    |
+|NEOS-A105 |NA105 |MAY02|122|18:00|24|FtG3GcKkWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|NEOS-A106 |NA106 |MAY09|129|18:00|24|FtG3KkWz                     |USNO|WASH|       |    |XE  |NASA|     |    |
+|CRF-N2    |CRFN2 |MAY10|130|20:00|24|ApG3GcWz                     |USNO|WASH|       |    |XN  |NASA|     |    |
+|NEOS-A107 |NA107 |MAY16|136|18:00|24|FtG3GcKkWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|KSP-95142 |K95142|MAY22|142|05:00|24|K1Kg                         |CRL |CRL |       |    |XX  |NASA|     |    |
+|NEOS-A108 |NA108 |MAY23|143|18:00|24|FtG3KkWz                     |USNO|WASH|       |    |XE  |NASA|     |    |
+|STH-TRF-05|STRF05|MAY24|144|20:00|24|FtHhHoKkSt                   |BONN|BONN|       |    |XS  |NASA|     |    |
+|NEOS-A109 |NA109 |MAY30|150|18:00|24|FtG3GcKkWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|WAPS-1    |WAP951|MAY31|151|20:00|24|BrHnKpMkNlOvPt               |NASA|VLBA|       |    |XB  |NASA|     |    |
+|R&D-5     |RD9505|MAY31|151|20:00|24|FdGcKkLaOnScWfWz             |NASA|HAYS|       |    |XA  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|NEOS-A110 |NA110 |JUN06|157|18:00|24|FtG3KkWz                     |USNO|WASH|       |    |XE  |NASA|     |    |
+|GEOVLBA-1 |RDG951|JUN07|158|20:00|24|BrFdHnKpLaMkNlOvPtSc         |NASA|VLBA|       |    |XB  |NASA|     |    |
+|EUROPE25  |EURO25|JUN08|159|22:00|24|65MaMcNtNyOnSmWzYb           |BONN|BONN|       |    |XA  |NASA|     |    |
+|NEOS-A111 |NA111 |JUN13|164|18:00|24|FtG3GcKkMiWz                 |USNO|WASH|       |    |XE  |NASA|     |    |
+|NAVEX-S6  |NAEXS6|JUN14|165|20:00|24|ApG3GcMiNyWz                 |USNO|WASH|       |    |XO  |NASA|     |    |
+|IRIS-S91  |IS091 |JUN19|170|12:00|24|FtHhMiWz                     |BONN|BONN|       |    |XH  |NASA|     |    |
+|NEOS-A112 |NA112 |JUN20|171|18:00|24|FtG3Wz                       |USNO|WASH|       |    |XE  |NASA|     |    |
+|CRF-DS1   |RDCDS1|JUN26|177|12:00|28|45FtHhHoPa                   |USNO|WASH|       |    |XN  |NASA|     |    |
+|NEOS-A113 |NA113 |JUN27|178|18:00|24|FtG3GcNyWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|APT-1     |APT951|JUN27|178|18:00|24|HhHoPa                       |USNO|WASH|       |    |XO  |NASA|     |    |
+|WAPS-2    |WAP952|JUN28|179|20:00|24|BrHnKpNlOvPtSc               |NASA|VLBA|       |    |XB  |NASA|     |    |
+|APT-2     |APT952|JUN28|179|20:00|28|HhHoPa                       |USNO|WASH|       |    |XO  |NASA|     |    |
+|R&D-6     |RD9506|JUN28|179|20:00|24|FdGcLaMkOnWfWz               |NASA|HAYS|       |    |XA  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|NEOS-A114 |NA114 |JUL05|186|18:00|24|FtG3Wz                       |USNO|WASH|       |    |XE  |NASA|     |    |
+|WAPS-3    |WAP953|JUL10|191|14:00|24|BrFdHnKpLaNlOvPt             |NASA|VLBA|       |    |XC  |NASA|     |    |
+|CRF-MSE1  |RDMSE1|JUL10|191|14:00|24|FtMkScSt                     |USNO|WASH|       |    |XN  |NASA|     |    |
+|NEOS-A115 |NA115 |JUL11|192|18:00|24|FtG3GcWz                     |USNO|WASH|       |    |XE  |NASA|     |    |
+|STH-TRF-06|STRF06|JUL12|193|20:00|24|45FtHhHoSt                   |NASA|WASH|       |    |XA  |NASA|     |    |
+|BB023C    |BB023C|JUL15|196|16:00|24|Va                           |VLBA|VLBA|       |    |XV  |NASA|     |    |
+|IRIS-S92  |IS092 |JUL17|198|12:00|24|FtHhWz                       |BONN|BONN|       |    |XH  |NASA|     |    |
+|NEOS-A116 |NA116 |JUL18|199|18:00|24|FtG3KkWz                     |USNO|WASH|       |    |XE  |NASA|     |    |
+|MIKA1     |MIKA1 |JUL20|201|03:00|24|KaMn                         |GSI |CRL |       |    |DX  |GSI |     |    |
+|GLOBL-TRF3|RDGTR3|JUL24|205|12:00|24|65GcHhHoKaKkKpNtStYk         |USNO|WASH|       |    |XD  |NASA|     |    |
+|GEOVLBA-2 |RDG952|JUL24|205|12:00|24|BrFdHnLaMkNlOvPtSc           |NASA|VLBA|       |    |XA  |NASA|     |    |
+|KSP95206  |K95206|JUL25|206|09:00|21|K1Mu                         |CRL |CRL |       |    |XX  |NASA|     |    |
+|NEOS-A117 |NA117 |JUL25|206|18:00|24|G3GcKkMiWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|NAVEX-S7  |NAEXS7|JUL31|212|16:00|24|ApG3GcKkNyWz                 |USNO|WASH|       |    |XO  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|NEOS-A118 |NA118 |AUG01|213|18:00|24|FtG3KkWz                     |USNO|WASH|       |    |XE  |NASA|     |    |
+|IRIS-S93  |IS093 |AUG07|219|12:00|24|HhWfWz                       |BONN|BONN|       |    |XH  |NASA|     |    |
+|NEOS-A119 |NA119 |AUG08|220|18:00|24|FtG3GcKkWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|GEOCAT-N2 |GC95N2|AUG09|221|20:00|24|GcKkWf                       |NASA|HAYS|       |    |XA  |NASA|     |    |
+|NEOS-A120 |NA120 |AUG15|227|18:00|24|FtG3KkMiNyWz                 |USNO|WASH|       |    |XE  |NASA|     |    |
+|GLOBL-TRF4|GTRF4 |AUG16|228|20:00|24|65FtGcHhHoKkMcOnStWfYk       |NASA|WASH|       |    |XA  |NASA|     |    |
+|NEOS-A121 |NA121 |AUG22|234|18:00|24|FtG3GcKkNyWz                 |USNO|WASH|       |    |XE  |NASA|     |    |
+|CONT95A   |RDC95A|AUG23|235|20:00|24|GcKkNyOnWfWz                 |NASA|WASH|       |    |XA  |NASA|     |    |
+|CONT95B   |RDC95B|AUG24|236|20:00|24|GcKkNyOnWfWz                 |NASA|WASH|       |    |XA  |NASA|     |    |
+|CONT95C   |RDC95C|AUG25|237|20:00|24|GcKkNyOnWz                   |NASA|WASH|       |    |XA  |NASA|     |    |
+|CONT95D   |RDC95D|AUG26|238|20:00|24|GcKkNyOnWfWz                 |NASA|WASH|       |    |XA  |NASA|     |    |
+|CONT95E   |RDC95E|AUG27|239|20:00|24|GcKkNyOnWfWz                 |NASA|WASH|       |    |XA  |NASA|     |    |
+|CONT95F   |RDC95F|AUG28|240|20:00|20|GcKkNyOnWz                   |NASA|WASH|       |    |XA  |NASA|     |    |
+|NEOS-A122 |NA122 |AUG29|241|18:00|24|FtG3GcKkNyWz                 |USNO|WASH|       |    |XE  |NASA|     |    |
+|WAPS-4    |WAP954|AUG30|242|20:00|24|BrFdKpLaOvPt                 |NASA|VLBA|       |    |XC  |NASA|     |    |
+|GGAO-RD-24|RDGG24|AUG30|242|20:00|24|ApGgHnNlSc                   |NASA|WASH|       |    |XB  |NASA|     |    |
+|CRF-MSW2  |RDMSW2|AUG30|242|20:00|24|HoKaMk                       |USNO|WASH|       |    |XN  |NASA|     |    |
+|EUROPE26  |EURO26|AUG31|243|22:00|24|65NyOnSmWz                   |BONN|BONN|       |    |XA  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|NEOS-A123 |NA123 |SEP05|248|18:00|24|FtG3GcKkWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|IRIS-S94  |IS094 |SEP06|249|20:00|24|FtHhMiWfWz                   |BONN|BONN|       |    |XH  |NASA|     |    |
+|NEOS-A124 |NA124 |SEP12|255|18:00|24|FtG3KkMiWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|GLOBL-TRF5|RDGTR5|SEP18|261|14:00|24|45ApGcHhKaKkNlNtNyOvWz       |USNO|WASH|       |    |XA  |NASA|     |    |
+|WAPS-5    |WAP955|SEP18|261|14:00|24|BrFdHnKpLaPt                 |NASA|VLBA|       |    |XC  |NASA|     |    |
+|NEOS-A125 |NA125 |SEP19|262|18:00|24|ApG3GcKkWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|STH-TRF-07|STRF07|SEP21|264|14:00|24|45FtHhHoKkSt                 |NASA|BONN|       |    |XA  |NASA|     |    |
+|STH-TRF-08|STRF08|SEP25|268|14:00|24|45FtHhHoKkSt                 |NASA|WASH|       |    |XA  |NASA|     |    |
+|NEOS-A126 |NA126 |SEP26|269|18:00|24|FtG3GnKkMiWz                 |USNO|WASH|       |    |XE  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|STH-TRF-09|STRF09|OCT02|275|16:00|24|65FtHhHoKkSt                 |NASA|WASH|       |    |XB  |NASA|     |    |
+|GEOVLBA-3 |RDG953|OCT02|275|16:00|24|BrFdGcHnKpLaMkNlOvPt         |NASA|VLBA|       |    |XC  |NASA|     |    |
+|NEOS-A127 |NA127 |OCT03|276|18:00|24|FtGcGnKkWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|STH-TRF-10|STRF10|OCT05|278|14:00|24|45FtHhHoKkOhSt               |NASA|BONN|       |    |XS  |NASA|     |    |
+|STH-TRFX8 |STRFX8|OCT09|282|14:00|24|HhHoKkOhSt                   |NASA|BONN|       |    |XS  |NASA|     |    |
+|NEOS-A128 |NA128 |OCT10|283|18:00|24|FtG3GnKkMiWz                 |USNO|WASH|       |    |XE  |NASA|     |    |
+|NAVEX-46  |NAEX46|OCT11|284|20:00|24|ApG3GcGnMiWfYk               |USNO|WASH|       |    |XO  |NASA|     |    |
+|VLBA-BF12 |VABF12|OCT12|285|22:00|24|BrFdHnKpLaMkNlOvPtVa         |VLBA|VLBA|       |    |XV  |NASA|     |    |
+|STH-TRF-11|STRF11|OCT12|285|14:00|24|45FtHhHoKkOhSt               |NASA|WASH|       |    |XS  |NASA|     |    |
+|NEOS-A129 |NA129 |OCT17|290|18:00|24|ApFtGcGnKkMkNlWz             |USNO|WASH|       |    |XE  |NASA|     |    |
+|IRIS-S95  |IS095 |OCT23|296|12:00|24|FtHhMiWfWz                   |BONN|BONN|       |    |XH  |NASA|     |    |
+|SUWON-02  |SU9502|OCT24|297|05:00|25|KaSu                         |CRL |CRL |       |    |XX  |NASA|     |    |
+|NEOS-A130 |NA130 |OCT24|297|18:00|24|FtG3KkMiWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|SUWON-03  |SU9503|OCT31|304|01:00|25|KaSu                         |CRL |CRL |       |    |XX  |NASA|     |    |
+|NEOS-A131 |NA131 |OCT31|304|18:00|24|FtG3GcKkNyWz                 |USNO|WASH|       |    |XE  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|SUWON-04  |SU9504|NOV01|305|02:00|24|KaSu                         |CRL |CRL |       |    |XX  |NASA|     |    |
+|NEOS-A132 |NA132 |NOV07|311|18:00|24|FtG3GnKkMiWz                 |USNO|WASH|       |    |XE  |NASA|     |    |
+|WAPS-6    |WAP956|NOV07|311|18:00|24|FdGcKpLaNlOvPtSc             |NASA|VLBA|       |    |XD  |NASA|     |    |
+|GLOBL-TRF6|RDGTR6|NOV07|311|18:00|24|15BrHhHnHoMaMkSt             |NASA|WASH|       |    |XA  |NASA|     |    |
+|EUROPE-27 |EURO27|NOV09|313|22:00|24|65MaMcNtOnWz                 |BONN|BONN|       |    |XA  |NASA|     |    |
+|STH-TRF-12|STRF12|NOV13|317|12:00|24|45FtHhKkSt                   |NASA|BONN|       |    |XS  |NASA|     |    |
+|NEOS-A133 |NA133 |NOV14|318|18:00|24|FtG3GcKkNyWz                 |USNO|WASH|       |    |XE  |NASA|     |    |
+|GLOBL-TRF7|GTRF7 |NOV16|320|14:00|24|65FtGcHhHoKkOnShSt           |USNO|WASH|       |    |XA  |NASA|     |    |
+|IRIS-S96  |IS096 |NOV20|324|13:00|24|FtHhWfWz                     |BONN|BONN|       |    |XH  |NASA|     |    |
+|MIKA2     |MIKA2 |NOV21|325|04:27|24|KbMnS3                       |GSI |CRL |       |    |DX  |GSI |     |    |
+|NEOS-A134 |NA134 |NOV21|325|18:00|24|FtG3GnKkMiWz                 |USNO|WASH|       |    |XE  |NASA|     |    |
+|CRF-DS2   |CRFDS2|NOV27|331|12:00|24|45FtHhHoSt                   |USNO|WASH|       |    |XN  |NASA|     |    |
+|NEOS-A135 |NA135 |NOV28|332|18:00|24|ApFtGcGnKkWz                 |USNO|WASH|       |    |XE  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|NEOS-A136 |NA136 |DEC05|339|18:00|24|G3GnKkKkWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+|EUROPE-28 |EURO28|DEC06|340|20:00|24|65EbMcNtNyOnWz               |BONN|BONN|       |    |XA  |NASA|     |    |
+|GB-TIES2  |GBTIE2|DEC06|340|21:30|24|G3Gn                         |NASA|WASH|       |    |XB  |NASA|     |    |
+|GEOVLBA-4 |RDG954|DEC07|341|22:00|24|BrFdGcHnKpLaMkNlOvPt         |NASA|VLBA|       |    |XC  |NASA|     |    |
+|NEOS-A137 |NA137 |DEC12|346|18:00|24|FtGcGnKkNyWz                 |USNO|WASH|       |    |XE  |NASA|     |    |
+|NAVEX-S8  |NAEXS8|DEC13|347|20:00|24|15ApGcGnKkNyWz               |USNO|WASH|       |    |XO  |NASA|     |    |
+|IRIS-S97  |IS097 |DEC18|352|13:00|24|FtHhWfWz                     |BONN|BONN|       |    |XH  |NASA|     |    |
+|NEOS-A138 |NA138 |DEC19|353|18:00|24|FtGnKkWz                     |USNO|WASH|       |    |XE  |NASA|     |    |
+|NEOS-A139 |NA139 |DEC26|360|18:00|24|FtGcGnKkWz                   |USNO|WASH|       |    |XE  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+## Master file format version 1.0           2001.08.21 CCT&NRV

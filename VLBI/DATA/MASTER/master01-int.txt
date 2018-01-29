@@ -1,0 +1,229 @@
+## Master file format version 1.0           2001.08.21 CCT&NRV
+
+                    2001 MULTI-AGENCY INTENSIVES SCHEDULE
+
+                     Last Updated - June 17, 2002 - CCT
+
+
+  SESSION      SESSION DATE  DOY TIME DUR        STATIONS                SKED CORR STATUS  PF  DBC SUBM DEL  MK4
+    NAME        CODE   mondd ddd hh:mm hr                                          yymondd     CODE     days NUM
+------------------------------------------------------------------------------------------------------------------
+|INT01-003     |I01003|JAN03|  3|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-004     |I01004|JAN04|  4|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-005     |I01005|JAN05|  5|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-008     |I01008|JAN08|  8|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-010     |I01010|JAN10| 10|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-011     |I01011|JAN11| 11|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-012     |I01012|JAN12| 12|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-017     |I01017|JAN17| 17|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-018     |I01018|JAN18| 18|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-019     |I01019|JAN19| 19|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-022     |I01022|JAN22| 22|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-024     |I01024|JAN24| 24|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-025     |I01025|JAN25| 25|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-026     |I01026|JAN26| 26|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-029     |I01029|JAN29| 29|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-031     |I01031|JAN31| 31|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT01-032     |I01032|FEB01| 32|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-033     |I01033|FEB02| 33|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-036     |I01036|FEB05| 36|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-038     |I01038|FEB07| 38|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-039     |I01039|FEB08| 39|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-040     |I01040|FEB09| 40|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-043     |I01043|FEB12| 43|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-045     |I01045|FEB14| 45|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-046     |I01046|FEB15| 46|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-047     |I01047|FEB16| 47|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-050     |I01050|FEB19| 50|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-052     |I01052|FEB21| 52|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-053     |I01053|FEB22| 53|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-054     |I01054|FEB23| 54|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-057     |I01057|FEB26| 57|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-059     |I01059|FEB28| 59|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT01-060     |I01060|MAR01| 60|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-061     |I01061|MAR02| 61|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-064     |I01064|MAR05| 64|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-066     |I01066|MAR07| 66|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-067     |I01067|MAR08| 67|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-068     |I01068|MAR09| 68|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-071     |I01071|MAR12| 71|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-073     |I01073|MAR14| 73|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-074     |I01074|MAR15| 74|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-075     |I01075|MAR16| 75|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-078     |I01078|MAR19| 78|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-080     |I01080|MAR21| 80|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-081     |I01081|MAR22| 81|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-082     |I01082|MAR23| 82|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-085     |I01085|MAR26| 85|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-087     |I01087|MAR28| 87|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-088     |I01088|MAR29| 88|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-089     |I01089|MAR30| 89|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT01-092     |I01092|APR02| 92|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-094     |I01094|APR04| 94|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-095     |I01095|APR05| 95|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-096     |I01096|APR06| 96|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-099     |I01099|APR09| 99|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-101     |I01101|APR11|101|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-TEST    |I01T  |APR11|101|20:30|1  |KkWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT01-102     |I01102|APR12|102|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-103     |I01103|APR13|103|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-106     |I01106|APR16|106|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-108     |I01108|APR18|108|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-109     |I01109|APR19|109|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-110     |I01110|APR20|110|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-113     |I01113|APR23|113|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-115     |I01115|APR25|115|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-116     |I01116|APR26|116|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-117     |I01117|APR27|117|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-120     |I01120|APR30|120|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-TEST2   |I01T2 |APR30|120|20:30|1  |KkWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT01-122     |I01122|MAY02|122|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-123     |I01123|MAY03|123|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-TEST3   |I01T3 |MAY03|123|20:30|1  |KkWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT01-124     |I01124|MAY04|124|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-127     |I01127|MAY07|127|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-TEST4   |I01T4 |MAY07|127|20:30|1  |KkWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT01-129     |I01129|MAY09|129|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-130     |I01130|MAY10|130|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-TEST5   |I01T5 |MAY10|130|20:30|1  |KkWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT01-131     |I01131|MAY11|131|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-134     |I01134|MAY14|134|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-136     |I01136|MAY16|136|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-137     |I01137|MAY17|137|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-138     |I01138|MAY18|138|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-141     |I01141|MAY21|141|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-143     |I01143|MAY23|143|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-144     |I01144|MAY24|144|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-145     |I01145|MAY25|145|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-150     |I01150|MAY30|150|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-151     |I01151|MAY31|151|18:30|1.5|KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT01-152     |I01152|JUN01|152|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-155     |I01155|JUN04|155|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-157     |I01157|JUN06|157|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-158     |I01158|JUN07|158|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-159     |I01159|JUN08|159|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-162     |I01162|JUN11|162|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-164     |I01164|JUN13|164|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-165     |I01165|JUN14|165|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-166     |I01166|JUN15|166|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-169     |I01169|JUN18|169|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-171     |I01171|JUN20|171|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-172     |I01172|JUN21|172|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-173     |I01173|JUN22|173|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-T173    |T01173|JUN22|173|20:00|1  |KkWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT01-176     |I01176|JUN25|176|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-178     |I01178|JUN27|178|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-179     |I01179|JUN28|179|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-180     |I01180|JUN29|180|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT01-184     |I01184|JUL03|184|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-186     |I01186|JUL05|186|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-187     |I01187|JUL06|187|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-190     |I01190|JUL09|190|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-192     |I01192|JUL11|192|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-193     |I01193|JUL12|193|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-194     |I01194|JUL13|194|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-197     |I01197|JUL16|197|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-199     |I01199|JUL18|199|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-200     |I01200|JUL19|200|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-201     |I01201|JUL20|201|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-204     |I01204|JUL23|204|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-206     |I01206|JUL25|206|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-207     |I01207|JUL26|207|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-208     |I01208|JUL27|208|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-211     |I01211|JUL30|211|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT01-213     |I01213|AUG01|213|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-214     |I01214|AUG02|214|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-215     |I01215|AUG03|215|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-218     |I01218|AUG06|218|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-220     |I01220|AUG08|220|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-221     |I01221|AUG09|221|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-222     |I01222|AUG10|222|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-225     |I01225|AUG13|225|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-227     |I01227|AUG15|227|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-228     |I01228|AUG16|228|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-229     |I01229|AUG17|229|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-232     |I01232|AUG20|232|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-234     |I01234|AUG22|234|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-235     |I01235|AUG23|235|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-236     |I01236|AUG24|236|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-239     |I01239|AUG27|239|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-241     |I01241|AUG29|241|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-242     |I01242|AUG30|242|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-243     |I01243|AUG31|243|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT01-248     |I01248|SEP05|248|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-249     |I01249|SEP06|249|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-250     |I01250|SEP07|250|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-253     |I01253|SEP10|253|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-255     |I01255|SEP12|255|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-256     |I01256|SEP13|256|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-257     |I01257|SEP14|257|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-260     |I01260|SEP17|260|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-262     |I01262|SEP19|262|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-263     |I01263|SEP20|263|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-264     |I01264|SEP21|264|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-267     |I01267|SEP24|267|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-269     |I01269|SEP26|269|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-270     |I01270|SEP27|270|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-271     |I01271|SEP28|271|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT01-274     |I01274|OCT01|274|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-276     |I01276|OCT03|276|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-277     |I01277|OCT04|277|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-278     |I01278|OCT05|278|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-281     |I01281|OCT08|281|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-283     |I01283|OCT10|283|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-284     |I01284|OCT11|284|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-285     |I01285|OCT12|285|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-288     |I01288|OCT15|288|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-290     |I01290|OCT17|290|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-291     |I01291|OCT18|291|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-292     |I01292|OCT19|292|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-295     |I01295|OCT22|295|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-297     |I01297|OCT24|297|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-298     |I01298|OCT25|298|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-299     |I01299|OCT26|299|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-302     |I01302|OCT29|302|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-304     |I01304|OCT31|304|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT01-305     |I01305|NOV01|305|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-306     |I01306|NOV02|306|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-309     |I01309|NOV05|309|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-311     |I01311|NOV07|311|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-312     |I01312|NOV08|312|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-313     |I01313|NOV09|313|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-316     |I01316|NOV12|316|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-318     |I01318|NOV14|318|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-319     |I01319|NOV15|319|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-320     |I01320|NOV16|320|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-323     |I01323|NOV19|323|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-325     |I01325|NOV21|325|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-330     |I01330|NOV26|330|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-332     |I01332|NOV28|332|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-333     |I01333|NOV29|333|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-334     |I01334|NOV30|334|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT01-337     |I01337|DEC03|337|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-339     |I01339|DEC05|339|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-340     |I01340|DEC06|340|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-341     |I01341|DEC07|341|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-344     |I01344|DEC10|344|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-346     |I01346|DEC12|346|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-347     |I01347|DEC13|347|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-348     |I01348|DEC14|348|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-351     |I01351|DEC17|351|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-353     |I01353|DEC19|353|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-354     |I01354|DEC20|354|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-355     |I01355|DEC21|355|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-360     |I01360|DEC26|360|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-362     |I01362|DEC28|362|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT01-365     |I01365|DEC31|365|18:30|1  |KkWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+## Master file format version 1.0           2001.08.21 CCT&NRV

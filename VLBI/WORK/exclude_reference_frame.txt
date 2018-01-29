@@ -1,0 +1,669 @@
+$15MAY20XN  opt_.mo^2 > 3
+$15MAY17XA  opt_.mo^2 > 3
+$15MAY05XB  opt_.mo^2 > 3
+$15MAR12XF  isnan(opt_.mo)
+$15MAR05XF  isnan(opt_.mo)
+$15JUN11XF  opt_.condn > 10^25
+$15JAN22XF  JADE
+$15JAN20XA  opt_.mo^2 > 3
+$15FEB19XF  opt_.mo^2 > 3
+$15APR23XF  VIE_LSM failed
+$15APR22XA  opt_.mo^2 > 3
+$14SEP03XA  opt_.mo^2 > 3
+$14OCT16XF  JADE
+$14MAY22XF  JADE
+$14MAR19XF  opt_.mo^2 > 3
+$14MAR13XF  JX
+$14JUL17XF  JADE
+$14JAN16XF  JADE
+$14FEB06XE  opt_.mo^2 > 3
+$14DEC23XE  opt_.mo^2 > 3
+$14DEC22XA  opt_.mo^2 > 3
+$14DEC03XA  opt_.mo^2 > 3
+$14DEC01XA  opt_.mo^2 > 3
+$14APR02XA  isnan(opt_.mo)
+$13SEP05XF  JADE
+$13OCT10XF  JADE
+$13NOV20XB  opt_.mo^2 > 3
+$13NOV20XA  opt_.mo^2 > 3
+$13NOV19XH  opt_.mo^2 > 3
+$13NOV14XF  JADE
+$13NOV14XE  opt_.mo^2 > 3
+$13MAY27XA  opt_.mo^2 > 3
+$13MAR18XA  opt_.mo^2 > 3
+$13MAR14XF  JADE
+$13JUN13XF  opt_.mo^2 > 3
+$13JUN10XA  opt_.mo^2 > 3
+$13JUL24XA  opt_.mo^2 > 3
+$13JUL18XF  JADE
+$13JUL09XN  < 200 obs
+$13JAN24XF  opt_.mo^2 > 3
+$13JAN21XA  opt_.mo^2 > 3
+$13JAN09XA  opt_.mo^2 > 3
+$13JAN08XN  < 200 obs
+$13FEB20XA  opt_.mo^2 > 3
+$13FEB13XA  opt_.mo^2 > 3
+$13DEC04XF  JADE
+$13AUG08XF  opt_.mo^2 > 3
+$12SEP03XA  isnan(opt_.mo)
+$12OCT29XA  opt_.mo^2 > 3
+$12OCT16XH  isnan(opt_.mo)
+$12NOV06XA  < 200 obs
+$12MAY22XN  < 200 obs
+$12MAY15XN  isnan(opt_.mo)
+$12MAY10XN  isnan(opt_.mo)
+$12JUN14XF  JADE
+$12JUN06XN  isnan(opt_.mo)
+$12JAN16XN  < 200 obs
+$12JAN12XF  JADE
+$12JAN11XF  JX
+$12FEB01XN  < 200 obs
+$12DEC19XN  isnan(opt_.mo)
+$12DEC19XA  opt_.mo^2 > 3
+$12DEC13XF  opt_.mo^2 > 3
+$12AUG30XE  opt_.mo^2 > 3
+$12AUG22XA  opt_.mo^2 > 3
+$12APR12XF  opt_.mo^2 > 3
+$11SEP08XF  opt_.mo^2 > 3
+$11OCT26XN  isnan(opt_.mo)
+$11OCT05XN  < 200 obs
+$11NOV22XE  opt_.mo^2 > 3
+$11NOV16XN  < 200 obs
+$11NOV16XA  opt_.mo^2 > 3
+$11JUN28XA  opt_.mo^2 > 3
+$11JUN23XF  JADE
+$11JUN15XN  isnan(opt_.mo)
+$11JUL04XA  opt_.mo^2 > 3
+$11JAN29XF  JX
+$11JAN13XF  JADE
+$11AUG08XA  opt_.mo^2 > 3
+$11APR12XF  JADE
+$10SEP09XE  opt_.mo^2 > 3
+$10MAR30XA  < 200 obs
+$10MAR26XA  < 200 obs
+$10MAR24XA  isnan(opt_.mo)
+$10MAR23XA  < 200 obs
+$10MAR14XF  JX
+$10MAR11XF  JADE
+$10MAR11XE  opt_.mo^2 > 3
+$10JUN22XF  JADE
+$10JUL22XE  opt_.mo^2 > 3
+$10JAN14XF  JADE
+$10JAN13XN  isnan(opt_.mo)
+$10FEB04XE  opt_.mo^2 > 3
+$10AUG26XF  opt_.mo^2 > 3
+$10APR01XA  < 200 obs
+$09NOV12XF  JADE
+$09MAY21XF  JADE
+$09MAY13XA  opt_.mo^2 > 3
+$09MAR05XF  JADE
+$09JUN11XF  JADE
+$09JUL16XF  JADE
+$09JAN16XF  JADE
+$09AUG25XH  removed by hand
+$09AUG20XF  JADE
+$08SEP13XN  isnan(opt_.mo)
+$08NOV13XF  JADE
+$08MAY15XF  JADE
+$08MAR13XF  JADE
+$08JUN19XF  JADE
+$08JUN18XF  JX
+$08JUL24XF  JADE
+$08JAN21XF  JADE
+$08JAN20XF  JX
+$08FEB14XF  JADE
+$08AUG28XF  JADE
+$08AUG05XN  < 200 obs
+$08APR17XF  JADE
+$07SEP13XF  JADE
+$07OCT18XF  JADE
+$07NOV08XF  JADE
+$07MAY24XF  JADE
+$07MAR15XF  JADE
+$07JUN22XF  JX
+$07JUN21XF  JADE
+$07JUL19XF  JADE
+$07JAN11XF  JADE
+$07FEB08XF  JADE
+$07DEC22XN  opt_.mo^2 > 3
+$07DEC13XF  JADE
+$07AUG23XF  JADE
+$07APR19XF  JADE
+$07APR16XN  < 200 obs
+$06SEP14XF  JADE
+$06OCT12XF  JADE
+$06NOV09XF  JADE
+$06NOV07XA  opt_.mo^2 > 3
+$06MAY25XF  JADE
+$06MAR23XF  JADE
+$06JUN23XF  JX
+$06JUN22XF  JADE
+$06JUN07XG  < 200 obs
+$06JUL26XG  < 200 obs
+$06JUL20XF  JADE
+$06JAN23XA  opt_.mo^2 > 3
+$06JAN12XF  opt_.mo^2 > 3
+$06FEB16XF  JADE
+$06DEC14XF  JADE
+$06DEC07XE  isnan(opt_.mo)
+$06AUG17XF  opt_.mo^2 > 3
+$06APR25XF  JADE
+$06APR11XN  opt_.mo^2 > 3
+$05SEP08XF  JADE
+$05OCT13XF  JADE
+$05NOV10XF  JADE
+$05NOV09XA  opt_.mo^2 > 3
+$05NOV08XA  opt_.mo^2 > 3
+$05MAY26XF  opt_.mo^2 > 3
+$05JUN16XF  JADE
+$05JUN15XG  < 200 obs
+$05JUL17XN  isnan(opt_.mo)
+$05JUL14XF  JADE
+$05JAN26XA  opt_.mo^2 > 3
+$05FEB23XF  JADE
+$05FEB15XA  opt_.mo^2 > 3
+$05FEB01XH  opt_.mo^2 > 3
+$05DEC14XN  opt_.mo^2 > 3
+$05DEC13XF  JADE
+$05AUG17XF  JADE
+$05APR14XF  JADE
+$04SEP14XF  JADE
+$04NOV30XA  opt_.mo^2 > 3
+$04NOV03XA  removed by hand
+$04MAY20XF  JADE
+$04MAR02XF  JADE
+$04JUN16XA  isnan(opt_.mo)
+$04JUN10XF  opt_.mo^2 > 3
+$04JUL05XN  < 200 obs
+$04JAN26XN  < 200 obs
+$04JAN08XF  JADE
+$04FEB04XF  JADE
+$04DEC16XF  JADE
+$04DEC15XA  opt_.condn > 10^25
+$04DEC08XB  opt_.mo^2 > 3
+$04DEC07XH  opt_.mo^2 > 3
+$04AUG12XE  < 200 obs
+$04APR06XF  JADE
+$03SEP10XF  JADE
+$03OCT02XF  JADE
+$03OCT01XG  < 200 obs
+$03NOV12XF  JADE
+$03MAY21XF  opt_.mo^2 > 3
+$03MAY20XN  isnan(opt_.mo)
+$03MAY13XN  < 200 obs
+$03JUN17XF  JADE
+$03JUL16XF  JADE
+$03JAN27XF  opt_.mo^2 > 3
+$03FEB13XF  JADE
+$03FEB05XN  < 200 obs
+$03DEC08XN  < 200 obs
+$03APR22XN  < 200 obs
+$03APR10XF  JADE
+$02OCT23XF  JADE
+$02NOV05XA  opt_.mo^2 > 3
+$02MAY29XG  isnan(opt_.mo)
+$02MAY27XF  JADE
+$02MAR19XN  < 200 obs
+$02MAR13XG  isnan(opt_.mo)
+$02JUN19XG  opt_.mo^2 > 3
+$02JUN12XF  JADE
+$02JUL16XF  opt_.mo^2 > 3
+$02FEB21XF  JADE
+$02DEC10XN  < 200 obs
+$02DEC10XF  JADE
+$02AUG29XE  opt_.mo^2 > 3
+$02AUG06XF  JADE
+$02APR17XG  opt_.mo^2 > 3
+$01OCT11XF  JADE
+$01NOV29XF  JADE
+$01JUN14XF  JADE
+$01FEB21XF  JADE
+$01FEB19XF  JADE
+$01FEB15XX  JPNT
+$00SEP12XX  JPNT
+$00SEP07XF  opt_.mo^2 > 3
+$00OCT11XX  opt_.mo^2 > 3
+$00NOV13XF  opt_.mo^2 > 3
+$00NOV07XX  JPNT
+$00MAY15XA  opt_.mo^2 > 3
+$00MAR06XX  JPNT
+$00JUN20XF  JADE
+$00JUN13XX  JPNT
+$00FEB28XF  JADE
+$00AUG10XG  opt_.mo^2 > 3
+$99SEP30XF  JADE
+$99OCT11XA  opt_.mo^2 > 3
+$99NOV15XF  JADE
+$99JUN28XA  opt_.mo^2 > 3
+$99JUN09XF  JADE
+$99FEB18XA  opt_.mo^2 > 3
+$99FEB08XH  < 200 obs
+$99FEB04XA  < 200 obs
+$99FEB01XN  < 200 obs
+$99AUG16XA  opt_.mo^2 > 3
+$99APR21XA  opt_.mo^2 > 3
+$99APR19XN  opt_.mo^2 > 3
+$99APR19XH  opt_.mo^2 > 3
+$98OCT20XX  JPNT
+$98NOV09XF  JADE
+$98MAY06XA  opt_.mo^2 > 3
+$98JUN25XF  JADE
+$98FEB19XF  JADE
+$98APR20XB  opt_.mo^2 > 3
+$97SEP03XA  opt_.mo^2 > 3
+$97NOV03XF  JADE
+$97MAY19XB  opt_.mo^2 > 3
+$97DEC03XN  opt_.mo^2 > 3
+$97AUG26XF  JADE
+$96NOV25XN  opt_.mo^2 > 3
+$96MAY22XA  opt_.mo^2 > 3
+$96MAY06XN  < 200 obs
+$96MAR13XA  opt_.mo^2 > 3
+$95MAY23XE  opt_.mo^2 > 3
+$95JUN28XO  opt_.mo^2 > 3
+$95JUN08XA  opt_.mo^2 > 3
+$95JUL10XN  < 200 obs
+$95FEB22XA  removed by hand
+$94OCT26XA  opt_.mo^2 > 3
+$94MAY16XS  < 200 obs
+$94JUL25XA  opt_.mo^2 > 3
+$94JUL13X_  opt_.mo^2 > 3
+$94JAN17XA  opt_.mo^2 > 3
+$94JAN05XP  < 200 obs
+$94FEB23X_  < 200 obs
+$94FEB14XR  opt_.mo^2 > 3
+$94APR18XS  < 200 obs
+$94APR13XN  < 200 obs
+$93SEP21X_  < 200 obs
+$93OCT27XP  < 200 obs
+$93NOV10XJ  opt_.mo^2 > 3
+$93MAY13X_  opt_.mo^2 > 3
+$93MAR24XS  < 200 obs
+$93MAR23XP  < 200 obs
+$93MAR03X_  opt_.mo^2 > 3
+$93JUN26XX  opt_.mo^2 > 3
+$93JUN24XX  opt_.mo^2 > 3
+$93JUN03XS  < 200 obs
+$93JUL19XS  < 200 obs
+$93JUL06XE  opt_.mo^2 > 3
+$93JAN26XJ  < 200 obs
+$93JAN19XJ  < 200 obs
+$93JAN13XJ  < 200 obs
+$93JAN12XJ  < 200 obs
+$93FEB24XJ  < 200 obs
+$93FEB23XJ  < 200 obs
+$93FEB04XS  < 200 obs
+$93FEB02XP  opt_.mo^2 > 3
+$93DEC19D_  < 200 obs
+$93DEC09XE  opt_.mo^2 > 3
+$93APR15XO  opt_.mo^2 > 3
+$93APR13XS  < 200 obs
+$93APR13XJ  < 200 obs
+$93APR05XI  opt_.mo^2 > 3
+$92SEP24XO  opt_.mo^2 > 3
+$92SEP16XS  < 200 obs
+$92SEP15XP  < 200 obs
+$92SEP08XJ  < 200 obs
+$92OCT30X_  opt_.mo^2 > 3
+$92OCT20XO  < 200 obs
+$92OCT19XS  < 200 obs
+$92OCT19X_  removed by hand
+$92OCT08XO  opt_.mo^2 > 3
+$92NOV17XJ  < 200 obs
+$92NOV11XO  opt_.mo^2 > 3
+$92MAY27XS  < 200 obs
+$92MAY27XJ  < 200 obs
+$92MAY25XM  < 200 obs
+$92MAY19XJ  < 200 obs
+$92MAY18XJ  < 200 obs
+$92MAY04XJ  opt_.mo^2 > 3
+$92MAR30XJ  opt_.mo^2 > 3
+$92MAR25XJ  < 200 obs
+$92MAR24XJ  < 200 obs
+$92MAR23XJ  < 200 obs
+$92MAR17XJ  < 200 obs
+$92MAR16XJ  < 200 obs
+$92MAR09XS  < 200 obs
+$92MAR09XJ  < 200 obs
+$92MAR02XJ  < 200 obs
+$92JUN30XO  opt_.mo^2 > 3
+$92JUN28XX  opt_.mo^2 > 3
+$92JUN26XM  VIE_LSM failed
+$92JUN25XX  opt_.mo^2 > 3
+$92JUN25XO  VIE_LSM failed
+$92JUN22XJ  < 200 obs
+$92JUN17XJ  < 200 obs
+$92JUN13X_  < 200 obs
+$92JUN08XN  < 200 obs
+$92JUN01XS  < 200 obs
+$92JUL20XS  < 200 obs
+$92JUL15X_  opt_.mo^2 > 3
+$92JUL14XJ  < 200 obs
+$92JUL07X_  opt_.mo^2 > 3
+$92JAN21XJ  opt_.mo^2 > 3
+$92JAN20XS  < 200 obs
+$92FEB21XM  VIE_LSM failed
+$92FEB11XS  < 200 obs
+$92FEB10XJ  < 200 obs
+$92FEB10X_  < 200 obs
+$92FEB04XN  < 200 obs
+$92DEC14XS  < 200 obs
+$92AUG10XS  < 200 obs
+$92AUG06XO  opt_.mo^2 > 3
+$92AUG03XJ  opt_.mo^2 > 3
+$92APR27XJ  < 200 obs
+$92APR13XS  < 200 obs
+$92APR13XJ  < 200 obs
+$91SEP19XO  VIE_LSM failed
+$91SEP18XJ  < 200 obs
+$91SEP17XJ  < 200 obs
+$91SEP12XO  VIE_LSM failed
+$91SEP11XJ  < 200 obs
+$91SEP03XJ  < 200 obs
+$91OCT28XJ  opt_.mo^2 > 3
+$91OCT21XJ  < 200 obs
+$91OCT14XJ  < 200 obs
+$91OCT08XN  opt_.mo^2 > 3
+$91OCT07XJ  < 200 obs
+$91NOV29XN  opt_.mo^2 > 3
+$91NOV18XJ  < 200 obs
+$91NOV18X_  opt_.mo^2 > 3
+$91MAY28XJ  < 200 obs
+$91MAY23XO  opt_.mo^2 > 3
+$91MAY20XJ  < 200 obs
+$91MAY16XO  opt_.mo^2 > 3
+$91MAY13XJ  < 200 obs
+$91MAY07XO  opt_.mo^2 > 3
+$91MAY06XJ  < 200 obs
+$91MAY02XO  opt_.mo^2 > 3
+$91MAR22XJ  < 200 obs
+$91MAR18XJ  < 200 obs
+$91MAR12XE  < 200 obs
+$91MAR04XJ  < 200 obs
+$91JUN30XX  opt_.mo^2 > 3
+$91JUN30X_  opt_.mo^2 > 3
+$91JUN25XP  < 200 obs
+$91JUN24XJ  < 200 obs
+$91JUN19XJ  < 200 obs
+$91JUN10XJ  < 200 obs
+$91JUN05XJ  < 200 obs
+$91JUL29XJ  < 200 obs
+$91JUL08XJ  < 200 obs
+$91JUL04XX  opt_.mo^2 > 3
+$91JAN18XJ  < 200 obs
+$91JAN14XJ  < 200 obs
+$91JAN11XJ  < 200 obs
+$91JAN07XJ  < 200 obs
+$91FEB26XJ  < 200 obs
+$91FEB21XJ  < 200 obs
+$91DEC31XJ  < 200 obs
+$91DEC23XJ  < 200 obs
+$91DEC16XJ  < 200 obs
+$91DEC10X_  opt_.mo^2 > 3
+$91DEC03XX  opt_.mo^2 > 3
+$91DEC02XN  < 200 obs
+$91AUG20XP  < 200 obs
+$91AUG19XJ  < 200 obs
+$91APR24XN  < 200 obs
+$91APR23XJ  < 200 obs
+$91APR09XO  opt_.mo^2 > 3
+$91APR05XJ  < 200 obs
+$91APR02XO  opt_.mo^2 > 3
+$90SEP20XO  opt_.mo^2 > 3
+$90SEP17XJ  opt_.mo^2 > 3
+$90SEP10XA  opt_.mo^2 > 3
+$90OCT26XJ  < 200 obs
+$90OCT19XJ  < 200 obs
+$90OCT18XJ  < 200 obs
+$90OCT16X_  < 200 obs
+$90OCT15X_  < 200 obs
+$90OCT13XJ  < 200 obs
+$90NOV28XX  opt_.mo^2 > 3
+$90NOV16XJ  < 200 obs
+$90NOV08XO  opt_.mo^2 > 3
+$90NOV06XO  opt_.mo^2 > 3
+$90NOV05XJ  < 200 obs
+$90NOV02XJ  < 200 obs
+$90MAY31XJ  < 200 obs
+$90MAY24X_  < 200 obs
+$90MAY21XJ  < 200 obs
+$90MAY18XJ  < 200 obs
+$90MAY17XJ  opt_.mo^2 > 3
+$90MAY11XJ  < 200 obs
+$90MAY10X_  opt_.mo^2 > 3
+$90MAY07XJ  < 200 obs
+$90MAY01XO  opt_.mo^2 > 3
+$90MAR30XJ  < 200 obs
+$90MAR26XJ  opt_.mo^2 > 3
+$90MAR20XJ  < 200 obs
+$90MAR17XJ  < 200 obs
+$90MAR11XJ  < 200 obs
+$90MAR10XJ  < 200 obs
+$90MAR05XJ  < 200 obs
+$90MAR02XJ  < 200 obs
+$90JUN30XY  opt_.mo^2 > 3
+$90JUN15XJ  < 200 obs
+$90JUN14XJ  < 200 obs
+$90JUN07XJ  < 200 obs
+$90JUL30DX  opt_.mo^2 > 3
+$90JUL26XJ  < 200 obs
+$90JUL19XJ  < 200 obs
+$90JUL16XJ  < 200 obs
+$90JUL11XJ  < 200 obs
+$90JUL05XO  opt_.mo^2 > 3
+$90JUL03XJ  < 200 obs
+$90JAN29XJ  < 200 obs
+$90JAN26XJ  < 200 obs
+$90JAN12XJ  < 200 obs
+$90JAN05XJ  < 200 obs
+$90FEB26XJ  opt_.mo^2 > 3
+$90FEB24XJ  opt_.mo^2 > 3
+$90FEB23XJ  < 200 obs
+$90FEB09XJ  isnan(opt_.mo)
+$90FEB05XJ  isnan(opt_.mo)
+$90FEB03XJ  < 200 obs
+$90DEC27XO  < 200 obs
+$90DEC10XJ  < 200 obs
+$90DEC05XO  opt_.mo^2 > 3
+$90DEC03XO  < 200 obs
+$90AUG13XJ  < 200 obs
+$90AUG10XJ  < 200 obs
+$90AUG06XJ  < 200 obs
+$90APR30XJ  < 200 obs
+$90APR27XJ  < 200 obs
+$90APR23XJ  < 200 obs
+$90APR21XJ  < 200 obs
+$90APR20XJ  < 200 obs
+$90APR12XJ  < 200 obs
+$90APR09XJ  < 200 obs
+$90APR06XJ  < 200 obs
+$90APR02XJ  < 200 obs
+$89NOV30XJ  < 200 obs
+$89NOV29XJ  < 200 obs
+$89NOV28XJ  < 200 obs
+$89NOV13XN  opt_.mo^2 > 3
+$89NOV09XO  < 200 obs
+$89NOV03XN  opt_.mo^2 > 3
+$89MAY31X_  opt_.mo^2 > 3
+$89MAY30X_  opt_.mo^2 > 3
+$89MAY21XO  < 200 obs
+$89MAY21XJ  < 200 obs
+$89MAY18XJ  < 200 obs
+$89MAY13XN  opt_.mo^2 > 3
+$89MAY04XJ  < 200 obs
+$89MAY02XN  < 200 obs
+$89MAR25XO  < 200 obs
+$89MAR19XO  < 200 obs
+$89MAR16XO  < 200 obs
+$89MAR02XO  < 200 obs
+$89JUN25XM  opt_.mo^2 > 3
+$89JUN23XM  opt_.mo^2 > 3
+$89JUN11XO  < 200 obs
+$89JUN11XJ  < 200 obs
+$89JUN01XO  < 200 obs
+$89JUL24XY  opt_.mo^2 > 3
+$89JUL24X_  opt_.mo^2 > 3
+$89JUL09XM  opt_.condn > 10^25
+$89JUL07X_  opt_.mo^2 > 3
+$89JAN26XN  opt_.mo^2 > 3
+$89JAN23XP  < 200 obs
+$89JAN14XO  < 200 obs
+$89JAN08XO  < 200 obs
+$89JAN05XO  < 200 obs
+$89FEB26XI  < 200 obs
+$89FEB19XO  < 200 obs
+$89FEB15XO  < 200 obs
+$89DEC13XO  opt_.mo^2 > 3
+$89AUG12X_  opt_.mo^2 > 3
+$89APR23XO  < 200 obs
+$89APR20XO  < 200 obs
+$89APR20XJ  < 200 obs
+$89APR13XJ  < 200 obs
+$88SEP28XO  < 200 obs
+$88SEP18XO  < 200 obs
+$88SEP10XO  < 200 obs
+$88SEP04D_  opt_.mo^2 > 3
+$88OCT30XO  < 200 obs
+$88OCT24XI  isnan(opt_.mo)
+$88OCT21X_  VIE_LSM failed
+$88OCT19XI  < 200 obs
+$88OCT14XI  < 200 obs
+$88OCT13XP  opt_.mo^2 > 3
+$88OCT06XO  < 200 obs
+$88OCT06X_  opt_.mo^2 > 3
+$88NOV08XO  < 200 obs
+$88NOV08XI  opt_.mo^2 > 3
+$88NOV06D_  isnan(opt_.mo)
+$88MAY23X_  < 200 obs
+$88MAY22XO  < 200 obs
+$88MAY20D_  opt_.mo^2 > 3
+$88MAY18XP  < 200 obs
+$88MAY03XN  opt_.mo^2 > 3
+$88MAR24XO  < 200 obs
+$88JUN05XO  < 200 obs
+$88JUL25XP  < 200 obs
+$88JUL21XW  < 200 obs
+$88JUL16XO  < 200 obs
+$88JUL16XI  < 200 obs
+$88JUL04X_  opt_.mo^2 > 3
+$88JUL03X_  opt_.mo^2 > 3
+$88FEB25XO  < 200 obs
+$88FEB21XO  < 200 obs
+$88FEB18X_  opt_.mo^2 > 3
+$88FEB10XO  < 200 obs
+$88DEC16XN  < 200 obs
+$88DEC07XO  < 200 obs
+$88AUG29XP  < 200 obs
+$88AUG22XO  < 200 obs
+$88AUG18XO  isnan(opt_.mo)
+$88AUG12XO  opt_.mo^2 > 3
+$88APR28XO  < 200 obs
+$88APR22X_  < 200 obs
+$88APR10XO  < 200 obs
+$88APR02D_  isnan(opt_.mo)
+$87OCT05XI  < 200 obs
+$87MAY21X_  opt_.mo^2 > 3
+$87MAR29XI  < 200 obs
+$87JUL28X_  opt_.mo^2 > 3
+$87JUL22XI  < 200 obs
+$87JUL17XI  < 200 obs
+$87JUL02XI  < 200 obs
+$87JAN19XH  < 200 obs
+$87JAN18XI  < 200 obs
+$87JAN13XI  < 200 obs
+$87FEB13XA  opt_.mo^2 > 3
+$87FEB12XI  < 200 obs
+$87FEB02XI  < 200 obs
+$87DEC19XI  opt_.mo^2 > 3
+$87DEC18XH  opt_.mo^2 > 3
+$87AUG21X_  opt_.mo^2 > 3
+$87AUG19XM  < 200 obs
+$87AUG15XN  opt_.mo^2 > 3
+$87AUG11XI  < 200 obs
+$87AUG11X_  < 200 obs
+$87AUG06XI  < 200 obs
+$87AUG03XN  < 200 obs
+$87AUG01XI  < 200 obs
+$87APR28XI  < 200 obs
+$86NOV04X_  opt_.mo^2 > 3
+$86MAY03XI  < 200 obs
+$86JAN05X_  opt_.mo^2 > 3
+$86FEB26X_  < 200 obs
+$86FEB23X_  opt_.mo^2 > 3
+$86DEC10X_  opt_.mo^2 > 3
+$86AUG16XI  < 200 obs
+$85SEP29DD  isnan(opt_.mo)
+$85SEP28DD  opt_.mo^2 > 3
+$85SEP04X_  removed by hand
+$85SEP01X_  < 200 obs
+$85MAY07XA  opt_.mo^2 > 3
+$85MAR07X_  opt_.mo^2 > 3
+$85JAN13XI  < 200 obs
+$85JAN09X_  opt_.mo^2 > 3
+$84SEP20XI  < 200 obs
+$84OCT31X_  opt_.mo^2 > 3
+$84MAY23X_  < 200 obs
+$84MAY13X_  < 200 obs
+$84MAY03X_  < 200 obs
+$84MAR24D_  opt_.mo^2 > 3
+$84MAR15X_  < 200 obs
+$84MAR09XP  < 200 obs
+$84MAR03X_  < 200 obs
+$84JUL31X_  opt_.mo^2 > 3
+$84JUL27XI  < 200 obs
+$84JUL23X_  opt_.condn > 10^25
+$84JUL22XA  < 200 obs
+$84JAN29X_  < 200 obs
+$84FEB29X_  opt_.mo^2 > 3
+$84FEB28XP  < 200 obs
+$84FEB26X_  opt_.mo^2 > 3
+$84FEB20X_  removed by hand
+$84FEB11D_  isnan(opt_.mo)
+$84FEB08X_  < 200 obs
+$84AUG07X_  opt_.mo^2 > 3
+$84APR26X_  opt_.mo^2 > 3
+$84APR22X_  opt_.mo^2 > 3
+$84APR17X_  opt_.mo^2 > 3
+$84APR12X_  opt_.mo^2 > 3
+$84APR09X_  opt_.mo^2 > 3
+$83SEP27X_  opt_.mo^2 > 3
+$83SEP22X_  < 200 obs
+$83NOV12X_  opt_.mo^2 > 3
+$83NOV10X_  opt_.mo^2 > 3
+$83NOV08X_  opt_.mo^2 > 3
+$83MAY20D_  isnan(opt_.mo)
+$83MAY16X_  < 200 obs
+$83MAY11X_  < 200 obs
+$83JUN13X_  < 200 obs
+$83JUN07X_  < 200 obs
+$83JUN06X_  opt_.mo^2 > 3
+$83JUL26RR  opt_.mo^2 > 3
+$83JUL26LL  opt_.mo^2 > 3
+$83JAN22D_  isnan(opt_.mo)
+$83FEB21X_  opt_.mo^2 > 3
+$83AUG29X_  < 200 obs
+$83AUG22XJ  removed by hand
+$82SEP20X_  opt_.mo^2 > 3
+$82SEP13X_  < 200 obs
+$82OCT21XA  opt_.mo^2 > 3
+$82OCT01D_  isnan(opt_.mo)
+$82NOV27D_  isnan(opt_.mo)
+$82NOV15X_  < 200 obs
+$82MAR17X_  < 200 obs
+$82JUN20XA  opt_.mo^2 > 3
+$82JUN17X_  < 200 obs
+$82JUN16X_  < 200 obs
+$82JUL01D_  isnan(opt_.mo)
+$82DEC17X_  removed by hand
+$82AUG14D_  isnan(opt_.mo)
+$82APR19XA  < 200 obs
+$81NOV20X_  isnan(opt_.mo)
+$81NOV19X_  opt_.mo^2 > 3
+$81MAY13X_  opt_.mo^2 > 3
+$81JAN22XA  < 200 obs
+$81FEB27X_  < 200 obs
+$80OCT21X_  opt_.mo^2 > 3
+$80JAN25D_  isnan(opt_.mo)
+$80APR13X_  opt_.mo^2 > 3
+$80APR11XQ  opt_.mo^2 > 3
+$79AUG03XX  opt_.mo^2 > 3

@@ -1,0 +1,570 @@
+* VERSION 2017Mar21_iGSFC 
+* CATALOG equip.cat    
+* EQUIP.CAT - station equipment
+*  
+* -----------  NEWEST ENTRIES GO AT THE TOP ---------------------
+* 2017Mar21 JMG. Changed Nyalesund, Wettzell from Mark5 Mark5B-->DBBC MARK5B
+* 2017Mar21 JMG. Added DSS34 and DSS36
+* 2017Jan18 KOL. Updated METSAHOV recorder (Mark5A => Mark5B) and changed to DBBC to reflect what is in the log (T2111)
+* 2016Nov21 JMG. Modified equipment type at KOKEE12M, WESTFORD and GGAO to RDBE
+* 2016Oct27 JMG. Updated WETTZ13N recorder. Mark6-->Mark5B
+* 2016Oct12 JMG. Modified SEFDs of ISHIOKA to  1950 1750 (X S) from 2000 4000.
+* 2016Oct12 JMG. Modified SEFDs of Westford from 1500 1400 ot 3000 4000
+* 2015Oct12 JMG. Modified GGAO SEFD from 3000 3000 to 3500 3000
+* 2016Sep27 JMG. Added IRBENE in Latvia per 2016Sep27 V. Bezrukovs
+* 2016Aug22 JMG.  Changed HOBART26 to Mark4 Mark5a
+* 2016Jul20  JMG  Changed TIGOPLTA to AGGO. Moved to top of file so in alphabetical order.  
+* 130716 dbb Add TIGOPLTA as the future home of TIGO at La Plata, Argentina.
+* 2016Mar30 JMG. Changed SESHAN25 to DBBC
+* 2016Jan25 JMG. Added Kokee12M. Based on GGAO12M. Both KOKEE12M and GGAO12M SEFDs set to 3000 3000
+* 2015Jun24 JMG. Updated to reflect stations that have DBBC as reflected in the logs:
+*    Changes include: WETTZ14N, WETTZ13S, MEDICINA,AUSCOPE,HART15M, RAEGYEB,...
+* 2015Jun17 JMg. Changed Warkworth SEFDs to be more representative of what we are seeing from snranal.
+* 2015Apr22 JMG. Commented out duplicate PARKES entries. Got rid of K-band PARKES entries
+* 2015Apr21 JMG. Commented out YEBESDBC (for testing DBBC) and changed YEBES40M to none MARK5B
+* 2015Feb25 JMG. Added RAEGYEB 
+* 2015Feb23 JMG. Added  ISHIOKA from jd1502 schedule
+* 2015Feb12 JMG. Put in WETTDBBC = Wettzell DBBC
+* 2015Jan22           Modified equipment for Wettzell twin telescopes. Use HART15M SEFDs
+* 2014Dec10 JMG.      Noto updated per email Piettro Cassaro. Now (none, Mark5B). none=DBBC which is not recognized yet. 
+* 2014Dec10 JMG.      Sejong X,S SEFDS==>5000
+* 2014Nov06 JMG.      Added DSS45
+* 2014Sep03 JMG.      Updated YARRA KATH12 HOBART12
+* 2014Aug26 JMG.      YARRA changed to 4500 5500;  HARTRAO rack changed to 'none'. 
+* 2014Jul01 JMG.      Further modification of Twin 'none Mark5B' (Is really DBBC which is not recognized yet.)
+* 2014Jun03 JMG.      Added twin telescope per email from arno Muesken
+* 140516    dbb       Add TIANMA65 per Fengchun Shu.
+* 2014May06 JMGipson  Made "none Mark5B"  default for Onsala60. Commented out DBBC test version
+* 2014May02 JMGipson  Changed rack tpe of Tsukuba K4-2 per E. Himwich email 5/2/14
+* 2014Mar28 JMGipson  Changed rack type of Zc to none
+* 2014Mar25 JMGipson  Added Od=ONSALA60 with DBBC
+* 2013Dec17 JMGipson  Added Yd=YEBES with DBBC
+* 2013Dec13 JMGipson. chaged SEFs at Sv, BD, Zc. X: 1200->400;  S:1500-->600
+* 2013Nov13 JMGipson. Changed X-band SEFDs of Kokee to 2000 per conversation with E. Himwich 
+* 2013Oct17 JMGipson. S-SEFD of NyAlesund changed from 2500--1500
+* 2013Oct11 JMGipson. Changed rack type to 'none' at Ht YG Ke
+* 2013Jul11 JMGipson. Changed equipment at Sejong to K4-1 K5
+* 2013Jul10 JMGipson. Changed SEFD at Sv, BD, Zc:  X: 400-->1200, S: 600-->1500. 
+*                     This reflects fact that will run warm for half of August
+* 2013Jul08 JMGipson. Changed S-SEFD of NyAlesund: 1500-->2500
+* 2013Jun19 JMGipson. Changed SEDF of Kokee
+* 2013May15 JMGipson. Changed name of GOR7102 to GGAO12M
+* 2013Apr10 JMGipson. Modified Sejong equiptment per email from Yi.
+* 2013Mar27 JMGipson. Added Sejong
+* 2013Mar20 JMGipson. Changed Effelsberg to none. 
+* 2012Jan18 JMGipson. Added GORF7102=GGAO 12m
+*
+*
+**************************************************************
+* Note: this file will be updated frequently as equipment    *
+*       is moved around.  This file reflects the most        *
+*       recent, current, and/or planned deployment of        *
+*       equipment.  Do not use this file for planning        *
+*       experiments -- check first!                          *
+**************************************************************
+* SEFD for ATA antenna:
+*
+* Tsys = 45K
+* eff = 0.6
+* k= 1.38e-23 m^2 kg s^-2 K^-1
+* D = 6.1 m
+*
+* SEFD = 2*k*Tsys/(pi*(D/2)^2*eff)/1.e-26 = 7083 Jy
+
+* Last update
+* 2012Nov12 JMGipson.  Changed Westford to Mark5B
+
+*
+* Last update:  
+* 920915 NRV Added SEFD parameters for R&D stations
+* 921005 NRV Added NRAO_851, made NRAO_140 HD
+* 930601 nrv Added SEFDs for new stations per DBS
+* 930603 nrv Algonquin has TVDS-1 (03)
+*            Fortaleza has OVRO_139 (01)
+*            Noto, Ny Alesund have RICHMOND (66)
+* 930604 nrv Seshan now high density
+* 930621 nrv Modified Kokee SEFDs
+*            All VLBA thin tape
+* 930623 nrv Seshan high density postponed until late July
+* 930714 nrv Yellowknife has TVDS-3, Gilcreek has Moj-VLBA
+* 930716 nrv Adjust SEFD for Fortaleza, O'Higgins
+* 930721 nrv Add Kokee SEFD parameters for elevation dependence
+* 930806 nrv Add Mizsawa 10-m
+* 930921 nrv Change Seshan to high density, VLBA
+* 931028 nrv Urumqi terminal is 67, formerly at Seshan
+* 931029 nrv Update IDs written on tape and read by correlator.
+* 931119 nrv Add SEFD parameters to all VLBA stations
+* 940127 nrv Change VLBA to 14-pass tapes
+* 940411 nrv Add MV3-LOW test entry for 0 deg elevation
+* 940523 nrv Change Crimea to 3000/2000 uncooled values (conservative)
+* 940719 nrv NOTO will have its own terminal (soon?)
+* 941011 nrv Change Ny Alesund name per C. Ma and M. Eubanks
+* 941024 nrv Ny Alesund SEFE elevation-dependence parameters per DBS
+* 950109 nrv Initial entry for NRAO20, copied from Kokee.
+* 950216 nrv SEFDs for NRAO20 per D. Shaffer.
+* 950410 nrv Hobart SEFD parameters per D. Shaffer.
+* 950503 nrv Add MIAMI20 per M. Eubanks.
+* 950518 nrv MIAMI20 is uncooled.
+* 950920 nrv Modify MEDICINA SEFDs and parameters per D. Shaffer.
+* 950927 nrv New SEFDs for YEBES, per D. Shaffer from EUROP3 data.
+* 951012 nrv Lower SEFDs for Algonquin per D. Shaffer, for cooled rx.
+* 960220 nrv Allow "passes" to be bit_density per station.
+* 960409 nrv Change "passes" to "headstacks", 1 or 2 (for Mark IV testing)
+*            including bit density.
+* 960417 nrv VLBA stations are high bit density as of 960430.
+* 960605 nrv Replace Matera's SEFDs with values from DBS.
+* 960624 nrv Replace Santiago's SEFDs with values from DBS.
+* 960819 nrv Make NRAO20 high density, thin tapes
+* 960912 nrv Santiago's X-band SEFD 5000 per DBS.
+* 961112 nrv Change X-band to 900 for Ny Alesund and Kokee per DBS.
+* 961212 nrv Add SEFDs for Effelsberg per A. Mueskens.
+* 970117 nrv Update Matera's SEFDs after wide-banding.
+* 970214 nrv Make Green Bank low density, thin tape for experiments
+*            to be processed at Mark III correlators.
+* 970307 nrv Update Noto's SEFDs per D. Shaffer.
+* 970324 nrv DSS15 is Mark IV, thin tape. DSS65 will be thin tape, as
+*            will DSS45. Leave all at low density for Mk3 correlators.
+* 970325 nrv Westford is Mark IV, thin tape, normal density.
+* 970328 nrv Westford, 15, 45, 65 all high density.
+* 970812 nrv Gilcreek and Kokee thin tape, high density as of 970901.
+* 971201 nrv Add TIGO, per europ6 schedule.
+* 971210 nrv Ny Alesund thin tape, low density.
+* 980127 nrv Ny Alesund thin tape, high density.
+* 980326 nrv Add Tsukuba. SEFDs per Fukuzaki.
+* 980505 nrv Add TAHITI for simulations, copy of NRAO20.
+* 980623 nrv Change TSUKUB32 SEFDs per DBS.
+* 980923 nrv Change Matera SEFD per DBS.
+* 981021 nrv Change HartRAO to thin tape, high density.
+* 981228 nrv Add SYOWA10 per Fukuzaki&Shibuya.
+* 990115 nrv SYOWA10 set for high density and long tape length.
+* 990222 nrv Tapes can only have 5 digit tape lengths for now.
+* 990222 nrv Wettzell thin tape, high density.
+* 990527 nrv Changed TIGO rack ID to 70, Tsukubsa to 108.
+* 990607 nrv Add rack and recorder types to end of the lines. 
+* 000125 nrv Add S2 equipment at ALGOPARK, ARIES-9M. Add CTVA S2. 
+* 000131 nrv Add entries for KASHIM11, KOGANEI, MIURA, TATEYMA as K4 types.
+*            Add K4 equipment for Kashima, Kashima34, Tsukuba.
+* 000314 nrv Change Matera to thin tape, high density.
+* 000314 nrv Remove second recorder for Tsukuba.
+* 000319 nrv Specify K4 default tape length in minutes.
+* 000510 nrv Change rack to "none" for S2 equipment at Canadian stations.
+* 000622 nrv Add Arecibo for completeness.
+* 000622 nrv Rack number for VLBA4 at Kokee will be 110.
+* 000622 nrv Rack number for VLBA4 at Green Bank will be 111.
+* 000802 nrv Change Matera equipment to Mk4/VLBA4.
+* 000802 nrv Change Matera SEFD to X/S 4000/2500 for temporary uncooled
+*            operations in Sept-Oct 2000. Use X/S 3500/2000 for short
+*            baseline (intra-Europe) sessions.
+* 000807 nrv Change TIGO SEFDs per H. Hase recommendation.
+* 000807 nrv Change CTVA SEFDs per C. Klatt.
+* 000828 nrv Assign 112 rack ID to O'Higgins VLBA4.
+* 000905 nrv Show Mk4 stations with 2 headstacks.
+* 001003 nrv Change equipment name at Syowa from SYOWA10 to SYOWA.
+* 001010 nrv Change Matera back to cooled SEFDs.
+* 001016 nrv Add SEFDs and equipment for C-band for JODRELL2,
+*            CAMBG32M, TORUN, WSTRBORK per P. Charlot info.
+* 001017 nrv Add SEFDs for C-band for EFLSBERG, MEDICINA, NOTO,
+*            ONSALA85, SESHAN, URUMQI per P. Charlot.
+*            NOTE: Stations with C-band SEFDs are listed with dual
+*            C-bands so that the FS drudg will read the resulting
+*            schedule file correctly. This will be corrected in
+*            the next FS release.
+* 001017 nrv Update URUMQI to Mark4 equipment and SESHAN to VLBA4.
+* 001017 nrv Fix some stations that had two recorders incorrectly
+*            specified. Should be two headstacks.
+* 001103 nrv NOTO changed to VLBA4 rack.
+* 001106 nrv MEDICINA changed to thin tape only.
+* 010410 nrv TSUKUBA has 2 headstacks but only one useable recorder.
+* 010508 nrv Add PARKES using MARPOINT equipment, Mk3 thick tape.
+* 010807 nrv Add Metsahovi from old .drg schedule info.
+* 010827 nrv Onsala thin tape, high density
+* 010919 nrv SESHAN thin tape, high density
+* 011002 nrv Add GBT_VLBA.
+* 011024 nrv Add SVETLOE per info in IVS AR2000.
+* 011101 nrv Add ZELENCHK per info from WEH.
+* 011101 nrv Assign rack ID 113 to TORUN.
+* 020107 nrv Change URUMQI, NOTO, EFLSBERG, YEBES to thin tape.
+* 010111 nrv Change OHIGGINS to thin tape, high density.
+* 020228 nrv Change YEBES to VLBA4 per P. Vicente.
+* 020228 nrv ALGOPARK temporarily has two sets of equipment, Mk3 and VLBA,
+*            Mk3 is default.
+* 020516 nrv Updated SEFD values for Onsala, HartRAO, Seshan based
+*            on analysis of snranal output by P. Charlot.
+* 020610 nrv Add S2 equipment to TIGO and KOKEE.
+* 020904 nrv Change ALGOPARK to thin tape, VLBA4 system.
+* 021016 nrv Change ALGOPARK to NRAO20 equipment. SVETLOE has TVDS-1.
+* 030702 nrv Add TIDBIN64, same equipment as DSS45.
+* 030828 nrv Hobart is Mk4. Set up as thin tape, though they are Mk5 only.
+* 040109 nrv Sent to Paul Lane for new formatter IDs: FORTLEZA  114,
+*            SVETLOE   115, ZELENCHK  116
+* 040111 nrv Change KOKEE to VLBA4 rack and recorder.
+* 040224 nrv Update METSHOVI to VLBA4 rack and recorder, thin tape,
+*            add SEFDs (scaled from Gilcreek values).
+* 040309 nrv Change METSHOVI (old mobile) to METSAHOV (astronomy antenna).
+* 040430 nrv Copy DSS15 to make a new DSS13. DSS13 may have its own equipment.
+* 040518 nrv METSAHOV has VLBA (not VLBA4) rack per A. Mujunen.
+* 040729 nrv Updated KASHIM11 and KOGANEI11 SEFD per config files.
+* 041014 nrv Add VLBA4 equipment to ZELENCHK. Change SVETLOE ID to 116,
+*            ZELENCHK 118, per P. Lane.
+* 041104 nrv Change SVETLOE equipment to Mark4, tape to thin (for scheduling
+*            Mk5 sessions).
+* 041213 nrv Correct KOKEE equipment to S2 recorder on S2 line.
+* 050405 nrv Update SYOWA S-band SEFD to 7500 per Y. Fukuzaki.
+* 050617 nrv Change DSN stations to single recorders.
+* 050629 nrv Change TIDBIN64 to single recorder too.
+* 050630 nrv Change PARKES SEFD to 200/300 per A. Fey.
+* 050726 nrv Change MATERA SEFDs to 5000/3000 due to warm receiver.
+* 050802 nrv Raise TIGOCONC X-band SEFD to 25000 per E. Himwich.
+* 050916 nrv Change GILCREEK to VLBA4 rack.
+* 050916 nrv Add X-band WSTRBORK.
+* 050921 dbb Change antenna name to DSS65A.
+* 051103 dbb Change Matera back to cooled SEFDs (1500/1300).
+* 051103 dbb Lower TIGOCONC X-band SEFD to 12000 per E. Himwich.
+* 060419 dbb Change SESHAN25 SEFDs from 1200/2500 to 700/1100 for new
+*            receiver per Tao An.
+* 060510 dbb Add ATCA, CEDUNA, and MOPRA per S. Pogrebenko and C. Phillips.
+* 060511 JMG.  Added K-band for HOBART, PARKES.
+*        JMG. Put in dummy Mark4 Mark4 equipment type for ATCA,CEDUNA, MOPRA,HOBART,PARKES
+* 060727 JMG. Made TIGOS and Kokees S2  configuration start with S2, e.g. S2-KO
+* 061107 dbb Add K4-1 K5 equipment for Syowa. Change number of headstacks to '1'.
+* 070112 jmg Added K4-2, K4-2 Equipment type for Kaashim34
+* 070221 JMG added BADARY based on ZELENCHUK
+* 070321 JMG changed number of headstacks for Tigo so could do 1GB RD 
+* 070427 dbb Raise FORTLEZA X-band SEFD to 10000 and S-band to 5000 per E. Himwich.
+* 070718 dbb Use SEFD value of 300 for X-band and S-band for Yebes 40-m for
+*            simulation purposes. (rough estimate)
+* 070723 JMG changed number of headstacks for Svetloe so could do 512Mb RD 
+* 071018 JMG Changed Rack, Rec for Fortleza to Mark4
+* 071020 JMG Modified KAshima KB to be K4-2  VLBA
+* 080414 dbb Change SEFDs for NYALES20 from (900/1200) to (2700/2400) due
+*            to warm receiver.
+* 080606 dbb Add AIRA, CHICHI10, and SINTOTU3.
+* 080617 dbb Add YEBES40M per P. de Vicente and P. Colomer. Comment out old YEBES
+*            to avoid confusion.
+* 082509 JMG. Changed most recorders to Mark5A
+* 082609 JMG. Changed Parkes to Mark4 MARk5A 
+* 08Oct07 JMG. Changed some more stations  Mark5A/K5 that I missed the first go round
+* 090126 dbb Change SEFDs for MATERA from (1500/1300) to (3500/2000) due
+*            to warm receiver per E. Himwich.
+* 090713 JMG. Changed SEFDS for NyAlesund back to 900/1200
+* 090821 dbb Raise TIGO X-band SEFD from 12000 to 20000 per D. MacMillan.
+* 090309 JMG. Changed KOGANEI ID to Kg to avoid collision with Kokee
+* 2009Sep22 JMG  Changed Kashima disk from Mk5 to K5 (fixed an error).
+* 2009Sep25 JMG  Changed CRIMEA rack Mark3-->Mark4.
+*                Changed AIAA, CHICHI, SINTOT  K4-2 -->K4-1
+*                CHanged TSUKUBA     to K4-2
+* 090921 dbb Add New Hobart, Katherine, Yarragadee, and Warkworth for simulation
+*            purposes.
+* 090928 dbb Add VERA stations Mizusawa and Ishigakijima.
+* 091007 dbb Double S-band SEFD for Mizusawa and Ishigakijima to 13160
+*            per Brian Corey.
+* 091118 dbb Raise KOKEE X-band SEFD from 900 to 2000 per E. Himwich.
+* 100521 dbb Change YEBES40M SEFD values from 420/420 to 250/1500 (X/S) per
+*            E. Himwich.
+*2010.06.15  JMG. Commented out S2 equipment for Zc. Made recorder Mark5B
+* 100811 dbb Change SEFDs for HOBART26 from 710/915 to 2130/1830 (X/S) due
+*            to warm receiver per Brett Reid.
+* 100913 dbb Change SEFDs for HOBART12 from 3800/3800 to 3500/3500 (X/S) due
+*            to new feed per Jim Lovell.
+* 101029 dbb Change SEFDs for HOBART12 from 3500/3500 to 9000/5500 (X/S) per
+*            Ed Himwich.
+* 100811 dbb Change SEFDs for MEDICINA from 310/500 to 970/1180 (X/S) due
+*            to warm receiver per Andrea Orlati.
+* 101118 dbb Change SEFDs for NYALES20 from (900/1200) to (2700/2400) due
+*            to warm receiver.
+* 101124 dbb Change SEFDs for NYALES20 to 4200/2600 (X/S) due to warm
+*            receiver per Ed Himwich.
+* 101206 dbb Change SEFDs for NYALES20 from (4200/2600) to (1500/2000) per
+*            Ed Himwich (receiver cold but remaining unresolved issues).
+* 110214 dbb Increase S-band SEFD for MATERA from 2000 to 3500 per Ed Himwich.
+* 110214 dbb Set SEFDs for WARK12M to 4100/4000 (X/S) per Sergei Gulyaev.
+* 110214 dbb Increase X-band SEFD for KOKEE from 2000 to 3000 per Ed Himwich.
+* 110308 JMG Reset Hobart26 SEFD per email from Jim Lovell, Ed Himwich
+* 110322 JMG Changed to Mark5B: Badary, Svetloe 
+*            Also changed Metshavi SEFDS per email from Ed Himwich. 
+* 110411 JMG Changed Yarragdee  equip per email J. Lovell
+* 110607 dbb Double X-band SEFD for KASHIM11 from 5500 to 11000 per Ed Himwich.
+* 110607 dbb Double S-band SEFD for FORTLEZA from 5000 to 10000 per Ed Himwich.
+* 110608 dbb Change SEFD values for WARK12M from 4100/4000 to 40000/8000 (X/S)
+*            per Ed Himwich.
+* 110630 dbb Change SEFD values for FORTLEZA from 10000/10000 to 5000/5000 (X/S)
+*            per Ed Himwich.
+* 110630 dbb Change TIGO recorder to MARK5B per Hayo Hase.
+* 110711 dbb Add KUNMING per Fengchun Shu.
+* 110711 dbb Change HARTRAO recorder to MARK5B per Ed Himwich.
+* 110714 dbb Change X-band SEFD for TIGO from 20000 to 10000 per Ed Himwich.
+* 110714 dbb Change SEFD values for NYALES20 from 1500/2000 to 1000/1500 (X/S)
+*            per Ed Himwich.
+* 110714 dbb Change SEFD values for MATERA from 3500/3500 to 1600/2200 (X/S)
+*            per Ed Himwich.
+* 110714 dbb Change SEFD values for HOBART12 from 9000/5500 to 5000/4000 (X/S)
+*            per Ed Himwich.
+* 110728 dbb Change X-band SEFD for TIGO from 10000 to 20000 per Ed Himwich.
+* 110823 dbb Change SEFD values for MEDICINA from 970/1180 to 1100/1500 (X/S)
+*            per Ed Himwich.
+* 111139 JMG Changed Kunming recorder to Mark5B
+* 120118 dbb Change X-band SEFD for KOKEE from 3000 to 2000 per Ed Himwich.
+* 120118 dbb Add JAXA station UCHINOUR.
+* 120320 dbb Change X-band SEFD for WARK12M from 40000 to 8000 per Ed Himwich.
+* 120510 JMG Updated a bucnch of stations based on email from Rich and Ed.
+* 120907 JMG updated all stations that we know are Mark5B.
+* 120925 dbb Add 15-m antenna at Hartebeesthoek (HART15M).
+* 121026 JMG Added terminal info to SYOWA. Somehow this disappeared.
+*
+*
+* NOTE: Multiple equipment lines may appear for the same antenna name,
+*       but any Mk3/4/VLBA equipment should be first, followed by any
+*       S2 or K4 equipment. SKED picks the first equipment it finds
+*       that matches the antenna name in the antenna.cat line.
+* NOTE: Multiple equipment lines may appear for different band
+*       observing. 
+* Antenna:  the name of the antenna where this equipment is installed.
+*           This name must match a name in the antenna catalog.
+* ID:       the electronics rack ID corresponding to the DAT_Name.
+*           This ID must be unique within the set of participating stations
+*           in a session. For Mk4 formatters, this ID must have at least
+*           two zero bits. This ID is matched to the ID on the 
+*           antenna.cat line.
+* DAT_Name: a name assigned to the DAT. Use "S2" or "K4" as the first
+*           two characters of the name to indicate S2 or K4 equipment.
+*           K4 or S2 equipment must follow any Mk3/4/VLBA equipment lines.
+*           It's not necessary any longer to have the names include the
+*           recorder type because this information is included in the
+*           recorder field at the end of the line.
+* Heads:    number of headstacks, 1 or 2, followed by "x56000" for 
+*           a high density station. For K4, this field is unused,
+*           it should be set to '1'. For S2, this field is the tape
+*           speed, either LP or SLP.
+* Tape_len: For Mk3/4/VLBA maximum length of tape at this station, 
+*           preceeded by "2x" for two tape drives. 
+*           For S2/K4 the tape length in minutes.
+*           This parameter is settable within sked and so the value 
+*           in this field should be a default or nominal type.
+* X,S SEFD: provided by D. Shaffer, all are on a consistent scale.
+* SEFD par: parameters for SEFD vs. elevation function (optional)
+* Equip   : rack, recorder1, recorder2 (optional). 
+*           Valid racks: 'none' 'Mark3A' 'VLBA' 'VLBAG' 'VLBA/8' 'VLBA4/8'
+*                        'Mark4' 'VLBA4' 'K4-1' 'K4-2' 'K4-1/K3' 'K4-2/K3'
+*                        'K4-1/M4' 'K4-2/M4','LBA','MARK5','VLBA5'
+*           Valid recorders: 'none' 'unused' 'Mark3A' 'VLBA' 'VLBA4'
+*                        'Mark4' 'S2' 'K4-1' 'K4-2','Mark5A', 'Mark5B'
+*
+*Antenna    ID  DAT_Name  Heads Tape_len  X  SEFD   S SEFD  SEFD param/Equip
+*                         den/spd ft/min     (Jy)      (Jy) 
+ AGGO       70  TIGO      2x56000 17640   X 20000   S 15000 VLBA5 MARK5B
+ AIRA       Ai  AIRA      1x56000 80000   X 10300   S  7400 K4-1  K5 
+*ALGOPARK   03  TVDS-1      1      8820   X   200   S   250 Mark3A Mark3A
+ ALGOPARK  106  NRAO20   1x56000  17640   X   200   S   250 VLBA4 MARK5A
+ ALGOPARK   AL  S2-ALGO    SLP      361   X   200   S   250 none S2
+ ARECIBO   109  ARECIBO     1      8820  
+ ARIES_4M   08  MV2_4M      1      8820   X 64000   S 80000
+ ARIES_9M   36  TVDS-3      1      8820   X  7600   S  6500 Mark3A Mark3A
+ ARIES_9M   YL  S2-YLOW    SLP      361   X  7600   S  6500 none S2
+ ATCA       At  ATCA        1       200   K  1500   K  1500 Mark4 MARK5A
+ BADARY     BD  BADARY    1x56000 17640   X   400   S   600 none MARK5B
+* BADARY     BD  BADARY    1x56000 17640   X   1200   S 1500 none MARK5B
+*MOJAVE12   01  OVRO_130    1      8820   X  2750   S  3100
+ BR-VLBA    BR  BR-VLBA  1x56000 2x17640  X   500   S   400 S 0.1 -2.087 3.087 X 0.5 0.731 0.269 VLBA MARK5A
+ CAMBG32M   CM  CAMBG32M 1x56000  17640   C   136   C   136 VLBA MARK5A
+ CHICHI10   Cc  CHICHI10  1x56000 80000   X 10300   S  7400 K4-1  K5 
+ CRIMEA     35  TVDS-2      1      8820   X  3000   S  2000 Mark5 MARK5B 
+ CTVA       CT  S2-CTVA    SLP      361   X 71000   S 75000 none S2
+ CEDUNA     Cd  CEDUNA      1       200   K  2500   K  2500 Mark4 MARK5A
+ DSS13      68  DSS13    2x56000  17640   X   400   S   250 Mark4 MARK5A
+ DSS14      68  DSS15       1      8820   X     0   S     0
+*DSS15      68  DSS15       1      8820   X   400   S   250
+*DSS15      68  DSS15    2x56000 2x17640   X   400   S   250 Mark4 MARK5A
+ DSS15      68  DSS15    2x56000  17640   X   400   S   250 Mark4 MARK5A
+*DSS45      39  DSS45       1      8820   X   185   S   200
+*DSS45      39  DSS45    2x56000 2x17640   X   185   S   200 Mark4 MARK5A
+ DSS34      34  DSS34    2x56000  17640   X   185   S   200 Mark4 MARK5A
+ DSS36      36  DSS36    2x56000  17640   X   185   S   200 Mark4 MARK5A
+ DSS45      39  DSS45    2x56000  17640   X   185   S   200 Mark4 MARK5A
+*TIDBIN64   39  DSS45    2x56000 2x17640   X   185   S   200 Mark4 MARK5A
+ TIDBIN64   39  DSS45    2x56000 17640   X   185   S   200 Mark4 MARK5A
+*DSS65      69  DSS65       1      8820   X   220   S   195
+*DSS65      69  DSS65    2x56000 2x17640   X   220   S   195 Mark4 MARK5A
+*DSS65      69  DSS65    2x56000 17640   X   220   S   195 Mark4 MARK5A
+ DSS65A     69  DSS65A   2x56000 17640   X   220   S   195 Mark4 MARK5A
+ DSS54      54  DSS54    2x56000 17640   X   220   S   195 Mark4 MARK5A
+*EFLSBERG   06  EFLSBERG    1      8820   X    40   S   100 Mark4 MARK5A
+ EFLSBERG   06  EFLSBERG 1x56000   17640  X    40   S   100 DBBC MARK5B
+* EFLSBERG   06  EFLSBERG 1x56000   17640  X    40   S   100 VLBA MARK5A
+ EFLSBERG   06  EFLSBERG 1x56000   17640  C    20   C    20 VLBA5 MARK5B
+ FD-VLBA    FV  FD-VLBA  1x56000 2x17640  X   500   S   400 S 0.1 -2.087 3.087 X 0.5 0.731 0.269 VLBA MARK5A
+* FORTLEZA   01  OVRO_130    1      8820   X  3000   S  3000 Mark3A Mark3A
+* FORTLEZA   01  OVRO_130    1      8820   X 10000   S  5000 Mark3A Mark3A
+ FORTLEZA   01  OVRO_130  2x56000   8820   X  5000   S  5000 Mark4 MARK5A
+*GILCREEK   36  TVDS-3      1      8820   X   750   S   800 X 1.0 0.954 0.0464 S 1.0 0.974 0.0263 VLBA MARK5A
+*GILCREEK  101  MOJ-VLBA    1      8820   X   750   S   800 X 1.0 0.954 0.0464 S 1.0 0.974 0.0263
+ GILCREEK  101  MOJ-VLBA 1x56000  17640   X   750   S   800 X 1.0 0.954 0.0464 S 1.0 0.974 0.0263 VLBA4 MARK5A
+ GGAO12M    Gs  GGAO12M   2x56000  17640  X  3500   S  3000 RDBE MARK6
+ GOLDVENU   16  DSS13       1      8820   X   500   S   350
+*HARTRAO    34  TDVS-VX1    1      8820   X  2000   S  1300
+*HARTRAO    34  TDVS-VX1 2x56000 17640   X  2000   S  1300 Mark4 MARK5A
+*HARTRAO    34  TDVS-VX1 2x56000 17640   X  1500   S  1300 Mark4 MARK5B
+*HARTRAO    34  TDVS-VX1 2x56000 17640   X  1500   S  1300 Mark5 MARK5B
+ HARTRAO    34  TDVS-VX1 2x56000 17640   X  1500   S  1300 none MARK5B
+ HART15M    Ht  HART15M  2x56000 17640   X  1400   S  1050 DBBC MARK5B
+ HATCREEK   03  TVDS-1      1      8820   X   525   S   460
+ HAYSTACK   00  HAYSTACK    1      8820   X  1050   S  6400
+ HN-VLBA    HN  HN-VLBA  1x56000 2x17640  X   500   S   400 S 0.1 -2.087 3.087 X 0.5 0.731 0.269 VLBA MARK5A
+*HOBART12   Hb  HOBART12  2x56000  17640  X  3500   S  3500 VLBA4 VLBA4
+*HOBART12   Hb  HOBART12  2x56000  17640  X  4500   S  5000 Mark4 MARK5B
+*HOBART12   Hb  HOBART12  2x56000  17640  X  3500   S  3500 Mark4 MARK5B
+ HOBART12   Hb  HOBART12  2x56000  17640  X  4300   S  5300 DBBC MARK5B
+*HOBART26   04  HRAS_085    1      8820   X   710   S   915 S 1.0 0.970 0.030  X 1.0 0.959 0.041 Mark3A Mark3A
+*HOBART26   04  HRAS_085 2x56000  17640   X  2130   S  1830 S 1.0 0.970 0.030  X 1.0 0.959 0.041 Mark4 MARK5A
+ HOBART26   04  HRAS_085 2x56000  17640   X  1200   S  800 S 1.0 0.970 0.030  X 1.0 0.959 0.041 MARK4  MARK5A 
+* HOBART26   04  HRAS_085 1x56000  17640   K  1800   K 1800  Mark4 MARK5A
+ HRAS_085   10  MV3_5M      1      8820   X  1450   S   900
+ IRBENE     IR  IRBENE   2x56000  17640   X  800    S  800 DBBC MARK5B
+ ISHIOKA    Is  ISHIOKA     1      100    X  1950   S  1750 K4-2 K5 
+ JODRELL2   37  JODRELL2 2x56000  17640   C   320   C   320 Mark4 MARK5A
+ *KASHIM34   Kk  K4-KA34     1       200   X   550   S   430 K4-2 K4-2
+ KASHIM34   KB  KASHIM34    1      8820   X   550   S   430 K4-2 K5 
+ KASHIM34   Kk  K4-KA34     1       200   X   550   S   430 K4-1 K5 
+ KASHIMA   160  KASHIMA     1      8820   X  2100   S  1100 Mark3A Mark3A
+ KASHIMA    Ka  K4-KA26     1       200   X  2100   S  1100 K4-2 K5 
+*KASHIM11   K1  K4-KA11     1       200   X  5500   S  3000 K4-2 K5 
+ KASHIM11   K1  K4-KA11     1       200   X 11000   S  3000 K4-2 K5 
+*KATH12M    Ke  KATH12M   2x56000  17640  X  3500   S  3500 VLBA4 MARK5A
+ KATH12M    Ke  KATH12M   2x56000  17640  X  4800   S  4800 DBBC MARK5B
+ KOGANEI    Kg  K4-KOGAN    1       200   X  5500   S  3000 K4-2 K5  
+ KAUAI      35  TVDS-2      1      8820   X  5700   S  5300 X 1.0 0.959 0.0412 S 1.0 0.976 0.0239
+*KOKEE     102  KO-VLBA  1x56000  17640   X   900   S   750 X 1.0 0.9453 0.0547 S 1.0 0.9695 0.0305 VLBA MARK5A
+*KOKEE     102  KO-VLBA  2x56000  17640   X   900   S   750 X 1.0 0.9453 0.0547 S 1.0 0.9695 0.0305 VLBA4 MARK5A
+ KOKEE     102  KO-VLBA  2x56000  17640   X  2000   S   750 X 1.0 0.9453 0.0547 S 1.0 0.9695 0.0305 VLBA5 MARK5B
+* KOKEE      Ko  S2-Ko      SLP      361   X   900   S   750 X 1.0 0.9453 0.0547 S 1.0 0.9695 0.0305 none S2
+ KOKEE12M    K2  KOKEE12M   2x56000  17640  X  3000   S  3000 RDBE MARK5B
+ KUNMING   103  KUNMING  1x56000   17640  X   600   S   500 VLBA5 Mark5B
+ KP-VLBA    KV  KP-VLBA  1x56000 2x17640  X   500   S   400 S 0.1 -2.087 3.087 X 0.5 0.731 0.269 VLBA MARK5A
+ LA-VLBA    LA  LA-VLBA  1x56000 2x17640  X   500   S   400 S 0.1 -2.259 3.259 X 1.0 0.934 0.0660  VLBA MARK5A
+ MADRID64   69  DSS65       1      8820   X     0   S     0
+ MARCUS    161  KASHIMA     1      8820   X 17000   S 12000
+*MARPOINT   09  MARPOINT    1      8820   X     0   S     0
+*MATERA    119  MATERA      1      8820   X  3000   S  5000
+*MATERA    119  MATERA      1      8820   X  1500   S   850
+*MATERA    119  MATERA      1      8820   X  1500   S  1300 Mark3A VLBA
+*MATERA    119  MATERA   1x56000  17640   X  4000   S  2500 Mark4 VLBA4
+*MATERA    119  MATERA   1x56000  17640   X  1500   S  1300 Mark4 VLBA4
+*MATERA    119  MATERA   1x56000  17640   X  5000   S  3000 Mark4 VLBA4
+*MATERA    119  MATERA   2x56000  17640   X  1500   S  1300 Mark4 MARK5A 
+ MATERA    119  MATERA   2x56000  17640   X  1600   S  2200 Mark5 MARK5B
+*MEDICINA   38  MEDICINA    1      8820   X  1000   S   850 S 1.0 0.962 0.038 X 1.0 0.931 0.069
+*MEDICINA   38  MEDICINA 2x56000  17640   X   310   S   500 S 0.5 0.839 0.161 X 0.1 -1.26 2.26 Mark4 MARK5A
+ MEDICINA   38  MEDICINA 2x56000  17640   X  1100   S  1500 S 0.5 0.839 0.161 X 0.1 -1.26 2.26 DBBC  MARK5B 
+ MEDICINA   38  MEDICINA 2x56000  17640  C   296    C   296 Mark4 MARK5A
+*METSHOVI   MH  METSHOVI 1x56000  17640   X  4500   S  3200 VLBA4 MARK5A
+*METSAHOV   MH  METSAHOV 2x56000  17640   X  6000   S  8000 VLBA4 MARK5A
+ METSAHOV   MH  METSAHOV 2x56000  17640   X  6000   S  8000 DBBC  MARK5B
+ MIURA      Mu  K4-MIURA    1       200   X  4500   S  4500 K4-2 K4-2
+ MIZUSGSI   MZ  MIZUSGSI    1      8820   X 24300   S 76300
+ MIZNAO10  250  MIZNAO10    1      8820   X  7250   S 31000
+ MK-VLBA    MK  MK-VLBA  1x56000 2x17640  X   500   S   400 S 0.1 -2.087 3.087 X 0.5 0.731 0.269 VLBA MARK5A
+ MCMURDO    MM  TVDS-X      1      8820   X 15000   S 15000
+ MOJAVE12   MO  MOJ-VLBA    1      8820   X  2750   S  3100 
+ MOJ-VLBA   MO  MOJ-VLBA    1      8820   X  2750   S  3100
+ MOPRA      Mp  MOPRA       1       200   K  1500   K  1500 Mark4 MARK5A
+ NL-VLBA    NL  NL-VLBA  1x56000 2x17640  X   500   S   400 S 0.1 -2.087 3.087 X 0.5 0.731 0.269 VLBA MARK5A
+ NOBEYA45   32  NOBEYA45           8820   X     0   S     0
+*NOTO       NO  NOTO        1      8820   X  1725   S  1100
+*NOTO       NO  NOTO        1      8820   X  1000   S   900 VLBA4 MARK5A
+ NOTO       NO  NOTO     1x56000  17640   X  1000   S   900 DBBC MARK5B 
+ NOTO       NO  NOTO     1x56000  17640   C   260   C   260 none MARK5B
+ NRAO85_3  103  VLBA85_3    1      8820   X   800   S   550
+ NRAO_13    GB  VLBASATL    1      8820   X  9600   S   550
+*NRAO85_1   KH  KOKEVLBA    1      8820   X   800   S   750
+ NRAO_140   100 NRAO_140    1      8820   X   730   S   530
+ GBT_VLBA  100  NRAO_140 1x56000  17640   X    15   X    15 VLBA MARK5A
+ NRAO20    106  NRAO20   1x56000  17640   X   900   S   600 X 1.0 0.9497 0.0503 S 1.0 0.9277 0.0723 VLBA MARK5A
+*NRAO20    106  NRAO20      1     17640   X   900   S   600 X 1.0 0.9497 0.0503 S 1.0 0.9277 0.0723
+ NYALES20   66  RICHMOND 2x56000  17640   X  1000   S  1500 S 1.0 0.979 0.021 X 1.0 0.962 0.038 DBBC MARK5B
+*OHIGGINS   OH  OHIGVLBA    1      8820   X  6300   S 12400
+*OHIGGINS  112  OHIGVLB4    1     17640   X 10000   S 18000 VLBA4 MARK5A
+*OHIGGINS  100  OHIGVLBA    1      8820   X 10000   S 18000 VLBA  MARK5A
+ OHIGGINS  100  OHIGVLBA 1x56000  17640   X 10000   S 18000 VLBA4 MARK5A
+*ONSALA60   02  ONSALA      1      8820   X  2450   S  3200 S 0.2 0.418 0.582 X 0.5 0.777 0.223 Mark4 MARK5A
+*ONSALA60   02  ONSALA   1x56000  17640   X  2450   S  3200 S 0.2 0.418 0.582 X 0.5 0.777 0.223 Mark4 MARK5A
+ ONSALA60   02  ONSALA   2x56000  17640   X  2000   S  2500 S 0.2 0.418 0.582 X 0.5 0.777 0.223  DBBC Mark5B
+* ONSALDBC  02d  ONSALA   2x56000  17640   X  2000   S  2500 S 0.2 0.418 0.582 X 0.5 0.777 0.223 None MARK5B
+* ONSALA85   02  ONSALA   1x56000  17640   C   600   C   600 Mark4 MARK5A
+ ORION_5M   10  MV3_5M   2x56000  17640   X 30000   S 45000 Mark4 MARK5A
+ MV3-LOW    10  MV3_5M      1     17640   X 30000   S 45000
+ OV-VLBA    OV  OV-VLBA  1x56000 2x17640  X   500   S   400 S 0.1 -2.087 3.087 X 0.5 0.731 0.269 VLBA MARK5A
+ OVRO_130   05  MV1_9M      1      8820   X   810   S   775
+*PARKES64   09  MARPOINT    1      8820   X   126   S   200 Mark3A Mark3A
+* PARKES64   09  MARPOINT    1      8820   K   800   K   800 Mark4  MARK5A
+* PARKES     09  MARPOINT    1      8820   K   800   K   800 Mark5  MARK5B
+* PARKES64   09  MARPOINT    1      8820   X   200   S   300 Mark3A Mark3A
+* PARKES64   09  MARPOINT    1      8820   X   200   S   300 Mark4 Mark5A
+ PARKES     09  MARPOINT    1      8820   X   200   S   300 Mark5 Mark5B
+ PIETOWN    PT  PT-VLBA   1x56000 2x17640  X   500   S   400 S 0.1 -2.002 3.002 X 0.25 0.494 0.506 VLBA MARK5A
+ RAEGYEB    Yj  RAEGYEB   1x56000 17640   X  1600   S  1700 DBBC MARK6
+*RICHMOND   66  RICHMOND    1      8820   X  2700   S  1800
+ MIAMI20    08  MV2_4M      1      8820   X  5500   S  5500 
+ SANTIA12   70  TVDS-VX2    1      8820   X  5000   S  3000
+ SC-VLBA    SC  SC-VLBA  1x56000 2x17640  X   500   S   400 S 0.1 -2.087 3.087 X 0.5 0.731 0.269 VLBA MARK5A
+*SESHAN25  104  SESHAN25 1x56000  17640   X  2000   S  2700 VLBA4 MARK5A
+ SESHAN25  104  SESHAN25 2x56000  17640   X   700   S  1100 DBBC MARK5B 
+* SESHAN25  104  SESHAN25 1x56000  17640   C   520  C   520 
+ SEJONG     Kv  SEJONG    1x56000 17640   X  5000   S  5000 K4-1  K5
+ SEST       70  TVDS-VX2    1      8820   X  8000   S 12000
+ SINTOTU3   S3  SINTOTU3  1x56000 80000   X 70900   S 77700 none K4-1 
+*SVETLOE   116  TVDS-1      1      8820   X   400   S   600 Mark3A Mark3A
+ SVETLOE   116  TVDS-1   2x56000  17640   X   400   S   600 none   MARK5B
+* SVETLOE   116  TVDS-1   2x56000  17640   X   1200   S  1500 none   MARK5B
+* SVETLOE    SV  S2-SVET    SLP      361   X   400   S   600 none S2
+*SYOWA10    SY  SYOWA-K4 1x56000  99999   X 11230   S  5300
+*SYOWA      SY  SYOWA-K4 1x56000  99999   X 11230   S  5300
+*SYOWA      SY  SYOWA-K4 1x56000  99999   X 11230   S  7500 
+ SYOWA      SY  SYOWA-K4    2     99999   X 11230   S  7500 K4-1 K5 
+ TAHITI     TH  TAHITI   1x56000  17640   X   900   S   600 X 1.0 0.9497 0.0503 S 1.0 0.9277 0.0723
+ TATEYAMA   Ty  K4-TATEY    1       200   X  4500   S  4500 K4-2 K5 
+ TIANMA65  109  TIANMA65 2x56000  17640   X    60   S    90 VLBA5 MARK5B
+*TIGO       70  TIGO      1x56000 17640   X  7000   S 30000 VLBA4 MARK5A
+*TIGO       70  TIGO      1x56000 17640   X  8500   S 15000 VLBA4 MARK5A
+ TIGO       70  TIGO      2x56000 17640   X 20000   S 15000 VLBA5 MARK5B
+*TIGO       70  S2-TIGO     SLP     361   X 12000   S 15000 none S2
+ TORUN     113  TORUN     1x56000 17640   C   250   C   250 VLBA MARK5A
+*TSUKUB32   TS  TSUKUB32  1x56000 17640   X   300   S   300
+ TSUKUB32  108  TSUKUB32  2x56000 17640   X   320   S   360 K4-2      K5 
+* TSUKUB32   TK  K4-TSUKB    1       100   X   320   S   360 K4-2     K5
+* TSUKUB32   T2  TS-K4M4     1       100   X   320   S   360 K4-2/M4  K5
+ UCHINOUR   Uc  UCHINOUR     1      100   X   460   S  360  X 1.0 0.890 0.110 S 1.0 0.920 0.080 K4-1 K5
+*URUMQI     67  URUMQI      1      8820   X  1500   S  1500
+*URUMQI     67  URUMQI      1      8820   X  1500   S  1500 Mark4 MARK5A
+ URUMQI     67  URUMQI    1x56000 17640   X  1500   S  1500 Mark5 MARK5B
+ URUMQI     K4  URUMQI      1       200   C   353   C   353 Mark5 MARK5B
+  USSURISK   US  USSUVLBA    1      8820   X   100   S   100
+* VERAISGK   Vs  K4-ISGK      1      100   X  4880   S  6580 X 1.0 0.890 0.110 S 1.0 0.920 0.080 K4-1 K4-2
+* VERAMZSW   Vm  K4-MIZ20     1      100   X  4880   S  6580 X 1.0 0.890 0.110 S 1.0 0.920 0.080 K4-1 K4-2
+ VERAISGK   Vs  ISGK    2x56000 17640   X  4880   S 13160  K4-1 K5
+ VERAMZSW   Vm  MIZ20   2x56000 17640   X  4880   S 13160  K4-1 K5
+ VLA        65  VLA         1      8820   X     0   S     0
+*WARK12M    Ww  WARK12M   2x56000  17640  X  3500   S  3500 Mark4 MARK5A
+ WARK12M    Ww  WARK12M   2x56000  17640  X  4600   S  4200 DBBC MARK5B
+*WESTERBK   11  WESTERBK    1      8820   X     0   S     0
+ WSTRBORK   11  WSTRBORK  2x56000 17640   C    60   C    60 Mark4 MARK5A
+ WSTRBORK   11  WSTRBORK  2x56000 17640   X    60   X    60 Mark4 MARK5A
+ WESTFORD   07  WESTFORD  2x56000 17640   X  3000   S  4000 S 1.0 0.962 0.0384 X 1.0 0.939 0.0608 RDBE MARK6
+*WETTZELL   33  WETTZELL    1      8820   X   750   S  1115 S 1.0 0.934 0.0660 X 1.0 0.948 0.0516
+ WETTZELL   33  WETTZELL  2x56000 17640   X   750   S  1115 S 1.0 0.934 0.0660 X 1.0 0.948 0.0516 DBBC  MARK5B
+ WETTDBBC   Wd  WETTDBBC  2x56000 17640   X   750   S  1115 S 1.0 0.934 0.0660 X 1.0 0.948 0.0516 None  MARK5B
+ WETTZELL   WK  K4-WETTZ  1         100   X   750   S  1115 S 1.0 0.934 0.0660 X 1.0 0.948 0.0516 Mark4 K5
+ WETTZ13N   Wn  WETTZ13N  2x56000  17640  X  1400   S  1050 DBBC MARK5B
+ WETTZ13S   WS  WETTZ13S  2x56000  17640  X  1400   S  1050 DBBC MARK6
+*YARRA12M   Yg  YARRA12M  2x56000  17640  X  3500   S  3500 VLBA4 MARK5A 
+*YARRA12M   Yg  YARRA12M  2x56000  17640  X  4500   S  5000 VLBA4 MARK5A 
+* YARRA12M   Yg  YARRA12M  2x56000  17640  X  9000   S  5500 none MARK5B
+ YARRA12M   Yg  YARRA12M  2x56000  17640  X  5800   S  4300 DBBC MARK5B  
+*YEBES     105  YEBES       1      8820   X  3000   S  5000 VLBA  MARK5A
+*YEBES     105  YEBES     1x56000 17640   X  3000   S  5000 VLBA4 MARK5A
+*YEBES40M  105  YEBES     1x56000 17640   X   420   S   420 VLBA4 MARK5A
+*YEBES40M  105  YEBES     1x56000 17640   X   250   S  1500 VLBA5 MARK5B
+ YEBES40M  105  YEBES     1x56000 17640   X   250   S  1500  DBBC MARK5B
+* YEBESDBC  xx5  YEBES     1x56000 17640   X   250   S  1500 none MARK5B
+*RAEGYEB    Yj  RAEGYEB   2x56000  17640  X  1400   S  1050 Mark5 MARK5B
+ ZELENCHK  118  ZELENCHK  2x56000 17640   X   400   S   600 none MARK5B
+* ZELENCHK  118  ZELENCHK  2x56000 17640   X   1200   S  1500  none MARK5B
+* ZELENCHK   ZC  S2-ZELEN   SLP      361   X   400   S   600 none S2

@@ -1,0 +1,208 @@
+## Master file format version 1.0           2001.08.21 CCT&NRV
+
+                         1984 MULTI-AGENCY SCHEDULE
+
+                     Last Updated - June 25, 2002 - CCT
+
+
+  SESSION  SESSION DATE  DOY TIME  DUR       STATIONS               SKED CORR STATUS  PF   DBC  SUBM  DEL  MK4
+    NAME     CODE  mondd ddd hh:mm hr                                         yymondd      CODE       days NUM
+----------------------------------------------------------------------------------------------------------------
+|IRIS-A152 |IA152 |JAN04|4  |     |  |WfHrMoRi                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|MOJ13-TIE2|CURTK2|JAN07|7  |     |  |MoGv                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A154 |IA154 |JAN09|9  |     |  |WfHrWz                       |NOAA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A155 |IA155 |JAN14|14 |     |  |WfHrRi                       |NOAA|HAYS|       |    |X   |NASA|     |    |
+|MOJ13-TIE3|CURTK3|JAN14|14 |     |  |MoGv                         |NASA|HAYS|       |    |XP  |NASA|     |    |
+|IRIS-A156 |IA156 |JAN24|24 |     |  |WfHrOnWzRi                   |NOAA|HAYS|       |    |X   |NASA|     |    |
+|KASHMOJ   |PAC841|JAN24|24 |     |  |MoKa                         |NASA|HAYS|       |    |XK  |NASA|     |    |
+|SURVEY-N1 |SYN184|JAN25|25 |     |  |WfHrOn                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A157 |IA157 |JAN29|29 |     |  |WfHrWz                       |NOAA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|IRIS-A158 |IA158 |FEB03|34 |     |  |WfWzRiHr                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A159 |IA159 |FEB08|39 |     |  |WfWzHr                       |NOAA|HAYS|       |    |X   |NASA|     |    |
+|NET-P47   |DSN841|FEB11|42 |     |  |RoGvTi                       |JPL |JPL |       |    |D   |NASA|     |    |
+|IRIS-A160 |IA160 |FEB13|44 |     |  |HrRiWf                       |NOAA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A161 |IA161 |FEB18|49 |     |  |RiWfWzHr                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|CDP-84A   |CDP84A|FEB20|51 |     |  |J1PbMoVbOo                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|PHSE-DELY1|PD841 |FEB21|52 |     |  |MoOo                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|CDP-84B   |CDP84B|FEB23|54 |     |  |MoFoOoVbHc                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A162 |IA162 |FEB23|54 |     |  |WfOnHrWz                     |NOAA|HAYS|       |    |XA  |NASA|     |    |
+|TRANS-ATL1|XAT841|FEB24|55 |     |  |HsOn                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|KASHIMA   |PAC842|FEB24|55 |     |  |MoKaHc                       |NASA|HAYS|       |    |XW  |NASA|     |    |
+|CDP-84C   |CDP84C|FEB26|57 |     |  |OoHcVbMoPr                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A163 |IA163 |FEB28|59 |     |  |WfWzHr                       |NOAA|HAYS|       |    |XP  |NASA|     |    |
+|CDP-84D   |CDP84D|FEB29|60 |     |  |MoVbSpDm                     |NASA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|CDP-84E   |CDP84E|MAR03|63 |     |  |MoBbVbOc                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A164 |IA164 |MAR04|64 |     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XP  |NASA|     |    |
+|IRIS-A165 |IA165 |MAR09|69 |     |  |WfHrWz                       |NOAA|HAYS|       |    |XP  |NASA|     |    |
+|IRIS-A166 |IA166 |MAR14|74 |     |  |WfHrOnWz                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|SURVEY-N2 |SYN284|MAR15|75 |     |  |WfHrOn                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A167 |IA167 |MAR19|79 |     |  |RiWfHrWz                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|NET-R27   |DSN842|MAR24|84 |     |  |RoGvTi                       |JPL |JPL |       |    |D   |NASA|     |    |
+|IRIS-A168 |IA168 |MAR25|85 |     |  |RiWzWfHr                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A169 |IA169 |MAR30|90 |     |  |HrWz                         |NOAA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT84-093 |I84093|APR02|93 |     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A170 |IA170 |APR03|94 |     |  |RiHrWfWz                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|INT84-094 |I84094|APR03|94 |     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-096 |I84096|APR05|96 |     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-097 |I84097|APR06|97 |     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-098 |I84098|APR07|98 |     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-099 |I84099|APR08|99 |     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A171 |IA171 |APR08|99 |     |  |WfHrRiWz                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|CDP-84F   |CDP84F|APR09|100|     |  |MoMlOoJ1                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT84-101 |I84101|APR10|101|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-102 |I84102|APR11|102|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-103 |I84103|APR12|103|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|CDP-84G   |CDP84G|APR12|103|     |  |MoMeVbHrQuHcOo               |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A172 |IA172 |APR13|104|     |  |RiWfHrWz                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|INT84-104 |I84104|APR13|104|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-106 |I84106|APR15|106|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-107 |I84107|APR16|107|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-108 |I84108|APR17|108|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|CDP-84H   |CDP84H|APR17|108|     |  |FlHcMoHrPl                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A173 |IA173 |APR18|109|     |  |WfOnWzRiHr                   |NOAA|BONN|       |    |X   |NASA|     |    |
+|TRANS-ATL2|XAT842|APR19|110|     |  |OoHsOn                       |NASA|HAYS|       |    |X   |NASA|     |    |
+|CDP-84I   |CDP84I|APR22|113|     |  |PlMoHrEl                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT84-113 |I84113|APR22|113|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-114 |I84114|APR23|114|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A174 |IA174 |APR23|114|     |  |WfHrWzRi                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|CDP-84J   |CDP84J|APR25|116|     |  |MoHrHcPl                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT84-116 |I84116|APR25|116|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-117 |I84117|APR26|117|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|NAPS-1    |NAP841|APR26|117|     |  |HrPlMoOoHcHs                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT84-118 |I84118|APR27|118|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A175 |IA175 |APR28|119|     |  |RiHrWfWz                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|INT84-121 |I84121|APR30|121|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT84-122 |I84122|MAY01|122|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-123 |I84123|MAY02|123|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-124 |I84124|MAY03|124|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A176 |IA176 |MAY03|124|     |  |WfHrWz                       |NOAA|HAYS|       |    |X   |NASA|     |    |
+|INT84-126 |I84126|MAY05|126|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-127 |I84127|MAY06|127|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-128 |I84128|MAY07|128|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-129 |I84129|MAY08|129|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A177 |IA177 |MAY08|129|     |  |WfHrWz                       |NOAA|HAYS|       |    |X   |NASA|     |    |
+|INT84-131 |I84131|MAY10|131|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-132 |I84132|MAY11|132|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-133 |I84133|MAY12|133|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A178 |IA178 |MAY13|134|     |  |WfHrWz                       |NOAA|HAYS|       |    |X   |NASA|     |    |
+|INT84-136 |I84136|MAY15|136|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-138 |I84138|MAY17|138|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-139 |I84139|MAY18|139|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A179 |IA179 |MAY18|139|     |  |WfHrOnWz                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|TRANS-ATL3|XAT843|MAY19|140|     |  |OnHs                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT84-141 |I84141|MAY20|141|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-142 |I84142|MAY21|142|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-143 |I84143|MAY22|143|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-144 |I84144|MAY23|144|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A180 |IA180 |MAY23|144|     |  |WfHrWz                       |NOAA|HAYS|       |    |X   |NASA|     |    |
+|INT84-146 |I84146|MAY25|146|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-147 |I84147|MAY26|147|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-148 |I84148|MAY27|148|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-149 |I84149|MAY28|149|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A181 |IA181 |MAY28|149|     |  |WfHrWzRi                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|INT84-151 |I84151|MAY30|151|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-152 |I84152|MAY31|152|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT84-153 |I84153|JUN01|153|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-154 |I84154|JUN02|154|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A182 |IA182 |JUN02|154|     |  |WfWzRiHr                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|INT84-156 |I84156|JUN04|156|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-157 |I84157|JUN05|157|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-158 |I84158|JUN06|158|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-159 |I84159|JUN07|159|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A183 |IA183 |JUN07|159|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|INT84-161 |I84161|JUN09|161|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-164 |I84164|JUN12|164|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A184 |IA184 |JUN12|164|     |  |WfHrRiWzOn                   |NOAA|BONN|       |    |XI  |NASA|     |    |
+|INT84-166 |I84166|JUN14|166|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-167 |I84167|JUN15|167|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-168 |I84168|JUN16|168|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-169 |I84169|JUN17|169|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A185 |IA185 |JUN17|169|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|INT84-171 |I84171|JUN19|171|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-172 |I84172|JUN20|172|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-173 |I84173|JUN21|173|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-174 |I84174|JUN22|174|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A186 |IA186 |JUN22|174|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT84-176 |I84176|JUN24|176|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-177 |I84177|JUN25|177|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-178 |I84178|JUN26|178|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-179 |I84179|JUN27|179|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|IRIS-A187 |IA187 |JUN27|179|     |  |HrWzWfRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|INT84-181 |I84181|JUN29|181|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+|INT84-182 |I84182|JUN30|182|     |  |WfWz                         |NOAA|HAYS|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|IRIS-A188 |IA188 |JUL02|184|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|E.PACIFIC1|EP841 |JUL07|189|     |  |KuMoVbGcKw                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A189 |IA189 |JUL07|189|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A190 |IA190 |JUL12|194|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|DSN-3     |DSN843|JUL14|196|     |  |RoTi                         |JPL |JPL |       |    |D   |NASA|     |    |
+|CDP-84K   |CDP84K|JUL14|196|     |  |GcNmVbSn                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A191 |IA191 |JUL17|199|     |  |WfWzRiHr                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|GSI-1     |GSI841|JUL18|200|     |  |KaTk                         |GSI |HAYS|       |    |DX  |NASA|     |    |
+|E.PACIFC2A|EP842A|JUL21|203|     |  |KuMoKwGcVb                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|E.PACIFC2B|EP843B|JUL22|204|     |  |KuMoVbKwGc                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A192 |IA192 |JUL22|204|     |  |WfRiHr                       |NOAA|HAYS|       |    |XA  |NASA|     |    |
+|CDP-84L   |CDP84L|JUL23|205|     |  |GcNmKoVb                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A193 |IA193 |JUL27|209|     |  |WfHrRi                       |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|W.PACIFC1A|WP841A|JUL28|210|     |  |KaKuKwMo                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|W.PACIFC1B|WP841B|JUL29|211|     |  |KaKuKwGcMo                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|CDP-84M   |CDP84M|JUL31|213|     |  |GcSoVbYa                     |NASA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|IRIS-A194 |IA194 |AUG01|214|     |  |HrRiWfWz                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|W.PACIFC2A|WP842A|AUG04|217|     |  |MoGcKaKuKw                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|W.PACIFC2B|WP842B|AUG05|218|     |  |KaKuGcMoKw                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A195 |IA195 |AUG06|219|     |  |WfHrWzRi                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|CDP-84N   |CDP84N|AUG07|220|     |  |GcVbWtSo                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A196 |IA196 |AUG11|224|     |  |WzRiHrWf                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A197 |IA197 |AUG16|229|     |  |WzRiWfHr                     |NOAA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A198 |IA198 |AUG21|234|     |  |WfRiHrWz                     |NOAA|BONN|       |    |X   |NASA|     |    |
+|NAPS-2    |NAP842|AUG24|237|     |  |ApHrYkGcPe                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A199 |IA199 |AUG26|239|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|NAPS-3    |NAP843|AUG28|241|     |  |HrGcWfAp                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|POLAR-1   |POL841|AUG30|243|     |  |GcKaMoWzHs                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A200 |IA200 |AUG31|244|     |  |WfWzRiHr                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|POLAR-2   |POL842|SEP02|246|     |  |GcHsMoKaWz                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A201 |IA201 |SEP05|249|     |  |WfWzRiHr                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A202 |IA202 |SEP10|254|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A203 |IA203 |SEP15|259|     |  |HrRiWfWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A204 |IA204 |SEP20|264|     |  |WfHrWz                       |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|LOW-ELV1  |LEL841|SEP23|267|     |  |HsMo                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A205 |IA205 |SEP25|269|     |  |WfHrWzRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A206 |IA206 |SEP30|274|     |  |WfHrWzRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|IRIS-A207 |IA207 |OCT05|279|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A208 |IA208 |OCT10|284|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A209 |IA209 |OCT15|289|     |  |WfHrWzRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A210 |IA210 |OCT20|294|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|CDP-84O   |CDP84O|OCT22|296|     |  |MoJ1OoMlVb                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|PHSE-DELY2|PD842 |OCT23|297|     |  |MoOo                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|CDP-84P   |CDP84P|OCT25|299|     |  |MoJ1VbPbOo                   |NOAA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A211 |IA211 |OCT25|299|     |  |WfHrWzOnRi                   |NOAA|BONN|       |    |XB  |NASA|     |    |
+|TRANS-ATL4|XAT844|OCT26|300|     |  |HsOo                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|CDP-84Q   |CDP84Q|OCT28|302|     |  |MoVbOoPn                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A212 |IA212 |OCT30|304|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|CDP-84R   |CDP84R|OCT31|305|     |  |MoVbPnYu                     |NASA|HAYS|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|IRIS-A213 |IA213 |NOV04|309|     |  |HrWzWf                       |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A214 |IA214 |NOV09|314|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A215 |IA215 |NOV14|319|     |  |WfHrOnWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|TRANS-ATL5|XAT845|NOV15|320|     |  |OnHs                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|LOW-ELV2  |LEL842|NOV16|321|     |  |HsMo                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A216 |IA216 |NOV19|324|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A217 |IA217 |NOV24|329|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A218 |IA218 |NOV29|334|     |  |WfHrWzRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|IRIS-A219 |IA219 |DEC04|339|     |  |HrRiWfWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A220 |IA220 |DEC09|344|     |  |WfWzHrRi                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A221 |IA221 |DEC14|349|     |  |WfWzRiHr                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A222 |IA222 |DEC19|354|     |  |WfHrWzOnRi                   |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A223 |IA223 |DEC23|358|     |  |WfHrRiWz                     |NOAA|HAYS|       |    |XI  |NASA|     |    |
+|IRIS-A224 |IA224 |DEC29|364|     |  |WfHrWz                       |NOAA|HAYS|       |    |XI  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+## Master file format version 1.0           2001.08.21 CCT&NRV

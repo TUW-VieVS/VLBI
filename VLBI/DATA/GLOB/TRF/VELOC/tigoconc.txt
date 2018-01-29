@@ -1,0 +1,2 @@
+% names of station with breaks, where the estimated velocity should be constant for all intervals
+TIGOCONC

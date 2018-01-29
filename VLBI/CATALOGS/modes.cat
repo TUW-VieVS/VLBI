@@ -1,0 +1,102 @@
+* VERSION 2017Feb08_iGSFC
+*
+* 2017Feb08  JMG Added '512' RDV mode by doubling BW. Used for CONT17 simulations.
+* 2015Sep22  JMG. Removed 256-16(AOV.....) because track layout is not defined elsewhere
+* 2015 Mar15 Lucia: DVP-SX recording added for DSS45 to be able to contribute to the AUSTRALs with 1Gbps recording
+* Updates now in decreaseing order, most recent first. 
+* 2015Feb23 JMG  Added K5-16KSP  = Japanese  jade mode 
+* 2014OCT03 JMG  Got rid of obsolete modes
+* 2013Nov13 JMG  Commented out INT2 observing mode.  This now uses R1 sequence.
+* 2013OCT11 JMG  Added 1GB Aust mode
+* 2013Jul09 JMG  Changed T2 mode because Seshan has a different track layout
+* 2012Sep07 JMG  Changed 32-16-2-1 to mm-16-m-1. The later is 16 channel 1 bit. 
+* CATALOG modes.cat 
+* MODES.CAT - observing modes
+*
+* This catalog contains specifications for observing modes:
+* frequency sequence, channel bandwidth, sample rate, and reference
+* to the recording mode for each station.
+*
+
+*
+***********************************************************************
+* Fields:
+* Mode name - name for the mode. Mode name must be unique within this 
+*             file. This label is recorded in the .skd file to indicate
+*             the catalog mode(s) in use for this schedule. The mode 
+*             name label conventionally includes the data rate in Mb/s, 
+*             the number of channels, and the session type in which 
+*             the mode is used in the form: rate-chan(sess).
+* freq.cat - frequency sequence name, as found in freq.cat.
+* chan bw - channel bandwidth in MHz. Used for all stations unless a
+*            station has a smaller maximum bandwidth specified in its
+*            corresponding rec.cat line.
+* samp rate - sample rate per channel, in Mb/s. Normally twice the
+*             channel bandwidth for the Nyquist sample rate. This rate
+*             applies to all channels and all stations.
+* rec.cat - recording mode name, as found in rec.cat. This label is
+*           generally formed as: tracks-channels-fanout-bits.
+* 051115 nrv Updated version, added documentation of fields.
+* JMGipson.  01May06  Modified for Digital Back End (DBE) test
+* JMGipson.  11May06  Modified for Australian K-band test.
+* JMGipson.  19May06  Added 128-16N mode for A. Fey. 
+* JMGipson.  13Jun06  Commented out 2MHz T2 mode
+* JMGipson   31Oct06  Added 2MHz Ohiggins mode based on EU-T2
+*                     Added 16 channel R4 and intensive modes.
+*                     Added 14 channel intensive mode for KK-WZ.
+* 06Feb27   JMGipson. Added double speed mode for Europe.
+* JMGipson   07Feb21  Commented out 112-14 GEOSXR4 (no longer used)
+* JMGipson   07May31  Commented out 128-16(INT) no longer used.
+*                     Added 256-16(INT2)
+
+* 07Jul23  JMG. Added 512MB R&D mode.
+* 08Feb25  JMGipson Added new mode for Patrik Charlot
+* 08Sep02  JMGipson  Moved CRF modes to end of standard list so that they won't be selected
+*                     as defaults when doing cat-get.
+* 08Sep26   JMGipson    Changed mode name: 32-16(OHIG)-->64-16(OHIG)
+* 08Sep26   JMGipson    Added new Ohiggins mode.  
+* 09Sep09   JMGipson    Added New 2-bit RDV mode
+*              
+***********************************************************************
+*Mode name       freq.cat    chan  samp    rec.cat
+*Max 16 char    Max 8 char    bw   rate    Max 16 char
+*rate-chan(sess)                          trk-chan-fan-bit
+*                                         trk-Ux+Lx-fan-bit  <---Alternate
+***********************************************************************
+* STANDARD GEODETIC MODES IN CURRENT USE 2014
+256-16(R1-R4)    GEOSX        8.0  16.0    00-16-0-1
+128-16(JADE)     K5-16KSP     4.0   8.0    00-16-0-1 
+128-16(INT)      NEOS-WB      4.0   8.0    32-16-2-1 
+1024-16(AU)      GEOSX       16.0   32.0   32-16-1-2
+64-16(OHIG)      EUR2-SX      2.0   4.0    16-16-1-1
+256-16(OHIG)     EUR2-SX      4.0   8.0    32-16-2-2
+64-32(APSG)      CDP-SX       4.0   8.0    32-16-2-1 
+64-16(EU-T2)     EUR2-SX      4.0   8.0    01-16-0-1
+256-8(RDV)       VGEOSX       8.0  16.0    00-8U-0-2
+512-16(RDV)      VGEOSX      16.0  32.0    00-8U-0-2
+512-16(CONT11)   GEOSX8N      8.0  16.0   32-16-1-2
+* Next two are 'fake' modes for simulation studies.
+*512-8(fake)       VGEOSX      32.0  64.0    32-8-4-1
+*1024-8(fake)      VGEOSX      64.0 128.0    32-8-4-1
+* End fake modes 
+1024-16(R&D)     GEOSX8N     16.0  32.0    64-16-2-2
+512-16(R&D)      GEOSX8N      8.0  16.0    32-16-2-2
+56-14(CRF)       CDP-SX       2.0   4.0    28-14-2-1
+56-14(CRF)       CDP-SX       4.0   8.0    28-14-2-1
+512-16(R&D2)     GEOSX8N      8.0  16.0    32-16-1-2
+***********************************************************************
+* Other modes and tests
+64-16            GEOSX        2.0   4.0    32-16-2-1
+128-16           GEOSX        4.0   8.0    32-16-2-1
+128-16N          CDP-SX       4.0   8.0    32-16-2-1
+512-16           GEOSX       16.0  32.0    32-16-2-1
+512-16(RTiGRID)  VIGR-X8      8.0  16.0    32-16-1-2
+512-16(Charlot)  VGEOSX_C     8.0  16.0    32-16-1-2
+DBE_TEST         DBE-X4      16.0  32.0    32-4U+4L-2-2
+K_ATNF           K_ATNF      32.   64.0    32-2-1-1
+***********************************************************************
+* mode used in VIE_SCHED
+*1024-16(AU)      GEOSX       16.0   32.0   32-16-1-2
+VLBI2010obsmodes GEOSX       16.0   32.0   32-16-1-2
+1024-16(DSN****) DVP-SX      16.0   32.0   32-16-1-2
+* 256-16(AOV.....) AOVSX8N      8.0  16.0    32-16-1-1

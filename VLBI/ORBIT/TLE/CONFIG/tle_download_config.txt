@@ -1,0 +1,44 @@
+#########################################################
+#     TLE dataset download - configuration file         #
+#########################################################
+#
+# DESCRIPTION:
+#    This configuration file defines the online resources of raw TLE data 
+#    and the file names of the locally stored raw TLE files. 
+#
+#    Have a look http://www.celestrak.com/NORAD/elements/ to find current TLE data files! 
+#    Current supplemental TLE data is available at: http://www.celestrak.com/NORAD/elements/supplemental/
+#    Information about the age of the data sets as available at: http://www.celestrak.com/NORAD/elements/master.asp
+#
+# CREATED:
+#    2015-02-10 (A. Hellerschmied)
+# 
+# CHANGES:
+#    2015-06-10 (A. Hellerschmied): 
+#     Updates
+# 
+# FORMAT:
+#    <http URL> - <file name of saved file>
+#
+# --- Current data sets ---  
+http://www.celestrak.com/NORAD/elements/gps-ops.txt      - gps.txt
+http://www.celestrak.com/NORAD/elements/resource.txt     - resource.txt
+http://www.celestrak.com/NORAD/elements/geo.txt          - geo.txt
+http://www.celestrak.com/NORAD/elements/amateur.txt      - amateur.txt
+http://www.celestrak.com/NORAD/elements/visual.txt       - visual.txt
+http://www.celestrak.com/NORAD/elements/weather.txt      - weather.txt
+http://www.celestrak.com/NORAD/elements/glo-ops.txt      - glonass.txt
+http://www.celestrak.com/NORAD/elements/galileo.txt      - galileo.txt
+http://celestrak.com/NORAD/elements/beidou.txt           - beidou.txt
+#
+#
+# --- Supplemented TLE data ---
+# => Derived directly from owner/operator-supplied orbital data
+# => Reduced latency and improved accuracy, according to http://www.celestrak.com/NORAD/elements/supplemental/
+#
+# GNSS data:
+http://www.celestrak.com/NORAD/elements/supplemental/gps.txt          - gps_sup.txt
+http://www.celestrak.com/NORAD/elements/supplemental/glonass.txt      - glonass_sup.txt
+#
+# Derived from latest Consolidated Laser Ranging Prediction Ephemeris Data:
+http://www.celestrak.com/NORAD/elements/supplemental/cpf.txt          - cpf_sup.txt

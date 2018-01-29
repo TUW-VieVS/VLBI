@@ -1,0 +1,48 @@
+#########################################################
+#      TLE dataset update - configuration file          #
+#########################################################
+#
+# DESCRIPTION:
+#    This configuration file defines the data resource (raw TLE data files, *.txt) for updating 
+#    the local TLE library (*.tle files). One local TLE file can be updated from several raw TLE files.
+#
+# CREATED:
+#    2015-02-10 (A. Hellerschmied)
+# 
+# CHANGES:
+#    2015-06-11 (A. Hellerschmied): Update
+#
+#
+# FORMAT:
+#    <local TLE file to be updated> - <raw TLE file 1> <raw TLE file 2> ... <raw TLE file n> 
+#
+#    At least one raw TLE file has to be assigned per line!
+#    Use "blanks" as white space!
+#
+#
+# -------------- GNSS satellites --------------
+# - Complete GPS and GLONASS constellation:
+gps_glon_sup.tle  - gps_sup.txt glonass_sup.txt
+#
+# - Complete GLONASS constellation:
+glonass_sup.tle   - glonass_sup.txt
+#
+# - Complete GPS constellation:
+gps_sup.tle   - gps_sup.txt
+# 
+# - Available GALILEO satellites (2016-05-02)
+galileo.tle   - galileo.txt
+#
+# - All GNSS satellites
+gnss.tle  - galileo.txt gps_sup.txt glonass_sup.txt
+# ---- Beidou ----
+beidou.tle  - beidou.txt
+# ----------------------------------------------
+# -------------- APOD ---------------------------
+# - Complete GPS constellation:
+XW-2A.tle   - cpf_sup.txt
+# ----------------------------------------------
+# -------------- CPF - GNSS ---------------------------
+# - All GNSS satellites included in current ILRS missions
+gnss_cpf_sup.tle   - cpf_sup.txt
+# ----------------------------------------------

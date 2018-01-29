@@ -1,0 +1,9 @@
+*
+* tagalong.txt 
+*
+* NOTE: Use this file to specify the station for tag-along mode  
+*       in Vie_Sched.
+*
+* StaName       
+* 
+ ABCDEFGH         

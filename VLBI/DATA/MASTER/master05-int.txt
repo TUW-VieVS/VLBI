@@ -1,0 +1,356 @@
+## Master file format version 1.0           2001.08.21 CCT&NRV
+
+                    2005 MULTI-AGENCY INTENSIVES SCHEDULE
+
+                     Last Updated - May 22, 2007 - CCT
+
+
+  SESSION      SESSION DATE  DOY TIME DUR        STATIONS      
+   SKED CORR STATUS  PF  DBC SUBM DEL  MK4
+    NAME        CODE   mondd ddd hh:mm hr                                                      yymondd     CODE     days NUM
+------------------------------------------------------------------------------------------------------------------------------
+|IN205-002     |K05002|JAN02|  2|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-004     |I05004|JAN04|  4|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-005     |I05005|JAN05|  5|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-007     |I05007|JAN07|  7|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-008     |K05008|JAN08|  8|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-009     |K05009|JAN09|  9|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-010     |I05010|JAN10| 10|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-012     |I05012|JAN12| 12|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-013     |I05013|JAN13| 13|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-014     |I05014|JAN14| 14|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-015     |K05015|JAN15| 15|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-016     |K05016|JAN16| 16|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-019     |I05019|JAN19| 19|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-020     |I05020|JAN20| 20|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-021     |I05021|JAN21| 21|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-022     |K05022|JAN22| 22|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-023     |K05023|JAN23| 23|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-024     |I05024|JAN24| 24|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-025     |I05025|JAN25| 25|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-026     |I05026|JAN26| 26|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-027     |I05027|JAN27| 27|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-028     |I05028|JAN28| 28|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-029     |K05029|JAN29| 29|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-030     |K05030|JAN30| 30|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-031     |I05031|JAN31| 31|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|IN105-032     |I05032|FEB01| 32|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-033     |I05033|FEB02| 33|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-034     |I05034|FEB03| 34|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-035     |I05035|FEB04| 35|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-036     |K05036|FEB05| 36|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-037     |K05037|FEB06| 37|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-038     |I05038|FEB07| 38|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-039     |I05039|FEB08| 39|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-040     |I05040|FEB09| 40|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-041     |I05041|FEB10| 41|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-042     |I05042|FEB11| 42|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-043     |K05043|FEB12| 43|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-044     |K05044|FEB13| 44|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-045     |I05045|FEB14| 45|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-046     |I05046|FEB15| 46|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-047     |I05047|FEB16| 47|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-048     |I05048|FEB17| 48|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-049     |I05049|FEB18| 49|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-050     |K05050|FEB19| 50|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-051     |K05051|FEB20| 51|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-052     |I05052|FEB21| 52|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-054     |I05054|FEB23| 54|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-055     |I05055|FEB24| 55|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-056     |I05056|FEB25| 56|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-057     |K05057|FEB26| 57|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-058     |K05058|FEB27| 58|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-059     |I05059|FEB28| 59|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|IN105-060     |I05060|MAR01| 60|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-061     |I05061|MAR02| 61|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-062     |I05062|MAR03| 62|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-063     |I05063|MAR04| 63|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-064     |K05064|MAR05| 64|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-065     |K05065|MAR06| 65|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-066     |I05066|MAR07| 66|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-067     |I05067|MAR08| 67|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-068     |I05068|MAR09| 68|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-069     |I05069|MAR10| 69|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-070     |I05070|MAR11| 70|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-071     |K05071|MAR12| 71|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-072     |K05072|MAR13| 72|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-073     |I05073|MAR14| 73|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-075     |I05075|MAR16| 75|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-076     |I05076|MAR17| 76|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-077     |I05077|MAR18| 77|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-078     |K05078|MAR19| 78|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-079     |K05079|MAR20| 79|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-080     |I05080|MAR21| 80|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-081     |I05081|MAR22| 81|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-082     |I05082|MAR23| 82|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-083     |I05083|MAR24| 83|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-088     |I05088|MAR29| 88|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-089     |I05089|MAR30| 89|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-090     |I05090|MAR31| 90|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|IN105-091     |I05091|APR01| 91|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-092     |K05092|APR02| 92|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-093     |K05093|APR03| 93|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-094     |I05094|APR04| 94|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-095     |I05095|APR05| 95|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-096     |I05096|APR06| 96|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-097     |I05097|APR07| 97|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-098     |I05098|APR08| 98|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-099     |K05099|APR09| 99|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-101     |I05101|APR11|101|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-102     |I05102|APR12|102|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-103     |I05103|APR13|103|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-104     |I05104|APR14|104|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-105     |I05105|APR15|105|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-106     |K05106|APR16|106|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-107     |K05107|APR17|107|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-108     |I05108|APR18|108|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-110     |I05110|APR20|110|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-111     |I05111|APR21|111|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-112     |I05112|APR22|112|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-113     |K05113|APR23|113|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-114     |K05114|APR24|114|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-115     |I05115|APR25|115|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-116     |I05116|APR26|116|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-117     |I05117|APR27|117|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-118     |I05118|APR28|118|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-119     |I05119|APR29|119|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|IN105-122     |I05122|MAY02|122|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-123     |I05123|MAY03|123|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-124     |I05124|MAY04|124|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-125     |I05125|MAY05|125|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-126     |I05126|MAY06|126|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-129     |I05129|MAY09|129|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-130     |I05130|MAY10|130|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-131     |I05131|MAY11|131|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-132     |I05132|MAY12|132|18:30|1  |KkSvWz                                   |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-133     |I05133|MAY13|133|19:00|1  |KkSvWz                                   |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-137     |I05137|MAY17|137|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-138     |I05138|MAY18|138|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-139     |I05139|MAY19|139|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-140     |I05140|MAY20|140|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-141     |K05141|MAY21|141|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-142     |K05142|MAY22|142|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-143     |I05143|MAY23|143|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-145     |I05145|MAY25|145|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-146     |I05146|MAY26|146|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-147     |I05147|MAY27|147|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-148     |K05148|MAY28|148|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-149     |K05149|MAY29|149|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-151     |I05151|MAY31|151|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|IN105-152     |I05152|JUN01|152|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-153     |I05153|JUN02|153|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-154     |I05154|JUN03|154|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-155     |K05155|JUN04|155|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-156     |K05156|JUN05|156|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-157     |I05157|JUN06|157|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-158     |I05158|JUN07|158|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-159     |I05159|JUN08|159|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-160     |I05160|JUN09|160|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-161     |I05161|JUN10|161|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-162     |K05162|JUN11|162|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-163     |K05163|JUN12|163|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-166     |I05166|JUN15|166|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-167     |I05167|JUN16|167|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-168     |I05168|JUN17|168|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-169     |K05169|JUN18|169|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-170     |K05170|JUN19|170|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-171     |I05171|JUN20|171|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-172     |I05172|JUN21|172|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-173     |I05173|JUN22|173|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-174     |I05174|JUN23|174|18:30|1  |KkSvWz                                   |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-175     |I05175|JUN24|175|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-176     |K05176|JUN25|176|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-177     |K05177|JUN26|177|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-178     |I05178|JUN27|178|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-179     |I05179|JUN28|179|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-180     |I05180|JUN29|180|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-181     |I05181|JUN30|181|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|IN105-182     |I05182|JUL01|182|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-183     |K05183|JUL02|183|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-184     |K05184|JUL03|184|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-186     |I05186|JUL05|186|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-187     |I05187|JUL06|187|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-188     |I05188|JUL07|188|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-189     |I05189|JUL08|189|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-190     |K05190|JUL09|190|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-191     |K05191|JUL10|191|07:30|1  |OnTsWz                                   |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-192     |I05192|JUL11|192|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-193     |I05193|JUL12|193|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-194     |I05194|JUL13|194|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-195     |I05195|JUL14|195|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-196     |I05196|JUL15|196|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-197     |K05197|JUL16|197|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-198     |K05198|JUL17|198|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-199     |I05199|JUL18|199|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-201     |I05201|JUL20|201|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-202     |A05202|JUL21|202|18:30|1  |KkSv                                     |USNO|WASH|       |    |XT|NASA|   0|    |
+|IN105-202     |I05202|JUL21|202|18:30|1  |KkSvWz                                   |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-203     |I05203|JUL22|203|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-204     |K05204|JUL23|204|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-205     |K05205|JUL24|205|07:30|1  |OnTs                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-206     |I05206|JUL25|206|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-207     |I05207|JUL26|207|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-208     |I05208|JUL27|208|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-209     |I05209|JUL28|209|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-210     |I05210|JUL29|210|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-211     |K05211|JUL30|211|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-212     |K05212|JUL31|212|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+------------------------------------------------------------------------------------------------------------------
+|IN105-213     |I05213|AUG01|213|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-214     |I05214|AUG02|214|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-215     |I05215|AUG03|215|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-216     |A05216|AUG04|216|18:30|1  |KkSv                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-216     |I05216|AUG04|216|18:30|1  |KkSvWz                                   |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-217     |I05217|AUG05|217|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-218     |K05218|AUG06|218|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-219     |K05219|AUG07|219|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-220     |I05220|AUG08|220|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-221     |I05221|AUG09|221|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-222     |I05222|AUG10|222|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-223     |I05223|AUG11|223|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-224     |I05224|AUG12|224|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-225     |K05225|AUG13|225|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-226     |K05226|AUG14|226|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-227     |I05227|AUG15|227|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-228     |I05228|AUG16|228|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-229     |I05229|AUG17|229|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-230     |A05230|AUG18|230|18:30|1  |KkSv                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-230     |I05230|AUG18|230|18:30|1  |KkSvWz                                   |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-231     |I05231|AUG19|231|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-232     |K05232|AUG20|232|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-233     |K05233|AUG21|233|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-234     |I05234|AUG22|234|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-236     |I05236|AUG24|236|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-237     |I05237|AUG25|237|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-238     |I05238|AUG26|238|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-239     |K05239|AUG27|239|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-240     |K05240|AUG28|240|07:30|1  |OnTs                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-243     |I05243|AUG31|243|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|IN105-244     |A05244|SEP01|244|18:30|1  |KkSv                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-244     |I05244|SEP01|244|18:30|1  |KkSvWz                                   |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-245     |I05245|SEP02|245|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-246     |K05246|SEP03|246|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-247     |K05247|SEP04|247|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-249     |I05249|SEP06|249|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-250     |I05250|SEP07|250|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-251     |I05251|SEP08|251|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-252     |I05252|SEP09|252|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-253     |K05253|SEP10|253|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-254     |K05254|SEP11|254|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-255     |I05255|SEP12|255|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-256     |I05256|SEP13|256|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-257     |I05257|SEP14|257|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-258     |I05258|SEP15|258|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-259     |I05259|SEP16|259|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-260     |K05260|SEP17|260|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-261     |K05261|SEP18|261|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-262     |I05262|SEP19|262|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-263     |I05263|SEP20|263|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-264     |I05264|SEP21|264|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-265     |I05265|SEP22|265|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-266     |I05266|SEP23|266|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-267     |K05267|SEP24|267|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-268     |K05268|SEP25|268|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-269     |I05269|SEP26|269|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-271     |I05271|SEP28|271|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-272     |A05272|SEP29|272|18:30|1  |KkSv                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-272     |I05272|SEP29|272|18:30|1  |KkSvWz                                   |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-273     |I05273|SEP30|273|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|IN205-274     |K05274|OCT01|274|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-275     |K05275|OCT02|275|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-276     |I05276|OCT03|276|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-277     |I05277|OCT04|277|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-278     |I05278|OCT05|278|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-279     |I05279|OCT06|279|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-280     |I05280|OCT07|280|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-281     |K05281|OCT08|281|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-282     |K05282|OCT09|282|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-283     |I05283|OCT10|283|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-284     |I05284|OCT11|284|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-285     |I05285|OCT12|285|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-286     |A05286|OCT13|286|18:30|1  |KkSv                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-286     |I05286|OCT13|286|18:30|1  |KkSvWz                                   |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-287     |I05287|OCT14|287|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-288     |K05288|OCT15|288|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-289     |K05289|OCT16|289|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-290     |I05290|OCT17|290|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-292     |I05292|OCT19|292|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-293     |A05293|OCT20|293|18:30|1  |KkSv                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-293     |I05293|OCT20|293|18:30|1  |KkSvWz                                   |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-294     |I05294|OCT21|294|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-295     |K05295|OCT22|295|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-296     |K05296|OCT23|296|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-297     |I05297|OCT24|297|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-298     |I05298|OCT25|298|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-299     |I05299|OCT26|299|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-300     |I05300|OCT27|300|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-301     |I05301|OCT28|301|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-304     |I05304|OCT31|304|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|IN105-306     |I05306|NOV02|306|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-307     |I05307|NOV03|307|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-308     |I05308|NOV04|308|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-309     |K05309|NOV05|309|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-310     |K05310|NOV06|310|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-311     |I05311|NOV07|311|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-312     |I05312|NOV08|312|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-313     |I05313|NOV09|313|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-314     |A05314|NOV10|314|18:30|1  |KkSv                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-314     |I05314|NOV10|314|18:30|1  |KkSvWz                                   |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-315     |I05315|NOV11|315|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-316     |K05316|NOV12|316|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-317     |K05317|NOV13|317|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-318     |I05318|NOV14|318|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-319     |I05319|NOV15|319|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-320     |I05320|NOV16|320|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-321     |I05321|NOV17|321|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-322     |I05322|NOV18|322|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-323     |K05323|NOV19|323|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-324     |K05324|NOV20|324|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-325     |I05325|NOV21|325|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-326     |A05326|NOV22|326|18:30|1  |KkSv                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-326     |I05326|NOV22|326|18:30|1  |KkSvWz                                   |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-327     |I05327|NOV23|327|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-330     |K05330|NOV26|330|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-331     |K05331|NOV27|331|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-332     |I05332|NOV28|332|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-333     |I05333|NOV29|333|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-334     |I05334|NOV30|334|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|IN105-335     |I05335|DEC01|335|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-336     |I05336|DEC02|336|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-337     |K05337|DEC03|337|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-338     |K05338|DEC04|338|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-339     |I05339|DEC05|339|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-340     |I05340|DEC06|340|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-341     |I05341|DEC07|341|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-342     |A05342|DEC08|342|18:30|1  |KkSv                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-342     |I05342|DEC08|342|18:30|1  |KkSvWz                                   |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-343     |I05343|DEC09|343|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-344     |K05344|DEC10|344|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-345     |K05345|DEC11|345|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-346     |I05346|DEC12|346|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-347     |I05347|DEC13|347|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-348     |I05348|DEC14|348|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-349     |I05349|DEC15|349|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-350     |I05350|DEC16|350|19:00|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN205-351     |K05351|DEC17|351|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN205-352     |K05352|DEC18|352|07:30|1  |TsWz                                     |BONN|GSI |       |    |XK|GSI |   0|    |
+|IN105-353     |I05353|DEC19|353|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-355     |I05355|DEC21|355|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-356     |A05356|DEC22|356|18:30|1  |KkSv                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-356     |I05356|DEC22|356|18:30|1  |KkSvWz                                   |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-361     |I05361|DEC27|361|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-362     |I05362|DEC28|362|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-363     |I05363|DEC29|363|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+|IN105-364     |I05364|DEC30|364|18:30|1  |KkWz                                     |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------------------
+## Master file format version 1.0           2001.08.21 CCT&NRV

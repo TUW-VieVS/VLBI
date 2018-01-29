@@ -1,0 +1,576 @@
+## Master file format version 1.0           2001.08.21 CCT&NRV
+
+                         1991 MULTI-AGENCY SCHEDULE
+
+                     Last Updated - June 25, 2002 - CCT
+
+
+  SESSION  SESSION DATE  DOY TIME  DUR       STATIONS               SKED CORR STATUS  PF   DBC  SUBM  DEL  MK4
+    NAME     CODE  mondd ddd hh:mm hr                                         yymondd      CODE       days NUM
+----------------------------------------------------------------------------------------------------------------
+|IRIS-A663 |IA663 |JAN02|2  |     |  |MoWzRiWf                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-003 |I91003|JAN03|3  |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-105|NAV105|JAN03|3  |     |  |GcKuRiG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-004 |I91004|JAN04|4  |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-005 |I91005|JAN05|5  |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|EUROPE-4  |EUR004|JAN06|6  |     |  |MaOnWz65                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A664 |IA664 |JAN07|7  |     |  |MoWfRiWzOn                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-007|N91007|JAN07|7  |     |  |GcKuG3                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|INT91-008 |I91008|JAN08|8  |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-106|NAV106|JAN08|8  |     |  |GcKuRiG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-009 |I91009|JAN09|9  |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|SH-S15    |SHS15 |JAN09|9  |     |  |HhHo                         |NOAA|WASH|       |    |XS  |NASA|     |    |
+|INT91-010 |I91010|JAN10|10 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-P46  |IP9146|JAN10|10 |     |  |GcMoHo                       |NOAA|WASH|       |    |XP  |NASA|     |    |
+|INT91-011 |I91011|JAN11|11 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-011|N91011|JAN11|11 |     |  |GcKuG3                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|IRIS-A665 |IA665 |JAN12|12 |     |  |MoWfWz                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-013 |I91013|JAN13|13 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-014 |I91014|JAN14|14 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-014|N91014|JAN14|14 |     |  |GcG3Ku                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|INT91-015 |I91015|JAN15|15 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-107|NAV107|JAN15|15 |     |  |GcKuG3                       |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-016 |I91016|JAN16|16 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-S38  |IS9138|JAN16|16 |     |  |MoWfHhWz                     |NOAA|BONN|       |    |XH  |NASA|     |    |
+|IRIS-A666 |IA666 |JAN17|17 |     |  |MoRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-018 |I91018|JAN18|18 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-018|N91018|JAN18|18 |     |  |GcG3Ku                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|INT91-019 |I91019|JAN19|19 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-020 |I91020|JAN20|20 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-021 |I91021|JAN21|21 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A667 |IA667 |JAN22|22 |     |  |WfWzMoRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVEX-6   |NAVEX6|JAN22|22 |     |  |GcKuMaG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-023 |I91023|JAN23|23 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-108|NAV108|JAN23|23 |     |  |GcKuRiG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-024 |I91024|JAN24|24 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-025 |I91025|JAN25|25 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-026 |I91026|JAN26|26 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A668 |IA668 |JAN27|27 |     |  |MoRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-028 |I91028|JAN28|28 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-109|NAV109|JAN28|28 |     |  |GcRiG3Ku                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-029 |I91029|JAN29|29 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|R&D-1     |RD9101|JAN30|30 |     |  |GcMoWzPt                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-031 |I91031|JAN31|31 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|IRIS-A669 |IA669 |FEB01|32 |     |  |MoWfWz                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|int91-033 |I91033|FEB02|33 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-034 |I91034|FEB03|34 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|PPM-NORTH |PM91N |FEB04|35 |     |  |GcMoKuKa                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-035 |I91035|FEB04|35 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-036 |I91036|FEB05|36 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A670 |IA670 |FEB06|37 |     |  |MoRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-037 |I91037|FEB06|37 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-110|NAV110|FEB07|38 |     |  |GcG3Ku                       |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-039 |I91039|FEB08|39 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-040 |I91040|FEB09|40 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-041 |I91041|FEB10|41 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|DSN-1     |DN9101|FEB11|42 |     |  |1565                         |DSN |JPL |       |    |D   |NASA|     |    |
+|IRIS-A671 |IA671 |FEB11|42 |     |  |MoOnRiWfWz                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-042 |I91042|FEB11|42 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVEX-7   |NAVEX7|FEB11|42 |     |  |KuG3MaGc                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|SH-S16    |SHS16 |FEB11|42 |     |  |HhHo                         |NOAA|WASH|       |    |XS  |NASA|     |    |
+|R&D-2     |RD9102|FEB12|43 |     |  |GcWzKuMoWfPt                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-S39  |IS9139|FEB13|44 |     |  |MoHhRiWfWz                   |NOAA|BONN|       |    |XH  |NASA|     |    |
+|NAVNET-111|NAV111|FEB13|44 |     |  |GcKuG3                       |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-045 |I91045|FEB14|45 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-046 |I91046|FEB15|46 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A672 |IA672 |FEB16|47 |     |  |WfWzMo                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-047 |I91047|FEB16|47 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-049 |I91049|FEB18|49 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-050 |I91050|FEB19|50 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-112|NAV112|FEB19|50 |     |  |GcRiG3Ku                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-051 |I91051|FEB20|51 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A673 |IA673 |FEB21|52 |     |  |MoRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-052 |I91052|FEB21|52 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-052|N91052|FEB21|52 |     |  |KuG3Gc                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|INT91-054 |I91054|FEB23|54 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91=055 |I91055|FEB24|55 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-P47  |IP9147|FEB24|55 |     |  |GcHoMoKb                     |NOAA|WASH|       |    |XP  |NASA|     |    |
+|INT91-056 |I91056|FEB25|56 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A674 |IA674 |FEB26|57 |     |  |MoWfWzRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-057 |I91057|FEB26|57 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-057|N91057|FEB26|57 |     |  |GcG3Ku                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|NAVNET-113|NAV113|FEB27|58 |     |  |GcRiKu                       |USNO|WASH|       |    |XO  |NASA|     |    |
+|SURVEY-N1 |SU91N1|FEB28|59 |     |  |GcKuMo                       |NASA|WASH|       |    |X   |NASA|     |    |
+|INT91-059 |I91059|FEB28|59 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT91-060 |I91060|MAR01|60 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-061 |I91061|MAR02|61 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A675 |IA675 |MAR03|62 |     |  |MoRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-062 |I91062|MAR03|62 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-063|N91063|MAR04|63 |     |  |GcKuG3                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|INT91-064 |I91064|MAR05|64 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-065 |I91065|MAR06|65 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-114|NAV114|MAR06|65 |     |  |GcRiKuG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-066 |I91066|MAR07|66 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A676 |IA676 |MAR08|67 |     |  |MoRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-067 |I91067|MAR08|67 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-069 |I91069|MAR10|69 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-070 |I91070|MAR11|70 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-115|NAV115|MAR11|70 |     |  |KuRiG3Gc                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|ES-TEST   |ES91TE|MAR12|71 |     |  |GcMoKu                       |NASA|HAYS|       |    |XE  |NASA|     |    |
+|INT91-071 |I91071|MAR12|71 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A677 |IA677 |MAR13|72 |     |  |MoRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-072 |I91072|MAR13|72 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVEX-8   |NAVEX8|MAR13|72 |     |  |KuMaGcG3NtNx                 |USNO|WASH|       |    |XO  |NASA|     |    |
+|R&D-3     |RD9103|MAR14|73 |     |  |MoWfPtWzGcKu                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-P48  |IP9148|MAR15|74 |     |  |GcKaMo                       |NOAA|WASH|       |    |XP  |NASA|     |    |
+|INT91-075 |I91075|MAR16|75 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A678 |IA678 |MAR18|77 |     |  |MoRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-077 |I91077|MAR18|77 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-077|N91077|MAR18|77 |     |  |GcKuG3                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|INT91-079 |I91079|MAR20|79 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-116|NAV116|MAR20|79 |     |  |GcRiG3Ku                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-080 |I91080|MAR21|80 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-081 |I91081|MAR22|81 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-081|N91081|MAR22|81 |     |  |GcKuG3                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|IRIS-A679 |IA679 |MAR23|82 |     |  |WfWzMoRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-082 |I91082|MAR23|82 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|PPM-S1    |PM91S1|MAR24|83 |     |  |45HoGcKuKbSh                 |NASA|WASH|       |    |X   |NASA|     |    |
+|GSI-1     |GSI911|MAR25|84 |     |  |TkKa                         |GSI |CRL |       |    |DX  |NASA|     |    |
+|IRIS-S40  |IS9140|MAR25|84 |     |  |RiHhMoWzWf                   |NOAA|BONN|       |    |XH  |NASA|     |    |
+|INT91-085 |I91085|MAR26|85 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-086 |I91086|MAR27|86 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|POLAR-N1  |PL91N1|MAR28|87 |     |  |GcGvMcHsOn                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A680 |IA680 |MAR28|87 |     |  |WfWzMoRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-087 |I91087|MAR28|87 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|DSN-2     |DN9102|MAR30|89 |     |  |1545                         |DSN |JPL |       |    |D   |NASA|     |    |
+|INT91-090 |I91090|MAR31|90 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|DSN-3     |DN9103|APR01|91 |     |  |1545                         |DSN |JPL |       |    |D   |NASA|     |    |
+|INT91-091 |I91091|APR01|91 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-P49  |IP9149|APR01|91 |     |  |GcMoKb                       |NOAA|WASH|       |    |XP  |NASA|     |    |
+|IRIS-A681 |IA681 |APR02|92 |     |  |RiMoWz                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVEX-9   |NAVEX9|APR02|92 |     |  |KuG3GaGcMa                   |USNO|WASH|       |    |XO  |NASA|     |    |
+|NAVNET-118|NAV118|APR03|93 |     |  |GcKuRiG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-094 |I91094|APR04|94 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-095 |I91095|APR05|95 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-095|N91095|APR05|95 |     |  |GcKuG3                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|DSN-4     |DN9104|APR06|96 |     |  |1565                         |DSN |JPL |       |    |D   |NASA|     |    |
+|INT91-096 |I91096|APR06|96 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A682 |IA682 |APR07|97 |     |  |RiWfWzMo                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-098 |I91098|APR08|98 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|DSN-5     |DN9105|APR09|99 |     |  |1565                         |DSN |JPL |       |    |D   |NASA|     |    |
+|INT91-099 |I91099|APR09|99 |     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-119|NAV119|APR09|99 |     |  |GcKuRiG3Ga                   |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-100 |I91100|APR10|100|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|FRAME-38  |FR9138|APR10|100|     |  |GcKuG3                       |NRL |WASH|       |    |XN  |NASA|     |    |
+|FRAME-39  |FR9139|APR11|101|     |  |GcKuG3                       |NRL |WASH|       |    |XN  |NASA|     |    |
+|IRIS-A683 |IA683 |APR12|102|     |  |RiWzMoWf                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-103 |I91103|APR13|103|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-104 |I91104|APR14|104|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|XASIA-1   |XAS911|APR15|105|     |  |45WzHhHoKbSh                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-105 |I91105|APR15|105|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-120|NAV120|APR15|105|     |  |GcKuG3Ri                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|FD-TIES1  |FDTIE1|APR16|106|     |  |HrFd                         |NASA|HAYS|       |    |XT  |NASA|     |    |
+|INT91-106 |I91106|APR16|106|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A684 |IA684 |APR17|107|     |  |MoRiWfWzOn                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|R&D-4     |RD9104|APR18|108|     |  |GcKuMoWfWz                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-109 |I91109|APR19|109|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-110 |I91110|APR20|110|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A685 |IA685 |APR22|112|     |  |MoRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-113 |I91113|APR23|113|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-S41  |IS9141|APR23|113|     |  |MoRiHhWzWf                   |NOAA|BONN|       |    |XH  |NASA|     |    |
+|NAVINT-113|N91113|APR23|113|     |  |GcKuG3                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|INT91-114 |I91114|APR24|114|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|FRAME-40  |FR9140|APR24|114|     |  |GcKuG3                       |NRL |WASH|       |    |XN  |NASA|     |    |
+|INT91-115 |I91115|APR25|115|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-121|NAV121|APR25|115|     |  |GcKuRiG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-116 |I91116|APR26|116|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-117 |I91117|APR27|117|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-118 |I91118|APR28|118|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-119|N91119|APR29|119|     |  |GcG3                         |NOAA|WASH|       |    |XJ  |NASA|     |    |
+|IRIS-A686 |IA686 |APR29|119|     |  |MoRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-119 |I91119|APR29|119|     |  |GcG3                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-120 |I91120|APR30|120|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|SURVEY-N2 |SU91N2|MAY01|121|     |  |GcKuMo                       |NASA|WASH|       |    |X   |NASA|     |    |
+|NAVNET-122|NAV122|MAY02|122|     |  |KuRiG3GcGa                   |USNO|WASH|       |    |XO  |NASA|     |    |
+|IRIS-A687 |IA687 |MAY06|126|     |  |MoOnRiWzWf                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-126|N91126|MAY06|126|     |  |GcKuG3                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|INT91-127 |I91127|MAY07|127|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-S42  |IS9142|MAY07|127|     |  |RiWfWzMoHhNt                 |NOAA|BONN|       |    |XH  |NASA|     |    |
+|NAVEX-10  |NAVX10|MAY07|127|     |  |GcKuG3GaMa                   |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-128 |I91128|MAY08|128|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-129 |I91129|MAY09|129|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-123|NAV123|MAY09|129|     |  |KuRiGcG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-130 |I91130|MAY10|130|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|ASTROM-S  |AST91S|MAY11|131|     |  |45Hh                         |NASA|WASH|       |    |X   |NASA|     |    |
+|INT91-131 |I91131|MAY11|131|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A688 |IA688 |MAY13|133|     |  |RiWfWzMo                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-133|N91133|MAY13|133|     |  |GcKuG3                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|INT91-134 |I91134|MAY14|134|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-P50  |IP9150|MAY14|134|     |  |GcMoKbHo                     |NOAA|WASH|       |    |XP  |NASA|     |    |
+|INT91-135 |I91135|MAY15|135|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|SH-S19    |SHS19 |MAY15|135|     |  |HhHo                         |NOAA|WASH|       |    |XS  |NASA|     |    |
+|FD-TIES2  |FDTIE2|MAY16|136|     |  |HrFd                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-136 |I91136|MAY16|136|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-124|NAV124|MAY16|136|     |  |GcG3KuRiGa                   |USNO|WASH|       |    |XO  |NASA|     |    |
+|DSN-6     |DN9106|MAY17|137|     |  |1545                         |DSN |JPL |       |    |D   |NASA|     |    |
+|INT91-137 |I91137|MAY17|137|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-138 |I91138|MAY18|138|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|DSN-7     |DN9107|MAY19|139|     |  |1545                         |DSN |JPL |       |    |D   |NASA|     |    |
+|INT91-139 |I91139|MAY19|139|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A689 |IA689 |MAY20|140|     |  |MoWzRiWf                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-140|N91140|MAY20|140|     |  |GcKuG3                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|R&D-5     |RD9105|MAY21|141|     |  |MoLaWfWzPtKuGc               |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-142 |I91142|MAY22|142|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-143 |I91143|MAY23|143|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-125|NAV125|MAY23|143|     |  |GcKuRiG3Gd                   |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-144 |I91144|MAY24|144|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-145 |I91145|MAY25|145|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-146 |I91146|MAY26|146|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|DSN-8     |DN9108|MAY27|147|     |  |1565                         |DSN |JPL |       |    |D   |NASA|     |    |
+|IRIS-A690 |IA690 |MAY27|147|     |  |MoRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-148 |I91148|MAY28|148|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-148|N91148|MAY28|148|     |  |GcKuG3                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|INT91-149 |I91149|MAY29|149|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|FRAME-41  |FR9141|MAY29|149|     |  |GcKuG3                       |NRL |WASH|       |    |XN  |NASA|     |    |
+|FD-TIES4  |FDTIE4|MAY30|150|     |  |HrFd                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|NAVNET-126|NAV126|MAY30|150|     |  |GcKuRi                       |USNO|WASH|       |    |XO  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT91-152 |I91152|JUN01|152|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-153 |I91153|JUN02|153|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|PPM-S2    |PM91S2|JUN03|154|     |  |45GcKaKuSh                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A691 |IA691 |JUN03|154|     |  |MoOnWfWzRi                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|FD-TIES5  |FDTIE5|JUN04|155|     |  |HrFd                         |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-156 |I91156|JUN05|156|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-156|N91156|JUN05|156|     |  |GcKuRi                       |NOAA|WASH|       |    |XJ  |NASA|     |    |
+|INT91-157 |I91157|JUN06|157|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-127|NAV127|JUN06|157|     |  |GcKuRiG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-158 |I91158|JUN07|158|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-159 |I91159|JUN08|159|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-160 |I91160|JUN09|160|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A692 |IA692 |JUN10|161|     |  |WfWzMoApRi                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-161|N91161|JUN10|161|     |  |GcKuG3                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|IRIS-S43  |IS9143|JUN11|162|     |  |RiWfWzHhMo                   |NOAA|BONN|       |    |XH  |NASA|     |    |
+|NAVEX-11  |NAVX11|JUN11|162|     |  |KuG3ApGcMa                   |USNO|WASH|       |    |XO  |NASA|     |    |
+|NAVNET-128|NAV128|JUN13|164|     |  |GcKuRiG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-165 |I91165|JUN14|165|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-166 |I91166|JUN15|166|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-167 |I91167|JUN16|167|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A693 |IA693 |JUN17|168|     |  |MoRiWfApWz                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-169 |I91169|JUN18|169|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-170 |I91170|JUN19|170|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-170|N91170|JUN19|170|     |  |GcKuRi                       |NOAA|WASH|       |    |XJ  |NASA|     |    |
+|INT91-171 |I91171|JUN20|171|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-129|NAV129|JUN20|171|     |  |GcKuRiG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|DSN-9     |DN9109|JUN21|172|     |  |1545                         |DSN |JPL |       |    |D   |NASA|     |    |
+|INT91-172 |I91172|JUN21|172|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-173 |I91173|JUN22|173|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-174 |I91174|JUN23|174|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A694 |IA694 |JUN24|175|     |  |MoRiWfWzAp                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-175|N91175|JUN24|175|     |  |GcKuG3                       |NOAA|WASH|       |    |XJ  |NASA|     |    |
+|SH-S20    |SHS20 |JUN24|175|     |  |HhHo                         |NOAA|WASH|       |    |XS  |NASA|     |    |
+|INT91-176 |I91176|JUN25|176|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-P51  |IP9151|JUN25|176|     |  |GcMoHo                       |NOAA|WASH|       |    |XP  |NASA|     |    |
+|INT91-177 |I91177|JUN26|177|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|FRAME-42  |FR9142|JUN26|177|     |  |GcKuG3Ap                     |NRL |WASH|       |    |XN  |NASA|     |    |
+|CRL-1     |CRL911|JUN27|178|     |  |KbMr                         |CRL |CRL |       |    |XX  |NASA|     |    |
+|INT91-178 |I91178|JUN27|178|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-130|NAV130|JUN27|178|     |  |GcKuG3                       |USNO|WASH|       |    |XO  |NASA|     |    |
+|R&D-6     |RD9106|JUN28|179|     |  |GcKuMoPtLaWfWz               |NASA|HAYS|       |    |X   |NASA|     |    |
+|CRL-2     |CRL912|JUN28|179|     |  |KbMr                         |CRL |CRL |       |    |XX  |NASA|     |    |
+|INT91-179 |I91179|JUN28|179|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|FRAME-42A |FR91TH|JUN29|180|     |  |TiHo                         |NRL |WASH|       |    |XN  |NASA|     |    |
+|CRL-3     |CRL913|JUN30|181|     |  |KbMrSh                       |CRL |CRL |       |    |XX  |NASA|     |    |
+|DSN-10    |DN9110|JUN30|181|     |  |1565                         |DSN |JPL |       |    |D   |NASA|     |    |
+|YELLOW1   |YLW911|JUN30|181|     |  |MoWfApYkGc                   |NOAA|WASH|       |    |X   |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|CRL-4     |CRL914|JUL01|182|     |  |KbMr                         |CRL |CRL |       |    |XX  |NASA|     |    |
+|IRIS-A695 |IA695 |JUL01|182|     |  |MoRiWfOnWz                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|FRAME-43  |FR9143|JUL01|182|     |  |GcG3KuAp                     |NRL |WASH|       |    |XN  |NASA|     |    |
+|CRL-5     |CRL915|JUL02|183|     |  |KbMr                         |CRL |CRL |       |    |XX  |NASA|     |    |
+|INT91-183 |I91183|JUL02|183|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-131|NAV131|JUL02|183|     |  |GcKuRiG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|CRL-6     |CRL916|JUL03|184|     |  |KbMr                         |CRL |CRL |       |    |XX  |NASA|     |    |
+|INT91-184 |I91184|JUL03|184|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CRL-7     |CRL917|JUL04|185|     |  |KbShMr                       |CRL |CRL |       |    |XX  |NASA|     |    |
+|NAVINT-187|N91187|JUL06|187|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-188 |I91188|JUL07|188|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A696 |IA696 |JUL08|189|     |  |RiWfWzApMo                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-189|N91189|JUL08|189|     |  |GcKuG3                       |NOAA|WASH|       |    |XJ  |NASA|     |    |
+|SH-S21    |SHS21 |JUL08|189|     |  |HhHo                         |NOAA|WASH|       |    |XS  |NASA|     |    |
+|INT91-190 |I91190|JUL09|190|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-P52  |IP9152|JUL09|190|     |  |GcMoHoN6Kb                   |NOAA|WASH|       |    |XP  |NASA|     |    |
+|R&D-7     |RD9107|JUL10|191|     |  |GcKuMoLaPtWzWf               |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-192 |I91192|JUL11|192|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-132|NAV132|JUL11|192|     |  |GcKuRi -G3                   |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-193 |I91193|JUL12|193|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-91A1  |CD91A1|JUL12|193|     |  |PrGcMoWfYk                   |NASA|WASH|       |    |X   |NASA|     |    |
+|INT91-194 |I91194|JUL13|194|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-91A2  |CD91A2|JUL13|194|     |  |GcWfMoPrYk                   |NASA|WASH|       |    |X   |NASA|     |    |
+|INT91-195 |I91195|JUL14|195|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A697 |IA697 |JUL15|196|     |  |MoWfWzApRi                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|IRIS-S44  |IS9144|JUL16|197|     |  |MoRiWfWzNtHh                 |NOAA|BONN|       |    |XH  |NASA|     |    |
+|NAVEX-12  |NAVX12|JUL16|197|     |  |GcKuApG3Ma                   |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-198 |I91198|JUL17|198|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-91B1  |CD91B1|JUL17|198|     |  |PfGcMoWfYk                   |NASA|WASH|       |    |X   |NASA|     |    |
+|xasia-2   |XAS912|JUL18|199|     |  |45HoKbHhShWz                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-199 |I91199|JUL18|199|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-91B2  |CD91B2|JUL18|199|     |  |GcWfYkMoPf                   |NASA|WASH|       |    |XA  |NASA|     |    |
+|INT91-200 |I91200|JUL19|200|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-133|NAV133|JUL19|200|     |  |GcG3KuRi                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-201 |I91201|JUL20|201|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A698 |IA698 |JUL21|202|     |  |MoWfWzRiAp                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|CDP-91C1  |CD91C1|JUL22|203|     |  |GcWfFsMoYk                   |NASA|WASH|       |    |X   |NASA|     |    |
+|INT91-204 |I91204|JUL23|204|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-91C2  |CD91C2|JUL23|204|     |  |FsGcWfMoYk                   |NASA|WASH|       |    |X   |NASA|     |    |
+|NAVNET-134|NAV134|JUL25|206|     |  |GcKuRi                       |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-207 |I91207|JUL26|207|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-208 |I91208|JUL27|208|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-91D1  |CD91D1|JUL27|208|     |  |GcMoVbWf                     |NASA|WASH|       |    |X   |NASA|     |    |
+|INT91-209 |I91209|JUL28|209|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP-91D2  |CD91D2|JUL28|209|     |  |GcMoWfVb                     |NASA|WASH|       |    |X   |NASA|     |    |
+|IRIS-A699 |IA699 |JUL29|210|     |  |MoRiApWfWz                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-210 |I91210|JUL29|210|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-210|N91210|JUL29|210|     |  |GcKuG3                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|NAPS-B1   |NP91B1|JUL30|211|     |  |GcWfMo                       |NASA|WASH|       |    |X   |NASA|     |    |
+|GSI-2     |GSI912|JUL31|212|     |  |TkKa                         |GSI |CRL |       |    |DX  |NASA|     |    |
+|INT91-212 |I91212|JUL31|212|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT91-213 |I91213|AUG01|213|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-135|NAV135|AUG01|213|     |  |GcKuRiG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-214 |I91214|AUG02|214|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|YELLOW2   |YLW912|AUG02|214|     |  |MoWfApGc                     |NOAA|WASH|       |    |X   |NASA|     |    |
+|NAPS-B2   |NP91B2|AUG03|215|     |  |GcMoApRiWfYk                 |NASA|WASH|       |    |X   |NASA|     |    |
+|INT91-215 |I91215|AUG03|215|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-216 |I91216|AUG04|216|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A700 |IA700 |AUG05|217|     |  |MoRiWzWf                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-218 |I91218|AUG06|218|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-S45  |IS9145|AUG06|218|     |  |WzHhNtMoRiWf                 |NOAA|BONN|       |    |XH  |NASA|     |    |
+|NAVEX-13  |NAVX13|AUG06|218|     |  |G3ApGcMaKu                   |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-219 |I91219|AUG07|219|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-220 |I91220|AUG08|220|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-136|NAV136|AUG08|220|     |  |KuRiG3Gc                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-221 |I91221|AUG09|221|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-222 |I91222|AUG10|222|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-223 |I91223|AUG11|223|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|POLAR-N2  |PL91N2|AUG12|224|     |  |GcGvHsKaOn                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A701 |IA701 |AUG12|224|     |  |MoRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-225 |I91225|AUG13|225|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|FRAME-44  |FR9144|AUG13|225|     |  |GcKu                         |NRL |WASH|       |    |XN  |NASA|     |    |
+|INT91-226 |I91226|AUG14|226|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-137|NAV137|AUG15|227|     |  |GcKuRiG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|GORF-3    |GRF913|AUG16|228|     |  |MoWfGfRiG3                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-228 |I91228|AUG16|228|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-229 |I91229|AUG17|229|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-230 |I91230|AUG18|230|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A702 |IA702 |AUG19|231|     |  |MoOnRiWfWz                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-231|N91231|AUG19|231|     |  |GcKuG3                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|IRIS-P53  |IP9153|AUG20|232|     |  |GcMoHo                       |NOAA|WASH|       |    |XP  |NASA|     |    |
+|R&D-8     |RD9108|AUG21|233|     |  |GcWzKuWfMo                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-233 |I91233|AUG21|233|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|SH-S22    |SHS22 |AUG21|233|     |  |HhHo                         |NOAA|WASH|       |    |XS  |NASA|     |    |
+|NAVNET-138|NAV138|AUG22|234|     |  |GcKuRiG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-235 |I91235|AUG23|235|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|DSN-11    |DN9111|AUG24|236|     |  |1565                         |DSN |JPL |       |    |D   |NASA|     |    |
+|INT91-236 |I91236|AUG24|236|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|PPM-S3    |PM91S3|AUG25|237|     |  |45GcKbKuSh                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-237 |I91237|AUG25|237|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A703 |IA703 |AUG26|238|     |  |MoRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVEX-W   |NAVEXW|AUG26|238|     |  |GcKuG3                       |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-239 |I91239|AUG27|239|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-240 |I91240|AUG28|240|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|FRAME-45  |FR9145|AUG28|240|     |  |GcKuG3                       |NRL |WASH|       |    |XN  |NASA|     |    |
+|INT91-241 |I91241|AUG29|241|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-139|NAV139|AUG29|241|     |  |KuRiGcG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-242 |I91242|AUG30|242|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|DSN-12    |DN9112|AUG31|243|     |  |1545                         |DSN |JPL |       |    |D   |NASA|     |    |
+|INT91-243 |I91243|AUG31|243|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT91-244 |I91244|SEP01|244|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A704 |IA704 |SEP02|245|     |  |RiWzMoWf                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-246 |I91246|SEP03|246|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-246|N91246|SEP03|246|     |  |KuG3Gc                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|INT91-247 |I91247|SEP04|247|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-S46  |IS9146|SEP04|247|     |  |MoRiNtWfWzHh                 |NOAA|BONN|       |    |XH  |NASA|     |    |
+|NAVEX-14  |NAVX14|SEP04|247|     |  |GcMaG3Ku                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-248 |I91248|SEP05|248|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-140|NAV140|SEP05|248|     |  |GcKuRiG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|R&D-9     |RD9109|SEP06|249|     |  |GcMoKuLaWfWz                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-249 |I91249|SEP06|249|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|EUROPE-5  |EUR005|SEP08|251|     |  |NtWzMaOn65Mc                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-251 |I91251|SEP08|251|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A705 |IA705 |SEP09|252|     |  |MoWzRiWfOn                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-252 |I91252|SEP09|252|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|SH-S23    |SHS23 |SEP09|252|     |  |HhHo                         |NOAA|WASH|       |    |XS  |NASA|     |    |
+|FRAME-46  |FR9146|SEP09|252|     |  |GcKuG3                       |NRL |WASH|       |    |XN  |NASA|     |    |
+|INT91-254 |I91254|SEP11|254|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-254|N91254|SEP11|254|     |  |GcKuRi                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|INT91-255 |I91255|SEP12|255|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-141|NAV141|SEP12|255|     |  |GcKuG3Ri                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|GORF-4    |GRF914|SEP13|256|     |  |MoWfG3RiGf                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-256 |I91256|SEP13|256|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-257 |I91257|SEP14|257|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-258 |I91258|SEP15|258|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A706 |IA706 |SEP16|259|     |  |RiWfMoWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-260 |I91260|SEP17|260|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-260|N91260|SEP17|260|     |  |GcKuRi                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|GSI-3     |GSI913|SEP18|261|     |  |MzKa                         |GSI |CRL |       |    |DX  |NASA|     |    |
+|INT91-261 |I91261|SEP18|261|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-261|N91261|SEP18|261|     |  |GcKuRi                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|INT91-262 |I91262|SEP19|262|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-142|NAV142|SEP19|262|     |  |GcKuRiG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|GSI-4     |GSI914|SEP20|263|     |  |MzKa                         |GSI |CRL |       |    |DX  |NASA|     |    |
+|INT91-263 |I91263|SEP20|263|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-264 |I91264|SEP21|264|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-265 |I91265|SEP22|265|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A707 |IA707 |SEP23|266|     |  |MoRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-267 |I91267|SEP24|267|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVEX-W2  |NAVXW2|SEP24|267|     |  |GcKuG3                       |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-268 |I91268|SEP25|268|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-P54  |IP9154|SEP25|268|     |  |GcKuMoHo                     |NOAA|WASH|       |    |XP  |NASA|     |    |
+|SESHAN-91A|SES91A|SEP26|269|     |  |KaShHhWz                     |NOAA|BONN|       |    |X   |NASA|     |    |
+|INT91-269 |I91269|SEP26|269|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-143|NAV143|SEP26|269|     |  |KuRiG3Gc                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-270 |I91270|SEP27|270|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-271 |I91271|SEP28|271|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-272 |I91272|SEP29|272|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A708 |IA708 |SEP30|273|     |  |RiWfWzMo                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|INT91-274 |I91274|OCT01|274|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-274|N91274|OCT01|274|     |  |GcKu                         |NOAA|WASH|       |    |XJ  |NASA|     |    |
+|INT91-275 |I91275|OCT02|275|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-P55  |IP9155|OCT02|275|     |  |GcKuMo                       |NOAA|WASH|       |    |XP  |NASA|     |    |
+|INT91-276 |I91276|OCT03|276|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-144|NAV144|OCT03|276|     |  |KuG3RiGc                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-277 |I91277|OCT04|277|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-278 |I91278|OCT05|278|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|DSN-13    |DN9113|OCT06|279|     |  |1545                         |DSN |JPL |       |    |D   |NASA|     |    |
+|INT91-279 |I91279|OCT06|279|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|XASIA-3   |XAS913|OCT07|280|     |  |45ShHhMc                     |NASA|WASH|       |    |X   |NASA|     |    |
+|IRIS-A709 |IA709 |OCT07|280|     |  |RiWfWzMo                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-280|N91280|OCT07|280|     |  |KuG3Gc                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|INT91-281 |I91281|OCT08|281|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|FRAME-47  |FR9147|OCT08|281|     |  |GcKuG3                       |NRL |WASH|       |    |XN  |NASA|     |    |
+|INT91-282 |I91282|OCT09|282|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-283 |I91283|OCT10|283|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-145|NAV145|OCT10|283|     |  |GcKuG3Ri                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-285 |I91285|OCT12|285|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-286 |I91286|OCT13|286|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A710 |IA710 |OCT14|287|     |  |MoWfWzRi                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-287|N91287|OCT14|287|     |  |KuG3Gc                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|R&DINT1   |RDINT1|OCT15|288|     |  |GcKuWzMoWfLa                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-288 |K91288|OCT15|288|     |  |MaG3                         |NOAA|WASH|       |    |XM  |NASA|     |    |
+|R&DINT2   |RDINT2|OCT16|289|     |  |GcWfKuMoLaWz                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-289 |K91289|OCT16|289|     |  |MaG3                         |NOAA|WASH|       |    |XM  |NASA|     |    |
+|INT91-290 |K91290|OCT17|290|     |  |MaG3                         |NOAA|WASH|       |    |XM  |NASA|     |    |
+|INT91-290 |I91290|OCT17|290|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-146|NAV146|OCT17|290|     |  |G3RiGcKu                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|R&DINT3   |RDINT3|OCT18|291|     |  |WfWzMoLaGcKu                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|GSI-5     |GSI915|OCT18|291|     |  |MzKa                         |GSI |CRL |       |    |DX  |NASA|     |    |
+|INT91-292 |K91292|OCT19|292|     |  |MaG3                         |NOAA|WASH|       |    |XM  |NASA|     |    |
+|R&DINT4   |RDINT4|OCT20|293|     |  |GcWzLaWfKuMo                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|GSI-6     |GSI916|OCT20|293|     |  |MzKa                         |GSI |CRL |       |    |DX  |NASA|     |    |
+|INT91-293 |K91293|OCT20|293|     |  |MaG3                         |NOAA|WASH|       |    |XM  |NASA|     |    |
+|IRIS-A711 |IA711 |OCT21|294|     |  |RiWfWzMaMo                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-294|N91294|OCT21|294|     |  |GcG3Ku                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|R&DINT5   |RDINT5|OCT22|295|     |  |GcLaWzMoWfKu                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-295 |K91295|OCT22|295|     |  |MaG3                         |NOAA|WASH|       |    |XM  |NASA|     |    |
+|R&DINT6   |RDINT6|OCT23|296|     |  |LaWfMoWz                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-296 |K91296|OCT23|296|     |  |MaG3                         |NOAA|WASH|       |    |XM  |NASA|     |    |
+|INT91-297 |K91297|OCT24|297|     |  |MaG3                         |NOAA|WASH|       |    |XM  |NASA|     |    |
+|INT91-297 |I91297|OCT24|297|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-147|NAV147|OCT24|297|     |  |G3RiKu                       |USNO|WASH|       |    |XO  |NASA|     |    |
+|NAPS-E    |NAP91E|OCT25|298|     |  |MoRiWfG3Gb                   |NASA|WASH|       |    |X   |NASA|     |    |
+|INT91-300 |I91300|OCT27|300|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A712 |IA712 |OCT28|301|     |  |MoRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-301|N91301|OCT28|301|     |  |GcKuG3                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|INT91-302 |I91302|OCT29|302|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-S47  |IS9147|OCT29|302|     |  |MoRiWfWzHh                   |NOAA|BONN|       |    |XH  |NASA|     |    |
+|NAVEX-15  |NAVX15|OCT29|302|     |  |GcG3MaKu                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-303 |I91303|OCT30|303|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-304 |I91304|OCT31|304|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-148|NAV148|OCT31|304|     |  |KuG3RiGc                     |USNO|WASH|       |    |XO  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|R&D-10    |RD9110|NOV01|305|     |  |WfWzLaMoGcKu                 |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-305 |I91305|NOV01|305|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-307 |I91307|NOV03|307|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A713 |IA713 |NOV04|308|     |  |MoRiWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|FRAME-48  |FR9148|NOV04|308|     |  |GcKuG3                       |NRL |WASH|       |    |XN  |NASA|     |    |
+|INT91-310 |I91310|NOV06|310|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-311 |I91311|NOV07|311|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-149|NAV149|NOV07|311|     |  |GcKuG3Ri                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|MVEUR-A   |MEU91A|NOV08|312|     |  |GcWfWzTl                     |BONN|WASH|       |    |XM  |NASA|     |    |
+|DSN-14    |DN9114|NOV10|314|     |  |1565                         |DSN |JPL |       |    |D   |NASA|     |    |
+|INT91-314 |I91314|NOV10|314|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A714 |IA714 |NOV11|315|     |  |RiWfWz                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|IRIS-S48  |IS9148|NOV12|316|     |  |RiWfWzMoHh                   |NOAA|BONN|       |    |XH  |NASA|     |    |
+|NAVEX-16  |NAVX16|NOV12|316|     |  |GcMaKuG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-317 |I91317|NOV13|317|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-318 |I91318|NOV14|318|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-150|NAV150|NOV14|318|     |  |GcKuG3Ri                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|MVEUR-B   |MEU91B|NOV15|319|     |  |TlGcWfWz                     |BONN|WASH|       |    |XM  |NASA|     |    |
+|DSN-15    |DN9115|NOV16|320|     |  |1545                         |DSN |JPL |       |    |D   |NASA|     |    |
+|INT91-321 |I91321|NOV17|321|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|CDP       |NASA  |NOV18|322|     |  |MoG3WfGd                     |NASA|HAYS|       |    |X   |NASA|     |    |
+|IRIS-A715 |IA715 |NOV18|322|     |  |RiWfWzMo                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-322|N91322|NOV18|322|     |  |KuG3Gc                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|IRIS-P56  |IP9156|NOV19|323|     |  |HoKuGcMo                     |NOAA|WASH|       |    |XP  |NASA|     |    |
+|NAVEX-G1  |NAVXG1|NOV19|323|     |  |G3RiMaHhWz                   |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-324 |I91324|NOV20|324|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|SH-S25    |SHS25 |NOV20|324|     |  |HhHoSt                       |NOAA|WASH|       |    |XS  |NASA|     |    |
+|X-GLOBAL  |XGLB91|NOV21|325|     |  |WfWzStGfMo                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91-325 |I91325|NOV21|325|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-151|NAV151|NOV21|325|     |  |GcG3RiKu                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-327 |I91327|NOV23|327|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|JMS91     |JMS91 |NOV24|328|     |  |GcKaMz                       |NASA|WASH|       |    |DX  |NASA|     |    |
+|INT91-328 |I91328|NOV24|328|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A716 |IA716 |NOV25|329|     |  |MaRiWzMoWf                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-329|N91329|NOV25|329|     |  |KuG3                         |NOAA|WASH|       |    |XJ  |NASA|     |    |
+|GSI-7     |GSI917|NOV26|330|     |  |MzKa                         |GSI |CRL |       |    |XX  |NASA|     |    |
+|INT91-330 |I91330|NOV26|330|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-152|NAV152|NOV26|330|     |  |GcKuRiG3                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|SESHAN-91B|SES91B|NOV27|331|     |  |KaMaShWz                     |NOAA|BONN|       |    |X   |NASA|     |    |
+|INT91-331 |I91331|NOV27|331|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-332 |I91332|NOV28|332|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-333 |I91333|NOV29|333|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|SOUTH17   |SOTH17|NOV29|333|     |  |TiHoPa                       |NRL |WASH|       |    |XN  |NASA|     |    |
+|INT91-334 |I91334|NOV30|334|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+|EUROPE-6  |EUR006|DEC01|335|     |  |EbMaWzMc65                   |NASA|HAYS|       |    |X   |NASA|     |    |
+|INT91=335 |I91335|DEC01|335|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A717 |IA717 |DEC02|336|     |  |MoWfWz                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-336|N91336|DEC02|336|     |  |GcG3                         |NOAA|WASH|       |    |XJ  |NASA|     |    |
+|FRAME-49  |FR9149|DEC02|336|     |  |GcG3Ku                       |NRL |WASH|       |    |XN  |NASA|     |    |
+|CRL-8     |CRL918|DEC03|337|     |  |KbShDa                       |CRL |CRL |       |    |XX  |NASA|     |    |
+|INT91-337 |I91337|DEC03|337|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-P57  |IP9157|DEC03|337|     |  |GcKuMoHo                     |NOAA|WASH|       |    |XP  |NASA|     |    |
+|R&D-11    |RD9111|DEC04|338|     |  |WfWzLaKuMoGcPt               |NASA|HAYS|       |    |X   |NASA|     |    |
+|CRL-9     |CRL919|DEC05|339|     |  |KbDa                         |CRL |CRL |       |    |MV  |NASA|     |    |
+|NAVNET-153|NAV153|DEC05|339|     |  |KuG3Gc                       |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-340 |I91340|DEC06|340|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-341 |I91341|DEC07|341|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-342 |I91342|DEC08|342|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A718 |IA718 |DEC09|343|     |  |TlGcWfWz                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|POLAR-S1  |PL91S1|DEC10|344|     |  |HhHoSt45                     |NASA|WASH|       |    |X   |NASA|     |    |
+|INT91-344 |I91344|DEC10|344|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-345 |I91345|DEC11|345|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-S49  |IS9149|DEC11|345|     |  |RiHhMoWzWf                   |NOAA|BONN|       |    |XH  |NASA|     |    |
+|NAVEX-17  |NAVX17|DEC11|345|     |  |GcG3MaKu                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-346 |I91346|DEC12|346|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-154|NAV154|DEC12|346|     |  |GcKuG3Ri                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-347 |I91347|DEC13|347|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|MVEUR-C   |MEU91C|DEC14|348|     |  |TlGcWzWf                     |BONN|WASH|       |    |XM  |NASA|     |    |
+|IRIS-A719 |IA719 |DEC16|350|     |  |MaMoRiWfWz                   |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-350|N91350|DEC16|350|     |  |KuG3Gc                       |USNO|WASH|       |    |XJ  |NASA|     |    |
+|GLOBAL-A  |GLB91A|DEC17|351|     |  |GcKuWzKbShHhHoStWf           |NASA|HAYS|       |    |X   |NASA|     |    |
+|GLOBAL-B  |GLB91B|DEC18|352|     |  |GcKuWzKbWfShHoHhSt           |NASA|HAYS|       |    |X   |NASA|     |    |
+|NAVNET-155|NAV155|DEC19|353|     |  |GcKuG3Ri                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|MVEUR-D   |MEU91D|DEC20|354|     |  |TlWzGcWf                     |BONN|WASH|       |    |XM  |NASA|     |    |
+|INT91-354 |I91354|DEC20|354|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|DSN-16    |DN9116|DEC22|356|     |  |1545                         |DSN |JPL |       |    |D   |NASA|     |    |
+|INT91-356 |I91356|DEC22|356|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A720 |IA720 |DEC23|357|     |  |RiWfWzMo                     |NOAA|WASH|       |    |XI  |NASA|     |    |
+|NAVINT-357|N91357|DEC23|357|     |  |KuG3Gc                       |NOAA|WASH|       |    |XJ  |NASA|     |    |
+|INT91-360 |I91360|DEC26|360|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVNET-156|NAV156|DEC26|360|     |  |GcG3RiKu                     |USNO|WASH|       |    |XO  |NASA|     |    |
+|INT91-361 |I91361|DEC27|361|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-362 |I91362|DEC28|362|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|INT91-363 |I91363|DEC29|363|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|IRIS-A721 |IA721 |DEC30|364|     |  |TlWfGc                       |NOAA|WASH|       |    |XI  |NASA|     |    |
+|INT91-365 |I91365|DEC31|365|     |  |WfWz                         |NOAA|WASH|       |    |XU  |NASA|     |    |
+|NAVINT-365|N91365|DEC31|365|     |  |GcG3KuRi                     |USNO|WASH|       |    |XJ  |NASA|     |    |
+----------------------------------------------------------------------------------------------------------------
+## Master file format version 1.0           2001.08.21 CCT&NRV

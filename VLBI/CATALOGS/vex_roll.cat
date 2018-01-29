@@ -1,0 +1,20 @@
+* ###################################################################################### 
+* #          VEX -   $ROLL - Catalog File                                              #
+* ######################################################################################
+*
+* ---- Format: ----
+* Parameterset Label
+*		Format: ><Paraemter-set label>
+* Parameter
+*		Format: <Parameter name>(<Index for multiple parameters>)= <Parameter Value>
+*
+* One Parameter/Parameterset Label per line
+* White space (\t, \b) between "=" and <Parameter_Value> is not considered.
+* Use "*" in front of a line to specify a comment
+*
+* ------------------ No_Roll ---------------------------------------------------------
+>No_Roll
+roll_note(1)=											barrel-rolling: off
+* roll_note(2)=
+roll(1)=															off
+* ---------------------------------------------------------------------------------------

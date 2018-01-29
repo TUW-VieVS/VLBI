@@ -1,0 +1,196 @@
+* ###################################################################################### 
+* #          VEX - $DAS (Data Acquisition System) Catalog File                         #
+* ######################################################################################
+*
+* ---- Format: ----
+* Parameterset Label
+*		Format: ><Paraemter-set label>
+* Parameter
+*		Format: <Parameter name>(<Index for multiple parameters>)= <Parameter Value>
+*
+* One Parameter/Parameterset Label per line
+* White space (\t, \b) between "=" and <Parameter_Value> is not considered.
+* Use "*" in front of a line to specify a comment
+*
+* ------------------ Mark5A_Mark4 ---------------------------------------------------------
+>Mark5A_Mark4
+*
+das_note(1)=										Recorder: Mark5A; Rack: Mark4
+* das_note(2)=		
+*
+record_transport_type=					Mark5A
+electronics_rack_type=					Mark4
+number_drives=									2
+*
+* --- headstack 1: ---
+headstack_number(1)=						1
+* headstack_function(1)=					
+drive_number_offset(1)=						0
+*
+* --- headstack 2: ---
+headstack_number(2)=						2
+* headstack_function(2)=					
+drive_number_offset(2)=						1
+*
+* --- tape_motion: ---
+tape_controll=									adaptive
+tape_early_start_time=					0 min
+tape_late_stop_time=						0 min
+min_gap_for_stopping_tape=			10 sec
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ DBBC_Mark5B_Wn ---------------------------------------------------------
+>DBBC_Mark5B_Wn
+* Obs. mode for SX taken from VEX file "k15152.vex" (provided by A. Neidhardt), Intensive Session
+*
+das_note(1)=										Recorder: Mark5B; Rack: none (DBBC) 
+* das_note(2)=		
+*
+record_transport_type=					    Mark5B
+electronics_rack_type=					    none
+recording_system_ID=						Wn
+*
+* --- headstack 1: ---
+* headstack_number(1)=						1
+* headstack_function(1)=					
+* drive_number_offset(1)=						0
+*
+* --- tape_motion: ---
+tape_controll=							adaptive
+tape_early_start_time=					0 min
+tape_late_stop_time=					0 min
+min_gap_for_stopping_tape=				10 sec
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ DBBC_Mark5B_Wd ---------------------------------------------------------
+>DBBC_Mark5B_Wd
+* Obs. mode for SX taken from VEX file "k15152.vex" (provided by A. Neidhardt), Intensive Session
+*
+das_note(1)=										Recorder: Mark5B; Rack: none (DBBC) 
+* das_note(2)=		
+*
+record_transport_type=					    Mark5B
+electronics_rack_type=					    none
+recording_system_ID=						Wd
+*
+* --- headstack 1: ---
+* headstack_number(1)=						1
+* headstack_function(1)=					
+* drive_number_offset(1)=						0
+*
+* --- tape_motion: ---
+tape_controll=							adaptive
+tape_early_start_time=					0 min
+tape_late_stop_time=					0 min
+min_gap_for_stopping_tape=				10 sec
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ Mark5A_Mark4_Ho ---------------------------------------------------------
+* Taken from C-band obs. (wark_1.vex), provided by Jamie McCallum, June 2015
+>Mark5A_Mark4_Ho
+*
+das_note(1)=							Recorder: Mark5A; Rack: Mark4
+das_note(2)=							Station: Ho
+*
+record_transport_type=					Mark5A
+electronics_rack_type=					Mark4
+number_drives=							1
+*
+* --- headstack 1: ---
+headstack_number(1)=					1
+* headstack_function(1)=					
+drive_number_offset(1)=					0
+*
+* --- headstack 2: ---
+headstack_number(2)=					2
+* headstack_function(2)=					
+drive_number_offset(2)=					0
+*
+* --- tape_motion: ---
+tape_controll=							adaptive
+tape_early_start_time=					0 min
+tape_late_stop_time=					0 min
+min_gap_for_stopping_tape=				10 sec
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ DBBC_Mark5B_Cd ---------------------------------------------------------
+>DBBC_Mark5B_Cd
+* Obs. mode taken from VEX file "wark1.vex" (provided by Jamie McCallum in June 2015)
+*
+das_note(1)=										Recorder: Mark5B; Rack: DBBC
+* das_note(2)=		
+*
+record_transport_type=					    Mark5B
+electronics_rack_type=					    DBBC
+number_drives=								1
+* recording_system_ID=						
+*
+* --- headstack 1: ---
+headstack_number(1)=						1
+headstack_function(1)=					
+drive_number_offset(1)=						0
+*
+* --- tape_motion: ---
+tape_controll=								adaptive
+tape_early_start_time=						0 min
+tape_late_stop_time=						0 min
+min_gap_for_stopping_tape=					10 sec
+*
+* -------------------------------------------------------------------------------------#
+*
+* ------------------ DBBC_Mark5B ---------------------------------------------------------
+>DBBC_Mark5B
+*
+das_note(1)=								Recorder: Mark5B; Rack: DBBC
+* das_note(2)=		
+*
+record_transport_type=					    Mark5B
+electronics_rack_type=					    DBBC
+number_drives=								1
+* recording_system_ID=						
+*
+* --- headstack 1: ---
+headstack_number(1)=						1
+headstack_function(1)=					
+drive_number_offset(1)=						0
+*
+* --- tape_motion: ---
+tape_controll=								adaptive
+tape_early_start_time=						0 min
+tape_late_stop_time=						0 min
+min_gap_for_stopping_tape=					10 sec
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ DBBC_Mark5C ---------------------------------------------------------
+>DBBC_Mark5C
+*
+das_note(1)=								Recorder: Mark5C; Rack: DBBC
+* das_note(2)=		
+*
+record_transport_type=					    Mark5C
+electronics_rack_type=					    DBBC
+number_drives=								1
+* recording_system_ID=						
+*
+* --- headstack 1: ---
+headstack_number(1)=						1
+headstack_function(1)=					
+drive_number_offset(1)=						0
+*
+* --- headstack 2: ---
+headstack_number(2)=						2
+* headstack_function(2)=					
+drive_number_offset(2)=						0
+*
+* --- tape_motion: ---
+tape_controll=								adaptive
+tape_early_start_time=						0 min
+tape_late_stop_time=						0 min
+min_gap_for_stopping_tape=					10 sec
+*
+* -------------------------------------------------------------------------------------

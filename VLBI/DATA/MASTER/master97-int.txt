@@ -1,0 +1,281 @@
+## Master file format version 1.0           2001.08.21 CCT&NRV
+
+                    1997 MULTI-AGENCY INTENSIVES SCHEDULE
+
+                     Last Updated - June 17, 2002 - CCT
+
+
+  SESSION      SESSION DATE  DOY TIME DUR        STATIONS                SKED CORR STATUS  PF  DBC SUBM DEL  MK4
+    NAME        CODE   mondd ddd hh:mm hr                                          yymondd     CODE     days NUM
+------------------------------------------------------------------------------------------------------------------
+|INT97-002     |I97002|JAN02|  2|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-003     |I97003|JAN03|  3|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-004     |I97004|JAN04|  4|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-004     |J97004|JAN04|  4|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-006     |I97006|JAN06|  6|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-009     |I97009|JAN09|  9|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-010     |I97010|JAN10| 10|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-011     |I97011|JAN11| 11|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-011     |J97011|JAN11| 11|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-013     |I97013|JAN13| 13|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-016     |I97016|JAN16| 16|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-017     |I97017|JAN17| 17|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-018     |I97018|JAN18| 18|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-018     |J97018|JAN18| 18|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-020     |I97020|JAN20| 20|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-021     |I97021|JAN21| 21|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-023     |I97023|JAN23| 23|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-024     |I97024|JAN24| 24|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-025     |I97025|JAN25| 25|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-025     |J97025|JAN25| 25|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-027     |I97027|JAN27| 27|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-028     |I97028|JAN28| 28|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-030     |I97030|JAN30| 30|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-031     |I97031|JAN31| 31|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT97-032     |I97032|FEB01| 32|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-032     |J97032|FEB01| 32|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-034     |I97034|FEB03| 34|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-035     |I97035|FEB04| 35|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-037     |I97037|FEB06| 37|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-038     |I97038|FEB07| 38|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-039     |I97039|FEB08| 39|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-039     |J97039|FEB08| 39|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-041     |I97041|FEB10| 41|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-044     |I97044|FEB13| 44|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-045     |I97045|FEB14| 45|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-046     |I97046|FEB15| 46|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-046     |J97046|FEB15| 46|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-048     |I97048|FEB17| 48|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-049     |I97049|FEB18| 49|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-051     |I97051|FEB20| 51|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-052     |I97052|FEB21| 52|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-055     |I97055|FEB24| 55|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-056     |I97056|FEB25| 56|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-059     |I97059|FEB28| 59|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT97-060     |I97060|MAR01| 60|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-060     |J97060|MAR01| 60|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-062     |I97062|MAR03| 62|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-066     |I97066|MAR07| 66|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-067     |I97067|MAR08| 67|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-067     |J97067|MAR08| 67|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-069     |I97069|MAR10| 69|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-073     |I97073|MAR14| 73|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-074     |I97074|MAR15| 74|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-074     |J97074|MAR15| 74|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-076     |I97076|MAR17| 76|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-079     |I97079|MAR20| 79|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-080     |I97080|MAR21| 80|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-081     |I97081|MAR22| 81|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-081     |J97081|MAR22| 81|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-083     |I97083|MAR24| 83|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-084     |I97084|MAR25| 84|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-086     |I97086|MAR27| 86|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-087     |I97087|MAR28| 87|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-088     |I97088|MAR29| 88|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-088     |J97088|MAR29| 88|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-090     |I97090|MAR31| 90|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT97-091     |I97091|APR01| 91|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-093     |I97093|APR03| 93|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-094     |I97094|APR04| 94|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-095     |I97095|APR05| 95|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-095     |J97095|APR05| 95|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-097     |I97097|APR07| 97|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-098     |I97098|APR08| 98|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-100     |I97100|APR10|100|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-101     |I97101|APR11|101|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-102     |I97102|APR12|102|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-102     |J97102|APR12|102|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-104     |I97104|APR14|104|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-105     |I97105|APR15|105|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-107     |I97107|APR17|107|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-108     |I97108|APR18|108|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-109     |I97109|APR19|109|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-109     |J97109|APR19|109|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-111     |I97111|APR21|111|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-114     |I97114|APR24|114|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-115     |I97115|APR25|115|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-116     |I97116|APR26|116|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-116     |J97116|APR26|116|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-118     |I97118|APR28|118|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT97-121     |I97121|MAY01|121|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-122     |I97122|MAY02|122|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-123     |I97123|MAY03|123|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-123     |J97123|MAY03|123|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-125     |I97125|MAY05|125|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-128     |I97128|MAY08|128|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-129     |I97129|MAY09|129|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-130     |I97130|MAY10|130|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-130     |J97130|MAY10|130|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-132     |I97132|MAY12|132|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-135     |I97135|MAY15|135|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-136     |I97136|MAY16|136|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-142     |I97142|MAY22|142|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-143     |I97143|MAY23|143|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-144     |I97144|MAY24|144|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-144     |J97144|MAY24|144|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-146     |I97146|MAY26|146|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-147     |I97147|MAY27|147|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-149     |I97149|MAY29|149|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-150     |I97150|MAY30|150|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-151     |I97151|MAY31|151|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-151     |J97151|MAY31|151|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT97-153     |I97153|JUN02|153|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-154     |I97154|JUN03|154|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-156     |I97156|JUN05|156|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-157     |I97157|JUN06|157|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-158     |I97158|JUN07|158|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-158     |J97158|JUN07|158|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-160     |I97160|JUN09|160|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-161     |I97161|JUN10|161|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-163     |I97163|JUN12|163|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-164     |I97164|JUN13|164|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-167     |I97167|JUN16|167|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-168     |I97168|JUN17|168|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-170     |I97170|JUN19|170|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-171     |I97171|JUN20|171|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-172     |I97172|JUN21|172|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-172     |J97172|JUN21|172|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-174     |I97174|JUN23|174|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-175     |I97175|JUN24|175|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-177     |I97177|JUN26|177|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-178     |I97178|JUN27|178|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-179     |I97179|JUN28|179|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-179     |J97179|JUN28|179|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-181     |I97181|JUN30|181|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT97-184     |I97184|JUL03|184|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-185     |I97185|JUL04|185|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-186     |I97186|JUL05|186|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-188     |I97188|JUL07|188|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-192     |I97192|JUL11|192|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-193     |I97193|JUL12|193|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-193     |J97193|JUL12|193|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-195     |I97195|JUL14|195|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-198     |I97198|JUL17|198|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-199     |I97199|JUL18|199|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-200     |I97200|JUL19|200|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-200     |J97200|JUL19|200|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-202     |I97202|JUL21|202|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-205     |I97205|JUL24|205|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-206     |I97206|JUL25|206|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-207     |I97207|JUL26|207|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-207     |J97207|JUL26|207|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-209     |I97209|JUL28|209|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-210     |I97210|JUL29|210|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-212     |I97212|JUL31|212|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT97-213     |I97213|AUG01|213|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-214     |I97214|AUG02|214|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-214     |J97214|AUG02|214|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-216     |I97216|AUG04|216|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-217     |I97217|AUG05|217|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-219     |I97219|AUG07|219|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-220     |I97220|AUG08|220|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-224     |I97224|AUG12|224|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-226     |I97226|AUG14|226|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-227     |I97227|AUG15|227|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-228     |I97228|AUG16|228|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-228     |J97228|AUG16|228|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-230     |I97230|AUG18|230|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-231     |I97231|AUG19|231|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-233     |I97233|AUG21|233|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-234     |I97234|AUG22|234|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-235     |I97235|AUG23|235|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-235     |J97235|AUG23|235|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-237     |I97237|AUG25|237|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-238     |I97238|AUG26|238|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-240     |I97240|AUG28|240|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-241     |I97241|AUG29|241|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-242     |I97242|AUG30|242|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-242     |J97242|AUG30|242|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT97-244     |I97244|SEP01|244|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-248     |I97248|SEP05|248|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-249     |I97249|SEP06|249|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-249     |J97249|SEP06|249|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-251     |I97251|SEP08|251|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-254     |I97254|SEP11|254|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-255     |I97255|SEP12|255|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-256     |I97256|SEP13|256|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-256     |J97256|SEP13|256|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-258     |I97258|SEP15|258|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-262     |I97262|SEP19|262|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-263     |I97263|SEP20|263|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-263     |J97263|SEP20|263|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-265     |I97265|SEP22|265|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-268     |I97268|SEP25|268|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-269     |I97269|SEP26|269|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-272     |I97272|SEP29|272|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-273     |I97273|SEP30|273|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT97-276     |I97276|OCT03|276|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-277     |I97277|OCT04|277|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-277     |J97277|OCT04|277|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-279     |I97279|OCT06|279|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-280     |I97280|OCT07|280|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-284     |I97284|OCT11|284|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-284     |J97284|OCT11|284|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-286     |I97286|OCT13|286|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-287     |I97287|OCT14|287|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-289     |I97289|OCT16|289|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-290     |I97290|OCT17|290|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-291     |I97291|OCT18|291|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-291     |J97291|OCT18|291|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-293     |I97293|OCT20|293|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-294     |I97294|OCT21|294|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-296     |I97296|OCT23|296|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-298     |I97298|OCT25|298|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-298     |J97298|OCT25|298|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-301     |I97301|OCT28|301|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-303     |I97303|OCT30|303|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT97-305     |I97305|NOV01|305|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-305     |J97305|NOV01|305|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-307     |I97307|NOV03|307|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-310     |I97310|NOV06|310|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-311     |I97311|NOV07|311|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-312     |I97312|NOV08|312|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-312     |J97312|NOV08|312|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-314     |I97314|NOV10|314|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-317     |I97317|NOV13|317|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-318     |I97318|NOV14|318|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-319     |I97319|NOV15|319|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-319     |J97319|NOV15|319|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-321     |I97321|NOV17|321|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-324     |I97324|NOV20|324|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-325     |I97325|NOV21|325|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-326     |I97326|NOV22|326|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-326     |J97326|NOV22|326|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-328     |I97328|NOV24|328|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-332     |I97332|NOV28|332|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-333     |I97333|NOV29|333|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-333     |J97333|NOV29|333|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+|INT97-335     |I97335|DEC01|335|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-338     |I97338|DEC04|338|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-339     |I97339|DEC05|339|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-340     |I97340|DEC06|340|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-340     |J97340|DEC06|340|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-343     |I97343|DEC09|343|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-345     |I97345|DEC11|345|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-346     |I97346|DEC12|346|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-347     |I97347|DEC13|347|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-347     |J97347|DEC13|347|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-349     |I97349|DEC15|349|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-350     |I97350|DEC16|350|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-352     |I97352|DEC18|352|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-353     |I97353|DEC19|353|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-354     |I97354|DEC20|354|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-354     |J97354|DEC20|354|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-356     |I97356|DEC22|356|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-357     |I97357|DEC23|357|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-361     |I97361|DEC27|361|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+|INT97-361     |J97361|DEC27|361|     |   |GnWz                         |USNO|WASH|       |    |XT|NASA|   0|    |
+|INT97-363     |I97363|DEC29|363|     |   |GnWz                         |USNO|WASH|       |    |XU|NASA|   0|    |
+------------------------------------------------------------------------------------------------------------------
+## Master file format version 1.0           2001.08.21 CCT&NRV

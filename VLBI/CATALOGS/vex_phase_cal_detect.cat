@@ -1,0 +1,46 @@
+* ###################################################################################### 
+* #          VEX -   Phase Cal. Detect Catalog File                                    #
+* ######################################################################################
+*
+* ---- Format: ----
+* Parameterset Label
+*		Format: ><Paraemter-set label>
+* Parameter
+*		Format: <Parameter name>(<Index for multiple parameters>)= <Parameter Value>
+*
+* One Parameter/Parameterset Label per line
+* White space (\t, \b) between "=" and <Parameter_Value> is not considered.
+* Use "*" in front of a line to specify a comment
+*
+* ------------------ UsbDetect ---------------------------------------------------------
+>UsbDetect
+pcal_id=					&U_Cal
+phase_cal_detect_note(1)=		Upper side band
+* phase_cal_detect_note(2)=		Upper side band_TEST_2
+* tone_number: Multiple declarations allowed!
+tone_number(1)=		1
+tone_number(2)=		8
+tone_number(3)=		0
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ LsbDetect ---------------------------------------------------------
+>LsbDetect
+pcal_id=					&L_Cal
+* tone_number: Multiple declarations allowed!
+tone_number(1)=		1
+tone_number(2)=		8
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ NoDetect ---------------------------------------------------------
+* Taken from C-band obs. (wark_1.vex), provided by Jamie McCallum, June 2015
+>NoDetect
+pcal_id=					&NoCal
+* tone_number: Multiple declarations allowed!
+* ---------------------------------------------------------------------------------------
+*
+* ------------------ Standard ---------------------------------------------------------
+>Standard
+pcal_id=					&U_cal
+* tone_number: Multiple declarations allowed!
+tone_number(1)=		1
+* ---------------------------------------------------------------------------------------

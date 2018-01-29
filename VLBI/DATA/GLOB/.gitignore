@@ -1,0 +1,7 @@
+*
+!.gitignore
+!CRF
+!EOP
+!TRF
+!tidalERPvar_globest.txt
+!tidalERPvar_list.txt

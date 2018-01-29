@@ -1,0 +1,9 @@
+*
+* down.txt - downtime information
+*
+* NOTE: Use this file for schedules to specify the downtime 
+*       that the station can't take part in observation.
+*
+* Name      start(YMDHMS)         end(YMDHMS) 
+*KOKEE      2012 10 02 18 15 00   2012 10 02 19 45 00
+*WETTZELL   2012 10 02 18 15 00   2012 10 02 19 45 00

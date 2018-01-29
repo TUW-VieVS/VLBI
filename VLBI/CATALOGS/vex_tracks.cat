@@ -1,0 +1,1200 @@
+* ###################################################################################### 
+* #          VEX - $TRACKS Catalog File                                                #
+* ######################################################################################
+*
+* ---- Format: ----
+* Parameterset Label
+*		Format: ><Paraemter-set label>
+* Parameter
+*		Format: <Parameter name>(<Index for multiple parameters>)= <Parameter Value>
+*
+* One Parameter/Parameterset Label per line
+* White space (\t, \b) between "=" and <Parameter_Value> is not considered.
+* Use "*" in front of a line to specify a comment
+*
+*
+* ------------------ MK4_4Ch_2bit_1to4 ---------------------------------------------------------
+>MK4_4Ch_2bit_1to4
+*
+tracks_note(1)=		Format: MKIV, fanout factor: 1/4
+tracks_note(2)=		2 bit, 4 channels, 32 tracks (2-33)
+*
+track_frame_format= 							Mark4
+data_modulation= 									off
+*
+* --- fanout_def 1: ---
+* sub_pass_id(1)=									<optional>
+can_id(1)=												&CH01
+sign_mag(1)= 											sign
+headstack_number(1)=							1
+multiplex_track(1).track(1)=			2
+multiplex_track(1).track(2)=			4
+multiplex_track(1).track(3)=			6
+multiplex_track(1).track(4)=			8
+*
+* --- fanout_def 2: ---
+* sub_pass_id(2)=									<optional>
+can_id(2)=												&CH01
+sign_mag(2)= 											mag
+headstack_number(2)=							1
+multiplex_track(2).track(1)=			10
+multiplex_track(2).track(2)=			12
+multiplex_track(2).track(3)=			14
+multiplex_track(2).track(4)=			16
+*
+* --- fanout_def 3: ---
+* sub_pass_id(3)=									<optional>
+can_id(3)=												&CH02
+sign_mag(3)= 											sign
+headstack_number(3)=							1
+multiplex_track(3).track(1)=			18
+multiplex_track(3).track(2)=			20
+multiplex_track(3).track(3)=			22
+multiplex_track(3).track(4)=			24
+*
+* --- fanout_def 4: ---
+* sub_pass_id(4)=									<optional>
+can_id(4)=												&CH02
+sign_mag(4)= 											mag
+headstack_number(4)=							1
+multiplex_track(4).track(1)=			26
+multiplex_track(4).track(2)=			28
+multiplex_track(4).track(3)=			30
+multiplex_track(4).track(4)=			32
+*
+* --- fanout_def 5: ---
+* sub_pass_id(5)=									<optional>
+can_id(5)=												&CH03
+sign_mag(5)= 											sign
+headstack_number(5)=							1
+multiplex_track(5).track(1)=			3
+multiplex_track(5).track(2)=			5
+multiplex_track(5).track(3)=			7
+multiplex_track(5).track(4)=			9
+*
+* --- fanout_def 6: ---
+* sub_pass_id(6)=									<optional>
+can_id(6)=												&CH03
+sign_mag(6)= 											mag
+headstack_number(6)=							1
+multiplex_track(6).track(1)=			11
+multiplex_track(6).track(2)=			13
+multiplex_track(6).track(3)=			15
+multiplex_track(6).track(4)=			17
+*
+* --- fanout_def 7: ---
+* sub_pass_id(7)=									<optional>
+can_id(7)=												&CH04
+sign_mag(7)= 											sign
+headstack_number(7)=							1
+multiplex_track(7).track(1)=			19
+multiplex_track(7).track(2)=			21
+multiplex_track(7).track(3)=			23
+multiplex_track(7).track(4)=			25
+*
+* --- fanout_def 8: ---
+* sub_pass_id(8)=									<optional>
+can_id(8)=												&CH04
+sign_mag(8)= 											mag
+headstack_number(8)=							1
+multiplex_track(8).track(1)=			27
+multiplex_track(8).track(2)=			29
+multiplex_track(8).track(3)=			31
+multiplex_track(8).track(4)=			33
+* -------------------------------------------------------------------------------------
+*
+* ------------------ Mk341_1f_ib_SX01 ---------------------------------------------------------
+>Mk341_1f_ib_SX01
+* Obs. mode for SX taken from VEX file "k15152.vex" (provided by A. Neidhardt), Intensive Session
+*
+* tracks_note(1)=  						
+* tracks_note(2)=
+*
+track_frame_format= 					Mark5B
+* data_modulation= 						off
+*
+* --- fanout_def 1: ---
+sub_pass_id(1)=							A
+can_id(1)=								&CH01
+sign_mag(1)= 							sign
+headstack_number(1)=					1
+multiplex_track(1).track(1)=			02
+*
+* --- fanout_def 2: ---
+sub_pass_id(2)=							A
+can_id(2)=								&CH02
+sign_mag(2)= 							sign
+headstack_number(2)=					1
+multiplex_track(2).track(1)=			10
+*
+* --- fanout_def 3: ---
+sub_pass_id(3)=							A
+can_id(3)=								&CH03
+sign_mag(3)= 							sign
+headstack_number(3)=					1
+multiplex_track(3).track(1)=			03
+*
+* --- fanout_def 4: ---
+sub_pass_id(4)=							A
+can_id(4)=								&CH04
+sign_mag(4)= 							sign
+headstack_number(4)=					1
+multiplex_track(4).track(1)=			04
+*
+* --- fanout_def 5: ---
+sub_pass_id(5)=							A
+can_id(5)=								&CH05
+sign_mag(5)= 							sign
+headstack_number(5)=					1
+multiplex_track(5).track(1)=			05
+*
+* --- fanout_def 6: ---
+sub_pass_id(6)=							A
+can_id(6)=								&CH06
+sign_mag(6)= 							sign
+headstack_number(6)=					1
+multiplex_track(6).track(1)=			06
+*
+* --- fanout_def 7: ---
+sub_pass_id(7)=							A
+can_id(7)=								&CH07
+sign_mag(7)= 							sign
+headstack_number(7)=					1
+multiplex_track(7).track(1)=			07
+*
+* --- fanout_def 8: ---
+sub_pass_id(8)=							A
+can_id(8)=								&CH08
+sign_mag(8)= 							sign
+headstack_number(8)=					1
+multiplex_track(8).track(1)=			08
+*
+*
+* --- fanout_def 9: ---
+sub_pass_id(9)=							A
+can_id(9)=								&CH09
+sign_mag(9)= 							sign
+headstack_number(9)=					1
+multiplex_track(9).track(1)=			09
+*
+* --- fanout_def 10: ---
+sub_pass_id(10)=						A
+can_id(10)=								&CH10
+sign_mag(10)= 							sign
+headstack_number(10)=					1
+multiplex_track(10).track(1)=			11
+*
+* --- fanout_def 11: ---
+sub_pass_id(11)=						A
+can_id(11)=								&CH11
+sign_mag(11)= 							sign
+headstack_number(11)=					1
+multiplex_track(11).track(1)=			12
+*
+* --- fanout_def 12: ---
+sub_pass_id(12)=						A
+can_id(12)=								&CH12
+sign_mag(12)= 							sign
+headstack_number(12)=					1
+multiplex_track(12).track(1)=			13
+*
+* --- fanout_def 13: ---
+sub_pass_id(13)=						A
+can_id(13)=								&CH13
+sign_mag(13)= 							sign
+headstack_number(13)=					1
+multiplex_track(13).track(1)=			14
+*
+* --- fanout_def 14: ---
+sub_pass_id(14)=						A
+can_id(14)=								&CH14
+sign_mag(14)= 							sign
+headstack_number(14)=					1
+multiplex_track(14).track(1)=			15
+*
+* --- fanout_def 15: ---
+sub_pass_id(15)=						A
+can_id(15)=								&CH15
+sign_mag(15)= 							sign
+headstack_number(15)=					1
+multiplex_track(15).track(1)=			16
+*
+* --- fanout_def 16: ---
+sub_pass_id(16)=						A
+can_id(16)=								&CH16
+sign_mag(16)= 							sign
+headstack_number(16)=					1
+multiplex_track(16).track(1)=			17
+* -------------------------------------------------------------------------------------
+*
+* ------------------ Mk4_16Ch_2bit_1to2 ---------------------------------------------------------
+>Mk4_16Ch_2bit_1to2
+* Taken from C-band obs. (wark_1.vex), provided by Jamie McCallum, June 2015
+*
+tracks_note(1)=  						Station: HOBART26
+* tracks_note(2)=
+*
+track_frame_format= 					Mark4
+data_modulation= 						off
+*
+* --- fanout_def 1: ---
+* sub_pass_id(1)=						
+can_id(1)=								&CH01
+sign_mag(1)= 							sign
+headstack_number(1)=					1
+multiplex_track(1).track(1)=			02
+multiplex_track(1).track(2)=			04
+*
+* --- fanout_def 2: ---
+* sub_pass_id(2)=							
+can_id(2)=								&CH01
+sign_mag(2)= 							mag
+headstack_number(2)=					1
+multiplex_track(2).track(1)=			06
+multiplex_track(2).track(2)=			08
+*
+* --- fanout_def 3: ---
+* sub_pass_id(3)=							
+can_id(3)=								&CH02
+sign_mag(3)= 							sign
+headstack_number(3)=					1
+multiplex_track(3).track(1)=			10
+multiplex_track(3).track(2)=			12
+*
+* --- fanout_def 4: ---
+* sub_pass_id(4)=							
+can_id(4)=								&CH02
+sign_mag(4)= 							mag
+headstack_number(4)=					1
+multiplex_track(4).track(1)=			14
+multiplex_track(4).track(2)=			16
+*
+* --- fanout_def 5: ---
+* sub_pass_id(5)=							
+can_id(5)=								&CH03
+sign_mag(5)= 							sign
+headstack_number(5)=					1
+multiplex_track(5).track(1)=			18
+multiplex_track(5).track(2)=			20
+*
+* --- fanout_def 6: ---
+* sub_pass_id(6)=							
+can_id(6)=								&CH03
+sign_mag(6)= 							mag
+headstack_number(6)=					1
+multiplex_track(6).track(1)=			22
+multiplex_track(6).track(2)=			24
+*
+* --- fanout_def 7: ---
+* sub_pass_id(7)=							
+can_id(7)=								&CH04
+sign_mag(7)= 							sign
+headstack_number(7)=					1
+multiplex_track(7).track(1)=			26
+multiplex_track(7).track(2)=			28
+*
+* --- fanout_def 8: ---
+* sub_pass_id(8)=							
+can_id(8)=								&CH04
+sign_mag(8)= 							mag
+headstack_number(8)=					1
+multiplex_track(8).track(1)=			30
+multiplex_track(8).track(2)=			32
+*
+* --- fanout_def 9: ---
+* sub_pass_id(9)=							
+can_id(9)=								&CH05
+sign_mag(9)= 							sign
+headstack_number(9)=					1
+multiplex_track(9).track(1)=			03
+multiplex_track(9).track(2)=			05
+*
+* --- fanout_def 10: ---
+* sub_pass_id(10)=						
+can_id(10)=								&CH05
+sign_mag(10)= 							mag
+headstack_number(10)=					1
+multiplex_track(10).track(1)=			07
+multiplex_track(10).track(2)=			09
+*
+* --- fanout_def 11: ---
+* sub_pass_id(11)=						
+can_id(11)=								&CH06
+sign_mag(11)= 							sign
+headstack_number(11)=					1
+multiplex_track(11).track(1)=			11
+multiplex_track(11).track(2)=			13
+*
+* --- fanout_def 12: ---
+* sub_pass_id(12)=						
+can_id(12)=								&CH06
+sign_mag(12)= 							mag
+headstack_number(12)=					1
+multiplex_track(12).track(1)=			15
+multiplex_track(12).track(2)=			17
+*
+* --- fanout_def 13: ---
+* sub_pass_id(13)=						
+can_id(13)=								&CH07
+sign_mag(13)= 							sign
+headstack_number(13)=					1
+multiplex_track(13).track(1)=			19
+multiplex_track(13).track(2)=			21
+*
+* --- fanout_def 14: ---
+* sub_pass_id(14)=						
+can_id(14)=								&CH07
+sign_mag(14)= 							mag
+headstack_number(14)=					1
+multiplex_track(14).track(1)=			23
+multiplex_track(14).track(2)=			25
+*
+* --- fanout_def 15: ---
+* sub_pass_id(15)=						
+can_id(15)=								&CH08
+sign_mag(15)= 							sign
+headstack_number(15)=					1
+multiplex_track(15).track(1)=			27
+multiplex_track(15).track(2)=			29
+*
+* --- fanout_def 16: ---
+* sub_pass_id(16)=						
+can_id(16)=								&CH08
+sign_mag(16)= 							mag
+headstack_number(16)=					1
+multiplex_track(16).track(1)=			31
+multiplex_track(16).track(2)=			33
+*
+* --- fanout_def 17: ---
+* sub_pass_id(17)=						
+can_id(17)=								&CH09
+sign_mag(17)= 							sign
+headstack_number(17)=					2
+multiplex_track(17).track(1)=			02
+multiplex_track(17).track(2)=			04
+*
+* --- fanout_def 18: ---
+* sub_pass_id(18)=							
+can_id(18)=								&CH09
+sign_mag(18)= 							mag
+headstack_number(18)=					2
+multiplex_track(18).track(1)=			06
+multiplex_track(18).track(2)=			08
+*
+* --- fanout_def 19: ---
+* sub_pass_id(19)=							
+can_id(19)=								&CH10
+sign_mag(19)= 							sign
+headstack_number(19)=					2
+multiplex_track(19).track(1)=			10
+multiplex_track(19).track(2)=			12
+*
+* --- fanout_def 20: ---
+* sub_pass_id(20)=							
+can_id(20)=								&CH10
+sign_mag(20)= 							mag
+headstack_number(20)=					2
+multiplex_track(20).track(1)=			14
+multiplex_track(20).track(2)=			16
+*
+* --- fanout_def 21: ---
+* sub_pass_id(21)=							
+can_id(21)=								&CH11
+sign_mag(21)= 							sign
+headstack_number(21)=					2
+multiplex_track(21).track(1)=			18
+multiplex_track(21).track(2)=			20
+*
+* --- fanout_def 22: ---
+* sub_pass_id(22)=							
+can_id(22)=								&CH11
+sign_mag(22)= 							mag
+headstack_number(22)=					2
+multiplex_track(22).track(1)=			22
+multiplex_track(22).track(2)=			24
+*
+* --- fanout_def 23: ---
+* sub_pass_id(23)=							
+can_id(23)=								&CH12
+sign_mag(23)= 							sign
+headstack_number(23)=					2
+multiplex_track(23).track(1)=			26
+multiplex_track(23).track(2)=			28
+*
+* --- fanout_def 24: ---
+* sub_pass_id(24)=							
+can_id(24)=								&CH12
+sign_mag(24)= 							mag
+headstack_number(24)=					2
+multiplex_track(24).track(1)=			30
+multiplex_track(24).track(2)=			32
+*
+* --- fanout_def 25: ---
+* sub_pass_id(25)=							
+can_id(25)=								&CH13
+sign_mag(25)= 							sign
+headstack_number(25)=					2
+multiplex_track(25).track(1)=			03
+multiplex_track(25).track(2)=			05
+*
+* --- fanout_def 26: ---
+* sub_pass_id(26)=						
+can_id(26)=								&CH13
+sign_mag(26)= 							mag
+headstack_number(26)=					2
+multiplex_track(26).track(1)=			07
+multiplex_track(26).track(2)=			09
+*
+* --- fanout_def 27: ---
+* sub_pass_id(27)=						
+can_id(27)=								&CH14
+sign_mag(27)= 							sign
+headstack_number(27)=					2
+multiplex_track(27).track(1)=			11
+multiplex_track(27).track(2)=			13
+*
+* --- fanout_def 28: ---
+* sub_pass_id(28)=						
+can_id(28)=								&CH14
+sign_mag(28)= 							mag
+headstack_number(28)=					2
+multiplex_track(28).track(1)=			15
+multiplex_track(28).track(2)=			17
+*
+* --- fanout_def 29: ---
+* sub_pass_id(29)=						
+can_id(29)=								&CH15
+sign_mag(29)= 							sign
+headstack_number(29)=					2
+multiplex_track(29).track(1)=			19
+multiplex_track(29).track(2)=			21
+*
+* --- fanout_def 30: ---
+* sub_pass_id(30)=						
+can_id(30)=								&CH15
+sign_mag(30)= 							mag
+headstack_number(30)=					2
+multiplex_track(30).track(1)=			23
+multiplex_track(30).track(2)=			25
+*
+* --- fanout_def 31: ---
+* sub_pass_id(31)=						
+can_id(31)=								&CH16
+sign_mag(31)= 							sign
+headstack_number(31)=					2
+multiplex_track(31).track(1)=			27
+multiplex_track(31).track(2)=			29
+*
+* --- fanout_def 32: ---
+* sub_pass_id(32)=						
+can_id(32)=								&CH16
+sign_mag(32)= 							mag
+headstack_number(32)=					2
+multiplex_track(32).track(1)=			31
+multiplex_track(32).track(2)=			33
+* -------------------------------------------------------------------------------------
+*
+* ------------------ Mk4_8Ch_2bit_1to1_Ho ---------------------------------------------------------
+>Mk4_8Ch_2bit_1to1_Ho
+* Taken from C-band obs. (wark_1.vex), provided by Jamie McCallum, June 2015
+* 2015-06-24 (A. Hellerschmied), renamed from: Mk4_8Ch_2bit_1to1
+*
+tracks_note(1)=  						Station: HOBART26
+* tracks_note(2)=
+*
+track_frame_format= 					Mark4
+data_modulation= 						off
+*
+* --- fanout_def 1: ---
+* sub_pass_id(1)=						
+can_id(1)=								&CH01
+sign_mag(1)= 							sign
+headstack_number(1)=					1
+multiplex_track(1).track(1)=			02
+multiplex_track(1).track(2)=			04
+*
+* --- fanout_def 2: ---
+* sub_pass_id(2)=							
+can_id(2)=								&CH01
+sign_mag(2)= 							mag
+headstack_number(2)=					1
+multiplex_track(2).track(1)=			06
+multiplex_track(2).track(2)=			08
+*
+* --- fanout_def 3: ---
+* sub_pass_id(3)=							
+can_id(3)=								&CH02
+sign_mag(3)= 							sign
+headstack_number(3)=					1
+multiplex_track(3).track(1)=			10
+multiplex_track(3).track(2)=			12
+*
+* --- fanout_def 4: ---
+* sub_pass_id(4)=							
+can_id(4)=								&CH02
+sign_mag(4)= 							mag
+headstack_number(4)=					1
+multiplex_track(4).track(1)=			14
+multiplex_track(4).track(2)=			16
+*
+* --- fanout_def 5: ---
+* sub_pass_id(5)=							
+can_id(5)=								&CH03
+sign_mag(5)= 							sign
+headstack_number(5)=					1
+multiplex_track(5).track(1)=			18
+multiplex_track(5).track(2)=			20
+*
+* --- fanout_def 6: ---
+* sub_pass_id(6)=							
+can_id(6)=								&CH03
+sign_mag(6)= 							mag
+headstack_number(6)=					1
+multiplex_track(6).track(1)=			22
+multiplex_track(6).track(2)=			24
+*
+* --- fanout_def 7: ---
+* sub_pass_id(7)=							
+can_id(7)=								&CH04
+sign_mag(7)= 							sign
+headstack_number(7)=					1
+multiplex_track(7).track(1)=			26
+multiplex_track(7).track(2)=			28
+*
+* --- fanout_def 8: ---
+* sub_pass_id(8)=							
+can_id(8)=								&CH04
+sign_mag(8)= 							mag
+headstack_number(8)=					1
+multiplex_track(8).track(1)=			30
+multiplex_track(8).track(2)=			32
+*
+* --- fanout_def 9: ---
+* sub_pass_id(9)=							
+can_id(9)=								&CH05
+sign_mag(9)= 							sign
+headstack_number(9)=					1
+multiplex_track(9).track(1)=			03
+multiplex_track(9).track(2)=			05
+*
+* --- fanout_def 10: ---
+* sub_pass_id(10)=						
+can_id(10)=								&CH05
+sign_mag(10)= 							mag
+headstack_number(10)=					1
+multiplex_track(10).track(1)=			07
+multiplex_track(10).track(2)=			09
+*
+* --- fanout_def 11: ---
+* sub_pass_id(11)=						
+can_id(11)=								&CH06
+sign_mag(11)= 							sign
+headstack_number(11)=					1
+multiplex_track(11).track(1)=			11
+multiplex_track(11).track(2)=			13
+*
+* --- fanout_def 12: ---
+* sub_pass_id(12)=						
+can_id(12)=								&CH06
+sign_mag(12)= 							mag
+headstack_number(12)=					1
+multiplex_track(12).track(1)=			15
+multiplex_track(12).track(2)=			17
+*
+* --- fanout_def 13: ---
+* sub_pass_id(13)=						
+can_id(13)=								&CH07
+sign_mag(13)= 							sign
+headstack_number(13)=					1
+multiplex_track(13).track(1)=			19
+multiplex_track(13).track(2)=			21
+*
+* --- fanout_def 14: ---
+* sub_pass_id(14)=						
+can_id(14)=								&CH07
+sign_mag(14)= 							mag
+headstack_number(14)=					1
+multiplex_track(14).track(1)=			23
+multiplex_track(14).track(2)=			25
+*
+* --- fanout_def 15: ---
+* sub_pass_id(15)=						
+can_id(15)=								&CH08
+sign_mag(15)= 							sign
+headstack_number(15)=					1
+multiplex_track(15).track(1)=			27
+multiplex_track(15).track(2)=			29
+*
+* --- fanout_def 16: ---
+* sub_pass_id(16)=						
+can_id(16)=								&CH08
+sign_mag(16)= 							mag
+headstack_number(16)=					1
+multiplex_track(16).track(1)=			31
+multiplex_track(16).track(2)=			33
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ Mk5B_16Ch_2bit_1to1_Cd ---------------------------------------------------------
+>Mk5B_16Ch_2bit_1to1_Cd
+* Taken from C-band obs. (wark_1.vex), provided by Jamie McCallum, June 2015
+* 2015-06-24 (A. Hellerschmied), renamed from: Mk5B_16Ch_2bit_1to1
+*
+tracks_note(1)=  						Station: CEDUNA
+* tracks_note(2)=
+*
+track_frame_format= 					Mark5B
+* data_modulation= 						
+*
+* --- fanout_def 1: ---
+* sub_pass_id(1)=						
+can_id(1)=								&CH01
+sign_mag(1)= 							sign
+headstack_number(1)=					1
+multiplex_track(1).track(1)=			18
+*
+* --- fanout_def 2: ---
+* sub_pass_id(2)=							
+can_id(2)=								&CH01
+sign_mag(2)= 							mag
+headstack_number(2)=					1
+multiplex_track(2).track(1)=			19
+*
+* --- fanout_def 3: ---
+* sub_pass_id(3)=							
+can_id(3)=								&CH02
+sign_mag(3)= 							sign
+headstack_number(3)=					1
+multiplex_track(3).track(1)=			20
+*
+* --- fanout_def 4: ---
+* sub_pass_id(4)=							
+can_id(4)=								&CH02
+sign_mag(4)= 							mag
+headstack_number(4)=					1
+multiplex_track(4).track(1)=			21
+*
+* --- fanout_def 5: ---
+* sub_pass_id(5)=							
+can_id(5)=								&CH03
+sign_mag(5)= 							sign
+headstack_number(5)=					1
+multiplex_track(5).track(1)=			22
+*
+* --- fanout_def 6: ---
+* sub_pass_id(6)=							
+can_id(6)=								&CH03
+sign_mag(6)= 							mag
+headstack_number(6)=					1
+multiplex_track(6).track(1)=			23
+*
+* --- fanout_def 7: ---
+* sub_pass_id(7)=							
+can_id(7)=								&CH04
+sign_mag(7)= 							sign
+headstack_number(7)=					1
+multiplex_track(7).track(1)=			24
+*
+* --- fanout_def 8: ---
+* sub_pass_id(8)=							
+can_id(8)=								&CH04
+sign_mag(8)= 							mag
+headstack_number(8)=					1
+multiplex_track(8).track(1)=			25
+*
+* --- fanout_def 9: ---
+* sub_pass_id(9)=							
+can_id(9)=								&CH05
+sign_mag(9)= 							sign
+headstack_number(9)=					1
+multiplex_track(9).track(1)=			26
+*
+* --- fanout_def 10: ---
+* sub_pass_id(10)=						
+can_id(10)=								&CH05
+sign_mag(10)= 							mag
+headstack_number(10)=					1
+multiplex_track(10).track(1)=			27
+*
+* --- fanout_def 11: ---
+* sub_pass_id(11)=						
+can_id(11)=								&CH06
+sign_mag(11)= 							sign
+headstack_number(11)=					1
+multiplex_track(11).track(1)=			28
+*
+* --- fanout_def 12: ---
+* sub_pass_id(12)=						
+can_id(12)=								&CH06
+sign_mag(12)= 							mag
+headstack_number(12)=					1
+multiplex_track(12).track(1)=			29
+*
+* --- fanout_def 13: ---
+* sub_pass_id(13)=						
+can_id(13)=								&CH07
+sign_mag(13)= 							sign
+headstack_number(13)=					1
+multiplex_track(13).track(1)=			30
+*
+* --- fanout_def 14: ---
+* sub_pass_id(14)=						
+can_id(14)=								&CH07
+sign_mag(14)= 							mag
+headstack_number(14)=					1
+multiplex_track(14).track(1)=			31
+*
+* --- fanout_def 15: ---
+* sub_pass_id(15)=						
+can_id(15)=								&CH08
+sign_mag(15)= 							sign
+headstack_number(15)=					1
+multiplex_track(15).track(1)=			32
+*
+* --- fanout_def 16: ---
+* sub_pass_id(16)=						
+can_id(16)=								&CH08
+sign_mag(16)= 							mag
+headstack_number(16)=					1
+multiplex_track(16).track(1)=			33
+*
+* --- fanout_def 17: ---
+* sub_pass_id(17)=						
+can_id(17)=								&CH09
+sign_mag(17)= 							sign
+headstack_number(17)=					1
+multiplex_track(17).track(1)=			02
+*
+* --- fanout_def 18: ---
+* sub_pass_id(18)=							
+can_id(18)=								&CH09
+sign_mag(18)= 							mag
+headstack_number(18)=					1
+multiplex_track(18).track(1)=			03
+*
+* --- fanout_def 19: ---
+* sub_pass_id(19)=							
+can_id(19)=								&CH10
+sign_mag(19)= 							sign
+headstack_number(19)=					1
+multiplex_track(19).track(1)=			04
+*
+* --- fanout_def 20: ---
+* sub_pass_id(20)=							
+can_id(20)=								&CH10
+sign_mag(20)= 							mag
+headstack_number(20)=					1
+multiplex_track(20).track(1)=			05
+*
+* --- fanout_def 21: ---
+* sub_pass_id(21)=							
+can_id(21)=								&CH11
+sign_mag(21)= 							sign
+headstack_number(21)=					1
+multiplex_track(21).track(1)=			06
+*
+* --- fanout_def 22: ---
+* sub_pass_id(22)=							
+can_id(22)=								&CH11
+sign_mag(22)= 							mag
+headstack_number(22)=					1
+multiplex_track(22).track(1)=			07
+*
+* --- fanout_def 23: ---
+* sub_pass_id(23)=							
+can_id(23)=								&CH12
+sign_mag(23)= 							sign
+headstack_number(23)=					1
+multiplex_track(23).track(1)=			08
+*
+* --- fanout_def 24: ---
+* sub_pass_id(24)=							
+can_id(24)=								&CH12
+sign_mag(24)= 							mag
+headstack_number(24)=					1
+multiplex_track(24).track(1)=			09
+*
+* --- fanout_def 25: ---
+* sub_pass_id(25)=							
+can_id(25)=								&CH13
+sign_mag(25)= 							sign
+headstack_number(25)=					1
+multiplex_track(25).track(1)=			10
+*
+* --- fanout_def 26: ---
+* sub_pass_id(26)=						
+can_id(26)=								&CH13
+sign_mag(26)= 							mag
+headstack_number(26)=					1
+multiplex_track(26).track(1)=			11
+*
+* --- fanout_def 27: ---
+* sub_pass_id(27)=						
+can_id(27)=								&CH14
+sign_mag(27)= 							sign
+headstack_number(27)=					1
+multiplex_track(27).track(1)=			12
+*
+* --- fanout_def 28: ---
+* sub_pass_id(28)=						
+can_id(28)=								&CH14
+sign_mag(28)= 							mag
+headstack_number(28)=					1
+multiplex_track(28).track(1)=			13
+*
+* --- fanout_def 29: ---
+* sub_pass_id(29)=						
+can_id(29)=								&CH15
+sign_mag(29)= 							sign
+headstack_number(29)=					1
+multiplex_track(29).track(1)=			14
+*
+* --- fanout_def 30: ---
+* sub_pass_id(30)=						
+can_id(30)=								&CH15
+sign_mag(30)= 							mag
+headstack_number(30)=					1
+multiplex_track(30).track(1)=			15
+*
+* --- fanout_def 31: ---
+* sub_pass_id(31)=						
+can_id(31)=								&CH16
+sign_mag(31)= 							sign
+headstack_number(31)=					1
+multiplex_track(31).track(1)=			16
+*
+* --- fanout_def 32: ---
+* sub_pass_id(32)=						
+can_id(32)=								&CH16
+sign_mag(32)= 							mag
+headstack_number(32)=					1
+multiplex_track(32).track(1)=			17
+* -------------------------------------------------------------------------------------
+*
+* ------------------ Mk5B_08Ch_2bit_1to1_Cd ---------------------------------------------------------
+>Mk5B_08Ch_2bit_1to1_Cd
+* Used for Sat/quasar obs (L1, L2) in CEDUNA, 2015-06-28
+*
+tracks_note(1)=  						Station: CEDUNA
+* tracks_note(2)=
+*
+track_frame_format= 					Mark5B
+* data_modulation= 						
+*
+* --- fanout_def 1: ---
+* sub_pass_id(1)=						
+can_id(1)=								&CH01
+sign_mag(1)= 							sign
+headstack_number(1)=					1
+multiplex_track(1).track(1)=			18
+*
+* --- fanout_def 2: ---
+* sub_pass_id(2)=							
+can_id(2)=								&CH01
+sign_mag(2)= 							mag
+headstack_number(2)=					1
+multiplex_track(2).track(1)=			19
+*
+* --- fanout_def 3: ---
+* sub_pass_id(3)=							
+can_id(3)=								&CH02
+sign_mag(3)= 							sign
+headstack_number(3)=					1
+multiplex_track(3).track(1)=			20
+*
+* --- fanout_def 4: ---
+* sub_pass_id(4)=							
+can_id(4)=								&CH02
+sign_mag(4)= 							mag
+headstack_number(4)=					1
+multiplex_track(4).track(1)=			21
+*
+* --- fanout_def 5: ---
+* sub_pass_id(5)=							
+can_id(5)=								&CH03
+sign_mag(5)= 							sign
+headstack_number(5)=					1
+multiplex_track(5).track(1)=			22
+*
+* --- fanout_def 6: ---
+* sub_pass_id(6)=							
+can_id(6)=								&CH03
+sign_mag(6)= 							mag
+headstack_number(6)=					1
+multiplex_track(6).track(1)=			23
+*
+* --- fanout_def 7: ---
+* sub_pass_id(7)=							
+can_id(7)=								&CH04
+sign_mag(7)= 							sign
+headstack_number(7)=					1
+multiplex_track(7).track(1)=			24
+*
+* --- fanout_def 8: ---
+* sub_pass_id(8)=							
+can_id(8)=								&CH04
+sign_mag(8)= 							mag
+headstack_number(8)=					1
+multiplex_track(8).track(1)=			25
+*
+* --- fanout_def 9: ---
+* sub_pass_id(9)=							
+can_id(9)=								&CH05
+sign_mag(9)= 							sign
+headstack_number(9)=					1
+multiplex_track(9).track(1)=			26
+*
+* --- fanout_def 10: ---
+* sub_pass_id(10)=						
+can_id(10)=								&CH05
+sign_mag(10)= 							mag
+headstack_number(10)=					1
+multiplex_track(10).track(1)=			27
+*
+* --- fanout_def 11: ---
+* sub_pass_id(11)=						
+can_id(11)=								&CH06
+sign_mag(11)= 							sign
+headstack_number(11)=					1
+multiplex_track(11).track(1)=			28
+*
+* --- fanout_def 12: ---
+* sub_pass_id(12)=						
+can_id(12)=								&CH06
+sign_mag(12)= 							mag
+headstack_number(12)=					1
+multiplex_track(12).track(1)=			29
+*
+* --- fanout_def 13: ---
+* sub_pass_id(13)=						
+can_id(13)=								&CH07
+sign_mag(13)= 							sign
+headstack_number(13)=					1
+multiplex_track(13).track(1)=			30
+*
+* --- fanout_def 14: ---
+* sub_pass_id(14)=						
+can_id(14)=								&CH07
+sign_mag(14)= 							mag
+headstack_number(14)=					1
+multiplex_track(14).track(1)=			31
+*
+* --- fanout_def 15: ---
+* sub_pass_id(15)=						
+can_id(15)=								&CH08
+sign_mag(15)= 							sign
+headstack_number(15)=					1
+multiplex_track(15).track(1)=			32
+*
+* --- fanout_def 16: ---
+* sub_pass_id(16)=						
+can_id(16)=								&CH08
+sign_mag(16)= 							mag
+headstack_number(16)=					1
+multiplex_track(16).track(1)=			33
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ Mk5B_4Ch_2bit_1to1 ---------------------------------------------------------
+* Used for TTW1 tests
+>Mk5B_4Ch_2bit_1to1
+*
+tracks_note(1)=  						Format: Mk5b, fan-out factor 1/1
+tracks_note(2)= 						2 bit, 4 channels, tracks 18-25
+*
+track_frame_format= 					Mark5B
+* data_modulation= 						
+*
+* --- fanout_def 1: ---
+* sub_pass_id(1)=						
+can_id(1)=								&CH01
+sign_mag(1)= 							sign
+headstack_number(1)=					1
+multiplex_track(1).track(1)=			18
+*
+* --- fanout_def 2: ---
+* sub_pass_id(2)=							
+can_id(2)=								&CH01
+sign_mag(2)= 							mag
+headstack_number(2)=					1
+multiplex_track(2).track(1)=			19
+*
+* --- fanout_def 3: ---
+* sub_pass_id(3)=							
+can_id(3)=								&CH02
+sign_mag(3)= 							sign
+headstack_number(3)=					1
+multiplex_track(3).track(1)=			20
+*
+* --- fanout_def 4: ---
+* sub_pass_id(4)=							
+can_id(4)=								&CH02
+sign_mag(4)= 							mag
+headstack_number(4)=					1
+multiplex_track(4).track(1)=			21
+*
+* --- fanout_def 5: ---
+* sub_pass_id(5)=							
+can_id(5)=								&CH03
+sign_mag(5)= 							sign
+headstack_number(5)=					1
+multiplex_track(5).track(1)=			22
+*
+* --- fanout_def 6: ---
+* sub_pass_id(6)=							
+can_id(6)=								&CH03
+sign_mag(6)= 							mag
+headstack_number(6)=					1
+multiplex_track(6).track(1)=			23
+*
+* --- fanout_def 7: ---
+* sub_pass_id(7)=							
+can_id(7)=								&CH04
+sign_mag(7)= 							sign
+headstack_number(7)=					1
+multiplex_track(7).track(1)=			24
+*
+* --- fanout_def 8: ---
+* sub_pass_id(8)=							
+can_id(8)=								&CH04
+sign_mag(8)= 							mag
+headstack_number(8)=					1
+multiplex_track(8).track(1)=			25
+*
+* -------------------------------------------------------------------------------------
+*
+* ------------------ Mk4_4Ch_2bit_1to1 ---------------------------------------------------------
+* Used for WETTZELL, Mark 4 Rack
+>Mk4_4Ch_2bit_1to1
+*
+tracks_note(1)=  						Format: Mk4, fan-out factor 1/1
+tracks_note(2)= 						2 bit, 4 channels, tracks 18-25
+*
+track_frame_format= 					Mark4
+data_modulation= 						off
+*
+* --- fanout_def 1: ---
+* sub_pass_id(1)=						
+can_id(1)=								&CH01
+sign_mag(1)= 							sign
+headstack_number(1)=					1
+multiplex_track(1).track(1)=			18
+*
+* --- fanout_def 2: ---
+* sub_pass_id(2)=							
+can_id(2)=								&CH01
+sign_mag(2)= 							mag
+headstack_number(2)=					1
+multiplex_track(2).track(1)=			19
+*
+* --- fanout_def 3: ---
+* sub_pass_id(3)=							
+can_id(3)=								&CH02
+sign_mag(3)= 							sign
+headstack_number(3)=					1
+multiplex_track(3).track(1)=			20
+*
+* --- fanout_def 4: ---
+* sub_pass_id(4)=							
+can_id(4)=								&CH02
+sign_mag(4)= 							mag
+headstack_number(4)=					1
+multiplex_track(4).track(1)=			21
+*
+* --- fanout_def 5: ---
+* sub_pass_id(5)=							
+can_id(5)=								&CH03
+sign_mag(5)= 							sign
+headstack_number(5)=					1
+multiplex_track(5).track(1)=			22
+*
+* --- fanout_def 6: ---
+* sub_pass_id(6)=							
+can_id(6)=								&CH03
+sign_mag(6)= 							mag
+headstack_number(6)=					1
+multiplex_track(6).track(1)=			23
+*
+* --- fanout_def 7: ---
+* sub_pass_id(7)=							
+can_id(7)=								&CH04
+sign_mag(7)= 							sign
+headstack_number(7)=					1
+multiplex_track(7).track(1)=			24
+*
+* --- fanout_def 8: ---
+* sub_pass_id(8)=							
+can_id(8)=								&CH04
+sign_mag(8)= 							mag
+headstack_number(8)=					1
+multiplex_track(8).track(1)=			25
+*
+* -------------------------------------------------------------------------------------
+*
+*################################### 144 ##################################################################################################
+* IF definitions for the 144a experiment (MEDICINA, ONSALA85, SARDINIA)
+*
+* ------------------ VDIF8032_2 ---------------------------------------------------------
+* Provided by V. Tornatore per mail, 2016-05-17
+>VDIF8032_2
+*
+tracks_note(1)=  						Format: VDIF/8032/2
+*
+track_frame_format= 					VDIF/8032/2
+*
+* --- fanout_def 1: ---
+* sub_pass_id(1)=						
+can_id(1)=								&CH01
+sign_mag(1)= 							sign
+headstack_number(1)=					1
+multiplex_track(1).track(1)=			2
+*
+* --- fanout_def 2: ---
+* sub_pass_id(2)=							
+can_id(2)=								&CH01
+sign_mag(2)= 							mag
+headstack_number(2)=					1
+multiplex_track(2).track(1)=			3
+*
+* --- fanout_def 3: ---
+* sub_pass_id(3)=							
+can_id(3)=								&CH02
+sign_mag(3)= 							sign
+headstack_number(3)=					1
+multiplex_track(3).track(1)=			4
+*
+* --- fanout_def 4: ---
+* sub_pass_id(4)=							
+can_id(4)=								&CH02
+sign_mag(4)= 							mag
+headstack_number(4)=					1
+multiplex_track(4).track(1)=			5
+*
+* --- fanout_def 5: ---
+* sub_pass_id(5)=							
+can_id(5)=								&CH03
+sign_mag(5)= 							sign
+headstack_number(5)=					1
+multiplex_track(5).track(1)=			6
+*
+* --- fanout_def 6: ---
+* sub_pass_id(6)=							
+can_id(6)=								&CH03
+sign_mag(6)= 							mag
+headstack_number(6)=					1
+multiplex_track(6).track(1)=			7
+*
+* --- fanout_def 7: ---
+* sub_pass_id(7)=							
+can_id(7)=								&CH04
+sign_mag(7)= 							sign
+headstack_number(7)=					1
+multiplex_track(7).track(1)=			8
+*
+* --- fanout_def 8: ---
+* sub_pass_id(8)=							
+can_id(8)=								&CH04
+sign_mag(8)= 							mag
+headstack_number(8)=					1
+multiplex_track(8).track(1)=			9
+* -------------------------------------------------------------------------------------
