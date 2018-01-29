@@ -1,0 +1,164 @@
+% This function creates the sources struct from the supersource file as
+% well as from netCDF data.
+%
+% LOG
+%  11.11.2015 M. Madzak  New Goddard structure adopted
+%   07 Jul 2016 by D. Mayer: included NNR for only defining sources
+%   15 Jul 2016 by D. Mayer: Added IVS name
+%   19 Jul 2016 by D. Mayer: Added firstObsMjd and lastObsMjd
+%   26 Sep 2016 by H. Krasna: changes related to updated supersource file -crf.commonName deleted. We assumed that source names in the vgosDB are the IVS names - crosschecking between IVS and IERS names is not desirable.
+%   13 Nov 2017 by J. Gruber: def. sources update
+
+function sources=nc2sources(out_struct, crf, chosenCrf)
+
+% get number of sources
+nSources=size(out_struct.head.SourceList.val,2);
+
+sources(nSources)=struct('name', [],'IVSname', [], 'IERSname', [], 'ICRFdes', [], ...
+    'ra2000', [], 'de2000', [], 'ra_sigma', ...
+    [], 'de_sigma', [], 'corr', [], 'in_crf', [], 'numobs', [], 'flag_defining', [], 'firstObsMjd', [], 'lastObsMjd', []);
+
+% % for speed improvement: delete all sources in crf which do not occur
+% sourceNamesCellStr=cellstr(out_struct.head.SourceName');
+% neededSourcesInCrf=ismember({crf.IERSname}, sourceNamesCellStr) | ...
+%     ismember({crf.commonName}, sourceNamesCellStr) | ...
+%     ismember({crf.designation}, sourceNamesCellStr);
+
+obs2scan=out_struct.CrossReference.ObsCrossRef.Obs2Scan.val;
+
+
+% for all sources
+for iSource=1:nSources
+    curName=out_struct.head.SourceList.val(:,iSource)';
+    
+    % find index in crf
+    indSourceInCrf=strcmp({crf.IVSname},curName);
+    if sum(indSourceInCrf)~=1
+        fprintf('ERROR: Zero (or more than 1) sources found for source %s in supersource file under IVS name\n', curName)
+    end
+    
+    % get index
+    indSourceInCrf=find(indSourceInCrf);
+    
+    % write name
+    sources(iSource).name=curName;
+    sources(iSource).IERSname=crf(indSourceInCrf).IERSname;
+    sources(iSource).IVSname = crf(indSourceInCrf).IVSname;
+    sources(iSource).ICRFdes=crf(indSourceInCrf).designation(6:end);
+    
+    % number of observations
+    %     out_struct.Observables.Source.Source % source names
+    scansUsingCurSource=out_struct.CrossReference.SourceCrossRef.Scan2Source.val==iSource; % logicals
+    
+    % src 10:       name: '1038+52A'
+    %     IERSname: '1038+528'
+    %      ICRFdes: 'J104146.7+523328'
+    %     scans:
+    %           10 6 obs
+    %          412 1
+    %          436 1
+    %          484 3
+    %          502 3
+    %          948 1
+    %          966 3
+    %         1002 1 --> 19 obs total
+    
+    % src 1:   name: 'NRAO512 '
+    %     IERSname: '1638+398'
+    %      ICRFdes: 'J164029.6+394646'
+    %            1 15
+    %           39 3
+    %           60 3
+    %          123 1
+    %          154 3
+    %          178 1
+    %          200 6
+    %          222 6
+    %          260 10
+    %          278 6
+    %          297 6
+    %          313 6 66
+    %          331 6
+    %          373 6
+    %          398 3
+    %          430 3
+    %          451 3
+    %          542 3
+    %          568 3
+    %          612 6
+    %          637 6 105
+    %          657 6
+    %          683 6
+    %          705 6
+    %          733 6
+    %          752 6
+    %          777 6
+    %          879 3
+    %          968 3
+    %          985 6
+    %         1007 3 156
+    
+    numobs1=sum(ismember(obs2scan,find(scansUsingCurSource)));
+    
+    sources(iSource).numobs=numobs1;
+    % in_crf
+    
+    % if there are coordinates for the chosen source in chosen CRF
+    if isempty(crf(indSourceInCrf).(chosenCrf))
+        sources(iSource).in_crf=0;
+        crfToTake='vievsCrf';
+    else
+        % if vievsCrf was chosen -> take in_crf from there
+        if strcmp(chosenCrf, 'vievsCrf')
+            sources(iSource).in_crf=crf(indSourceInCrf).vievsCrf.in_crf;
+        else
+            sources(iSource).in_crf=1;
+        end
+        crfToTake=chosenCrf;
+    end
+    %David - always add information about defining sources
+    %from the ICRF2
+    if isfield(crf(indSourceInCrf),'icrf2')
+        if ~isempty(crf(indSourceInCrf).icrf2)
+            sources(iSource).flag_defining=crf(indSourceInCrf).icrf2.defining;
+        else
+            sources(iSource).flag_defining=0;
+        end
+    else
+        sources(iSource).flag_defining=0;
+    end
+    
+    % RA/DE
+    sources(iSource).ra2000=      crf(indSourceInCrf).(crfToTake).ra;
+    sources(iSource).de2000=      crf(indSourceInCrf).(crfToTake).de;
+    
+    % sigmas (RA/DE)
+    if isfield(crf(indSourceInCrf).(crfToTake), 'ra_sigma')
+        sources(iSource).ra_sigma=crf(indSourceInCrf).(crfToTake).ra_sigma;
+        sources(iSource).de_sigma=crf(indSourceInCrf).(crfToTake).de_sigma;
+    else
+        sources(iSource).ra_sigma=[];
+        sources(iSource).de_sigma=[];
+    end
+    if isfield(crf(indSourceInCrf).(crfToTake), 'corr')
+        sources(iSource).corr=    crf(indSourceInCrf).(crfToTake).corr;
+    else
+        sources(iSource).corr=[];
+    end
+    %     if isfield(crf(indSourceInCrf).(crfToTake), 'def')
+    %         sources(iSource).def=    crf(indSourceInCrf).(crfToTake).def;
+    %     else
+    %         sources(iSource).def=[];
+    %     end
+    
+    
+    %out_struct.CrossReference.SourceCrossRef.Scan2Source.val % source ID per scan
+    %out_struct.Scan.TimeUTC.YMDHM.val % time of each scan
+    
+    mjd_of_scans = cal2jd(double(out_struct.Scan.TimeUTC.YMDHM.val(1,:)), double(out_struct.Scan.TimeUTC.YMDHM.val(2,:)),double(out_struct.Scan.TimeUTC.YMDHM.val(3,:)))-2400000.5...
+        +double(out_struct.Scan.TimeUTC.YMDHM.val(4,:))./24 +double(out_struct.Scan.TimeUTC.YMDHM.val(5,:))./24/60+out_struct.Scan.TimeUTC.Second.val'./24/60/60;
+       
+    
+    sources(iSource).firstObsMjd = min(mjd_of_scans(scansUsingCurSource));
+    sources(iSource).lastObsMjd = max(mjd_of_scans(scansUsingCurSource));
+end
