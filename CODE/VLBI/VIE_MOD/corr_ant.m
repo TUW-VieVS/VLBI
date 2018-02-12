@@ -71,7 +71,8 @@
 %  22 Feb 2017 by A. Hellerschmied: Manual TRF file support established
 %  23 Feb 2017 by A. Hellerschmied: flagmess is added as in- and output argument (not global any more!)
 %  13 Dec 2017 by D. Landskron: VMF1 input changed from .mat to .vmf1_r
-%  11 Jan 2017 by D. Landskron: VM1 folder moved to TRP and renamed to VMF1
+%  11 Jan 2018 by D. Landskron: VM1 folder moved to TRP and renamed to VMF1
+%  07 Feb 2018 by D. Landskron: bug-fix with VM1 close to New Year
 % *************************************************************************
 %
 function [antenna, flagmess] = corr_ant(time_lim, tim, antenna, parameter, flagmess)
@@ -166,6 +167,7 @@ for ist=1:nant
     
     %%% Non tidal atmosphere loading  %%% cnta
     if parameter.vie_mod.cnta == 1
+        
         antenna(ist).cnta_dx=[];
         for idyr=0:numyrs-1
             fil=num2str(sprintf(['../ATM/' parameter.vie_mod.cntam '/%4d_ATM.mat'],iye+idyr));
@@ -180,7 +182,7 @@ for ist=1:nant
                 end
             end
         end
-        % Save into antenna.cnta_dx
+        % Reduce data, if it contains 2 years
         if isempty(antenna(ist).cnta_dx)
             flagmess.cnta(ist)=1;
         else
@@ -294,6 +296,7 @@ for ist=1:nant
     
     %%% Vienna Mapping Function 1, VMF1 %%%
     if strcmp(parameter.vie_init.zhd,'vmf1')   ||   strcmp(parameter.vie_init.zwd,'vmf1')   ||   strcmp(parameter.vie_mod.mfh,'vmf1')   ||   strcmp(parameter.vie_mod.mfw,'vmf1')
+        
         antenna(ist).vm1=[];
         for idyr=0:numyrs-1
             fil=num2str(sprintf('../TRP/VMF1/y%4d.vmf1_r',iye+idyr));
@@ -322,6 +325,19 @@ for ist=1:nant
                 end
             end
         end
+        
+        % Reduce data, if it contains 2 years
+        if isempty(antenna(ist).vm1)
+            flagmess.vm1(ist)=1;
+        else
+            [antenna(ist).vm1,flag]=datachecking(antenna(ist).vm1,mjd1,mjd2);
+            if ~flag
+                flagmess.vm1(ist)=1;
+                antenna(ist).vm1=[];
+                fprintf('%s : not enough vm1 at session time: %f to %f\n',aname,mjd1,mjd2)
+            end
+        end
+        
     end
     
     

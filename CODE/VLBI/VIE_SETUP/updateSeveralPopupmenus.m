@@ -20,14 +20,16 @@
 % - getTLEFileNames
 %
 % CHANGES
-% - 2015-09-30, Hellerschmied: Extracted from vievs2_3.m
-% - 2015-10-01, Hellerschmied: Updated (now all popupmenues are updated!)
-% - 2015-10-02, Hellerschmied: Added possibility to add filenames to the popupmenu string by defining them as input argument for the subroutine "update_popupmenu_files_in_dir". And Bug-fix!
-% - 2017-01-27, bug fix with TLE directory
-% - 2017-02-19, Krasna: ../DATA/GLOB/TRF/AO/*.txt, ../DATA/GLOB/TRF/STSEASON/*.txt, ../DATA/GLOB/TRF/APLRG/*.txt added
-% - 2017-02-28, Hellerschmied: Fixed a problem with updating OUTLIER directories
-% - 2017-06-08, Hellerschmied: Fixed a bug which caused problems, if no own TRF or won CRF was available in tghe TRF or CRF folder.
-% - 2017-08-31, Hellerschmied: Fixed a problem when the dir /ION/FILES/ was empty.
+% 2015-09-30 by A. Hellerschmied: Extracted from vievs2_3.m
+% 2015-10-01 by A. Hellerschmied: Updated (now all popupmenues are updated!)
+% 2015-10-02 by A. Hellerschmied: Added possibility to add filenames to the popupmenu string by defining them as input argument for the subroutine "update_popupmenu_files_in_dir". And Bug-fix!
+% 2017-01-27 by A. Hellerschmied: bug fix with TLE directory
+% 2017-02-19 by H. Krasna: ../DATA/GLOB/TRF/AO/*.txt, ../DATA/GLOB/TRF/STSEASON/*.txt, ../DATA/GLOB/TRF/APLRG/*.txt added
+% 2017-02-28 by A. Hellerschmied: Fixed a problem with updating OUTLIER directories
+% 2017-06-08 by A. Hellerschmied: Fixed a bug which caused problems, if no own TRF or won CRF was available in tghe TRF or CRF folder.
+% 2017-08-31 by A. Hellerschmied: Fixed a problem when the dir /ION/FILES/ was empty.
+% 2018-02-11 by D. Landskron: external troposphere files section removed
+% 
 
 function updateSeveralPopupmenus(hObject, handles)
 % This function updates some of the popupmenus where e.g. models can be
@@ -109,32 +111,6 @@ if flag_no_files
 else
     set(handles.popupmenu_parameters_refFrames_otherCRF, 'Enable', 'on')
     set(handles.radiobutton_parameters_refFrames_otherCRF, 'Enable', 'on')
-end
-
-
-
-% ##### Troposphere #####
-
-% ### folder of external tropo files ###
-curContent=get(handles.popupmenu_parameters_tropo_externalFile, 'String');
-if iscell(curContent)
-    curSelected=curContent{get(handles.popupmenu_parameters_tropo_externalFile, 'Value')};
-else
-    curSelected=curContent;
-end
-dirsInTrpFolder=dir('../TRP/OUTPUT_DATA/');
-dirsInTrpFolder(strcmp({dirsInTrpFolder.name}, '.')|strcmp({dirsInTrpFolder.name}, '..')|~[dirsInTrpFolder.isdir])=[];
-% if no folders (except PROGRAM+second) exist, just take ''
-if isempty(dirsInTrpFolder)
-    set(handles.popupmenu_parameters_tropo_externalFile, 'String', ' ');
-else
-    set(handles.popupmenu_parameters_tropo_externalFile, 'String', {dirsInTrpFolder.name});
-    oldFoundInNew=~cellfun(@isempty, strfind({dirsInTrpFolder.name}, curSelected));
-    if sum(oldFoundInNew)>0
-        set(handles.popupmenu_parameters_tropo_externalFile, 'Value', find(oldFoundInNew))
-    else
-        msgbox('Previously selected tropo delay directory was not found!\n', 'Warning', 'warn')
-    end
 end
 
 
