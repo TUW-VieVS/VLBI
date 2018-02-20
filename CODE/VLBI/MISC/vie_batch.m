@@ -71,20 +71,6 @@ fid = fopen('failed_sess_temp.txt', 'w'); %delete content of file - this file is
 fclose(fid);
 % guiparameter=parameter;
 
-%% add compile folders to path
-addpath('../COMPILE/MISC/');
-addpath('../COMPILE/VIE_INIT_V31/');
-addpath('../COMPILE/VIE_MOD_V31/');
-addpath('../COMPILE/VIE_LSM_V31/');
-addpath('../COMPILE/VIE_LSM_scan_V31/');
-addpath('../COMPILE/VIE_SETUP_V31/');
-addpath('../COMPILE/VIE_SIM_V31/');
-addpath('../COMPILE/VIE_GLOB_V31/');
-addpath('../COMPILE/VIE_SCHED_V31/');
-addpath('../COMPILE/VIE_SCHED_V31/SAT_SCHED/');
-addpath('../COMPILE/VIE_SCHED_V31/SAT_SCHED/SGP4/');
-addpath('../COMPILE/VIE_SCHED_V31/SAT_SCHED/VALLADO/');
-
 if ~isfield(runp,'sim')
     runp.sim=0;
 end
