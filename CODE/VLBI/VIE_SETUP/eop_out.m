@@ -82,7 +82,8 @@
 %							'The set of parameters for triaxiality models to zero' is uncommented
 %							function description is updated
 %                           errors are added to format (output_mode(2))
-%- 2016-11-29, A. Girdiuk: re-viewed; bug-fix
+% - 2016-11-29, A. Girdiuk: re-viewed; bug-fix
+% - 2018-03-13, A. Hellerschmied: function now supports arbitrary session names in process lists.
 
 function eop_out(process_list, subdir, varargin)
 
@@ -180,13 +181,18 @@ Dut1_keep = []; Dut1_e_keep = [];
 
 box=[];
 for j = 1:pl(1)
-	sname = process_list(j,end-13:end);
+    
+    % Get session name:
+    % Unix:
+    ind_unix = strfind(process_list, '/');
+    % DOS:
+    ind_dos = strfind(process_list, '\');
+    ind = max([ind_unix, ind_dos]);
+    sname = process_list(j,ind+1:end);
 
-	load(strcat('../DATA/LEVEL3/',subdir,'/x_',num2str(sname)));
-
-	load(strcat('../DATA/LEVEL3/',subdir,'/opt_',num2str(sname)));
-
-	load(strcat('../DATA/LEVEL1/',opt_.level1OutDir,'/',num2str(sname),'_parameter'));
+	load(strcat('../DATA/LEVEL3/',subdir,'/x_',sname));
+	load(strcat('../DATA/LEVEL3/',subdir,'/opt_',sname));
+	load(strcat('../DATA/LEVEL1/',opt_.level1OutDir,'/',sname,'_parameter'));
 
 	if parameter.lsmopt.xpol.model==1
 		mjdp = x_.xpol.mjd;
