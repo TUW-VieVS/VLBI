@@ -32,7 +32,7 @@ for iSource=1:nSources
     curName=out_struct.head.SourceList.val(:,iSource)';
     
     % find index in crf
-    indSourceInCrf=strcmp({crf.IVSname},curName);
+    indSourceInCrf=strcmp(deblank({crf.IVSname}),deblank(curName));
     if sum(indSourceInCrf)~=1
         fprintf('ERROR: Zero (or more than 1) sources found for source %s in supersource file under IVS name\n', curName)
     end
