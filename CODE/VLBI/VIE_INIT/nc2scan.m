@@ -352,9 +352,12 @@ for iScan=1:nScans
     [scan(iScan).obs.sgdion]=   deal(ionoDelSigCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [nano-sec]
     [scan(iScan).obs.q_code_ion]=   deal(ionoDelFlagcell{obsI1Index:obsI1Index+scan(iScan).nobs-1});
     
+    if length(delayFlagLikeNGS)==1 % check length of delay flag vector, if it is only 1 value for the whole session, this value will be assigned to all observations
+        [scan(iScan).obs.q_code]=deal(double(delayFlagLikeNGS{1}).*ones(scan(iScan).nobs,1));          
+    else
+        [scan(iScan).obs.q_code]=deal(delayFlagLikeNGS{obsI1Index:obsI1Index+scan(iScan).nobs-1});   
+    end
     
-    
-    [scan(iScan).obs.q_code]=deal(delayFlagLikeNGS{obsI1Index:obsI1Index+scan(iScan).nobs-1});   
     
     
     
