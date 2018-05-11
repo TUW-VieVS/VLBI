@@ -25,12 +25,12 @@
 %          and display a message about the use of the first matching trp entry.
 %   27 Jan 2016 by Armin Hofmeister: Increase allowed difference in seconds between observation from
 %          VieVS and from trp-file to up to 0.1 seconds.
+%   11 May 2018 by Daniel Landskron: minor bug fix
 %   
 % ************************************************************************
 function [scan] = get_trpdel(trpdata,scan,isc,ist,antenna,trpFileFoundLog,sourceNames)
 
-%        % define if vmf1 is needed because no trp data is found in trp
-%        % file (for current station in current scan)
+%        % define if vmf1 is needed because no trp data is found in trp file (for current station in current scan)
 %        vmf1NeededLog=0;
 
 % but first: if we have trp file -> try to get data
@@ -86,7 +86,7 @@ if trpFileFoundLog==1
     % no matching entry
     if nr_matches == 0
         % display message
-        fprintf('No trp entry has been found for scan %s for station %s! ',num2str(isc),strtrim(antenna(ist).name));
+        fprintf('No trp entry has been found for scan %s for station %s! \n',num2str(isc),strtrim(antenna(ist).name));
 
         % No data assignments necessary.
         % Note: Already existing values of pressure and temperature are preserved as they are

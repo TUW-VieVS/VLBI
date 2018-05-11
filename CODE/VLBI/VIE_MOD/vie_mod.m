@@ -154,6 +154,7 @@
 %   06 Jun 2017 by A. Hellerschmied: Corrected calculation of partial derivatives for PWL satellite position offsets
 %   22 Jun 2017 by A. Hellerschmied: "psou" was not stored in scan structure
 %   13 Sep 2017 by D. Landskron: 'tropSource' shifted into 'vie_init' 
+%   11 May 2018 by D. Landskron: bug with usage of raytr-files corrected
 %
 % ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %  NOTATION:
@@ -474,22 +475,20 @@ if ~isempty(sources.s)
 end % if ~isempty(sources.s)
 
 
-% ##### if external tropospheric or ray-tracing files are to be used #####
-% test if tropospheric files are used
-trp_used = strcmp(parameter.vie_init.tropSource.name,'ext');
+% ##### if ray-tracing files are to be used #####
 raytr_used = strcmp(parameter.vie_init.tropSource.name,'raytr');
 
-if trp_used
-    extTrpFolder = parameter.vie_init.tropSource.extTrpFolder;
-    % if ' ' was chosen, i.e. the trp file is in the main folder
-    if strcmp(extTrpFolder, ' ')
-        extTrpFolder = '/';
-        parameter.vie_init.tropSource.extTrpFolder = extTrpFolder;
-    end
+% if ray-traced delays are used, then set the remaining parameters to VMF1 which can then be used as default, in case a certain line is missing in the .trp-file
+if raytr_used
+    
+    parameter.vie_init.zhd = 'in situ';
+    parameter.vie_init.zwd = 'vmf1';
+    parameter.vie_mod.mfh = 'vmf1';
+    parameter.vie_mod.mfw = 'vmf1';
+    parameter.vie_mod.apgm_h = 'no';
+    parameter.vie_mod.apgm_w = 'no';
+    
 end
-% get mapping function (only used when not reading external trp files or no trp file data available)
-mapf_h = parameter.vie_mod.mfh ; % VMF1, GPT3
-mapf_w = parameter.vie_mod.mfw ; % VMF1, GPT3
 
 
 
@@ -934,35 +933,11 @@ for isc = 1:number_of_all_scans
             
             
             % -------------------------
-            %  tropospheric parameters (using external tropospheric files)
+            %  tropospheric parameters (using ray-traced delays)
             % -------------------------
             
-            if trp_used % if tropospheric files are used
-                % only do the first time
-                if ~exist('firstTrpRun', 'var')
-                    disp('use external trp files')
-                    % check if needed folder is already in path
-                    curPath = path;
-                    % if not, add it
-                    if isempty(strfind(curPath, '../TRP/PROGRAM/'))
-                        addpath('../TRP/PROGRAM/');
-                    end
-                    firstTrpRun = 1;
-                    [trpdata, trpFileFoundLog] = load_trpfile(parameter, session);
-                    
-                    % if tropospheric files should be used, but file has not been found
-                    if ~trpFileFoundLog
-                        % display which backup solution is set in the parameters for vie_mod and used
-                        % instead of the missing trp data
-                        fprintf('%s used instead of missing trp data!\n\n', mapf_h);
-                    end
-                    
-                end % do only in first run
-                scan = get_trpdel(trpdata, scan, isc, i_stat, antenna, trpFileFoundLog, sourceNames);
-            end % use trp file
-            
             if raytr_used   % if ray-tracing files are used
-                if ~exist('firstRaytrRun', 'var')
+                if ~exist('firstRaytrRun', 'var')   % read the .trp-file only in the first run
                     disp('use ray-tracing files')
                     firstRaytrRun = 1;
                     [raytrdata, raytrFileFoundLog] = load_trpfile(parameter, session);
@@ -970,15 +945,8 @@ for isc = 1:number_of_all_scans
                 scan = get_trpdel(raytrdata, scan, isc, i_stat, antenna, raytrFileFoundLog, sourceNames);
             end
             
-            if isempty(scan(isc).stat(i_stat).trop) % use VMF/GPT3 intead of trp files
-                aht = 0; awt = 0; zhdt = 0; zwdt = 0;
-                
-                % if tropospheric files should be used or file has been found, but matching data has not been found
-                if trp_used && trpFileFoundLog
-                    % display which backup solution is set in the parameters for vie_mod and used
-                    % instead of the missing trp data
-                    fprintf('%s used instead of missing trp data!\n', mapf_h);
-                end
+            aht = 0; awt = 0; zhdt = 0; zwdt = 0;
+            if strcmpi(parameter.vie_init.tropSource.name,'indModeling')   ||   isempty(scan(isc).stat(i_stat).trop)
                 
                 if strcmpi(parameter.vie_init.zhd,'vmf1')
                     tmjd = antenna(i_stat).vm1(:,1);
@@ -993,7 +961,7 @@ for isc = 1:number_of_all_scans
                     zwdt = call_spline_4(tmjd,zwd,mjd);
                 end
 
-                if strcmpi(mapf_h,'vmf1')
+                if strcmpi(parameter.vie_mod.mfh,'vmf1')
                     if isempty(antenna(i_stat).vm1) == 0
                         % load the parameters from antenna.vm1
                         tmjd = antenna(i_stat).vm1(:,1);
@@ -1004,7 +972,7 @@ for isc = 1:number_of_all_scans
                         awt = call_spline_4(tmjd,aw,mjd);
                     end
                 end
-                if strcmpi(mapf_w,'vmf1')
+                if strcmpi(parameter.vie_mod.mfw,'vmf1')
                     if isempty(antenna(i_stat).vm1) == 0
                         % load the parameters from antenna.vm1
                         tmjd = antenna(i_stat).vm1(:,1);
@@ -1015,15 +983,15 @@ for isc = 1:number_of_all_scans
                         awt = call_spline_4(tmjd,aw,mjd);
                     end
                 end
-                
-                % store results per scan & station
-                scan(isc).stat(i_stat).aht  = aht;    % interpolated ah
-                scan(isc).stat(i_stat).awt  = awt;    % interpolated aw
-                scan(isc).stat(i_stat).zhdt = zhdt;   % interpolated zhd
-                scan(isc).stat(i_stat).zwdt = zwdt;   % interpolated zwd
                 
                 
             end % use VMF/GPT3/GMF intead of trp files
+            
+            % store results per scan & station
+            scan(isc).stat(i_stat).aht  = aht;    % interpolated ah
+            scan(isc).stat(i_stat).awt  = awt;    % interpolated aw
+            scan(isc).stat(i_stat).zhdt = zhdt;   % interpolated zhd
+            scan(isc).stat(i_stat).zwdt = zwdt;   % interpolated zwd
             
         end % if ~isempty(scan(isc).stat(i_stat).x)
         
@@ -1293,7 +1261,6 @@ for isc = 1:number_of_all_scans
                                 % Correction:
                                 dt_old  = dt;
                                 dt      = norm(sc_pos_crf - stat_1_gcrs)/c - ((sc_pos_crf' - stat_1_gcrs')*sc_vel_crf)/c^2; % [sec] (6.4)
-    %                             fprintf(' => dt = %10.17e sec\n', dt)
                                 t_ref_sec_obs_tmp = t_ref_sec_obs - dt; % correctd epoch [sec] since "ref. time" (t_ref_sec, t_ref_mjd)
 
                                 %iteration1
@@ -1311,9 +1278,6 @@ for isc = 1:number_of_all_scans
 
                             end
                         end
-                        
-%                         disp(number_of_iterations)
-%                         fprintf('\n');
 
                         
                         % Vector station-spacecraft (source vectors) at the time of signal emission (spacecraft) and reception at station one (stations)
@@ -1494,9 +1458,7 @@ for isc = 1:number_of_all_scans
                 end
                 
                 
-                
-                % only if individual modeling is used (not for ext_trop or raytr)
-                if strcmpi(parameter.vie_init.tropSource.name,'indModeling')
+                if strcmpi(parameter.vie_init.tropSource.name,'indModeling')   ||   isempty(scan(isc).stat(stnum).trop)
 
                     % TROPOSPHERE
                     
@@ -1539,9 +1501,9 @@ for isc = 1:number_of_all_scans
                     
                     % hydrostatic
                     aht = scan(isc).stat(stnum).aht;
-                    if strcmpi(mapf_h,'vmf1') == 1 && aht ~= 0
+                    if strcmpi(parameter.vie_mod.mfh,'vmf1') == 1 && aht ~= 0
                         [mfh,~] = vmf1(aht,awt,mjd,phi,zd);   % VMF1
-                    elseif strcmpi(mapf_h,'gpt3')
+                    elseif strcmpi(parameter.vie_mod.mfh,'gpt3')
                         [~,~,~,~,~,aht,awt,~,~,~,~,~,~] = gpt3_5_fast (mjd,phi,lam,hell,0,cell_grid_GPT3);
                         [mfh,~] = vmf3_ht (aht,awt,mjd,phi,lam,hell,zd);   % GPT3
                     else
@@ -1550,9 +1512,9 @@ for isc = 1:number_of_all_scans
                     
                     % wet
                     awt = scan(isc).stat(stnum).awt;
-                    if strcmpi(mapf_w,'vmf1') == 1 && awt ~= 0
+                    if strcmpi(parameter.vie_mod.mfw,'vmf1') == 1 && awt ~= 0
                         [~,mfw] = vmf1(aht,awt,mjd,phi,zd);   % VMF1
-                    elseif strcmpi(mapf_w,'gpt3')
+                    elseif strcmpi(parameter.vie_mod.mfw,'gpt3')
                         [~,~,~,~,~,aht,awt,~,~,~,~,~,~] = gpt3_5_fast (mjd,phi,lam,hell,0,cell_grid_GPT3);
                         [~,mfw] = vmf3_ht (aht,awt,mjd,phi,lam,hell,zd);   % GPT3
                     else
@@ -1649,8 +1611,7 @@ for isc = 1:number_of_all_scans
                     scan(isc).stat(stnum).aoalt   = aoalt; % antenna axis offset altitude correction [m]                    
                     scan(isc).stat(stnum).trop  = ((zdry+aoalt) * mfh + zwet * mfw + aprgrd)/c; % contains the whole (asymmetric) delay [sec]
  
-                end   % if trop is empty
-                
+                end 
                 
                 
                 % THERMAL DEFORMATION (Haas et al.,1998; Skurihina 2000)

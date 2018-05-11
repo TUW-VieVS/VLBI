@@ -14,6 +14,7 @@
 % 18 March 2013 by Hana Krásná: change according to new supersource file
 % 25 Jan 2017 by Daniel Landskron: output changed due to troposphere model change
 % 13 Sep 2017 by Daniel Landskron: 'tropSource' shifted into 'vie_init' 
+% 11 May 2018 by Daniel Landskron: remaining variable 'ext' removed
 %%
 
 function create_input_protocol(parameter, outfile)
@@ -51,7 +52,6 @@ function create_input_protocol(parameter, outfile)
     fprintf(fid, '\n quality code limit: %1.0f', parameter.vie_init.Qlim);
 
     fprintf(fid, '\n info about temperature: %s', parameter.vie_init.tp);
-    if strcmp(parameter.vie_init.tropSource.name,'ext'); fprintf(fid, '\n external tropospheric folder: %s', parameter.vie_init.tropSource.extTrpFolder); end
     fprintf(fid, '\n info about ionosphere: %s', parameter.vie_init.iono);
     
     
