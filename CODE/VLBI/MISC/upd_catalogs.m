@@ -2,6 +2,8 @@
 % to be stored in VieVS/WORK/
 % lucia, 25-3-2014
 % M. Schartner, 26-4-2016: Minor bug fix
+% Lucia, 10-5-18: new server for catalogs, replace 'urlwrite' with
+% 'websave'
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % files to be updated:
@@ -25,7 +27,8 @@ f.delL5    = 1;
 % +++++++++++++++++++++++++++++
 
 outfolder='../CATALOGS/';
-gsfc='ftp://gemini.gsfc.nasa.gov/pub/sked/catalogs/';
+% gsfc='ftp://gemini.gsfc.nasa.gov/pub/sked/catalogs/';
+gsfc='https://vlbi.gsfc.nasa.gov/software/sked/catalogs/';
 
 %disp(['download new files from ',gsfc]);
 h = waitbar(0,'Please wait...');
@@ -36,7 +39,8 @@ if f.antenna==1
     filename='antenna.cat';
     url=[gsfc, filename,];
     % download
-    urlwrite(url, [outfolder, filename]);  
+%     urlwrite(url, [outfolder, filename]);  
+    websave([outfolder, filename],url);  
     waitbar(i/15,h,['updated file: ',filename]);
     i=i+1;
 end
@@ -44,7 +48,8 @@ if f.position==1
     filename='position.cat';
     url=[gsfc, filename,];
     % download
-    urlwrite(url, [outfolder, filename]);  
+%     urlwrite(url, [outfolder, filename]);
+    websave([outfolder, filename],url);  
     waitbar(i/15,h,['updated file: ',filename]);
     i=i+1;
 end
@@ -52,7 +57,8 @@ if f.equip==1
     filename='equip.cat';
     url=[gsfc, filename,];
     % download
-    urlwrite(url, [outfolder, filename]);  
+%     urlwrite(url, [outfolder, filename]);
+    websave([outfolder, filename],url);  
     waitbar(i/15,h,['updated file: ',filename]);
     i=i+1;
 end
@@ -60,7 +66,8 @@ if f.mask==1
     filename='mask.cat';
     url=[gsfc, filename,];
     % download
-    urlwrite(url, [outfolder, filename]);  
+%     urlwrite(url, [outfolder, filename]); 
+    websave([outfolder, filename],url);  
     waitbar(i/15,h,['updated file: ',filename]);
     i=i+1;
 end
@@ -68,7 +75,8 @@ if f.modes==1
     filename='modes.cat';
     url=[gsfc, filename,];
     % download
-    urlwrite(url, [outfolder, filename]);  
+%     urlwrite(url, [outfolder, filename]); 
+    websave([outfolder, filename],url);  
     waitbar(i/15,h,['updated file: ',filename]);
     i=i+1;
 end
@@ -76,7 +84,8 @@ if f.source==1
     filename='source.cat';
     url=[gsfc, filename,];
     % download
-    urlwrite(url, [outfolder, filename]);  
+%     urlwrite(url, [outfolder, filename]);  
+    websave([outfolder, filename],url);  
     waitbar(i/15,h,['updated file: ',filename]);
     i=i+1;
 end
@@ -84,7 +93,8 @@ if f.flux==1
     filename='flux.cat';
     url=[gsfc, filename,];
     % download
-    urlwrite(url, [outfolder, filename]);  
+%     urlwrite(url, [outfolder, filename]);  
+    websave([outfolder, filename],url);  
     waitbar(i/15,h,['updated file: ',filename]);
     i=i+1;
 end
@@ -92,7 +102,8 @@ if f.freq==1
     filename='freq.cat';
     url=[gsfc, filename,];
     % download
-    urlwrite(url, [outfolder, filename]);  
+%     urlwrite(url, [outfolder, filename]);  
+    websave([outfolder, filename],url);  
     waitbar(i/15,h,['updated file: ',filename]);
     i=i+1;
 end
@@ -100,7 +111,8 @@ if f.rx==1
     filename='rx.cat';
     url=[gsfc, filename,];
     % download
-    urlwrite(url, [outfolder, filename]);  
+%     urlwrite(url, [outfolder, filename]); 
+    websave([outfolder, filename],url);  
     waitbar(i/15,h,['updated file: ',filename]);
     i=i+1;
 end
@@ -108,7 +120,8 @@ if f.loif==1
     filename='loif.cat';
     url=[gsfc, filename,];
     % download
-    urlwrite(url, [outfolder, filename]);  
+%     urlwrite(url, [outfolder, filename]);  
+    websave([outfolder, filename],url);  
     waitbar(i/15,h,['updated file: ',filename]);
     i=i+1;
 end
@@ -116,7 +129,8 @@ if f.rec==1
     filename='rec.cat';
     url=[gsfc, filename,];
     % download
-    urlwrite(url, [outfolder, filename]);  
+%     urlwrite(url, [outfolder, filename]);  
+    websave([outfolder, filename],url);  
     waitbar(i/15,h,['updated file: ',filename]);
     i=i+1;
 end
@@ -124,7 +138,8 @@ if f.hdpos==1
     filename='hdpos.cat';
     url=[gsfc, filename,];
     % download
-    urlwrite(url, [outfolder, filename]);  
+%     urlwrite(url, [outfolder, filename]);
+    websave([outfolder, filename],url);  
     waitbar(i/15,h,['updated file: ',filename]);
     i=i+1;
 end
@@ -132,7 +147,8 @@ if f.tracks==1
     filename='tracks.cat';
     url=[gsfc, filename,];
     % download
-    urlwrite(url, [outfolder, filename]);  
+%     urlwrite(url, [outfolder, filename]); 
+    websave([outfolder, filename],url);  
     waitbar(i/15,h,['updated file: ',filename]);
     i=i+1;
 end
@@ -140,7 +156,8 @@ if f.stations==1
     filename='stations.tmp';
     url=[gsfc, filename,];
     % download
-    urlwrite(url, [outfolder, 'stations.cat']);  
+%     urlwrite(url, [outfolder, 'stations.cat']);  
+    websave([outfolder, filename],url);  
     waitbar(i/15,h,['updated file: ',filename]);
     i=i+1;
 end
