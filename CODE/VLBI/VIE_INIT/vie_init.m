@@ -323,7 +323,6 @@ switch(parameter.data_type)
         % read vievs input settings from vgosdb_input_settings.tx file 
         [ in, fb, wrapper_k, wrapper_v ] = read_vgosdb_input_settings( 'vgosdb_input_settings.txt' );
         
-        
         % Standard settings, which are used if not defined differently in settings file:
         if isempty(in) % institute
             in = 'IVS';
@@ -343,6 +342,7 @@ switch(parameter.data_type)
         end
         
         % Read wrapper
+        wrapper_data = read_vgosdb_wrapper(curNcFolder, parameter.session_name, in, wrapper_k, wrapper_v);
         
         
         
