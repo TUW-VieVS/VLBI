@@ -53,30 +53,41 @@ else
 	
         % #### Read one line ####
         str = fgetl(fid);
-  
-        if ~isempty(str)
-            % parse line
-            temp_str = textscan(str, '%s', 'CommentStyle', '%'); 
-            if size(temp_str{1}, 1) == 2 % not a comment
-
-                switch(temp_str{1}{1})
-
-                    case in_tag
-                        in = temp_str{1}{2};
-
-                    case fb_tag
-                        fb = temp_str{1}{2};
-
-                    case wrapper_k_tag
-                        wrapper_k = temp_str{1}{2};
-
-                    case wrapper_v_tag
-                        wrapper_v = temp_str{1}{2};
-
-                end
-            end
+        
+        % Check for comments:
+%         if strcmp(str(1), '%')
+%             continue;
+%         end
+        
+        % parse line
+        temp_str = textscan(str, '%s', 'CommentStyle', '%'); 
+        if size(temp_str{1}, 1) == 2 % not a comment
             
-        end % if ~isempty(str)
+            switch(temp_str{1})
+                
+                case in_tag
+                    in = temp_str{2};
+                    
+                case fb_tag
+                    in = temp_str{2};
+                    
+                case wrapper_k_tag
+                    wrapper_k = temp_str{2};
+                    
+                case wrapper_v_tag
+                    in = temp_str{2};
+                    
+                case ''
+                case ''
+                case ''
+            end
+
+            
+        end
+        
+        
+        
+        
         
     end % while ~feof(fid)
     

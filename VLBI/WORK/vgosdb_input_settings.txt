@@ -7,6 +7,8 @@
 % GroupDelay_bX (X-band group delay without ambiguity correction)
 % GroupDelay_bS (S-band group delay without ambiguity correction)
 % e.g.
-institute: IVS
-frequency band: GroupDelayFull_bX
+institute: 			IVS
+frequency_band: 	GroupDelayFull_bX
+wrapper_k: 			all
+% wrapper_version: 
 

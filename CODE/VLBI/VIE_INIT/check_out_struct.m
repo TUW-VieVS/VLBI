@@ -51,6 +51,8 @@ dn{2} = 'CrossReference';files{2} = {'ObsCrossRef','SourceCrossRef','StationCros
 dn{3} = 'Observables'; files{3} = {'GroupDelay'};
 dn{4} = 'ObsDerived'; files{4} = {'Cal_SlantPathIonoGroup'};
 dn{5} = 'Scan'; files{5} = {'TimeUTC'};
+dn{6} = 'CrossReference'; files{6} = {'ObsCrossRef','SourceCrossRef','StationCrossRef'};
+
 dn_stat = 'stat'; files_stat = {'TimeUTC','Met','Cal_Cable'};
 
 
