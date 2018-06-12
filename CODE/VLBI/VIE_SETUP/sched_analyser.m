@@ -73,6 +73,9 @@ elseif strcmp(varargin{1},'file')
                 if strcmp(fline(1),'$')
                     break
                 end
+                if strcmp(fline(1),'*')
+                    continue
+                end
                 C = textscan(fline,'%s %s %f %f %f %f %f %f %[^\n]');
                 source(counter).name = C{1}{1};
                 if strcmp(C{2},'$')
@@ -97,6 +100,9 @@ elseif strcmp(varargin{1},'file')
                 fline = fgetl(fid);
                 if strcmp(fline(1),'$')
                     break
+                end
+                if strcmp(fline(1),'*')
+                    continue
                 end
 
                 if strcmp(fline(1),'A')
@@ -133,6 +139,9 @@ elseif strcmp(varargin{1},'file')
                 if strcmp(fline(1),'$')
                     break
                 end
+                if strcmp(fline(1),'*')
+                    continue
+                end
                 C = textscan(fline,'%s %d %s %s %s %d %s %d %s %s %[^\n]');
                 srcname = C{1};
                 date = C{5};
@@ -140,7 +149,7 @@ elseif strcmp(varargin{1},'file')
                 stat = C{10};
                 ids = stat{1}(1:2:end);
                 info = C{11};
-                info = strsplit(info{1});
+                info = strsplit(strtrim(info{1}));
                 sched(counter).nscan = 1;
 
                 scan = struct();
