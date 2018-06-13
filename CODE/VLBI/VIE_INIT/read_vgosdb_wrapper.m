@@ -74,7 +74,7 @@ switch(wrapper_version)
         version_str = sprintf('%03d', str2num(wrapper_version));
 end
 
-disp(version_str)
+% disp(version_str)
 
 nc_filename = [session_name(1:9), '_V', version_str, '_i', institute, '_k', wrapper_k, '.wrp'];
     
@@ -89,19 +89,18 @@ else
     
     % ##### Loop over all lines #####
     
-    % Init:
+    % Loop init:
     flag_in_block = 0;
     flag_valid_block = 0;
     current_block_str   = '';
     current_default_dir = '';
     
     
-    
     while ~feof(fid)
 	
         % #### Read one line ####
         str = fgetl(fid);
-        disp(str);
+        % disp(str);
         
         if isempty(str)
             continue;
@@ -152,7 +151,7 @@ else
                                 if ~isfield(wrapper_data.(current_block_str), current_default_dir)
                                    wrapper_data.(current_block_str).(current_default_dir).files = temp_str{1}{1};
                                 else
-                                    wrapper_data.(current_block_str).(current_default_dir).files = [wrapper_data.(current_block_str).(current_default_dir).files, temp_str{1}]
+                                    wrapper_data.(current_block_str).(current_default_dir).files = [wrapper_data.(current_block_str).(current_default_dir).files, temp_str{1}];
                                 end
                             end
                         end

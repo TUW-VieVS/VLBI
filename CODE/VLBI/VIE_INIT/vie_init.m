@@ -345,7 +345,6 @@ switch(parameter.data_type)
         wrapper_data = read_vgosdb_wrapper(curNcFolder, parameter.session_name, in, wrapper_k, wrapper_v);
         
         
-        
         % check out_struct
         out_struct = check_out_struct( out_struct,in );
         
@@ -357,28 +356,6 @@ switch(parameter.data_type)
         % "clean" scan struct (because of exclusions)
         [scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.vie_init.Qlim, parameter.vie_init.min_elev);
 
-        % --- "OPT file-cleaning" ---
-        %     % just for testing ++++
-        %     fprintf('nobs (true (head)) = %1.0f\nnobs (src) = %1.0f\nnobs(ant) = %1.0f\nnobs (sca) = %1.0f\n',...
-        %         out_struct.head.NumObs.val,sum([sources.numobs]), sum([antenna.numobs]), sum([scan.nobs]));
-        %    
-        %     tic
-        %     [antenna2,sources2,scan2]=read_ngs(['../DATA/NGS/2014/14APR14XA_N004'],trffile,crffile,ini_opt,pt, tp, trf, crf);
-        %     toc
-        %     
-        %     fprintf('nobs (src2) = %1.0f\nnobs(ant2) = %1.0f\nnobs (sca2) = %1.0f\n',...
-        %         sum([sources2.numobs]), sum([antenna2.numobs]), sum([scan2.nobs]));
-        %     
-        %     % compare structs
-        %     addpath(genpath('D:/Madzak/matlabfiles/'))
-        %     compareSourceStructs(sources,sources2);
-        %     compareAntennaStructs(antenna,antenna2);
-        %     [scan1_out]=compareScanStructs(scan,scan2, antenna,antenna2,sources,sources2);
-        %     fprintf('\n')
-        % 
-        % %     scan=scan1_out;
-        %     % just for testing ------
-        %profile viewer
     
         % Create a sub-structure in "sources" for quasars sources:
         q = sources;
