@@ -346,7 +346,7 @@ switch(parameter.data_type)
         
         
         % check out_struct
-        out_struct = check_out_struct( out_struct,in );
+        out_struct = check_out_struct( out_struct, in, wrapper_data);
         
         % get scan, antenna, source struct from netCDF files
         scan        = nc2scan(out_struct, nc_info, fb);

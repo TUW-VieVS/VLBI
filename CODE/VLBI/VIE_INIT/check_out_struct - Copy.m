@@ -11,15 +11,14 @@
 % 	D.) Distinguishes between different frequency bands
 % 	The following files are used in VieVS and the reference to the VieVS
 % 	out_struct is given:
-% 	CrossReference/ObsCrossRef.nc           --> out_struct.CrossReference.ObsCrossRef
-% 	CrossReference/SourceCrossRef.nc        --> out_struct.CrossReference.SourceCrossRef
-% 	CrossReference/StationCrossRef.nc       --> out_struct.CrossReference.StationCrossRef
-% 	ObsEdit/GroupDelayFull_bX.nc            --> out_struct.ObsEdit.GroupDelayFull_bX
-% 	ObsEdit/Edit.nc                         --> out_struct.ObsEdit.Edit
-% 	Observables/GroupDelay_bX.nc            --> out_struct.Observables.GroupDelay_bX
+% 	CrossReference/ObsCrossRef.nc --> out_struct.CrossReference.ObsCrossRef
+% 	CrossReference/SourceCrossRef.nc --> out_struct.CrossReference.SourceCrossRef
+% 	CrossReference/StationCrossRef.nc --> out_struct.CrossReference.StationCrossRef
+% 	ObsEdit/GroupDelayFull_bX.nc --> out_struct.ObsEdit.GroupDelayFull_bX
+% 	ObsEdit/Edit.nc --> out_struct.ObsEdit.Edit
+% 	Observables/GroupDelay_bX.nc --> 
 % 	ObsDerived/Cal_SlantPathIonoGroup_bX.nc --> out_struct.ObsDerived.Cal_SlantPathIonoGroup_bX
 % 	Scan/TimeUTC.nc
-%
 % 	<Station>/TimeUTC.nc
 % 	<Station>/Met.nc
 % 	<Station>/Cal_Cable.nc
@@ -36,14 +35,13 @@
 %
 % INPUT:
 %	- out_struct (matlab struct of the vgos data base)
-%   - in (string institute name)
-%   - wrapper_data (structure, containing wrapper information)
+%       - in (string institute name)
 % OUTPUT:
 %	- out_struct_checked (matlab struct of the checked vgos data base)
 %
 % CHANGES:
 %
-function [ out_struct_checked ] = check_out_struct(out_struct, in, wrapper_data)
+function [ out_struct_checked ] = check_out_struct( out_struct, in )
 
 verbosity = 0;
 
@@ -53,6 +51,7 @@ dn{2} = 'CrossReference';files{2} = {'ObsCrossRef','SourceCrossRef','StationCros
 dn{3} = 'Observables'; files{3} = {'GroupDelay'};
 dn{4} = 'ObsDerived'; files{4} = {'Cal_SlantPathIonoGroup'};
 dn{5} = 'Scan'; files{5} = {'TimeUTC'};
+dn{6} = 'CrossReference'; files{6} = {'ObsCrossRef','SourceCrossRef','StationCrossRef'};
 
 dn_stat = 'stat'; files_stat = {'TimeUTC','Met','Cal_Cable'};
 
