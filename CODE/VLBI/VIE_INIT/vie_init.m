@@ -343,13 +343,12 @@ switch(parameter.data_type)
         
         % Read wrapper
         wrapper_data = read_vgosdb_wrapper(curNcFolder, parameter.session_name, in, wrapper_k, wrapper_v);
-        
-        
+
         % check out_struct
-        out_struct = check_out_struct( out_struct, in, wrapper_data);
+        % out_struct = check_out_struct( out_struct, in, wrapper_data);
         
         % get scan, antenna, source struct from netCDF files
-        scan        = nc2scan(out_struct, nc_info, fb);
+        scan        = nc2scan(out_struct, nc_info, fb, wrapper_data, in);
         antenna     = nc2antenna(out_struct, trf, trffile{2});
         sources     = nc2sources(out_struct, crf, crffile{2});
         
