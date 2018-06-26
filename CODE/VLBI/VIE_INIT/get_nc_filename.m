@@ -9,7 +9,7 @@
 %   - flag_generate_error_msg (optional):   If this flag is set to "1" (default = 0), an error will be generated if there is no match. Otherwise just a warnign appears.
 %
 %   Output:
-%      The scan structure array.
+%   - fieldname_str (string):               Name of entry in "wrapper_data_files" that matches the string(s) in "field_name_pattern"
 % 
 %   External calls: 	
 %       

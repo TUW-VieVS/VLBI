@@ -45,9 +45,6 @@ antenna(nStat)=struct('IDsuper', [], 'in_trf', [], 'name', [],  'x', [], 'y', []
 
 % for some things no loop is needed
 %[antenna.session]=deal(out_struct.head.Session');
-
-
-
                         
                         
 for iStat=1:nStat

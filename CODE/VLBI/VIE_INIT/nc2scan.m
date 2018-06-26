@@ -364,12 +364,9 @@ for iScan=1:nScans
         [scan(iScan).obs.q_code]=deal(delayFlagLikeNGS{obsI1Index:obsI1Index+scan(iScan).nobs-1});   
     end
     
-    
-    
-    
+
     obsI1Index=obsI1Index+scan(iScan).nobs;
 
-    
     ionosphereCorrection    = 1;
     cableCalibration        = 1;
 %     % "modify" delay for cable cal and iono delay

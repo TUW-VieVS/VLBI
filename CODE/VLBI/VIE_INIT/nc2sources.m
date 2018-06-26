@@ -101,11 +101,6 @@ for iSource=1:nSources
     else
         sources(iSource).corr=[];
     end
-    %     if isfield(crf(indSourceInCrf).(crfToTake), 'def')
-    %         sources(iSource).def=    crf(indSourceInCrf).(crfToTake).def;
-    %     else
-    %         sources(iSource).def=[];
-    %     end
     
     
     %out_struct.CrossReference.SourceCrossRef.Scan2Source.val % source ID per scan
