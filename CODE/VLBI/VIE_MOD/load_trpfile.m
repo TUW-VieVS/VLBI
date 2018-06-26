@@ -53,15 +53,7 @@ function [trpdata,trpFileFoundLog] = load_trpfile (parameter,session)
 % subfolders (and sub-...-subfolders) in the main trp-path will be searched to find a trp-file
 % matching with the session name (except for the ngs-file version).
 
-if strcmp(parameter.vie_init.tropSource.name,'ext')
-    trpPath='../TRP/OUTPUT_DATA/';
-    trpSubfolder=parameter.vie_init.tropSource.extTrpFolder;
-    trpFolder=[trpPath, trpSubfolder, '/'];
-    
-    % define trpfile
-    trpFile=[trpFolder, session, '.trp'];
-    
-elseif strcmp(parameter.vie_init.tropSource.name,'raytr')
+if strcmp(parameter.vie_init.tropSource.name,'raytr')
     
       trpFolder = '../TRP/RAYTRACING_DATA/';
      % define raytracing file
@@ -75,59 +67,8 @@ end
     
    
 
-% if it does not exist, try to find it somewhere else (in any subfolder)
-if ~exist(trpFile, 'file')  &&   strcmp(parameter.vie_init.tropSource.name,'ext')
-
-    % if trp-file does not include the ngs-file version in its name, e.g. "_N004"
-    % --> search for files containing only the session name without the file version
-    trpFile=[trpFolder, session(1:9), '.trp'];
-
-    % in case of file still not found
-    if ~exist(trpFile, 'file')  
-
-        % check all directories for trp-file (not including the ngs-file version in its name, e.g.
-        % "_N004")
-        trpFoundFiles=dirr([trpPath, '*', session(1:9)]);
-
-        % if nothing found:
-        if isempty(trpFoundFiles)
-            fprintf('trp File not found!\n');
-            trpFileFoundLog=0;
-            trpdata=[];
-        else
-            % create new var just for search
-            tempTrpFoundFiles=trpFoundFiles(1); %(1)
-            trpSearchSubFolder='/';
-
-            % get correct path to trp-file in case of a number of subfolders --> while loop
-            while isstruct(tempTrpFoundFiles)
-                trpSearchSubFolder=[trpSearchSubFolder, tempTrpFoundFiles.name, '/'];
-                tempTrpFoundFiles=tempTrpFoundFiles.isdir;
-            end
-            % delete '\' at end
-            trpSearchSubFolder(end)=[];
-
-            % define found trp-file
-            trpFile=[trpPath, trpSearchSubFolder];
-            fprintf('.trp file not found in specified folder.\nInstead following file found:\n''%s''\nThis is used!\n', trpFile);
-            trpFileFoundLog=1;
-        end
-
-    % in case of file found without version identifier
-    else
-
-        trpFileFoundLog=1;
-
-        % in case of found file: report
-        fprintf('.trp file not found with included version identifier.\nInstead following file without version identifier found:\n''%s''\nThis is used!\n', trpFile);
-
-    end
-
-elseif exist(trpFile, 'file')  &&   strcmp(parameter.vie_init.tropSource.name,'ext')
-    
-    trpFileFoundLog=1;
-    
-elseif exist(trpFile, 'file')  &&   strcmp(parameter.vie_init.tropSource.name,'raytr')
+% if it does not exist, give message
+if exist(trpFile, 'file')  &&   strcmp(parameter.vie_init.tropSource.name,'raytr')
     
     trpFileFoundLog=1;
     
@@ -199,36 +140,21 @@ if trpFileFoundLog==1
                 % use the trp-format specification (see trp-file) to find the necessary span of
                 % characters describing each value
 
-                % source name
-                trpdata{1,1}{ind,1} = curr_line(13:20);
-                % scan number
-                trpdata{1,2}(ind,1) = str2double(curr_line(4:8));
-                % year
-                trpdata{1,3}(ind,1) = str2double(curr_line(26:29));
-                % month
-                trpdata{1,4}(ind,1) = str2double(curr_line(31:32));
-                % day
-                trpdata{1,5}(ind,1) = str2double(curr_line(34:35));
-                % hour
-                trpdata{1,6}(ind,1) = str2double(curr_line(37:38));
-                % minute
-                trpdata{1,7}(ind,1) = str2double(curr_line(40:41));
-                % seconds
-                trpdata{1,8}(ind,1) = str2double(curr_line(43:46));
-                % site ID
-                trpdata{1,9}{ind,1} = curr_line(49:56);
-                % azimuth in [°]
-                trpdata{1,10}(ind,1) = str2double(curr_line(59:67));
-                % outgoing elevation angle in [°]
-                trpdata{1,11}(ind,1) = str2double(curr_line(69:76));
-                % pressure in [hPa]
-                trpdata{1,12}(ind,1) = str2double(curr_line(79:84));
-                % temperature in [°C]
-                trpdata{1,13}(ind,1) = str2double(curr_line(86:90));
-                % slant total delay including geometric bending effect in [sec]
-                trpdata{1,14}(ind,1) = str2double(curr_line(93:107));
-                % wet mapping function
-                trpdata{1,15}(ind,1) = str2double(curr_line(109:123));
+                trpdata{1,1}{ind,1} = curr_line(13:20);                  % source name
+                trpdata{1,2}(ind,1) = str2double(curr_line(4:8));        % scan number
+                trpdata{1,3}(ind,1) = str2double(curr_line(26:29));      % year
+                trpdata{1,4}(ind,1) = str2double(curr_line(31:32));      % month
+                trpdata{1,5}(ind,1) = str2double(curr_line(34:35));      % day
+                trpdata{1,6}(ind,1) = str2double(curr_line(37:38));      % hour
+                trpdata{1,7}(ind,1) = str2double(curr_line(40:41));      % minute
+                trpdata{1,8}(ind,1) = str2double(curr_line(43:46));      % seconds
+                trpdata{1,9}{ind,1} = curr_line(49:56);                  % site ID
+                trpdata{1,10}(ind,1) = str2double(curr_line(59:67));     % azimuth in [°]
+                trpdata{1,11}(ind,1) = str2double(curr_line(69:76));     % outgoing elevation angle in [°]
+                trpdata{1,12}(ind,1) = str2double(curr_line(79:84));     % pressure in [hPa]
+                trpdata{1,13}(ind,1) = str2double(curr_line(86:90));     % temperature in [°C]
+                trpdata{1,14}(ind,1) = str2double(curr_line(93:107));    % slant total delay including geometric bending effect in [sec]
+                trpdata{1,15}(ind,1) = str2double(curr_line(109:123));   % wet mapping function
                 
             end
         end
