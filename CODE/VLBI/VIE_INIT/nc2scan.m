@@ -51,7 +51,7 @@ space0.t2c=zeros(3,3);
 
 % ##### Get cross referencing indices from folder CrossReference #####
 % obs2Baseline:
-nc_filename = get_nc_filename('ObsCrossRef', wrapper_data.Observation.CrossReference.files);
+nc_filename = get_nc_filename('ObsCrossRef', wrapper_data.Observation.CrossReference.files, 1);
 obs2Baseline=double(out_struct.CrossReference.(nc_filename).Obs2Baseline.val)'; % it is also saved in netCDF file (->take it from there) nRows=nObs, nCols=2
 % for (at least some) intensives: only one baseline given (as they are all equal) --> repmat
 if size(obs2Baseline,1)==1
@@ -62,10 +62,10 @@ obs2BaselineCell=num2cell(obs2Baseline);
 % obs2Scan:
 obs2Scan=double(out_struct.CrossReference.(nc_filename).Obs2Scan.val); % vector (lenght = nScans), giving scan number (as integer) nObs x 1
 % scan2Station:
-nc_filename = get_nc_filename('StationCrossRef', wrapper_data.Session.CrossReference.files);
+nc_filename = get_nc_filename('StationCrossRef', wrapper_data.Session.CrossReference.files, 1);
 scan2Station=double(out_struct.CrossReference.(nc_filename).Scan2Station.val)'; % matrix (nRows=nScans), giving stations (also the number of observations per station is counted!), nCols = nStations
 % scan2Source
-nc_filename = get_nc_filename('SourceCrossRef', wrapper_data.Session.CrossReference.files);
+nc_filename = get_nc_filename('SourceCrossRef', wrapper_data.Session.CrossReference.files, 1);
 scan2Source=double(out_struct.CrossReference.(nc_filename).Scan2Source.val); % vector (nRows=nScans), giving integer source index, nCols=1
 
 switch fband
@@ -76,11 +76,11 @@ switch fband
         % sigma delay, groupDelaySigCell: /Observables/GroupDelay_bX
         % ionospheric delay, ionoDelCell: /ObsDerived/Cal_SlantPathIonoGroup_bX
         % sigma ionospheric delay, ionoDelSigCell: /ObsDerived/Cal_SlantPathIonoGroup_bX
-        nc_filename = get_nc_filename({'GroupDelayFull', '_bX', institution_tag}, wrapper_data.Observation.ObsEdit.files);
+        nc_filename = get_nc_filename({'GroupDelayFull', '_bX', institution_tag}, wrapper_data.Observation.ObsEdit.files, 1);
         tau_folder = 'ObsEdit';
         tau_file = nc_filename;
         tau_field = 'GroupDelayFull';
-        nc_filename = get_nc_filename({'GroupDelay', '_bX'}, wrapper_data.Observation.Observables.files);
+        nc_filename = get_nc_filename({'GroupDelay', '_bX'}, wrapper_data.Observation.Observables.files, 1);
         sigma_tau_folder = 'Observables';
         sigma_tau_file = nc_filename;
         sigma_tau_field = 'GroupDelaySig';
@@ -99,11 +99,11 @@ switch fband
         % ionospheric delay, ionoDelCell:
         % /ObsDerived/Cal_SlantPathIonoGroup_bX or /ObsDerived/Cal_SlantPathIonoGroup_bS
         % sigma ionospheric delay, ionoDelSigCell: /ObsDerived/Cal_SlantPathIonoGroup_bX or /ObsDerived/Cal_SlantPathIonoGroup_bS
-        nc_filename = get_nc_filename({'GroupDelayFull', '_bS', institution_tag}, wrapper_data.Observation.ObsEdit.files);
+        nc_filename = get_nc_filename({'GroupDelayFull', '_bS', institution_tag}, wrapper_data.Observation.ObsEdit.files, 1);
         tau_folder = 'ObsEdit';
         tau_file = nc_filename;
         tau_field = 'GroupDelayFull';
-        nc_filename = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files);
+        nc_filename = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files, 1);
         sigma_tau_folder = 'Observables';
         sigma_tau_file = 'GroupDelay_bS';
         sigma_tau_field = 'GroupDelaySig';
@@ -118,7 +118,7 @@ switch fband
         % sigma delay, groupDelaySigCell: /Observables/GroupDelay_bX
         % ionospheric delay, ionoDelCell: 
         % sigma ionospheric delay, ionoDelSigCell: 
-        nc_filename = get_nc_filename({'GroupDelay', '_bx'}, wrapper_data.Observation.Observables.files);
+        nc_filename = get_nc_filename({'GroupDelay', '_bx'}, wrapper_data.Observation.Observables.files, 1);
         tau_folder = 'Observables';
         tau_file = nc_filename;
         tau_field = 'GroupDelay';
@@ -135,7 +135,7 @@ switch fband
         % sigma delay, groupDelaySigCell: /Observables/GroupDelay_bS
         % ionospheric delay, ionoDelCell: 
         % sigma ionospheric delay, ionoDelSigCell: 
-        nc_filename = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files);
+        nc_filename = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files, 1);
         tau_folder = 'Observables';
         tau_file = nc_filename;
         tau_field = 'GroupDelay';
@@ -152,14 +152,14 @@ switch fband
         % sigma delay, groupDelaySigCell: /Observables/GroupDelay_bX
         % ionospheric delay, ionoDelCell: /ObsDerived/Cal_SlantPathIonoGroup_bX
         % sigma ionospheric delay, ionoDelSigCell: /ObsDerived/Cal_SlantPathIonoGroup_bX
-        nc_filename = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files);
+        nc_filename = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files, 1);
         tau_folder = 'Observables';
         tau_file = nc_filename;
         tau_field = 'GroupDelay';
         sigma_tau_folder = 'Observables';
         sigma_tau_file = nc_filename;
         sigma_tau_field = 'GroupDelaySig';
-        nc_filename = get_nc_filename({'Cal-SlantPathIonoGroup', '_bX'}, wrapper_data.Observation.ObsDerived.files);
+        nc_filename = get_nc_filename({'Cal-SlantPathIonoGroup', '_bX'}, wrapper_data.Observation.ObsDerived.files, 1);
         tau_ion_folder = 'ObsDerived';
         tau_ion_file = strrep(nc_filename,'-','_');
         tau_ion_field = 'Cal_SlantPathIonoGroup';
@@ -170,14 +170,14 @@ switch fband
         % sigma delay, groupDelaySigCell: /Observables/GroupDelay_bS
         % ionospheric delay, ionoDelCell: /ObsDerived/Cal_SlantPathIonoGroup_bX or /ObsDerived/Cal_SlantPathIonoGroup_bS
         % sigma ionospheric delay, ionoDelSigCell: /ObsDerived/Cal_SlantPathIonoGroup_bX or /ObsDerived/Cal_SlantPathIonoGroup_bS
-        nc_filename = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files);
+        nc_filename = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files, 1);
         tau_folder = 'Observables';
         tau_file = nc_filename;
         tau_field = 'GroupDelay';
         sigma_tau_folder = 'Observables';
         sigma_tau_file = nc_filename;
         sigma_tau_field = 'GroupDelaySig';
-        nc_filename = get_nc_filename({'Cal-SlantPathIonoGroup', '_bS'}, wrapper_data.Observation.ObsDerived.files);
+        nc_filename = get_nc_filename({'Cal-SlantPathIonoGroup', '_bS'}, wrapper_data.Observation.ObsDerived.files, 1);
         tau_ion_folder = 'ObsDerived';
         tau_ion_file = strrep(nc_filename,'-','_');
         tau_ion_field = 'Cal_SlantPathIonoGroup';
@@ -214,7 +214,7 @@ else
 end
 
 %% DELAY FLAG DELAY:
-nc_filename = get_nc_filename({'Edit', institution_tag}, wrapper_data.Observation.ObsEdit.files);
+nc_filename = get_nc_filename({'Edit', institution_tag}, wrapper_data.Observation.ObsEdit.files, 1);
 delayFlagLikeNGS    = num2cell(out_struct.ObsEdit.(nc_filename).DelayFlag.val);
 
 %% SIGMA FINAL DELAY:  
@@ -228,7 +228,7 @@ oneToN=1:40;
 % scan.mjd /.iso
 % yr; mo; day; hr; minute; sec. (num cols = num scans)
 
-nc_filename = get_nc_filename({'TimeUTC'}, wrapper_data.Scan.Scan.files);
+nc_filename = get_nc_filename({'TimeUTC'}, wrapper_data.Scan.Scan.files, 1);
 if length(out_struct.Scan.TimeUTC.Second.val) == 1
     out_struct.Scan.(nc_filename).Second.val = zeros(length(out_struct.Scan.TimeUTC.YMDHM.val),1);
 end
@@ -401,65 +401,6 @@ end
 scan(end)=[];
 % fprintf('nc2scan finished\n')
 
-
-
-
-%% #### Sub-functions 
-
-function fieldname_str = get_nc_filename(field_name_pattern, wrapper_data_files)
-% Input: 
-% - field_name_pattern (Cell-array): Cell-array with 1 or more strings, which are matched with entries in "wrapper_data_files"
-% - wrapper_data_files (Cell-array): containing name of .nc files
-
-    flag_generate_error_msg = 0;
-
-    switch(nargin)
-        case 3
-            flag_generate_error_msg = varargin{3};
-    end
-
-    % Check input:
-    if ~iscell(field_name_pattern)
-        field_name_pattern = {field_name_pattern};
-    end
-    if ~iscell(wrapper_data_files)
-        wrapper_data_files = {wrapper_data_files};
-    end
-    
-    % Init.:
-    flaglist_match_wrapper_data_files = true(length(wrapper_data_files), length(field_name_pattern));
-    
-    % Select file from list according to "field_name_default"  
-    for i_1 = 1 : length(field_name_pattern)
-        for i_2 = 1 : length(wrapper_data_files)
-            flaglist_match_wrapper_data_files(i_2, i_1) = flaglist_match_wrapper_data_files(i_2, i_1) && ~isempty(strfind(wrapper_data_files{i_2},field_name_pattern{i_1}));
-        end
-    end
-    
-    % Check, wich file in "wrapper_data_files" matches all strings in "field_name_default":
-    ind = true(length(wrapper_data_files), 1);
-    for i_1 = 1 : length(field_name_pattern)
-        ind = ind & flaglist_match_wrapper_data_files(:, i_1);
-    end
-    
-    % Check, if there is a match:
-    if sum(ind) == 1 % one match
-        tmp_str = wrapper_data_files{ind};
-        % Remove the ".nc" file ending:
-        fieldname_str = tmp_str(1 : strfind(tmp_str, '.nc')-1);
-    elseif sum(ind) >= 1 % more than 1 match
-        error('More than 1 match was found!');
-    else % sum == 0, no match
-        fieldname_str = '';
-        switch(flag_generate_error_msg)
-            case 0
-                warning('No match for .nc file (from wrapper) found in out_struct!')
-            case 1
-                error('No match for .nc file (from wrapper) found in out_struct!')
-        end
-    end
-    
-return
 
 
 

@@ -349,8 +349,8 @@ switch(parameter.data_type)
         
         % get scan, antenna, source struct from netCDF files
         scan        = nc2scan(out_struct, nc_info, fb, wrapper_data, in);
-        antenna     = nc2antenna(out_struct, trf, trffile{2});
-        sources     = nc2sources(out_struct, crf, crffile{2});
+        antenna     = nc2antenna(out_struct, trf, trffile{2}, wrapper_data);
+        sources     = nc2sources(out_struct, crf, crffile{2}, wrapper_data);
         
         % "clean" scan struct (because of exclusions)
         [scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.vie_init.Qlim, parameter.vie_init.min_elev);
@@ -358,7 +358,7 @@ switch(parameter.data_type)
     
         % Create a sub-structure in "sources" for quasars sources:
         q = sources;
-        clear sources
+        clear sources,
         sources.q   = q;
         sources.s 	= [];
         fprintf('...reading the vgosDB file finished!\n');
