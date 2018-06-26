@@ -21,60 +21,74 @@
 % OUTPUT:
 %	- in (institute name)
 %	- fb (frequency band name)
+%   - wrapper_k  (wrapper tag, "all" or "ngs")
+%   - wrapper_v  (wrapper version number)
 %
 % CHANGES:
 %
 
-function [ in,fb ] = read_vgosdb_input_settings( ptf )
+function [ in, fb, wrapper_k, wrapper_v ] = read_vgosdb_input_settings( ptf )
 
-inid = 'institute:';
-fbid = 'frequencyband:';
+in_tag          = 'institute:';         % => in
+fb_tag          = 'frequency_band:';    % => in
+wrapper_k_tag   = 'wrapper_k:';         % => wrapper_k
+wrapper_v_tag   = 'wrapper_version:';   % => wrapper_v
 
-in = [];
-fb = [];
 
-fid = fopen(ptf);
+in = '';
+fb = '';
+wrapper_k = '';
+wrapper_v = '';
+
+% ##### Open file #####
+fid = fopen(ptf,'r');
+
 if fid<0
     fprintf('File vievs_input_settings.txt does not exist\n')
 else
-    fprintf('File vievs_input_settings.txt found\n')
-    tline = fgetl(fid);
-    while ischar(tline)
-        ic = strfind(tline,'%'); % find comments
-        if ~isempty(ic)
-            tline = tline(1:ic-1);
-        end
-        is = strfind(tline,' ');
-        if ~isempty(is)
-            %         for iis = 1:length(is)
-            %             ec{iis} = '';
-            %         end
-            tline(is) = '';
-        end
-        iin = strfind(tline,inid); % find institute
-        ifb = strfind(tline,fbid); % find frequency band
-        if ~isempty(iin)
-            in = tline(iin+length(inid):end);
-        end
-        if ~isempty(ifb)
-            fb = tline(ifb+length(fbid):end);
-        end
-        tline = fgetl(fid);
-    end
-    fclose(fid);
+    fprintf('Reading: %s\n', ptf)
     
-    if isempty(in)
-        fprintf('No institute is specified\n')
-    else
-        fprintf('Institute specified: %s\n',in)
-    end
-    if isempty(fb)
-        fprintf('No frequencyband is specified\n')
-    else
-        fprintf('Frequencyband specified: %s\n',fb)
-    end    
+    % ##### Loop over all lines #####
+    while ~feof(fid)
+	
+        % #### Read one line ####
+        str = fgetl(fid);
+  
+        if ~isempty(str)
+            % parse line
+            temp_str = textscan(str, '%s', 'CommentStyle', '%'); 
+            if size(temp_str{1}, 1) == 2 % not a comment
+
+                switch(temp_str{1}{1})
+
+                    case in_tag
+                        in = temp_str{1}{2};
+
+                    case fb_tag
+                        fb = temp_str{1}{2};
+
+                    case wrapper_k_tag
+                        wrapper_k = temp_str{1}{2};
+
+                    case wrapper_v_tag
+                        wrapper_v = temp_str{1}{2};
+
+                end
+            end
+            
+        end % if ~isempty(str)
+        
+    end % while ~feof(fid)
+    
+    
+    
+    
+    % Close file
+    fclose(fid);
+
+    
 end
 
 
-end
+
 

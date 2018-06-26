@@ -6,6 +6,7 @@
 %
 % Input:	
 %   Both variables from the netCDF files - out_struct and nc_info.
+%   - wrapper_data: Struct, containing all information loaded from the vgosDB wrapper file
 %
 % Output:
 %   The scan structure array.
@@ -28,7 +29,7 @@
 % ************************************************************************
 
 
-function antenna=nc2antenna(out_struct, trf, chosenTrf)
+function antenna=nc2antenna(out_struct, trf, chosenTrf, wrapper_data)
 
 % number of stations in session
 nStat=size(out_struct.head.StationList.val,2);
@@ -44,9 +45,6 @@ antenna(nStat)=struct('IDsuper', [], 'in_trf', [], 'name', [],  'x', [], 'y', []
 
 % for some things no loop is needed
 %[antenna.session]=deal(out_struct.head.Session');
-
-
-
                         
                         
 for iStat=1:nStat
@@ -98,8 +96,7 @@ for iStat=1:nStat
         fprintf('No valid %s epoch for %s - get vievsTrf coordinates (no NNT/NNR)\n', trfToTake, curName)
         % so: no valid epoch for official (e.g.. VTRF2008) TRF -> get vievsTrf break
         trfToTake='vievsTrf';
-        bnr=find(antenna(iStat).firstObsMjd>=[trf(indCurStatInTrf).(trfToTake).break.start] & ...
-            antenna(iStat).firstObsMjd<=[trf(indCurStatInTrf).(trfToTake).break.end]);
+        bnr=find(antenna(iStat).firstObsMjd>=[trf(indCurStatInTrf).(trfToTake).break.start] & antenna(iStat).firstObsMjd<=[trf(indCurStatInTrf).(trfToTake).break.end]);
     end
     
     curBreak=trf(indCurStatInTrf).(trfToTake).break(bnr);
@@ -153,7 +150,10 @@ for iStat=1:nStat
     end
     
     % numobs
-    nobstemp3=sum(sum(out_struct.CrossReference.ObsCrossRef.Obs2Baseline.val==iStat)); % 808
+    nc_filename = get_nc_filename('ObsCrossRef', wrapper_data.Observation.CrossReference.files, 1);
+    nobstemp3=sum(sum(out_struct.CrossReference.(nc_filename).Obs2Baseline.val==iStat)); % 808
+    
+       
     antenna(iStat).numobs=nobstemp3;
     if ~isempty(trf(indCurStatInTrf).antenna_info)
         antenna(iStat).axtyp=trf(indCurStatInTrf).antenna_info.mount(4:end);

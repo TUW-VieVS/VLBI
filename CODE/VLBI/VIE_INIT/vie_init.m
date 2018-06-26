@@ -321,55 +321,44 @@ switch(parameter.data_type)
         [out_struct, nc_info]=read_nc(curNcFolder);
         
         % read vievs input settings from vgosdb_input_settings.tx file 
-        [ in,fb ] = read_vgosdb_input_settings( 'vgosdb_input_settings.txt' );
+        [ in, fb, wrapper_k, wrapper_v ] = read_vgosdb_input_settings( 'vgosdb_input_settings.txt' );
         
-        if isempty(in)
+        % Standard settings, which are used if not defined differently in settings file:
+        if isempty(in) % institute
             in = 'IVS';
-            fprintf('Set to %s by default\n',in)
+            fprintf('Set institute to default: %s\n', in)
         end
-        if isempty(fb)
+        if isempty(fb) % frequency band
             fb = 'GroupDelayFull_bX';
-            fprintf('Set to %s by default\n',fb)
+            fprintf('Set frequency band to default: %s\n', fb)
+        end
+        if isempty(wrapper_k) % wrapper tag
+            wrapper_k = 'all';
+            fprintf('Set wrapper tag to default: %s\n', wrapper_k)
+        end
+        if isempty(wrapper_v) % wrapper version
+            wrapper_v = 'highest_version';
+            fprintf('Set wrapper version to default: %s\n', wrapper_v)
         end
         
-        
+        % Read wrapper
+        wrapper_data = read_vgosdb_wrapper(curNcFolder, parameter.session_name, in, wrapper_k, wrapper_v);
+
         % check out_struct
-        out_struct = check_out_struct( out_struct,in );
+        % out_struct = check_out_struct( out_struct, in, wrapper_data);
         
         % get scan, antenna, source struct from netCDF files
-        scan        = nc2scan(out_struct, nc_info, fb);
-        antenna     = nc2antenna(out_struct, trf, trffile{2});
-        sources     = nc2sources(out_struct, crf, crffile{2});
+        scan        = nc2scan(out_struct, nc_info, fb, wrapper_data, in);
+        antenna     = nc2antenna(out_struct, trf, trffile{2}, wrapper_data);
+        sources     = nc2sources(out_struct, crf, crffile{2}, wrapper_data);
         
         % "clean" scan struct (because of exclusions)
         [scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.vie_init.Qlim, parameter.vie_init.min_elev);
 
-        % --- "OPT file-cleaning" ---
-        %     % just for testing ++++
-        %     fprintf('nobs (true (head)) = %1.0f\nnobs (src) = %1.0f\nnobs(ant) = %1.0f\nnobs (sca) = %1.0f\n',...
-        %         out_struct.head.NumObs.val,sum([sources.numobs]), sum([antenna.numobs]), sum([scan.nobs]));
-        %    
-        %     tic
-        %     [antenna2,sources2,scan2]=read_ngs(['../DATA/NGS/2014/14APR14XA_N004'],trffile,crffile,ini_opt,pt, tp, trf, crf);
-        %     toc
-        %     
-        %     fprintf('nobs (src2) = %1.0f\nnobs(ant2) = %1.0f\nnobs (sca2) = %1.0f\n',...
-        %         sum([sources2.numobs]), sum([antenna2.numobs]), sum([scan2.nobs]));
-        %     
-        %     % compare structs
-        %     addpath(genpath('D:/Madzak/matlabfiles/'))
-        %     compareSourceStructs(sources,sources2);
-        %     compareAntennaStructs(antenna,antenna2);
-        %     [scan1_out]=compareScanStructs(scan,scan2, antenna,antenna2,sources,sources2);
-        %     fprintf('\n')
-        % 
-        % %     scan=scan1_out;
-        %     % just for testing ------
-        %profile viewer
     
         % Create a sub-structure in "sources" for quasars sources:
         q = sources;
-        clear sources
+        clear sources,
         sources.q   = q;
         sources.s 	= [];
         fprintf('...reading the vgosDB file finished!\n');
