@@ -894,6 +894,10 @@ if ess == 1 % +hana 10Nov10
     % Introducing NNR for source coordinates
     if opt.est_sourceNNR==1
         fprintf('!!! NNR condition is introduced to matrix N for source coordinates!!!\n');
+        if sum([opt.source.nnr_inc]) < 3
+            fprintf(1,'Not enough sources for NNR condition. All sources are used for NNR instead\n');
+            [opt.source.nnr_inc] = deal(1);
+        end
         [N] = nnr_cond(ns_q,ra,de,opt,sum_dj,N);
     end
 
@@ -1580,7 +1584,7 @@ if opt.ascii_snx == 1
     
     total_est = sum_dj;
     real_obs = n_observ;
-    all_obs = real_obs + nconstr_red;
+    all_obs = real_obs + nconstr_red; 
     
     
     % Save info about columns
@@ -1588,7 +1592,7 @@ if opt.ascii_snx == 1
     % Save info about statistic
     col_sinex.lTPlreduc = lTPlreduc;
     col_sinex.nr_unknowns = total_est(end);
-    col_sinex.nr_obs = all_obs;
+    col_sinex.nr_obs = real_obs; % write only the real observations into sinex
     col_sinex.vTPv = vTPv;
     col_sinex.varfac = mo^2; % hana 24 Apr 2013
     col_sinex.outsnx=outsnx;
