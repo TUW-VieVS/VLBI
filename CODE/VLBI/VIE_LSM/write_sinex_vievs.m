@@ -24,18 +24,18 @@
 %   17 June 2011 by Hana Spicakova: fclose for ns-codes.txt was missing 
 %   05 July 2011 by Hana Spicakova: FILE/COMMENT block according to
 %      template from Axel Nothnagel - Version 2.0
-%   10 July 2012 by Hana Krásná: compatibility of non-tidal APL with
+%   10 July 2012 by Hana Krï¿½snï¿½: compatibility of non-tidal APL with
 %   version2.0
-%   10 July 2012 by Hana Krásná: hydrology loading added
-%   30 Oct 2012 by Hana Krásná: ns_codes.txt changed to superstation file
-%   30 Oct 2012 by Hana Krásná: the total tropospheric zenith delay added
-%   18 Dec 2012 by Hana Krásná: changes in header according to the new
+%   10 July 2012 by Hana Krï¿½snï¿½: hydrology loading added
+%   30 Oct 2012 by Hana Krï¿½snï¿½: ns_codes.txt changed to superstation file
+%   30 Oct 2012 by Hana Krï¿½snï¿½: the total tropospheric zenith delay added
+%   18 Dec 2012 by Hana Krï¿½snï¿½: changes in header according to the new
 %       representation of constraints in the GUI 2.1
-%   30 Apr 2013 by Hana Krásná: TROWET changed to TROTOT
-%   18 Dec 2013 by Hana Krásná: ICRF designation for sources added
-%   18 Dec 2013 by Hana Krásná: change in the header
-%   20 Dec 2013 by Hana Krásná: change to IERS name
-%   10 Feb 2014 by Hana Krásná: information about tidal UT corrections
+%   30 Apr 2013 by Hana Krï¿½snï¿½: TROWET changed to TROTOT
+%   18 Dec 2013 by Hana Krï¿½snï¿½: ICRF designation for sources added
+%   18 Dec 2013 by Hana Krï¿½snï¿½: change in the header
+%   20 Dec 2013 by Hana Krï¿½snï¿½: change to IERS name
+%   10 Feb 2014 by Hana Krï¿½snï¿½: information about tidal UT corrections
 %       added
 %   19 Jun 2014 by Hana Krasna: sources can be estimated in vie_lsm with
 %       NNR condition
@@ -65,6 +65,7 @@
 
 function write_sinex_vievs(fname, varargin)
 
+ispc = false; % quick fix --> should be properly implemented for early matlab versions
 % if subfolder is given as an input
 if nargin>1
     subfolder=varargin{1};
@@ -295,7 +296,7 @@ for pl=1:size(process_list,1)
     dataStartEndYrStr=num2str(dataStartEnd(:,1));
     obsCode='R';            % observation code (R=VLBI)
     numEstPar=length(b_sinex);
-    constrCode=num2str(0);  % 0=tight, 1=significant, 2=unconstrained
+    constrCode=num2str(2);  % 0=tight, 1=significant, 2=unconstrained
     
     solcontents=[''];
     if outsnx.xyz==1; solcontents = ['S ']; end
@@ -559,24 +560,24 @@ for pl=1:size(process_list,1)
     % write blockstart line to file
     fprintf(fid, '+%s\n', blockName);
     
-    useIVSnames = true;
+    useIVSnames = false;
     % write description line
     if useIVSnames
-        fprintf(fid, '%s\n', '*Code IVS_des ICRF_designator');
+        fprintf(fid, '%s\n', '*Code IVS_des ICRF_designator  Comments');
     else
-        fprintf(fid, '%s\n', '*Code IERS_des ICRF_designator');
+        fprintf(fid, '%s\n', '*Code IERS_des ICRF_designator  Comments');
     end
     
     % for all sources
     for k=1:numSou
         if useIVSnames
             if isempty(sources.q(k).IVSname)
-                fprintf(fid, ' %04s %-8s %-16s\n', num2str(k), sources.q(k).IERSname, sources.q(k).ICRFdes);
+                fprintf(fid, ' %04s %-8s %-16s %-68s\n', num2str(k), sources.q(k).IERSname, sources.q(k).ICRFdes, num2str(sources.q(k).numobs));
             else
-                fprintf(fid, ' %04s %-8s %-16s\n', num2str(k), sources.q(k).IVSname, sources.q(k).ICRFdes);
+                fprintf(fid, ' %04s %-8s %-16s %-68s\n', num2str(k), sources.q(k).IVSname, sources.q(k).ICRFdes, num2str(sources.q(k).numobs));
             end
         else
-            fprintf(fid, ' %04s %-8s %-16s\n', num2str(k), sources.q(k).IERSname, sources.q(k).ICRFdes);
+            fprintf(fid, ' %04s %-8s %-16s %-68s\n', num2str(k), sources.q(k).IERSname, sources.q(k).ICRFdes, num2str(sources.q(k).numobs));
         end
         sources.q(k).siteCode=num2str(k);
     end
@@ -594,14 +595,14 @@ for pl=1:size(process_list,1)
     % get lat and lon from extimated x,y,z
     [approxLat,approxLon,approxH]=xyz2ell([[antenna.x]', [antenna.y]', [antenna.z]']);
 
-    % rad -> °
+    % rad -> ï¿½
     approxLat=approxLat*180/pi;
     approxLon=approxLon*180/pi;
 
     % [-180, 180] -> [0, 360]
     approxLon(approxLon<0)=approxLon(approxLon<0)+360;
 
-    % ° -> dms
+    % ï¿½ -> dms
     dmsLat=degrees2dms(approxLat);
     dmsLon=degrees2dms(approxLon);
 
@@ -786,6 +787,7 @@ for pl=1:size(process_list,1)
 
         if outsnx.xyz==1
         % write x,y,z coordinates
+            cpsd_all = cPostSeismDeform(midmjd,antenna);
             for k=1:numStat
                 % Solution ID   
                 soln=num2str(1);
@@ -793,9 +795,9 @@ for pl=1:size(process_list,1)
 
                 % calculate apriori values
                 %                  coordx   +     vx      * (   mean scan mjd - itrf epoch mjd )/ diff(mjd)->years                                
-                antenna(k).aprX=antenna(k).x+antenna(k).vx*(midmjd-antenna(k).epoch)/365.25;
-                antenna(k).aprY=antenna(k).y+antenna(k).vy*(midmjd-antenna(k).epoch)/365.25;
-                antenna(k).aprZ=antenna(k).z+antenna(k).vz*(midmjd-antenna(k).epoch)/365.25;
+                antenna(k).aprX=antenna(k).x+antenna(k).vx*(midmjd-antenna(k).epoch)/365.25 + cpsd_all(1,1,k);
+                antenna(k).aprY=antenna(k).y+antenna(k).vy*(midmjd-antenna(k).epoch)/365.25 + cpsd_all(2,1,k);
+                antenna(k).aprZ=antenna(k).z+antenna(k).vz*(midmjd-antenna(k).epoch)/365.25 + cpsd_all(3,1,k);
 
 
                 % calculate total estimated values

@@ -642,6 +642,13 @@ if (get(handles.checkbox_estimation_leastSquares_eop_xpEst, 'Value')+...
 else
     parameter.lsmopt.outsnx.eop=get(handles.radiobutton_run_sinex_eop_incl, 'Value');
 end
+
+if get(handles.checkbox_run_sinex_changeAnalystsName, 'Value')
+    parameter.lsmopt.outsnx.changeAnalystsName=1;
+else
+    parameter.lsmopt.outsnx.changeAnalystsName=0;
+end
+
 parameter.lsmopt.outsnx.firstname=get(handles.edit_run_sinex_firstname, 'String');
 parameter.lsmopt.outsnx.lastname=get(handles.edit_run_sinex_lastname, 'String');
 parameter.lsmopt.outsnx.email=get(handles.edit_run_sinex_email, 'String');

@@ -1032,6 +1032,13 @@ set(handles.radiobutton_run_sinex_sources_incl, 'Value', 1)
 set(handles.radiobutton_run_sinex_stationCoords_incl, 'Value', parameter.lsmopt.outsnx.xyz)
 set(handles.radiobutton_run_sinex_eop_incl, 'Value', parameter.lsmopt.outsnx.eop)
 set(handles.checkbox_run_sinex_sources, 'Value', parameter.lsmopt.addSnxSource)
+set(handles.checkbox_run_sinex_changeAnalystsName, 'Value', parameter.lsmopt.outsnx.changeAnalystsName)
+set(handles.edit_run_sinex_firstname, 'String', parameter.lsmopt.outsnx.firstname)
+set(handles.edit_run_sinex_lastname, 'String', parameter.lsmopt.outsnx.lastname)
+set(handles.edit_run_sinex_email, 'String', parameter.lsmopt.outsnx.email)
+set(handles.edit_run_sinex_firstname,'Enable', 'on');
+set(handles.edit_run_sinex_lastname,'Enable', 'on');
+set(handles.edit_run_sinex_email,'Enable', 'on');
 
 if parameter.lsmopt.addSnxSource && parameter.lsmopt.ascii_snx
     set(handles.text_run_sinex_sources, 'Enable', 'on')
