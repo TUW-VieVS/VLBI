@@ -155,6 +155,7 @@
 %   22 Jun 2017 by A. Hellerschmied: "psou" was not stored in scan structure
 %   13 Sep 2017 by D. Landskron: 'tropSource' shifted into 'vie_init' 
 %   11 May 2018 by D. Landskron: bug with usage of raytr-files corrected
+%   05 Jul 2018 by D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
 %
 % ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %  NOTATION:
@@ -478,13 +479,13 @@ end % if ~isempty(sources.s)
 % ##### if ray-tracing files are to be used #####
 raytr_used = strcmp(parameter.vie_init.tropSource.name,'raytr');
 
-% if ray-traced delays are used, then set the remaining parameters to VMF1 which can then be used as default, in case a certain line is missing in the .trp-file
+% if ray-traced delays are used, then set the remaining parameters to VMF3 which can then be used as default, in case a certain line is missing in the .trp-file
 if raytr_used
     
     parameter.vie_init.zhd = 'in situ';
-    parameter.vie_init.zwd = 'vmf1';
-    parameter.vie_mod.mfh = 'vmf1';
-    parameter.vie_mod.mfw = 'vmf1';
+    parameter.vie_init.zwd = 'vmf3';
+    parameter.vie_mod.mfh = 'vmf3';
+    parameter.vie_mod.mfw = 'vmf3';
     parameter.vie_mod.apgm_h = 'no';
     parameter.vie_mod.apgm_w = 'no';
     
@@ -589,7 +590,7 @@ end
 % �  2. STATION COORDINATES                                              �
 % ������������������������������������������������������������������������
 zz = zeros(length(antenna),1);
-flagmess = struct('cto',zz,'cta',zz,'cnta',zz,'crg',zz,'gia',zz,'axtyp',zz,'thermal',zz,'vm1',zz,'dao',zz,'ctop',zz,'chl',zz);
+flagmess = struct('cto',zz,'cta',zz,'cnta',zz,'crg',zz,'gia',zz,'axtyp',zz,'thermal',zz,'vmf3',zz,'vmf1',zz,'dao',zz,'ctop',zz,'chl',zz);
 
 % antenna corrections for all stations
 time_lim = [min(MJD) max(MJD)];     % scans might not be in straight order
@@ -948,36 +949,68 @@ for isc = 1:number_of_all_scans
             aht = 0; awt = 0; zhdt = 0; zwdt = 0;
             if strcmpi(parameter.vie_init.tropSource.name,'indModeling')   ||   isempty(scan(isc).stat(i_stat).trop)
                 
-                if strcmpi(parameter.vie_init.zhd,'vmf1')
-                    tmjd = antenna(i_stat).vm1(:,1);
-                    zhd  = antenna(i_stat).vm1(:,4);
+                if strcmpi(parameter.vie_init.zhd,'vmf3')
+                    tmjd = antenna(i_stat).vmf3(:,1);
+                    zhd  = antenna(i_stat).vmf3(:,4);
 
                     zhdt = call_spline_4(tmjd,zhd,mjd);
                 end
+                if strcmpi(parameter.vie_init.zhd,'vmf1')
+                    tmjd = antenna(i_stat).vmf1(:,1);
+                    zhd  = antenna(i_stat).vmf1(:,4);
+
+                    zhdt = call_spline_4(tmjd,zhd,mjd);
+                end
+                
+                if strcmpi(parameter.vie_init.zwd,'vmf3')
+                    tmjd = antenna(i_stat).vmf3(:,1);
+                    zwd  = antenna(i_stat).vmf3(:,5);
+
+                    zwdt = call_spline_4(tmjd,zwd,mjd);
+                end
                 if strcmpi(parameter.vie_init.zwd,'vmf1')
-                    tmjd = antenna(i_stat).vm1(:,1);
-                    zwd  = antenna(i_stat).vm1(:,5);
+                    tmjd = antenna(i_stat).vmf1(:,1);
+                    zwd  = antenna(i_stat).vmf1(:,5);
 
                     zwdt = call_spline_4(tmjd,zwd,mjd);
                 end
 
+                if strcmpi(parameter.vie_mod.mfh,'vmf3')
+                    if isempty(antenna(i_stat).vmf3) == 0
+                        tmjd = antenna(i_stat).vmf3(:,1);
+                        ah   = antenna(i_stat).vmf3(:,2);
+                        aw   = antenna(i_stat).vmf3(:,3);
+                        
+                        aht = call_spline_4(tmjd,ah,mjd);
+                        awt = call_spline_4(tmjd,aw,mjd);
+                    end
+                end
                 if strcmpi(parameter.vie_mod.mfh,'vmf1')
-                    if isempty(antenna(i_stat).vm1) == 0
-                        % load the parameters from antenna.vm1
-                        tmjd = antenna(i_stat).vm1(:,1);
-                        ah   = antenna(i_stat).vm1(:,2);
-                        aw   = antenna(i_stat).vm1(:,3);
+                    if isempty(antenna(i_stat).vmf1) == 0
+                        tmjd = antenna(i_stat).vmf1(:,1);
+                        ah   = antenna(i_stat).vmf1(:,2);
+                        aw   = antenna(i_stat).vmf1(:,3);
+                        
+                        aht = call_spline_4(tmjd,ah,mjd);
+                        awt = call_spline_4(tmjd,aw,mjd);
+                    end
+                end
+                
+                if strcmpi(parameter.vie_mod.mfw,'vmf3')
+                    if isempty(antenna(i_stat).vmf3) == 0
+                        tmjd = antenna(i_stat).vmf3(:,1);
+                        ah   = antenna(i_stat).vmf3(:,2);
+                        aw   = antenna(i_stat).vmf3(:,3);
                         
                         aht = call_spline_4(tmjd,ah,mjd);
                         awt = call_spline_4(tmjd,aw,mjd);
                     end
                 end
                 if strcmpi(parameter.vie_mod.mfw,'vmf1')
-                    if isempty(antenna(i_stat).vm1) == 0
-                        % load the parameters from antenna.vm1
-                        tmjd = antenna(i_stat).vm1(:,1);
-                        ah   = antenna(i_stat).vm1(:,2);
-                        aw   = antenna(i_stat).vm1(:,3);
+                    if isempty(antenna(i_stat).vmf1) == 0
+                        tmjd = antenna(i_stat).vmf1(:,1);
+                        ah   = antenna(i_stat).vmf1(:,2);
+                        aw   = antenna(i_stat).vmf1(:,3);
                         
                         aht = call_spline_4(tmjd,ah,mjd);
                         awt = call_spline_4(tmjd,aw,mjd);
@@ -1468,6 +1501,8 @@ for isc = 1:number_of_all_scans
                     if strcmpi(parameter.vie_init.zhd,'in situ')
                         pres = scan(isc).stat(stnum).pres;  % [hPa]
                         zdry = 0.0022768*pres / (1-0.00266*cos(2*phi)-(0.28e-6*hell));   %[m]
+                    elseif strcmpi(parameter.vie_init.zhd,'vmf3')
+                        zdry = scan(isc).stat(stnum).zhdt;
                     elseif strcmpi(parameter.vie_init.zhd,'vmf1')
                         zdry = scan(isc).stat(stnum).zhdt;
                     elseif strcmpi(parameter.vie_init.zhd,'gpt3')
@@ -1485,6 +1520,8 @@ for isc = 1:number_of_all_scans
                         Tm     = antenna(stnum).gpt3.Tm;
                         lambda = antenna(stnum).gpt3.lambda;
                         zwet   = asknewet ( e , Tm , lambda );
+                    elseif strcmpi(parameter.vie_init.zwd,'vmf3')
+                        zwet   = scan(isc).stat(stnum).zwdt;
                     elseif strcmpi(parameter.vie_init.zwd,'vmf1')
                         zwet   = scan(isc).stat(stnum).zwdt;
                     elseif strcmpi(parameter.vie_init.zwd,'gpt3')
@@ -1501,7 +1538,9 @@ for isc = 1:number_of_all_scans
                     
                     % hydrostatic
                     aht = scan(isc).stat(stnum).aht;
-                    if strcmpi(parameter.vie_mod.mfh,'vmf1') == 1 && aht ~= 0
+                    if strcmpi(parameter.vie_mod.mfh,'vmf3') == 1 && aht ~= 0
+                        [mfh,~] = vmf3(aht,awt,mjd,phi,lam,zd);   % VMF3
+                    elseif strcmpi(parameter.vie_mod.mfh,'vmf1') == 1 && aht ~= 0
                         [mfh,~] = vmf1(aht,awt,mjd,phi,zd);   % VMF1
                     elseif strcmpi(parameter.vie_mod.mfh,'gpt3')
                         [~,~,~,~,~,aht,awt,~,~,~,~,~,~] = gpt3_5_fast (mjd,phi,lam,hell,0,cell_grid_GPT3);
@@ -1512,7 +1551,9 @@ for isc = 1:number_of_all_scans
                     
                     % wet
                     awt = scan(isc).stat(stnum).awt;
-                    if strcmpi(parameter.vie_mod.mfw,'vmf1') == 1 && awt ~= 0
+                    if strcmpi(parameter.vie_mod.mfw,'vmf3') == 1 && awt ~= 0
+                        [~,mfw] = vmf3(aht,awt,mjd,phi,lam,zd);   % VMF3
+                    elseif strcmpi(parameter.vie_mod.mfw,'vmf1') == 1 && awt ~= 0
                         [~,mfw] = vmf1(aht,awt,mjd,phi,zd);   % VMF1
                     elseif strcmpi(parameter.vie_mod.mfw,'gpt3')
                         [~,~,~,~,~,aht,awt,~,~,~,~,~,~] = gpt3_5_fast (mjd,phi,lam,hell,0,cell_grid_GPT3);
@@ -2024,7 +2065,10 @@ for i_stat=1:length(antenna)
     if flagmess.thermal(i_stat) ==1
         fprintf('\n Problems with thermal correction at station %8s \n',antenna(i_stat).name);
     end
-    if flagmess.vm1(i_stat) ==1
+    if flagmess.vmf3(i_stat) ==1
+        fprintf('\n Problems with VMF3 at station %8s \n',antenna(i_stat).name);
+    end
+    if flagmess.vmf1(i_stat) ==1
         fprintf('\n Problems with VMF1 at station %8s \n',antenna(i_stat).name);
     end
     if flagmess.dao(i_stat) ==1
