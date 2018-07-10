@@ -579,7 +579,6 @@ end
 
 
 
-
 % zenith delay
 try
     switch parameter.vie_init.zhd
@@ -613,51 +612,67 @@ catch
     set(handles.radiobutton_parameters_troposphere_zwd_no, 'Value', 1)
     warning('Setting of ZWD failed --> no is set');
 end
+
 %  mapping function
 try
-switch parameter.vie_mod.mfh
-    case 'vmf3'
-        set(handles.radiobutton_parameters_troposphere_mfh_VMF3, 'Value', 1)
-    case 'vmf1'
-        set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Value', 1)
-    case 'gpt3'
-        set(handles.radiobutton_parameters_troposphere_mfh_GPT3, 'Value', 1)
-end
-switch parameter.vie_mod.mfw
-    case 'vmf1'
-        set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Value', 1)
-    case 'GPT3'
-        set(handles.radiobutton_parameters_troposphere_mfw_GPT3, 'Value', 1)
-end
+    switch parameter.vie_mod.mfh
+        case 'vmf3'
+            set(handles.radiobutton_parameters_troposphere_mfh_VMF3, 'Value', 1)
+        case 'vmf1'
+            set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Value', 1)
+        case 'gpt3'
+            set(handles.radiobutton_parameters_troposphere_mfh_GPT3, 'Value', 1)
+    end
 catch
-    set(handles.radiobutton_parameters_troposphere_mfh_VMF3, 'Value', 1)
-    warning('Setting of mapping function failed --> VMF3 is set');
+    set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Value', 1)
+    warning('Setting of hydrostatic mapping function failed --> VMF1 is set');
+end
+try
+    switch parameter.vie_mod.mfw
+        case 'vmf3'
+            set(handles.radiobutton_parameters_troposphere_mfw_VMF3, 'Value', 1)
+        case 'vmf1'
+            set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Value', 1)
+        case 'gpt3'
+            set(handles.radiobutton_parameters_troposphere_mfw_GPT3, 'Value', 1)
+    end
+catch
+    set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Value', 1)
+    warning('Setting of wet mapping function failed --> VMF1 is set');
 end
 
 % gradients
 try
-switch parameter.vie_mod.apgm_h
-    case 'no'
-        set(handles.radiobutton_parameters_troposphere_gradients_h_no, 'Value', 1)
-    case 'grad'
-        set(handles.radiobutton_parameters_troposphere_gradients_h_GRAD, 'Value', 1)
-    case 'gpt3'
-        set(handles.radiobutton_parameters_troposphere_gradients_h_GPT3, 'Value', 1)
-    case 'dao'
-        set(handles.radiobutton_parameters_troposphere_gradients_h_DAO, 'Value', 1)
-end
-switch parameter.vie_mod.apgm_w
-    case 'no'
-        set(handles.radiobutton_parameters_troposphere_gradients_w_no, 'Value', 1)
-    case 'grad'
-        set(handles.radiobutton_parameters_troposphere_gradients_w_GRAD, 'Value', 1)
-    case 'gpt3'
-        set(handles.radiobutton_parameters_troposphere_gradients_w_GPT3, 'Value', 1)
-end
-catch 
+    switch parameter.vie_mod.apgm_h
+        case 'no'
+            set(handles.radiobutton_parameters_troposphere_gradients_h_no, 'Value', 1)
+        case 'grad'
+            set(handles.radiobutton_parameters_troposphere_gradients_h_GRAD, 'Value', 1)
+        case 'gpt3'
+            set(handles.radiobutton_parameters_troposphere_gradients_h_GPT3, 'Value', 1)
+        case 'dao'
+            set(handles.radiobutton_parameters_troposphere_gradients_h_DAO, 'Value', 1)
+    end
+catch
     set(handles.radiobutton_parameters_troposphere_gradients_h_no, 'Value', 1)
-    warning('Setting of gradients failed --> no gradients are set');
+    warning('Setting of hydrostatic gradients failed --> no gradients are set');
 end
+try
+    switch parameter.vie_mod.apgm_w
+        case 'no'
+            set(handles.radiobutton_parameters_troposphere_gradients_w_no, 'Value', 1)
+        case 'grad'
+            set(handles.radiobutton_parameters_troposphere_gradients_w_GRAD, 'Value', 1)
+        case 'gpt3'
+            set(handles.radiobutton_parameters_troposphere_gradients_w_GPT3, 'Value', 1)
+    end
+catch
+    set(handles.radiobutton_parameters_troposphere_gradients_w_no, 'Value', 1)
+    warning('Setting of wet gradients failed --> no gradients are set');
+end
+
+
+
 % source structure
 % find chosen model in current popupmenu
 indOfModelFound=find(strcmp(get(handles.popupmenu_parameters_ss_catalog, 'string'), parameter.vie_mod.sou_cat));
