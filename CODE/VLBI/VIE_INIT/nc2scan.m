@@ -26,7 +26,7 @@
 %   2018-16-01, J.Gruber: Second redundant exception for Ion code Flag removed
 
 % ************************************************************************
-function scan=nc2scan(out_struct, nc_info, fband, wrapper_data, institution_tag)
+function scan=nc2scan(out_struct, nc_info, fband, wrapper_data)
 % fprintf('nc2scan started\n')
 
 % ##### Options #####
@@ -76,7 +76,7 @@ switch fband
         % sigma delay, groupDelaySigCell: /Observables/GroupDelay_bX
         % ionospheric delay, ionoDelCell: /ObsDerived/Cal_SlantPathIonoGroup_bX
         % sigma ionospheric delay, ionoDelSigCell: /ObsDerived/Cal_SlantPathIonoGroup_bX
-        nc_filename = get_nc_filename({'GroupDelayFull', '_bX', institution_tag}, wrapper_data.Observation.ObsEdit.files, 1);
+        nc_filename = get_nc_filename({'GroupDelayFull', '_bX'}, wrapper_data.Observation.ObsEdit.files, 1);
         tau_folder = 'ObsEdit';
         tau_file = nc_filename;
         tau_field = 'GroupDelayFull';
@@ -99,7 +99,7 @@ switch fband
         % ionospheric delay, ionoDelCell:
         % /ObsDerived/Cal_SlantPathIonoGroup_bX or /ObsDerived/Cal_SlantPathIonoGroup_bS
         % sigma ionospheric delay, ionoDelSigCell: /ObsDerived/Cal_SlantPathIonoGroup_bX or /ObsDerived/Cal_SlantPathIonoGroup_bS
-        nc_filename = get_nc_filename({'GroupDelayFull', '_bS', institution_tag}, wrapper_data.Observation.ObsEdit.files, 1);
+        nc_filename = get_nc_filename({'GroupDelayFull', '_bS'}, wrapper_data.Observation.ObsEdit.files, 1);
         tau_folder = 'ObsEdit';
         tau_file = nc_filename;
         tau_field = 'GroupDelayFull';
@@ -214,7 +214,7 @@ else
 end
 
 %% DELAY FLAG DELAY:
-nc_filename = get_nc_filename({'Edit', institution_tag}, wrapper_data.Observation.ObsEdit.files, 1);
+nc_filename = get_nc_filename({'Edit'}, wrapper_data.Observation.ObsEdit.files, 1);
 delayFlagLikeNGS    = num2cell(out_struct.ObsEdit.(nc_filename).DelayFlag.val);
 
 %% SIGMA FINAL DELAY:  
