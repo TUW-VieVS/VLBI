@@ -483,7 +483,7 @@ raytr_used = strcmp(parameter.vie_init.tropSource.name,'raytr');
 if raytr_used
     
     parameter.vie_init.zhd = 'in situ';
-    parameter.vie_init.zwd = 'vmf3';
+    parameter.vie_init.zwd = 'no';
     parameter.vie_mod.mfh = 'vmf3';
     parameter.vie_mod.mfw = 'vmf3';
     parameter.vie_mod.apgm_h = 'no';
