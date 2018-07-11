@@ -33,7 +33,7 @@ function [ wrapper_data ] = read_vgosdb_wrapper(path_nc, session_name, institute
 
 % Wrapper blocks which are considered (all others are neglected...):
 wraper_blocks = {'Session', 'Station', 'Scan', 'Observation'};
-wrapper_data = struct('Session', [], 'Station', [], 'Scan', [], 'Observation', []);
+wrapper_data = struct('Session', [], 'Station', [], 'Scan', [], 'Observation', [], 'wrapper_filename', []);
 
 
 % ##### Get wrapper filename #####
@@ -77,6 +77,7 @@ end
 % disp(version_str)
 
 nc_filename = [session_name(1:9), '_V', version_str, '_i', institute, '_k', wrapper_k, '.wrp'];
+wrapper_data.wrapper_filename = nc_filename;
     
 
 % ##### Open file #####

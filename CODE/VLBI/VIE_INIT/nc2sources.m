@@ -108,9 +108,8 @@ for iSource=1:nSources
     nc_filename = get_nc_filename('TimeUTC', wrapper_data.Scan.Scan.files, 1);
     
     YMDHM_tmp = out_struct.Scan.(nc_filename).YMDHM.val;
-    mjd_of_scans = cal2jd(double(YMDHM_tmp(1,:)), double(YMDHM_tmp(2,:)),double(YMDHM_tmp(3,:))) - 2400000.5+double(YMDHM_tmp(4,:))./24 +double(out_struct.Scan.TimeUTC.YMDHM.val(5,:))./24/60 + double(out_struct.Scan.(nc_filename).Second.val')./24/60/60;
+    mjd_of_scans = cal2jd(double(YMDHM_tmp(1,:)), double(YMDHM_tmp(2,:)),double(YMDHM_tmp(3,:))) - 2400000.5+double(YMDHM_tmp(4,:))./24 +double(out_struct.Scan.(nc_filename).YMDHM.val(5,:))./24/60 + double(out_struct.Scan.(nc_filename).Second.val')./24/60/60;
 
-    
     sources(iSource).firstObsMjd = min(mjd_of_scans(scansUsingCurSource));
     sources(iSource).lastObsMjd = max(mjd_of_scans(scansUsingCurSource));
 end
