@@ -266,6 +266,9 @@ for iScan=1:nScans
         stat_name = deblank(out_struct.head.StationList.val(:,stat_id)');
         wrapper_stat_file_list = wrapper_data.Station.(stat_name).files;
         
+        tmp=scan2Station(scan2Station(:,stat_id) ~= 0, stat_id);
+        num_of_scans_per_stat = tmp(end);
+        
         
         %% #### Met. data ####
         
@@ -274,7 +277,11 @@ for iScan=1:nScans
         nc_filename = get_nc_filename({'Met'}, wrapper_stat_file_list);
         if ~isempty(out_struct.stat(stationIndices(iStat)).(nc_filename))
             if isfield(out_struct.stat(stationIndices(iStat)).(nc_filename), 'TempC')
-                tdry = out_struct.stat(stationIndices(iStat)).(nc_filename).TempC.val(scan2Station(iScan,stationIndices(iStat)));
+                if size(out_struct.stat(stationIndices(iStat)).(nc_filename).TempC.val, 1) == num_of_scans_per_stat
+                   tdry = out_struct.stat(stationIndices(iStat)).(nc_filename).TempC.val(scan2Station(iScan,stationIndices(iStat)));
+                else
+                    tdry = error_code_invalid_met_data;
+                end
             else
                 tdry = error_code_invalid_met_data;
             end
@@ -293,7 +300,11 @@ for iScan=1:nScans
         % Check data availability:
         if ~isempty(out_struct.stat(stationIndices(iStat)).(nc_filename))
             if isfield(out_struct.stat(stationIndices(iStat)).(nc_filename), 'AtmPres')
-                pres = out_struct.stat(stationIndices(iStat)).(nc_filename).AtmPres.val(scan2Station(iScan,stationIndices(iStat)));
+                if size(out_struct.stat(stationIndices(iStat)).(nc_filename).AtmPres.val, 1) == num_of_scans_per_stat
+                    pres = out_struct.stat(stationIndices(iStat)).(nc_filename).AtmPres.val(scan2Station(iScan,stationIndices(iStat)));
+                else
+                    pres = error_code_invalid_met_data;
+                end
             else
                 pres = error_code_invalid_met_data;
             end
@@ -312,7 +323,11 @@ for iScan=1:nScans
         % Check data availability:
         if ~isempty(out_struct.stat(stationIndices(iStat)).(nc_filename))
             if isfield(out_struct.stat(stationIndices(iStat)).(nc_filename), 'RelHum')
-                relHum = out_struct.stat(stationIndices(iStat)).(nc_filename).RelHum.val(scan2Station(iScan,stationIndices(iStat)));
+                if size(out_struct.stat(stationIndices(iStat)).(nc_filename).RelHum.val, 1) == num_of_scans_per_stat
+                    relHum = out_struct.stat(stationIndices(iStat)).(nc_filename).RelHum.val(scan2Station(iScan,stationIndices(iStat)));
+                else
+                    relHum = error_code_invalid_met_data;
+                end
             else
                 relHum = error_code_invalid_met_data;
             end
