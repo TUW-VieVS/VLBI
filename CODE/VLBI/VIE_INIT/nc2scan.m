@@ -275,76 +275,90 @@ for iScan=1:nScans
         % ### scan.stat.temp ###
         % Check data availability:
         nc_filename = get_nc_filename({'Met'}, wrapper_stat_file_list);
-        if ~isempty(out_struct.stat(stationIndices(iStat)).(nc_filename))
-            if isfield(out_struct.stat(stationIndices(iStat)).(nc_filename), 'TempC')
-                if size(out_struct.stat(stationIndices(iStat)).(nc_filename).TempC.val, 1) == num_of_scans_per_stat
-                   tdry = out_struct.stat(stationIndices(iStat)).(nc_filename).TempC.val(scan2Station(iScan,stationIndices(iStat)));
+        
+        if ~isempty(nc_filename)% Check, if met. data is available for this station and scan
+            if isfield(out_struct.stat(stationIndices(iStat)), nc_filename)
+                if ~isempty(out_struct.stat(stationIndices(iStat)).(nc_filename))
+                    if isfield(out_struct.stat(stationIndices(iStat)).(nc_filename), 'TempC')
+                        if size(out_struct.stat(stationIndices(iStat)).(nc_filename).TempC.val, 1) == num_of_scans_per_stat
+                           tdry = out_struct.stat(stationIndices(iStat)).(nc_filename).TempC.val(scan2Station(iScan,stationIndices(iStat)));
+                        else
+                            tdry = error_code_invalid_met_data;
+                        end
+                    else
+                        tdry = error_code_invalid_met_data;
+                    end
                 else
                     tdry = error_code_invalid_met_data;
                 end
-            else
-                tdry = error_code_invalid_met_data;
-            end
-        else
-            tdry = error_code_invalid_met_data;
-        end
-        % Check data value:
-        if tdry ~= error_code_invalid_met_data
-            if (tdry < -99)
-                tdry = error_code_invalid_met_data;
-            end
-        end
-        scan(iScan).stat(stationIndices(iStat)).temp = tdry;
+                % Check data value:
+                if tdry ~= error_code_invalid_met_data
+                    if (tdry < -99)
+                        tdry = error_code_invalid_met_data;
+                    end
+                end
+                scan(iScan).stat(stationIndices(iStat)).temp = tdry;
 
-        % ### scan.stat.pres ###
-        % Check data availability:
-        if ~isempty(out_struct.stat(stationIndices(iStat)).(nc_filename))
-            if isfield(out_struct.stat(stationIndices(iStat)).(nc_filename), 'AtmPres')
-                if size(out_struct.stat(stationIndices(iStat)).(nc_filename).AtmPres.val, 1) == num_of_scans_per_stat
-                    pres = out_struct.stat(stationIndices(iStat)).(nc_filename).AtmPres.val(scan2Station(iScan,stationIndices(iStat)));
+                % ### scan.stat.pres ###
+                % Check data availability:
+                if ~isempty(out_struct.stat(stationIndices(iStat)).(nc_filename))
+                    if isfield(out_struct.stat(stationIndices(iStat)).(nc_filename), 'AtmPres')
+                        if size(out_struct.stat(stationIndices(iStat)).(nc_filename).AtmPres.val, 1) == num_of_scans_per_stat
+                            pres = out_struct.stat(stationIndices(iStat)).(nc_filename).AtmPres.val(scan2Station(iScan,stationIndices(iStat)));
+                        else
+                            pres = error_code_invalid_met_data;
+                        end
+                    else
+                        pres = error_code_invalid_met_data;
+                    end
                 else
                     pres = error_code_invalid_met_data;
                 end
-            else
-                pres = error_code_invalid_met_data;
-            end
-        else
-            pres = error_code_invalid_met_data;
-        end
-        % Check data value:
-        if pres ~= error_code_invalid_met_data
-            if (pres < 0)
-                pres = error_code_invalid_met_data;
-            end
-        end
-        scan(iScan).stat(stationIndices(iStat)).pres = pres;
-        
-        % ### scan.stat.e ###
-        % Check data availability:
-        if ~isempty(out_struct.stat(stationIndices(iStat)).(nc_filename))
-            if isfield(out_struct.stat(stationIndices(iStat)).(nc_filename), 'RelHum')
-                if size(out_struct.stat(stationIndices(iStat)).(nc_filename).RelHum.val, 1) == num_of_scans_per_stat
-                    relHum = out_struct.stat(stationIndices(iStat)).(nc_filename).RelHum.val(scan2Station(iScan,stationIndices(iStat)));
+                % Check data value:
+                if pres ~= error_code_invalid_met_data
+                    if (pres < 0)
+                        pres = error_code_invalid_met_data;
+                    end
+                end
+                scan(iScan).stat(stationIndices(iStat)).pres = pres;
+
+                % ### scan.stat.e ###
+                % Check data availability:
+                if ~isempty(out_struct.stat(stationIndices(iStat)).(nc_filename))
+                    if isfield(out_struct.stat(stationIndices(iStat)).(nc_filename), 'RelHum')
+                        if size(out_struct.stat(stationIndices(iStat)).(nc_filename).RelHum.val, 1) == num_of_scans_per_stat
+                            relHum = out_struct.stat(stationIndices(iStat)).(nc_filename).RelHum.val(scan2Station(iScan,stationIndices(iStat)));
+                        else
+                            relHum = error_code_invalid_met_data;
+                        end
+                    else
+                        relHum = error_code_invalid_met_data;
+                    end
                 else
                     relHum = error_code_invalid_met_data;
                 end
+                % Check data value:
+                if (relHum ~= error_code_invalid_met_data) && (tdry ~= error_code_invalid_met_data) 
+                    if (tdry > -99) && (relHum > 0)
+                        e = 6.1078 * exp((17.1 * tdry) / (235 + tdry)) * relHum;   % formula by Magnus * relative humidity
+                    else
+                        e = error_code_invalid_met_data;
+                    end
+                else
+                    e = error_code_invalid_met_data;
+                end
+                scan(iScan).stat(stationIndices(iStat)).e = e;
             else
-                relHum = error_code_invalid_met_data;
+                scan(iScan).stat(stationIndices(iStat)).temp = error_code_invalid_met_data;
+                scan(iScan).stat(stationIndices(iStat)).pres = error_code_invalid_met_data;
+                scan(iScan).stat(stationIndices(iStat)).e = error_code_invalid_met_data;
             end
-        else
-            relHum = error_code_invalid_met_data;
+        else % No met. data available
+            scan(iScan).stat(stationIndices(iStat)).temp = error_code_invalid_met_data;
+            scan(iScan).stat(stationIndices(iStat)).pres = error_code_invalid_met_data;
+            scan(iScan).stat(stationIndices(iStat)).e = error_code_invalid_met_data;
         end
-        % Check data value:
-        if (relHum ~= error_code_invalid_met_data) && (tdry ~= error_code_invalid_met_data) 
-            if (tdry > -99) && (relHum > 0)
-                e = 6.1078 * exp((17.1 * tdry) / (235 + tdry)) * relHum;   % formula by Magnus * relative humidity
-            else
-                e = error_code_invalid_met_data;
-            end
-        else
-            e = error_code_invalid_met_data;
-        end
-        scan(iScan).stat(stationIndices(iStat)).e = e;
+
             
         
         % #### Cable Cal. ####
