@@ -109,6 +109,7 @@
 %                                  - parameter struct added as in/output argument
 %  - 2017-02-09, D. Landskron: Preallocation extended
 %  - 2017-02-22, A. Hellerschmied: antenna.psd initialized
+%  - 2018-07-06, D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
 %
 %
 function [antenna, sources, scan, parameter] = read_vso(vso_file_path, vso_file_name, trf, trf_name_str, crf, crf_name_str, ini_opt, sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type, parameter)
@@ -532,7 +533,7 @@ number_of_remaining_stat = length(stat_names_remaining_str);
 antenna(number_of_remaining_stat) = struct('IDsuper', [], 'in_trf', [], 'name', [], 'x', [], 'y', [], 'z', [], 'firstObsMjd', [], 'vx', [], 'vy', [], 'vz', [], 'epoch', [], 'start', [], 'end', [],...
                                             'x_sigma', [], 'y_sigma', [], 'z_sigma', [], 'vx_sigma', [], 'vy_sigma', [], 'vz_sigma', [], 'thermal', [], 'comments', [], 'domes', [], 'code', [],... 
                                             'ecc', [], 'ecctype', [], 'axtyp', [], 'offs', [], 'gpt3pres', [], 'gpt3temp', [], 'gpt3e', [], 'gpt3', [], 'noGrad', [], ...
-                                            'cto', [], 'cta', [], 'cnta_dx', [], 'vm1', [], 'opl', [], 'numobs', [], 'lastObsMjd', [], 'psd', []);
+                                            'cto', [], 'cta', [], 'cnta_dx', [], 'vmf3', [], 'vmf1', [], 'opl', [], 'numobs', [], 'lastObsMjd', [], 'psd', []);
 [antenna.gpt3] = deal(struct('pres', [], 'temp', [],'lapserate', [], 'e', [], 'ah', [], 'aw', [], 'undulation', []));
 
 

@@ -25,6 +25,7 @@
 %   2017-01-23, D. Landskron: Initilization of GPT2 changed to GPT3, GPT removed
 %   2017-02-09, D. Landskron: Preallocation extended
 %   2017-02-22, A. Hellerschmied: antenna.psd initialized
+%   2018-07-06, D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
 %
 % ************************************************************************
 
@@ -41,7 +42,7 @@ antenna(nStat)=struct('IDsuper', [], 'in_trf', [], 'name', [],  'x', [], 'y', []
     'thermal', [], 'comments', [], 'domes', [], 'code', [], 'ecc', [], ...
     'ecctype', [], 'axtyp', [], 'offs', [], 'gpt3pres', [],  'gpt3temp', [],  'gpt3e', [], 'gpt3', [], 'noGrad', [], ...
     'cto', [], 'cta', [], 'cnta_dx', [],  ...
-    'vm1', [], 'opl', [], 'numobs', [],  'lastObsMjd', [],  'psd', []);
+    'vmf3', [], 'vmf1', [], 'opl', [], 'numobs', [],  'lastObsMjd', [],  'psd', []);
 
 % for some things no loop is needed
 %[antenna.session]=deal(out_struct.head.Session');

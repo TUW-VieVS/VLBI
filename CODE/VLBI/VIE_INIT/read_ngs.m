@@ -151,6 +151,7 @@
 %   09 Feb 2017 by D. Landskron: Preallocation extended
 %   14 Feb 2017 by M. Schartner: changes to improve speed
 %   22 Feb 2017 by A. Hellerschmied: antenna.psd initialized
+%   05 Jul 2018 by D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
 % ************************************************************************
 
 
@@ -794,7 +795,8 @@ while (idx_line <= nlines)
                 antenna(stat_id_vec(i_stat)).cto        = [];
                 antenna(stat_id_vec(i_stat)).cta        = [];
                 antenna(stat_id_vec(i_stat)).cnta_dx    = [];
-                antenna(stat_id_vec(i_stat)).vm1        = [];
+                antenna(stat_id_vec(i_stat)).vmf3       = [];
+                antenna(stat_id_vec(i_stat)).vmf1       = [];
                 antenna(stat_id_vec(i_stat)).opl        = [];
 
                 antenna(stat_id_vec(i_stat)).numobs     = 0;
