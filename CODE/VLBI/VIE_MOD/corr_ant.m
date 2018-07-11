@@ -64,7 +64,7 @@
 %                             are replaced by greploaddat.m
 %							  datachecking.m is added to help when next year 
 %							  includes some equaled data to previous year.
-%  24 May 2016 by A.Girdiuk : bug-fix in case of no loads or vmf1 is availible
+%  24 May 2016 by A.Girdiuk : bug-fix in case of no loads or vmf1 is available
 %  23 Jun 2016 by A.Girdiuk : bug-fix in loadings
 %  08 Aug 2016 by A.Girdiuk : new hydrology loading provider is added
 %  24 Jan 2017 by D. Landskron: zhd and zwd also written to parameter.vm1
@@ -73,6 +73,7 @@
 %  13 Dec 2017 by D. Landskron: VMF1 input changed from .mat to .vmf1_r
 %  11 Jan 2018 by D. Landskron: VM1 folder moved to TRP and renamed to VMF1
 %  07 Feb 2018 by D. Landskron: bug-fix with VM1 close to New Year
+%  06 Jul 2018 by D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
 % *************************************************************************
 %
 function [antenna, flagmess] = corr_ant(time_lim, tim, antenna, parameter, flagmess)
@@ -97,7 +98,7 @@ end
 iye  = tim(1);
 idoy = tim(7);
 
-if (idoy>360) || (idoy<6) %There is a chance that we need ATM/VM1 data from next year.
+if (idoy>360) || (idoy<6) % There is a chance that we need ATM/VMF1 data from next year.
   numyrs=2;
 else
   numyrs=1;
@@ -294,47 +295,94 @@ for ist=1:nant
     end
     
     
-    %%% Vienna Mapping Function 1, VMF1 %%%
-    if strcmp(parameter.vie_init.zhd,'vmf1')   ||   strcmp(parameter.vie_init.zwd,'vmf1')   ||   strcmp(parameter.vie_mod.mfh,'vmf1')   ||   strcmp(parameter.vie_mod.mfw,'vmf1')
+    %%% Vienna Mapping Function 1, VMF3 %%%
+    if strcmp(parameter.vie_init.zhd,'vmf3')   ||   strcmp(parameter.vie_init.zwd,'vmf3')   ||   strcmp(parameter.vie_mod.mfh,'vmf3')   ||   strcmp(parameter.vie_mod.mfw,'vmf3')
         
-        antenna(ist).vm1=[];
+        antenna(ist).vmf3=[];
         for idyr=0:numyrs-1
-            fil=num2str(sprintf('../TRP/VMF1/y%4d.vmf1_r',iye+idyr));
+            fil=num2str(sprintf('../TRP/VMF3/y%4d.vmf3_r',iye+idyr));
             if exist(fil,'file')
                 fid = fopen(fil);
-                vm1_data = textscan(fid,'%s%f%f%f%f%f%f%f%f%f%f','CommentStyle','#');
+                vmf3_data = textscan(fid,'%s%f%f%f%f%f%f%f%f','CommentStyle','#');
                 fclose(fid);
-                if ~isempty(find(strcmpi(vm1_data{1},strtrim(aname))))
+                if ~isempty(find(strcmpi(vmf3_data{1},strtrim(aname))))
                    
-                    % reduce VMF1 data to lines that contain the respective station
-                    wantedLines = ismember(vm1_data{1,1}, strtrim(aname));
-                    for k=1:length(vm1_data)
-                        vm1_data{k} = vm1_data{k}(wantedLines);
+                    % reduce VMF3 data to lines that contain the respective station
+                    wantedLines = ismember(vmf3_data{1,1}, strtrim(aname));
+                    for k=1:length(vmf3_data)
+                        vmf3_data{k} = vmf3_data{k}(wantedLines);
                     end
                     
-                    % make VMF1 data smaller by extracting only data on the respective day + 1 day before and after
-                    wantedLines = vm1_data{2}>mjd1-1.25 & vm1_data{2}<mjd2+1;
-                    for k=1:length(vm1_data)
-                        vm1_data{k} = vm1_data{k}(wantedLines);
+                    % make VMF3 data smaller by extracting only data on the respective day + 1 day before and after
+                    wantedLines = vmf3_data{2}>mjd1-1.25 & vmf3_data{2}<mjd2+1;
+                    for k=1:length(vmf3_data)
+                        vmf3_data{k} = vmf3_data{k}(wantedLines);
                     end
                     
-                    if ~isempty(vm1_data)
-                        % Save into antenna.vmf1
-                        antenna(ist).vm1 = [antenna(ist).vm1;vm1_data{2},vm1_data{3},vm1_data{4},vm1_data{5},vm1_data{6}];  % = [tmjd,ah,aw,zhd,zwd]
+                    if ~isempty(vmf3_data)
+                        % Save into antenna.vmf3
+                        antenna(ist).vmf3 = [antenna(ist).vmf3;vmf3_data{2},vmf3_data{3},vmf3_data{4},vmf3_data{5},vmf3_data{6}];  % = [station,tmjd,ah,aw,zhd,zwd]
                     end
                 end
             end
         end
         
         % Reduce data, if it contains 2 years
-        if isempty(antenna(ist).vm1)
-            flagmess.vm1(ist)=1;
+        if isempty(antenna(ist).vmf3)
+            flagmess.vmf3(ist)=1;
         else
-            [antenna(ist).vm1,flag]=datachecking(antenna(ist).vm1,mjd1,mjd2);
+            [antenna(ist).vmf3,flag]=datachecking(antenna(ist).vmf3,mjd1,mjd2);
             if ~flag
-                flagmess.vm1(ist)=1;
-                antenna(ist).vm1=[];
-                fprintf('%s : not enough vm1 at session time: %f to %f\n',aname,mjd1,mjd2)
+                flagmess.vmf3(ist)=1;
+                antenna(ist).vmf3=[];
+                fprintf('%s : not enough vmf3 at session time: %f to %f\n',aname,mjd1,mjd2)
+            end
+        end
+        
+    end
+    
+    
+    %%% Vienna Mapping Function 1, VMF1 %%%
+    if strcmp(parameter.vie_init.zhd,'vmf1')   ||   strcmp(parameter.vie_init.zwd,'vmf1')   ||   strcmp(parameter.vie_mod.mfh,'vmf1')   ||   strcmp(parameter.vie_mod.mfw,'vmf1')
+        
+        antenna(ist).vmf1=[];
+        for idyr=0:numyrs-1
+            fil=num2str(sprintf('../TRP/VMF1/y%4d.vmf1_r',iye+idyr));
+            if exist(fil,'file')
+                fid = fopen(fil);
+                vmf1_data = textscan(fid,'%s%f%f%f%f%f%f%f%f%f%f','CommentStyle','#');
+                fclose(fid);
+                if ~isempty(find(strcmpi(vmf1_data{1},strtrim(aname))))
+                   
+                    % reduce VMF1 data to lines that contain the respective station
+                    wantedLines = ismember(vmf1_data{1,1}, strtrim(aname));
+                    for k=1:length(vmf1_data)
+                        vmf1_data{k} = vmf1_data{k}(wantedLines);
+                    end
+                    
+                    % make VMF1 data smaller by extracting only data on the respective day + 1 day before and after
+                    wantedLines = vmf1_data{2}>mjd1-1.25 & vmf1_data{2}<mjd2+1;
+                    for k=1:length(vmf1_data)
+                        vmf1_data{k} = vmf1_data{k}(wantedLines);
+                    end
+                    
+                    if ~isempty(vmf1_data)
+                        % Save into antenna.vmf1
+                        antenna(ist).vmf1 = [antenna(ist).vmf1;vmf1_data{2},vmf1_data{3},vmf1_data{4},vmf1_data{5},vmf1_data{6}];  % = [station,tmjd,ah,aw,zhd,zwd]
+                    end
+                end
+            end
+        end
+        
+        % Reduce data, if it contains 2 years
+        if isempty(antenna(ist).vmf1)
+            flagmess.vmf1(ist)=1;
+        else
+            [antenna(ist).vmf1,flag]=datachecking(antenna(ist).vmf1,mjd1,mjd2);
+            if ~flag
+                flagmess.vmf1(ist)=1;
+                antenna(ist).vmf1=[];
+                fprintf('%s : not enough vmf1 at session time: %f to %f\n',aname,mjd1,mjd2)
             end
         end
         

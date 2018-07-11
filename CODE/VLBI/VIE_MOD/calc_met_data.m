@@ -184,8 +184,10 @@ for i_scan = 1 : number_of_scans
                         antenna(i_stat).gpt3e       = 1;
                     case {'gpt3'}
                         scan(i_scan).stat(i_stat).e = gpt3_e(i_stat);
+                        antenna(i_stat).gpt3e       = 1;
                     case {'no'}
                         scan(i_scan).stat(i_stat).e = gpt3_e(i_stat);
+                        antenna(i_stat).gpt3e       = 1;
                 end
             end
         end

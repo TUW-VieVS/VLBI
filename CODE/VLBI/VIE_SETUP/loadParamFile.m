@@ -50,6 +50,7 @@
 %   2017-03-20, A. Hellerschmied: Changes required for new EOP data loading routine
 %   2017-09-13, D. Landskron: 'tropSource' shifted into 'vie_init' 
 %   2018-01-11, D. Landskron: external troposphere modeling removed
+%   2018-07-06, D. Landskron: VMF3 added to the troposphere models 
 %
 function loadParamFile(hObject, handles, fullFileName)
 
@@ -195,12 +196,15 @@ try
             
             % set en/disable
             set(handles.radiobutton_parameters_troposphere_zhd_fromInSitu, 'Enable', 'on')
+            set(handles.radiobutton_parameters_troposphere_zhd_VMF3, 'Enable', 'on')
             set(handles.radiobutton_parameters_troposphere_zhd_VMF1, 'Enable', 'on')
             set(handles.radiobutton_parameters_troposphere_zhd_GPT3, 'Enable', 'on')
             set(handles.radiobutton_parameters_troposphere_zwd_no, 'Enable', 'on')
             set(handles.radiobutton_parameters_troposphere_zwd_fromInSitu, 'Enable', 'on')
+            set(handles.radiobutton_parameters_troposphere_zwd_VMF3, 'Enable', 'on')
             set(handles.radiobutton_parameters_troposphere_zwd_VMF1, 'Enable', 'on')
             set(handles.radiobutton_parameters_troposphere_zwd_GPT3, 'Enable', 'on')
+            set(handles.radiobutton_parameters_troposphere_mfh_VMF3, 'Enable', 'on')
             set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Enable', 'on')
             set(handles.radiobutton_parameters_troposphere_mfh_GPT3, 'Enable', 'on')
             set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Enable', 'on')
@@ -219,12 +223,15 @@ try
             
             % set en/disable
             set(handles.radiobutton_parameters_troposphere_zhd_fromInSitu, 'Enable', 'off')
+            set(handles.radiobutton_parameters_troposphere_zhd_VMF3, 'Enable', 'off')
             set(handles.radiobutton_parameters_troposphere_zhd_VMF1, 'Enable', 'off')
             set(handles.radiobutton_parameters_troposphere_zhd_GPT3, 'Enable', 'off')
             set(handles.radiobutton_parameters_troposphere_zwd_no, 'Enable', 'off')
             set(handles.radiobutton_parameters_troposphere_zwd_fromInSitu, 'Enable', 'off')
+            set(handles.radiobutton_parameters_troposphere_zwd_VMF3, 'Enable', 'off')
             set(handles.radiobutton_parameters_troposphere_zwd_VMF1, 'Enable', 'off')
             set(handles.radiobutton_parameters_troposphere_zwd_GPT3, 'Enable', 'off')
+            set(handles.radiobutton_parameters_troposphere_mfh_VMF3, 'Enable', 'off')
             set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Enable', 'off')
             set(handles.radiobutton_parameters_troposphere_mfh_GPT3, 'Enable', 'off')
             set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Enable', 'off')
@@ -242,12 +249,15 @@ catch
     
     % set en/disable
     set(handles.radiobutton_parameters_troposphere_zhd_fromInSitu, 'Enable', 'on')
+    set(handles.radiobutton_parameters_troposphere_zhd_VMF3, 'Enable', 'on')
     set(handles.radiobutton_parameters_troposphere_zhd_VMF1, 'Enable', 'on')
     set(handles.radiobutton_parameters_troposphere_zhd_GPT3, 'Enable', 'on')
     set(handles.radiobutton_parameters_troposphere_zwd_no, 'Enable', 'on')
     set(handles.radiobutton_parameters_troposphere_zwd_fromInSitu, 'Enable', 'on')
+    set(handles.radiobutton_parameters_troposphere_zwd_VMF3, 'Enable', 'on')
     set(handles.radiobutton_parameters_troposphere_zwd_VMF1, 'Enable', 'on')
     set(handles.radiobutton_parameters_troposphere_zwd_GPT3, 'Enable', 'on')
+    set(handles.radiobutton_parameters_troposphere_mfh_VMF3, 'Enable', 'on')
     set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Enable', 'on')
     set(handles.radiobutton_parameters_troposphere_mfh_GPT3, 'Enable', 'on')
     set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Enable', 'on')
@@ -569,12 +579,13 @@ end
 
 
 
-
 % zenith delay
 try
     switch parameter.vie_init.zhd
         case 'in situ'
             set(handles.radiobutton_parameters_troposphere_zhd_fromInSitu, 'Value', 1)
+        case 'vmf3'
+            set(handles.radiobutton_parameters_troposphere_zhd_VMF3, 'Value', 1)
         case 'vmf1'
             set(handles.radiobutton_parameters_troposphere_zhd_VMF1, 'Value', 1)
         case 'gpt3'
@@ -590,6 +601,8 @@ try
             set(handles.radiobutton_parameters_troposphere_zwd_no, 'Value', 1)
         case 'in situ'
             set(handles.radiobutton_parameters_troposphere_zwd_fromInSitu, 'Value', 1)
+        case 'vmf3'
+            set(handles.radiobutton_parameters_troposphere_zwd_VMF3, 'Value', 1)
         case 'vmf1'
             set(handles.radiobutton_parameters_troposphere_zwd_VMF1, 'Value', 1)
         case 'gpt3'
@@ -599,49 +612,67 @@ catch
     set(handles.radiobutton_parameters_troposphere_zwd_no, 'Value', 1)
     warning('Setting of ZWD failed --> no is set');
 end
+
 %  mapping function
 try
-switch parameter.vie_mod.mfh
-    case 'vmf1'
-        set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Value', 1)
-    case 'gpt3'
-        set(handles.radiobutton_parameters_troposphere_mfh_GPT3, 'Value', 1)
-end
-switch parameter.vie_mod.mfw
-    case 'vmf1'
-        set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Value', 1)
-    case 'GPT3'
-        set(handles.radiobutton_parameters_troposphere_mfw_GPT3, 'Value', 1)
-end
+    switch parameter.vie_mod.mfh
+        case 'vmf3'
+            set(handles.radiobutton_parameters_troposphere_mfh_VMF3, 'Value', 1)
+        case 'vmf1'
+            set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Value', 1)
+        case 'gpt3'
+            set(handles.radiobutton_parameters_troposphere_mfh_GPT3, 'Value', 1)
+    end
 catch
     set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Value', 1)
-    warning('Setting of mapping function failed --> VMF1 is set');
+    warning('Setting of hydrostatic mapping function failed --> VMF1 is set');
+end
+try
+    switch parameter.vie_mod.mfw
+        case 'vmf3'
+            set(handles.radiobutton_parameters_troposphere_mfw_VMF3, 'Value', 1)
+        case 'vmf1'
+            set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Value', 1)
+        case 'gpt3'
+            set(handles.radiobutton_parameters_troposphere_mfw_GPT3, 'Value', 1)
+    end
+catch
+    set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Value', 1)
+    warning('Setting of wet mapping function failed --> VMF1 is set');
 end
 
 % gradients
 try
-switch parameter.vie_mod.apgm_h
-    case 'no'
-        set(handles.radiobutton_parameters_troposphere_gradients_h_no, 'Value', 1)
-    case 'grad'
-        set(handles.radiobutton_parameters_troposphere_gradients_h_GRAD, 'Value', 1)
-    case 'gpt3'
-        set(handles.radiobutton_parameters_troposphere_gradients_h_GPT3, 'Value', 1)
-    case 'dao'
-        set(handles.radiobutton_parameters_troposphere_gradients_h_DAO, 'Value', 1)
-end
-switch parameter.vie_mod.apgm_w
-    case 'no'
-        set(handles.radiobutton_parameters_troposphere_gradients_w_no, 'Value', 1)
-    case 'grad'
-        set(handles.radiobutton_parameters_troposphere_gradients_w_GRAD, 'Value', 1)
-    case 'gpt3'
-        set(handles.radiobutton_parameters_troposphere_gradients_w_GPT3, 'Value', 1)
-end
-catch 
+    switch parameter.vie_mod.apgm_h
+        case 'no'
+            set(handles.radiobutton_parameters_troposphere_gradients_h_no, 'Value', 1)
+        case 'grad'
+            set(handles.radiobutton_parameters_troposphere_gradients_h_GRAD, 'Value', 1)
+        case 'gpt3'
+            set(handles.radiobutton_parameters_troposphere_gradients_h_GPT3, 'Value', 1)
+        case 'dao'
+            set(handles.radiobutton_parameters_troposphere_gradients_h_DAO, 'Value', 1)
+    end
+catch
     set(handles.radiobutton_parameters_troposphere_gradients_h_no, 'Value', 1)
-    warning('Setting of gradients failed --> no gradients are set');
+    warning('Setting of hydrostatic gradients failed --> no gradients are set');
 end
+try
+    switch parameter.vie_mod.apgm_w
+        case 'no'
+            set(handles.radiobutton_parameters_troposphere_gradients_w_no, 'Value', 1)
+        case 'grad'
+            set(handles.radiobutton_parameters_troposphere_gradients_w_GRAD, 'Value', 1)
+        case 'gpt3'
+            set(handles.radiobutton_parameters_troposphere_gradients_w_GPT3, 'Value', 1)
+    end
+catch
+    set(handles.radiobutton_parameters_troposphere_gradients_w_no, 'Value', 1)
+    warning('Setting of wet gradients failed --> no gradients are set');
+end
+
+
+
 % source structure
 % find chosen model in current popupmenu
 indOfModelFound=find(strcmp(get(handles.popupmenu_parameters_ss_catalog, 'string'), parameter.vie_mod.sou_cat));

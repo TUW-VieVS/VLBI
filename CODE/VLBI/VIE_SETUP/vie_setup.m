@@ -119,6 +119,7 @@ function varargout = vie_setup(varargin)
 % 31 Aug 2017 by A. Hellerschmied: Problem with empty /ION/Files/ dir solved (popupmenu in GUI crashed)
 % 11 Jan 2018 by D. Landskron: external troposphere modeling removed
 % 18 Jan 2018 by A. Hellerschmied: Changes for transition to GIT (call of vie_batch.m)
+% 06 Jul 2018 by D. Landskron: VMF3 added to the troposphere models
 %*************************************************************************
 
 % Begin initialization code - DO NOT EDIT
@@ -4594,6 +4595,8 @@ function panel_models_troposphere_zhd_SelectionChangeFcn(hObject, eventdata, han
 %	NewValue: handle of the currently selected object
 % handles    structure with handles and user data (see GUIDATA)
 
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
 
 % % defines if the popupmenu (containing all folders of TRP) should be  
 % % updated -> is needed when external tropospheric files are created in the
@@ -4605,8 +4608,12 @@ function panel_models_troposphere_zhd_SelectionChangeFcn(hObject, eventdata, han
 %         set(handles.popupmenu_parameters_tropo_externalFile, 'Enable', 'on')
 %         set(handles.pushbutton_parameters_troposphere_externalsCreate, 'Enable', 'on')
 %         % enable also (again?) mapping functions and gradients
+%         set(handles.radiobutton_parameters_troposphere_mfh_VMF3, 'Enable', 'Off')
 %         set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Enable', 'Off')
+%         set(handles.radiobutton_parameters_troposphere_mfh_GPT3, 'Enable', 'Off')
+%         set(handles.radiobutton_parameters_troposphere_mfw_VMF3, 'Enable', 'Off')
 %         set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Enable', 'Off')
+%         set(handles.radiobutton_parameters_troposphere_mfw_GPT3, 'Enable', 'Off')
 %         set(handles.radiobutton_parameters_troposphere_gradients_h_no, 'Enable', 'Off')
 %         set(handles.radiobutton_parameters_troposphere_gradients_h_GRAD, 'Enable', 'Off')
 %         set(handles.radiobutton_parameters_troposphere_gradients_h_GPT3, 'Enable', 'Off')
@@ -4619,8 +4626,12 @@ function panel_models_troposphere_zhd_SelectionChangeFcn(hObject, eventdata, han
 %         set(handles.popupmenu_parameters_tropo_externalFile, 'Enable', 'off')
 %         set(handles.pushbutton_parameters_troposphere_externalsCreate, 'Enable', 'off')
 %         % enable also (again?) mapping functions and gradients
+%         set(handles.radiobutton_parameters_troposphere_mfh_VMF3, 'Enable', 'On')
 %         set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Enable', 'On')
+%         set(handles.radiobutton_parameters_troposphere_mfh_GPT3, 'Enable', 'On')
+%         set(handles.radiobutton_parameters_troposphere_mfw_VMF3, 'Enable', 'On')
 %         set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Enable', 'On')
+%         set(handles.radiobutton_parameters_troposphere_mfw_GPT3, 'Enable', 'On')
 %         set(handles.radiobutton_parameters_troposphere_gradients_h_no, 'Enable', 'On')
 %         set(handles.radiobutton_parameters_troposphere_gradients_h_GRAD, 'Enable', 'On')
 %         set(handles.radiobutton_parameters_troposphere_gradients_h_GPT3, 'Enable', 'On')
@@ -9438,15 +9449,20 @@ function radiobutton_parameters_troposphere_indModeling_Callback(hObject, eventd
 
 % Hint: get(hObject,'Value') returns toggle state of radiobutton_parameters_troposphere_indModeling
 
+% set en/disable
 set(handles.radiobutton_parameters_troposphere_zhd_fromInSitu, 'Enable', 'on')
+set(handles.radiobutton_parameters_troposphere_zhd_VMF3, 'Enable', 'on')
 set(handles.radiobutton_parameters_troposphere_zhd_VMF1, 'Enable', 'on')
 set(handles.radiobutton_parameters_troposphere_zhd_GPT3, 'Enable', 'on')
 set(handles.radiobutton_parameters_troposphere_zwd_no, 'Enable', 'on')
 set(handles.radiobutton_parameters_troposphere_zwd_fromInSitu, 'Enable', 'on')
+set(handles.radiobutton_parameters_troposphere_zwd_VMF3, 'Enable', 'on')
 set(handles.radiobutton_parameters_troposphere_zwd_VMF1, 'Enable', 'on')
 set(handles.radiobutton_parameters_troposphere_zwd_GPT3, 'Enable', 'on')
+set(handles.radiobutton_parameters_troposphere_mfh_VMF3, 'Enable', 'on')
 set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Enable', 'on')
 set(handles.radiobutton_parameters_troposphere_mfh_GPT3, 'Enable', 'on')
+set(handles.radiobutton_parameters_troposphere_mfw_VMF3, 'Enable', 'on')
 set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Enable', 'on')
 set(handles.radiobutton_parameters_troposphere_mfw_GPT3, 'Enable', 'on')
 set(handles.radiobutton_parameters_troposphere_gradients_h_no, 'Enable', 'on')
@@ -9470,14 +9486,18 @@ function radiobutton_parameters_troposphere_raytr_Callback(hObject, eventdata, h
 
 % set en/disable
 set(handles.radiobutton_parameters_troposphere_zhd_fromInSitu, 'Enable', 'off')
+set(handles.radiobutton_parameters_troposphere_zhd_VMF3, 'Enable', 'off')
 set(handles.radiobutton_parameters_troposphere_zhd_VMF1, 'Enable', 'off')
 set(handles.radiobutton_parameters_troposphere_zhd_GPT3, 'Enable', 'off')
 set(handles.radiobutton_parameters_troposphere_zwd_no, 'Enable', 'off')
 set(handles.radiobutton_parameters_troposphere_zwd_fromInSitu, 'Enable', 'off')
+set(handles.radiobutton_parameters_troposphere_zwd_VMF3, 'Enable', 'off')
 set(handles.radiobutton_parameters_troposphere_zwd_VMF1, 'Enable', 'off')
 set(handles.radiobutton_parameters_troposphere_zwd_GPT3, 'Enable', 'off')
+set(handles.radiobutton_parameters_troposphere_mfh_VMF3, 'Enable', 'off')
 set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Enable', 'off')
 set(handles.radiobutton_parameters_troposphere_mfh_GPT3, 'Enable', 'off')
+set(handles.radiobutton_parameters_troposphere_mfw_VMF3, 'Enable', 'off')
 set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Enable', 'off')
 set(handles.radiobutton_parameters_troposphere_mfw_GPT3, 'Enable', 'off')
 set(handles.radiobutton_parameters_troposphere_gradients_h_no, 'Enable', 'off')

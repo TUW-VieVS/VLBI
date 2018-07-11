@@ -52,6 +52,7 @@
 %   26 Sep 2016 by Hana Krasna: update related changes in supersource file,
 %   change of the IVS name format string to char
 %   25 Jan 2017 by Daniel Landskron: adapted for splitted mf and gradients
+%   06 Jul 2018 by Daniel Landskron: VMF3 added to the troposphere models 
 %
 % call this function:
 %
@@ -330,12 +331,14 @@ for pl=1:size(process_list,1)
     %comment={'Constraints for EOP are always relative.'};
     
     if strcmp(parameter.vie_init.zhd,'in situ'); zhd=' b) use NGS file content';
+    elseif strcmp(parameter.vie_init.zhd,'vmf3'); zhd=' c) other (VMF3)';
     elseif strcmp(parameter.vie_init.zhd,'vmf1'); zhd=' c) other (VMF1)';
     elseif strcmp(parameter.vie_init.zhd,'gpt3'); zhd=' c) other (GPT3 function)';
     else zhd=' c) other'; 
     end
     
     if strcmp(parameter.vie_init.tp,'in situ'); tp=' b) use NGS file content';
+    elseif strcmp(parameter.vie_init.tp,'vmf3'); tp=' c) other (VMF3)';
     elseif strcmp(parameter.vie_init.tp,'vmf1'); tp=' c) other (VMF1)';
     elseif strcmp(parameter.vie_init.tp,'gpt3'); tp=' c) other (GPT3 function)';
     else tp=' c) other';
