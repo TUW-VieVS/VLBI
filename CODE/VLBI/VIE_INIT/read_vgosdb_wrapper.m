@@ -79,7 +79,6 @@ switch(wrapper_version)
 end
 
 % disp(version_str)
-
 nc_filename = [session_name, '_V', version_str, '_i', institute, '_k', wrapper_k, '.wrp'];
 wrapper_data.wrapper_filename = nc_filename;
     
@@ -156,17 +155,9 @@ else
                             tmp = temp_str{1}{1};
                             if strcmp(tmp(end-2:end), '.nc') && ~isempty(current_default_dir) % nc file! => make entry!
                                 if ~isfield(wrapper_data.(current_block_str), current_default_dir)
-                                    try
-                                   wrapper_data.(current_block_str).(current_default_dir).files = temp_str{1}{1};
-                                   catch
-                                       disp('test') 
-                                    end
+                                    wrapper_data.(current_block_str).(current_default_dir).files = temp_str{1}{1};
                                 else
-                                    try
                                     wrapper_data.(current_block_str).(current_default_dir).files = [wrapper_data.(current_block_str).(current_default_dir).files, temp_str{1}];
-                                    catch
-                                       disp('test') 
-                                    end
                                 end
                             end
                         end
