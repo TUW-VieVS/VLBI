@@ -264,6 +264,10 @@ for iScan=1:nScans
         % Get nc file-list for the current station from the wrapper:
         stat_id = stationIndices(iStat);
         stat_name = deblank(out_struct.head.StationList.val(:,stat_id)');
+        
+        % Exchange '-' with '_', because '-' are not valid for field names of MATLAB structs (...and therefor not used in "wrapper_data"):
+        stat_name(strfind(stat_name, '-')) = '_';
+        
         wrapper_stat_file_list = wrapper_data.Station.(stat_name).files;
         
         tmp=scan2Station(scan2Station(:,stat_id) ~= 0, stat_id);

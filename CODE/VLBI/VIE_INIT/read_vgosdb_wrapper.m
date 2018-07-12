@@ -3,8 +3,12 @@
 % #########################################################################
 %
 % DESCRIPTION
-% 	
-%   
+% This function reads the vgosDB wrapper files and strores the information
+% in a MATLAB structure.
+% 
+% Attention: Matlab does not allow to use '-' in field names. Therefore, all
+%            according '-' (e.g. in stationnames) are replaced by '_'.
+%            E.g.: "BR-VLBA" => "BR_VLBA"
 %
 % CREATED  
 %   2018-06-12     Andreas Hellerschmied
@@ -75,8 +79,7 @@ switch(wrapper_version)
 end
 
 % disp(version_str)
-
-nc_filename = [session_name(1:9), '_V', version_str, '_i', institute, '_k', wrapper_k, '.wrp'];
+nc_filename = [session_name, '_V', version_str, '_i', institute, '_k', wrapper_k, '.wrp'];
 wrapper_data.wrapper_filename = nc_filename;
     
 
@@ -143,6 +146,8 @@ else
                         end
                         if strcmp(temp_str{1}{1}, 'Default_Dir')
                             current_default_dir = temp_str{1}{2};
+                            % Exchange '-' with '_', because '-' are not valid for field names of MATLAB structs:
+                            current_default_dir(strfind(current_default_dir, '-')) = '_';
                             continue;
                         end
                         % nc file?
@@ -150,7 +155,7 @@ else
                             tmp = temp_str{1}{1};
                             if strcmp(tmp(end-2:end), '.nc') && ~isempty(current_default_dir) % nc file! => make entry!
                                 if ~isfield(wrapper_data.(current_block_str), current_default_dir)
-                                   wrapper_data.(current_block_str).(current_default_dir).files = temp_str{1}{1};
+                                    wrapper_data.(current_block_str).(current_default_dir).files = temp_str{1}{1};
                                 else
                                     wrapper_data.(current_block_str).(current_default_dir).files = [wrapper_data.(current_block_str).(current_default_dir).files, temp_str{1}];
                                 end
