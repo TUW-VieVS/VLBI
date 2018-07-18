@@ -203,6 +203,9 @@ else
         if isfield(out_struct.(tau_ion_folder).(tau_ion_file), 'Cal_SlantPathIonoGroupDataFlag') % if iono flag is given
             ionoDelFlagcell = num2cell(double(out_struct.(tau_ion_folder).(tau_ion_file).Cal_SlantPathIonoGroupDataFlag.val));
             fprintf('Ionospheric delay Flag will be used\n')
+            if length(ionoDelFlagcell) == 1
+                fprintf(' - Same ionospheric delay flag (= %1.0f) used for all scans!\n', ionoDelFlagcell{1})
+            end
         else
             ionoDelFlagcell = num2cell(zeros(1,length(groupDelayWAmbigCell)));
         end
@@ -385,12 +388,19 @@ for iScan=1:nScans
     [scan(iScan).obs.sig]=deal(delaySigmaTimesIonoSigma{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
     [scan(iScan).obs.delion]=   deal(ionoDelCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [nano-sec]
     [scan(iScan).obs.sgdion]=   deal(ionoDelSigCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [nano-sec]
-    [scan(iScan).obs.q_code_ion]=   deal(ionoDelFlagcell{obsI1Index:obsI1Index+scan(iScan).nobs-1});
+    
     
     if length(delayFlagLikeNGS)==1 % check length of delay flag vector, if it is only 1 value for the whole session, this value will be assigned to all observations
         [scan(iScan).obs.q_code]=deal(double(delayFlagLikeNGS{1}).*ones(scan(iScan).nobs,1));          
     else
         [scan(iScan).obs.q_code]=deal(delayFlagLikeNGS{obsI1Index:obsI1Index+scan(iScan).nobs-1});   
+    end
+    
+    if length(ionoDelFlagcell)==1 % check length of delay flag vector, if it is only 1 value for the whole session, this value will be assigned to all observations
+        % [scan(iScan).obs.q_code_ion]    = deal(ionoDelFlagcell{1}.*ones(scan(iScan).nobs,1)); 
+        [scan(iScan).obs.q_code_ion]    = deal(ionoDelFlagcell{1}); 
+    else
+        [scan(iScan).obs.q_code_ion]=   deal(ionoDelFlagcell{obsI1Index:obsI1Index+scan(iScan).nobs-1});  
     end
     
 
