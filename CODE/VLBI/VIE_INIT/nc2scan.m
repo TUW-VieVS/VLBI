@@ -211,7 +211,7 @@ else
         end
         fprintf('Ionospheric delay will be used\n')
     else
-        fprintf('Can find Inospheric Delay File\n')
+        fprintf('Can find Ionospheric Delay File\n')
         warning('Ionospheric delay can not be used because was not found\n')
     end
 end
@@ -233,7 +233,8 @@ oneToN=1:40;
 
 nc_filename = get_nc_filename({'TimeUTC'}, wrapper_data.Scan.Scan.files, 1);
 if length(out_struct.Scan.TimeUTC.Second.val) == 1
-    out_struct.Scan.(nc_filename).Second.val = zeros(length(out_struct.Scan.TimeUTC.YMDHM.val),1);
+    %out_struct.Scan.(nc_filename).Second.val = zeros(length(out_struct.Scan.TimeUTC.YMDHM.val),1);
+    out_struct.Scan.(nc_filename).Second.val = repmat(out_struct.Scan.(nc_filename).Second.val,length(out_struct.Scan.TimeUTC.YMDHM.val),1);
 end
 tim=[double(out_struct.Scan.(nc_filename).YMDHM.val); out_struct.Scan.(nc_filename).Second.val'];
 
