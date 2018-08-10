@@ -24,6 +24,8 @@
 %   2017-11-13, J.Gruber: General update. +It is now possible to choose a certain frequency band
 %   2017-12-13, A. Hellerschmied: function modjuldat.m instead of date2mjd.m used.
 %   2018-16-01, J.Gruber: Second redundant exception for Ion code Flag removed
+%   2018-08-01, D. Landskron: bug corrected with storing the "Second" in
+%               vgosDB files
 
 % ************************************************************************
 function scan=nc2scan(out_struct, nc_info, fband, wrapper_data)
@@ -211,7 +213,7 @@ else
         end
         fprintf('Ionospheric delay will be used\n')
     else
-        fprintf('Can find Inospheric Delay File\n')
+        fprintf('Can find Ionospheric Delay File\n')
         warning('Ionospheric delay can not be used because was not found\n')
     end
 end
@@ -233,7 +235,7 @@ oneToN=1:40;
 
 nc_filename = get_nc_filename({'TimeUTC'}, wrapper_data.Scan.Scan.files, 1);
 if length(out_struct.Scan.TimeUTC.Second.val) == 1
-    out_struct.Scan.(nc_filename).Second.val = zeros(length(out_struct.Scan.TimeUTC.YMDHM.val),1);
+    out_struct.Scan.(nc_filename).Second.val = repmat(out_struct.Scan.(nc_filename).Second.val,length(out_struct.Scan.TimeUTC.YMDHM.val),1);
 end
 tim=[double(out_struct.Scan.(nc_filename).YMDHM.val); out_struct.Scan.(nc_filename).Second.val'];
 

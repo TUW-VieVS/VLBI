@@ -42,6 +42,7 @@
 %   10 Mar 2017 by D. Landskron: raytr data also enabled from yearly subdivided folders
 %   13 Sep 2017 by D. Landskron: 'tropSource' shifted into 'vie_init' 
 %   09 Jul 2018 by D. Landskron: also enabled for input of .radiate files
+%   01 Aug 2018 by D. Landskron: .radiate files made priority input
 %
 %
 function [trpdata,trpFileFoundLog] = load_trpfile (parameter,session)
@@ -71,13 +72,13 @@ else
 end
 
    
-% if it does not exist, give message
-if exist(trpFile, 'file')
-    trpFileFoundLog=1;
-    radiateFileFoundLog=0;
-elseif exist(radiateFile, 'file')
+% if both .radiate-file and .trp file of a session are available, then the .radiate-file is read, because it's more accurate
+if exist(radiateFile, 'file')
     radiateFileFoundLog=1;
     trpFileFoundLog=0;
+elseif exist(trpFile, 'file')
+    radiateFileFoundLog=0;
+    trpFileFoundLog=1;
 elseif ~exist(trpFile, 'file') 
     error('No ray-tracing file (.trp) available for this session! Specify another source for the tropospheric delays.')
 end
@@ -111,8 +112,63 @@ end
 
 
 
-%% (a) Read in the trp-file
-% if both .trp-file and .radiate file of a session are available, then the .trp-file is read, because it's faster
+%% (a) Read in the .radiate-file
+% if both .trp-file and .radiate file of a session are available, then the .radiate-file is read, because it's more accurate
+
+
+% if file found -> load and read
+if radiateFileFoundLog==1
+    
+    c = 299792458;   % speed of light in [m/s]
+    
+    % open the file
+    fidRadiate=fopen(radiateFile);
+    
+    % get the current line
+    curr_line=fgetl(fidRadiate);
+    curr_line=fgetl(fidRadiate);
+    if ~strcmpi(curr_line,'% RADIATE format v 2.0')
+        error('Something is wrong with the .radiate file!');
+    end
+    fclose(fidRadiate);
+    
+    % open the file again and read all data
+    fidRadiate=fopen(radiateFile);    
+    radiate_data = textscan(fidRadiate,'%f%f%f%f%f%f%f%s%f%f%s%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f','CommentStyle','%');
+    
+    mjd = radiate_data{2};
+    [~, month, day, ~, ~, ~] = mjd2date(mjd);
+    
+    % define the correct columns
+    trpdata{1,1} = radiate_data{11};           % source name
+    trpdata{1,2} = radiate_data{1};            % scan number
+    trpdata{1,3} = radiate_data{3};            % year
+    trpdata{1,4} = month;                      % month
+    trpdata{1,5} = day;                        % day
+    trpdata{1,6} = radiate_data{5};            % hour
+    trpdata{1,7} = radiate_data{6};            % min
+    trpdata{1,8} = radiate_data{7};            % sec
+    trpdata{1,9} = radiate_data{8};            % station
+    trpdata{1,10} = radiate_data{9}*180/pi;    % azimuth angle in [°]
+    trpdata{1,11} = radiate_data{10}*180/pi;   % outgoing elevation angle in [°]
+    trpdata{1,12} = radiate_data{13};          % pressure in [hPa]
+    trpdata{1,13} = radiate_data{12};          % temperature in [°C]
+    trpdata{1,14} = radiate_data{18}/c;        % slant total delay including geometric bending effect in [sec]  
+    trpdata{1,15} = radiate_data{26};          % wet mapping function
+    
+    % add blanks to the source names and station names
+    trpdata{1} = pad(trpdata{1},8);
+    trpdata{9} = pad(trpdata{9},8);
+    
+    % close the file
+    fclose(fidRadiate);
+     
+end
+
+
+
+%% (b) Read in the trp-file
+% this is only read in if no .radiate-file is available
 
 
 % if file found -> load and read
@@ -172,60 +228,6 @@ if trpFileFoundLog==1
     % close the file
     fclose(fidTrp);
     
-end
-
-
-%% (b) Read in the radiate-file
-% this is only read in if no .trp-file is available
-
-
-% if file found -> load and read
-if radiateFileFoundLog==1
-    
-    c = 299792458;   % speed of light in [m/s]
-    
-    % open the file
-    fidRadiate=fopen(radiateFile);
-    
-    % get the current line
-    curr_line=fgetl(fidRadiate);
-    curr_line=fgetl(fidRadiate);
-    if ~strcmpi(curr_line,'% RADIATE format v 2.0')
-        error('Something is wrong with the .radiate file!');
-    end
-    fclose(fidRadiate);
-    
-    % open the file again and read all data
-    fidRadiate=fopen(radiateFile);    
-    radiate_data = textscan(fidRadiate,'%f%f%f%f%f%f%f%s%f%f%s%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f','CommentStyle','%');
-    
-    mjd = radiate_data{2};
-    [~, month, day, ~, ~, ~] = mjd2date(mjd);
-    
-    % define the correct columns
-    trpdata{1,1} = radiate_data{11};           % source name
-    trpdata{1,2} = radiate_data{1};            % scan number
-    trpdata{1,3} = radiate_data{3};            % year
-    trpdata{1,4} = month;                      % month
-    trpdata{1,5} = day;                        % day
-    trpdata{1,6} = radiate_data{5};            % hour
-    trpdata{1,7} = radiate_data{6};            % min
-    trpdata{1,8} = radiate_data{7};            % sec
-    trpdata{1,9} = radiate_data{8};            % station
-    trpdata{1,10} = radiate_data{9}*180/pi;    % azimuth angle in [°]
-    trpdata{1,11} = radiate_data{10}*180/pi;   % outgoing elevation angle in [°]
-    trpdata{1,12} = radiate_data{13};          % pressure in [hPa]
-    trpdata{1,13} = radiate_data{12};          % temperature in [°C]
-    trpdata{1,14} = radiate_data{18}/c;        % slant total delay including geometric bending effect in [sec]  
-    trpdata{1,15} = radiate_data{26};          % wet mapping function
-    
-    % add blanks to the source names and station names
-    trpdata{1} = pad(trpdata{1},8);
-    trpdata{9} = pad(trpdata{9},8);
-    
-    % close the file
-    fclose(fidRadiate);
-     
 end
 
 

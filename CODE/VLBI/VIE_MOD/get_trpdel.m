@@ -30,9 +30,6 @@
 % ************************************************************************
 function [scan] = get_trpdel(trpdata,scan,isc,ist,antenna,trpFileFoundLog,sourceNames)
 
-%        % define if vmf1 is needed because no trp data is found in trp file (for current station in current scan)
-%        vmf1NeededLog=0;
-
 % but first: if we have trp file -> try to get data
 if trpFileFoundLog==1
     
@@ -63,19 +60,6 @@ if trpFileFoundLog==1
 %                         end
 %
 %            %return if finished
-%            
-%                         if vmf1NeededLog==0 % if there is exactly one line (what we want)
-%                             if vahabsRaytracingFiles==1
-%                                 scan(isc).stat(ist).trop =trpdata{14}(curLine);
-%                                 vmf1NeededLog=1;
-%                                 % the rest does not exist (load vmf1 later)
-%                             else
-%                                 scan(isc).stat(ist).trop  = trpdata{14}(curLine);   % slant path delay [sec]   
-%                                 scan(isc).stat(ist).mfw   = trpdata{15}(curLine);   % wet mapping function
-%                                 scan(isc).stat(ist).temp  = trpdata{13}(curLine);   % temperature [°C]
-%                                 scan(isc).stat(ist).pres  = trpdata{12}(curLine);   % pressure [hPa]
-%                             end
-%                         end
             
     % determine the number of matching trp entries
     nr_matches = sum(curLine);
