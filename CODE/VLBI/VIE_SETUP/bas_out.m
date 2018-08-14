@@ -37,6 +37,7 @@
 % 2017-05-30, A. Girdiuk: opt-file directory info will be used to detect LEVEL1directory, if the directory with the same as in LEVEL3 does not exist
 %                           it will be crased if there is still nothing
 % 2018-08-01, D. Landskron: slightly adapted so it can also read vgosDB session names
+% 2018-08-14, D. Landskron: some more adaptions for reading vgosDB session names
 
 function [varargout] = bas_out(process_list,subdir,varargin)
 
@@ -139,6 +140,11 @@ kbas=0;
 for ip = 1:nSes
     if ~isempty(process_list)
         sname = process_list(ip,6:end);   % adapted so it can read vgosDB session names as well
+        sname_test = strsplit(sname,' ');
+        if length(sname_test)>1   % this means that it is a vgosDB session
+            sname = sname_test{1};
+        end
+            
     else
         sname='XXXXXX'; % better but does not work for older data: x_files{1}(ip).session;
     end
@@ -147,11 +153,6 @@ for ip = 1:nSes
     else
         load(strcat(path,'DATA/LEVEL3/',subdir,'/x_',num2str(sname)));
     end
-%    if antFilesGiven==1
- %       antenna=ant_files{ip};
-  %  else
-   %     load(strcat(path,'DATA/LEVEL1/',subdir,'/',num2str(sname),'_antenna'));
-    %end
     if  atpaFilesGiven==1
         atpa_=atpa_files{ip};
     else
