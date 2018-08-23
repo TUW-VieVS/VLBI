@@ -53,6 +53,7 @@
 %   change of the IVS name format string to char
 %   25 Jan 2017 by Daniel Landskron: adapted for splitted mf and gradients
 %   06 Jul 2018 by Daniel Landskron: VMF3 added to the troposphere models 
+%   23 Aug 2018 by Daniel Landskron: adapted for vgosDB
 %
 % call this function:
 %
@@ -330,14 +331,14 @@ for pl=1:size(process_list,1)
     blockName='FILE/COMMENT';
     %comment={'Constraints for EOP are always relative.'};
     
-    if strcmp(parameter.vie_init.zhd,'in situ'); zhd=' b) use NGS file content';
+    if strcmp(parameter.vie_init.zhd,'in situ'); zhd=[' b) use ' parameter.data_type ' file content'];
     elseif strcmp(parameter.vie_init.zhd,'vmf3'); zhd=' c) other (VMF3)';
     elseif strcmp(parameter.vie_init.zhd,'vmf1'); zhd=' c) other (VMF1)';
     elseif strcmp(parameter.vie_init.zhd,'gpt3'); zhd=' c) other (GPT3 function)';
     else zhd=' c) other'; 
     end
     
-    if strcmp(parameter.vie_init.tp,'in situ'); tp=' b) use NGS file content';
+    if strcmp(parameter.vie_init.tp,'in situ'); tp=[' b) use ' parameter.data_type ' file content'];
     elseif strcmp(parameter.vie_init.tp,'vmf3'); tp=' c) other (VMF3)';
     elseif strcmp(parameter.vie_init.tp,'vmf1'); tp=' c) other (VMF1)';
     elseif strcmp(parameter.vie_init.tp,'gpt3'); tp=' c) other (GPT3 function)';
@@ -351,8 +352,8 @@ for pl=1:size(process_list,1)
     if parameter.vie_mod.cto==1; cto=parameter.vie_mod.ocm;
     else cto=' none';
     end
-    if parameter.vie_mod.cta==1;
-        if strcmp(parameter.vie_mod.ctam,'s12_cm_noib_leonid.mat');
+    if parameter.vie_mod.cta==1
+        if strcmp(parameter.vie_mod.ctam,'s12_cm_noib_leonid.mat')
             cta =' Ponte and Ray (2002) model; Leonid Petrov';% '(http://gemini.gsfc.nasa.gov/aplo/aplo_s1_s2_noib_1.0x1.0deg.nc)';
         else cta=parameter.vie_mod.ctam;
         end
@@ -400,7 +401,7 @@ for pl=1:size(process_list,1)
     end
     
     if parameter.vie_mod.therm == 1
-        therm = 'IVS antenna thermal expansion model of Nothnagel (2008) using scan-wise temperatures from NGS file';
+        therm = ['IVS antenna thermal expansion model of Nothnagel (2008) using scan-wise temperatures from ' parameter.data_type ' file'];
     else
         therm = 'none';
     end
@@ -457,7 +458,7 @@ for pl=1:size(process_list,1)
         'Version 2.0 (2011-05-26)'; 
         '(http://vlbi.geod.uni-bonn.de/IVS-AC/Docs/Analysis_description.txt)';
         '1. Origin of input data';
-        ' c) NGS file from IVS Data Center';
+        [' c) ' parameter.data_type ' file from IVS Data Center'];
         '3. Origin of meteorological data';
         [' zenith hydrostatic delay: ' zhd];
         [' temperature: ' tp];
@@ -466,9 +467,9 @@ for pl=1:size(process_list,1)
         '5. Setting of mapping functions';
         ' b) other (created by VieVS)';
         '6. Origin of cable cal data';
-        ' b) Use NGS file content';
+        [' b) Use ' parameter.data_type ' file content'];
         '7. Application of cable cal flags';
-        ' a) all on by default (data from NGS file is used as it is)';
+        [' a) all on by default (data from ' parameter.data_type ' file is used as it is)'];
         '8. Selection/settings of geophysical models';
         '8.1 A priori Earth orientation';
         ['- A priori precession/nutation model: ' parameter.vie_mod.nutmod];
