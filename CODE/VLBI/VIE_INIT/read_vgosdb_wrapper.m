@@ -30,6 +30,11 @@
 %
 % CHANGES:
 %
+% 2018-08-28, D. Landskron: adapted also for different wrapper file name
+%
+% #########################################################################
+
+
 
 function [ wrapper_data ] = read_vgosdb_wrapper(path_nc, session_name, institute, wrapper_k, wrapper_version)
 
@@ -56,8 +61,9 @@ for i = 1 : length(tmp)
             wrapper_filenames{i_wrapper} = name;
             
             % version number
-            str_match = ['_i', institute, '_k', wrapper_k, '.wrp'];
-            if strcmp(name(end-(length(str_match)-1):end), str_match)
+            str_match1 = ['_i', institute, '_k', wrapper_k, '.wrp'];
+            str_match2 = ['_k', wrapper_k, '_i', institute, '.wrp'];   % it might happen that the wrapper file is differently named
+            if strcmp(name(end-(length(str_match1)-1):end), str_match1)   ||   strcmp(name(end-(length(str_match2)-1):end), str_match2)
                 id = strfind(name, '_V');
                 if str2num(name(id+2:id+4)) > version
                     version = str2num(name(id+2:id+4));
@@ -78,13 +84,17 @@ switch(wrapper_version)
         version_str = sprintf('%03d', str2num(wrapper_version));
 end
 
-% disp(version_str)
-nc_filename = [session_name, '_V', version_str, '_i', institute, '_k', wrapper_k, '.wrp'];
-wrapper_data.wrapper_filename = nc_filename;
-    
-
 % ##### Open file #####
+nc_filename = [session_name, '_V', version_str, '_i', institute, '_k', wrapper_k, '.wrp'];
 fid = fopen([path_nc, nc_filename],'r');
+
+% it might happen that the wrapper file is differently named
+if fid<0
+    nc_filename = [session_name, '_V', version_str, '_k', wrapper_k, '_i', institute, '.wrp'];
+    fid = fopen([path_nc, nc_filename],'r');
+end
+
+wrapper_data.wrapper_filename = nc_filename;
 
 if fid<0
     error('%s does not exist\n', [path_nc, nc_filename])
