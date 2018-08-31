@@ -10,6 +10,7 @@ $15FEB19XF  JADE session with ambiguity problems - Andreas
 $15FEB01XA  way too high chi-squared  Daniel
 $15JAN31XA  way too high chi-squared  Daniel
 $15JAN23XC  high chi-squared(38.5) BG219(?) session - Younghee 
+$14SEP15XB  huge chi-squared
 $14FEB06XE  high chi-squared Johannes
 $14DEC20XC  high chi-squared(10.6) BG219(?) session - Younghee
 $14DEC03XA
