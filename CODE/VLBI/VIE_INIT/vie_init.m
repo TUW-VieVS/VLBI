@@ -99,6 +99,7 @@
 %   13 Nov 2017 by J. Gruber: new functions to specify insitute provider,
 %   			version name and frequency band (read_vgosdb_input_settings.m)
 %   06 Jan 2018 by J. Gruber: Changed call of cleanScan.m
+%   28 Aug 2018 by D. Landskron: shape of output slightly changed
 
 % ************************************************************************
 %
@@ -197,17 +198,16 @@ if parameter.vie_init.use_opt_files
 end
 % --------------------------------------- (get opt stuff)
 
-% write info about excluded baselines, statinos, sources +++++++++++ 
+% write info about excluded baselines, stations, sources +++++++++++ 
 fprintf('Stations to be excluded: %1.0f\n', size(ini_opt.sta_excl,1))
 for k=1:size(ini_opt.sta_excl,1)
-    if ini_opt.sta_excl_start(k)==0                                    %%%=> A. Girdiuk 2015-07-20
+    if ini_opt.sta_excl_start(k)==0
         fprintf('%s \n', ini_opt.sta_excl(k,:));
     else
         fprintf('%s %f %f\n', ini_opt.sta_excl(k,:), ini_opt.sta_excl_start(k),ini_opt.sta_excl_end(k));
-    end                                                                %%%<= A. Girdiuk 2015-07-20
+    end
 end
   
-%------------- Monika
 fprintf('Stations to be down-weighted: %1.0f\n', size(ini_opt.stat_dw,1))
 if size(ini_opt.stat_dw,1) == 0
     parameter.vie_init.stat_dw = [];
@@ -220,7 +220,6 @@ else
         parameter.vie_init.stat_co(k,:) = str2num(ini_opt.stat_co(k,:));
     end
 end
-%---------------
     
 fprintf('Sources to be excluded: %1.0f\n', size(ini_opt.sour_excl,1))
 for k=1:size(ini_opt.sour_excl,1)
@@ -244,11 +243,11 @@ if remove_sources_from_list
         ini_opt.sour_excl = [ini_opt.sour_excl;char(remove_sources)];
         disp('+ sources from external file removed');
         if isfield(ini_opt, 'sour_excl_start')
-        ini_opt.sour_excl_start = [ini_opt.sour_excl_start, zeros(1,length(remove_sources))];
-        ini_opt.sour_excl_end = [ini_opt.sour_excl_end, zeros(1,length(remove_sources))];
+            ini_opt.sour_excl_start = [ini_opt.sour_excl_start, zeros(1,length(remove_sources))];
+            ini_opt.sour_excl_end = [ini_opt.sour_excl_end, zeros(1,length(remove_sources))];
         else
-        ini_opt.sour_excl_start = zeros(1,length(remove_sources));
-        ini_opt.sour_excl_end = zeros(1,length(remove_sources));
+            ini_opt.sour_excl_start = zeros(1,length(remove_sources));
+            ini_opt.sour_excl_end = zeros(1,length(remove_sources));
         end
     end
     fclose(fid);
@@ -450,12 +449,9 @@ end % switch(parameter.data_type)
 fprintf('\n');
 fprintf('A total of %d stations, %d sources (quasars) and %d scans were found\n', length(antenna), length(sources.q), length(scan));
 disp('The following stations were found:')
-ind = 1;
-for a=1:length(antenna)
-  fprintf('%2.0f%s%s\n',ind,'. ',antenna(a).name)
-  ind=ind+1;
+for i_ant = 1:length(antenna)
+  fprintf('%2.0f%s%s\n',i_ant,'. ',antenna(i_ant).name)
 end
-clear ind
 
 % ????????? Needed:
 antenna(1).ngsfile=ngsfile;

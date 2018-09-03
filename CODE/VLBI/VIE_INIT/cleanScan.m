@@ -23,6 +23,7 @@
 %   16 Jan 2018 by J. Gruber: bug fix in "No cable calibration" section
 %   16 Jan 2018 by J. Gruber: Ion code flag is also considered, only ion code zero values are taken
 %   17 Jan 2018 by J. Gruber: bug fix in "Excluded baselines" section
+%   28 Aug 2018 by D. Landskron: shape of output slightly changed
 
 % ************************************************************************
 function [scan, sources, antenna]=cleanScan(scan, sources, antenna, out_structFieldnames, allSourceNames, ini_opt, bas_excl, qualityLimit, minElevation)
@@ -60,12 +61,12 @@ end
 %% Clean scan struct
 
 % (1) No cable calibration
-fprintf('No cable-cal for stations: %1.0f\n', size(ini_opt.no_cab,1))
+%fprintf('No cable-cal for stations: %1.0f\n', size(ini_opt.no_cab,1))
 
 if isempty(ini_opt.no_cab)
 else
     for k=1:size(ini_opt.no_cab,1)
-        fprintf('%s\n', ini_opt.no_cab(k,:));
+        %fprintf('%s\n', ini_opt.no_cab(k,:));
     end
     
     % get antenna numbers
@@ -101,13 +102,13 @@ end
     
 
 % (2) Excluded baselines
-fprintf('Baselines to be excluded: %1.0f\n', size(bas_excl,1))
+%fprintf('Baselines to be excluded: %1.0f\n', size(bas_excl,1))
 if isempty(bas_excl)
 else
     % write user info to command window
-    for k=1:size(bas_excl,1)
-        fprintf('%s\n', bas_excl(k,:))
-    end
+    %for k=1:size(bas_excl,1)
+        %fprintf('%s\n', bas_excl(k,:))
+    %end
     % for all baselines
     for iBasel=1:size(bas_excl,1)
         
@@ -178,26 +179,24 @@ end
 
 % (3) Excluded stations
 nStat2excl=size(ini_opt.sta_excl,1);
-fprintf('Stations to be excluded: %1.0f\n',nStat2excl)
+%fprintf('Stations to be excluded: %1.0f\n',nStat2excl)
 obs2delPerStat=zeros(nStats,1); % for all stations: obs (nobs) have to be deleted!
 if isempty(ini_opt.sta_excl)
 else
 
     for k=1:nStat2excl
-        fprintf('%s ', ini_opt.sta_excl(k,:))
-        if ini_opt.sta_excl_start(k)~=0
-            fprintf('(%1.1f-%1.1f)', ...
-                ini_opt.sta_excl_start(k), ini_opt.sta_excl_end(k))
-        end
-        fprintf('\n');
+        %fprintf('%s ', ini_opt.sta_excl(k,:))
+        %if ini_opt.sta_excl_start(k)~=0
+            %fprintf('(%1.1f-%1.1f)', ini_opt.sta_excl_start(k), ini_opt.sta_excl_end(k))
+        %end
+        %fprintf('\n');
     end
     % get station logicals to be deleted
     curStatLog=zeros(nStats,1);
     for iStatExcl=1:size(ini_opt.sta_excl,1)
         foundLogsCurAnt=strcmpi({antenna.name},ini_opt.sta_excl(iStatExcl,:));
         if sum(foundLogsCurAnt)~=1
-            fprintf('%s (to be excluded) not found in antenna struct\n-> not excluded!\n',...
-                ini_opt.sta_excl(iStatExcl,:));
+            fprintf('%s (to be excluded) not found in antenna struct\n-> not excluded!\n',ini_opt.sta_excl(iStatExcl,:));
         else
             curStatLog=curStatLog(:) | foundLogsCurAnt(:);
         end
@@ -268,7 +267,7 @@ end
 
 
 % (4) Excluded sources (only get indices - scans are deleted later)
-fprintf('Sources to be excluded: %1.0f\n', size(ini_opt.sour_excl,1))
+%fprintf('Sources to be excluded: %1.0f\n', size(ini_opt.sour_excl,1))
 
 % preallocate
 exclSourcesInd=zeros(size(ini_opt.sour_excl,1),1);
@@ -289,9 +288,9 @@ if ~isempty(ini_opt.sour_excl)
         if logical(ini_opt.sour_excl_start(iSource2BeExcl))
             exclSourcesInd_byTime = exclSourcesInd_byTime | (scansToExcludedSources & (([scan.mjd]>=ini_opt.sour_excl_start(iSource2BeExcl)) & ([scan.mjd]<=ini_opt.sour_excl_end(iSource2BeExcl))));
             exclSourcesInd(iSource2BeExcl)=[];
-            fprintf('%s %f %f\n', ini_opt.sour_excl(iSource2BeExcl,:), ini_opt.sour_excl_start(iSource2BeExcl),ini_opt.sour_excl_end(iSource2BeExcl));
+            %fprintf('%s %f %f\n', ini_opt.sour_excl(iSource2BeExcl,:), ini_opt.sour_excl_start(iSource2BeExcl),ini_opt.sour_excl_end(iSource2BeExcl));
         else
-            fprintf('%s\n', ini_opt.sour_excl(iSource2BeExcl,:))
+            %fprintf('%s\n', ini_opt.sour_excl(iSource2BeExcl,:))
         end
     end
 	fprintf('\n')

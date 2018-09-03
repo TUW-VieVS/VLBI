@@ -34,8 +34,8 @@
 %   02 Feb 2016 by A. Girdiuk: bug-fix in log-messages
 %   09 Feb 2016 by C. Sch�nberger: Bug-fix: Date/time input (YYDDMMhhmm) now works for 19xx and 20xx 
 %   11 Feb 2016 by D. Mayer: It is now possible to append comments (beginning with #) to OPT statements
-%   31 Mar 2017 by D. Mayer: added the possibility to remove list of
-%   station from every session in the code
+%   31 Mar 2017 by D. Mayer: added the possibility to remove list of station from every session in the code
+%   28 Aug 2018 by D. Landskron: bug correct corrected with excluding only a time frame of a station
 % ************************************************************************
 
 function [ini_opt, bas_excl]=readOPT(optfil,remove_sprecial_stations,stations_to_be_removed)
@@ -136,6 +136,7 @@ while ~feof(fid)
                 end
             elseif flag_excl_station
                 ini_opt.sta_excl_start(nex) = 0;
+                ini_opt.sta_excl_end(nex) = 0;
             else
                 error('Exclude stations: Unknown mode.');
             end
