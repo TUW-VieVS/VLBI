@@ -16,21 +16,26 @@
 %   tle_str         String containing all filenames
 %
 % CHANGES
+% 2018-09-06, A. Hellerschmied: Exception added, if no TLE file found
 
 
 function [tle_str] = getTLEFileNames(path_tle_dir)
 
     % --- get avilable TLE filenames ---
     tle_files_struct = dir([path_tle_dir ,'*.tle']);
-
-    number_of_tle_files = length(tle_files_struct);
-    tle_str = '';
-
-    for i = 1 : (number_of_tle_files - 1)
-        tle_str = [tle_str, tle_files_struct(i).name, '|'];
-    end
-    tle_str = [tle_str, tle_files_struct(number_of_tle_files).name];
     
+    if ~isempty(tle_files_struct)
+
+        number_of_tle_files = length(tle_files_struct);
+        tle_str = '';
+
+        for i = 1 : (number_of_tle_files - 1)
+            tle_str = [tle_str, tle_files_struct(i).name, '|'];
+        end
+        tle_str = [tle_str, tle_files_struct(number_of_tle_files).name];
+    else
+        tle_str = ' ';
+    end
 end
 
 
