@@ -19,12 +19,13 @@
 % INPUT:
 %	- ptf (path to file)
 % OUTPUT:
-%	- in (institute name)
+%	- in (institute name)(cell array)
 %	- fb (frequency band name)
 %   - wrapper_k  (wrapper tag, "all" or "ngs")
 %   - wrapper_v  (wrapper version number)
 %
 % CHANGES:
+% 2018-09-12, A. Hellerschmied: "Priority list option" for institution flag added
 %
 
 function [ in, fb, wrapper_k, wrapper_v ] = read_vgosdb_input_settings( ptf )
@@ -35,7 +36,7 @@ wrapper_k_tag   = 'wrapper_k:';         % => wrapper_k
 wrapper_v_tag   = 'wrapper_version:';   % => wrapper_v
 
 
-in = '';
+in{1} = '';
 fb = '';
 wrapper_k = '';
 wrapper_v = '';
@@ -57,13 +58,14 @@ else
         if ~isempty(str)
             % parse line
             temp_str = textscan(str, '%s', 'CommentStyle', '%'); 
-            if size(temp_str{1}, 1) == 2 % not a comment
+            if ~isempty(temp_str{1}) % not a comment
 
                 switch(temp_str{1}{1})
 
                     case in_tag
-                        in = temp_str{1}{2};
-
+                        % in = temp_str{1}{2};
+                        in = {temp_str{1}{2:length(temp_str{1})}};
+                        
                     case fb_tag
                         fb = temp_str{1}{2};
 
