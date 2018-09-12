@@ -1,13 +1,14 @@
 % This file can be used to specify the institute provider of the data files in the vgos database which should be used for processing.
 % Two settings are possible: institute, frequencyband
 % If a institute parameter is set only data from this institute will be used
+% - Here a list of institution flags can be provided, separated by white space
 % VieVS supports 4 possibilites for the frequencyband parameters:
 % GroupDelayFull_bX (final X-band group delay with ambiguity correction, corresponds to the delay in the NGS file)
 % GroupDelayFull_bS (final S-band group delay with ambiguity correction)
 % GroupDelay_bX (X-band group delay without ambiguity correction)
 % GroupDelay_bS (S-band group delay without ambiguity correction)
 % e.g.
-institute: 			IVS
+institute: 			IVS GSFC GSF
 frequency_band: 	GroupDelayFull_bX
 wrapper_k: 			all
 % wrapper_version: 

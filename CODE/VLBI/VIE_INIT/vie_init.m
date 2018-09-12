@@ -323,9 +323,9 @@ switch(parameter.data_type)
         [ in, fb, wrapper_k, wrapper_v ] = read_vgosdb_input_settings( 'vgosdb_input_settings.txt' );
         
         % Standard settings, which are used if not defined differently in settings file:
-        if isempty(in) % institute
-            in = 'IVS';
-            fprintf('Set institute to default: %s\n', in)
+        if isempty(in{1}) % institute
+            in = {'IVS'};
+            fprintf('Set institute to default: %s\n', in{1})
         end
         if isempty(fb) % frequency band
             fb = 'GroupDelayFull_bX';

@@ -43,11 +43,14 @@ function [ wrapper_data ] = read_vgosdb_wrapper(path_nc, session_name, institute
 % Wrapper blocks which are considered (all others are neglected...):
 wraper_blocks = {'Session', 'Station', 'Scan', 'Observation'};
 wrapper_data = struct('Session', [], 'Station', [], 'Scan', [], 'Observation', [], 'wrapper_filename', []);
+min_wrapper_version = 4;
+
+
+% #### Init #####
+num_institutions    = length(institute);
 
 
 % ##### Get wrapper filename #####
-
-% Get wrapper filenames in directory:
 tmp = dir(path_nc);
 tmp = {tmp.name};
 wrapper_filenames = {};
@@ -59,40 +62,142 @@ for i = 1 : length(tmp)
         if strcmp(name(end-3:end), '.wrp')
             i_wrapper = i_wrapper + 1;
             wrapper_filenames{i_wrapper} = name;
-            
-            % version number
-            str_match1 = ['_i', institute, '_k', wrapper_k, '.wrp'];
-            str_match2 = ['_k', wrapper_k, '_i', institute, '.wrp'];   % it might happen that the wrapper file is differently named
-            if strcmp(name(end-(length(str_match1)-1):end), str_match1)   ||   strcmp(name(end-(length(str_match2)-1):end), str_match2)
-                id = strfind(name, '_V');
-                if str2num(name(id+2:id+4)) > version
-                    version = str2num(name(id+2:id+4));
-                end
-            end
+           
         end
     end
 end
 
+num_of_length_wrappers = length(wrapper_filenames);
 
+% Get i, k, V flags of wrapper names
+i_list = cell(num_of_length_wrappers, 1);
+V_list = nan(num_of_length_wrappers, 1);
+k_list = cell(num_of_length_wrappers, 1);
 
-% Get version number
-switch(wrapper_version)
-    case 'highest_version'
-        version_str = sprintf('%03d', version);
-        
-    otherwise
-        version_str = sprintf('%03d', str2num(wrapper_version));
+for i = 1 : num_of_length_wrappers
+    % _i
+    str_id_start = strfind(wrapper_filenames{i}, '_i');
+    if  ~isempty(str_id_start)
+        substr = wrapper_filenames{i}(str_id_start+2:end-4);
+        tmp_id = strfind(substr, '_');
+        if isempty(tmp_id)
+            i_list{i} = substr;
+        else
+            str_id_end = min(tmp_id);
+            i_list{i} = substr(1:str_id_end-1);
+        end
+    end
+    
+    % _k
+    str_id_start = strfind(wrapper_filenames{i}, '_k');
+    if  ~isempty(str_id_start)
+        substr = wrapper_filenames{i}(str_id_start+2:end-4);
+        tmp_id = strfind(substr, '_');
+        if isempty(tmp_id)
+            k_list{i} = substr;
+        else
+            str_id_end = min(tmp_id);
+            k_list{i} = substr(1:str_id_end-1);
+        end
+    end
+    
+    % _V
+    str_id_start = strfind(wrapper_filenames{i}, '_V');
+    if  ~isempty(str_id_start)
+        substr = wrapper_filenames{i}(str_id_start+2:end-4);
+        tmp_id = strfind(substr, '_');
+        if isempty(tmp_id)
+            V_list(i) = str2num(substr);
+        else
+            str_id_end = min(tmp_id);
+            V_list(i) = str2num(substr(1:str_id_end-1));
+        end
+    end
+
 end
 
-% ##### Open file #####
-nc_filename = [session_name, '_V', version_str, '_i', institute, '_k', wrapper_k, '.wrp'];
+% flag arraycontent:
+%  col 1: version
+%  col 2: k
+%  col 3 to n: institution(s)
+flag_array = zeros(num_of_length_wrappers, (2 + num_institutions));
+
+nc_filename = '';
+
+
+% ##### Select a wrapper file by the following conditions: #####
+% - Version number:
+%   - if there is no specfic version number defined, the highes number is taken of the defined institution (first in the list)
+%     - the min wrapper version is defined in the variable "min_wrapper_version"
+%   - if a version number is defined, the wrapper with this version and the institution with highest priority is taken
+
+% _V
+if isempty(wrapper_version)
+    % any k is valid!
+    flag_array(V_list >= min_wrapper_version, 1) = V_list(V_list >= min_wrapper_version);
+else
+    if strcmp(wrapper_version, 'highest_version')
+        flag_array(V_list >= min_wrapper_version, 1) = V_list(V_list >= min_wrapper_version);
+    else % only take specified version:
+       flag_array(:, 1) = V_list == wrapper_version;
+    end
+end
+
+% _k
+if isempty(wrapper_k)
+    % any k is valid!
+    flag_array(:, 2) = true;
+else
+    flag_array(:, 2) = strcmp(k_list, 'all');
+end
+
+%_i
+for i_int = 1 : num_institutions
+    i_col = i_int+2;
+    flag_array(:, i_col) = strcmp(i_list, institute{i_int});
+end
+
+
+% Select the best fitting wrapper file:
+
+% exclude filenames based on _k
+wrapper_filenames_tmp = wrapper_filenames(logical(flag_array(:, 2)));
+flag_array_tmp =  flag_array(logical(flag_array(:, 2)), :);
+if isempty(wrapper_filenames_tmp)
+    error('No valid wrapper file found (no wrapper with _k = %s)',wrapper_k);
+end
+
+% Loop over institutions and select the highest version available:
+for i_inst = 1 : num_institutions
+   i_col = i_inst + 2;
+
+   if sum(flag_array_tmp(:, i_col)) > 0 % Check, if there are valid wrappers with this inst.
+       % Check the version numbers for this inst.:
+       if sum(flag_array_tmp(:,1) & flag_array_tmp(:, i_col)) == 0
+           error('No valid wrapper file found!)');
+       end
+       flag_array_tmp(~(flag_array_tmp(:,1) & flag_array_tmp(:, i_col)), 1) = 0;
+       [max_version, max_version_id]=max(flag_array_tmp(:, 1));
+       
+       nc_filename = wrapper_filenames_tmp{max_version_id};
+   else
+       fprintf(' - No valid wrapper file for institution: %s\n', institute{i_inst})
+       
+   end
+   
+end
+
+% Check, if wrapper is available!
+if isempty(nc_filename)
+    error('No valid wrapper file found!');
+end
+
+% Load wrapper file:
 fid = fopen([path_nc, nc_filename],'r');
-
-% it might happen that the wrapper file is differently named
-if fid<0
-    nc_filename = [session_name, '_V', version_str, '_k', wrapper_k, '_i', institute, '.wrp'];
-    fid = fopen([path_nc, nc_filename],'r');
+if fid < 0
+    error('Unable to open wrapper file: %s', [path_nc, nc_filename]);
 end
+
 
 wrapper_data.wrapper_filename = nc_filename;
 
