@@ -72,11 +72,12 @@ break0=struct('start', [],  'epoch', [],  'end', [], 'x', [], 'y', [],...
 
 % preallocate ns_codes
 atm0=struct('vienna', [], 'gsfc', [], 'vandam', []);
+
 ns_codes=struct('code', [], 'name', [],'domes', [], 'CDP', [], 'comments', [], ...
-    'antenna_info', [], 'antennadat', [], 'ecc', [], 'blokq', [], 'equip', [], ...
-    'mask_vector', [], 'ocean_loading', [], 'itrf2005', [], ...
-    'itrf2008', [], 'itrf2014', [], 'dtrf2014', [], ...
-    'vtrf2008', [], 'vtrf2014', [], 'ivsTrf2014b', [], 'VieTRF13', [], 'vlbiDiscont', [], 'vievsTrf', [], ...
+    'antenna_info', [], 'ecc', [], ...
+    'ocean_loading', [],  ...
+    'itrf2014', [], 'dtrf2014', [], ...
+    'vtrf2014', [], 'ivsTrf2014b', [], 'VieTRF13', [], 'vievsTrf', [], ...
     'atmosphere_tidal_loading', [], 'oceanPoleTideLoading', [], 'aplrg', [], ...
     'gia', []);
 
@@ -646,6 +647,7 @@ end
 % since we want all ns-codes stations to have vievsTrf coordinates: Write
 % message if not.
 noVievsTrfCoords=cellfun(@isempty, {ns_codes.vievsTrf});
+
 if sum(noVievsTrfCoords)>0 % if there are ns_codes stations with no vievsTrf coordinates
     
     % get indices of stations where we don't have vievsTrf coordinates.
@@ -653,23 +655,9 @@ if sum(noVievsTrfCoords)>0 % if there are ns_codes stations with no vievsTrf coo
     
     % write all those stations as one line
     for k=1:sum(noVievsTrfCoords)
-        % (1) Try to get VTRF2008 coords
-        if ~isempty(ns_codes(ind(k)).vtrf2008)
-            ns_codes(ind(k)).vievsTrf.break=ns_codes(ind(k)).vtrf2008.break;
-        elseif ~isempty(ns_codes(ind(k)).VieTRF13)
-            % (2) try to get VieTRF13 coordinates
+        if ~isempty(ns_codes(ind(k)).VieTRF13)
+            % try to get VieTRF13 coordinates
             ns_codes(ind(k)).vievsTrf.break=ns_codes(ind(k)).VieTRF13.break;
-        elseif ~isempty(ns_codes(ind(k)).itrf2008)
-            % (3) try to get ITRF2008 coordinates
-            ns_codes(ind(k)).vievsTrf.break=ns_codes(ind(k)).itrf2008.break;
-        elseif ~isempty(ns_codes(ind(k)).itrf2005)
-            % (4) try to get ITRF2005 coordinates
-            ns_codes(ind(k)).vievsTrf.break=ns_codes(ind(k)).itrf2005.break;
-        elseif ~isempty(ns_codes(ind(k)).blokq)
-            % (5) try to get (approximate) coordinates from blokq.dat file (which is already in ns_codes struct)
-            ns_codes(ind(k)).vievsTrf.break.x=ns_codes(ind(k)).blokq.X;
-            ns_codes(ind(k)).vievsTrf.break.y=ns_codes(ind(k)).blokq.Y;
-            ns_codes(ind(k)).vievsTrf.break.z=ns_codes(ind(k)).blokq.Z;
         end
         
     end
@@ -945,34 +933,27 @@ for k=1:size(ns_codes,2)
     curLat=[];
     coordsFound=0;
     % get lon and lat of current station
-    % see if we have ITRF2005 coordinates
-    if ~isempty(ns_codes(k).itrf2005) 
+    % see if we have ITRF2014 coordinates
+    if ~isempty(ns_codes(k).itrf2014) 
         coordsFound=1;
-        curX=ns_codes(k).itrf2005.break(size(ns_codes(k).itrf2005.break,2)).x;
-        curY=ns_codes(k).itrf2005.break(size(ns_codes(k).itrf2005.break,2)).y;
-        curZ=ns_codes(k).itrf2005.break(size(ns_codes(k).itrf2005.break,2)).z;
-    elseif ~isempty(ns_codes(k).itrf2008) % if we have ITRF 2008 coords
+        curX=ns_codes(k).itrf2014.break(size(ns_codes(k).itrf2014.break,2)).x;
+        curY=ns_codes(k).itrf2014.break(size(ns_codes(k).itrf2014.break,2)).y;
+        curZ=ns_codes(k).itrf2014.break(size(ns_codes(k).itrf2014.break,2)).z;
+    elseif ~isempty(ns_codes(k).vtrf2014) % if we have VTRF 2014 coords
         coordsFound=1;
-        curX=ns_codes(k).itrf2008.break(size(ns_codes(k).itrf2008.break,2)).x;
-        curY=ns_codes(k).itrf2008.break(size(ns_codes(k).itrf2008.break,2)).y;
-        curZ=ns_codes(k).itrf2008.break(size(ns_codes(k).itrf2008.break,2)).z;
-    elseif ~isempty(ns_codes(k).vtrf2008)
+        curX=ns_codes(k).vtrf2014.break(size(ns_codes(k).vtrf2014.break,2)).x;
+        curY=ns_codes(k).vtrf2014.break(size(ns_codes(k).vtrf2014.break,2)).y;
+        curZ=ns_codes(k).vtrf2014.break(size(ns_codes(k).vtrf2014.break,2)).z;
+    elseif ~isempty(ns_codes(k).dtrf2014) % if we have DTRF 2014 coords
         coordsFound=1;
-        curX=ns_codes(k).vtrf2008.break(size(ns_codes(k).vtrf2008.break,2)).x;
-        curY=ns_codes(k).vtrf2008.break(size(ns_codes(k).vtrf2008.break,2)).y;
-        curZ=ns_codes(k).vtrf2008.break(size(ns_codes(k).vtrf2008.break,2)).z;
+        curX=ns_codes(k).dtrf2014.break(size(ns_codes(k).dtrf2014.break,2)).x;
+        curY=ns_codes(k).dtrf2014.break(size(ns_codes(k).dtrf2014.break,2)).y;
+        curZ=ns_codes(k).dtrf2014.break(size(ns_codes(k).dtrf2014.break,2)).z;
     elseif ~isempty(ns_codes(k).vievsTrf)
         coordsFound=1;
         curX=ns_codes(k).vievsTrf.break(size(ns_codes(k).vievsTrf.break,2)).x;
         curY=ns_codes(k).vievsTrf.break(size(ns_codes(k).vievsTrf.break,2)).y;
         curZ=ns_codes(k).vievsTrf.break(size(ns_codes(k).vievsTrf.break,2)).z;
-    elseif ~isempty(ns_codes(k).antennadat)
-        % antennadat could contain NaN
-        if ~isnan(ns_codes(k).antennadat.longitude)
-            coordsFound=1;
-            curLon=ns_codes(k).antennadat.longitude;
-            curLat=ns_codes(k).antennadat.latitude;
-        end
     end
     
     % if we have found coords -> interpolate and save to struct
@@ -1177,16 +1158,16 @@ if sum(noVandam|noGsfc|noVienna|noAtmoTidLoad)>0
         curY=0;
         curZ=0;
 
-        % if we have an entry for ITRF2008 - use these coordinates
-        if ~isempty(ns_codes(indInNs_codes).itrf2008)
-            curX=ns_codes(indInNs_codes).itrf2008.break(size(ns_codes(indInNs_codes).itrf2008.break,2)).x;
-            curY=ns_codes(indInNs_codes).itrf2008.break(size(ns_codes(indInNs_codes).itrf2008.break,2)).y;
-            curZ=ns_codes(indInNs_codes).itrf2008.break(size(ns_codes(indInNs_codes).itrf2008.break,2)).z;
+        % if we have an entry for ITRF2014 - use these coordinates
+        if ~isempty(ns_codes(indInNs_codes).itrf2014)
+            curX=ns_codes(indInNs_codes).itrf2014.break(size(ns_codes(indInNs_codes).itrf2014.break,2)).x;
+            curY=ns_codes(indInNs_codes).itrf2014.break(size(ns_codes(indInNs_codes).itrf2014.break,2)).y;
+            curZ=ns_codes(indInNs_codes).itrf2014.break(size(ns_codes(indInNs_codes).itrf2014.break,2)).z;
             coordsYes=1;
-        elseif ~isempty(ns_codes(indInNs_codes).vtrf2008) % next try: maybe there are coordinates available for vtrf2008:
-            curX=ns_codes(indInNs_codes).vtrf2008.break(size(ns_codes(indInNs_codes).vtrf2008.break,2)).x;
-            curY=ns_codes(indInNs_codes).vtrf2008.break(size(ns_codes(indInNs_codes).vtrf2008.break,2)).y;
-            curZ=ns_codes(indInNs_codes).vtrf2008.break(size(ns_codes(indInNs_codes).vtrf2008.break,2)).z;
+        elseif ~isempty(ns_codes(indInNs_codes).vtrf2014) % next try: maybe there are coordinates available for vtrf2014:
+            curX=ns_codes(indInNs_codes).vtrf2014.break(size(ns_codes(indInNs_codes).vtrf2014.break,2)).x;
+            curY=ns_codes(indInNs_codes).vtrf2014.break(size(ns_codes(indInNs_codes).vtrf2014.break,2)).y;
+            curZ=ns_codes(indInNs_codes).vtrf2014.break(size(ns_codes(indInNs_codes).vtrf2014.break,2)).z;
             coordsYes=1;
         elseif ~isempty(ns_codes(indInNs_codes).vievsTrf)
             curX=ns_codes(indInNs_codes).vievsTrf.break(size(ns_codes(indInNs_codes).vievsTrf.break,2)).x;
@@ -1375,7 +1356,7 @@ for iBlock=1:nBlocks
         curZ=0;
         coordsYes=0;
         
-        trfsToGetCoords={'vievsTrf', 'VieTRF13', 'vtrf2014', 'ivsTrf2014b'}; % get xyz from one of these
+        trfsToGetCoords={'itrf2014', 'vtrf2014', 'dtrf2014', 'vievsTrf', 'VieTRF13'}; % get xyz from one of these
         for kTrf=1:length(trfsToGetCoords)
             if ~isempty(ns_codes(curInd).(trfsToGetCoords{kTrf}))
                 curX=ns_codes(curInd).(trfsToGetCoords{kTrf}).break(size(ns_codes(curInd).(trfsToGetCoords{kTrf}).break,2)).x;
@@ -1450,8 +1431,7 @@ for iBlock=1:nBlocks
         curZ=0;
         coordsYes=0;
         
-        % trfsToGetCoords={'vievsTrf', 'VieTRF13', 'vtrf2014', 'ivsTrf2014b', 'vtrf2008', 'itrf2008', 'itrf2005'}; % get xyz from one of these
-        trfsToGetCoords={'vievsTrf', 'VieTRF13', 'vtrf2014', 'ivsTrf2014b'}; % get xyz from one of these
+        trfsToGetCoords={'itrf2014', 'vtrf2014', 'dtrf2014', 'vievsTrf', 'VieTRF13'}; % get xyz from one of these
         for kTrf=1:length(trfsToGetCoords)
             if ~isempty(ns_codes(k).(trfsToGetCoords{kTrf}))
                 curX=ns_codes(k).(trfsToGetCoords{kTrf}).break(size(ns_codes(k).(trfsToGetCoords{kTrf}).break,2)).x;
@@ -1483,7 +1463,7 @@ end
 noCoordsStats(cellfun(@isempty, noCoordsStats(:,1)),:)=[];
 
 % write stations with no coords to command window (for information)
-fprintf('\nFollowing stations have no coordinates (neither vievsTrf(backup),\n VieTRF13, vtrf2014, nor ivsTrf2014b) and therefore no ocean loading\ncorrections can be calculated for them:\n\n  NAME     DOMES      COMMENT\n');
+fprintf('\nFollowing stations have no coordinates (neither ITRF2014, vievsTrf(backup),\n VieTRF13, VTRF2014, nor DTRF2014) and therefore no ocean loading\ncorrections can be calculated for them:\n\n  NAME     DOMES      COMMENT\n');
 for k=1:size(noCoordsStats,1)
     fprintf('%4.0f %-8s  %9s  %30s\n', k,noCoordsStats{k,1}, noCoordsStats{k,2}, noCoordsStats{k,3});
 end
