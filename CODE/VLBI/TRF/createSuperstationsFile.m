@@ -70,26 +70,16 @@ function createSuperstationsFile_OpeningFcn(hObject, eventdata, handles, varargi
 handles.allPanels={'uipanel_mainInfoFiles', 'uipanel_trf', ...
     'uipanel_atmoLoading', 'uipanel_oceanLoading'};
 
-% define names of all files and save it in handles struct
-% handles.data.allFileDescriptions={'nsCodes', 'antennaInfo', 'antenna', 'eccdat', 'blokq', 'itrf2005', ...
-%         'vlbidiscont', 'itrf2008', 'itrf2014','dtrf2014', 'vtrf2008dat', 'vtrf2014dat', 'ivstrf2014b'...
-%         'vieTrf13', 'mask', 'equip', 's12vienna','s12vandam', 's12gsfc', 's12userOwn',...
-%         'oceanLoadingFES2004', 'oceanLoadingGOT00', 'oceanLoadingEOT08a', 'oceanLoadingTPXO72', 'oceanLoadingAG06', 'oceanLoadingUserOwn' ...
-%         'opoleloadcoefcmcor', 'opoleloadUserOwn', 'vievsTrf', 'userOwnTrf'};
-handles.data.allFileDescriptions={'nsCodes', 'antennaInfo', 'eccdat', 'itrf2005', ...
-        'itrf2008', 'itrf2014','dtrf2014', 'vtrf2008dat', 'vtrf2014dat', 'ivstrf2014b'...
+
+handles.data.allFileDescriptions={'nsCodes', 'antennaInfo', 'eccdat', ...
+        'itrf2014','dtrf2014', 'vtrf2014dat', 'ivstrf2014b'...
         'vieTrf13', 's12vienna','s12vandam', 's12gsfc', 's12userOwn',...
         'oceanLoadingFES2004', 'oceanLoadingGOT00', 'oceanLoadingEOT08a', 'oceanLoadingTPXO72', 'oceanLoadingAG06', 'oceanLoadingUserOwn' ...
         'opoleloadcoefcmcor', 'opoleloadUserOwn', 'vievsTrf', 'userOwnTrf'};
     
-% handles.data.allFileNames={'ns-codes.txt', 'antenna-info.txt', 'antenna.dat', 'ECCDAT.ecc', 'blokq.dat', 'ITRF2005_VLBI.SSC.txt',...
-%     'VLBI-DISCONT.txt', 'ITRF2008_VLBI.SSC.txt', 'ITRF2014-IVS-TRF.SNX', 'DTRF2014_VLBI.snx', 'VTRF2008.dat', 'VTRF2014_final.snx', ...
-%     'IVS_TRF2014b.SSC.txt', 'VieTRF13.txt', 'mask.cat', 'equip.cat',...
-%     's1_s2_s3_cm_noib_vlbi.dat','s12_cm_noib_vandam.dat', 's12_cm_noib_gsfc.dat',  's12userOwn.dat',...
-%     'ocean_loading_FES2004.TXT', 'ocean_loading_GOT00.TXT', 'ocean_loading_EOT08a.TXT', 'ocean_loading_TPXO72.TXT', 'ocean_loading_AG06.TXT', 'ocean_loading_userOwn.TXT',...
-%     'opoleloadcoefcmcor.txt', 'opoleloadUserOwn.txt', 'vievsTrf.txt', 'userOwnTrf.txt'};
-handles.data.allFileNames={'ns-codes.txt', 'antenna-info.txt', 'ECCDAT.ecc', 'ITRF2005_VLBI.SSC.txt',...
-    'ITRF2008_VLBI.SSC.txt', 'ITRF2014-IVS-TRF.SNX', 'DTRF2014_VLBI.snx', 'VTRF2008.dat', 'VTRF2014_final.snx', ...
+
+handles.data.allFileNames={'ns-codes.txt', 'antenna-info.txt', 'ECCDAT.ecc',...
+    'ITRF2014-IVS-TRF.SNX', 'DTRF2014_VLBI.snx', 'VTRF2014_final.snx', ...
     'IVS_TRF2014b.SSC.txt', 'VieTRF13.txt',...
     's1_s2_s3_cm_noib_vlbi.dat','s12_cm_noib_vandam.dat', 's12_cm_noib_gsfc.dat',  's12userOwn.dat',...
     'ocean_loading_FES2004.TXT', 'ocean_loading_GOT00.TXT', 'ocean_loading_EOT08a.TXT', 'ocean_loading_TPXO72.TXT', 'ocean_loading_AG06.TXT', 'ocean_loading_userOwn.TXT',...
@@ -335,26 +325,6 @@ if ~isempty(FileName)
         saveGuiDataToDisk(handles);        
     end
 end
-
-% --- Executes when selected object is changed in uipanel_antennaInfo.
-function uipanel_antennaInfo_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_antennaInfo 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% if "download" button was chosen
-if strcmp(get(eventdata.NewValue, 'Tag'), 'radiobutton_antennaInfoDownload')
-    set(handles.edit_antennaInfoFile, 'Enable', 'Off');
-    set(handles.pushbutton_antennaInfoBrowse, 'Enable', 'Off');
-else
-    set(handles.edit_antennaInfoFile, 'Enable', 'On');
-    set(handles.pushbutton_antennaInfoBrowse, 'Enable', 'On');
-end
-
-saveGuiDataToDisk(handles)
     
 % --- Executes on button press in pushbutton_antennaInfoBrowse.
 function pushbutton_antennaInfoBrowse_Callback(hObject, eventdata, handles)
@@ -438,71 +408,6 @@ h=msgbox(sprintf('%1.0f of %1.0f files found and written to textboxes', sum(foun
  
 saveGuiDataToDisk(handles);
 
-
-
-% --- Executes on button press in pushbutton_vtrf2008datBrowse.
-function pushbutton_vtrf2008datBrowse_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_vtrf2008datBrowse (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-browseFunction(hObject, handles)
-
-
-
-function edit_vtrf2008datFile_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vtrf2008datFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vtrf2008datFile as text
-%        str2double(get(hObject,'String')) returns contents of edit_vtrf2008datFile as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vtrf2008datFile_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vtrf2008datFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_itrf2008Browse.
-function pushbutton_itrf2008Browse_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_itrf2008Browse (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-browseFunction(hObject, handles)
-
-
-function edit_itrf2008File_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_itrf2008File (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_itrf2008File as text
-%        str2double(get(hObject,'String')) returns contents of edit_itrf2008File as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_itrf2008File_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_itrf2008File (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
 % --- Executes on button press in pushbutton_opoleloadcoefcmcorBrowse.
 function pushbutton_opoleloadcoefcmcorBrowse_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_opoleloadcoefcmcorBrowse (see GCBO)
@@ -534,71 +439,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-% --- Executes on button press in pushbutton_itrf2005Browse.
-function pushbutton_itrf2005Browse_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_itrf2005Browse (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-browseFunction(hObject, handles)
-
-
-
-function edit_itrf2005File_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_itrf2005File (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_itrf2005File as text
-%        str2double(get(hObject,'String')) returns contents of edit_itrf2005File as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_itrf2005File_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_itrf2005File (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_blokqBrowse.
-function pushbutton_blokqBrowse_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_blokqBrowse (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-browseFunction(hObject, handles)
-
-
-
-function edit_blokqFile_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_blokqFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_blokqFile as text
-%        str2double(get(hObject,'String')) returns contents of edit_blokqFile as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_blokqFile_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_blokqFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
 % --- Executes on button press in pushbutton_eccdatBrowse.
 function pushbutton_eccdatBrowse_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_eccdatBrowse (see GCBO)
@@ -621,37 +461,6 @@ function edit_eccdatFile_Callback(hObject, eventdata, handles)
 % --- Executes during object creation, after setting all properties.
 function edit_eccdatFile_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit_eccdatFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_antennaBrowse.
-function pushbutton_antennaBrowse_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_antennaBrowse (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-browseFunction(hObject, handles)
-
-
-function edit_antennaFile_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_antennaFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_antennaFile as text
-%        str2double(get(hObject,'String')) returns contents of edit_antennaFile as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_antennaFile_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_antennaFile (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -692,70 +501,6 @@ function edit_s12vandamFile_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-
-% --- Executes on button press in pushbutton_equipBrowse.
-function pushbutton_equipBrowse_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_equipBrowse (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-browseFunction(hObject, handles)
-
-
-
-function edit_equipFile_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_equipFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_equipFile as text
-%        str2double(get(hObject,'String')) returns contents of edit_equipFile as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_equipFile_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_equipFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_maskBrowse.
-function pushbutton_maskBrowse_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_maskBrowse (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-browseFunction(hObject, handles)
-
-
-function edit_maskFile_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_maskFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_maskFile as text
-%        str2double(get(hObject,'String')) returns contents of edit_maskFile as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_maskFile_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_maskFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
 
 % --- Executes when selected object is changed in uipanel_antenna.
 function uipanel_antenna_SelectionChangeFcn(hObject, eventdata, handles)
@@ -831,49 +576,6 @@ end
 saveGuiDataToDisk(handles)
 
 
-% --- Executes when selected object is changed in uipanel_blokq.
-function uipanel_blokq_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_blokq 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% if "download" button was chosen
-if strcmp(get(eventdata.NewValue, 'Tag'), 'radiobutton_blokqDownload')
-    set(handles.edit_blokqFile, 'Enable', 'Off');
-    set(handles.pushbutton_blokqBrowse, 'Enable', 'Off');
-else
-    set(handles.edit_blokqFile, 'Enable', 'On');
-    set(handles.pushbutton_blokqBrowse, 'Enable', 'On');
-end
-
-saveGuiDataToDisk(handles)
-
-
-% --- Executes when selected object is changed in uipanel_itrf2005.
-function uipanel_itrf2005_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_itrf2005 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% if "download" button was chosen
-if strcmp(get(eventdata.NewValue, 'Tag'), 'radiobutton_itrf2005Download')
-    set(handles.edit_itrf2005File, 'Enable', 'Off');
-    set(handles.pushbutton_itrf2005Browse, 'Enable', 'Off');
-else
-    set(handles.edit_itrf2005File, 'Enable', 'On');
-    set(handles.pushbutton_itrf2005Browse, 'Enable', 'On');
-end
-
-saveGuiDataToDisk(handles)
-
-
 % --- Executes when selected object is changed in uipanel_opoleloadcoefcmcor.
 function uipanel_opoleloadcoefcmcor_SelectionChangeFcn(hObject, eventdata, handles)
 % hObject    handle to the selected object in uipanel_opoleloadcoefcmcor 
@@ -895,95 +597,6 @@ end
 
 saveGuiDataToDisk(handles)
 
-
-% --- Executes when selected object is changed in uipanel_itrf2008.
-function uipanel_itrf2008_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_itrf2008 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% if "download" button was chosen
-if strcmp(get(eventdata.NewValue, 'Tag'), 'radiobutton_itrf2008Download')
-    set(handles.edit_itrf2008File, 'Enable', 'Off');
-    set(handles.pushbutton_itrf2008Browse, 'Enable', 'Off');
-else
-    set(handles.edit_itrf2008File, 'Enable', 'On');
-    set(handles.pushbutton_itrf2008Browse, 'Enable', 'On');
-end
-
-saveGuiDataToDisk(handles)
-
-
-% --- Executes when selected object is changed in uipanel_vtrf2008dat.
-function uipanel_vtrf2008dat_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_vtrf2008dat 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% if "download" button was chosen
-if strcmp(get(eventdata.NewValue, 'Tag'), 'radiobutton_vtrf2008datDownload')
-    set(handles.edit_vtrf2008datFile, 'Enable', 'Off');
-    set(handles.pushbutton_vtrf2008datBrowse, 'Enable', 'Off');
-else
-    set(handles.edit_vtrf2008datFile, 'Enable', 'On');
-    set(handles.pushbutton_vtrf2008datBrowse, 'Enable', 'On');
-end
-
-saveGuiDataToDisk(handles)
-
-
-% --- Executes when selected object is changed in uipanel_mask.
-function uipanel_mask_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_mask 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% if "download" button was chosen
-if strcmp(get(eventdata.NewValue, 'Tag'), 'radiobutton_maskDownload')
-    set(handles.edit_maskFile, 'Enable', 'Off');
-    set(handles.pushbutton_maskBrowse, 'Enable', 'Off');
-else
-    set(handles.edit_maskFile, 'Enable', 'On');
-    set(handles.pushbutton_maskBrowse, 'Enable', 'On');
-end
-
-saveGuiDataToDisk(handles)
-
-
-% --- Executes when selected object is changed in uipanel_equip.
-function uipanel_equip_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_equip 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% if "download" button was chosen
-if strcmp(get(eventdata.NewValue, 'Tag'), 'radiobutton_equipDownload')
-    set(handles.edit_equipFile, 'Enable', 'Off');
-    set(handles.pushbutton_equipBrowse, 'Enable', 'Off');
-else
-    set(handles.edit_equipFile, 'Enable', 'On');
-    set(handles.pushbutton_equipBrowse, 'Enable', 'On');
-end
-
-saveGuiDataToDisk(handles)
-
-
 % --- Executes when selected object is changed in uipanel_s12vandam.
 function uipanel_s12vandam_SelectionChangeFcn(hObject, eventdata, handles)
 % hObject    handle to the selected object in uipanel_s12vandam 
@@ -1004,61 +617,6 @@ else
 end
 
 saveGuiDataToDisk(handles)
-
-
-% --- Executes when selected object is changed in uipanel_vlbidiscont.
-function uipanel_vlbidiscont_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_vlbidiscont 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% if "download" button was chosen
-if strcmp(get(eventdata.NewValue, 'Tag'), 'radiobutton_vlbidiscontDownload')
-    set(handles.edit_vlbidiscontFile, 'Enable', 'Off');
-    set(handles.pushbutton_vlbidiscontBrowse, 'Enable', 'Off');
-else
-    set(handles.edit_vlbidiscontFile, 'Enable', 'On');
-    set(handles.pushbutton_vlbidiscontBrowse, 'Enable', 'On');
-end
-
-saveGuiDataToDisk(handles)
-
-
-% --- Executes on button press in pushbutton_vlbidiscontBrowse.
-function pushbutton_vlbidiscontBrowse_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_vlbidiscontBrowse (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-browseFunction(hObject, handles)
-
-
-
-function edit_vlbidiscontFile_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vlbidiscontFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vlbidiscontFile as text
-%        str2double(get(hObject,'String')) returns contents of edit_vlbidiscontFile as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vlbidiscontFile_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vlbidiscontFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
 
 % --- Executes on button press in pushbutton_s12gsfcBrowse.
 function pushbutton_s12gsfcBrowse_Callback(hObject, eventdata, handles)
@@ -2024,14 +1582,6 @@ makeAllPanelsInvisible(handles)
 set(handles.uipanel_oceanLoading, 'Visible', 'on');
 
 
-% --- If Enable == 'on', executes on mouse press in 5 pixel border.
-% --- Otherwise, executes on mouse press in 5 pixel border or over edit_itrf2005File.
-function edit_itrf2005File_ButtonDownFcn(hObject, eventdata, handles)
-% hObject    handle to edit_itrf2005File (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-rightClickOnEdit(hObject,eventdata,handles);
 
 
 % This function is executed on a right-click on an edit textbox
@@ -2083,26 +1633,6 @@ end
 
 
 % --- If Enable == 'on', executes on mouse press in 5 pixel border.
-% --- Otherwise, executes on mouse press in 5 pixel border or over edit_itrf2008File.
-function edit_itrf2008File_ButtonDownFcn(hObject, eventdata, handles)
-% hObject    handle to edit_itrf2008File (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-rightClickOnEdit(hObject,eventdata,handles);
-
-
-% --- If Enable == 'on', executes on mouse press in 5 pixel border.
-% --- Otherwise, executes on mouse press in 5 pixel border or over edit_vtrf2008datFile.
-function edit_vtrf2008datFile_ButtonDownFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vtrf2008datFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-rightClickOnEdit(hObject,eventdata,handles);
-
-
-% --- If Enable == 'on', executes on mouse press in 5 pixel border.
 % --- Otherwise, executes on mouse press in 5 pixel border or over edit_vtrf2014datFile.
 function edit_vtrf2014datFile_ButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to edit_vtrf2014datFile (see GCBO)
@@ -2120,17 +1650,6 @@ function edit_vieTrf13File_ButtonDownFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 rightClickOnEdit(hObject,eventdata,handles);
-
-
-% --- If Enable == 'on', executes on mouse press in 5 pixel border.
-% --- Otherwise, executes on mouse press in 5 pixel border or over edit_vlbidiscontFile.
-function edit_vlbidiscontFile_ButtonDownFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vlbidiscontFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-rightClickOnEdit(hObject,eventdata,handles);
-
 
 % --- If Enable == 'on', executes on mouse press in 5 pixel border.
 % --- Otherwise, executes on mouse press in 5 pixel border or over edit_vievsTrfFile.
@@ -2279,27 +1798,9 @@ rightClickOnEdit(hObject,eventdata,handles);
 
 
 % --- If Enable == 'on', executes on mouse press in 5 pixel border.
-% --- Otherwise, executes on mouse press in 5 pixel border or over edit_antennaFile.
-function edit_antennaFile_ButtonDownFcn(hObject, eventdata, handles)
-% hObject    handle to edit_antennaFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-rightClickOnEdit(hObject,eventdata,handles);
-
-
-% --- If Enable == 'on', executes on mouse press in 5 pixel border.
 % --- Otherwise, executes on mouse press in 5 pixel border or over edit_eccdatFile.
 function edit_eccdatFile_ButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to edit_eccdatFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-rightClickOnEdit(hObject,eventdata,handles);
-
-
-% --- If Enable == 'on', executes on mouse press in 5 pixel border.
-% --- Otherwise, executes on mouse press in 5 pixel border or over edit_blokqFile.
-function edit_blokqFile_ButtonDownFcn(hObject, eventdata, handles)
-% hObject    handle to edit_blokqFile (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 rightClickOnEdit(hObject,eventdata,handles);
@@ -2312,17 +1813,6 @@ function edit_maskFile_ButtonDownFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 rightClickOnEdit(hObject,eventdata,handles);
-
-
-% --- If Enable == 'on', executes on mouse press in 5 pixel border.
-% --- Otherwise, executes on mouse press in 5 pixel border or over edit_equipFile.
-function edit_equipFile_ButtonDownFcn(hObject, eventdata, handles)
-% hObject    handle to edit_equipFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-rightClickOnEdit(hObject,eventdata,handles);
-
-
 
 function edit_ivstrf2014bFile_Callback(hObject, eventdata, handles)
 % hObject    handle to edit_ivstrf2014bFile (see GCBO)

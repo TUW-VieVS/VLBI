@@ -22,21 +22,12 @@ function [varargout]=mk_superstatFile(inFiles, outFile)
 idiF=1;
 nsCodesFile=inFiles(idiF).name; idiF=idiF+1;
 antennaInfoFile=inFiles(idiF).name; idiF=idiF+1;
-antennaDatFile=inFiles(idiF).name; idiF=idiF+1;
 eccdatFile=inFiles(idiF).name; idiF=idiF+1;
-blokqFile=inFiles(idiF).name; idiF=idiF+1;
-itrf2005File=inFiles(idiF).name; idiF=idiF+1;
-%vtrf2005File=inFiles(idiF).name; % we don't use that because of stupid format
-vlbiDiscontFile=inFiles(idiF).name; idiF=idiF+1;
-itrf2008File=inFiles(idiF).name; idiF=idiF+1;
 itrf2014File=inFiles(idiF).name; idiF=idiF+1;
 dtrf2014File=inFiles(idiF).name; idiF=idiF+1;
-vtrf2008File=inFiles(idiF).name; idiF=idiF+1;
 vtrf2014File=inFiles(idiF).name; idiF=idiF+1;
 ivstrf2014bFile=inFiles(idiF).name; idiF=idiF+1;
 vieTrf13File=inFiles(idiF).name; idiF=idiF+1;
-maskFile=inFiles(idiF).name; idiF=idiF+1;
-equipFile=inFiles(idiF).name; idiF=idiF+1;
 s123viennaFile=inFiles(idiF).name; idiF=idiF+1;
 s12vandamFile=inFiles(idiF).name; idiF=idiF+1;
 s12gsfcFile=inFiles(idiF).name; idiF=idiF+1;
@@ -60,20 +51,20 @@ opoleloadUserOwnFieldname=inFiles(idiF).fieldName; idiF=idiF+1;
 vievsTrfFile=inFiles(idiF).name; idiF=idiF+1;
 userOwnTrfFile=inFiles(idiF).name;
 
-aplrgFilename1 = '../TRF/create/superstation/neededFiles/APL_RC_external1.txt'; % added by Hana 01/2014
+aplrgFilename1 = '../TRF/neededFiles/APL_RC_external1.txt'; % added by Hana 01/2014
 aplrgFieldname1 = 'p0_RCexternal';
-aplrgFilename2 = '../TRF/create/superstation/neededFiles/APL_RC_vievs1.txt';
+aplrgFilename2 = '../TRF/neededFiles/APL_RC_vievs1.txt';
 aplrgFieldname2 = 'p0_RCvievs';
 
 
-giaFilename1 = '../TRF/create/superstation/neededFiles/gia_uplift_rates_ICE_5G_VM2_2012.txt';
+giaFilename1 = '../TRF/neededFiles/gia_uplift_rates_ICE_5G_VM2_2012.txt';
 giaFieldname1 = 'ICE_5G_VM2_2012';
-giaMJDFilename1 = '../TRF/create/superstation/neededFiles/gia_mean_mjd_8413.txt';
+giaMJDFilename1 = '../TRF/neededFiles/gia_mean_mjd_8413.txt';
 giaMJDFieldname1 = 'refEpoch';
 
 % atmo tidal loading grid file from vandam
-atmoTidalLoadVandamGridFile='../TRF/create/superstation/neededFiles/s1_s2_def_cm.dat';
-atmoTidalLoadViennaGridFile='../TRF/create/superstation/neededFiles/s1_s2_s3_cm_noib_grid.dat';
+atmoTidalLoadVandamGridFile='../TRF/neededFiles/s1_s2_def_cm.dat';
+atmoTidalLoadViennaGridFile='../TRF/neededFiles/s1_s2_s3_cm_noib_grid.dat';
 
 break0=struct('start', [],  'epoch', [],  'end', [], 'x', [], 'y', [],... 
     'z', [], 'x_sigma', [], 'y_sigma', [], 'z_sigma', [], 'vx', [], ...
@@ -200,65 +191,10 @@ end
 
 
 % ---------------
-% 2.1.3 antenna.dat
+% 2.1.3 ECCDAT.dat
 % ---------------
 
-fprintf('\n2.1.3 Loading antenna.dat\n\n');
-
-if ~isempty(antennaDatFile)
-	fid = fopen(antennaDatFile);
-	k=0;
-	while ~feof(fid)
-		line = [fgetl(fid),'                                                                                                          '];
-		
-		% if we have data line
-		if line(1) ~= '#'
-			% find station in ns_codes
-			iStat=find(strcmpi({ns_codes.name}, line(1:8)));
-			
-			% if it is empty, try to find stationname with '_' instead of ' '
-			if isempty(iStat)
-				iStat=find(strcmpi({ns_codes.name}, strrep(line(1:8), ' ', '_')));
-			end
-
-			
-			
-			
-			if ~isempty(iStat)
-				iStat=iStat(1);
-				ns_codes(iStat).antennadat.name           = line(1:8);
-				ns_codes(iStat).antennadat.fixed_mobile   = line(15:15);
-				ns_codes(iStat).antennadat.IERS_name      = line(27:43);
-				dg_long                               = str2double(line(103:105));
-				mn_long                               = str2double(line(107:108));
-				sc_long                               = str2double(line(110:113));
-				ns_codes(iStat).antennadat.longitude  = dg_long + (mn_long/60) + (sc_long/3600);
-				dg_lat                                = str2double(line(115:117));
-				mn_lat                                = str2double(line(119:120));
-				sc_lat                                = str2double(line(122:125));
-				if sign(dg_lat)==-1
-					ns_codes(iStat).antennadat.latitude   = -1*(abs(dg_lat) + mn_lat/60 + sc_lat/3600);
-				else
-					ns_codes(iStat).antennadat.latitude   = dg_lat + (mn_lat/60) + (sc_lat/3600);
-				end
-				
-				ns_codes(iStat).antennadat.height         = str2double(line(127:132));
-			else
-				fprintf('%s (antenna.dat) not found in ns_codes ('' '' -> ''_'' checked)\n', line(1:8));
-			end
-		end
-	end
-	fclose(fid);
-else
-    fprintf('antenna.dat is not available\n\n');
-end
-
-
-% ---------------
-% 2.1.4 ECCDAT.dat
-% ---------------
-
-fprintf('\n2.1.4 Loading ECCDAT.ecc\n\n');
+fprintf('\n2.1.3 Loading ECCDAT.ecc\n\n');
 
 if ~isempty(eccdatFile)
 	fid=fopen(eccdatFile);
@@ -307,181 +243,11 @@ else
     fprintf('ECCDAT.ecc is not available\n\n');
 end
 
-% ---------------
-% 2.1.5 blokq.dat
-% ---------------
-
-fprintf('\n2.1.5 Loading blokq.dat\n\n');
-
-if ~isempty(blokqFile)
-	fid=fopen(blokqFile);
-
-	% create boolean if we are already at ocean loading in file
-	weAreAtOcean=0;
-
-	% my code:
-	while ~feof(fid)
-		line=[fgetl(fid),'                                                                                                          '];
-		
-		% if we are at sources (at very bottom) -> we don't need source information -> break
-		if strcmp(line(1:20), '$$    SOURCE CATALOG')
-			break;
-		
-		% if we are at start of ocean loading stuff -> get these data from now on
-		elseif weAreAtOcean==1 || strcmp(line(1:19), '$$    OCEAN LOADING')
-			break; % we don't need ocean loading from the blokq.dat file!
-		else % we are still at the beginning of the file (x,y,z from blokq.dat)
-			
-			% if we have data line
-			if strcmp(line(1:4), '    ')
-				% get index of station in ns_codes
-				iStat=find(strcmpi({ns_codes.name}, line(5:12)));
-				
-				% if it is empty, try to find stationname with '_' instead of ' '
-				if isempty(iStat)
-					iStat=find(strcmpi({ns_codes.name}, strrep(line(5:12), ' ', '_')));
-				end
-				
-				% if we have found a station
-				if ~isempty(iStat)
-					iStat=iStat(1);
-					if length(iStat)>1
-						keyboard; % we need to write data from blokq to mroe than one entry: make loop
-					end
-					ns_codes(iStat).blokq.X             = str2double(line(16:27));
-					ns_codes(iStat).blokq.Y             = str2double(line(32:43));
-					ns_codes(iStat).blokq.Z             = str2double(line(48:59));
-					ns_codes(iStat).blokq.xyz_temp1     = str2double(line(62:62));
-					ns_codes(iStat).blokq.xyz_temp2     = str2double(line(65:70));
-					ns_codes(iStat).blokq.xyz_temp3     = str2double(line(73:75));
-					ns_codes(iStat).blokq.xyz_temp4     = line(77:80);
-				else
-					fprintf('%s (in blokq.dat @ 1st (x,y,z) part) not found in ns_codes ('' '' -> ''_'' checked)\n', line(5:12));
-				end
-			end
-		end
-	end
-else
-    fprintf('blokq.dat is not available\n\n');
-end
-	
-
-% -------------
-% 2.1.6 equip.cat
-% -------------
-
-fprintf('\n2.1.6 Loading equip.cat\n\n');
-
-if ~isempty(equipFile)
-	fid=fopen(equipFile);
-	while ~feof(fid)
-		line=[fgetl(fid), '                                                                            '];
-		
-		% if we have data line (ie not * and not two blanks at beginning
-		if ~strcmp(line(1:1), '*') && ~strcmp(line(1:2), '  ')
-			
-			% find station name in ns_codes
-			iStat=find(strcmpi({ns_codes.name}, line(2:9)));
-			
-			% if ~empty: get data
-			if ~isempty(iStat)
-				% write it to all found stations
-				for k=1:length(iStat)
-					ns_codes(iStat(k)).equip.DAT_Name         = line(17:24);
-					ns_codes(iStat(k)).equip.Heads            = line(26:32);
-					ns_codes(iStat(k)).equip.Tape_len         = line(34:40);
-					ns_codes(iStat(k)).equip.SEFD             = line(55:59);
-					ns_codes(iStat(k)).equip.SEFD_param_Equip = line(61:107);
-				end
-			else
-				fprintf('%s (equip.cat) not found in ns_codes\n', line(2:9));
-			end
-			
-		end % if we have data line
-		
-	end % while
-
-	fclose(fid);
-else
-    fprintf('equip.cat is not available\n\n');
-end
-
-
-% ------------
-% 2.1.7 mask.cat
-% ------------
-
-fprintf('\n2.1.7 Loading mask.cat\n\n');
-
-if ~isempty(maskFile)
-	fid = fopen(maskFile);
-	i=0;
-
-	% preallocate
-	mask=struct;
-
-	while ~feof(fid)
-		
-		line = [fgetl(fid),'                                                                         '];      
-		if strcmp(line(1:2),'*H')==1 && strcmp(line(1:7),'*H Name')==0 || strcmp(line(1:2),'*-')==1
-			remain =line;
-			if strcmp(line(1:2),'*-')~=1
-				j=0;
-				i=i+1;
-				k=strfind(line, ' ');
-				mask(i).name = line(4:k(2)-1);
-			end
-			while true
-				[str, remain] = strtok(remain,' ');
-				if isempty(str),  break;  end
-				j=j+1;
-				if ~isnan(str2double(str))
-					k=k+1;
-					str2double(str);
-					mask(i).vector(k) = str2double(str);
-				end
-			end
-			
-		end
-	end
-
-	fclose(fid);
-	number_of_site2=i;
-
-	for j=1:number_of_site2
-		mask(j).vector(1)=[];
-		mask(j).vector(1)=[];
-		mask(j).vector(1)=[];
-		if mask(j).vector(1)~=0.0
-			mask(j).vector(1)=[];
-		end
-		f1=find(mask(j).vector>=360);
-		
-		L1=length(mask(j).vector);
-		for n=L1:-1:(f1(1)+1)
-			mask(j).vector(n)=[];
-			L1=L1-1;
-		end
-	end
-
-	j=1;
-	while j<=number_of_site2
-		for i=1:number_of_site
-			if strfind(ns_codes(i).name,mask(j).name)~= 0
-				ns_codes(i).mask_vector=mask(j).vector;
-			end
-		end
-		j=j+1;
-	end
-else
-    fprintf('mask.cat is not available\n\n');
-end
-
 
 % -----------------
 % 2.2 Ocean loading
 % -----------------
-fprintf('2.2 Ocean loading\n')
+fprintf('\n2.2 Ocean loading\n')
 
 
 %fprintf('\n2.2.1 Loading ocean loading files\n\n');
@@ -586,40 +352,13 @@ end
 % --------------------------------
 % 2.3 Terrestrial reference frames
 % --------------------------------
-fprintf('2.3 Terrestrial reference frames\n')
-
-
-% ---------------------------
-% 2.3.1 ITRF2005_VLBI.SSC.txt
-% ---------------------------
-
-fprintf('\n2.3.1 Loading ITRF2005_VLBI.SSC.txt\n\n');
-
-if ~isempty(itrf2005File)
-	ep=2000;
-    [ns_codes] = ITRF_VLBI_SSC_reader(itrf2005File,ep,ns_codes,'itrf2005',break0);
-else
-    fprintf('ITRF2005_VLBI.SSC.txt is not available\n\n');
-end
-
-% ---------------------------
-% 2.3.2 ITRF2008_VLBI.SSC.txt
-% ---------------------------
-
-fprintf('\n2.3.2 Loading ITRF2008_VLBI.SSC.txt\n\n');
-
-if ~isempty(itrf2008File)
-	ep=2005;
-    [ns_codes] = ITRF_VLBI_SSC_reader(itrf2008File,ep,ns_codes,'itrf2008',break0);
-else
-    fprintf('ITRF2008_VLBI.SSC.txt is not available\n\n');
-end
+fprintf('\n2.3 Terrestrial reference frames\n')
 
 
 % --------------------------
-% 2.3.3 ITRF2014-IVS-TRF.SNX
+% 2.3.1 ITRF2014-IVS-TRF.SNX
 % --------------------------
-fprintf('\n2.3.3 ITRF2014-IVS-TRF.SNX\n\n');
+fprintf('\n2.3.1 ITRF2014-IVS-TRF.SNX\n\n');
 if exist(itrf2014File, 'file')
 	itrf2014File_name = 'itrf2014';
 	[ns_codes] = trf_by_snx_reader(ns_codes,itrf2014File,itrf2014File_name,break0);
@@ -627,7 +366,7 @@ if exist(itrf2014File, 'file')
     setStartEndEpoch('itrf2014');
 
     % add post-seismic deformation
-    itrf2014psdfile='../TRF/create/superstation/neededFiles/ITRF2014-psd-vlbi.dat';
+    itrf2014psdfile='../TRF/neededFiles/ITRF2014-psd-vlbi.dat';
     if exist(itrf2014psdfile, 'file')
     % load file
         fid=fopen(itrf2014psdfile);
@@ -636,7 +375,7 @@ if exist(itrf2014File, 'file')
         while ~feof(fid)
             curl=fgetl(fid); curLinePart=curLinePart+1;
         
-            if curLinePart==4;
+            if curLinePart==4
                 curLinePart=1;
             end
         
@@ -695,10 +434,10 @@ else
 end
 
 % --------------------------
-% DTRF2014
+% 2.3.2 DTRF2014
 % --------------------------
 
-fprintf('\n2.3.3 DTRF2014_VLBI.SNX\n\n');
+fprintf('\n2.3.2 DTRF2014_VLBI.SNX\n\n');
 if exist(dtrf2014File, 'file')
 	dtrf2014File_name = 'dtrf2014';
 	[ns_codes] = trf_by_snx_reader(ns_codes,dtrf2014File,dtrf2014File_name,break0);
@@ -709,23 +448,10 @@ else
 end
 
 
-% ------------------
-% 2.3.4 VTRF2008.dat
-% ------------------
-
-fprintf('\n2.3.4 Loading VTRF2008.dat\n\n');
-
-if ~isempty(vtrf2008File)
-	ep=2000;
-    [ns_codes] = ITRF_VLBI_SSC_reader(vtrf2008File,ep,ns_codes,'vtrf2008',break0);
-else
-    fprintf('VTRF2008_VLBI.SSC.txt is not available\n\n');
-end
-
 % ------------------------
-% 2.3.5 VTRF2014_final.snx
+% 2.3.3 VTRF2014_final.snx
 % ------------------------
-fprintf('\n2.3.5 Loading VTRF2014_final.snx\n\n');
+fprintf('\n2.3.3 Loading VTRF2014_final.snx\n\n');
 if exist(vtrf2014File, 'file')
 
 	vtrf2014File_name = 'vtrf2014';
@@ -738,9 +464,9 @@ else
 end
         
 % --------------------------
-% 2.3.6 IVS_TRF2014b.SSC.txt
+% 2.3.4 IVS_TRF2014b.SSC.txt
 % --------------------------
-fprintf('\n2.3.6 Loading IVS_TRF2014b.SSC.txt\n\n');
+fprintf('\n2.3.4 Loading IVS_TRF2014b.SSC.txt\n\n');
 
 if ~isempty(ivstrf2014bFile)
 	ep=2005;
@@ -750,16 +476,15 @@ else
 end
 
 % --------------------
-% 2.3.7 vieTrf13.txt
+% 2.3.5 vieTrf13.txt
 % --------------------
 
-fprintf('\n2.3.7 Loading VieTRF13.txt\n\n');
+fprintf('\n2.3.5 Loading VieTRF13.txt\n\n');
 
 if ~isempty(vieTrf13File)
 	% open file -> read date -> close file
 	fid=fopen(vieTrf13File);
-	vieTrf13Data=textscan(fid, '%8s      %13.4f   %13.4f   %13.4f        %7.4f     %7.4f     %7.4f      %5.0f   %5.0f   %5.0f',...
-		'commentstyle', '%', 'delimiter', '||');
+	vieTrf13Data=textscan(fid, '%8s      %13.4f   %13.4f   %13.4f        %7.4f     %7.4f     %7.4f      %5.0f   %5.0f   %5.0f', 'commentstyle', '%', 'delimiter', '||');
 	fclose(fid);
 
 	% for all lines of the vieTrf file
@@ -820,119 +545,15 @@ else
     fprintf('VieTRF13.txt is not available\n\n');
 end     
 
-% ----------------------
-% 2.3.8 VLBI-DISCONT.txt
-% ----------------------
-
-fprintf('\n2.3.8 Loading VLBI-DISCONT.txt\n\n');
-
-
-% read sinex file
-blocks=sinex_reader(vlbiDiscontFile);
-
-% get index of SITE/ID block (could be different depending on sinex file)
-indWantedBlockSITEID=find(~cellfun(@isempty, strfind({blocks.name}, 'SITE/ID')));
-indWantedBlockSOLUTIONDISK=find(~cellfun(@isempty, strfind({blocks.name}, 'SOLUTION/DISCONTINUITY')));
-
-% get number of different stations in discont file
-nUniqueStats=size(blocks(indWantedBlockSITEID).data{1},2);
-
-% go through all unique stations and write data to main struct
-for k=1:nUniqueStats
-    % A - find corresponding station (if not found, make new)
-    
-    % find domes
-    indFoundStat=find(strcmpi({ns_codes.domes}, blocks(indWantedBlockSITEID).data{3}{k}{1} ));
-    
-    % if nothing was found yet - try to find station name
-    if isempty(indFoundStat)
-        indFoundStat=find(strcmpi({ns_codes.name}, blocks(indWantedBlockSITEID).data{5}{k}{1}(1:8) ));
-        
-        % if it is still empty: write message to command window and put
-        % data into a new entry in the struct
-        if isempty(indFoundStat)
-            fprintf('Station (from VLBI-DISCONT.txt) ''%s'' (domes: %s) was not found in ns_codes struct.\nAdded a new entry in struct (no other information now available for this station\n.Maybe check id too (hint for matthias)!\n', blocks(indWantedBlockSITEID).data{5}{k}{1}(1:8), blocks(indWantedBlockSITEID).data{3}{k});
-            indFoundStat=size(ns_codes,2)+1;
-        end
-    end
-    
-    
-    % get data to write to struct
-    
-    % B - write data to all station that have eg same domes (for all found stations)
-    for iFoundStat=1:size(indFoundStat,2)
-        curStatInd=indFoundStat(iFoundStat); % index in ns_codes of current station
-        
-        
-        % get number of breaks
-        allIdsDisc=[blocks(indWantedBlockSOLUTIONDISK).data{1}{:}]; % get all IDs of block "SOLUTION/DISCONTINUITY" into one matrix
-        curID=blocks(indWantedBlockSITEID).data{1}{k}; % ID of current stations (we are in loop over all stations in SINEX file
-        wantedBreaks=find(allIdsDisc==curID);
-        
-        % write "header infos" eg name, domes,... 
-        ns_codes(curStatInd).vlbiDiscont.id=        curID;
-        ns_codes(curStatInd).vlbiDiscont.domes_nr=  blocks(indWantedBlockSITEID).data{3}{k};
-        ns_codes(curStatInd).vlbiDiscont.site_descr=blocks(indWantedBlockSITEID).data{5}{k}{1};
-        
-        % for all breaks
-        for iBreak=1:size(wantedBreaks,2)
-            curLine=wantedBreaks(iBreak); % get line (in discontStruct) of the current break of the station
-            
-            % get discontinuitiy dates
-            startYr=   blocks(indWantedBlockSOLUTIONDISK).data{5}{curLine};
-            startDoy=  blocks(indWantedBlockSOLUTIONDISK).data{6}{curLine};
-            startSecod=blocks(indWantedBlockSOLUTIONDISK).data{7}{curLine};
-
-            % get end date
-            endYr=   blocks(indWantedBlockSOLUTIONDISK).data{8}{curLine};
-            endDoy=  blocks(indWantedBlockSOLUTIONDISK).data{9}{curLine};
-            endSecod=blocks(indWantedBlockSOLUTIONDISK).data{10}{curLine};
-
-            % get start epoch
-            if startDoy==0
-                startEpoch=0;
-            else
-                % convert yy:doy:secod to mjd
-                % make yy -> yyyy
-                if startYr>79
-                    startYr=1900+startYr;
-                else
-                    startYr=2000+startYr;
-                end
-                startEpoch=doy2jd(startYr,startDoy)-2400000.5 +startSecod/60/60/24;
-            end
-
-            % get end epoch
-            if endDoy==0
-                endEpoch=99999;
-            else
-                % convert yy:doy:secod to mjd
-                % yy -> yyyy
-                if endYr>79
-                    endYr=1900+endYr;
-                else
-                    endYr=2000+endYr;
-                end
-                endEpoch=doy2jd(endYr,endDoy)-2400000.5 +endSecod/60/60/24;
-            end
-                   
-            % write data to struct
-            ns_codes(curStatInd).vlbiDiscont.break(iBreak).start=startEpoch;
-            ns_codes(curStatInd).vlbiDiscont.break(iBreak).end=endEpoch;
-        end
-        
-    end
-    
-end
 
 % -------------------
-% 2.3.9 VieVS TRF file
+% 2.3.6 VieVS TRF file
 % -------------------
 % This TRF is the backup-TRF for VieVS and it is a mixture of the vieTrf
 % and (if no coordinates are available there) the VTRF2008. Also in this
 % backup-TRF the estimated coordinates after an earthquake are written to!
 
-fprintf('\n2.3.9 Loading VieVS TRF file\n\n');
+fprintf('\n2.3.6 Loading VieVS TRF file\n\n');
 
 fid=fopen(vievsTrfFile);
 
@@ -1055,10 +676,10 @@ if sum(noVievsTrfCoords)>0 % if there are ns_codes stations with no vievsTrf coo
 end
 
 % -----------------------
-% 2.3.8 User own TRF file
+% 2.3.9 User own TRF file
 % -----------------------
 if ~isempty(userOwnTrfFile)
-    fprintf('\n2.3.8 User own TRF file (%s)\n\n', userOwnTrfFile);
+    fprintf('\n2.3.9 User own TRF file (%s)\n\n', userOwnTrfFile);
 
     if strcmp(userOwnTrfFile(end-3:end),'.TXT') || strcmp(userOwnTrfFile(end-3:end),'.txt')
         % open file -> read date -> close file
@@ -1114,10 +735,10 @@ end
 % ----------------------
 % 2.4 Atmosphere loading
 % ----------------------
-fprintf('2.4 Atmosphere loading\n')
+fprintf('\n2.4 Atmosphere loading\n')
 
 % ----------------------------
-% s1_s2_s3_cm_noib_vlbi.dat (VIENNA)
+% 2.4.1 s1_s2_s3_cm_noib_vlbi.dat (VIENNA)
 % ----------------------------
 fprintf('\n2.4.1 Loading s1_s2_s3_cm_noib_vlbi.dat (VIENNA)\n\n');
 % for i=1:length(ns_codes)
@@ -1631,17 +1252,17 @@ if sum(noVandam|noGsfc|noVienna|noAtmoTidLoad)>0
                     fprintf('Downloading vandam grid file\n');
 
                     % download .Z file
-                    urlwrite(url, '../TRF/create/superstation/neededFiles/s1_s2_def_cm.dat.Z');
+                    urlwrite(url, '../TRF/neededFiles/s1_s2_def_cm.dat.Z');
 
                     % write message to user to extract file
-                    fprintf('Grid file (s1_s2_def_cm.dat.Z) for atmospheric tidal loading not found!\nIt was downloaded to ../TRF/create/superstation/neededFiles.\nPlease extract manually and re-run this program (or type ''return'').\n');
+                    fprintf('Grid file (s1_s2_def_cm.dat.Z) for atmospheric tidal loading not found!\nIt was downloaded to ../TRF/neededFiles.\nPlease extract manually and re-run this program (or type ''return'').\n');
                     keyboard;
                 end
                 % if we need to get the vandam grid into proper format
                 % (only do once)
                 if needToGetVandamGridToProperFormat==1
                     % get data
-                    fid=fopen('../TRF/create/superstation/neededFiles/s1_s2_def_cm.dat');
+                    fid=fopen('../TRF/neededFiles/s1_s2_def_cm.dat');
                     vandamGrid=textscan(fid, '%f %f %f %f %f %f %f %f %f %f %f %f %f %f');
                     fclose(fid);
 
@@ -1671,7 +1292,7 @@ if sum(noVandam|noGsfc|noVienna|noAtmoTidLoad)>0
             % ======================
             if noGsfc(indInNs_codes)==1
                 % do once: loading data
-                if ~exist('../TRF/create/superstation/neededFiles/aplo_s1_s2_noib_1.0x1.0deg.nc', 'file')
+                if ~exist('../TRF/neededFiles/aplo_s1_s2_noib_1.0x1.0deg.nc', 'file')
                     % download
                     url='http://gemini.gsfc.nasa.gov/aplo/aplo_s1_s2_noib_1.0x1.0deg.nc';
                     
@@ -1679,14 +1300,14 @@ if sum(noVandam|noGsfc|noVienna|noAtmoTidLoad)>0
                     fprintf('Downloading gsfc grid file (aplo_s1_s2_noib_1.0x1.0deg.nc)\n');
 
                     % download .Z file
-                    urlwrite(url, '../TRF/create/superstation/neededFiles/aplo_s1_s2_noib_1.0x1.0deg.nc');
+                    urlwrite(url, '../TRF/neededFiles/aplo_s1_s2_noib_1.0x1.0deg.nc');
                 end
                 
                 % load data to proper format ONLY ONCE
                 if needToGetGsfcGridToProperFormat ==1
                     [mesh_lon, mesh_lat, a{1}, a{2}, a{3}, ...
                         a{4}, a{5}, a{6}, a{7}, a{8}, a{9}, ...
-                        a{10}, a{11}, a{12}]=getGsfcsAploGrid('../TRF/create/superstation/neededFiles/aplo_s1_s2_noib_1.0x1.0deg.nc');
+                        a{10}, a{11}, a{12}]=getGsfcsAploGrid('../TRF/neededFiles/aplo_s1_s2_noib_1.0x1.0deg.nc');
 %                     [mesh_lon, mesh_lat, cos_s1_dr, sin_s1_dr, cos_s2_dr, ...
 %                         sin_s2_dr, cos_s1_dn, sin_s1_dn, cos_s2_dn, sin_s2_dn, cos_s1_de, ...
 %                         sin_s1_de, cos_s2_de, sin_s2_de]=getGsfcsAploGrid('../neededFiles/aplo_s1_s2_noib_1.0x1.0deg.nc');
@@ -1754,8 +1375,7 @@ for iBlock=1:nBlocks
         curZ=0;
         coordsYes=0;
         
-        trfsToGetCoords={'vievsTrf', 'VieTRF13', 'vtrf2014', 'ivsTrf2014b', 'vtrf2008',...
-            'itrf2008', 'itrf2005'}; % get xyz from one of these
+        trfsToGetCoords={'vievsTrf', 'VieTRF13', 'vtrf2014', 'ivsTrf2014b'}; % get xyz from one of these
         for kTrf=1:length(trfsToGetCoords)
             if ~isempty(ns_codes(curInd).(trfsToGetCoords{kTrf}))
                 curX=ns_codes(curInd).(trfsToGetCoords{kTrf}).break(size(ns_codes(curInd).(trfsToGetCoords{kTrf}).break,2)).x;
@@ -1765,23 +1385,6 @@ for iBlock=1:nBlocks
                 break
             end
         end
-%         % if we have an entry for ITRF2008 - use these coordinates
-%         if ~isempty(ns_codes(curInd).itrf2008)
-%             curX=ns_codes(curInd).itrf2008.break(size(ns_codes(curInd).itrf2008.break,2)).x;
-%             curY=ns_codes(curInd).itrf2008.break(size(ns_codes(curInd).itrf2008.break,2)).y;
-%             curZ=ns_codes(curInd).itrf2008.break(size(ns_codes(curInd).itrf2008.break,2)).z;
-%             coordsYes=1;
-%         elseif ~isempty(ns_codes(curInd).vtrf2008) % next try: maybe there are coordinates available for vtrf2008:
-%             curX=ns_codes(curInd).vtrf2008.break(size(ns_codes(curInd).vtrf2008.break,2)).x;
-%             curY=ns_codes(curInd).vtrf2008.break(size(ns_codes(curInd).vtrf2008.break,2)).y;
-%             curZ=ns_codes(curInd).vtrf2008.break(size(ns_codes(curInd).vtrf2008.break,2)).z;
-%             coordsYes=1;
-%         elseif ~isempty(ns_codes(curInd).vievsTrf)
-%             curX=ns_codes(curInd).vievsTrf.break(size(ns_codes(curInd).vievsTrf.break,2)).x;
-%             curY=ns_codes(curInd).vievsTrf.break(size(ns_codes(curInd).vievsTrf.break,2)).y;
-%             curZ=ns_codes(curInd).vievsTrf.break(size(ns_codes(curInd).vievsTrf.break,2)).z;
-%             coordsYes=1;
-%         end
         
         if coordsYes==1
             fprintf(osoFormat, ns_codes(curInd).name, curX, curY, curZ);
@@ -1847,8 +1450,8 @@ for iBlock=1:nBlocks
         curZ=0;
         coordsYes=0;
         
-        trfsToGetCoords={'vievsTrf', 'VieTRF13', 'vtrf2014', 'ivsTrf2014b', 'vtrf2008',...
-            'itrf2008', 'itrf2005'}; % get xyz from one of these
+        % trfsToGetCoords={'vievsTrf', 'VieTRF13', 'vtrf2014', 'ivsTrf2014b', 'vtrf2008', 'itrf2008', 'itrf2005'}; % get xyz from one of these
+        trfsToGetCoords={'vievsTrf', 'VieTRF13', 'vtrf2014', 'ivsTrf2014b'}; % get xyz from one of these
         for kTrf=1:length(trfsToGetCoords)
             if ~isempty(ns_codes(k).(trfsToGetCoords{kTrf}))
                 curX=ns_codes(k).(trfsToGetCoords{kTrf}).break(size(ns_codes(k).(trfsToGetCoords{kTrf}).break,2)).x;
@@ -1858,34 +1461,6 @@ for iBlock=1:nBlocks
                 break
             end
         end
-        
-%         % if we have an entry for ITRF2008 - use these coordinates
-%         if ~isempty(ns_codes(k).itrf2008)
-%             curX=ns_codes(k).itrf2008.break(size(ns_codes(k).itrf2008.break,2)).x;
-%             curY=ns_codes(k).itrf2008.break(size(ns_codes(k).itrf2008.break,2)).y;
-%             curZ=ns_codes(k).itrf2008.break(size(ns_codes(k).itrf2008.break,2)).z;
-%             coordsYes=1;
-%         elseif ~isempty(ns_codes(k).vtrf2008) % next try: maybe there are coordinates available for vtrf2008:
-%             curX=ns_codes(k).vtrf2008.break(size(ns_codes(k).vtrf2008.break,2)).x;
-%             curY=ns_codes(k).vtrf2008.break(size(ns_codes(k).vtrf2008.break,2)).y;
-%             curZ=ns_codes(k).vtrf2008.break(size(ns_codes(k).vtrf2008.break,2)).z;
-%             coordsYes=1;
-%         elseif ~isempty(ns_codes(k).vtrf2014) % next try: maybe there are coordinates available for vtrf2008:
-%             curX=ns_codes(k).vtrf2014.break(size(ns_codes(k).vtrf2014.break,2)).x;
-%             curY=ns_codes(k).vtrf2014.break(size(ns_codes(k).vtrf2014.break,2)).y;
-%             curZ=ns_codes(k).vtrf2014.break(size(ns_codes(k).vtrf2014.break,2)).z;
-%             coordsYes=1;
-%         elseif ~isempty(ns_codes(k).vievsTrf)
-%             curX=ns_codes(k).vievsTrf.break(size(ns_codes(k).vievsTrf.break,2)).x;
-%             curY=ns_codes(k).vievsTrf.break(size(ns_codes(k).vievsTrf.break,2)).y;
-%             curZ=ns_codes(k).vievsTrf.break(size(ns_codes(k).vievsTrf.break,2)).z;
-%             coordsYes=1;
-%         elseif ~isempty(ns_codes(k).VieTRF13)
-%             curX=ns_codes(k).VieTRF13.break(size(ns_codes(k).vieTrf13.break,2)).x;
-%             curY=ns_codes(k).VieTRF13.break(size(ns_codes(k).vieTrf13.break,2)).y;
-%             curZ=ns_codes(k).VieTRF13.break(size(ns_codes(k).vieTrf13.break,2)).z;
-%             coordsYes=1;
-%         else
 
         if coordsYes==0
             % write all stations which have no coordinates to this array for error message
@@ -1908,7 +1483,7 @@ end
 noCoordsStats(cellfun(@isempty, noCoordsStats(:,1)),:)=[];
 
 % write stations with no coords to command window (for information)
-fprintf('\nFollowing stations have no coordinates (neither ITRF2008,\nVTRF2008, VieTRF13 nor VieVS (backup) and therefore no ocean loading\ncorrections can be calculated for them:\n\n  NAME     DOMES      COMMENT\n');
+fprintf('\nFollowing stations have no coordinates (neither vievsTrf(backup),\n VieTRF13, vtrf2014, nor ivsTrf2014b) and therefore no ocean loading\ncorrections can be calculated for them:\n\n  NAME     DOMES      COMMENT\n');
 for k=1:size(noCoordsStats,1)
     fprintf('%4.0f %-8s  %9s  %30s\n', k,noCoordsStats{k,1}, noCoordsStats{k,2}, noCoordsStats{k,3});
 end
