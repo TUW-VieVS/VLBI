@@ -1,0 +1,69 @@
+# ns-codes.txt --------------
+            ns-codes, editTextbox | ../TRF/data/ns-codes.txt
+#
+# antenna-info.txt --------------
+        antenna-info, editTextBox | ../TRF/data/antenna-info.txt
+#
+# ECCDAT.ecc --------------
+              eccdat, editTextBox | ../TRF/data/ECCDAT.ecc
+#
+# ITRF2014-IVS-TRF.SNX --------------
+            itrf2014, editTextBox | ../TRF/data/ITRF2014-IVS-TRF.SNX
+#
+# DTRF2014_VLBI.snx --------------
+            dtrf2014, editTextBox | 
+#
+# VTRF2014_final.snx --------------
+         vtrf2014dat, editTextBox | ../TRF/data/VTRF2014_final.snx
+#
+# IVS_TRF2014b.SSC.txt --------------
+         ivstrf2014b, editTextBox | ../TRF/data/IVS_TRF2014b.SSC.txt
+#
+# VieTRF13.txt --------------
+            vieTrf13, editTextBox | ../TRF/data/VieTRF13.txt
+#
+# s1_s2_s3_cm_noib_vlbi.dat --------------
+           s12vienna, editTextBox | ../TRF/data/s1_s2_s3_cm_noib_vlbi.dat
+#
+# s12_cm_noib_vandam.dat --------------
+           s12vandam, editTextBox | ../TRF/data/s12_cm_noib_vandam.dat
+#
+# s12_cm_noib_gsfc.dat --------------
+             s12gsfc, editTextBox | ../TRF/data/s12_cm_noib_gsfc.dat
+#
+# s12userOwn.dat --------------
+          s12userOwn, editTextbox | 
+#
+# ocean_loading_FES2004.TXT --------------
+    oceanLoadFES2004, editTextBox | ../TRF/data/ocean_loading_FES2004.TXT
+#
+# ocean_loading_GOT00.TXT --------------
+      oceanLoadGOT00, editTextBox | ../TRF/data/ocean_loading_GOT00.TXT
+#
+# ocean_loading_EOT08a.TXT --------------
+     oceanLoadEOT08a, editTextBox | ../TRF/data/ocean_loading_EOT08a.TXT
+#
+# ocean_loading_TPXO72.TXT --------------
+     oceanLoadTPXO72, editTextBox | ../TRF/data/ocean_loading_TPXO72.TXT
+#
+# ocean_loading_AG06.TXT --------------
+       oceanLoadAG06, editTextBox | ../TRF/data/ocean_loading_AG06.TXT
+#
+# ocean_loading_userOwn.TXT --------------
+    oceanLoadUserOwn, editTextBox | 
+#
+# opoleloadcoefcmcor.txt --------------
+  opoleloadcoefcmcor, editTextBox | ../TRF/data/opoleloadcoefcmcor.txt
+#
+# opoleloadUserOwn.txt --------------
+    opoleloadUserOwn, editTextBox | 
+#
+# vievsTrf.txt --------------
+            vievsTrf, editTextBox | ../TRF/data/vievsTrf.txt
+#
+# userOwnTrf.txt --------------
+          userOwnTrf, editTextBox | 
+#
+
+#
+                          outFile | D:\GIT\vievs\VLBI\TRF\superstation.mat

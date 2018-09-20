@@ -32,6 +32,8 @@
 
 function antenna=nc2antenna(out_struct, trf, chosenTrf, wrapper_data)
 
+url_vievswiki_create_superstation = 'http://vievswiki.geo.tuwien.ac.at/doku.php?id=public:vievs_manual:data#create_a_superstation_file';
+
 % number of stations in session
 nStat=size(out_struct.head.StationList.val,2);
 
@@ -58,7 +60,7 @@ for iStat=1:nStat
     curStatInTrf=strcmp({trf.name}, curName);
     
     if sum(curStatInTrf)~=1
-        fprintf('ERROR: Station %s not found in superstation file!\n', curName)
+        error('Station %s not found in the superstation file. Add this station to the superstation file (vievsTRF = backup TRF) by following the steps described at %s\n', curName, url_vievswiki_create_superstation);
     else
         indCurStatInTrf=find(curStatInTrf);
     end
@@ -75,10 +77,8 @@ for iStat=1:nStat
     curYMDHM=out_struct.stat(iStat).TimeUTC.YMDHM.val;
     curSecond=out_struct.stat(iStat).TimeUTC.Second.val;
     
-    antenna(iStat).firstObsMjd=cal2jd(double(curYMDHM(1,1)), double(curYMDHM(2,1)),...
-        double(curYMDHM(3,1)))-2400000.5 +double(curYMDHM(4,1))/24+double(curYMDHM(5,1))/60/24+curSecond(1)/60/60/24;
-    antenna(iStat).lastObsMjd=cal2jd(double(curYMDHM(1,end)), double(curYMDHM(2,end)),...
-        double(curYMDHM(3,end)))-2400000.5 +double(curYMDHM(4,end))/24+double(curYMDHM(5,end))/60/24+curSecond(end)/60/60/24;
+    antenna(iStat).firstObsMjd=cal2jd(double(curYMDHM(1,1)), double(curYMDHM(2,1)), double(curYMDHM(3,1)))-2400000.5 +double(curYMDHM(4,1))/24+double(curYMDHM(5,1))/60/24+curSecond(1)/60/60/24;
+    antenna(iStat).lastObsMjd=cal2jd(double(curYMDHM(1,end)), double(curYMDHM(2,end)), double(curYMDHM(3,end)))-2400000.5 +double(curYMDHM(4,end))/24+double(curYMDHM(5,end))/60/24+curSecond(end)/60/60/24;
     
     % get trf coordinates from chosen trf
     if isempty(trf(indCurStatInTrf).(chosenTrf))
@@ -88,16 +88,24 @@ for iStat=1:nStat
         trfToTake=chosenTrf;
     end
     
-    % find break
-    bnr=find(antenna(iStat).firstObsMjd>=[trf(indCurStatInTrf).(trfToTake).break.start] & ...
-        antenna(iStat).firstObsMjd<=[trf(indCurStatInTrf).(trfToTake).break.end]);
-    
+    if ~isempty(trf(indCurStatInTrf).(chosenTrf))
+        % find break
+        bnr=find(antenna(iStat).firstObsMjd>=[trf(indCurStatInTrf).(trfToTake).break.start] & antenna(iStat).firstObsMjd<=[trf(indCurStatInTrf).(trfToTake).break.end]);
+    else % no vievsTRF coordinates alvailable
+        error('Station %s  has no vievsTRF coordinates in the superstation file. Add this station to the superstation file (to vievsTRF.txt) by following the steps described at %s\n', antenna(iStat).name, url_vievswiki_create_superstation);
+    end
+
     % no break is found for the "trfToTake"
     if isempty(bnr)
         fprintf('No valid %s epoch for %s - get vievsTrf coordinates (no NNT/NNR)\n', trfToTake, curName)
         % so: no valid epoch for official (e.g.. VTRF2008) TRF -> get vievsTrf break
         trfToTake='vievsTrf';
+        
         bnr=find(antenna(iStat).firstObsMjd>=[trf(indCurStatInTrf).(trfToTake).break.start] & antenna(iStat).firstObsMjd<=[trf(indCurStatInTrf).(trfToTake).break.end]);
+
+        if isempty(bnr)
+            error('Station %s not found in the superstation file (vievsTRF). Add this station to the superstation file by following the steps described at %s\n', antenna(iStat).name, url_vievswiki_create_superstation);
+        end
     end
     
     curBreak=trf(indCurStatInTrf).(trfToTake).break(bnr);

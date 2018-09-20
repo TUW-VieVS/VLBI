@@ -274,7 +274,7 @@ dirsInTrpFolder(strcmp({dirsInTrpFolder.name}, '.')|strcmp({dirsInTrpFolder.name
 dirsInIonFolder(strcmp({dirsInIonFolder.name}, '.')|strcmp({dirsInIonFolder.name}, '..')|~[dirsInIonFolder.isdir])=[];
 dirsInAtmFolder(strcmp({dirsInAtmFolder.name}, '.')|strcmp({dirsInAtmFolder.name}, '..')|strcmp({dirsInAtmFolder.name}, 'temp')|~[dirsInAtmFolder.isdir])=[];
 dirsInHydloFolder(strcmp({dirsInHydloFolder.name}, '.')|strcmp({dirsInHydloFolder.name}, '..')|~[dirsInHydloFolder.isdir])=[];
-dirsInTrfFolder(strcmp({dirsInTrfFolder.name}, '.')|strcmp({dirsInTrfFolder.name}, '..')|cellfun(@isempty, strfind({dirsInTrfFolder.name}, '.txt')))=[];
+dirsInTrfFolder( strcmp({dirsInTrfFolder.name}, '.') | strcmp({dirsInTrfFolder.name}, '..') | strcmp({dirsInTrfFolder.name}, 'SavedGuiData_superstations.txt') | cellfun(@isempty, strfind({dirsInTrfFolder.name}, '.txt')) )=[]; % Exception for superstation GUI settup savings file ("SavedGuiData_superstations.txt")
 dirsInCrfFolder(strcmp({dirsInCrfFolder.name}, '.')|strcmp({dirsInCrfFolder.name}, '..'))=[];
 dirsInEopFolder(strcmp({dirsInEopFolder.name}, '.')|strcmp({dirsInEopFolder.name}, '..'))=[];
 dirsInEophfFolder(strcmp({dirsInEophfFolder.name}, '.')|strcmp({dirsInEophfFolder.name}, '..'))=[];

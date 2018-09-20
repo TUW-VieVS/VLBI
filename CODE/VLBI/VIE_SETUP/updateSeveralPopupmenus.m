@@ -57,7 +57,6 @@ if ~iscell(curContent)
 else
     curSelected=curContent{get(handles.popupmenu_setInput_outDir, 'Value')};
 end
-% curSelected=curContent{get(handles.popupmenu_setInput_outDir, 'Value')};
 dirsInOutlierFolder=dir('../DATA/OUTLIER/');
 yrsToDelete=~cellfun(@isnan, cellfun(@str2double, {dirsInOutlierFolder.name}, 'UniformOutput', false));
 dirsInOutlierFolder(strcmp({dirsInOutlierFolder.name}, '.')|strcmp({dirsInOutlierFolder.name}, '..')|~[dirsInOutlierFolder.isdir]|yrsToDelete)=[];
@@ -91,7 +90,9 @@ end
 path_dir             = '../TRF/*.txt';
 popupmenu_tag        = 'popupmenu_parameters_refFrames_otherTRF';
 file_description_str = 'TRF file';
-flag_no_files = update_popupmenu_files_in_dir(path_dir, popupmenu_tag, file_description_str, handles);
+additonal_filenames = {};
+remove_filenames = {'SavedGuiData_superstations.txt'};
+flag_no_files = update_popupmenu_files_in_dir(path_dir, popupmenu_tag, file_description_str, handles, additonal_filenames, remove_filenames);
 if flag_no_files
     set(handles.popupmenu_parameters_refFrames_otherTRF, 'Enable', 'off')
     set(handles.radiobutton_parameters_refFrames_otherTRF, 'Enable', 'off')
@@ -380,8 +381,13 @@ flag_no_files = false;
 switch nargin
     case 4 % Just add the names of all files found in the derfined directory to the popupmenu
         additonal_filenames = {};
+        remove_filenames = {};
     case 5 % additional strings (which are provided as input argument) have to be added to the popupmenu
         additonal_filenames = varargin{1};
+        remove_filenames = {};
+    case 6
+        additonal_filenames = varargin{1};
+        remove_filenames = varargin{2};
     otherwise
         additonal_filenames = {}; % Error init.
 end
@@ -391,8 +397,15 @@ if ischar(curContent)
 end
 curSelected = eval( ['curContent{get(handles.', popupmenu_tag, ', ''Value'')}'] );
 filesInDir = dir(path_dir);
+filesInDir(strcmp({filesInDir.name}, '.')|strcmp({filesInDir.name}, '..'))=[]; % Remove "." and ".."
+
+if ~isempty(remove_filenames) % Remove filenames defined in input argument "remove_filenames"
+    for i = 1 : length(remove_filenames)
+        filesInDir(strcmp({filesInDir.name}, remove_filenames))=[]; % Remove "." and ".."
+    end
+end
+
 filenames = {filesInDir.name};
-filesInDir(strcmp(filenames, '.')|strcmp(filenames, '..'))=[];
 filenames = [filenames, additonal_filenames]; % Add additional filesnames
 if isempty(filenames)
     filenames = ' '; % It is not allowed to set an empty string!
@@ -418,11 +431,11 @@ curContent = eval(['get(handles.', popupmenu_tag, ', ''String'')']);
 if ~iscell(curContent)
     curContent = {curContent};
 end
-try
+% try
 curSelected = eval( ['curContent{get(handles.', popupmenu_tag, ', ''Value'')}'] );
-catch
-    disp('iii');
-end
+% catch
+%     disp('iii');
+% end
 foldersInDir = dir(path_dir);
 foldersInDir(strcmp({foldersInDir.name}, '.')|strcmp({foldersInDir.name}, '..')|~[foldersInDir.isdir])=[]; % Only get the names of the sub-directories!
 if strcmp(curSelected, '/') % ...because "/" is set as default in the LEVEL3-subfolder popupmenus on program start in Vie_SETUP (plotting tools and EOP/BAS output)!

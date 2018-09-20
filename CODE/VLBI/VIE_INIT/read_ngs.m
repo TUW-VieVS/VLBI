@@ -162,7 +162,8 @@ function [antenna,sources,scan]=read_ngs(ngsfil,trffil,crffil,ini_opt, trf, crf)
 % constants; % ???
 
 % ##### Options #####
-error_code_invalid_met_data = -999; % Error corde for missing met. data in NGS file (numerical)
+url_vievswiki_create_superstation   = 'http://vievswiki.geo.tuwien.ac.at/doku.php?id=public:vievs_manual:data#create_a_superstation_file';
+error_code_invalid_met_data         = -999; % Error corde for missing met. data in NGS file (numerical)
 
 % ##### Check inoput options (ini_opt) #####
 if ~isfield(ini_opt,'minel')
@@ -582,7 +583,7 @@ while (idx_line <= nlines)
 
                 % #### Check, if there is an entry for the current station in the superstation file. If not => Error Msg. and abort! ####
                 if isempty(trf_id)
-                    error('ERROR (read_ngs.m): No entry for station %s in the superstation file!\n', sta_names(i_stat,:));
+                    error('Station %s not found in the superstation file. Add this station to the superstation file by following the steps described at %s\n', sta_names(i_stat,:), url_vievswiki_create_superstation);
                 end
 
                 % Save the ID of the antenna in the superstation file (needed for finding of the corrections in Vie_MOD)
@@ -618,7 +619,7 @@ while (idx_line <= nlines)
                     end
 
                 else % Not found...
-                    fprintf('Station not found in %s - write coordinates to ASCII file and renew superstation file!\n', trffil{2});
+                    fprintf('Station not found in %s!\n', trffil{2});
                     break_id = [];
                 end
 
@@ -630,20 +631,23 @@ while (idx_line <= nlines)
                     fprintf('No %s coordinates for %s in %s ... get vievsTrf coordinates\n', trffil{2},sta_names(i_stat,:),trffil{1});
 
                     % if there is no start break - only approx coords (e.g. station "VLA     ")
-                    if ~isfield(trf(trf_id).vievsTrf.break, 'start')
-                        break_id = 1;
-                    else
-                        break_id = find(mjd >= [trf(trf_id).vievsTrf.break.start] & mjd <= [trf(trf_id).vievsTrf.break.end]);
-                        if length(break_id) > 1
-                            break_id = break_id(1);
-                            warning(['Multiple breaks found in TRF data for station: ' trf(trf_id).name]);
+                    if ~isempty(trf(trf_id).vievsTrf)
+                        if ~isfield(trf(trf_id).vievsTrf.break, 'start')
+                            break_id = 1;
+                        else
+                            break_id = find(mjd >= [trf(trf_id).vievsTrf.break.start] & mjd <= [trf(trf_id).vievsTrf.break.end]);
+                            if length(break_id) > 1
+                                break_id = break_id(1);
+                                warning(['Multiple breaks found in TRF data for station: ' trf(trf_id).name]);
+                            end
                         end
+                    else
+                        error('Station %s has no vievsTRF coordinates in the superstation file. Add this station to the superstation file (to vievsTRF.txt) by following the steps described at %s\n', sta_names(i_stat,:), url_vievswiki_create_superstation);
                     end
 
                     % ### Check, if VieVS TRF coordinates were found: ###
                     if isempty(break_id)
-                        fprintf('Station not found in vievs TRF - write coordinates to ASCII file and renew superstation file!\n');
-                        keyboard;
+                        error('Station %s not found in the superstation file (vievsTRF). Add this station to the superstation file by following the steps described at %s\n', trf(trf_id).name, url_vievswiki_create_superstation);
                     end
 
                     % ### Get the break sub-structure from the trf structure where coords should be taken ###
