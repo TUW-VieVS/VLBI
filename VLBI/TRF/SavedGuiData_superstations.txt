@@ -1,113 +1,69 @@
 # ns-codes.txt --------------
-             ns-codes, download | 0
-              ns-codes, specify | 1
-          ns-codes, editTextbox | ../TRF/neededFiles/ns-codes.txt
+            ns-codes, editTextbox | ../TRF/neededFiles/ns-codes.txt
 #
 # antenna-info.txt --------------
-         antenna-info, download | 0
-          antenna-info, specify | 1
-      antenna-info, editTextBox | ../TRF/neededFiles/antenna-info.txt
+        antenna-info, editTextBox | ../TRF/neededFiles/antenna-info.txt
 #
 # ECCDAT.ecc --------------
-               eccdat, download | 0
-                eccdat, specify | 1
-            eccdat, editTextBox | ../TRF/neededFiles/ECCDAT.ecc
+              eccdat, editTextBox | ../TRF/neededFiles/ECCDAT.ecc
 #
 # ITRF2014-IVS-TRF.SNX --------------
-             itrf2005, download | 0
-              itrf2005, specify | 1
-          itrf2005, editTextBox | ../TRF/neededFiles/ITRF2014-IVS-TRF.SNX
+            itrf2014, editTextBox | ../TRF/neededFiles/ITRF2014-IVS-TRF.SNX
 #
 # DTRF2014_VLBI.snx --------------
-             itrf2008, download | 0
-              itrf2008, specify | 1
-          itrf2008, editTextBox | ../TRF/neededFiles/DTRF2014_VLBI.snx
+            dtrf2014, editTextBox | ../TRF/neededFiles/DTRF2014_VLBI.snx
 #
 # VTRF2014_final.snx --------------
-             itrf2014, download | 0
-              itrf2014, specify | 1
-          itrf2014, editTextBox | ../TRF/neededFiles/VTRF2014_final.snx
+         vtrf2014dat, editTextBox | ../TRF/neededFiles/VTRF2014_final.snx
 #
 # IVS_TRF2014b.SSC.txt --------------
-             dtrf2014, download | 0
-              dtrf2014, specify | 1
-          dtrf2014, editTextBox | ../TRF/neededFiles/IVS_TRF2014b.SSC.txt
+         ivstrf2014b, editTextBox | ../TRF/neededFiles/IVS_TRF2014b.SSC.txt
 #
 # VieTRF13.txt --------------
-          vtrf2008dat, download | 0
-           vtrf2008dat, specify | 1
-       vtrf2008dat, editTextBox | ../TRF/neededFiles/VieTRF13.txt
+            vieTrf13, editTextBox | 
 #
 # s1_s2_s3_cm_noib_vlbi.dat --------------
-          vtrf2014dat, download | 0
-           vtrf2014dat, specify | 1
-       vtrf2014dat, editTextBox | ../TRF/neededFiles/s1_s2_s3_cm_noib_vlbi.dat
+           s12vienna, editTextBox | ../TRF/neededFiles/s1_s2_s3_cm_noib_vlbi.dat
 #
 # s12_cm_noib_vandam.dat --------------
-       ivstrf2014bdat, download | 0
-           ivstrf2014b, specify | 1
-       ivstrf2014b, editTextBox | ../TRF/neededFiles/s12_cm_noib_vandam.dat
+           s12vandam, editTextBox | ../TRF/neededFiles/s12_cm_noib_vandam.dat
 #
 # s12_cm_noib_gsfc.dat --------------
-             vieTrf13, download | 0
-              vieTrf13, specify | 1
-          vieTrf13, editTextBox | ../TRF/neededFiles/s12_cm_noib_gsfc.dat
+             s12gsfc, editTextBox | ../TRF/neededFiles/s12_cm_noib_gsfc.dat
 #
 # s12userOwn.dat --------------
-            s12vienna, download | 0
-             s12vienna, specify | 1
-         s12vienna, editTextBox | 
+          s12userOwn, editTextbox | 
 #
 # ocean_loading_FES2004.TXT --------------
-            s12vandam, download | 0
-             s12vandam, specify | 1
-         s12vandam, editTextBox | ../TRF/neededFiles/ocean_loading_FES2004.TXT
+    oceanLoadFES2004, editTextBox | ../TRF/neededFiles/ocean_loading_FES2004.TXT
 #
 # ocean_loading_GOT00.TXT --------------
-              s12gsfc, download | 0
-               s12gsfc, specify | 1
-           s12gsfc, editTextBox | ../TRF/neededFiles/ocean_loading_GOT00.TXT
+      oceanLoadGOT00, editTextBox | ../TRF/neededFiles/ocean_loading_GOT00.TXT
 #
 # ocean_loading_EOT08a.TXT --------------
-           s12userOwn, download | 0
-            s12userOwn, specify | 1
-        s12userOwn, editTextbox | ../TRF/neededFiles/ocean_loading_EOT08a.TXT
+     oceanLoadEOT08a, editTextBox | ../TRF/neededFiles/ocean_loading_EOT08a.TXT
 #
 # ocean_loading_TPXO72.TXT --------------
-     oceanLoadFES2004, download | 0
-      oceanLoadFES2004, specify | 1
-  oceanLoadFES2004, editTextBox | ../TRF/neededFiles/ocean_loading_TPXO72.TXT
+     oceanLoadTPXO72, editTextBox | ../TRF/neededFiles/ocean_loading_TPXO72.TXT
 #
 # ocean_loading_AG06.TXT --------------
-       oceanLoadGOT00, download | 0
-        oceanLoadGOT00, specify | 1
-    oceanLoadGOT00, editTextBox | ../TRF/neededFiles/ocean_loading_AG06.TXT
+       oceanLoadAG06, editTextBox | ../TRF/neededFiles/ocean_loading_AG06.TXT
 #
 # ocean_loading_userOwn.TXT --------------
-      oceanLoadEOT08a, download | 0
-       oceanLoadEOT08a, specify | 1
-   oceanLoadEOT08a, editTextBox | 
+    oceanLoadUserOwn, editTextBox | 
 #
 # opoleloadcoefcmcor.txt --------------
-      oceanLoadTPXO72, download | 0
-       oceanLoadTPXO72, specify | 1
-   oceanLoadTPXO72, editTextBox | ../TRF/neededFiles/opoleloadcoefcmcor.txt
+  opoleloadcoefcmcor, editTextBox | ../TRF/neededFiles/opoleloadcoefcmcor.txt
 #
 # opoleloadUserOwn.txt --------------
-        oceanLoadAG06, download | 0
-         oceanLoadAG06, specify | 1
-     oceanLoadAG06, editTextBox | 
+    opoleloadUserOwn, editTextBox | 
 #
 # vievsTrf.txt --------------
-     oceanLoadUserOwn, download | 0
-      oceanLoadUserOwn, specify | 1
-  oceanLoadUserOwn, editTextBox | ../TRF/neededFiles/vievsTrf.txt
+            vievsTrf, editTextBox | ../TRF/neededFiles/vievsTrf.txt
 #
 # userOwnTrf.txt --------------
-   opoleloadcoefcmcor, download | 0
-    opoleloadcoefcmcor, specify | 1
-opoleloadcoefcmcor, editTextBox | 
+          userOwnTrf, editTextBox | 
 #
 
 #
-                        outFile | D:\GIT\vievs\VLBI\TRF\superstation_test.mat
+                          outFile | D:\GIT\vievs\VLBI\TRF\superstation_test.mat

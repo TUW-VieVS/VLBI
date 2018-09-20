@@ -51,6 +51,13 @@ opoleloadUserOwnFieldname=inFiles(idiF).fieldName; idiF=idiF+1;
 vievsTrfFile=inFiles(idiF).name; idiF=idiF+1;
 userOwnTrfFile=inFiles(idiF).name;
 
+% Flags, for the availability of TRF files
+flag_trf_itrf2014 = true;
+flag_trf_dtrf2014 = true;
+flag_trf_vtrf2014 = true;
+flag_trf_vieTrf13 = true;
+flag_trf_ivstrf2014b = true;
+
 aplrgFilename1 = '../TRF/neededFiles/APL_RC_external1.txt'; % added by Hana 01/2014
 aplrgFieldname1 = 'p0_RCexternal';
 aplrgFilename2 = '../TRF/neededFiles/APL_RC_vievs1.txt';
@@ -84,6 +91,13 @@ ns_codes=struct('code', [], 'name', [],'domes', [], 'CDP', [], 'comments', [], .
 %% ============
 % 2. read files
 % =============
+
+% First check, if vievsTRF is available!
+% - It is required in any case, because it is used as backup TRF file!
+if isempty(vievsTrfFile)
+    varargout{1} = 'The loction of the vievsTRF.txt (mandatory!) is not specified! Define the file location and run the program again.';
+    return;
+end
 
 % -----------------------
 % 2.1 Antenna information
@@ -432,6 +446,7 @@ if exist(itrf2014File, 'file')
     end
 else
     fprintf('ITRF2014-IVS-TRF.SNX is not available\n\n');
+    flag_trf_itrf2014 = false;
 end
 
 % --------------------------
@@ -446,6 +461,8 @@ if exist(dtrf2014File, 'file')
     setStartEndEpoch('dtrf2014');
 else
     fprintf('DTRF2014_VLBI.SNX is not available\n\n');
+    flag_trf_dtrf2014 = false;
+
 end
 
 
@@ -462,6 +479,8 @@ if exist(vtrf2014File, 'file')
     setStartEndEpoch('vtrf2014');
 else
     fprintf('VTRF2014_final.SNX is not available\n\n');
+    flag_trf_vtrf2014 = false;
+
 end
         
 % --------------------------
@@ -474,6 +493,7 @@ if ~isempty(ivstrf2014bFile)
     [ns_codes] = ITRF_VLBI_SSC_reader(ivstrf2014bFile,ep,ns_codes,'ivsTrf2014b',break0);
 else
     fprintf('IVS_TRF2014b.SSC.txt is not available\n\n');
+    flag_trf_ivstrf2014b = false;
 end
 
 % --------------------
@@ -544,6 +564,7 @@ if ~isempty(vieTrf13File)
 	end
 else
     fprintf('VieTRF13.txt is not available\n\n');
+    flag_trf_vieTrf13 = false;
 end     
 
 
@@ -556,24 +577,9 @@ end
 
 fprintf('\n2.3.6 Loading VieVS TRF file\n\n');
 
-fid=fopen(vievsTrfFile);
-
-% find number of headerlines
-nHeaderlines=0;
-
-while ~feof(fid)
-    curLine=[fgetl(fid), ' '];
-    if strcmp(curLine(1), '%') || strcmp(curLine(1), ' ')
-        nHeaderlines=nHeaderlines+1;
-    else
-        break;
-    end
-end
-fclose(fid);
-
 % read data using textscan
 fid=fopen(vievsTrfFile);
-vievsTrf=textscan(fid, '%8s %20f %16f %16f %15f %12f %12f %11f %8f %8f %f %s', 'headerlines', nHeaderlines, 'delimiter', '|');
+vievsTrf=textscan(fid, '%8s %20f %16f %16f %15f %12f %12f %11f %8f %8f %f %s', 'commentstyle', '%', 'delimiter', '|');
 fclose(fid);
 nStat=size(vievsTrf{1},1); % get number of stations
 
@@ -593,7 +599,7 @@ for k=1:nStat
             indStat=find(strcmpi({ns_codes.name}, strrep(vievsTrf{1}{k}, ' ', '_')));
         else
             % if not found, add new entry to ns_codes
-            fprintf('station %s (in manual vievsTRF) was not found in ns_codes -> writing station to new entry!\n', vievsTrf{1}{k});
+            fprintf('station %s (in vievsTRF) was not found in ns_codes -> writing station to new entry!\n', vievsTrf{1}{k});
             indStat=size(ns_codes,2)+1;
         end
     end
@@ -1474,6 +1480,28 @@ end
 % =============================================
 
 fprintf('\n5. Saving superstations struct\n\n');
+
+
+% Delete fields for unavailable TRFs:
+
+
+
+if ~flag_trf_itrf2014
+    ns_codes = rmfield(ns_codes, 'itrf2014');
+end
+if ~flag_trf_dtrf2014
+    ns_codes = rmfield(ns_codes, 'dtrf2014');
+end
+if ~flag_trf_vtrf2014
+    ns_codes = rmfield(ns_codes, 'vtrf2014');
+end
+if ~flag_trf_vieTrf13
+    ns_codes = rmfield(ns_codes, 'VieTRF13');
+end
+if ~flag_trf_ivstrf2014b
+    ns_codes = rmfield(ns_codes, 'ivsTrf2014b');
+end
+
 
 % save the main variable under name superstations
 superstations=ns_codes;
