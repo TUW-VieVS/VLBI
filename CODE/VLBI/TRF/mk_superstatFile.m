@@ -58,20 +58,20 @@ flag_trf_vtrf2014 = true;
 flag_trf_vieTrf13 = true;
 flag_trf_ivstrf2014b = true;
 
-aplrgFilename1 = '../TRF/neededFiles/APL_RC_external1.txt'; % added by Hana 01/2014
+aplrgFilename1 = '../TRF/data/APL_RC_external1.txt'; % added by Hana 01/2014
 aplrgFieldname1 = 'p0_RCexternal';
-aplrgFilename2 = '../TRF/neededFiles/APL_RC_vievs1.txt';
+aplrgFilename2 = '../TRF/data/APL_RC_vievs1.txt';
 aplrgFieldname2 = 'p0_RCvievs';
 
 
-giaFilename1 = '../TRF/neededFiles/gia_uplift_rates_ICE_5G_VM2_2012.txt';
+giaFilename1 = '../TRF/data/gia_uplift_rates_ICE_5G_VM2_2012.txt';
 giaFieldname1 = 'ICE_5G_VM2_2012';
-giaMJDFilename1 = '../TRF/neededFiles/gia_mean_mjd_8413.txt';
+giaMJDFilename1 = '../TRF/data/gia_mean_mjd_8413.txt';
 giaMJDFieldname1 = 'refEpoch';
 
 % atmo tidal loading grid file from vandam
-atmoTidalLoadVandamGridFile='../TRF/neededFiles/s1_s2_def_cm.dat';
-atmoTidalLoadViennaGridFile='../TRF/neededFiles/s1_s2_s3_cm_noib_grid.dat';
+atmoTidalLoadVandamGridFile='../TRF/data/s1_s2_def_cm.dat';
+atmoTidalLoadViennaGridFile='../TRF/data/s1_s2_s3_cm_noib_grid.dat';
 
 break0=struct('start', [],  'epoch', [],  'end', [], 'x', [], 'y', [],... 
     'z', [], 'x_sigma', [], 'y_sigma', [], 'z_sigma', [], 'vx', [], ...
@@ -113,6 +113,10 @@ fprintf('2.1.1 Loading ns_codes.txt\n\n');
 if ~isempty(nsCodesFile)
 	% open file
 	fid=fopen(nsCodesFile);
+    if (fid < 0)
+        varargout{1} = ['ERROR: Cannot open the file: ', nsCodesFile];
+        return;
+    end
 	% preallocate ns_codes struct
 
 	i=1;
@@ -144,6 +148,8 @@ if ~isempty(nsCodesFile)
     number_of_site=length(ns_codes);	
 else
     fprintf('ns_codes.txt is not available\n\n');
+    varargout{1} = 'ns_codes.txt is not specified!';
+    return;
 end
 
 
@@ -160,6 +166,10 @@ fprintf('\n2.1.2 Loading antenna-info.txt\n\n');
 if ~isempty(antennaInfoFile)
 	% open file
 	fid=fopen(antennaInfoFile);
+    if (fid < 0)
+        varargout{1} = ['ERROR: Cannot open the file: ', antennaInfoFile];
+        return;
+    end
 
 	j=0;
 	while ~feof(fid)
@@ -202,6 +212,8 @@ if ~isempty(antennaInfoFile)
 	fclose(fid);
 else
     fprintf('antenna-info is not available\n\n');
+    varargout{1} = 'antenna-info.txt is not specified!';
+    return;
 end
 
 
@@ -213,6 +225,10 @@ fprintf('\n2.1.3 Loading ECCDAT.ecc\n\n');
 
 if ~isempty(eccdatFile)
 	fid=fopen(eccdatFile);
+    if (fid < 0)
+        varargout{1} = ['ERROR: Cannot open the file: ', eccdatFile];
+        return;
+    end
 
 	while ~feof(fid)
 		line = [fgetl(fid),'                                                                                                          '];
@@ -256,6 +272,8 @@ if ~isempty(eccdatFile)
 	fclose(fid);
 else
     fprintf('ECCDAT.ecc is not available\n\n');
+    varargout{1} = 'ECCDAT.ecc is not specified!';
+    return;
 end
 
 
@@ -296,6 +314,11 @@ for k=1:nFiles % 6 ocean loading files (last is optional - user own
 		% if textfile
 		if strcmp(files2load{k}(end-3:end),'.TXT') || strcmp(files2load{k}(end-3:end),'.txt')
 			fid=fopen(files2load{k});
+            if (fid < 0)
+               varargout{1} = ['ERROR: Cannot open the file: ', files2load{k}];
+               return;
+            end
+
 
 			while ~feof(fid)
 				line=[fgetl(fid), '        '];
@@ -328,7 +351,6 @@ for k=1:nFiles % 6 ocean loading files (last is optional - user own
 						end
 
 						% get data
-	%                    ns_codes(iStat).ocean_loading.(ol_fieldnames{k})(1,:)=str2num(line);
 						ns_codes(iStat).ocean_loading.(ol_fieldnames{k})(1,:)=[str2num(line(2:8)) str2num(line(9:15)) str2num(line(16:22)) str2num(line(23:29)) str2num(line(30:36)) str2num(line(37:43)) str2num(line(44:50)) str2num(line(51:57))  str2num(line(58:64)) str2num(line(65:71)) str2num(line(72:78))]; % Richard Ray format
 						line = [fgetl(fid),'                                                                                                          '];                   
 						ns_codes(iStat).ocean_loading.(ol_fieldnames{k})(2,:)=str2num(line);
@@ -341,7 +363,6 @@ for k=1:nFiles % 6 ocean loading files (last is optional - user own
 
 						line = [fgetl(fid),'                                                                                                          '];
 						ns_codes(iStat).ocean_loading.(ol_fieldnames{k})(6,:)=str2num(line);
-	%                     ns_codes(iStat).ocean_loading.(ol_fieldnames{k}).SSA.phase_TANGENTL_NS    = str2double(line(73:78));
 					else
 						fprintf('%s (ocean_loading_%s.TXT) not found in ns_codes ('' '' -> ''_'' checked)\n', line(3:10), ol_fieldnames{k});
 					end   
@@ -349,7 +370,8 @@ for k=1:nFiles % 6 ocean loading files (last is optional - user own
 			end % while
 			fclose(fid);
 		elseif strcmp(files2load{k}(end-3:end),'.mat')
-			tempp=load(files2load{k});fprintf('ocean_loading_%s is introduced\n',ol_fieldnames{k})
+			tempp=load(files2load{k});
+            fprintf('ocean_loading_%s is introduced\n',ol_fieldnames{k})
             fn=fieldnames(tempp); 
             oceanLOAD=tempp.(fn{1});
             for i=1:length(oceanLOAD)
@@ -381,10 +403,14 @@ if exist(itrf2014File, 'file')
     setStartEndEpoch('itrf2014');
 
     % add post-seismic deformation
-    itrf2014psdfile='../TRF/neededFiles/ITRF2014-psd-vlbi.dat';
+    itrf2014psdfile='../TRF/data/ITRF2014-psd-vlbi.dat';
     if exist(itrf2014psdfile, 'file')
     % load file
         fid=fopen(itrf2014psdfile);
+        if (fid < 0)
+           varargout{1} = ['ERROR: Cannot open the file: ', itrf2014psdfile];
+           return;
+        end
     
         curLinePart=0;
         while ~feof(fid)
@@ -462,7 +488,6 @@ if exist(dtrf2014File, 'file')
 else
     fprintf('DTRF2014_VLBI.SNX is not available\n\n');
     flag_trf_dtrf2014 = false;
-
 end
 
 
@@ -480,7 +505,6 @@ if exist(vtrf2014File, 'file')
 else
     fprintf('VTRF2014_final.SNX is not available\n\n');
     flag_trf_vtrf2014 = false;
-
 end
         
 % --------------------------
@@ -505,6 +529,10 @@ fprintf('\n2.3.5 Loading VieTRF13.txt\n\n');
 if ~isempty(vieTrf13File)
 	% open file -> read date -> close file
 	fid=fopen(vieTrf13File);
+    if (fid < 0)
+       varargout{1} = ['ERROR: Cannot open the file: ', vieTrf13File];
+       return;
+    end
 	vieTrf13Data=textscan(fid, '%8s      %13.4f   %13.4f   %13.4f        %7.4f     %7.4f     %7.4f      %5.0f   %5.0f   %5.0f', 'commentstyle', '%', 'delimiter', '||');
 	fclose(fid);
 
@@ -579,6 +607,10 @@ fprintf('\n2.3.6 Loading VieVS TRF file\n\n');
 
 % read data using textscan
 fid=fopen(vievsTrfFile);
+if (fid < 0)
+   varargout{1} = ['ERROR: Cannot open the file: ', vievsTrf];
+   return;
+end
 vievsTrf=textscan(fid, '%8s %20f %16f %16f %15f %12f %12f %11f %8f %8f %f %s', 'commentstyle', '%', 'delimiter', '|');
 fclose(fid);
 nStat=size(vievsTrf{1},1); % get number of stations
@@ -678,8 +710,11 @@ if ~isempty(userOwnTrfFile)
     if strcmp(userOwnTrfFile(end-3:end),'.TXT') || strcmp(userOwnTrfFile(end-3:end),'.txt')
         % open file -> read date -> close file
         fid=fopen(userOwnTrfFile);
-        userOwnTrfData=textscan(fid, '%8c %f %f %f %f %f %f %f %f %f',...
-        'commentstyle', '%');
+        if (fid < 0)
+            varargout{1} = ['ERROR: Cannot open the file: ', userOwnTrfFile];
+            return;
+        end
+        userOwnTrfData=textscan(fid, '%8c %f %f %f %f %f %f %f %f %f', 'commentstyle', '%');
         fclose(fid);
     elseif strcmp(userOwnTrfFile(end-3:end),'.mat')
         tempt=load(userOwnTrfFile);
@@ -738,7 +773,17 @@ fprintf('\n2.4.1 Loading s1_s2_s3_cm_noib_vlbi.dat (VIENNA)\n\n');
 % for i=1:length(ns_codes)
 %     ns_codes(i).atmosphere_tidal_loading.vienna=[];
 % end
+if isempty(s123viennaFile)
+    varargout{1} = 'ERROR: Location of s1_s2_s3_cm_noib_vlbi.dat not specified!';
+    return;
+end
 fid = fopen(s123viennaFile);
+if (fid < 0)
+    varargout{1} = ['ERROR: Cannot open the file: ', s123viennaFile];
+    return;
+end
+
+
 while ~feof(fid)
     line = [fgetl(fid),'                                                                                                          '];
     linum=str2num(line(9:end));
@@ -768,7 +813,15 @@ fclose(fid);
 
 fprintf('\n2.4.2 Loading s12_cm_noib_gsfc.dat\n\n');
 
+if isempty(s123viennaFile)
+    varargout{1} = 'ERROR: Location of s12_cm_noib_gsfc.dat not specified!';
+    return;
+end
 fid = fopen(s12gsfcFile);
+if (fid < 0)
+    varargout{1} = ['ERROR: Cannot open the file: ', s12gsfcFile];
+    return;
+end
 
 while ~feof(fid)
     
@@ -796,7 +849,17 @@ fclose(fid);
 % ----------------------------
 
 fprintf('\n2.4.3 Loading s12_cm_noib_vandam.dat\n\n');
+
+if isempty(s123viennaFile)
+    varargout{1} = 'ERROR: Location of s12_cm_noib_vandam.dat not specified!';
+    return;
+end
 fid = fopen(s12vandamFile);
+if (fid < 0)
+    varargout{1} = ['ERROR: Cannot open the file: ', s12vandamFile];
+    return;
+end
+
 while ~feof(fid)
     line = [fgetl(fid),'                                                                                                          '];
     
@@ -824,6 +887,10 @@ fclose(fid);
 if ~isempty(s12UserOwnFile)
     fprintf('\n2.4.4 User own atmosphere loading data (%s)\n\n', s12UserOwnFile);
     fid = fopen(s12UserOwnFile);
+    if (fid < 0)
+        varargout{1} = ['ERROR: Cannot open the file: ', s12UserOwnFile];
+        return;
+    end
 
     while ~feof(fid)
         line = [fgetl(fid),'                                                                                                          '];
@@ -864,7 +931,15 @@ else
 end
 
 % open file
+if isempty(opoleloadcoefcmcorFile)
+    varargout{1} = 'ERROR: Ocean pole tide loading file is not specified!';
+    return;
+end
 fid=fopen(opoleloadcoefcmcorFile);
+if (fid < 0)
+    varargout{1} = ['ERROR: Cannot open file: ', opoleloadcoefcmcorFile];
+    return;
+end
 
 % get data
 oceanPoleTideCoefs=textscan(fid, '%f %f %f %f %f %f %f %f', 'headerlines', 14);
@@ -1203,6 +1278,10 @@ if sum(noVandam|noGsfc|noVienna|noAtmoTidLoad)>0
                     if needToGetViennaGridToProperFormat==1
                         % get data
                         fid=fopen(atmoTidalLoadViennaGridFile);
+                        if (fid < 0)
+                            varargout{1} = ['ERROR: Cannot open the file: ', atmoTidalLoadViennaGridFile];
+                            return;
+                        end
                         viennaGrid=cell2mat(textscan(fid, '%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f'));
                         fclose(fid);
                         lonV=0.5:359.5;
@@ -1239,17 +1318,21 @@ if sum(noVandam|noGsfc|noVienna|noAtmoTidLoad)>0
                     fprintf('Downloading vandam grid file\n');
 
                     % download .Z file
-                    urlwrite(url, '../TRF/neededFiles/s1_s2_def_cm.dat.Z');
+                    urlwrite(url, '../TRF/data/s1_s2_def_cm.dat.Z');
 
                     % write message to user to extract file
-                    fprintf('Grid file (s1_s2_def_cm.dat.Z) for atmospheric tidal loading not found!\nIt was downloaded to ../TRF/neededFiles.\nPlease extract manually and re-run this program (or type ''return'').\n');
+                    fprintf('Grid file (s1_s2_def_cm.dat.Z) for atmospheric tidal loading not found!\nIt was downloaded to ../TRF/data.\nPlease extract manually and re-run this program (or type ''return'').\n');
                     keyboard;
                 end
                 % if we need to get the vandam grid into proper format
                 % (only do once)
                 if needToGetVandamGridToProperFormat==1
                     % get data
-                    fid=fopen('../TRF/neededFiles/s1_s2_def_cm.dat');
+                    fid=fopen('../TRF/data/s1_s2_def_cm.dat');
+                    if (fid < 0)
+                        varargout{1} = ['ERROR: Cannot open the file: ../TRF/data/s1_s2_def_cm.dat'];
+                        return;
+                    end
                     vandamGrid=textscan(fid, '%f %f %f %f %f %f %f %f %f %f %f %f %f %f');
                     fclose(fid);
 
@@ -1279,7 +1362,7 @@ if sum(noVandam|noGsfc|noVienna|noAtmoTidLoad)>0
             % ======================
             if noGsfc(indInNs_codes)==1
                 % do once: loading data
-                if ~exist('../TRF/neededFiles/aplo_s1_s2_noib_1.0x1.0deg.nc', 'file')
+                if ~exist('../TRF/data/aplo_s1_s2_noib_1.0x1.0deg.nc', 'file')
                     % download
                     url='http://gemini.gsfc.nasa.gov/aplo/aplo_s1_s2_noib_1.0x1.0deg.nc';
                     
@@ -1287,17 +1370,14 @@ if sum(noVandam|noGsfc|noVienna|noAtmoTidLoad)>0
                     fprintf('Downloading gsfc grid file (aplo_s1_s2_noib_1.0x1.0deg.nc)\n');
 
                     % download .Z file
-                    urlwrite(url, '../TRF/neededFiles/aplo_s1_s2_noib_1.0x1.0deg.nc');
+                    urlwrite(url, '../TRF/data/aplo_s1_s2_noib_1.0x1.0deg.nc');
                 end
                 
                 % load data to proper format ONLY ONCE
                 if needToGetGsfcGridToProperFormat ==1
                     [mesh_lon, mesh_lat, a{1}, a{2}, a{3}, ...
                         a{4}, a{5}, a{6}, a{7}, a{8}, a{9}, ...
-                        a{10}, a{11}, a{12}]=getGsfcsAploGrid('../TRF/neededFiles/aplo_s1_s2_noib_1.0x1.0deg.nc');
-%                     [mesh_lon, mesh_lat, cos_s1_dr, sin_s1_dr, cos_s2_dr, ...
-%                         sin_s2_dr, cos_s1_dn, sin_s1_dn, cos_s2_dn, sin_s2_dn, cos_s1_de, ...
-%                         sin_s1_de, cos_s2_de, sin_s2_de]=getGsfcsAploGrid('../neededFiles/aplo_s1_s2_noib_1.0x1.0deg.nc');
+                        a{10}, a{11}, a{12}]=getGsfcsAploGrid('../TRF/data/aplo_s1_s2_noib_1.0x1.0deg.nc');
                     needToGetGsfcGridToProperFormat=0;
                 end
                 
@@ -1306,9 +1386,6 @@ if sum(noVandam|noGsfc|noVienna|noAtmoTidLoad)>0
                 for ind_k=1:12
                     ns_codes(indInNs_codes).atmosphere_tidal_loading.gsfc(ind_k)=interp2(mesh_lon, mesh_lat, a{ind_k}, curLon, curLat, 'linear');
                 end
-%                 for iAtmoLoadTerm=1:12
-%                     eval(['ns_codes(indInNs_codes).atmosphere_tidal_loading.gsfc.t', num2str(iAtmoLoadTerm), '=interp2(mesh_lon, mesh_lat, a{', num2str(iAtmoLoadTerm), '}, curLon, curLat, ''linear'');']);
-%                 end
                 
             end % if we need gsfc loading correction
         end % =if we have coordinates found

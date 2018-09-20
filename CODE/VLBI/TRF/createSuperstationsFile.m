@@ -35,7 +35,7 @@ function varargout = createSuperstationsFile(varargin)
 
 % Edit the above text to modify the response to help createSuperstationsFile
 
-% Last Modified by GUIDE v2.5 20-Oct-2017 13:39:10
+% Last Modified by GUIDE v2.5 20-Sep-2018 10:47:53
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -210,28 +210,6 @@ fprintf(fid, ['\n#\n%', l,'s | %s\n'], 'outFile', get(handles.edit_createSuperst
 
 fclose(fid);
 
-
-% --- Executes when selected object is changed in uipanel_ns.
-function uipanel_ns_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_ns 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% if "donwload newest" is selected
-if strcmp(get(eventdata.NewValue, 'Tag'), 'radiobutton_nsCodesDownload')
-    set(handles.edit_nsCodesFile, 'Enable', 'off');
-    set(handles.pushbutton_nsCodesBrowse, 'Enable', 'off');
-else
-    set(handles.edit_nsCodesFile, 'Enable', 'on');
-    set(handles.pushbutton_nsCodesBrowse, 'Enable', 'on');
-end
-
-saveGuiDataToDisk(handles)
-
-
 % --- Executes on button press in pushbutton_nsCodesBrowse.
 function pushbutton_nsCodesBrowse_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_nsCodesBrowse (see GCBO)
@@ -315,12 +293,12 @@ function pushbutton_searchForFiles_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% This function searches the 'neededFiles' folder and puts the names of the
+% This function searches the 'data' folder and puts the names of the
 % found files (if more than one found, simply the first is taken) into the
 % corresponding textbox
 
 % get path to be searched
-searchPath='../TRF/neededFiles/';
+searchPath='../TRF/data/';
 
 % get number of files
 nFiles=size(handles.data.allFileNames,2);
@@ -503,27 +481,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes when selected object is changed in uipanel_eccdat.
-function uipanel_eccdat_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_eccdat 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% if "download" button was chosen
-if strcmp(get(eventdata.NewValue, 'Tag'), 'radiobutton_eccdatDownload')
-    set(handles.edit_eccdatFile, 'Enable', 'Off');
-    set(handles.pushbutton_eccdatBrowse, 'Enable', 'Off');
-else
-    set(handles.edit_eccdatFile, 'Enable', 'On');
-    set(handles.pushbutton_eccdatBrowse, 'Enable', 'On');
-end
-
-saveGuiDataToDisk(handles)
-
-
 % --- Executes when selected object is changed in uipanel_opoleloadcoefcmcor.
 function uipanel_opoleloadcoefcmcor_SelectionChangeFcn(hObject, eventdata, handles)
 % hObject    handle to the selected object in uipanel_opoleloadcoefcmcor 
@@ -545,26 +502,6 @@ end
 
 saveGuiDataToDisk(handles)
 
-% --- Executes when selected object is changed in uipanel_s12vandam.
-function uipanel_s12vandam_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_s12vandam 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% if "download" button was chosen
-if strcmp(get(eventdata.NewValue, 'Tag'), 'radiobutton_s12vandamDownload')
-    set(handles.edit_s12vandamFile, 'Enable', 'Off');
-    set(handles.pushbutton_s12vandamBrowse, 'Enable', 'Off');
-else
-    set(handles.edit_s12vandamFile, 'Enable', 'On');
-    set(handles.pushbutton_s12vandamBrowse, 'Enable', 'On');
-end
-
-saveGuiDataToDisk(handles)
 
 % --- Executes on button press in pushbutton_s12gsfcBrowse.
 function pushbutton_s12gsfcBrowse_Callback(hObject, eventdata, handles)
@@ -596,50 +533,6 @@ function edit_s12gsfcFile_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-
-% --- Executes when selected object is changed in uipanel_s12gsfc.
-function uipanel_s12gsfc_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_s12gsfc 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% if "download" button was chosen
-if strcmp(get(eventdata.NewValue, 'Tag'), 'radiobutton_s12gsfcDownload')
-    set(handles.edit_s12gsfcFile, 'Enable', 'Off');
-    set(handles.pushbutton_s12gsfcBrowse, 'Enable', 'Off');
-else
-    set(handles.edit_s12gsfcFile, 'Enable', 'On');
-    set(handles.pushbutton_s12gsfcBrowse, 'Enable', 'On');
-end
-
-saveGuiDataToDisk(handles)
-
-
-% --- Executes when selected object is changed in uipanel_vievsTrf.
-function uipanel_vievsTrf_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_vievsTrf 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% if "download" button was chosen
-if strcmp(get(eventdata.NewValue, 'Tag'), 'radiobutton_vievsTrfDownload')
-    set(handles.edit_vievsTrfFile, 'Enable', 'Off');
-    set(handles.pushbutton_vievsTrfBrowse, 'Enable', 'Off');
-else
-    set(handles.edit_vievsTrfFile, 'Enable', 'On');
-    set(handles.pushbutton_vievsTrfBrowse, 'Enable', 'On');
-end
-
-saveGuiDataToDisk(handles)
 
 
 % --- Executes on button press in pushbutton_oceanLoadingFES2004Browse.
@@ -1082,27 +975,6 @@ function pushbutton_vieTrf13Browse_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 browseFunction(hObject, handles)
 
-% --- Executes when selected object is changed in uipanel_vieTrf13.
-function uipanel_vieTrf13_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_vieTrf13 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% if "donwload newest" is selected
-if strcmp(get(eventdata.NewValue, 'Tag'), 'radiobutton_vieTrf13Download')
-    set(handles.edit_vieTrf13File, 'Enable', 'off');
-    set(handles.pushbutton_vieTrf13Browse, 'Enable', 'off');
-else
-    set(handles.edit_vieTrf13File, 'Enable', 'on');
-    set(handles.pushbutton_vieTrf13Browse, 'Enable', 'on');
-end
-
-saveGuiDataToDisk(handles)
-
-
 
 function edit_userOwnTrfFile_Callback(hObject, eventdata, handles)
 % hObject    handle to edit_userOwnTrfFile (see GCBO)
@@ -1116,8 +988,7 @@ function edit_userOwnTrfFile_Callback(hObject, eventdata, handles)
 % --- Executes during object creation, after setting all properties.
 function edit_userOwnTrfFile_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit_userOwnTrfFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
+% eventdata  reserved - to be defined in a future version of MATLAB handles    empty - handles not created until after all CreateFcns called
 
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
@@ -1756,3 +1627,10 @@ function edit_dtrf2014File_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --------------------------------------------------------------------
+function Untitled_1_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
