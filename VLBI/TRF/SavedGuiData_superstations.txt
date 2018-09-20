@@ -66,4 +66,4 @@
 #
 
 #
-                          outFile | D:\GIT\vievs\VLBI\TRF\superstation_test.mat
+                          outFile | D:\GIT\vievs\VLBI\TRF\superstation.mat

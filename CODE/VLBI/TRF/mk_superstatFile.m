@@ -1353,7 +1353,6 @@ if sum(noVandam|noGsfc|noVienna|noAtmoTidLoad)>0
 
                     data(:)=vandamGrid{iCol};
                     ns_codes(indInNs_codes).atmosphere_tidal_loading.vandam(iCol-2)=interp2(meshX, meshY, data, curLon, curLat, 'linear');
-%                         eval(['ns_codes(indInNs_codes).atmosphere_tidal_loading.vandam.t', num2str(iCol),'=interp2(meshX, meshY, data, curLon,curLat,''linear'');']);
                 end
                 
             end % if we need vandam data
@@ -1407,16 +1406,6 @@ oceanFieldIndex=strcmp(fieldnames(ns_codes), 'ocean_loading');
 noOceanLoadCorr=cellfun('isempty', tmp_superstatCell(oceanFieldIndex,:,:));
 noOceanLoadCorr=noOceanLoadCorr(:);
 noOceanLoadCorrInd=find(noOceanLoadCorr);
-
-% statNamesWithNoOceanLoad={ns_codes(noOceanLoadCorr).name};
-% statCodesWithNoOceanLoad={ns_codes(noOceanLoadCorr).code};
-% keyboard;
-% what about JOHANNES-station?
-% 
-% for k=1:sum(noOceanLoadCorr)
-%     fprintf(' %8s (%2s) has no ocean loading correction\n', ...
-%         statNamesWithNoOceanLoad{k}, statCodesWithNoOceanLoad{k});
-% end
 
 % get number of blocks
 nBlocks=ceil(sum(noOceanLoadCorr)/100);
