@@ -309,8 +309,7 @@ else
 %         curStatLog=strcmpi(out_structFieldnames,strtrim(ini_opt.scan_excl(iOutlier).sta1)) | ...
 %             strcmpi(out_structFieldnames,strtrim(ini_opt.scan_excl(iOutlier).sta2));
         
-        curStatLog = strcmpi(out_structFieldnames,strtrim({ini_opt.scan_excl(iOutlier).sta1})) | ...
-                strcmpi(out_structFieldnames,strtrim({ini_opt.scan_excl(iOutlier).sta2}));
+        curStatLog = strcmpi(out_structFieldnames,strtrim({ini_opt.scan_excl(iOutlier).sta1})) | strcmpi(out_structFieldnames,strtrim({ini_opt.scan_excl(iOutlier).sta2})); % Indices of both stations in baseline
         
         curStatInd=vector1ToN(curStatLog);
         
@@ -318,26 +317,54 @@ else
         oneSecInDays=1/60/60/24;
         curScanLog=abs([scan.mjd]-ini_opt.scan_excl(iOutlier).mjd)<(oneSecInDays/10);
         
-        % check if there is (still) an obs of the two stations in cur scan
-        obs2Delete=sum([scan(curScanLog).obs.i1; scan(curScanLog).obs.i2]==curStatInd(1) | ...
-            [scan(curScanLog).obs.i1; scan(curScanLog).obs.i2]==curStatInd(2))==2;
+        % Check, if only one scan was found!
+        % - If more than one scan was found by matching the scan reference times, the stations have to be considered in addition
+        flag_found_scan = true; 
+        if sum(curScanLog) > 1 % More than one scan found?
+            curScanLog_ids = find(curScanLog);
+            flag_found_scan = false;
+            % Check stations in scan:
+            for i_scan = 1 : sum(curScanLog)
+                scan_id = curScanLog_ids(i_scan);
+                stat_ids_in_scan = unique([scan(scan_id).obs.i1, scan(scan_id).obs.i2]);
+                if ( ismember(curStatInd(1), stat_ids_in_scan) && ismember(curStatInd(2), stat_ids_in_scan) )
+                   flag_found_scan = true; 
+                   break
+                end
+            end
+            if ~flag_found_scan % No observation with the current baseline found in the considered scans
+                fprintf('WARNING (outlier removal in cleanScan.m): No observation on the baseline %s - %s found at epoch %s!\n', ini_opt.scan_excl(iOutlier).sta1, ini_opt.scan_excl(iOutlier).sta2, mjd2datestr(ini_opt.scan_excl(iOutlier).mjd) )
+            else
+                cur_scan_id = scan_id;
+            end
+        else
+            cur_scan_id = find(curScanLog);
+        end
+        
+        if flag_found_scan
+            % check if there is (still) an obs of the two stations in cur scan
+            obs2Delete=sum([scan(cur_scan_id).obs.i1; scan(cur_scan_id).obs.i2]==curStatInd(1) | [scan(cur_scan_id).obs.i1; scan(cur_scan_id).obs.i2]==curStatInd(2))==2;
+        else
+            obs2Delete = [];
+        end
+
 
         if sum(obs2Delete)>0
             % then we have to delete something
-            scan(curScanLog).obs(obs2Delete)=[];
-            scan(curScanLog).nobs=scan(curScanLog).nobs-1;
+            scan(cur_scan_id).obs(obs2Delete)=[];
+            scan(cur_scan_id).nobs=scan(cur_scan_id).nobs-1;
 
             statStructs2Delete=[];
             % delete stat struct if needed (if that station has
             % no observation anymore (for both stats separate)
-            if sum(sum([scan(curScanLog).obs.i1; scan(curScanLog).obs.i2]==curStatInd(1)))==0
+            if sum(sum([scan(cur_scan_id).obs.i1; scan(cur_scan_id).obs.i2]==curStatInd(1)))==0
                 statStructs2Delete(1)=curStatInd(1);
             end
-            if sum(sum([scan(curScanLog).obs.i1; scan(curScanLog).obs.i2]==curStatInd(2)))==0
+            if sum(sum([scan(cur_scan_id).obs.i1; scan(cur_scan_id).obs.i2]==curStatInd(2)))==0
                 statStructs2Delete(2)=curStatInd(2);
             end
 
-            scan(curScanLog).stat(statStructs2Delete)=subStruct_stat;
+            scan(cur_scan_id).stat(statStructs2Delete)=subStruct_stat;
 
         end
     end

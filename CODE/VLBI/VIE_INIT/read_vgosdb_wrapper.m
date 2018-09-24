@@ -164,7 +164,7 @@ end
 wrapper_filenames_tmp = wrapper_filenames(logical(flag_array(:, 2)));
 flag_array_tmp =  flag_array(logical(flag_array(:, 2)), :);
 if isempty(wrapper_filenames_tmp)
-    error('No valid wrapper file found (no wrapper with _k = %s)',wrapper_k);
+    error(' - No valid wrapper file found (no wrapper with _k = %s)',wrapper_k);
 end
 
 % Loop over institutions and select the highest version available:
@@ -174,7 +174,9 @@ for i_inst = 1 : num_institutions
    if sum(flag_array_tmp(:, i_col)) > 0 % Check, if there are valid wrappers with this inst.
        % Check the version numbers for this inst.:
        if sum(flag_array_tmp(:,1) & flag_array_tmp(:, i_col)) == 0
-           error('No valid wrapper file found!)');
+           % error('No valid wrapper file found!)');
+           fprintf(' - No valid wrapper file for institution: %s\n', institute{i_inst})
+           continue
        end
        flag_array_tmp(~(flag_array_tmp(:,1) & flag_array_tmp(:, i_col)), 1) = 0;
        [max_version, max_version_id]=max(flag_array_tmp(:, 1));
