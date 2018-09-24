@@ -18,7 +18,7 @@
 %   dd mmm yyyy by FIRSTNAME SECONDNAME:
 % ************************************************************************
 function [scan_excl_field]=readOUT(outfile)
-
+scan_excl_field = [];
 fid=fopen(outfile,'r');
   a=1;
   while ~feof(fid)
