@@ -5457,7 +5457,7 @@ function analyseNetcdfFile(src,eventdata,hObject,handles)
 % get selected file
 allSessionsInList=get(handles.listbox_setInput_processList, 'String');
 session=allSessionsInList{get(handles.listbox_setInput_processList, 'Value')};
-vgosdb_path_str = ['../DATA/vgosdb/', session(1 : (strfind(session, ' [vgosDB]')-1)), '/'];
+vgosdb_path_str = ['../DATA/vgosDB/', session(1 : (strfind(session, ' [vgosDB]')-1)), '/'];
 % Open GUI
 analyseNetcdf(vgosdb_path_str)
 

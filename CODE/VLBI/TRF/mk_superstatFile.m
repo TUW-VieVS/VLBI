@@ -1419,7 +1419,7 @@ for iBlock=1:nBlocks
     end
     
     % write header lines
-    fprintf('//Stations %1.0f - %1.0f (if coords available) which don''t have any ocean tide loading corrections\n// -> http://froste.oso.chalmers.se/loading//)\n', firstStat, lastStat);
+    fprintf('//Stations %1.0f - %1.0f (if coords available) which don''t have any ocean tide loading corrections\n// -> http://holt.oso.chalmers.se/loading//)\n', firstStat, lastStat);
     fprintf('//Name of station_______| Longitude (deg)| Latitude (deg)| Height (m)  	  \n//Name of station_______|     X (m)      |     Y (m)     |     Z (m)      \n');
     for k=firstStat:lastStat
         curInd=noOceanLoadCorrInd(k);
