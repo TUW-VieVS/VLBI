@@ -1398,7 +1398,7 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
         sum_glob_dj(i+1) = sum_glob_dj(i) + glob_dj(i);
     end
     
-    IDglobdj=number_of_estimated_parameters+1
+    IDglobdj=number_of_estimated_parameters+1;
     
     x_.col_soura = sum_glob_dj(IDglobdj) + 1 : 1 : sum_glob_dj(IDglobdj+1);  IDglobdj=IDglobdj+1;   
     x_.col_soude = sum_glob_dj(IDglobdj) + 1 : 1 : sum_glob_dj(IDglobdj+1);  IDglobdj=IDglobdj+1;

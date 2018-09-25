@@ -84,6 +84,8 @@
 %                           errors are added to format (output_mode(2))
 % - 2016-11-29, A. Girdiuk: re-viewed; bug-fix
 % - 2018-03-13, A. Hellerschmied: function now supports arbitrary session names in process lists.
+% - 2018-09-25, S. Boehm: if default tight constraints were used for EOP only one EOP value per session is written,
+%                          referred to the middle of the session.
 
 function eop_out(process_list, subdir, varargin)
 
@@ -143,7 +145,7 @@ else
         outfile_1=[outfile,'_detailed','.txt'];
         fid_1 = fopen(outfile_1,'wt');
         fprintf(fid_1,'%%************************************************************\n');
-        fprintf(fid_1,'%% Columns:\n%%\t 1     .... mjd\n%%\t 2-6   .... total values(x,y,ut,dX,dY)\n%%\t 7-11  .... a priori EOP (input in vie_mod)\n%%\t 11-16 .... estimated values\n%%\t 17-21 .... error of estimation\n%%\t 22-24 .... high frequency (subdaily) ERP corrections\n%%\n'); 
+        fprintf(fid_1,'%% Columns:\n%%\t 1     .... mjd\n%%\t 2-6   .... total values(x,y,ut,dX,dY)\n%%\t 7-11  .... a priori EOP (input in vie_mod)\n%%\t 12-16 .... estimated values\n%%\t 17-21 .... error of estimation\n%%\t 22-24 .... high frequency (subdaily) ERP corrections\n%%\n'); 
         fprintf(fid_1,'%% all units in mas resp. ms (dut1)\n');
         fprintf(fid_1,'%%************************************************************\n');
         fprintf(fid_1,'%%    MJD       xpol        ypol        dut1        dX          dY          x_apr       y_apr       ut_apr      dX_apr      dY_apr      x_est       y_est       dut1_est    dX_est      dY_est      x_err       y_err       ut_err      dX_err      dY_err      x_hf        y_hf        ut_hf\n');
@@ -184,9 +186,9 @@ for j = 1:pl(1)
     
     % Get session name:
     % Unix:
-    ind_unix = strfind(process_list, '/');
+    ind_unix = strfind(process_list(j,:), '/');
     % DOS:
-    ind_dos = strfind(process_list, '\');
+    ind_dos = strfind(process_list(j,:), '\');
     ind = max([ind_unix, ind_dos]);
     sname = process_list(j,ind+1:end);
 
@@ -195,24 +197,32 @@ for j = 1:pl(1)
 	load(strcat('../DATA/LEVEL1/',opt_.level1OutDir,'/',sname,'_parameter'));
 
 	if parameter.lsmopt.xpol.model==1
-		mjdp = x_.xpol.mjd;
+        if opt_.xpol.coef > 1.0e-4
+		   mjdp = x_.xpol.mjd;
+        else
+           mjdp = (opt_.first_scan + opt_.last_scan)/2; 
+        end
 	else
 		mjdp = [];
 	end
 
-	if (length([x_.dut1.mjd]) ~= length(mjdp))
-        if flag_intensive
+	if parameter.lsmopt.dut1.model==1
+        if flag_intensive || (opt_.dut1.coef <= 1.0e-4)
             mjdu = (opt_.first_scan + opt_.last_scan)/2;
         else
             mjdu = x_.dut1.mjd;
         end
 	else
-		mjdu = mjdp;
+		mjdu = [];
 	end
 
 	% nutation if estimated
 	if parameter.lsmopt.nutdx.model==1
-	   mjdn   = x_.nutdx.mjd;
+       if opt_.nutdx.coef > 1.0e-4
+	      mjdn   = x_.nutdx.mjd;
+       else
+          mjdn = (opt_.first_scan + opt_.last_scan)/2; 
+       end
 	else
 	   mjdn   = [];
 	end
@@ -240,20 +250,20 @@ for j = 1:pl(1)
 	dY_e = NaN(1,length(mjd)); 
     
 	if parameter.lsmopt.xpol.model==1
-	   xp(indp)   = x_.xpol.val;  
-	   xp_e(indp) = x_.xpol.mx;
-	   yp(indp)   = x_.ypol.val;
-	   yp_e(indp) = x_.ypol.mx; 
+	   xp(indp)   = x_.xpol.val(1:length(mjdp));  
+	   xp_e(indp) = x_.xpol.mx(1:length(mjdp));
+	   yp(indp)   = x_.ypol.val(1:length(mjdp));
+	   yp_e(indp) = x_.ypol.mx(1:length(mjdp)); 
 	end
 	if parameter.lsmopt.dut1.model==1
-	   ut(indu)   = x_.dut1.val;   
-	   ut_e(indu) = x_.dut1.mx; 
+	   ut(indu)   = x_.dut1.val(1:length(mjdu));   
+	   ut_e(indu) = x_.dut1.mx(1:length(mjdu)); 
 	end
 	if parameter.lsmopt.nutdx.model==1
-	   dX(indn)   = x_.nutdx.val; 
-	   dX_e(indn) = x_.nutdx.mx; 
-	   dY(indn)   = x_.nutdy.val;  
-	   dY_e(indn) = x_.nutdy.mx;   
+	   dX(indn)   = x_.nutdx.val(1:length(mjdn)); 
+	   dX_e(indn) = x_.nutdx.mx(1:length(mjdn)); 
+	   dY(indn)   = x_.nutdy.val(1:length(mjdn));  
+	   dY_e(indn) = x_.nutdy.mx(1:length(mjdn));   
 	end 
 
 	% high frequency corrections
