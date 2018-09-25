@@ -607,8 +607,18 @@ for pl=1:size(process_list,1)
     approxLon(approxLon<0)=approxLon(approxLon<0)+360;
 
     % � -> dms
-    dmsLat=degrees2dms(approxLat);
-    dmsLon=degrees2dms(approxLon);
+    %dmsLat=degrees2dms(approxLat); not in basic Matlab
+    degrees = fix(approxLat);
+    minutes = abs(fix((approxLat-degrees).*60));
+    seconds = (abs(approxLat-degrees).*60 - minutes).*60;
+    dmsLat = [degrees,minutes,seconds];
+
+    %dmsLon=degrees2dms(approxLon); not in basic Matlab
+    degrees = fix(approxLon);
+    minutes = abs(fix((approxLon-degrees).*60));
+    seconds = (abs(approxLon-degrees).*60 - minutes).*60;
+    dmsLon = [degrees,minutes,seconds];
+    clearvars degrees minutes seconds;
 
     % write blockstart line to file
     fprintf(fid, '+%s\n', blockName);
