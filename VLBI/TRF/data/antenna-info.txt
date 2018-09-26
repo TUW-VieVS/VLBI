@@ -48,6 +48,7 @@ $ Antenna Information File  Format Version of 2008.04.22
 #             2015-03-12 RAEGYEB added / completed 2015-03-13
 #             2015-08-13 ISHIOKA added as of info by Fukuzaki 12.08.2015
 #             2015-10-08 CEDUNA added (dummy) to get VM1 Data, Hellerschmied A.
+#             2018-09-26 GGAO12M and KOKEE12M added (dummy), Hellerschmied A.
 #
 #  N.B.: For direct use in Solve, the empty FO_ entries have to be filled with
 #        dummy SECN or PRIM. These entries have been left empty on purpose to express
@@ -1009,3 +1010,7 @@ ANTENNA_INFO  WARK30M   FO_SECN MO_AZEL RA_NO   ME_ROUG  14.5  0    0   1002.6  
 ANTENNA_INFO  ONSAVDIF  FO_SECN MO_AZEL RA_YES  ME_COMP   9.0  0    0   1010.7   20.0 11.3000  0      1.00E-5   2.9000 1.20E-5  -0.0060 1.20E-5   3.4000 1.20E-5   5.5000 1.20E-5
 # Infos copied from station ONSALA60 (by M. Schartner, 2017-03-16)
 $ Antenna Information File  Format Version of 2008.04.22
+#----------------------------------------------------------------------------------------
+ANTENNA_INFO  GGAO12M  
+#----------------------------------------------------------------------------------------
+ANTENNA_INFO  KOKEE12M  

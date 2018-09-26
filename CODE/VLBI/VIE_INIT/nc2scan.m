@@ -86,13 +86,24 @@ switch fband
         sigma_tau_folder = 'Observables';
         sigma_tau_file = nc_filename;
         sigma_tau_field = 'GroupDelaySig';
-        nc_filename = get_nc_filename({'Cal-SlantPathIonoGroup', '_bX'}, wrapper_data.Observation.ObsDerived.files);
-        tau_ion_folder = 'ObsDerived';
-        tau_ion_file = strrep(nc_filename,'-','_');
-        tau_ion_field = 'Cal_SlantPathIonoGroup';
-        sigma_tau_ion_folder = 'ObsDerived';
-        sigma_tau_ion_file = strrep(nc_filename,'-','_');
-        sigma_tau_ion_field = 'Cal_SlantPathIonoGroupSigma';
+        % Check, if Ionosphere correctrions are defined in wrapper file:
+        if isfield(wrapper_data.Observation, 'ObsDerived') 
+            nc_filename = get_nc_filename({'Cal-SlantPathIonoGroup', '_bX'}, wrapper_data.Observation.ObsDerived.files);
+            tau_ion_folder = 'ObsDerived';
+            tau_ion_file = strrep(nc_filename,'-','_');
+            tau_ion_field = 'Cal_SlantPathIonoGroup';
+            sigma_tau_ion_folder = 'ObsDerived';
+            sigma_tau_ion_file = strrep(nc_filename,'-','_');
+            sigma_tau_ion_field = 'Cal_SlantPathIonoGroupSigma';
+        else
+            tau_ion_folder = {}; % ionospheric correction won't be used
+            tau_ion_file = {}; % ionospheric correction won't be used
+            tau_ion_field = {};
+            sigma_tau_ion_folder = {};
+            sigma_tau_ion_file = {};
+            sigma_tau_ion_field = {};
+            fprintf(' - No nc file with ionosphere corrections defined in the selected wrapper file!\n')
+        end
         
     case 'GroupDelayFull_bS'
         % GroupDelayFull_bS:

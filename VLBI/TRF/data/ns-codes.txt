@@ -129,6 +129,16 @@
 * 140527 dbb Add ISHIOKA station in Japan.
 * 140527 dbb Add RAEGE antennas at Yebes (RAEGYEB) and Santa Maria (RAEGSMAR).
 * 140527 dbb Add RAEGE antennas on Flores (RAEGFLOR) and Tenerife (RAEGTNFE).
+* 150108 dbb Add 13-m antennas at Badary (BADRT13V) and Zelenchukskaya (ZELRT13V).
+* 150527 dbb Add WARK30M for Warkworth and its CDP number.
+* 150528 dbb Add DOMES number for WARK30M.
+* 150915 dbb Add 12-m antenna at Kokee Park as K2.
+* 160127 dbb Add DOMES and CDP numbers for KOKEE12M.
+* 160615 dbb Add DSS36.
+* 160926 dbb Add 32-m antenna at IRBENE.
+* 170216 dbb Add Onsala Twin Telescope (OTT), Sweden as Oe ONSA13NE and Ow ONSA13SW.
+* 170221 dbb Add DOMES and CDP numbers for ONSA13NE and ONSA13SW.
+* 170310 dbb Add DSS34.
 *
 * Fields:
 * 1. IVS 2-letter code. Not case sensitive, although the initial 
@@ -148,7 +158,8 @@
  13 DSS13    40405S039 1516 34-m at Goldstone, CA, USA
  14 GOLDMARS 40405S001 1514 70-m DSS14 at Goldstone, CA, USA
  15 DSS15    40405S019 1515 34-m HEF at Goldstone, CA, USA
- 36 DSS36    --------- ---- Australia
+ 34 DSS34    --------- ---- 34-m DSS34 at Tidbinbilla, Australia
+ 36 DSS36    --------- ---- 34-m DSS36 at Tidbinbilla, Australia
  43 DSS43    --------- ---- 34-m Australia
  45 DSS45    50103S010 1545 34-m HEF at Tidbinbilla, Australia
  61 ROBLED32 13407S003 1561 DSS61 Robledo, Spain
@@ -170,6 +181,7 @@
  Bo BLOOMIND 40452M001 7291 mobile Bloomington, IN, USA
  Br BR-VLBA  40473S001 7614 VLBA at Brewster, WA, USA
  Bs BREST    10004M002 7604 mobile Brest, France
+ Bv BADRT13V 12338S005 7384 13-m at Badary, Russia
  C4 CAMBRIDG --------- ---- Cambridge, UK (Mk4)
  Ca CAMBRIDG --------- ---- Cambridge, UK (VLBA)
  Cb CAMBRIDG --------- ---- Cambridge, UK (Ryle)
@@ -223,12 +235,14 @@
  Hr HRAS_085 40442S003 7216 HRAS at Fort Davis, TX, USA
  Hs HAYSTACK 40440S002 7205 Haystack, Westford, MA, USA 
  Ht HART15M  30302S009 7378 15-m antenna at HartRAO, South Africa
+ Ir IRBENE   --------- ---- 32-m antenna at Irbene, Ventspils, Latvia
  Is ISHIOKA  21791S001 7369 13-m antenna at Ishioka, Japan
  It ITAPETGA --------- ---- Itapetinga, Brazil
  J1 JPL_MV1  40400M003 7263 MV1 at JPL, Pasadena, CA, USA 
  Jb JODRELL2 --------- ---- Mk4, Jodrell Bank, UK
  Jv JODRELL2 --------- ---- VLBA, Jodrell Bank, UK
  K1 KASHIM11 21701S006 7334 11-m Keystone at Kashima, Japan 
+ K2 KOKEE12M 40424S010 7623 12-m at Kokee Park, Kauai, HI, USA
  K3 KOGANEI3 21704S007 7344 3-m at Koganei, Japan 
  Ka KASHIMA  21701S001 1856 26-m at Kashima, Japan 
  Kb KASHIM34 21701S004 1857 34-m at Kashima, Japan 
@@ -286,14 +300,16 @@
  Nc NTT20102 10317S005 7402 Ny Alesund, Svalbard, Norway
  O8 ONSALA85 10402S001 7212 85-ft Onsala, Sweden
  Oc OCOTILLO 40449M001 7270 mobile Ocotillo, CA, USA
+ Oe ONSA13NE 10402S014 7636 Onsala 13-m antenna north-east (north-east tower of OTT)
  Oh OHIGGINS 66008S001 7245 O'Higgins, Antarctica
  Om -------- --------- ---- 10-m antenna, Owens Valley, CA, USA
  On ONSALA60 10402S002 7213 60-ft Onsala, Sweden
  Oa OTT20101 10402S003 7501 12m Onsala, Sweden
- Oc OTT20102 10402S004 7502 12m Onsala, Sweden
+ Oc OTT20102 10402S004 7502 12m Onsala, Sweden										  
  Oo OVRO_130 40439S002 7207 130-ft at Owens Valley, CA, USA 
  Or OVR_7853 40439M004 7853 mobile Owens Valley, CA, USA
  Ov OV-VLBA  40439S006 7616 VLBA at Owens Valley, CA, USA 
+ Ow ONSA13SW 10402S015 7637 Onsala 13-m antenna south-west (south-west tower of OTT)
  Pa PARKES   50108S001 7202 Parkes, Australia 
  Pb PBLOSSOM 40404M001 7254 mobile Pearblossom, CA, USA
  Pe PENTICTN 40105M001 7283 Penticton, British Columbia, Canada 
@@ -356,6 +372,7 @@
  Vo VERAOGSW 21732S005 7363 20-m NAOJ VERA, Ogasawara, Tokyo, Japan
  Vr VERAIRIK 21748S001 7364 20-m NAOJ VERA, Iriki, Kagoshima, Japan
  Vs VERAISGK 21736S002 7365 20-m NAOJ VERA, Ishigakijima, Okinawa, Japan
+ Wa WARK30M  50243S002 7391 30-m antenna at Warkworth, New Zealand
  Wb WSTRBORK --------- ---- Westerbork, Dwingeloo, Netherlands
  Wf WESTFORD 40440S003 7209 Westford, MA, USA
  Wh -------- --------- ---- Weilheim, Germany
@@ -376,10 +393,10 @@
  Ys YEBES40M 13420S002 7386 40-m antenna at Yebes, Spain
  Yu YUMA     40493M001 7894 mobile Yuma, CA, USA
  Zc ZELENCHK 12351S001 7381 Zelenchukskaya, Russia
+ Zv ZELRT13V 12351S003 7383 13-m at Zelenchukskaya, Russia
  Yd YEBESDBC 13420S003 9999 40-m antenna at Yebes, Spain
  Yx YEBEDBBC 13420S003 9999 40-m antenna at Yebes, Spain 
  Ox ONSALAAN 10402S002 7213 60-ft Onsala with an analog converter, Sweden
  Wd WETTDBBC 14201S004 7224 Wettzell, Germany
  Ge GEOCENTR --------- ---- Geocenter
- Wa WARK30M  --------- ---- 30-m antenna at Warkworth, New Zealand
- Od ONSAVDIF 10402S002 7213 60-ft Onsala, Sweden
+ Od ONSAVDIF 10402S002 7213 60-ft Onsala, Sweden											
