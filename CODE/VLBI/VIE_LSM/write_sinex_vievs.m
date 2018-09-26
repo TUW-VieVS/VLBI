@@ -423,7 +423,8 @@ for pl=1:size(process_list,1)
     
     if parameter.lsmopt.pw_zwd==1
         zwd=[' zenith wet delay: ' num2str(parameter.lsmopt.int_zwd) ' min offsets with rel. constr. ' num2str(parameter.lsmopt.coef_zwd) ' cm after '  num2str(parameter.lsmopt.int_zwd) ' min' ];
-    else zwd=' zenith wet delay: was not estimated';
+    else
+        zwd=' was not estimated';
     end
     
     % north and east gradients have to have the same parameterization for
@@ -435,13 +436,14 @@ for pl=1:size(process_list,1)
             tgr=[' ' num2str(parameter.lsmopt.int_ngr) ' min offsets with rel. constr. ' num2str(parameter.lsmopt.coef_rel_ngr) ' cm after ' num2str(parameter.lsmopt.int_ngr) ' min and abs. constr. ' num2str(parameter.lsmopt.coef_abs_ngr) ' cm'];
         elseif parameter.lsmopt.constr_rel_ngr==0 && parameter.lsmopt.constr_abs_ngr==1
             tgr=[' ' num2str(parameter.lsmopt.int_ngr) ' min offsets with abs. constr. ' num2str(parameter.lsmopt.coef_abs_ngr) ' cm'];
-        elseif parameter.lsmopt.constr_rel_ngr==0;
+        elseif parameter.lsmopt.constr_rel_ngr==0
             tgr=[' ' num2str(parameter.lsmopt.int_ngr) ' min offsets without any constraints'];
         end
-    else tgr=' troposphere horizontal gradients: were not estimated';
+    else
+        tgr=' were not estimated';
     end
     
-    outlr=[''];
+    outlr='';
     if parameter.vie_init.rm_outlier==1
         outlr=' + with residuals larger than 5*aposteriori variance of unit weight)'; % usual number which is used for outlier detection (in previous run of VieVS by creating the outlier file)
     end
