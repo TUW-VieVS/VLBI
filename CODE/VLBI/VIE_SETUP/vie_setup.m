@@ -120,6 +120,7 @@ function varargout = vie_setup(varargin)
 % 11 Jan 2018 by D. Landskron: external troposphere modeling removed
 % 18 Jan 2018 by A. Hellerschmied: Changes for transition to GIT (call of vie_batch.m)
 % 06 Jul 2018 by D. Landskron: VMF3 added to the troposphere models
+% 25 Sep 2018 by D. Landskron: specific warning message suppressed
 %*************************************************************************
 
 % Begin initialization code - DO NOT EDIT
@@ -141,6 +142,8 @@ else
 end
 % End initialization code - DO NOT EDIT
 
+
+
 % --- Executes just before vie_setup is made visible.
 function vie_setup_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
@@ -158,6 +161,10 @@ function vie_setup_OpeningFcn(hObject, eventdata, handles, varargin)
 %     jIcon=javax.swing.ImageIcon('vievs_logo.gif');
 %     jframe.setFigureIcon(jIcon);
 % end
+
+% suppress the warning 'Setting the "WindowButtonUpFcn" property is not permitted while this mode is active.' which appears in Plotting - Residuals when scrolling through stations while "Zoom in" is active
+warning('off','MATLAB:modes:mode:InvalidPropertySet')
+
 
 allMainUiPanels=[handles.uipanel_file_setInputFiles, ...
     handles.uipanel_parameters_referenceFrames, ...

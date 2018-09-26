@@ -34,6 +34,7 @@
 %   Revision: 
 %   06 Dec 2009 by Kamil Teke: header added
 %   06 Mar 2010 by Kamil Teke: absolute constraints for troposphere gradients corres. parts added
+%   26 Sep 2018 by Daniel Landskron: bug corrected with excluding absolute constraints on gradients
 % ************************************************************************ 
 function [n_,t,A,H,Ph,och] = delparam(na,t,opt,n_,sum_,A,H,Ph,och)
          
@@ -83,12 +84,12 @@ for istat = 1 : na
 
         if opt.constr_rel_ngr == 0 & opt.constr_abs_ngr == 1
             H(4).abs_sm(:,sum_.ngr(del.ngr(countngr))+1:sum_.ngr(del.ngr(countngr)+1)) = [];
-            H(4).abs_sm(sum_.ngr(del.ngr(countngr))+1:sum_.ngr(del.ngr(countngr)+1),:) = [];
+            H(4).abs_sm(summ_ngr(del.ngr(countngr))+1:summ_ngr(del.ngr(countngr)+1),:) = [];
 
-            Ph(4).abs_sm(:,sum_.ngr(del.ngr(countngr))+1:sum_.ngr(del.ngr(countngr)+1)) = [];
-            Ph(4).abs_sm(sum_.ngr(del.ngr(countngr))+1:sum_.ngr(del.ngr(countngr)+1),:) = [];
+            Ph(4).abs_sm(:,summ_ngr(del.ngr(countngr))+1:summ_ngr(del.ngr(countngr)+1)) = [];
+            Ph(4).abs_sm(summ_ngr(del.ngr(countngr))+1:summ_ngr(del.ngr(countngr)+1),:) = [];
 
-            och(4).abs_sv(sum_.ngr(del.ngr(countngr))+1:sum_.ngr(del.ngr(countngr)+1)) = [];
+            och(4).abs_sv(summ_ngr(del.ngr(countngr))+1:summ_ngr(del.ngr(countngr)+1)) = [];
         end
         
         if opt.constr_rel_ngr == 1 & opt.constr_abs_ngr == 1            
@@ -101,12 +102,12 @@ for istat = 1 : na
             och(4).rel_sv(summ_ngr(del.ngr(countngr))+1:summ_ngr(del.ngr(countngr)+1)) = [];
 
             H(4).abs_sm(:,sum_.ngr(del.ngr(countngr))+1:sum_.ngr(del.ngr(countngr)+1)) = [];
-            H(4).abs_sm(sum_.ngr(del.ngr(countngr))+1:sum_.ngr(del.ngr(countngr)+1),:) = [];
+            H(4).abs_sm(summ_ngr(del.ngr(countngr))+1:summ_ngr(del.ngr(countngr)+1),:) = [];
 
-            Ph(4).abs_sm(:,sum_.ngr(del.ngr(countngr))+1:sum_.ngr(del.ngr(countngr)+1)) = [];
-            Ph(4).abs_sm(sum_.ngr(del.ngr(countngr))+1:sum_.ngr(del.ngr(countngr)+1),:) = [];
+            Ph(4).abs_sm(:,summ_ngr(del.ngr(countngr))+1:summ_ngr(del.ngr(countngr)+1)) = [];
+            Ph(4).abs_sm(summ_ngr(del.ngr(countngr))+1:summ_ngr(del.ngr(countngr)+1),:) = [];
 
-            och(4).abs_sv(sum_.ngr(del.ngr(countngr))+1:sum_.ngr(del.ngr(countngr)+1)) = [];
+            och(4).abs_sv(summ_ngr(del.ngr(countngr))+1:summ_ngr(del.ngr(countngr)+1)) = [];
         end
                 
         n_(:,del.ngr(countngr)).ngr = 0;
@@ -133,12 +134,12 @@ for istat = 1 : na
         
         if opt.constr_rel_egr == 0 & opt.constr_abs_egr == 1
             H(5).abs_sm(:,sum_.egr(del.egr(countegr))+1:sum_.egr(del.egr(countegr)+1)) = [];
-            H(5).abs_sm(sum_.egr(del.egr(countegr))+1:sum_.egr(del.egr(countegr)+1),:) = [];
+            H(5).abs_sm(summ_egr(del.egr(countegr))+1:summ_egr(del.egr(countegr)+1),:) = [];
 
-            Ph(5).abs_sm(:,sum_.egr(del.egr(countegr))+1:sum_.egr(del.egr(countegr)+1)) = []; 
-            Ph(5).abs_sm(sum_.egr(del.egr(countegr))+1:sum_.egr(del.egr(countegr)+1),:) = []; 
+            Ph(5).abs_sm(:,summ_egr(del.egr(countegr))+1:summ_egr(del.egr(countegr)+1)) = []; 
+            Ph(5).abs_sm(summ_egr(del.egr(countegr))+1:summ_egr(del.egr(countegr)+1),:) = []; 
 
-            och(5).abs_sv(sum_.egr(del.egr(countegr))+1:sum_.egr(del.egr(countegr)+1)) = [];
+            och(5).abs_sv(summ_egr(del.egr(countegr))+1:summ_egr(del.egr(countegr)+1)) = [];
         end
         
         if opt.constr_rel_egr == 1 & opt.constr_abs_egr == 1   
@@ -151,12 +152,12 @@ for istat = 1 : na
             och(5).rel_sv(summ_egr(del.egr(countegr))+1:summ_egr(del.egr(countegr)+1)) = [];
             
             H(5).abs_sm(:,sum_.egr(del.egr(countegr))+1:sum_.egr(del.egr(countegr)+1)) = [];
-            H(5).abs_sm(sum_.egr(del.egr(countegr))+1:sum_.egr(del.egr(countegr)+1),:) = [];
+            H(5).abs_sm(summ_egr(del.egr(countegr))+1:summ_egr(del.egr(countegr)+1),:) = [];
 
-            Ph(5).abs_sm(:,sum_.egr(del.egr(countegr))+1:sum_.egr(del.egr(countegr)+1)) = []; 
-            Ph(5).abs_sm(sum_.egr(del.egr(countegr))+1:sum_.egr(del.egr(countegr)+1),:) = []; 
+            Ph(5).abs_sm(:,summ_egr(del.egr(countegr))+1:summ_egr(del.egr(countegr)+1)) = []; 
+            Ph(5).abs_sm(summ_egr(del.egr(countegr))+1:summ_egr(del.egr(countegr)+1),:) = []; 
 
-            och(5).abs_sv(sum_.egr(del.egr(countegr))+1:sum_.egr(del.egr(countegr)+1)) = [];
+            och(5).abs_sv(summ_egr(del.egr(countegr))+1:summ_egr(del.egr(countegr)+1)) = [];
         end
         
         n_(:,del.egr(countegr)).egr = 0;
