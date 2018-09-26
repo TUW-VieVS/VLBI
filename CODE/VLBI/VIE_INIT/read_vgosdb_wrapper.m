@@ -148,7 +148,7 @@ if isempty(wrapper_k)
     % any k is valid!
     flag_array(:, 2) = true;
 else
-    flag_array(:, 2) = strcmp(k_list, 'all');
+    flag_array(:, 2) = strcmp(k_list, wrapper_k);
 end
 
 %_i
