@@ -230,8 +230,13 @@ else
 end
 
 %% DELAY FLAG DELAY:
-nc_filename = get_nc_filename({'Edit'}, wrapper_data.Observation.ObsEdit.files, 1);
-delayFlagLikeNGS    = num2cell(out_struct.ObsEdit.(nc_filename).DelayFlag.val);
+nc_filename = get_nc_filename({'Edit'}, wrapper_data.Observation.ObsEdit.files, 0);
+if ~isempty(nc_filename) % not mathc found in wrapper data
+    delayFlagLikeNGS    = num2cell(out_struct.ObsEdit.(nc_filename).DelayFlag.val);
+else
+    fprintf(' - No delay flags defined in wrapper file: delay flag is set to "0" for all observations!\n')
+    delayFlagLikeNGS = {0};
+end
 
 %% SIGMA FINAL DELAY:  
 delaySigmaTimesIonoSigma=num2cell(sqrt([groupDelaySigCell{:}].^2 + ([ionoDelSigCell{:}]*1e-9).^2)); % [sec]    cell: 1 x nObs
@@ -250,8 +255,7 @@ if length(out_struct.Scan.TimeUTC.Second.val) == 1
 end
 tim=[double(out_struct.Scan.(nc_filename).YMDHM.val); out_struct.Scan.(nc_filename).Second.val'];
 
-scanMjd =  modjuldat(double(out_struct.Scan.(nc_filename).YMDHM.val(1,:)'), double(out_struct.Scan.(nc_filename).YMDHM.val(2,:)'), double(out_struct.Scan.(nc_filename).YMDHM.val(3,:)')) + ...
-    double(out_struct.Scan.(nc_filename).YMDHM.val(4,:))'./24 + double(out_struct.Scan.(nc_filename).YMDHM.val(5,:))'./60./24 + out_struct.Scan.(nc_filename).Second.val/60/60/24;
+scanMjd =  modjuldat(double(out_struct.Scan.(nc_filename).YMDHM.val(1,:)'), double(out_struct.Scan.(nc_filename).YMDHM.val(2,:)'), double(out_struct.Scan.(nc_filename).YMDHM.val(3,:)')) + double(out_struct.Scan.(nc_filename).YMDHM.val(4,:))'./24 + double(out_struct.Scan.(nc_filename).YMDHM.val(5,:))'./60./24 + out_struct.Scan.(nc_filename).Second.val/60/60/24;
 
 scanMjdCell=num2cell(scanMjd);
 scanSouCell=num2cell(scan2Source);
