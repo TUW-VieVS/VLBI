@@ -52,6 +52,59 @@ function saveParamFile(hObject, handles, fullOutName)
 % preallocate
 auto_save_parameterfileparameter=struct('vie_init', [], 'vie_mod', [], 'lsmopt', []);
 
+% ===========================
+% OPT files
+% ===========================
+
+% OPT file flag (apply opt file options?):
+parameter.opt.use_opt_files=get(handles.checkbox_setInput_useOptFiles, 'Value');
+
+% OPT file directory:
+allOptDirs=get(handles.popupmenu_setInput_optDir, 'String');
+if ~isempty(allOptDirs)
+    parameter.opt.opt_file_dir = allOptDirs{get(handles.popupmenu_setInput_optDir, 'Value')};
+else
+    parameter.opt.opt_file_dir = '';
+end
+
+
+% ===========================
+% Outlier filed
+% ===========================
+
+% outlier file directory:
+allOutDirs = get(handles.popupmenu_setInput_outDir, 'String');
+if strcmp(allOutDirs, ' ')
+    parameter.outlier.out_file_dir = '';
+else
+    parameter.outlier.out_file_dir = allOutDirs{get(handles.popupmenu_setInput_outDir, 'Value')};
+end
+
+% remove outlier option:
+parameter.outlier.flag_remove_outlier = get(handles.checkbox_setInput_eliminOutliers, 'Value');
+
+% ===========================
+% Observation restrictions
+% ===========================
+
+% Set cut-off elevation:
+minElevInputNum = str2double(get(handles.edit_parameter_obsRestr_cutOff, 'String'));
+if isnan(minElevInputNum)
+    parameter.obs_restrictions.cut_off_elev = 0; % [rad]
+else
+    parameter.obs_restrictions.cut_off_elev = minElevInputNum * pi/180; % [rad]
+end
+
+% Quality code limit:
+qLimitInputNum = str2double(get(handles.edit_parameter_obsRestr_qualityCode, 'String'));
+if isnan(qLimitInputNum)
+    parameter.obs_restrictions.q_code_limit = 0;
+else
+    parameter.obs_restrictions.q_code_limit = qLimitInputNum;
+end
+
+
+% ===========================
 % VIE_INIT
 % ===========================
 
@@ -104,7 +157,7 @@ else
 end
 
 % station info file (not variable yet)
-parameter.vie_init.sta_info='../TRF/STAT_INFO';
+% parameter.vie_init.sta_info='../TRF/STAT_INFO';
 
 % minimum elevation/quality limit/jet angle
 minElevInputNum=str2double(get(handles.edit_parameter_obsRestr_cutOff, 'String'));

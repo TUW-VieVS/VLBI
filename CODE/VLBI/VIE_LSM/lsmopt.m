@@ -462,48 +462,29 @@ opt.stat(end).clkbreak          = [];
 opt.stat(1).ref = 1; % first clock of the session is seleced as reference clock
 
 % If data should be taken from the OPT file:
-if opt.use_opt_files == 1
-    
-    % Check, if VIE_INIT was run to actually load the OPT file:
-    if parameter.vie_init.use_opt_files
-    
-        % ##### CLOCK REFERENCE #####
-        if ~isempty(parameter.vie_init.ref_clk_name) % If there is a Ref. clock defined in the OPT file...
-            if find(strcmp({antenna.name}, parameter.vie_init.ref_clk_name)) ~= 0
-                opt.stat(1).ref = 0; % Reset first station as ref. clock
-                opt.stat(strcmp({antenna.name}, parameter.vie_init.ref_clk_name)).ref = 1; % Set ref. clock as defined in the OPT file
+% if opt.use_opt_files == 1
+if parameter.opt.use_opt_files
+
+    % ##### CLOCK REFERENCE #####
+    if ~isempty(parameter.opt.options.refclock) % If there is a Ref. clock defined in the OPT file...
+        if find(strcmp({antenna.name}, parameter.opt.options.refclock)) ~= 0
+            opt.stat(1).ref = 0; % Reset first station as ref. clock
+            opt.stat(strcmp({antenna.name}, parameter.opt.options.refclock)).ref = 1; % Set ref. clock as defined in the OPT file
+        end
+    end
+
+
+    % ##### CLOCK BREAKS #####
+    if parameter.opt.options.num_clk_breaks > 0 % If there are clock braeks defined in the OPT file...
+        for i_clkbr = 1 : parameter.opt.options.num_clk_breaks
+            % Get station index:
+            stat_index = strcmp({antenna.name}, parameter.opt.options.clk_break(i_clkbr).stat_name);
+            % Check, if the station with clock break(s ) is included in the antenna structure (or has been excluded):
+            if sum(stat_index) == 1 % station found in antenna structure
+                % Add MJD of the clock break:
+                opt.stat(stat_index).clkbreak = [opt.stat(stat_index).clkbreak; parameter.opt.options.clk_break(i_clkbr).mjd];
             end
         end
-
-
-        % ##### CLOCK BREAKS #####
-        if parameter.vie_init.num_clk_breaks > 0 % If there are clock braeks defined in the OPT file...
-            for i_clkbr = 1 : parameter.vie_init.num_clk_breaks
-                % Get station index:
-                stat_index = strcmp({antenna.name}, parameter.vie_init.clk_break(i_clkbr).stat_name);
-                % Check, if the station with clock break(s ) is included in the antenna structure (or has been excluded):
-                if sum(stat_index) == 1 % station found in antenna structure
-                    % Add MJD of the clock break:
-                    opt.stat(stat_index).clkbreak = [opt.stat(stat_index).clkbreak; parameter.vie_init.clk_break(i_clkbr).mjd];
-                end
-            end
-        end
-
-        %     % In a 2 station session where both stations have a clock break the reference clock is not changed:
-        %     if exist('stat','var') &  find([opt.stat.ref])==1
-        %        if length(opt.stat) < 2  % 25/06/2014
-        %             if ~isempty(opt.stat(1).clkbreak) 
-        %                 opt.stat(1).ref = 0; 
-        %                 opt.stat(2).ref = 1;
-        %                 if ~isempty(opt.stat(2).clkbreak)
-        %                     opt.stat(1).ref = 0; 
-        %                     opt.stat(3).ref = 1;
-        %                 end
-        %             end
-        %        end
-        %     end
-    else
-        warning('"Use OPT file" was selected, but OPT file information is not available in the parameters structure (otpions not applied)! => Run VIE_INIT first/again!');
     end
 
 end % if opt.use_opt_files == 1

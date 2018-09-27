@@ -185,6 +185,157 @@ end
 
 tic
 
+% #######################################################################
+% # Clean VieVS structures                                              #
+% #######################################################################
+% 
+% Based on
+% - OPT files
+% - Outliers
+% - Observation restrictions
+
+% ########################
+% ##### Load Options #####
+% ########################
+
+% Init.:
+clean_opt.sta_excl          = ''; % Exclude stations
+clean_opt.sta_excl_start    = 0;  % Exclude stations start epoch
+clean_opt.sta_excl_end      = 0;  % Exclude stations end epoch
+
+clean_opt.sour_excl         = ''; % Exclude sources
+clean_opt.bas_excl          = []; % Exclude baselines
+
+clean_opt.num_clk_breaks        = 0;  % Number of clock breaks
+clean_opt.refclock              = ''; % Reference clock
+clean_opt.clk_break.stat_name   = []; % Clock break stations 
+clean_opt.clk_break.mjd         = []; % Clock break epochs
+
+clean_opt.stat_dw       = ''; % Downweight stations
+clean_opt.no_cab        = ''; % Cable cal
+
+clean_opt.scan_excl     = []; % Outliers
+
+% bas_excl                = ''; % Not needed! => Same info in ini_opt.bas_excl
+
+% ini_opt.bas_excl(nex).sta1 = station_name_1_str;
+% ini_opt.bas_excl(nex).sta2 = station_name_2_str;
+% bas_excl(nex,:) = [station_name_1_str, ' ', station_name_2_str];
+
+remove_sprecial_stations = false;
+stations_to_be_removed = {''; ''; ''; ''}; % Can be set here in cell array!
+
+
+% ##### OPT files #####
+
+% read OPT-file
+opt_file_path_name = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name, '.OPT'];
+if parameter.opt.use_opt_files
+    if exist(opt_file_path_name, 'file')
+        [clean_opt, ~] = readOPT(opt_file_path_name,remove_sprecial_stations,stations_to_be_removed);
+%         parameter.vie_init.ref_clk_name     = clean_opt.refclock;         % If no reference clock is defined in the OPt file, this field conatin an empty string ('')!
+%         parameter.vie_init.num_clk_breaks   = clean_opt.num_clk_breaks;   % Number of clock braeks in OPT file
+%         parameter.vie_init.clk_break        = clean_opt.clk_break;        % Clock break info (structure)
+        parameter.opt.options          = clean_opt;
+    else
+        fprintf(' - OPT file not available: %s\n', opt_file_path_name);
+%         parameter.vie_init.ref_clk_name     = ''; % If no reference clock is defined in the OPt file, this field conatin an empty string ('')!
+%         parameter.vie_init.num_clk_breaks   = 0;
+%         parameter.vie_init.clk_break        = [];
+        if remove_sprecial_stations
+            clean_opt.sta_excl = char(stations_to_be_removed);
+            clean_opt.sta_excl_start = zeros(1,size(stations_to_be_removed,1));
+        end
+    end
+end
+
+% ### write info about excluded baselines, stations, sources to CW ###
+fprintf('Stations to be excluded: %1.0f\n', size(clean_opt.sta_excl,1))
+for k=1:size(clean_opt.sta_excl,1)
+    if clean_opt.sta_excl_start(k)==0
+        fprintf('%s \n', clean_opt.sta_excl(k,:));
+    else
+        fprintf('%s %f %f\n', clean_opt.sta_excl(k,:), clean_opt.sta_excl_start(k),clean_opt.sta_excl_end(k));
+    end
+end
+  
+fprintf('Stations to be down-weighted: %1.0f\n', size(clean_opt.stat_dw,1))
+if size(clean_opt.stat_dw,1) == 0
+    parameter.vie_init.stat_dw = [];
+else
+	parameter.vie_init.stat_dw = {};
+    for k=1:size(clean_opt.stat_dw,1)
+        fprintf('%s', clean_opt.stat_dw(k,:),' ', clean_opt.stat_co(k,:))
+        fprintf('\n')
+        parameter.vie_init.stat_dw(k,:) = {clean_opt.stat_dw(k,:)};
+        parameter.vie_init.stat_co(k,:) = str2num(clean_opt.stat_co(k,:));
+    end
+end
+    
+fprintf('Sources to be excluded: %1.0f\n', size(clean_opt.sour_excl,1))
+for k=1:size(clean_opt.sour_excl,1)
+    %fprintf('%s\n', ini_opt.sour_excl(k,:))
+    if clean_opt.sour_excl_start(k)==0                                    
+        fprintf('%s \n', clean_opt.sour_excl(k,:));
+    else
+        fprintf('%s %f %f\n', clean_opt.sour_excl(k,:), clean_opt.sour_excl_start(k),clean_opt.sour_excl_end(k));
+    end 
+end
+
+remove_sources_from_list = false;
+if remove_sources_from_list
+    path2sourcelist = '';     %add the path of your .txt file here. Format is the same as glob input .txt files   
+    fid = fopen(path2sourcelist);
+    if fid == -1
+        warning('File with list of removed sources can not be found\n');
+    else
+        remove_sources = textscan(fid, '%8s','Delimiter','\n');
+        remove_sources = remove_sources{1};
+        clean_opt.sour_excl = [clean_opt.sour_excl;char(remove_sources)];
+        disp('+ sources from external file removed');
+        if isfield(clean_opt, 'sour_excl_start')
+            clean_opt.sour_excl_start = [clean_opt.sour_excl_start, zeros(1,length(remove_sources))];
+            clean_opt.sour_excl_end = [clean_opt.sour_excl_end, zeros(1,length(remove_sources))];
+        else
+            clean_opt.sour_excl_start = zeros(1,length(remove_sources));
+            clean_opt.sour_excl_end = zeros(1,length(remove_sources));
+        end
+    end
+    fclose(fid);
+end
+
+fprintf('Baselines to be excluded: %1.0f\n', size(clean_opt.bas_excl, 2))
+for k=1:size(clean_opt.bas_excl, 2)
+    fprintf('%8s - %8s \n', clean_opt.bas_excl(k).sta1, clean_opt.bas_excl(k).sta2)
+end
+fprintf('No cable calibration: %1.0f\n', size(clean_opt.no_cab,1))
+for k=1:size(clean_opt.no_cab,1)
+    fprintf('%s\n', clean_opt.no_cab(k,:))
+end
+fprintf('\n')
+% -------------------------------------------------------------------    
+
+
+% ##### Outlier files #####
+
+
+
+
+% ##### Observation restrictions #####
+
+
+
+
+
+% ############################
+% ##### Clean structures ##### 
+% ############################
+
+% [scan, sources, antenna]=cleanScan(scan, sources, antenna, out_structFieldnames, allSourceNames, ini_opt, bas_excl, qualityLimit, minElevation)
+[scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.vie_init.Qlim, parameter.vie_init.min_elev);
+
+
+
 % Constants:
 c = 299792458; % velocity in m/s
 %rad2uas = (180/pi)*3600*1000*1000; % radian to micro arc second
