@@ -8,10 +8,10 @@
 %      ngsfile, containing the name of NGS-file to be processed must exist
 %      in the workspace.
 %   Input arguments:
-%    - ngsfile                  - directory and name of the input file (e.g. "2005/05APR04XA_N004")
+%    - obs_file_name            - directory and name of the input file (e.g. "2005/05APR04XA_N004")
 %    - parameter                - VieVS parameter structure (contains GUI parameters)
 %    - out_vie_init_subdir      - sub-directory for VIE_INIT (LEVEL0)
-%    - ngsdir                   - Input file directiory (if it is empty the default path is used for different input file formats: "ngsdir_tmp")
+%    - obs_file_dir             - Input file directiory (if it is empty the default path is used for different input file formats: "obs_fle_dir_tmp")
 %    - trf                      - TRF data structure (optional)
 %    - crf                      - CRF data structure (optional)
 %
@@ -103,7 +103,7 @@
 
 % ************************************************************************
 %
-function [antenna,sources,scan,parameter]=vie_init(ngsfile, parameter, out_vie_init_subdir, ngsdir, varargin)
+function [antenna,sources,scan,parameter]=vie_init(obs_file_name, parameter, out_vie_init_subdir, obs_file_dir, varargin)
 disp('---------------------------------------------------------------')
 disp('|                  Welcome to VIE_INIT!!!!!                   |')
 disp('---------------------------------------------------------------')
@@ -115,7 +115,7 @@ constants;
 switch(parameter.data_type)
     case 'ngs'
 %         parameter.session_name  = ngsfile(6 : end);
-        ngsdir_tmp              = 'NGS';
+        obs_fle_dir_tmp              = 'NGS';
         index_underscore_in_name = strfind(parameter.session_name, '_');
         if size(index_underscore_in_name,2) == 1
             optfil                  = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name(1 : (index_underscore_in_name(1) - 1)), '.OPT'];
@@ -129,13 +129,13 @@ switch(parameter.data_type)
 %         fprintf(' ==> Input file format: NGS\n');
     case 'vso'
 %         parameter.session_name  = ngsfile(6 : (strfind(ngsfile, ' [VSO]')-1));
-        ngsdir_tmp              = 'VSO';
+        obs_fle_dir_tmp              = 'VSO';
         optfil                  = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name, '.OPT'];
         outfile                 = ['../DATA/OUTLIER/', parameter.vie_init.dirout, '/', parameter.year, '/', parameter.session_name, '.OUT'];
 %         fprintf(' ==> Input file format: VSO\n');
     case 'vgosdb'
 %         parameter.session_name  = ngsfile(6 : (strfind(ngsfile, ' [vgosDB]')-1));
-        ngsdir_tmp              = 'vgosDB';
+        obs_fle_dir_tmp              = 'vgosDB';
         optfil                  = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name, '.OPT'];
         outfile                 = ['../DATA/OUTLIER/', parameter.vie_init.dirout, '/', parameter.year, '/', parameter.session_name, '.OUT'];
 %         fprintf(' ==> Input file format: vgosDB\n');
@@ -145,11 +145,11 @@ session = parameter.session_name;
 
 % check if ngsdir exists:
 if exist('ngsdir', 'var')
-    if isempty(ngsdir)
-        ngsdir = ngsdir_tmp;
+    if isempty(obs_file_dir)
+        obs_file_dir = obs_fle_dir_tmp;
     end
 else
-    ngsdir = ngsdir_tmp;
+    obs_file_dir = obs_fle_dir_tmp;
 end
 
 
@@ -352,7 +352,7 @@ switch(parameter.data_type)
         sources     = nc2sources(out_struct, crf, crffile{2}, wrapper_data);
         
         % "clean" scan struct (because of exclusions)
-        % [scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.vie_init.Qlim, parameter.vie_init.min_elev);
+        [scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.vie_init.Qlim, parameter.vie_init.min_elev);
 
     
         % Create a sub-structure in "sources" for quasars sources:
@@ -367,11 +367,11 @@ switch(parameter.data_type)
     % #####     NGS           #####
     % #############################
     case 'ngs'
-        fprintf(' => Start reading %s\n',ngsfile);
-        if isnan(str2double(ngsfile(1))) % if first element in ngsfile is character - absolute path of NGS file is given
-            [antenna,sources,scan] = read_ngs(ngsfile, trffile, crffile, ini_opt, trf, crf);
+        fprintf(' => Start reading %s\n',obs_file_name);
+        if isnan(str2double(obs_file_name(1))) % if first element in ngsfile is character - absolute path of NGS file is given
+            [antenna,sources,scan] = read_ngs(obs_file_name, trffile, crffile, ini_opt, trf, crf);
         else
-            [antenna,sources,scan] = read_ngs(['../DATA/' ngsdir '/' ngsfile], trffile, crffile, ini_opt, trf, crf);
+            [antenna,sources,scan] = read_ngs(['../DATA/' obs_file_dir '/' obs_file_name], trffile, crffile, ini_opt, trf, crf);
         end
         fprintf('...reading the NGS file finished!\n');
         
@@ -454,7 +454,7 @@ for i_ant = 1:length(antenna)
 end
 
 % ????????? Needed:
-antenna(1).ngsfile=ngsfile;
+antenna(1).ngsfile=obs_file_name;
 antenna(1).session=session;
 
 fprintf('\nvie_init successfully finished!\n');
