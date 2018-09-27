@@ -1,4 +1,5 @@
 *
 !.gitignore
 !superstation.mat
-!create
+!data
+!SavedGuiData_superstations.txt

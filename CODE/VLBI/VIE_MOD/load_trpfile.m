@@ -41,108 +41,53 @@
 %   20 Jan 2017 by D. Landskron: enabled also for ray-tracing .trp-files
 %   10 Mar 2017 by D. Landskron: raytr data also enabled from yearly subdivided folders
 %   13 Sep 2017 by D. Landskron: 'tropSource' shifted into 'vie_init' 
+%   09 Jul 2018 by D. Landskron: also enabled for input of .radiate files
+%   01 Aug 2018 by D. Landskron: .radiate files made priority input
 %
 %
 function [trpdata,trpFileFoundLog] = load_trpfile (parameter,session)
 
 
-%% Get trp-file for the desired session
-% This section is used to find the correct trp-file for the desired session.
+%% Get .trp-file or .radiate-file for the desired session
+% This section is used to find the correct .trp-files or .radiate-files for the desired session.
 % In case that the predefined (user-defined) path to file does not contain the file, it will be
 % tried to exclude the ngs-file version (e.g. "_N004"). If the file is still not found all
 % subfolders (and sub-...-subfolders) in the main trp-path will be searched to find a trp-file
 % matching with the session name (except for the ngs-file version).
 
-if strcmp(parameter.vie_init.tropSource.name,'ext')
-    trpPath='../TRP/OUTPUT_DATA/';
-    trpSubfolder=parameter.vie_init.tropSource.extTrpFolder;
-    trpFolder=[trpPath, trpSubfolder, '/'];
+
+if ~strcmp(parameter.vie_init.tropSource.name,'raytr')
+    error('Something is wrong with the usage of raytracing files!')
+end
     
-    % define trpfile
+
+% define the raytracing file
+trpFolder = '../TRP/RAYTRACING_DATA/';
+if exist([trpFolder,parameter.year,'/'])==7
+    trpFile=[trpFolder,parameter.year,'/' session, '.trp'];
+    radiateFile=[trpFolder,parameter.year,'/' session, '.radiate'];
+else
     trpFile=[trpFolder, session, '.trp'];
-    
-elseif strcmp(parameter.vie_init.tropSource.name,'raytr')
-    
-      trpFolder = '../TRP/RAYTRACING_DATA/';
-     % define raytracing file
-     if exist([trpFolder,parameter.year,'/'])==7
-         trpFile=[trpFolder,parameter.year,'/' session, '.trp'];
-     else
-         trpFile=[trpFolder, session, '.trp'];
-     end
-    
+    radiateFile=[trpFolder, session, '.radiate'];
 end
-    
+
    
-
-% if it does not exist, try to find it somewhere else (in any subfolder)
-if ~exist(trpFile, 'file')  &&   strcmp(parameter.vie_init.tropSource.name,'ext')
-
-    % if trp-file does not include the ngs-file version in its name, e.g. "_N004"
-    % --> search for files containing only the session name without the file version
-    trpFile=[trpFolder, session(1:9), '.trp'];
-
-    % in case of file still not found
-    if ~exist(trpFile, 'file')  
-
-        % check all directories for trp-file (not including the ngs-file version in its name, e.g.
-        % "_N004")
-        trpFoundFiles=dirr([trpPath, '*', session(1:9)]);
-
-        % if nothing found:
-        if isempty(trpFoundFiles)
-            fprintf('trp File not found!\n');
-            trpFileFoundLog=0;
-            trpdata=[];
-        else
-            % create new var just for search
-            tempTrpFoundFiles=trpFoundFiles(1); %(1)
-            trpSearchSubFolder='/';
-
-            % get correct path to trp-file in case of a number of subfolders --> while loop
-            while isstruct(tempTrpFoundFiles)
-                trpSearchSubFolder=[trpSearchSubFolder, tempTrpFoundFiles.name, '/'];
-                tempTrpFoundFiles=tempTrpFoundFiles.isdir;
-            end
-            % delete '\' at end
-            trpSearchSubFolder(end)=[];
-
-            % define found trp-file
-            trpFile=[trpPath, trpSearchSubFolder];
-            fprintf('.trp file not found in specified folder.\nInstead following file found:\n''%s''\nThis is used!\n', trpFile);
-            trpFileFoundLog=1;
-        end
-
-    % in case of file found without version identifier
-    else
-
-        trpFileFoundLog=1;
-
-        % in case of found file: report
-        fprintf('.trp file not found with included version identifier.\nInstead following file without version identifier found:\n''%s''\nThis is used!\n', trpFile);
-
-    end
-
-elseif exist(trpFile, 'file')  &&   strcmp(parameter.vie_init.tropSource.name,'ext')
-    
+% if both .radiate-file and .trp file of a session are available, then the .radiate-file is read, because it's more accurate
+if exist(radiateFile, 'file')
+    radiateFileFoundLog=1;
+    trpFileFoundLog=0;
+elseif exist(trpFile, 'file')
+    radiateFileFoundLog=0;
     trpFileFoundLog=1;
-    
-elseif exist(trpFile, 'file')  &&   strcmp(parameter.vie_init.tropSource.name,'raytr')
-    
-    trpFileFoundLog=1;
-    
-elseif ~exist(trpFile, 'file')  &&   strcmp(parameter.vie_init.tropSource.name,'raytr') 
-    
+elseif ~exist(trpFile, 'file') 
     error('No ray-tracing file (.trp) available for this session! Specify another source for the tropospheric delays.')
-    
 end
 
 
-%% Read in the trp-file
 % This section reads in the trp-file in case one has been found.
 % A new variable "trpdata" will be created, which must have the following structure for a correct
 % further usage in VieVS:
-% 
+%
 % Content of variable "trpdata":
 %   trpdata is a cell array of dimension 1x15
 %   content of the cells
@@ -161,9 +106,69 @@ end
 %       cell 13: temperature in [°C]
 %       cell 14: slant total delay including geometric bending effect in [sec]
 %       cell 15: wet mapping function
-% 
-% Note: The additional data columns for hydrostatic and wet zenith delay contained in the trp-file
-%       are not read in.
+%
+% Note: The additional data columns contained in the .trp-file and .radiate
+% file are not read in
+
+
+
+%% (a) Read in the .radiate-file
+% if both .trp-file and .radiate file of a session are available, then the .radiate-file is read, because it's more accurate
+
+
+% if file found -> load and read
+if radiateFileFoundLog==1
+    
+    c = 299792458;   % speed of light in [m/s]
+    
+    % open the file
+    fidRadiate=fopen(radiateFile);
+    
+    % get the current line
+    curr_line=fgetl(fidRadiate);
+    curr_line=fgetl(fidRadiate);
+    if ~strcmpi(curr_line,'% RADIATE format v 2.0')
+        error('Something is wrong with the .radiate file!');
+    end
+    fclose(fidRadiate);
+    
+    % open the file again and read all data
+    fidRadiate=fopen(radiateFile);    
+    radiate_data = textscan(fidRadiate,'%f%f%f%f%f%f%f%s%f%f%s%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f','CommentStyle','%');
+    
+    mjd = radiate_data{2};
+    [~, month, day, ~, ~, ~] = mjd2date(mjd);
+    
+    % define the correct columns
+    trpdata{1,1} = radiate_data{11};           % source name
+    trpdata{1,2} = radiate_data{1};            % scan number
+    trpdata{1,3} = radiate_data{3};            % year
+    trpdata{1,4} = month;                      % month
+    trpdata{1,5} = day;                        % day
+    trpdata{1,6} = radiate_data{5};            % hour
+    trpdata{1,7} = radiate_data{6};            % min
+    trpdata{1,8} = radiate_data{7};            % sec
+    trpdata{1,9} = radiate_data{8};            % station
+    trpdata{1,10} = radiate_data{9}*180/pi;    % azimuth angle in [°]
+    trpdata{1,11} = radiate_data{10}*180/pi;   % outgoing elevation angle in [°]
+    trpdata{1,12} = radiate_data{13};          % pressure in [hPa]
+    trpdata{1,13} = radiate_data{12};          % temperature in [°C]
+    trpdata{1,14} = radiate_data{18}/c;        % slant total delay including geometric bending effect in [sec]  
+    trpdata{1,15} = radiate_data{26};          % wet mapping function
+    
+    % add blanks to the source names and station names
+    trpdata{1} = pad(trpdata{1},8);
+    trpdata{9} = pad(trpdata{9},8);
+    
+    % close the file
+    fclose(fidRadiate);
+     
+end
+
+
+
+%% (b) Read in the trp-file
+% this is only read in if no .radiate-file is available
 
 
 % if file found -> load and read
@@ -199,36 +204,21 @@ if trpFileFoundLog==1
                 % use the trp-format specification (see trp-file) to find the necessary span of
                 % characters describing each value
 
-                % source name
-                trpdata{1,1}{ind,1} = curr_line(13:20);
-                % scan number
-                trpdata{1,2}(ind,1) = str2double(curr_line(4:8));
-                % year
-                trpdata{1,3}(ind,1) = str2double(curr_line(26:29));
-                % month
-                trpdata{1,4}(ind,1) = str2double(curr_line(31:32));
-                % day
-                trpdata{1,5}(ind,1) = str2double(curr_line(34:35));
-                % hour
-                trpdata{1,6}(ind,1) = str2double(curr_line(37:38));
-                % minute
-                trpdata{1,7}(ind,1) = str2double(curr_line(40:41));
-                % seconds
-                trpdata{1,8}(ind,1) = str2double(curr_line(43:46));
-                % site ID
-                trpdata{1,9}{ind,1} = curr_line(49:56);
-                % azimuth in [°]
-                trpdata{1,10}(ind,1) = str2double(curr_line(59:67));
-                % outgoing elevation angle in [°]
-                trpdata{1,11}(ind,1) = str2double(curr_line(69:76));
-                % pressure in [hPa]
-                trpdata{1,12}(ind,1) = str2double(curr_line(79:84));
-                % temperature in [°C]
-                trpdata{1,13}(ind,1) = str2double(curr_line(86:90));
-                % slant total delay including geometric bending effect in [sec]
-                trpdata{1,14}(ind,1) = str2double(curr_line(93:107));
-                % wet mapping function
-                trpdata{1,15}(ind,1) = str2double(curr_line(109:123));
+                trpdata{1,1}{ind,1} = curr_line(13:20);                  % source name
+                trpdata{1,2}(ind,1) = str2double(curr_line(4:8));        % scan number
+                trpdata{1,3}(ind,1) = str2double(curr_line(26:29));      % year
+                trpdata{1,4}(ind,1) = str2double(curr_line(31:32));      % month
+                trpdata{1,5}(ind,1) = str2double(curr_line(34:35));      % day
+                trpdata{1,6}(ind,1) = str2double(curr_line(37:38));      % hour
+                trpdata{1,7}(ind,1) = str2double(curr_line(40:41));      % minute
+                trpdata{1,8}(ind,1) = str2double(curr_line(43:46));      % seconds
+                trpdata{1,9}{ind,1} = curr_line(49:56);                  % station
+                trpdata{1,10}(ind,1) = str2double(curr_line(59:67));     % azimuth angle in [°]
+                trpdata{1,11}(ind,1) = str2double(curr_line(69:76));     % outgoing elevation angle in [°]
+                trpdata{1,12}(ind,1) = str2double(curr_line(79:84));     % pressure in [hPa]
+                trpdata{1,13}(ind,1) = str2double(curr_line(86:90));     % temperature in [°C]
+                trpdata{1,14}(ind,1) = str2double(curr_line(93:107));    % slant total delay including geometric bending effect in [sec]
+                trpdata{1,15}(ind,1) = str2double(curr_line(109:123));   % wet mapping function
                 
             end
         end
@@ -240,4 +230,7 @@ if trpFileFoundLog==1
     
 end
 
-end % end of function
+
+
+
+end

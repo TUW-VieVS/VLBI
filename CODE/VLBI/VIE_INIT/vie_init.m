@@ -99,6 +99,7 @@
 %   13 Nov 2017 by J. Gruber: new functions to specify insitute provider,
 %   			version name and frequency band (read_vgosdb_input_settings.m)
 %   06 Jan 2018 by J. Gruber: Changed call of cleanScan.m
+%   28 Aug 2018 by D. Landskron: shape of output slightly changed
 
 % ************************************************************************
 %
@@ -197,17 +198,16 @@ if parameter.vie_init.use_opt_files
 end
 % --------------------------------------- (get opt stuff)
 
-% write info about excluded baselines, statinos, sources +++++++++++ 
+% write info about excluded baselines, stations, sources +++++++++++ 
 fprintf('Stations to be excluded: %1.0f\n', size(ini_opt.sta_excl,1))
 for k=1:size(ini_opt.sta_excl,1)
-    if ini_opt.sta_excl_start(k)==0                                    %%%=> A. Girdiuk 2015-07-20
+    if ini_opt.sta_excl_start(k)==0
         fprintf('%s \n', ini_opt.sta_excl(k,:));
     else
         fprintf('%s %f %f\n', ini_opt.sta_excl(k,:), ini_opt.sta_excl_start(k),ini_opt.sta_excl_end(k));
-    end                                                                %%%<= A. Girdiuk 2015-07-20
+    end
 end
   
-%------------- Monika
 fprintf('Stations to be down-weighted: %1.0f\n', size(ini_opt.stat_dw,1))
 if size(ini_opt.stat_dw,1) == 0
     parameter.vie_init.stat_dw = [];
@@ -220,7 +220,6 @@ else
         parameter.vie_init.stat_co(k,:) = str2num(ini_opt.stat_co(k,:));
     end
 end
-%---------------
     
 fprintf('Sources to be excluded: %1.0f\n', size(ini_opt.sour_excl,1))
 for k=1:size(ini_opt.sour_excl,1)
@@ -244,11 +243,11 @@ if remove_sources_from_list
         ini_opt.sour_excl = [ini_opt.sour_excl;char(remove_sources)];
         disp('+ sources from external file removed');
         if isfield(ini_opt, 'sour_excl_start')
-        ini_opt.sour_excl_start = [ini_opt.sour_excl_start, zeros(1,length(remove_sources))];
-        ini_opt.sour_excl_end = [ini_opt.sour_excl_end, zeros(1,length(remove_sources))];
+            ini_opt.sour_excl_start = [ini_opt.sour_excl_start, zeros(1,length(remove_sources))];
+            ini_opt.sour_excl_end = [ini_opt.sour_excl_end, zeros(1,length(remove_sources))];
         else
-        ini_opt.sour_excl_start = zeros(1,length(remove_sources));
-        ini_opt.sour_excl_end = zeros(1,length(remove_sources));
+            ini_opt.sour_excl_start = zeros(1,length(remove_sources));
+            ini_opt.sour_excl_end = zeros(1,length(remove_sources));
         end
     end
     fclose(fid);
@@ -321,55 +320,44 @@ switch(parameter.data_type)
         [out_struct, nc_info]=read_nc(curNcFolder);
         
         % read vievs input settings from vgosdb_input_settings.tx file 
-        [ in,fb ] = read_vgosdb_input_settings( 'vgosdb_input_settings.txt' );
+        [ in, fb, wrapper_k, wrapper_v ] = read_vgosdb_input_settings( 'vgosdb_input_settings.txt' );
         
-        if isempty(in)
-            in = 'IVS';
-            fprintf('Set to %s by default\n',in)
+        % Standard settings, which are used if not defined differently in settings file:
+        if isempty(in{1}) % institute
+            in = {'IVS'};
+            fprintf('Set institute to default: %s\n', in{1})
         end
-        if isempty(fb)
+        if isempty(fb) % frequency band
             fb = 'GroupDelayFull_bX';
-            fprintf('Set to %s by default\n',fb)
+            fprintf('Set frequency band to default: %s\n', fb)
+        end
+        if isempty(wrapper_k) % wrapper tag
+            wrapper_k = 'all';
+            fprintf('Set wrapper tag to default: %s\n', wrapper_k)
+        end
+        if isempty(wrapper_v) % wrapper version
+            wrapper_v = 'highest_version';
+            fprintf('Set wrapper version to default: %s\n', wrapper_v)
         end
         
-        
+        % Read wrapper
+        wrapper_data = read_vgosdb_wrapper(curNcFolder, parameter.session_name, in, wrapper_k, wrapper_v);
+
         % check out_struct
-        out_struct = check_out_struct( out_struct,in );
+        % out_struct = check_out_struct( out_struct, in, wrapper_data);
         
         % get scan, antenna, source struct from netCDF files
-        scan        = nc2scan(out_struct, nc_info, fb);
-        antenna     = nc2antenna(out_struct, trf, trffile{2});
-        sources     = nc2sources(out_struct, crf, crffile{2});
+        scan        = nc2scan(out_struct, nc_info, fb, wrapper_data);
+        antenna     = nc2antenna(out_struct, trf, trffile{2}, wrapper_data);
+        sources     = nc2sources(out_struct, crf, crffile{2}, wrapper_data);
         
         % "clean" scan struct (because of exclusions)
-        [scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.vie_init.Qlim, parameter.vie_init.min_elev);
+        % [scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.vie_init.Qlim, parameter.vie_init.min_elev);
 
-        % --- "OPT file-cleaning" ---
-        %     % just for testing ++++
-        %     fprintf('nobs (true (head)) = %1.0f\nnobs (src) = %1.0f\nnobs(ant) = %1.0f\nnobs (sca) = %1.0f\n',...
-        %         out_struct.head.NumObs.val,sum([sources.numobs]), sum([antenna.numobs]), sum([scan.nobs]));
-        %    
-        %     tic
-        %     [antenna2,sources2,scan2]=read_ngs(['../DATA/NGS/2014/14APR14XA_N004'],trffile,crffile,ini_opt,pt, tp, trf, crf);
-        %     toc
-        %     
-        %     fprintf('nobs (src2) = %1.0f\nnobs(ant2) = %1.0f\nnobs (sca2) = %1.0f\n',...
-        %         sum([sources2.numobs]), sum([antenna2.numobs]), sum([scan2.nobs]));
-        %     
-        %     % compare structs
-        %     addpath(genpath('D:/Madzak/matlabfiles/'))
-        %     compareSourceStructs(sources,sources2);
-        %     compareAntennaStructs(antenna,antenna2);
-        %     [scan1_out]=compareScanStructs(scan,scan2, antenna,antenna2,sources,sources2);
-        %     fprintf('\n')
-        % 
-        % %     scan=scan1_out;
-        %     % just for testing ------
-        %profile viewer
     
         % Create a sub-structure in "sources" for quasars sources:
         q = sources;
-        clear sources
+        clear sources,
         sources.q   = q;
         sources.s 	= [];
         fprintf('...reading the vgosDB file finished!\n');
@@ -461,12 +449,9 @@ end % switch(parameter.data_type)
 fprintf('\n');
 fprintf('A total of %d stations, %d sources (quasars) and %d scans were found\n', length(antenna), length(sources.q), length(scan));
 disp('The following stations were found:')
-ind = 1;
-for a=1:length(antenna)
-  fprintf('%2.0f%s%s\n',ind,'. ',antenna(a).name)
-  ind=ind+1;
+for i_ant = 1:length(antenna)
+  fprintf('%2.0f%s%s\n',i_ant,'. ',antenna(i_ant).name)
 end
-clear ind
 
 % ????????? Needed:
 antenna(1).ngsfile=ngsfile;

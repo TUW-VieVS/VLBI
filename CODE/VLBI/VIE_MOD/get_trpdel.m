@@ -25,13 +25,10 @@
 %          and display a message about the use of the first matching trp entry.
 %   27 Jan 2016 by Armin Hofmeister: Increase allowed difference in seconds between observation from
 %          VieVS and from trp-file to up to 0.1 seconds.
+%   11 May 2018 by Daniel Landskron: minor bug fix
 %   
 % ************************************************************************
 function [scan] = get_trpdel(trpdata,scan,isc,ist,antenna,trpFileFoundLog,sourceNames)
-
-%        % define if vmf1 is needed because no trp data is found in trp
-%        % file (for current station in current scan)
-%        vmf1NeededLog=0;
 
 % but first: if we have trp file -> try to get data
 if trpFileFoundLog==1
@@ -63,19 +60,6 @@ if trpFileFoundLog==1
 %                         end
 %
 %            %return if finished
-%            
-%                         if vmf1NeededLog==0 % if there is exactly one line (what we want)
-%                             if vahabsRaytracingFiles==1
-%                                 scan(isc).stat(ist).trop =trpdata{14}(curLine);
-%                                 vmf1NeededLog=1;
-%                                 % the rest does not exist (load vmf1 later)
-%                             else
-%                                 scan(isc).stat(ist).trop  = trpdata{14}(curLine);   % slant path delay [sec]   
-%                                 scan(isc).stat(ist).mfw   = trpdata{15}(curLine);   % wet mapping function
-%                                 scan(isc).stat(ist).temp  = trpdata{13}(curLine);   % temperature [°C]
-%                                 scan(isc).stat(ist).pres  = trpdata{12}(curLine);   % pressure [hPa]
-%                             end
-%                         end
             
     % determine the number of matching trp entries
     nr_matches = sum(curLine);
@@ -86,7 +70,7 @@ if trpFileFoundLog==1
     % no matching entry
     if nr_matches == 0
         % display message
-        fprintf('No trp entry has been found for scan %s for station %s! ',num2str(isc),strtrim(antenna(ist).name));
+        fprintf('No trp entry has been found for scan %s for station %s! \n',num2str(isc),strtrim(antenna(ist).name));
 
         % No data assignments necessary.
         % Note: Already existing values of pressure and temperature are preserved as they are

@@ -109,6 +109,7 @@
 %                                  - parameter struct added as in/output argument
 %  - 2017-02-09, D. Landskron: Preallocation extended
 %  - 2017-02-22, A. Hellerschmied: antenna.psd initialized
+%  - 2018-07-06, D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
 %
 %
 function [antenna, sources, scan, parameter] = read_vso(vso_file_path, vso_file_name, trf, trf_name_str, crf, crf_name_str, ini_opt, sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type, parameter)
@@ -119,6 +120,7 @@ function [antenna, sources, scan, parameter] = read_vso(vso_file_path, vso_file_
 % ##### Options #####
 error_code_invalid_met_data = -999; % Error corde for missing met. data in NGS file (numerical)
 flag_sort_scans_by_epoch    = true; % Sort scans (read from the input vso file) by the scan epoch? [true=t/false]
+url_vievswiki_create_superstation = 'http://vievswiki.geo.tuwien.ac.at/doku.php?id=public:vievs_manual:data#create_a_superstation_file';
 
 % => Define parameters (for all scans) which are not available in the VSO fils:
 scan_obs_q_code_ion     = 0;
@@ -532,7 +534,7 @@ number_of_remaining_stat = length(stat_names_remaining_str);
 antenna(number_of_remaining_stat) = struct('IDsuper', [], 'in_trf', [], 'name', [], 'x', [], 'y', [], 'z', [], 'firstObsMjd', [], 'vx', [], 'vy', [], 'vz', [], 'epoch', [], 'start', [], 'end', [],...
                                             'x_sigma', [], 'y_sigma', [], 'z_sigma', [], 'vx_sigma', [], 'vy_sigma', [], 'vz_sigma', [], 'thermal', [], 'comments', [], 'domes', [], 'code', [],... 
                                             'ecc', [], 'ecctype', [], 'axtyp', [], 'offs', [], 'gpt3pres', [], 'gpt3temp', [], 'gpt3e', [], 'gpt3', [], 'noGrad', [], ...
-                                            'cto', [], 'cta', [], 'cnta_dx', [], 'vm1', [], 'opl', [], 'numobs', [], 'lastObsMjd', [], 'psd', []);
+                                            'cto', [], 'cta', [], 'cnta_dx', [], 'vmf3', [], 'vmf1', [], 'opl', [], 'numobs', [], 'lastObsMjd', [], 'psd', []);
 [antenna.gpt3] = deal(struct('pres', [], 'temp', [],'lapserate', [], 'e', [], 'ah', [], 'aw', [], 'undulation', []));
 
 
@@ -545,6 +547,7 @@ for i_stat = 1 : number_of_remaining_stat
     
     % #### Check, if there is an entry for the current station in the superstation file. If not => Error Msg. and abort! ####
     if isempty(trf_id)
+        fprintf('Add station %s to the superstation file by following the steps described at %s\n', stat_name_8char_str, url_vievswiki_create_superstation);
         error('ERROR (read_vso.m): No entry for station %s in the superstation file! Add it!\n', stat_name_8char_str);
     end
     
@@ -590,7 +593,7 @@ for i_stat = 1 : number_of_remaining_stat
         break_id = find(antenna(i_stat).firstObsMjd >= [trf(trf_id).(trf_name_str).break.start] & antenna(i_stat).firstObsMjd <= [trf(trf_id).(trf_name_str).break.end]);
 
     else % Not found...
-        fprintf('Station not found in %s - write coordinates to ASCII file and renew superstation file!\n', trf_name_str);
+        fprintf('Station not found in %s!\n', trf_name_str);
         break_id = [];
     end
     
@@ -610,8 +613,7 @@ for i_stat = 1 : number_of_remaining_stat
 
         % ### Check, if VieVS TRF coordinates were found: ###
         if isempty(break_id)
-            warning('Station not found in vievs TRF - write coordinates to ASCII file and renew superstation file!\n');
-            keyboard;
+            error('Station %s not found in vievsTrf. Add this station to the superstation file by following the steps described at %s\n', stat_name_str, url_vievswiki_create_superstation);
         end
 
         % ### Get the break sub-structure from the trf structure where coordinatess should be taken from ###

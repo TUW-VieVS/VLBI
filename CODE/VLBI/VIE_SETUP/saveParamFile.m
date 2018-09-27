@@ -45,6 +45,7 @@
 %   2017-03-20, A. Hellerschmied: Changes required for new EOP data loading routine
 %   2017-09-13, D. Landskron: 'tropSource' shifted into 'vie_init' 
 %   2018-01-11, D. Landskron: external troposphere modeling removed
+%   2018-07-06, D. Landskron: VMF3 added to the troposphere models 
 
 function saveParamFile(hObject, handles, fullOutName)
 
@@ -310,6 +311,8 @@ end
 % zenith delay
 if get(handles.radiobutton_parameters_troposphere_zhd_fromInSitu, 'Value')
     parameter.vie_init.zhd='in situ';
+elseif get(handles.radiobutton_parameters_troposphere_zhd_VMF3, 'Value')
+    parameter.vie_init.zhd='vmf3';
 elseif get(handles.radiobutton_parameters_troposphere_zhd_VMF1, 'Value')
     parameter.vie_init.zhd='vmf1';
 elseif get(handles.radiobutton_parameters_troposphere_zhd_GPT3, 'Value')
@@ -319,6 +322,8 @@ if get(handles.radiobutton_parameters_troposphere_zwd_no, 'Value')
     parameter.vie_init.zwd='no';
 elseif get(handles.radiobutton_parameters_troposphere_zwd_fromInSitu, 'Value')
     parameter.vie_init.zwd='in situ';
+elseif get(handles.radiobutton_parameters_troposphere_zwd_VMF3, 'Value')
+    parameter.vie_init.zwd='vmf3';
 elseif get(handles.radiobutton_parameters_troposphere_zwd_VMF1, 'Value')
     parameter.vie_init.zwd='vmf1';
 elseif get(handles.radiobutton_parameters_troposphere_zwd_GPT3, 'Value')
@@ -344,12 +349,16 @@ elseif get(handles.radiobutton_parameters_troposphere_gradients_w_GPT3, 'Value')
 end
 
 % mapping function
-if get(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'value')
+if get(handles.radiobutton_parameters_troposphere_mfh_VMF3, 'value')
+    parameter.vie_mod.mfh='vmf3';
+elseif get(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'value')
     parameter.vie_mod.mfh='vmf1';
 elseif get(handles.radiobutton_parameters_troposphere_mfh_GPT3, 'value')
     parameter.vie_mod.mfh='gpt3';
 end
-if get(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'value')
+if get(handles.radiobutton_parameters_troposphere_mfw_VMF3, 'value')
+    parameter.vie_mod.mfw='vmf3';
+elseif get(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'value')
     parameter.vie_mod.mfw='vmf1';
 elseif get(handles.radiobutton_parameters_troposphere_mfw_GPT3, 'value')
     parameter.vie_mod.mfw='gpt3';
@@ -642,6 +651,13 @@ if (get(handles.checkbox_estimation_leastSquares_eop_xpEst, 'Value')+...
 else
     parameter.lsmopt.outsnx.eop=get(handles.radiobutton_run_sinex_eop_incl, 'Value');
 end
+
+if get(handles.checkbox_run_sinex_changeAnalystsName, 'Value')
+    parameter.lsmopt.outsnx.changeAnalystsName=1;
+else
+    parameter.lsmopt.outsnx.changeAnalystsName=0;
+end
+
 parameter.lsmopt.outsnx.firstname=get(handles.edit_run_sinex_firstname, 'String');
 parameter.lsmopt.outsnx.lastname=get(handles.edit_run_sinex_lastname, 'String');
 parameter.lsmopt.outsnx.email=get(handles.edit_run_sinex_email, 'String');

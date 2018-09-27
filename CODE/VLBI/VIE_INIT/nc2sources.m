@@ -1,6 +1,9 @@
 % This function creates the sources struct from the supersource file as
 % well as from netCDF data.
 %
+% Input
+%  - wrapper_data: Struct, containing all information loaded from the vgosDB wrapper file
+%
 % LOG
 %  11.11.2015 M. Madzak  New Goddard structure adopted
 %   07 Jul 2016 by D. Mayer: included NNR for only defining sources
@@ -9,14 +12,12 @@
 %   26 Sep 2016 by H. Krasna: changes related to updated supersource file -crf.commonName deleted. We assumed that source names in the vgosDB are the IVS names - crosschecking between IVS and IERS names is not desirable.
 %   13 Nov 2017 by J. Gruber: def. sources update
 
-function sources=nc2sources(out_struct, crf, chosenCrf)
+function sources=nc2sources(out_struct, crf, chosenCrf, wrapper_data)
 
 % get number of sources
 nSources=size(out_struct.head.SourceList.val,2);
 
-sources(nSources)=struct('name', [],'IVSname', [], 'IERSname', [], 'ICRFdes', [], ...
-    'ra2000', [], 'de2000', [], 'ra_sigma', ...
-    [], 'de_sigma', [], 'corr', [], 'in_crf', [], 'numobs', [], 'flag_defining', [], 'firstObsMjd', [], 'lastObsMjd', []);
+sources(nSources)=struct('name', [],'IVSname', [], 'IERSname', [], 'ICRFdes', [], 'ra2000', [], 'de2000', [], 'ra_sigma', [], 'de_sigma', [], 'corr', [], 'in_crf', [], 'numobs', [], 'flag_defining', [], 'firstObsMjd', [], 'lastObsMjd', []);
 
 % % for speed improvement: delete all sources in crf which do not occur
 % sourceNamesCellStr=cellstr(out_struct.head.SourceName');
@@ -24,7 +25,8 @@ sources(nSources)=struct('name', [],'IVSname', [], 'IERSname', [], 'ICRFdes', []
 %     ismember({crf.commonName}, sourceNamesCellStr) | ...
 %     ismember({crf.designation}, sourceNamesCellStr);
 
-obs2scan=out_struct.CrossReference.ObsCrossRef.Obs2Scan.val;
+nc_filename = get_nc_filename('ObsCrossRef', wrapper_data.Observation.CrossReference.files, 1);
+obs2scan = out_struct.CrossReference.(nc_filename).Obs2Scan.val;
 
 
 % for all sources
@@ -32,7 +34,7 @@ for iSource=1:nSources
     curName=out_struct.head.SourceList.val(:,iSource)';
     
     % find index in crf
-    indSourceInCrf=strcmp({crf.IVSname},curName);
+    indSourceInCrf=strcmp(deblank({crf.IVSname}),deblank(curName));
     if sum(indSourceInCrf)~=1
         fprintf('ERROR: Zero (or more than 1) sources found for source %s in supersource file under IVS name\n', curName)
     end
@@ -48,55 +50,9 @@ for iSource=1:nSources
     
     % number of observations
     %     out_struct.Observables.Source.Source % source names
-    scansUsingCurSource=out_struct.CrossReference.SourceCrossRef.Scan2Source.val==iSource; % logicals
+    nc_filename = get_nc_filename('SourceCrossRef', wrapper_data.Session.CrossReference.files, 1);
+    scansUsingCurSource=out_struct.CrossReference.(nc_filename).Scan2Source.val==iSource; % logicals
     
-    % src 10:       name: '1038+52A'
-    %     IERSname: '1038+528'
-    %      ICRFdes: 'J104146.7+523328'
-    %     scans:
-    %           10 6 obs
-    %          412 1
-    %          436 1
-    %          484 3
-    %          502 3
-    %          948 1
-    %          966 3
-    %         1002 1 --> 19 obs total
-    
-    % src 1:   name: 'NRAO512 '
-    %     IERSname: '1638+398'
-    %      ICRFdes: 'J164029.6+394646'
-    %            1 15
-    %           39 3
-    %           60 3
-    %          123 1
-    %          154 3
-    %          178 1
-    %          200 6
-    %          222 6
-    %          260 10
-    %          278 6
-    %          297 6
-    %          313 6 66
-    %          331 6
-    %          373 6
-    %          398 3
-    %          430 3
-    %          451 3
-    %          542 3
-    %          568 3
-    %          612 6
-    %          637 6 105
-    %          657 6
-    %          683 6
-    %          705 6
-    %          733 6
-    %          752 6
-    %          777 6
-    %          879 3
-    %          968 3
-    %          985 6
-    %         1007 3 156
     
     numobs1=sum(ismember(obs2scan,find(scansUsingCurSource)));
     
@@ -145,20 +101,15 @@ for iSource=1:nSources
     else
         sources(iSource).corr=[];
     end
-    %     if isfield(crf(indSourceInCrf).(crfToTake), 'def')
-    %         sources(iSource).def=    crf(indSourceInCrf).(crfToTake).def;
-    %     else
-    %         sources(iSource).def=[];
-    %     end
     
     
     %out_struct.CrossReference.SourceCrossRef.Scan2Source.val % source ID per scan
     %out_struct.Scan.TimeUTC.YMDHM.val % time of each scan
+    nc_filename = get_nc_filename('TimeUTC', wrapper_data.Scan.Scan.files, 1);
     
-    mjd_of_scans = cal2jd(double(out_struct.Scan.TimeUTC.YMDHM.val(1,:)), double(out_struct.Scan.TimeUTC.YMDHM.val(2,:)),double(out_struct.Scan.TimeUTC.YMDHM.val(3,:)))-2400000.5...
-        +double(out_struct.Scan.TimeUTC.YMDHM.val(4,:))./24 +double(out_struct.Scan.TimeUTC.YMDHM.val(5,:))./24/60+out_struct.Scan.TimeUTC.Second.val'./24/60/60;
-       
-    
+    YMDHM_tmp = out_struct.Scan.(nc_filename).YMDHM.val;
+    mjd_of_scans = cal2jd(double(YMDHM_tmp(1,:)), double(YMDHM_tmp(2,:)),double(YMDHM_tmp(3,:))) - 2400000.5+double(YMDHM_tmp(4,:))./24 +double(out_struct.Scan.(nc_filename).YMDHM.val(5,:))./24/60 + double(out_struct.Scan.(nc_filename).Second.val')./24/60/60;
+
     sources(iSource).firstObsMjd = min(mjd_of_scans(scansUsingCurSource));
     sources(iSource).lastObsMjd = max(mjd_of_scans(scansUsingCurSource));
 end

@@ -20,14 +20,16 @@
 % - getTLEFileNames
 %
 % CHANGES
-% - 2015-09-30, Hellerschmied: Extracted from vievs2_3.m
-% - 2015-10-01, Hellerschmied: Updated (now all popupmenues are updated!)
-% - 2015-10-02, Hellerschmied: Added possibility to add filenames to the popupmenu string by defining them as input argument for the subroutine "update_popupmenu_files_in_dir". And Bug-fix!
-% - 2017-01-27, bug fix with TLE directory
-% - 2017-02-19, Krasna: ../DATA/GLOB/TRF/AO/*.txt, ../DATA/GLOB/TRF/STSEASON/*.txt, ../DATA/GLOB/TRF/APLRG/*.txt added
-% - 2017-02-28, Hellerschmied: Fixed a problem with updating OUTLIER directories
-% - 2017-06-08, Hellerschmied: Fixed a bug which caused problems, if no own TRF or won CRF was available in tghe TRF or CRF folder.
-% - 2017-08-31, Hellerschmied: Fixed a problem when the dir /ION/FILES/ was empty.
+% 2015-09-30 by A. Hellerschmied: Extracted from vievs2_3.m
+% 2015-10-01 by A. Hellerschmied: Updated (now all popupmenues are updated!)
+% 2015-10-02 by A. Hellerschmied: Added possibility to add filenames to the popupmenu string by defining them as input argument for the subroutine "update_popupmenu_files_in_dir". And Bug-fix!
+% 2017-01-27 by A. Hellerschmied: bug fix with TLE directory
+% 2017-02-19 by H. Krasna: ../DATA/GLOB/TRF/AO/*.txt, ../DATA/GLOB/TRF/STSEASON/*.txt, ../DATA/GLOB/TRF/APLRG/*.txt added
+% 2017-02-28 by A. Hellerschmied: Fixed a problem with updating OUTLIER directories
+% 2017-06-08 by A. Hellerschmied: Fixed a bug which caused problems, if no own TRF or won CRF was available in tghe TRF or CRF folder.
+% 2017-08-31 by A. Hellerschmied: Fixed a problem when the dir /ION/FILES/ was empty.
+% 2018-02-11 by D. Landskron: external troposphere files section removed
+% 
 
 function updateSeveralPopupmenus(hObject, handles)
 % This function updates some of the popupmenus where e.g. models can be
@@ -55,7 +57,6 @@ if ~iscell(curContent)
 else
     curSelected=curContent{get(handles.popupmenu_setInput_outDir, 'Value')};
 end
-% curSelected=curContent{get(handles.popupmenu_setInput_outDir, 'Value')};
 dirsInOutlierFolder=dir('../DATA/OUTLIER/');
 yrsToDelete=~cellfun(@isnan, cellfun(@str2double, {dirsInOutlierFolder.name}, 'UniformOutput', false));
 dirsInOutlierFolder(strcmp({dirsInOutlierFolder.name}, '.')|strcmp({dirsInOutlierFolder.name}, '..')|~[dirsInOutlierFolder.isdir]|yrsToDelete)=[];
@@ -89,7 +90,9 @@ end
 path_dir             = '../TRF/*.txt';
 popupmenu_tag        = 'popupmenu_parameters_refFrames_otherTRF';
 file_description_str = 'TRF file';
-flag_no_files = update_popupmenu_files_in_dir(path_dir, popupmenu_tag, file_description_str, handles);
+additonal_filenames = {};
+remove_filenames = {'SavedGuiData_superstations.txt'};
+flag_no_files = update_popupmenu_files_in_dir(path_dir, popupmenu_tag, file_description_str, handles, additonal_filenames, remove_filenames);
 if flag_no_files
     set(handles.popupmenu_parameters_refFrames_otherTRF, 'Enable', 'off')
     set(handles.radiobutton_parameters_refFrames_otherTRF, 'Enable', 'off')
@@ -109,32 +112,6 @@ if flag_no_files
 else
     set(handles.popupmenu_parameters_refFrames_otherCRF, 'Enable', 'on')
     set(handles.radiobutton_parameters_refFrames_otherCRF, 'Enable', 'on')
-end
-
-
-
-% ##### Troposphere #####
-
-% ### folder of external tropo files ###
-curContent=get(handles.popupmenu_parameters_tropo_externalFile, 'String');
-if iscell(curContent)
-    curSelected=curContent{get(handles.popupmenu_parameters_tropo_externalFile, 'Value')};
-else
-    curSelected=curContent;
-end
-dirsInTrpFolder=dir('../TRP/OUTPUT_DATA/');
-dirsInTrpFolder(strcmp({dirsInTrpFolder.name}, '.')|strcmp({dirsInTrpFolder.name}, '..')|~[dirsInTrpFolder.isdir])=[];
-% if no folders (except PROGRAM+second) exist, just take ''
-if isempty(dirsInTrpFolder)
-    set(handles.popupmenu_parameters_tropo_externalFile, 'String', ' ');
-else
-    set(handles.popupmenu_parameters_tropo_externalFile, 'String', {dirsInTrpFolder.name});
-    oldFoundInNew=~cellfun(@isempty, strfind({dirsInTrpFolder.name}, curSelected));
-    if sum(oldFoundInNew)>0
-        set(handles.popupmenu_parameters_tropo_externalFile, 'Value', find(oldFoundInNew))
-    else
-        msgbox('Previously selected tropo delay directory was not found!\n', 'Warning', 'warn')
-    end
 end
 
 
@@ -404,8 +381,13 @@ flag_no_files = false;
 switch nargin
     case 4 % Just add the names of all files found in the derfined directory to the popupmenu
         additonal_filenames = {};
+        remove_filenames = {};
     case 5 % additional strings (which are provided as input argument) have to be added to the popupmenu
         additonal_filenames = varargin{1};
+        remove_filenames = {};
+    case 6
+        additonal_filenames = varargin{1};
+        remove_filenames = varargin{2};
     otherwise
         additonal_filenames = {}; % Error init.
 end
@@ -415,8 +397,15 @@ if ischar(curContent)
 end
 curSelected = eval( ['curContent{get(handles.', popupmenu_tag, ', ''Value'')}'] );
 filesInDir = dir(path_dir);
+filesInDir(strcmp({filesInDir.name}, '.')|strcmp({filesInDir.name}, '..'))=[]; % Remove "." and ".."
+
+if ~isempty(remove_filenames) % Remove filenames defined in input argument "remove_filenames"
+    for i = 1 : length(remove_filenames)
+        filesInDir(strcmp({filesInDir.name}, remove_filenames))=[]; % Remove "." and ".."
+    end
+end
+
 filenames = {filesInDir.name};
-filesInDir(strcmp(filenames, '.')|strcmp(filenames, '..'))=[];
 filenames = [filenames, additonal_filenames]; % Add additional filesnames
 if isempty(filenames)
     filenames = ' '; % It is not allowed to set an empty string!
@@ -442,11 +431,11 @@ curContent = eval(['get(handles.', popupmenu_tag, ', ''String'')']);
 if ~iscell(curContent)
     curContent = {curContent};
 end
-try
+% try
 curSelected = eval( ['curContent{get(handles.', popupmenu_tag, ', ''Value'')}'] );
-catch
-    disp('iii');
-end
+% catch
+%     disp('iii');
+% end
 foldersInDir = dir(path_dir);
 foldersInDir(strcmp({foldersInDir.name}, '.')|strcmp({foldersInDir.name}, '..')|~[foldersInDir.isdir])=[]; % Only get the names of the sub-directories!
 if strcmp(curSelected, '/') % ...because "/" is set as default in the LEVEL3-subfolder popupmenus on program start in Vie_SETUP (plotting tools and EOP/BAS output)!

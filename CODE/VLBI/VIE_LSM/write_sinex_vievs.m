@@ -24,18 +24,18 @@
 %   17 June 2011 by Hana Spicakova: fclose for ns-codes.txt was missing 
 %   05 July 2011 by Hana Spicakova: FILE/COMMENT block according to
 %      template from Axel Nothnagel - Version 2.0
-%   10 July 2012 by Hana Krásná: compatibility of non-tidal APL with
+%   10 July 2012 by Hana Krï¿½snï¿½: compatibility of non-tidal APL with
 %   version2.0
-%   10 July 2012 by Hana Krásná: hydrology loading added
-%   30 Oct 2012 by Hana Krásná: ns_codes.txt changed to superstation file
-%   30 Oct 2012 by Hana Krásná: the total tropospheric zenith delay added
-%   18 Dec 2012 by Hana Krásná: changes in header according to the new
+%   10 July 2012 by Hana Krï¿½snï¿½: hydrology loading added
+%   30 Oct 2012 by Hana Krï¿½snï¿½: ns_codes.txt changed to superstation file
+%   30 Oct 2012 by Hana Krï¿½snï¿½: the total tropospheric zenith delay added
+%   18 Dec 2012 by Hana Krï¿½snï¿½: changes in header according to the new
 %       representation of constraints in the GUI 2.1
-%   30 Apr 2013 by Hana Krásná: TROWET changed to TROTOT
-%   18 Dec 2013 by Hana Krásná: ICRF designation for sources added
-%   18 Dec 2013 by Hana Krásná: change in the header
-%   20 Dec 2013 by Hana Krásná: change to IERS name
-%   10 Feb 2014 by Hana Krásná: information about tidal UT corrections
+%   30 Apr 2013 by Hana Krï¿½snï¿½: TROWET changed to TROTOT
+%   18 Dec 2013 by Hana Krï¿½snï¿½: ICRF designation for sources added
+%   18 Dec 2013 by Hana Krï¿½snï¿½: change in the header
+%   20 Dec 2013 by Hana Krï¿½snï¿½: change to IERS name
+%   10 Feb 2014 by Hana Krï¿½snï¿½: information about tidal UT corrections
 %       added
 %   19 Jun 2014 by Hana Krasna: sources can be estimated in vie_lsm with
 %       NNR condition
@@ -52,6 +52,8 @@
 %   26 Sep 2016 by Hana Krasna: update related changes in supersource file,
 %   change of the IVS name format string to char
 %   25 Jan 2017 by Daniel Landskron: adapted for splitted mf and gradients
+%   06 Jul 2018 by Daniel Landskron: VMF3 added to the troposphere models 
+%   23 Aug 2018 by Daniel Landskron: adapted for vgosDB
 %
 % call this function:
 %
@@ -65,6 +67,7 @@
 
 function write_sinex_vievs(fname, varargin)
 
+ispc = false; % quick fix --> should be properly implemented for early matlab versions
 % if subfolder is given as an input
 if nargin>1
     subfolder=varargin{1};
@@ -295,7 +298,7 @@ for pl=1:size(process_list,1)
     dataStartEndYrStr=num2str(dataStartEnd(:,1));
     obsCode='R';            % observation code (R=VLBI)
     numEstPar=length(b_sinex);
-    constrCode=num2str(0);  % 0=tight, 1=significant, 2=unconstrained
+    constrCode=num2str(2);  % 0=tight, 1=significant, 2=unconstrained
     
     solcontents=[''];
     if outsnx.xyz==1; solcontents = ['S ']; end
@@ -328,13 +331,15 @@ for pl=1:size(process_list,1)
     blockName='FILE/COMMENT';
     %comment={'Constraints for EOP are always relative.'};
     
-    if strcmp(parameter.vie_init.zhd,'in situ'); zhd=' b) use NGS file content';
+    if strcmp(parameter.vie_init.zhd,'in situ'); zhd=[' b) use ' parameter.data_type ' file content'];
+    elseif strcmp(parameter.vie_init.zhd,'vmf3'); zhd=' c) other (VMF3)';
     elseif strcmp(parameter.vie_init.zhd,'vmf1'); zhd=' c) other (VMF1)';
     elseif strcmp(parameter.vie_init.zhd,'gpt3'); zhd=' c) other (GPT3 function)';
     else zhd=' c) other'; 
     end
     
-    if strcmp(parameter.vie_init.tp,'in situ'); tp=' b) use NGS file content';
+    if strcmp(parameter.vie_init.tp,'in situ'); tp=[' b) use ' parameter.data_type ' file content'];
+    elseif strcmp(parameter.vie_init.tp,'vmf3'); tp=' c) other (VMF3)';
     elseif strcmp(parameter.vie_init.tp,'vmf1'); tp=' c) other (VMF1)';
     elseif strcmp(parameter.vie_init.tp,'gpt3'); tp=' c) other (GPT3 function)';
     else tp=' c) other';
@@ -347,8 +352,8 @@ for pl=1:size(process_list,1)
     if parameter.vie_mod.cto==1; cto=parameter.vie_mod.ocm;
     else cto=' none';
     end
-    if parameter.vie_mod.cta==1;
-        if strcmp(parameter.vie_mod.ctam,'s12_cm_noib_leonid.mat');
+    if parameter.vie_mod.cta==1
+        if strcmp(parameter.vie_mod.ctam,'s12_cm_noib_leonid.mat')
             cta =' Ponte and Ray (2002) model; Leonid Petrov';% '(http://gemini.gsfc.nasa.gov/aplo/aplo_s1_s2_noib_1.0x1.0deg.nc)';
         else cta=parameter.vie_mod.ctam;
         end
@@ -396,7 +401,7 @@ for pl=1:size(process_list,1)
     end
     
     if parameter.vie_mod.therm == 1
-        therm = 'IVS antenna thermal expansion model of Nothnagel (2008) using scan-wise temperatures from NGS file';
+        therm = ['IVS antenna thermal expansion model of Nothnagel (2008) using scan-wise temperatures from ' parameter.data_type ' file'];
     else
         therm = 'none';
     end
@@ -418,7 +423,8 @@ for pl=1:size(process_list,1)
     
     if parameter.lsmopt.pw_zwd==1
         zwd=[' zenith wet delay: ' num2str(parameter.lsmopt.int_zwd) ' min offsets with rel. constr. ' num2str(parameter.lsmopt.coef_zwd) ' cm after '  num2str(parameter.lsmopt.int_zwd) ' min' ];
-    else zwd=' zenith wet delay: was not estimated';
+    else
+        zwd=' was not estimated';
     end
     
     % north and east gradients have to have the same parameterization for
@@ -430,13 +436,14 @@ for pl=1:size(process_list,1)
             tgr=[' ' num2str(parameter.lsmopt.int_ngr) ' min offsets with rel. constr. ' num2str(parameter.lsmopt.coef_rel_ngr) ' cm after ' num2str(parameter.lsmopt.int_ngr) ' min and abs. constr. ' num2str(parameter.lsmopt.coef_abs_ngr) ' cm'];
         elseif parameter.lsmopt.constr_rel_ngr==0 && parameter.lsmopt.constr_abs_ngr==1
             tgr=[' ' num2str(parameter.lsmopt.int_ngr) ' min offsets with abs. constr. ' num2str(parameter.lsmopt.coef_abs_ngr) ' cm'];
-        elseif parameter.lsmopt.constr_rel_ngr==0;
+        elseif parameter.lsmopt.constr_rel_ngr==0
             tgr=[' ' num2str(parameter.lsmopt.int_ngr) ' min offsets without any constraints'];
         end
-    else tgr=' troposphere horizontal gradients: were not estimated';
+    else
+        tgr=' were not estimated';
     end
     
-    outlr=[''];
+    outlr='';
     if parameter.vie_init.rm_outlier==1
         outlr=' + with residuals larger than 5*aposteriori variance of unit weight)'; % usual number which is used for outlier detection (in previous run of VieVS by creating the outlier file)
     end
@@ -453,7 +460,7 @@ for pl=1:size(process_list,1)
         'Version 2.0 (2011-05-26)'; 
         '(http://vlbi.geod.uni-bonn.de/IVS-AC/Docs/Analysis_description.txt)';
         '1. Origin of input data';
-        ' c) NGS file from IVS Data Center';
+        [' c) ' parameter.data_type ' file from IVS Data Center'];
         '3. Origin of meteorological data';
         [' zenith hydrostatic delay: ' zhd];
         [' temperature: ' tp];
@@ -462,9 +469,9 @@ for pl=1:size(process_list,1)
         '5. Setting of mapping functions';
         ' b) other (created by VieVS)';
         '6. Origin of cable cal data';
-        ' b) Use NGS file content';
+        [' b) Use ' parameter.data_type ' file content'];
         '7. Application of cable cal flags';
-        ' a) all on by default (data from NGS file is used as it is)';
+        [' a) all on by default (data from ' parameter.data_type ' file is used as it is)'];
         '8. Selection/settings of geophysical models';
         '8.1 A priori Earth orientation';
         ['- A priori precession/nutation model: ' parameter.vie_mod.nutmod];
@@ -559,24 +566,24 @@ for pl=1:size(process_list,1)
     % write blockstart line to file
     fprintf(fid, '+%s\n', blockName);
     
-    useIVSnames = true;
+    useIVSnames = false;
     % write description line
     if useIVSnames
-        fprintf(fid, '%s\n', '*Code IVS_des ICRF_designator');
+        fprintf(fid, '%s\n', '*Code IVS_des ICRF_designator  Comments');
     else
-        fprintf(fid, '%s\n', '*Code IERS_des ICRF_designator');
+        fprintf(fid, '%s\n', '*Code IERS_des ICRF_designator  Comments');
     end
     
     % for all sources
     for k=1:numSou
         if useIVSnames
             if isempty(sources.q(k).IVSname)
-                fprintf(fid, ' %04s %-8s %-16s\n', num2str(k), sources.q(k).IERSname, sources.q(k).ICRFdes);
+                fprintf(fid, ' %04s %-8s %-16s %-68s\n', num2str(k), sources.q(k).IERSname, sources.q(k).ICRFdes, num2str(sources.q(k).numobs));
             else
-                fprintf(fid, ' %04s %-8s %-16s\n', num2str(k), sources.q(k).IVSname, sources.q(k).ICRFdes);
+                fprintf(fid, ' %04s %-8s %-16s %-68s\n', num2str(k), sources.q(k).IVSname, sources.q(k).ICRFdes, num2str(sources.q(k).numobs));
             end
         else
-            fprintf(fid, ' %04s %-8s %-16s\n', num2str(k), sources.q(k).IERSname, sources.q(k).ICRFdes);
+            fprintf(fid, ' %04s %-8s %-16s %-68s\n', num2str(k), sources.q(k).IERSname, sources.q(k).ICRFdes, num2str(sources.q(k).numobs));
         end
         sources.q(k).siteCode=num2str(k);
     end
@@ -594,16 +601,26 @@ for pl=1:size(process_list,1)
     % get lat and lon from extimated x,y,z
     [approxLat,approxLon,approxH]=xyz2ell([[antenna.x]', [antenna.y]', [antenna.z]']);
 
-    % rad -> °
+    % rad -> ï¿½
     approxLat=approxLat*180/pi;
     approxLon=approxLon*180/pi;
 
     % [-180, 180] -> [0, 360]
     approxLon(approxLon<0)=approxLon(approxLon<0)+360;
 
-    % ° -> dms
-    dmsLat=degrees2dms(approxLat);
-    dmsLon=degrees2dms(approxLon);
+    % ï¿½ -> dms
+    %dmsLat=degrees2dms(approxLat); not in basic Matlab
+    degrees = fix(approxLat);
+    minutes = abs(fix((approxLat-degrees).*60));
+    seconds = (abs(approxLat-degrees).*60 - minutes).*60;
+    dmsLat = [degrees,minutes,seconds];
+
+    %dmsLon=degrees2dms(approxLon); not in basic Matlab
+    degrees = fix(approxLon);
+    minutes = abs(fix((approxLon-degrees).*60));
+    seconds = (abs(approxLon-degrees).*60 - minutes).*60;
+    dmsLon = [degrees,minutes,seconds];
+    clearvars degrees minutes seconds;
 
     % write blockstart line to file
     fprintf(fid, '+%s\n', blockName);
@@ -786,6 +803,7 @@ for pl=1:size(process_list,1)
 
         if outsnx.xyz==1
         % write x,y,z coordinates
+            cpsd_all = cPostSeismDeform(midmjd,antenna);
             for k=1:numStat
                 % Solution ID   
                 soln=num2str(1);
@@ -793,9 +811,9 @@ for pl=1:size(process_list,1)
 
                 % calculate apriori values
                 %                  coordx   +     vx      * (   mean scan mjd - itrf epoch mjd )/ diff(mjd)->years                                
-                antenna(k).aprX=antenna(k).x+antenna(k).vx*(midmjd-antenna(k).epoch)/365.25;
-                antenna(k).aprY=antenna(k).y+antenna(k).vy*(midmjd-antenna(k).epoch)/365.25;
-                antenna(k).aprZ=antenna(k).z+antenna(k).vz*(midmjd-antenna(k).epoch)/365.25;
+                antenna(k).aprX=antenna(k).x+antenna(k).vx*(midmjd-antenna(k).epoch)/365.25 + cpsd_all(1,1,k);
+                antenna(k).aprY=antenna(k).y+antenna(k).vy*(midmjd-antenna(k).epoch)/365.25 + cpsd_all(2,1,k);
+                antenna(k).aprZ=antenna(k).z+antenna(k).vz*(midmjd-antenna(k).epoch)/365.25 + cpsd_all(3,1,k);
 
 
                 % calculate total estimated values

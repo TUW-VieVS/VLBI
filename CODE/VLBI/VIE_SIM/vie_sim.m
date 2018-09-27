@@ -547,7 +547,7 @@ for iscan = 1:length(scan)
 end
 
 % update antenna structure
-if strcmp(antenna(1).session(11),'V')
+if strcmpi(antenna(1).session(11),'V')
     fname = antenna(1).session;
 else
     fname = antenna(1).session(1:9);

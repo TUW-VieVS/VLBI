@@ -36,11 +36,33 @@ mjd=maxMjdEop;
 
 % if both x_ and opt_ exist (and are not empty) := normal with estimation:
 if ~isempty(x_) && ~isempty(opt_)
-    mjde = x_.xpol.mjd;
-    xp   = x_.xpol.val; 
-    xp_e = x_.xpol.mx;
-    mjdxpol=x_.xpol.mjd;
-
+    
+    if opt_.xpol.model==1
+        mjde = x_.xpol.mjd;
+    elseif opt_.ypol.model==1
+        mjde = x_.ypol.mjd;
+    elseif opt_.dut1.model==1
+        mjde = x_.dut1.mjd;
+    elseif opt_.nutdx.model==1
+        mjde = x_.nutdx.mjd;
+    elseif opt_.nutdy.model==1
+        mjde = x_.nutdy.mjd;
+    else
+        error('error writing eop data')
+    end
+    
+    
+    if opt_.xpol.model==1
+       mjdxpol=x_.xpol.mjd;
+       %mjdn   = x_.nutdx.mjd;
+       xp   = x_.xpol.val;
+       xp_e = x_.xpol.mx;
+    else
+       mjdxpol= [mjde(1);mjde(end)];
+       xp     = [0; 0];
+       xp_e   = [0; 0];
+    end
+    
     % ypol if estimated
     if opt_.ypol.model==1
        mjdypol=x_.ypol.mjd;

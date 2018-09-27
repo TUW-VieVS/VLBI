@@ -1,4 +1,5 @@
 *
 !*.OPT
 !.gitignore
-!VIENNA
+!VIENNA_VGOSDB
+!VIENNA_NGS
