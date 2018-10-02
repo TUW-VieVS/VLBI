@@ -352,7 +352,7 @@ switch(parameter.data_type)
         sources     = nc2sources(out_struct, crf, crffile{2}, wrapper_data);
         
         % "clean" scan struct (because of exclusions)
-        % [scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.vie_init.Qlim, parameter.vie_init.min_elev);
+        [scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.vie_init.Qlim, parameter.vie_init.min_elev);
 
     
         % Create a sub-structure in "sources" for quasars sources:
