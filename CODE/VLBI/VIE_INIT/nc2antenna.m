@@ -82,22 +82,26 @@ for iStat=1:nStat
     
     % get trf coordinates from chosen trf
     if isempty(trf(indCurStatInTrf).(chosenTrf))
-        fprintf('No %s coordinates for %s - get vievsTrf coordinates (no NNT/NNR)\n', chosenTrf, curName)
-        trfToTake='vievsTrf';
+        if strcmp(chosenTrf, 'vievsTrf') % Station not even in vievsTrf (backup)
+            error('Station %s not found in the superstation file (vievsTRF). Add this station to the superstation file by following the steps described at %s\n', antenna(iStat).name, url_vievswiki_create_superstation);
+        end
+        bnr = [];
     else
         trfToTake=chosenTrf;
+        
+        % find break
+        if ~isempty(trf(indCurStatInTrf).(trfToTake))
+            bnr=find(antenna(iStat).firstObsMjd>=[trf(indCurStatInTrf).(trfToTake).break.start] & antenna(iStat).firstObsMjd<=[trf(indCurStatInTrf).(trfToTake).break.end]);
+        else
+            bnr = [];
+        end
     end
     
-    if ~isempty(trf(indCurStatInTrf).(chosenTrf))
-        % find break
-        bnr=find(antenna(iStat).firstObsMjd>=[trf(indCurStatInTrf).(trfToTake).break.start] & antenna(iStat).firstObsMjd<=[trf(indCurStatInTrf).(trfToTake).break.end]);
-    else % no vievsTRF coordinates alvailable
-        error('Station %s  has no vievsTRF coordinates in the superstation file. Add this station to the superstation file (to vievsTRF.txt) by following the steps described at %s\n', antenna(iStat).name, url_vievswiki_create_superstation);
-    end
+
 
     % no break is found for the "trfToTake"
     if isempty(bnr)
-        fprintf('No valid %s epoch for %s - get vievsTrf coordinates (no NNT/NNR)\n', trfToTake, curName)
+        fprintf('No valid %s coordinates for %s => get vievsTrf coordinates (no NNT/NNR conditions applied!)\n', trfToTake, curName)
         % so: no valid epoch for official (e.g.. VTRF2008) TRF -> get vievsTrf break
         trfToTake='vievsTrf';
         

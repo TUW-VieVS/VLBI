@@ -66,4 +66,4 @@
 #
 
 #
-                          outFile | D:\GIT\vievs\VLBI\TRF\superstation_vgos.mat
+                          outFile | D:\Weitere Dokumente\Weitere Programme\vievs\VLBI\TRF\superstation.mat
