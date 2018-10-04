@@ -238,7 +238,7 @@ if parameter.opt.use_opt_files
 %         parameter.vie_init.clk_break        = clean_opt.clk_break;        % Clock break info (structure)
         parameter.opt.options          = clean_opt;
     else
-        fprintf(' - OPT file not available: %s\n', opt_file_path_name);
+        fprintf(' - No OPT file applied: %s\n', opt_file_path_name);
 %         parameter.vie_init.ref_clk_name     = ''; % If no reference clock is defined in the OPt file, this field conatin an empty string ('')!
 %         parameter.vie_init.num_clk_breaks   = 0;
 %         parameter.vie_init.clk_break        = [];
@@ -250,78 +250,104 @@ if parameter.opt.use_opt_files
 end
 
 % ### write info about excluded baselines, stations, sources to CW ###
-fprintf('Stations to be excluded: %1.0f\n', size(clean_opt.sta_excl,1))
-for k=1:size(clean_opt.sta_excl,1)
-    if clean_opt.sta_excl_start(k)==0
-        fprintf('%s \n', clean_opt.sta_excl(k,:));
-    else
-        fprintf('%s %f %f\n', clean_opt.sta_excl(k,:), clean_opt.sta_excl_start(k),clean_opt.sta_excl_end(k));
-    end
-end
-  
-fprintf('Stations to be down-weighted: %1.0f\n', size(clean_opt.stat_dw,1))
-if size(clean_opt.stat_dw,1) == 0
-    parameter.vie_init.stat_dw = [];
-else
-	parameter.vie_init.stat_dw = {};
-    for k=1:size(clean_opt.stat_dw,1)
-        fprintf('%s', clean_opt.stat_dw(k,:),' ', clean_opt.stat_co(k,:))
-        fprintf('\n')
-        parameter.vie_init.stat_dw(k,:) = {clean_opt.stat_dw(k,:)};
-        parameter.vie_init.stat_co(k,:) = str2num(clean_opt.stat_co(k,:));
-    end
-end
-    
-fprintf('Sources to be excluded: %1.0f\n', size(clean_opt.sour_excl,1))
-for k=1:size(clean_opt.sour_excl,1)
-    %fprintf('%s\n', ini_opt.sour_excl(k,:))
-    if clean_opt.sour_excl_start(k)==0                                    
-        fprintf('%s \n', clean_opt.sour_excl(k,:));
-    else
-        fprintf('%s %f %f\n', clean_opt.sour_excl(k,:), clean_opt.sour_excl_start(k),clean_opt.sour_excl_end(k));
-    end 
-end
-
-remove_sources_from_list = false;
-if remove_sources_from_list
-    path2sourcelist = '';     %add the path of your .txt file here. Format is the same as glob input .txt files   
-    fid = fopen(path2sourcelist);
-    if fid == -1
-        warning('File with list of removed sources can not be found\n');
-    else
-        remove_sources = textscan(fid, '%8s','Delimiter','\n');
-        remove_sources = remove_sources{1};
-        clean_opt.sour_excl = [clean_opt.sour_excl;char(remove_sources)];
-        disp('+ sources from external file removed');
-        if isfield(clean_opt, 'sour_excl_start')
-            clean_opt.sour_excl_start = [clean_opt.sour_excl_start, zeros(1,length(remove_sources))];
-            clean_opt.sour_excl_end = [clean_opt.sour_excl_end, zeros(1,length(remove_sources))];
+if parameter.opt.use_opt_files
+    fprintf('Stations to be excluded: %1.0f\n', size(clean_opt.sta_excl,1))
+    for k=1:size(clean_opt.sta_excl,1)
+        if clean_opt.sta_excl_start(k)==0
+            fprintf('%s \n', clean_opt.sta_excl(k,:));
         else
-            clean_opt.sour_excl_start = zeros(1,length(remove_sources));
-            clean_opt.sour_excl_end = zeros(1,length(remove_sources));
+            fprintf('%s %f %f\n', clean_opt.sta_excl(k,:), clean_opt.sta_excl_start(k),clean_opt.sta_excl_end(k));
         end
     end
-    fclose(fid);
-end
 
-fprintf('Baselines to be excluded: %1.0f\n', size(clean_opt.bas_excl, 2))
-for k=1:size(clean_opt.bas_excl, 2)
-    fprintf('%8s - %8s \n', clean_opt.bas_excl(k).sta1, clean_opt.bas_excl(k).sta2)
+    fprintf('Stations to be down-weighted: %1.0f\n', size(clean_opt.stat_dw,1))
+    if size(clean_opt.stat_dw,1) == 0
+        parameter.vie_init.stat_dw = [];
+    else
+        parameter.vie_init.stat_dw = {};
+        for k=1:size(clean_opt.stat_dw,1)
+            fprintf('%s', clean_opt.stat_dw(k,:),' ', clean_opt.stat_co(k,:))
+            fprintf('\n')
+            parameter.vie_init.stat_dw(k,:) = {clean_opt.stat_dw(k,:)};
+            parameter.vie_init.stat_co(k,:) = str2num(clean_opt.stat_co(k,:));
+        end
+    end
+
+    fprintf('Sources to be excluded: %1.0f\n', size(clean_opt.sour_excl,1))
+    for k=1:size(clean_opt.sour_excl,1)
+        %fprintf('%s\n', ini_opt.sour_excl(k,:))
+        if clean_opt.sour_excl_start(k)==0                                    
+            fprintf('%s \n', clean_opt.sour_excl(k,:));
+        else
+            fprintf('%s %f %f\n', clean_opt.sour_excl(k,:), clean_opt.sour_excl_start(k),clean_opt.sour_excl_end(k));
+        end 
+    end
+
+    remove_sources_from_list = false;
+    if remove_sources_from_list
+        path2sourcelist = '';     %add the path of your .txt file here. Format is the same as glob input .txt files   
+        fid = fopen(path2sourcelist);
+        if fid == -1
+            warning('File with list of removed sources can not be found\n');
+        else
+            remove_sources = textscan(fid, '%8s','Delimiter','\n');
+            remove_sources = remove_sources{1};
+            clean_opt.sour_excl = [clean_opt.sour_excl;char(remove_sources)];
+            disp('+ sources from external file removed');
+            if isfield(clean_opt, 'sour_excl_start')
+                clean_opt.sour_excl_start = [clean_opt.sour_excl_start, zeros(1,length(remove_sources))];
+                clean_opt.sour_excl_end = [clean_opt.sour_excl_end, zeros(1,length(remove_sources))];
+            else
+                clean_opt.sour_excl_start = zeros(1,length(remove_sources));
+                clean_opt.sour_excl_end = zeros(1,length(remove_sources));
+            end
+        end
+        fclose(fid);
+    end
+
+    fprintf('Baselines to be excluded: %1.0f\n', size(clean_opt.bas_excl, 2))
+    for k=1:size(clean_opt.bas_excl, 2)
+        fprintf('%8s - %8s \n', clean_opt.bas_excl(k).sta1, clean_opt.bas_excl(k).sta2)
+    end
+    fprintf('No cable calibration: %1.0f\n', size(clean_opt.no_cab,1))
+    for k=1:size(clean_opt.no_cab,1)
+        fprintf('%s\n', clean_opt.no_cab(k,:))
+    end
+    fprintf('\n')
 end
-fprintf('No cable calibration: %1.0f\n', size(clean_opt.no_cab,1))
-for k=1:size(clean_opt.no_cab,1)
-    fprintf('%s\n', clean_opt.no_cab(k,:))
-end
-fprintf('\n')
 % -------------------------------------------------------------------    
 
 
 % ##### Outlier files #####
+parameter.outlier.obs2remove = []; % init empty field for outliers
 
-
+outlier_filename_path = ['../DATA/OUTLIER/', parameter.outlier.out_file_dir, '/', parameter.year, '/', parameter.session_name, '.OUT'];
+if parameter.outlier.flag_remove_outlier
+    if exist(outlier_filename_path, 'file')
+        [parameter.outlier.obs2remove] = readOUT(outlier_filename_path);
+        fprintf('%d outliers will be removed:\n',size(parameter.outlier.obs2remove,2));        %%%=> A. Girdiuk 2015-07-21
+        for k=1:size(parameter.outlier.obs2remove,2)
+            fprintf(' - %8s %8s %5.2f\n', parameter.outlier.obs2remove(k).sta1, parameter.outlier.obs2remove(k).sta2, parameter.outlier.obs2remove(k).mjd);
+        end
+    else
+        fprintf('Outlier list not available: %s\n', outlier_filename_path);
+    end
+else
+    fprintf('Outliers will not be removed\n');
+end
+fprintf('\n')  
 
 
 % ##### Observation restrictions #####
+
+% ### Quality code limit ###
+
+
+
+% ### Cut-off elevation ###
+
+
+
 
 
 
@@ -332,7 +358,8 @@ fprintf('\n')
 % ############################
 
 % [scan, sources, antenna]=cleanScan(scan, sources, antenna, out_structFieldnames, allSourceNames, ini_opt, bas_excl, qualityLimit, minElevation)
-[scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.vie_init.Qlim, parameter.vie_init.min_elev);
+% [scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.obs_restrictions.q_code_limit, parameter.obs_restrictions.cut_off_elev);
+[scan, sources, antenna] = cleanScan(scan, sources, antenna, parameter);
 
 
 
@@ -1304,32 +1331,41 @@ if ess == 1 % +hana 10Nov10
 
     [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, number_pwlo_per_sat);
 
-    [atpa_.mat] = N;
-    [atpl_.vec] = n;
+    % [atpa_.mat] = N;
+    % [atpl_.vec] = n;
     [opt_] = opt;
     % save files
 
     fprintf('----------\n');
     test_significance(x_,opt_,5);
+    
+    % Save the "cleaned" VieVS structures (consistent withe the results in x_ and res_):
+    fprintf('Save VieVS data structures (oultiers and OPT file options applied!)\n');
+    fprintf('  ../VieVS/DATA/LEVEL3/%s/%s_antenna.mat\n',dirpth,fname);
+    save(['../DATA/LEVEL3/',dirpth,'/',fname,'_antenna.mat'],'antenna');
+    fprintf('  ../VieVS/DATA/LEVEL3/%s/%s_source.mat\n',dirpth,fname);
+    save(['../DATA/LEVEL3/',dirpth,'/',fname,'_source.mat'],'antenna');
+    fprintf('  ../VieVS/DATA/LEVEL3/%s/%s_parameter.mat\n',dirpth,fname);
+    save(['../DATA/LEVEL3/',dirpth,'/',fname,'_parameter.mat'],'antenna');
+    fprintf('  ../VieVS/DATA/LEVEL3/%s/%s_scan.mat\n',dirpth,fname);
+    save(['../DATA/LEVEL3/',dirpth,'/',fname,'_scan.mat'],'antenna');
+    
 
-    fprintf('estimated parameters are saved as ../VieVS/DATA/LEVEL3/%s/x_%s.mat\n',dirpth,fname);
+    fprintf('Estimated parameters are saved as ../VieVS/DATA/LEVEL3/%s/x_%s.mat\n',dirpth,fname);
     save(['../DATA/LEVEL3/',dirpth,'/x_',fname,'.mat'],'x_');
 
-    fprintf('estimation options are saved as ../VieVS/DATA/LEVEL3/%s/opt_%s.mat\n',dirpth,fname);
+    fprintf('Estimation options are saved as ../VieVS/DATA/LEVEL3/%s/opt_%s.mat\n',dirpth,fname);
     save(['../DATA/LEVEL3/',dirpth,'/opt_',fname,'.mat'],'opt_');
 
-    fprintf('normal equation matrix is saved as ../VieVS/DATA/LEVEL3/%s/atpa_%s.mat\n',dirpth,fname);
-    save(['../DATA/LEVEL3/',dirpth,'/atpa_',fname,'.mat'],'atpa_');
+%     fprintf('normal equation matrix is saved as ../VieVS/DATA/LEVEL3/%s/atpa_%s.mat\n',dirpth,fname);
+%     save(['../DATA/LEVEL3/',dirpth,'/atpa_',fname,'.mat'],'atpa_');
 
-    fprintf('right hand side vector is saved as ../VieVS/DATA/LEVEL3/%s/atpl_%s.mat\n',dirpth,fname);
-    save(['../DATA/LEVEL3/',dirpth,'/atpl_',fname,'.mat'],'atpl_');
+%     fprintf('right hand side vector is saved as ../VieVS/DATA/LEVEL3/%s/atpl_%s.mat\n',dirpth,fname);
+%     save(['../DATA/LEVEL3/',dirpth,'/atpl_',fname,'.mat'],'atpl_');
     
-    fprintf('residuals are saved as ../VieVS/DATA/LEVEL3/%s/res_%s.mat\n',dirpth,fname);
+    fprintf('Residuals are saved as ../VieVS/DATA/LEVEL3/%s/res_%s.mat\n',dirpth,fname);
     save(['../DATA/LEVEL3/',dirpth,'/res_',fname,'.mat'],'res');
 
-    
-    
-    
 end
 
 [opt_] = opt;
@@ -1739,14 +1775,14 @@ if opt.ascii_snx == 1
     
     
     % Save info about columns
-    col_sinex=snx_newcol(col_est,x_,antenna,outsnx);
+    col_sinex = snx_newcol(col_est, x_, antenna, outsnx);
     % Save info about statistic
     col_sinex.lTPlreduc = lTPlreduc;
     col_sinex.nr_unknowns = total_est(end);
     col_sinex.nr_obs = real_obs; % write only the real observations into sinex
     col_sinex.vTPv = vTPv;
     col_sinex.varfac = mo^2; % hana 24 Apr 2013
-    col_sinex.outsnx=outsnx;
+    col_sinex.outsnx = outsnx;
     
     % Change units of the N matrix and b vector !!!
     [N_sinex, b_sinex]=snx_changeunits(N_sinex,b_sinex,col_sinex,outsnx);   

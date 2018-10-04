@@ -11,13 +11,22 @@
 %   External calls: 	
 %       
 %   Coded for VieVS: 
-%   A. Hellerschmied, 2018-09-27
+%   Jul 2012 by Matthias Madzak
 %
 %   Revision: 
 %   dd mmm yyyy by FIRSTNAME SECONDNAME:
+%   18 Jul 2016 by D. Mayer: include fistObsMjd and lastObsMjd into source
+%   struct
+%   13 Oct 2016 by A. Girdiuk: bug-fix: sources can be excluded when time span is written down to OPT-file
+%   13 Nov 2017 by J. Gruber: Update to use sessions where several stations are excluded
+%   06 Jan 2018 by J. Gruber: bug fix in the outlier section (it is now possible to remove outliers)
+%   16 Jan 2018 by J. Gruber: bug fix in "No cable calibration" section
+%   16 Jan 2018 by J. Gruber: Ion code flag is also considered, only ion code zero values are taken
+%   17 Jan 2018 by J. Gruber: bug fix in "Excluded baselines" section
+%   28 Aug 2018 by D. Landskron: shape of output slightly changed
 
 % ************************************************************************
-function [scan, sources, antenna]=cleanScan2(scan, sources, antenna, out_structFieldnames, allSourceNames, ini_opt, bas_excl, qualityLimit, minElevation)
+function [scan, sources, antenna]=cleanScan(scan, sources, antenna, out_structFieldnames, allSourceNames, ini_opt, bas_excl, qualityLimit, minElevation)
 
 %% Precalculations
 vector1ToN=1:50;

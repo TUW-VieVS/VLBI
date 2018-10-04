@@ -69,7 +69,7 @@ end
 
 
 % ===========================
-% Outlier filed
+% Outlier files
 % ===========================
 
 % outlier file directory:
