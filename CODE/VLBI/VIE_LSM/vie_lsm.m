@@ -226,7 +226,8 @@ clean_opt.no_cab        = ''; % Cable cal
 
 clean_opt.scan_excl     = []; % Outliers
 
-% bas_excl                = ''; % Not needed! => Same info in ini_opt.bas_excl
+parameter.opt.options = clean_opt; % Init
+
 
 % ini_opt.bas_excl(nex).sta1 = station_name_1_str;
 % ini_opt.bas_excl(nex).sta2 = station_name_2_str;
@@ -494,7 +495,7 @@ else
 end
 
 %---------------------------
-if isempty(stations)==0
+if ~isempty(stations)
     nmi_observ = (addnoise/c).^2+(mi_observ).^2;  % [seconds2]
     an_weight = parameter.vie_init.stat_co; 
     numbers = find(ismember ({antenna.name},stations)==1);  

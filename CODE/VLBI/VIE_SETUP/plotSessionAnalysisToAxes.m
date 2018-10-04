@@ -247,6 +247,9 @@ elseif get(handles.radiobutton_plot_sessionAnalysis_corMatrix, 'Value')
         collast = x_.(lastpar)(end).col;
         if isempty(collast) % If there are no estimates for the "last" station, e.g. ref. station for clock estimates
             collast = x_.(lastpar)(end-1).col;
+            if isempty(collast) % If there are no estimates for the "last" station, e.g. ref. station for clock estimates
+                collast = x_.(lastpar)(end-2).col;
+            end
         end
     end
     collast = collast(end);

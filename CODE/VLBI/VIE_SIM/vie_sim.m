@@ -558,9 +558,12 @@ if isempty(dirpt0)
 else
     sdir = ['../SIM/', dirpt0, '/',num2str(parameter.year)];
 end
+
+
 antenna(1).ngsfile = [];
 antenna(1).session = [];
 antenna(1).ngsfile = sdir;
+
 for isim = 1:sim_idays
     antenna(1).session{isim} = sprintf('%s_S%03d',fname,sind+isim-1);
 end

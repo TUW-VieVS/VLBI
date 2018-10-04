@@ -29,17 +29,34 @@
 function [scan, sources, antenna]=cleanScan(scan, sources, antenna, parameter)
 
 %% Options
-flag_pring_debug_info = false;
+flag_pring_debug_info = true;
 
 %% Precalculations
-nScans=size(scan,2);
-nStats=length(antenna);
-nSources=size(sources.q,2);
+nScans = size(scan,2);
 
+% Stations:
+nStats = length(antenna);
 allStationNames = {antenna.name}';
 allStationNames = strtrim(allStationNames);
-allSourceNames  = {sources.q.name}';
-allSourceNames  = strtrim(allSourceNames);
+
+% Sources:
+% - Quasars
+nSources_q = size(sources.q, 2);
+if ~isempty(sources.q)
+    allSourceNames_q  = {sources.q.name}';
+    allSourceNames_q  = strtrim(allSourceNames_q);
+else
+    allSourceNames_q = {};
+end
+
+% - Spacecrafts/Satellites:
+nSources_s = size(sources.s, 2);
+if ~isempty(sources.s)
+    allSourceNames_s  = {sources.s.name}';
+    allSourceNames_s  = strtrim(allSourceNames_s);
+else
+    allSourceNames_s = {};
+end
 
 oneSecInDays = 1/60/60/24;
 
@@ -225,23 +242,38 @@ end
 % (4) Excluded sources (only get scan indices => scans are deleted later
 
 % preallocate
-exclSourcesInd = zeros(size(parameter.opt.options.sour_excl,1),1);
-exclSourcesInd_byTime = false(1, nScans); % Number of scans
+exclSourcesInd_q = zeros(size(parameter.opt.options.sour_excl,1), 1); % quasars
+exclSourcesInd_s = zeros(size(parameter.opt.options.sour_excl,1), 1); % sc
+
+exclSourcesInd_byTime_q = false(1, nScans); % Number of scans, quasars
+exclSourcesInd_byTime_s = false(1, nScans); % Number of scans, sc
+
 if ~isempty(parameter.opt.options.sour_excl)
     
     % get source logicals to be deleted
     for iSource2BeExcl = 1 : size(parameter.opt.options.sour_excl, 1)
         
         % Get source IDs:
-        exclSourcesInd(iSource2BeExcl) = find(strcmp(allSourceNames, strtrim(parameter.opt.options.sour_excl(iSource2BeExcl,:))));
+        if ~isempty(allSourceNames_q) && (sum(strcmp(allSourceNames_q, strtrim(parameter.opt.options.sour_excl(iSource2BeExcl,:)))) > 0)
+            exclSourcesInd_q(iSource2BeExcl) = find(strcmp(allSourceNames_q, strtrim(parameter.opt.options.sour_excl(iSource2BeExcl,:))));
+        end
+        if ~isempty(allSourceNames_s) && (sum(strcmp(allSourceNames_s, strtrim(parameter.opt.options.sour_excl(iSource2BeExcl,:)))) > 0)
+            exclSourcesInd_s(iSource2BeExcl) = find(strcmp(allSourceNames_s, strtrim(parameter.opt.options.sour_excl(iSource2BeExcl,:))));
+        end
         
         % Get IDs of scans in which the current source was observed:
-        scansToExcludedSources = ismember([scan.iso], exclSourcesInd(iSource2BeExcl));
+        scansToExcludedSources_q = ismember([scan.iso], exclSourcesInd_q) & strcmp({scan.obs_type}, 'q'); % quasar
+        scansToExcludedSources_s = ismember([scan.iso], exclSourcesInd_s) & strcmp({scan.obs_type}, 's'); % sc
+       
         
         % Get scan IDs at which a source is partly excluded (by time):
         if logical(parameter.opt.options.sour_excl_start(iSource2BeExcl)) % If parameter.opt.options.sour_excl_start ~= 0
-            exclSourcesInd_byTime = exclSourcesInd_byTime | (scansToExcludedSources & (([scan.mjd] >= parameter.opt.options.sour_excl_start(iSource2BeExcl)) & ([scan.mjd]<=parameter.opt.options.sour_excl_end(iSource2BeExcl))));
-            exclSourcesInd(iSource2BeExcl) = [];
+            
+            exclSourcesInd_byTime_q = exclSourcesInd_byTime_q | (scansToExcludedSources_q & (([scan.mjd] >= parameter.opt.options.sour_excl_start(iSource2BeExcl)) & ([scan.mjd]<=parameter.opt.options.sour_excl_end(iSource2BeExcl))));
+            exclSourcesInd_q(iSource2BeExcl) = [];
+            
+            exclSourcesInd_byTime_s = exclSourcesInd_byTime_s | (scansToExcludedSources_s & (([scan.mjd] >= parameter.opt.options.sour_excl_start(iSource2BeExcl)) & ([scan.mjd]<=parameter.opt.options.sour_excl_end(iSource2BeExcl))));
+            exclSourcesInd_s(iSource2BeExcl) = [];
         end
     end
 end
@@ -357,9 +389,6 @@ end
 sum_del_cut_off_elev = 0;
 if parameter.obs_restrictions.cut_off_elev > 0
     
-% scan(isc).stat(stnum).az    = azim;
-% scan(isc).stat(stnum).zd    = zd; % corrected for aberration, not for refraction!
-    
     for iScan = 1 : nScans
         % get stations in current scan
         allStationsInCurScan = unique([[scan(iScan).obs.i1], [scan(iScan).obs.i2]]);
@@ -373,15 +402,7 @@ if parameter.obs_restrictions.cut_off_elev > 0
             curStat = allStationsInCurScan(iStat);
             
             if ~isempty(scan(iScan).stat(curStat).zd)
-                
-                % calc elevation
-                % curElevation = elev(scan(iScan).mjd, [antenna(curStat).x, antenna(curStat).y, antenna(curStat).z],sources.q(scan(iScan).iso).de2000, sources.q(scan(iScan).iso).ra2000);
-% Used for debugging:
-%                 diff_elev_deg = (curElevation - (pi/2 - scan(iScan).stat(curStat).zd))*180/pi;
-%                 if abs(diff_elev_deg) > 0.1 % deg
-%                     fprintf(' - - Scan %d, stat %d: Elev diff = %f deg\n', iScan, curStat, diff_elev_deg)
-%                 end
-                
+               
                 % Get elevation calculated in VIE_MOD:
                 curElevation = pi/2 - scan(iScan).stat(curStat).zd; % in [rad]
                 if curElevation < parameter.obs_restrictions.cut_off_elev
@@ -415,43 +436,54 @@ if parameter.obs_restrictions.cut_off_elev > 0
     end % all scans
 end
 if flag_pring_debug_info
-    fprintf(' - Obserevations removed due to cut-off elevation (%f deg): %d\n', parameter.obs_restrictions.cut_off_elev * 180/pi, sum_del_q_limit)
+    fprintf(' - Obserevations removed due to cut-off elevation (%f deg): %d\n', parameter.obs_restrictions.cut_off_elev * 180/pi, sum_del_cut_off_elev)
 end
 
 
 
 %% Delete empty scans and those to an excluded source
-scansToExcludedSources=ismember([scan.iso], exclSourcesInd);
-emptyScans=[scan.nobs]<=0; % < ... just to be sure!
+scansToExcludedSources_q = ismember([scan.iso], exclSourcesInd_q) & strcmp({scan.obs_type}, 'q'); % quasar
+scansToExcludedSources_s = ismember([scan.iso], exclSourcesInd_s) & strcmp({scan.obs_type}, 's'); % sc
+emptyScans = [scan.nobs] <= 0; % < ... just to be sure!
 
 if flag_pring_debug_info
     fprintf(' - Obserevations removed due to empty scans: %d\n', sum([scan(emptyScans).nobs])); % should be = 0!
-    fprintf(' - Obserevations removed due to sources: %d\n', sum([scan(scansToExcludedSources).nobs]));
+    fprintf(' - Obserevations removed due to sources: %d\n', sum([scan(scansToExcludedSources_q).nobs]));
 end
 
 % Remove scans:
-scan((scansToExcludedSources | exclSourcesInd_byTime)|emptyScans)=[];
+scan( (scansToExcludedSources_q | exclSourcesInd_byTime_q | scansToExcludedSources_s | exclSourcesInd_byTime_s) | emptyScans) = [];
 
 
 
 
 %% UPDATE INDICES OF ANTENNAS AND SOURCES (in scan struct)
 % only when something was deleted
-if sum([sum(scansToExcludedSources | exclSourcesInd_byTime), sum(emptyScans), nStat2excl]) > 0 
+if sum([sum(scansToExcludedSources_s | exclSourcesInd_byTime_s), sum(scansToExcludedSources_q | exclSourcesInd_byTime_q), sum(emptyScans), nStat2excl]) > 0 
     
     % number of observations per station (one line=one station)
     nObsPerStat     = zeros(size(antenna, 2), 1);
-    nObsPerSource   = zeros(size(sources.q, 2), 1);
+    nObsPerSource_q   = zeros(size(sources.q, 2), 1);
+    nObsPerSource_s   = zeros(size(sources.s, 2), 1);
     
     % Get number of observations per source and per station
     % => Delete those with no observations left!
     for iScan = 1 : size(scan, 2)
-        % add for each observation the entry by one
+        
+        % Stations:
         [hista,histb] = hist([scan(iScan).obs.i1, scan(iScan).obs.i2], 1:nStats);
         nObsPerStat = nObsPerStat(:) + hista(:);
         % nObsPerStat should be equal [antenna.numobs]
-        % same for source
-        nObsPerSource(scan(iScan).iso) = nObsPerSource(scan(iScan).iso) + scan(iScan).nobs;
+        
+        % Sources:
+        if strcmp(scan(iScan).obs_type, 'q') % quasar scan
+            nObsPerSource_q(scan(iScan).iso) = nObsPerSource_q(scan(iScan).iso) + scan(iScan).nobs;
+
+        elseif strcmp(scan(iScan).obs_type, 's') % sc scan
+            nObsPerSource_s(scan(iScan).iso) = nObsPerSource_s(scan(iScan).iso) + scan(iScan).nobs;
+        else
+            error('Unknown soruce type: %s', scan(iScan).obs_type);
+        end
     end
     
     % get new indices for antennas: e.g. antennas [1,2,3,4,5,6,7,8] -> 2,4,5,7 excluded --> [1,x,2,x,x,3,x,4]
@@ -467,14 +499,30 @@ if sum([sum(scansToExcludedSources | exclSourcesInd_byTime), sum(emptyScans), nS
         end
     end
 
-    % get new indices for sources
-    newIndForSource = 1 : nSources;
-    for iSource = 1 : nSources
-        if nObsPerSource(iSource)  == 0
-            newIndForSource(iSource) = 0;
-            % only if we are not at last station
-            if iSource < nSources
-                newIndForSource(iSource + 1:end) = newIndForSource(iSource + 1:end) - 1;
+    % get new indices for sources (quasars)
+    if nSources_q > 0
+        newIndForSource_q = 1 : nSources_q;
+        for iSource = 1 : nSources_q
+            if nObsPerSource_q(iSource)  == 0
+                newIndForSource_q(iSource) = 0;
+                % only if we are not at last station
+                if iSource < nSources_q
+                    newIndForSource_q(iSource + 1:end) = newIndForSource_q(iSource + 1:end) - 1;
+                end
+            end
+        end
+    end
+    
+    % get new indices for sources (sc)
+    if nSources_s > 0
+        newIndForSource_s = 1 : nSources_s;
+        for iSource = 1 : nSources_s
+            if nObsPerSource_s(iSource)  == 0
+                newIndForSource_s(iSource) = 0;
+                % only if we are not at last station
+                if iSource < nSources_s
+                    newIndForSource_s(iSource + 1:end) = newIndForSource_s(iSource + 1:end) - 1;
+                end
             end
         end
     end
@@ -501,52 +549,92 @@ if sum([sum(scansToExcludedSources | exclSourcesInd_byTime), sum(emptyScans), nS
         
         % delete antenna entries (antennas with no obs)
         antenna(statWithNoObs) = [];
-    end            
-            
-    % if there is a source to delete
-    % => Update source IDs
-    if sum(nObsPerSource == 0) > 0
-        sourWithNoObs = nObsPerSource == 0;
-
-        % Update
-        for iScan = 1 : size(scan, 2)
-            scan(iScan).iso = newIndForSource(scan(iScan).iso);
-        end
-        
-        % delete sources to which no observations are taken
-        sources.q(sourWithNoObs) = [];   
-    end
-    
-    % update number of observations per source
-    newNumObsPerSou = nObsPerSource(nObsPerSource ~= 0);
-    for iSou = 1 : length(sources)
-        sources(iSou).numobs = newNumObsPerSou(iSou);
-    end
+    end          
     
     % update number of observations per station
     newNumObsPerStat = nObsPerStat(nObsPerStat ~= 0);
     for iStat = 1 : length(antenna)   
         antenna(iStat).numobs = newNumObsPerStat(iStat);
     end
+            
+    % Delete sources and update IDs
+    % Quasars:
+    if nSources_q > 0
+        if sum(nObsPerSource_q == 0) > 0
+            sourWithNoObs = nObsPerSource_q == 0;
+
+            % Update
+            for iScan = 1 : size(scan, 2)
+                scan(iScan).iso = newIndForSource_q(scan(iScan).iso);
+            end
+
+            % delete sources to which no observations are taken
+            sources.q(sourWithNoObs) = [];   
+        end
+
+        % update number of observations per source
+        newNumObsPerSou_q = nObsPerSource_q(nObsPerSource_q ~= 0);
+        for iSou = 1 : length(sources.q)
+            sources.q(iSou).numobs = newNumObsPerSou_q(iSou);
+        end
+    end
+    
+    % Satellites:
+    if nSources_s > 0
+        if sum(nObsPerSource_s == 0) > 0
+            sourWithNoObs = nObsPerSource_s == 0;
+
+            % Update
+            for iScan = 1 : size(scan, 2)
+                scan(iScan).iso = newIndForSource_s(scan(iScan).iso);
+            end
+
+            % delete sources to which no observations are taken
+            sources.s(sourWithNoObs) = [];   
+        end
+
+        % update number of observations per source
+        newNumObsPerSou_s = nObsPerSource_s(nObsPerSource_s ~= 0);
+        for iSou = 1 : length(sources.s)
+            sources.s(iSou).numobs = newNumObsPerSou_s(iSou);
+        end
+    end
+    
 end
 
 %% update 'firstObsMjd' 'lastObsMjd' of antenna structs and add both fields to sources struct
 stat_firstObsMjd_checked = zeros(length(antenna), 1);
-src_firstObsMjd_checked = zeros(length(sources.q), 1);
+src_q_firstObsMjd_checked = zeros(length(sources.q), 1);
+src_s_firstObsMjd_checked = zeros(length(sources.s), 1);
 
 for iScan = 1 : length(scan)
     statIndOfCurScan = unique([[scan(iScan).obs.i1], [scan(iScan).obs.i2]]);
-    % put mjd of cur scan to those stations
+    
+    % Stations:
     [antenna(statIndOfCurScan(stat_firstObsMjd_checked(statIndOfCurScan) == 0)).firstObsMjd] =  deal(scan(iScan).mjd);
     stat_firstObsMjd_checked(statIndOfCurScan) = 1;
     [antenna(statIndOfCurScan).lastObsMjd] = deal(scan(iScan).mjd);
-    srcIndOfCurScan = scan(iScan).iso;
     
-    if src_firstObsMjd_checked(srcIndOfCurScan) == 0
-        sources.q(srcIndOfCurScan).firstObsMjd = scan(iScan).mjd;
-        src_firstObsMjd_checked(srcIndOfCurScan) = 1;
+    % Sources:
+    srcIndOfCurScan = scan(iScan).iso;
+    srcTypeOfCurScan = scan(iScan).obs_type;
+    
+    if strcmp(srcTypeOfCurScan, 'q') % quasar scan
+        if src_q_firstObsMjd_checked(srcIndOfCurScan) == 0
+            sources.q(srcIndOfCurScan).firstObsMjd = scan(iScan).mjd;
+            src_q_firstObsMjd_checked(srcIndOfCurScan) = 1;
+        end
+        sources.q(srcIndOfCurScan).lastObsMjd = scan(iScan).mjd;
+        
+    elseif strcmp(srcTypeOfCurScan, 's') % sc scan
+        if src_s_firstObsMjd_checked(srcIndOfCurScan) == 0
+            sources.s(srcIndOfCurScan).firstObsMjd = scan(iScan).mjd;
+            src_s_firstObsMjd_checked(srcIndOfCurScan) = 1;
+        end
+        sources.s(srcIndOfCurScan).lastObsMjd = scan(iScan).mjd;
+    else
+        error('Unknown soruce type: %s', srcTypeOfCurScan);
     end
-    sources.q(srcIndOfCurScan).lastObsMjd = scan(iScan).mjd;
 end
 
 
