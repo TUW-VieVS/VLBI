@@ -86,6 +86,7 @@
 % - 2018-03-13, A. Hellerschmied: function now supports arbitrary session names in process lists.
 % - 2018-09-25, S. Boehm: if default tight constraints were used for EOP only one EOP value per session is written,
 %                          referred to the middle of the session.
+% - 2018-10-04, A. Hellerschmied: VieVS structures are now loaded from LEVEL3 instead from LEVEL1!
 
 function eop_out(process_list, subdir, varargin)
 
@@ -139,6 +140,7 @@ if flag_intensive
 	fprintf(fid_int,'%%************************************************************\n');
 	fprintf(fid_int,'%%    MJD        dut1        ut_apr      dut1_est     ut_err      ut_hf\n');
 	fprintf(fid_int,'%%\n');
+    output_mode = [0,0,0];
 else
     % 1
     if output_mode(1)
@@ -191,10 +193,18 @@ for j = 1:pl(1)
     ind_dos = strfind(process_list(j,:), '\');
     ind = max([ind_unix, ind_dos]);
     sname = process_list(j,ind+1:end);
-
+    sname = strtrim(sname); % Remoce leading and trailing blanks from string - just to be sure...
+    
+    % Remove tags ([VGOSDB] or [VSO]) from string:
+    char_id = strfind(sname, ' ');
+    if ~isempty(char_id)
+        sname = sname(1:char_id-1);
+    end
+    
 	load(strcat('../DATA/LEVEL3/',subdir,'/x_',sname));
 	load(strcat('../DATA/LEVEL3/',subdir,'/opt_',sname));
-	load(strcat('../DATA/LEVEL1/',opt_.level1OutDir,'/',sname,'_parameter'));
+% 	load(strcat('../DATA/LEVEL1/',opt_.level1OutDir,'/',sname,'_parameter'));
+    load(strcat('../DATA/LEVEL3/',subdir,'/',sname,'_parameter'));
 
 	if parameter.lsmopt.xpol.model==1
         if opt_.xpol.coef > 1.0e-4
@@ -371,7 +381,15 @@ if output_mode(2) || output_mode(3)
         [~,ind_min]=min(box(:,1));% = min(MJDeop);
         [~,ind_max]=max(box(:,2));% = max(MJDeop);
         sname = process_list(ind_min,6:end);
-        load(strcat('../DATA/LEVEL1/',opt_.level1OutDir,'/',num2str(sname),'_parameter'));
+        sname = strtrim(sname); % Remoce leading and trailing blanks from string - just to be sure...
+        % Remove tags ([VGOSDB] or [VSO]) from string:
+        char_id = strfind(sname, ' ');
+        if ~isempty(char_id)
+            sname = sname(1:char_id-1);
+        end
+%         load(strcat('../DATA/LEVEL1/',opt_.level1OutDir,'/',num2str(sname),'_parameter'));
+        load(strcat('../DATA/LEVEL3/',subdir,'/',sname,'_parameter'));
+                
         % get a priori values
         MJDeop =  parameter.eop.mjd;
         XPeop  = (parameter.eop.xp)*1e3;  % [mas]
@@ -392,7 +410,14 @@ if output_mode(2) || output_mode(3)
         dYeop_add_edge_min  = dYeop(1:find(MJDeop==min(outMjd))-1);
 
         sname = process_list(ind_max,6:end);
-        load(strcat('../DATA/LEVEL1/',opt_.level1OutDir,'/',num2str(sname),'_parameter'));
+        sname = strtrim(sname); % Remoce leading and trailing blanks from string - just to be sure...
+        % Remove tags ([VGOSDB] or [VSO]) from string:
+        char_id = strfind(sname, ' ');
+        if ~isempty(char_id)
+            sname = sname(1:char_id-1);
+        end
+%         load(strcat('../DATA/LEVEL1/',opt_.level1OutDir,'/',num2str(sname),'_parameter'));
+        load(strcat('../DATA/LEVEL3/',subdir,'/',sname,'_parameter'));
         % get a priori values
         MJDeop =  parameter.eop.mjd;
         XPeop  = (parameter.eop.xp)*1e3;  % [mas]

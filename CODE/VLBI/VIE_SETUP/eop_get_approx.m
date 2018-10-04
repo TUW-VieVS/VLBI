@@ -10,7 +10,7 @@
 %   2016/11     A. Girdiuk
 %
 % INPUT
-% - parameter   : structure from LEVEL1
+% - parameter   : structure from LEVEL3
 % - mjd         : vector of time momemts of observations 
 % - TT          : mjd vector converted to TT
 %

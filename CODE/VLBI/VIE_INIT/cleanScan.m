@@ -28,6 +28,9 @@
 % ************************************************************************
 function [scan, sources, antenna]=cleanScan(scan, sources, antenna, parameter)
 
+%% Options
+flag_pring_debug_info = false;
+
 %% Precalculations
 nScans=size(scan,2);
 nStats=length(antenna);
@@ -158,7 +161,9 @@ if ~isempty(parameter.opt.options.bas_excl)
         end
     end    
 end
-fprintf(' - Obserevations removed due excluded baselines: %d\n', sum_del_baseline);
+if flag_pring_debug_info
+    fprintf(' - Obserevations removed due excluded baselines: %d\n', sum_del_baseline);
+end
 
 
 % (3) Excluded stations
@@ -312,7 +317,9 @@ if parameter.outlier.flag_remove_outlier
         end
     end
 end
-fprintf(' - Obserevations removed due to outliers: %d\n', sum_del_outliers)
+if flag_pring_debug_info
+	fprintf(' - Obserevations removed due to outliers: %d\n', sum_del_outliers)
+end
 
 
 % (6) Quality of observation
@@ -342,8 +349,9 @@ for iScan = 1 : nScans
         scan(iScan).stat(indStatStruct) = empty_struct;
     end   
 end
-fprintf(' - Obserevations removed due to quality code limit (%d): %d\n', parameter.obs_restrictions.q_code_limit, sum_del_q_limit)
-
+if flag_pring_debug_info
+    fprintf(' - Obserevations removed due to quality code limit (%d): %d\n', parameter.obs_restrictions.q_code_limit, sum_del_q_limit)
+end
 
 % (7) Minimum elevation angle
 sum_del_cut_off_elev = 0;
@@ -364,15 +372,18 @@ if parameter.obs_restrictions.cut_off_elev > 0
         for iStat = 1 : length(allStationsInCurScan)
             curStat = allStationsInCurScan(iStat);
             
-            if ~isempty(scan(iScan).stat(curStat).temp)
-                % calc elevation
-                curElevation = elev(scan(iScan).mjd, [antenna(curStat).x, antenna(curStat).y, antenna(curStat).z],sources.q(scan(iScan).iso).de2000, sources.q(scan(iScan).iso).ra2000);
+            if ~isempty(scan(iScan).stat(curStat).zd)
                 
-% ACHTUNG! Check Unterscheid zw elev Ergebnis und zd aus scans struct:
-diff_elev_deg = (curElevation - (pi/2 - scan(iScan).stat(curStat).zd))*180/pi;
-if abs(diff_elev_deg) > 0.1 % deg
-    fprintf(' - - Scan %d, stat %d: Elev diff = %f deg\n', iScan, curStat, diff_elev_deg)
-end
+                % calc elevation
+                % curElevation = elev(scan(iScan).mjd, [antenna(curStat).x, antenna(curStat).y, antenna(curStat).z],sources.q(scan(iScan).iso).de2000, sources.q(scan(iScan).iso).ra2000);
+% Used for debugging:
+%                 diff_elev_deg = (curElevation - (pi/2 - scan(iScan).stat(curStat).zd))*180/pi;
+%                 if abs(diff_elev_deg) > 0.1 % deg
+%                     fprintf(' - - Scan %d, stat %d: Elev diff = %f deg\n', iScan, curStat, diff_elev_deg)
+%                 end
+                
+                % Get elevation calculated in VIE_MOD:
+                curElevation = pi/2 - scan(iScan).stat(curStat).zd; % in [rad]
                 if curElevation < parameter.obs_restrictions.cut_off_elev
                     % delete this observation
                     deleteStatInCurScanLogicals(iStat) = 1;
@@ -403,19 +414,24 @@ end
         end
     end % all scans
 end
-fprintf(' - Obserevations removed due to cut-off elevation (%f deg): %d\n', parameter.obs_restrictions.cut_off_elev * 180/pi, sum_del_q_limit)
+if flag_pring_debug_info
+    fprintf(' - Obserevations removed due to cut-off elevation (%f deg): %d\n', parameter.obs_restrictions.cut_off_elev * 180/pi, sum_del_q_limit)
+end
 
 
 
 %% Delete empty scans and those to an excluded source
 scansToExcludedSources=ismember([scan.iso], exclSourcesInd);
-fprintf(' - Obserevations removed due to sources: %d\n', sum([scan(scansToExcludedSources).nobs]));
-
 emptyScans=[scan.nobs]<=0; % < ... just to be sure!
-fprintf(' - Obserevations removed due to empty scans: %d\n', sum([scan(emptyScans).nobs])); % should be = 0!
+
+if flag_pring_debug_info
+    fprintf(' - Obserevations removed due to empty scans: %d\n', sum([scan(emptyScans).nobs])); % should be = 0!
+    fprintf(' - Obserevations removed due to sources: %d\n', sum([scan(scansToExcludedSources).nobs]));
+end
 
 % Remove scans:
 scan((scansToExcludedSources | exclSourcesInd_byTime)|emptyScans)=[];
+
 
 
 
@@ -532,8 +548,6 @@ for iScan = 1 : length(scan)
     end
     sources.q(srcIndOfCurScan).lastObsMjd = scan(iScan).mjd;
 end
-
-disp('test')
 
 
 %% ############### subroutines #####################

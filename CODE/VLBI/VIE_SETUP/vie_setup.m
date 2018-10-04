@@ -9034,7 +9034,7 @@ guidata(hObject, handles);
     
 % i need following files: 
 % x_ (level3)      ... baseline lnegth rep
-% antenna (level1) ... map network
+% antenna (level3) ... map network
 % atpa (level3)    ... corrmat
 
 

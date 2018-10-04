@@ -10,7 +10,7 @@
 %
 % need following files: 
 % x_      (level3) ... baseline lnegth rep
-% antenna (level1) ... map network
+% antenna (level3) ... map network
 % atpa    (level3) ... corrmat
 % opt_    (level3) ... opt_.mo
 %
@@ -112,25 +112,24 @@ if strcmpi(get(hObject, 'Tag'), 'pushbutton_plot_sessionAnalysis_load')
             end
 
             % load opt_ file
-            load(['../DATA/LEVEL3/', curSubfolder, '/', ...
-                strrep(allX_Files(iFile).name, 'x_', 'opt_')]);
+            load(['../DATA/LEVEL3/', curSubfolder, '/', strrep(allX_Files(iFile).name, 'x_', 'opt_')]);
             
-            if ~isfield(opt_, 'level1OutDir')
-                level1OutDir=curSubfolder;
-            else
-                level1OutDir=opt_.level1OutDir;
-            end
+%             if ~isfield(opt_, 'level1OutDir')
+%                 level1OutDir=curSubfolder;
+%             else
+%                 level1OutDir=opt_.level1OutDir;
+%             end
             
             % add opt_ to handles struct
             handles.data.plot.sessionAnalysis.optFiles(1).opt(iFile).opt=opt_;
             
             % load antenna file and add to handles struct
-            load(['../DATA/LEVEL1/', level1OutDir, '/', sessionnamesShort{iFile}, '_antenna.mat'])
+%             load(['../DATA/LEVEL1/', level1OutDir, '/', sessionnamesShort{iFile}, '_antenna.mat'])
+            load(['../DATA/LEVEL3/', curSubfolder, '/', sessionnamesShort{iFile}, '_antenna.mat'])
             handles.data.plot.sessionAnalysis.antennaFiles(1).antenna(iFile).antenna=antenna;
 
             % load atpa file and add to handles struct
-            load(['../DATA/LEVEL3/', curSubfolder, '/', ...
-                strrep(allX_Files(iFile).name, 'x_', 'atpa_')]);
+            load(['../DATA/LEVEL3/', curSubfolder, '/', strrep(allX_Files(iFile).name, 'x_', 'atpa_')]);
             handles.data.plot.sessionAnalysis.atpaFiles(1).atpa(iFile).atpa=atpa_;
             
             % update waitbar
@@ -212,17 +211,18 @@ else % second (or more) load button is clicked
             load(['../DATA/LEVEL3/', curSubfolder, '/', ...
                 strrep(allX_Files(iFile).name, 'x_', 'opt_')]);
             
-            if ~isfield(opt_, 'level1OutDir')
-                level1OutDir=curSubfolder;
-            else
-                level1OutDir=opt_.level1OutDir;
-            end
+%             if ~isfield(opt_, 'level1OutDir')
+%                 level1OutDir=curSubfolder;
+%             else
+%                 level1OutDir=opt_.level1OutDir;
+%             end
             
             % add opt_ to handles struct
             handles.data.plot.sessionAnalysis.optFiles(buttonNr).opt(iFile).opt=opt_;
             
             % load antenna file
-            load(['../DATA/LEVEL1/', level1OutDir, '/', sessionnamesShort{iFile}, '_antenna.mat'])
+%             load(['../DATA/LEVEL1/', level1OutDir, '/', sessionnamesShort{iFile}, '_antenna.mat'])
+            load(['../DATA/LEVEL3/', curSubfolder, '/', sessionnamesShort{iFile}, '_antenna.mat'])
             handles.data.plot.sessionAnalysis.antennaFiles(buttonNr).antenna(iFile).antenna=antenna;
 
             % load atpa file
