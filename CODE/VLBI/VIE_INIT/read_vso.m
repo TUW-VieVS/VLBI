@@ -770,6 +770,15 @@ scan(number_of_remaining_scans) = struct('mjd', [], 'stat', [], 'tim', [], 'nobs
 [scan.stat] = deal(struct('x', [], 'temp', [], 'pres', [], 'e', [], 'az', [], 'zd', [], 'zdry', [], 'cab', [], 'axkt', [], 'therm', [], 'pantd', [], 'trop', [], 'psd', []));
 [scan.obs] = deal(struct('i1', [], 'i2', [], 'obs', [], 'sig', [], 'com', 0, 'q_code', [], 'q_code_ion', [], 'delion', [], 'sgdion', []));
 
+
+% Handle options for ionosphere corrections
+% - If ion. corrections is taken from separate ion. file => Do not apply correction from VSO file!
+% - parameter.vie_init.iono
+
+if ~strcmp(parameter.vie_init.iono, 'ngs') && exist('ion_del', 'var') % use ion. correction from external source (ion file)
+    ion_del = zeros(length(ion_del),1); % Set to zero
+end
+
 year_scan   = year(scan2obs_ind);
 mon_scan    = mon(scan2obs_ind);
 day_scan    = day(scan2obs_ind);

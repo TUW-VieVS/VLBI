@@ -28,7 +28,7 @@
 %               vgosDB files
 
 % ************************************************************************
-function scan=nc2scan(out_struct, nc_info, fband, wrapper_data)
+function scan=nc2scan(out_struct, nc_info, fband, wrapper_data, parameter)
 % fprintf('nc2scan started\n')
 
 % ##### Options #####
@@ -204,30 +204,39 @@ groupDelayWAmbigCell = num2cell(out_struct.(tau_folder).(tau_file).(tau_field).v
 %% SIGMA DELAY:
 groupDelaySigCell = num2cell(out_struct.(sigma_tau_folder).(sigma_tau_file).(sigma_tau_field).val);
 %% IONOSPHERIC DELAY, SIGMA IONOSPHERIC DELAY and DELAY FLAG IONOSPHERIC DELAY::
-if isempty(tau_ion_folder)
-    ionoDelCell = num2cell(zeros(1,length(groupDelayWAmbigCell)));
-    ionoDelSigCell = num2cell(zeros(1,length(groupDelayWAmbigCell)));
-    ionoDelFlagcell = num2cell(zeros(1,length(groupDelayWAmbigCell)));
-    fprintf('With this setting ionospheric delay will not be used\n')
-else
-    if isfield(out_struct.(tau_ion_folder),tau_ion_file)            
-        ionoDelCell = num2cell(1e9*out_struct.(tau_ion_folder).(tau_ion_file).(tau_ion_field).val(1,:)); % cell: 1 x nObs            
-        ionoDelSigCell = num2cell(1e9*out_struct.(sigma_tau_ion_folder).(sigma_tau_ion_file).(sigma_tau_ion_field).val(1,:)); % cell: 1 x nObs
-        if isfield(out_struct.(tau_ion_folder).(tau_ion_file), 'Cal_SlantPathIonoGroupDataFlag') % if iono flag is given
-            ionoDelFlagcell = num2cell(double(out_struct.(tau_ion_folder).(tau_ion_file).Cal_SlantPathIonoGroupDataFlag.val));
-            fprintf('Ionospheric delay Flag will be used\n')
-            if length(ionoDelFlagcell) == 1
-                fprintf(' - Same ionospheric delay flag (= %1.0f) used for all scans!\n', ionoDelFlagcell{1})
-            end
-        else
-            ionoDelFlagcell = num2cell(zeros(1,length(groupDelayWAmbigCell)));
-        end
-        fprintf('Ionospheric delay will be used\n')
+if strcmp(parameter.vie_init.iono, 'ngs')
+    if isempty(tau_ion_folder)
+        ionoDelCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
+        ionoDelSigCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
+        ionoDelFlagcell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
+        fprintf('With this setting ionospheric delay will not be used\n')
     else
-        fprintf('Can find Ionospheric Delay File\n')
-        warning('Ionospheric delay can not be used because was not found\n')
+        if isfield(out_struct.(tau_ion_folder),tau_ion_file)            
+            ionoDelCell = num2cell(1e9*out_struct.(tau_ion_folder).(tau_ion_file).(tau_ion_field).val(1,:)); % cell: 1 x nObs            
+            ionoDelSigCell = num2cell(1e9*out_struct.(sigma_tau_ion_folder).(sigma_tau_ion_file).(sigma_tau_ion_field).val(1,:)); % cell: 1 x nObs
+            if isfield(out_struct.(tau_ion_folder).(tau_ion_file), 'Cal_SlantPathIonoGroupDataFlag') % if iono flag is given
+                ionoDelFlagcell = num2cell(double(out_struct.(tau_ion_folder).(tau_ion_file).Cal_SlantPathIonoGroupDataFlag.val));
+                fprintf('Ionospheric delay Flag will be used\n')
+                if length(ionoDelFlagcell) == 1
+                    fprintf(' - Same ionospheric delay flag (= %1.0f) used for all scans!\n', ionoDelFlagcell{1})
+                end
+            else
+                ionoDelFlagcell = num2cell(zeros(1,length(groupDelayWAmbigCell)));
+            end
+            fprintf('Ionospheric delay will be used\n')
+        else
+            fprintf('Can find Ionospheric Delay File\n')
+            warning('Ionospheric delay can not be used because was not found\n')
+        end
     end
+else % Take ionosphere corrections from external (ion) file:
+    ionoDelCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
+    ionoDelSigCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
+    ionoDelFlagcell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
+    fprintf('Ionospheric delay corrections will be taken from external source.\n')
 end
+
+
 
 %% DELAY FLAG DELAY:
 nc_filename = get_nc_filename({'Edit'}, wrapper_data.Observation.ObsEdit.files, 0);
@@ -431,17 +440,14 @@ for iScan=1:nScans
     cableCalibration        = 1;
 %     % "modify" delay for cable cal and iono delay
     if cableCalibration == 1
-        for iObs=1:length(scan(iScan).obs)
-            corcab=scan(iScan).stat(scan(iScan).obs(iObs).i2).cab-...
-                scan(iScan).stat(scan(iScan).obs(iObs).i1).cab; % [ns]
-            scan(iScan).obs(iObs).obs=scan(iScan).obs(iObs).obs+... 
-               corcab*(1e-9);
+        for iObs = 1 : length(scan(iScan).obs)
+            corcab = scan(iScan).stat(scan(iScan).obs(iObs).i2).cab - scan(iScan).stat(scan(iScan).obs(iObs).i1).cab; % [ns]
+            scan(iScan).obs(iObs).obs = scan(iScan).obs(iObs).obs + corcab*(1e-9);
         end
     end
     if ionosphereCorrection == 1
-        for iObs=1:length(scan(iScan).obs)
-            scan(iScan).obs(iObs).obs=scan(iScan).obs(iObs).obs-...        
-                scan(iScan).obs(iObs).delion*(1e-9); % [sec]
+        for iObs = 1 : length(scan(iScan).obs)
+            scan(iScan).obs(iObs).obs = scan(iScan).obs(iObs).obs - scan(iScan).obs(iObs).delion*(1e-9); % [sec]
         end
     end
     % --- scan.obs ---

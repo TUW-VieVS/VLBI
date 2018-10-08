@@ -99,15 +99,16 @@ if ~isempty(parameter.opt.options.no_cab)
                     obsI1NoCab = find([scan(iS).obs.i1]==curI);
                     obsI2NoCab = find([scan(iS).obs.i2]==curI);
                     
-                    for ionc = 1:length(obsI1NoCab)
+                    % Remove cable calibration which was already applied in VIe_INIT when loading the observation file:
+                    for ionc = 1 : length(obsI1NoCab)
                         scan(iS).obs(obsI1NoCab(ionc)).obs = scan(iS).obs(obsI1NoCab(ionc)).obs + curCab;
                     end
-                    for ionc = 1:length(obsI2NoCab)
+                    for ionc = 1 : length(obsI2NoCab)
                         scan(iS).obs(obsI2NoCab(ionc)).obs = scan(iS).obs(obsI2NoCab(ionc)).obs - curCab;
                     end
 
                     % set cable cal to zero!
-                    scan(iS).stat(curI).cab=0;
+                    scan(iS).stat(curI).cab = 0;
                 end
             end
             
