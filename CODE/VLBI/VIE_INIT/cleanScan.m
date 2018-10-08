@@ -29,7 +29,7 @@
 function [scan, sources, antenna]=cleanScan(scan, sources, antenna, parameter)
 
 %% Options
-flag_pring_debug_info = true;
+flag_pring_debug_info = false;
 
 %% Precalculations
 nScans = size(scan,2);
@@ -180,7 +180,7 @@ if ~isempty(parameter.opt.options.bas_excl)
     end    
 end
 if flag_pring_debug_info
-    fprintf(' - Obserevations removed due excluded baselines: %d\n', sum_del_baseline);
+    fprintf(' - Observations removed due excluded baselines: %d\n', sum_del_baseline);
 end
 
 
@@ -351,7 +351,7 @@ if parameter.outlier.flag_remove_outlier
     end
 end
 if flag_pring_debug_info
-	fprintf(' - Obserevations removed due to outliers: %d\n', sum_del_outliers)
+	fprintf(' - Observations removed due to outliers: %d\n', sum_del_outliers)
 end
 
 
@@ -383,7 +383,7 @@ for iScan = 1 : nScans
     end   
 end
 if flag_pring_debug_info
-    fprintf(' - Obserevations removed due to quality code limit (%d): %d\n', parameter.obs_restrictions.q_code_limit, sum_del_q_limit)
+    fprintf(' - Observations removed due to quality code limit (%d): %d\n', parameter.obs_restrictions.q_code_limit, sum_del_q_limit)
 end
 
 % (7) Minimum elevation angle
@@ -437,7 +437,7 @@ if parameter.obs_restrictions.cut_off_elev > 0
     end % all scans
 end
 if flag_pring_debug_info
-    fprintf(' - Obserevations removed due to cut-off elevation (%f deg): %d\n', parameter.obs_restrictions.cut_off_elev * 180/pi, sum_del_cut_off_elev)
+    fprintf(' - Observations removed due to cut-off elevation (%f deg): %d\n', parameter.obs_restrictions.cut_off_elev * 180/pi, sum_del_cut_off_elev)
 end
 
 
@@ -448,8 +448,8 @@ scansToExcludedSources_s = ismember([scan.iso], exclSourcesInd_s) & strcmp({scan
 emptyScans = [scan.nobs] <= 0; % < ... just to be sure!
 
 if flag_pring_debug_info
-    fprintf(' - Obserevations removed due to empty scans: %d\n', sum([scan(emptyScans).nobs])); % should be = 0!
-    fprintf(' - Obserevations removed due to sources: %d\n', sum([scan(scansToExcludedSources_q).nobs]));
+    fprintf(' - Observations removed due to empty scans: %d\n', sum([scan(emptyScans).nobs])); % should be = 0!
+    fprintf(' - Observations removed due to sources: %d\n', sum([scan(scansToExcludedSources_q).nobs]));
 end
 
 % Remove scans:

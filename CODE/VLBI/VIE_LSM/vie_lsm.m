@@ -239,6 +239,9 @@ stations_to_be_removed = {''; ''; ''; ''}; % Can be set here in cell array!
 
 % ##### OPT files #####
 
+% Init.:
+parameter.vie_init.stat_dw = [];
+
 % read OPT-file
 opt_file_path_name = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name, '.OPT'];
 if parameter.opt.use_opt_files
