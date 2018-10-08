@@ -4,7 +4,7 @@
 % INPUT
 %  process_list    process_list (variable or path to mat file). Can be
 %                  empty if all files (x_...) are given
-%  subdir          LEVEL3 and LEVEL1 subdirectory
+%  subdir          LEVEL3 and LEVEL3 subdirectory
 %  varargin
 %   {1} outfile    full out path of output file. 
 %                  If []: no file is output.
@@ -34,7 +34,7 @@
 % 11.02.2016 M. Madzak: Name of output file changed (to basel_...)
 % 2016-09-21, A. Girdiuk: warning messages are added in case of absence of
 %                           station coordinates estimates
-% 2017-05-30, A. Girdiuk: opt-file directory info will be used to detect LEVEL1directory, if the directory with the same as in LEVEL3 does not exist
+% 2017-05-30, A. Girdiuk: opt-file directory info will be used to detect LEVEL1 directory, if the directory with the same as in LEVEL3 does not exist
 %                           it will be crased if there is still nothing
 % 2018-08-01, D. Landskron: slightly adapted so it can also read vgosDB session names
 % 2018-08-14, D. Landskron: some more adaptions for reading vgosDB session names
@@ -164,14 +164,10 @@ for ip = 1:nSes
         load(strcat(path,'DATA/LEVEL3/',subdir,'/opt_',num2str(sname)));
     end
     
-	if antFilesGiven==1
+	if antFilesGiven
         antenna=ant_files{ip};
     else
-        if ~isdir(strcat(path,'DATA/LEVEL1/',subdir,'/'))
-            load(strcat(path,'DATA/LEVEL1/',opt_.level1OutDir,'/',num2str(sname),'_antenna'));
-        else
-            load(strcat(path,'DATA/LEVEL1/',subdir,'/',num2str(sname),'_antenna'));
-        end
+        load(strcat(path,'DATA/LEVEL3/',subdir,'/',num2str(sname),'_antenna'));
     end
     
     if isempty([x_.coorx.col]) || isempty([x_.coory.col]) || isempty([x_.coorz.col])
