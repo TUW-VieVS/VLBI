@@ -171,6 +171,7 @@ if ~isempty(parameter.opt.options.bas_excl)
                         end
                         empty_struct = get_empty_fields_struct(scan(iScan).stat(statStructs2Delete_1));
                         scan(iScan).stat(statStructs2Delete_1) = empty_struct;
+                        empty_struct = get_empty_fields_struct(scan(iScan).stat(statStructs2Delete_2));
                         scan(iScan).stat(statStructs2Delete_2) = empty_struct;
                                                 
                     end
@@ -332,18 +333,22 @@ if parameter.outlier.flag_remove_outlier
                 scan(cur_scan_id).obs(obs2Delete) = [];
                 scan(cur_scan_id).nobs = scan(cur_scan_id).nobs - 1;
 
-                statStructs2Delete = [];
-                % delete stat struct if needed (if that station has
-                % no observation anymore (for both stats separate)
-                if sum(sum([scan(cur_scan_id).obs.i1; scan(cur_scan_id).obs.i2]==curStatInd(1)))==0
-                    statStructs2Delete(1) = curStatInd(1);
+                statStructs2Delete_1 = [];
+                statStructs2Delete_2 = [];
+                        
+                % delete stat struct if needed (if that station has no observation anymore (for both stats separate)
+                if sum(sum([scan(cur_scan_id).obs.i1; scan(cur_scan_id).obs.i2]==curStatInd(1)))==0 % If no observations for station with ID "curStatInd(1)" left => Delete station
+                    statStructs2Delete_1 = curStatInd(1);
                 end
-                if sum(sum([scan(cur_scan_id).obs.i1; scan(cur_scan_id).obs.i2]==curStatInd(2)))==0
-                    statStructs2Delete(2) = curStatInd(2);
+                if sum(sum([scan(cur_scan_id).obs.i1; scan(cur_scan_id).obs.i2]==curStatInd(2)))==0 % If no observations for station with ID "curStatInd(1)" left => Delete station
+                    statStructs2Delete_2 = curStatInd(2);
                 end
+                
+                empty_struct = get_empty_fields_struct(scan(cur_scan_id).stat(statStructs2Delete_1));
+                scan(cur_scan_id).stat(statStructs2Delete_1) = empty_struct;
+                empty_struct = get_empty_fields_struct(scan(cur_scan_id).stat(statStructs2Delete_2));
+                scan(cur_scan_id).stat(statStructs2Delete_2) = empty_struct;
 
-                empty_struct = get_empty_fields_struct(scan(cur_scan_id).stat(statStructs2Delete));
-                scan(cur_scan_id).stat(statStructs2Delete) = empty_struct;
             elseif obs2Delete > 1
                 error('%d observations matche the following outlier: baseline %s - %s at MJD %f', obs2Delete, parameter.outlier.obs2remove(iOutlier).sta1, parameter.outlier.obs2remove(iOutlier).sta2, parameter.outlier.obs2remove(iOutlier).mjd)
             end
