@@ -23,17 +23,17 @@
 %      23-28 March 2009, Bordeaux, France, pp. 63-67 (Poster and paper).
 %
 %   Input:                                                                              
-%      'VieVS/DATA/LEVEL1/fname_antenna.mat'   structure array   (for info. /DOC/structures.xls)
-%      'VieVS/DATA/LEVEL1/fname_parameter.mat'   structure array   (for info. /DOC/structures.xls)
-%      'VieVS/DATA/LEVEL1/fname_scan.mat'   structure array   (for info. /DOC/structures.xls)
-%      'VieVS/DATA/LEVEL1/fname_sources.mat'   structure array   (for info. /DOC/structures.xls)
+%      'VieVS/DATA/LEVEL1/parameter.session_name_antenna.mat'   structure array   (for info. /DOC/structures.xls)
+%      'VieVS/DATA/LEVEL1/parameter.session_name_parameter.mat'   structure array   (for info. /DOC/structures.xls)
+%      'VieVS/DATA/LEVEL1/parameter.session_name_scan.mat'   structure array   (for info. /DOC/structures.xls)
+%      'VieVS/DATA/LEVEL1/parameter.session_name_sources.mat'   structure array   (for info. /DOC/structures.xls)
 %
 %   Output:
-%      'VieVS/DATA/LEVEL3/opt_',fname,'.mat'    structure array  (for info. ../DOC/structures.xls)
-%      'VieVS/DATA/LEVEL3/x_',fname,'.mat'      structure array  (for info. ../DOC/structures.xls)
-%      'VieVS/DATA/LEVEL3/atpa_',fname,'.mat'   structure array  (for info. ../DOC/structures.xls)
-%      'VieVS/DATA/LEVEL3/atpl_',fname,'.mat'   structure array  (for info. ../DOC/structures.xls)
-%      'VieVS/DATA/LEVEL2/' fname '_glob.mat'   structure array  (for info. ../DOC/structures.xls)
+%      'VieVS/DATA/LEVEL3/opt_',parameter.session_name,'.mat'    structure array  (for info. ../DOC/structures.xls)
+%      'VieVS/DATA/LEVEL3/x_',parameter.session_name,'.mat'      structure array  (for info. ../DOC/structures.xls)
+%      'VieVS/DATA/LEVEL3/atpa_',parameter.session_name,'.mat'   structure array  (for info. ../DOC/structures.xls)
+%      'VieVS/DATA/LEVEL3/atpl_',parameter.session_name,'.mat'   structure array  (for info. ../DOC/structures.xls)
+%      'VieVS/DATA/LEVEL2/' parameter.session_name '_glob.mat'   structure array  (for info. ../DOC/structures.xls)
 %   
 %   External calls: 	
 %   a_love.m, a_shida.m, a_source.m, a_xyz.m, ahp_dut1.m, ahp_nutdx.m, 
@@ -168,12 +168,23 @@
 
 function vie_lsm(antenna, sources, scan, parameter, dirpth, dirpthL2)
 
+tic
+
 fprintf('---------------------------------------------------------------\n')
 fprintf('|                   Welcome to VIE_LSM!!!!!                   |\n')
 fprintf('---------------------------------------------------------------\n\n')
 
 % ##### Init.: #####
 format compact;
+
+% Constants:
+c = 299792458; % velocity in m/s
+rad2mas = (180/pi)*3600*1000; % radian to milli arc second
+
+% Preallocate variables:
+x   = []; 
+mi  = []; 
+tso = []; % +hana 10Nov10
 
 % Check sub-directories:
 if ~exist('dirpth')
@@ -183,17 +194,163 @@ if ~exist('dirpthL2')
   dirpthL2='';
 end
 
-tic
 
-% Constants:
-c = 299792458; % velocity in m/s
-%rad2uas = (180/pi)*3600*1000*1000; % radian to micro arc second
-rad2mas = (180/pi)*3600*1000; % radian to milli arc second
+% #######################################################################
+% # Clean VieVS structures                                              #
+% #######################################################################
+% Based on
+% - OPT files
+% - Outliers
+% - Observation restrictions
+fprintf('0. APPLY OUTLIERS AND ANALYSIS OPTIONS\n');
 
-% Preallocate variables:
-x   = []; 
-mi  = []; 
-tso = []; % +hana 10Nov10
+% ########################
+% ##### Load Options #####
+% ########################
+
+% Init.:
+clean_opt.sta_excl          = ''; % Exclude stations
+clean_opt.sta_excl_start    = 0;  % Exclude stations start epoch
+clean_opt.sta_excl_end      = 0;  % Exclude stations end epoch
+
+clean_opt.sour_excl         = ''; % Exclude sources
+clean_opt.bas_excl          = []; % Exclude baselines
+
+clean_opt.num_clk_breaks        = 0;  % Number of clock breaks
+clean_opt.refclock              = ''; % Reference clock
+clean_opt.clk_break.stat_name   = []; % Clock break stations 
+clean_opt.clk_break.mjd         = []; % Clock break epochs
+
+clean_opt.stat_dw       = ''; % Downweight stations
+clean_opt.no_cab        = ''; % Cable cal
+
+clean_opt.scan_excl     = []; % Outliers
+
+parameter.opt.options = clean_opt; % Init
+
+
+% ini_opt.bas_excl(nex).sta1 = station_name_1_str;
+% ini_opt.bas_excl(nex).sta2 = station_name_2_str;
+% bas_excl(nex,:) = [station_name_1_str, ' ', station_name_2_str];
+
+remove_sprecial_stations = false;
+stations_to_be_removed = {''; ''; ''; ''}; % Can be set here in cell array!
+
+
+% ##### OPT files #####
+
+% Init.:
+parameter.vie_init.stat_dw = [];
+
+% read OPT-file
+opt_file_path_name = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name, '.OPT'];
+if parameter.opt.use_opt_files
+    if exist(opt_file_path_name, 'file')
+        [clean_opt, ~] = readOPT(opt_file_path_name,remove_sprecial_stations,stations_to_be_removed);
+        parameter.opt.options = clean_opt;
+    else
+        fprintf(' - No OPT file applied: %s\n', opt_file_path_name);
+        if remove_sprecial_stations
+            clean_opt.sta_excl = char(stations_to_be_removed);
+            clean_opt.sta_excl_start = zeros(1,size(stations_to_be_removed,1));
+        end
+    end
+end
+
+% ### write info about excluded baselines, stations, sources to CW ###
+if parameter.opt.use_opt_files
+    fprintf('Stations to be excluded: %1.0f\n', size(clean_opt.sta_excl,1))
+    for k=1:size(clean_opt.sta_excl,1)
+        if clean_opt.sta_excl_start(k)==0
+            fprintf('%s \n', clean_opt.sta_excl(k,:));
+        else
+            fprintf('%s %f %f\n', clean_opt.sta_excl(k,:), clean_opt.sta_excl_start(k),clean_opt.sta_excl_end(k));
+        end
+    end
+
+    fprintf('Stations to be down-weighted: %1.0f\n', size(clean_opt.stat_dw,1))
+    if size(clean_opt.stat_dw,1) == 0
+        parameter.vie_init.stat_dw = [];
+    else
+        parameter.vie_init.stat_dw = {};
+        for k=1:size(clean_opt.stat_dw,1)
+            fprintf('%s', clean_opt.stat_dw(k,:),' ', clean_opt.stat_co(k,:))
+            fprintf('\n')
+            parameter.vie_init.stat_dw(k,:) = {clean_opt.stat_dw(k,:)};
+            parameter.vie_init.stat_co(k,:) = str2num(clean_opt.stat_co(k,:));
+        end
+    end
+
+    fprintf('Sources to be excluded: %1.0f\n', size(clean_opt.sour_excl,1))
+    for k=1:size(clean_opt.sour_excl,1)
+        %fprintf('%s\n', ini_opt.sour_excl(k,:))
+        if clean_opt.sour_excl_start(k)==0                                    
+            fprintf('%s \n', clean_opt.sour_excl(k,:));
+        else
+            fprintf('%s %f %f\n', clean_opt.sour_excl(k,:), clean_opt.sour_excl_start(k),clean_opt.sour_excl_end(k));
+        end 
+    end
+
+    remove_sources_from_list = false;
+    if remove_sources_from_list
+        path2sourcelist = '';     %add the path of your .txt file here. Format is the same as glob input .txt files   
+        fid = fopen(path2sourcelist);
+        if fid == -1
+            warning('File with list of removed sources can not be found\n');
+        else
+            remove_sources = textscan(fid, '%8s','Delimiter','\n');
+            remove_sources = remove_sources{1};
+            clean_opt.sour_excl = [clean_opt.sour_excl;char(remove_sources)];
+            disp('+ sources from external file removed');
+            if isfield(clean_opt, 'sour_excl_start')
+                clean_opt.sour_excl_start = [clean_opt.sour_excl_start, zeros(1,length(remove_sources))];
+                clean_opt.sour_excl_end = [clean_opt.sour_excl_end, zeros(1,length(remove_sources))];
+            else
+                clean_opt.sour_excl_start = zeros(1,length(remove_sources));
+                clean_opt.sour_excl_end = zeros(1,length(remove_sources));
+            end
+        end
+        fclose(fid);
+    end
+
+    fprintf('Baselines to be excluded: %1.0f\n', size(clean_opt.bas_excl, 2))
+    for k=1:size(clean_opt.bas_excl, 2)
+        fprintf('%8s - %8s \n', clean_opt.bas_excl(k).sta1, clean_opt.bas_excl(k).sta2)
+    end
+    fprintf('No cable calibration: %1.0f\n', size(clean_opt.no_cab,1))
+    for k=1:size(clean_opt.no_cab,1)
+        fprintf('%s\n', clean_opt.no_cab(k,:))
+    end
+    fprintf('\n')
+end
+
+% ##### Outlier files #####
+parameter.outlier.obs2remove = []; % init empty field for outliers
+
+outlier_filename_path = ['../DATA/OUTLIER/', parameter.outlier.out_file_dir, '/', parameter.year, '/', parameter.session_name, '.OUT'];
+if parameter.outlier.flag_remove_outlier
+    if exist(outlier_filename_path, 'file')
+        [parameter.outlier.obs2remove] = readOUT(outlier_filename_path);
+        fprintf('%d outliers will be removed:\n',size(parameter.outlier.obs2remove,2));        %%%=> A. Girdiuk 2015-07-21
+        for k=1:size(parameter.outlier.obs2remove,2)
+            fprintf(' - %8s %8s %5.2f\n', parameter.outlier.obs2remove(k).sta1, parameter.outlier.obs2remove(k).sta2, parameter.outlier.obs2remove(k).mjd);
+        end
+    else
+        fprintf('Outlier list not available: %s\n', outlier_filename_path);
+    end
+else
+    fprintf('Outliers will not be removed\n');
+end
+fprintf('\n')  
+
+
+% ############################
+% ##### Clean structures ##### 
+% ############################
+% => Remove scans, observations, antennas and soures based on analysis options (obs. restrictions, OPT and OUTLIER files)
+[scan, sources, antenna] = cleanScan(scan, sources, antenna, parameter);
+
+
 
 fprintf('1. LOADING THE FILES\n');
 
@@ -203,15 +360,12 @@ if opt.addSnxSource==1
     opt.est_source=1;
 end
 
-%dname = antenna(1).ngsfile; %parameter.vie_init.ngsfile;
-fname = antenna(1).session;
-
 % ##### Initial checks: #####
 % Check, if the sources structure has the correct format (with fields "q" and "s" for quasars and satellites respectively).
 % ==> Older format (VieVS 2.3): copy content from "sources" to "sources.q"
 % !!! Remove this check after the release of VieVS V3.0!!
 if ~isfield(sources, 'q') && ~isfield(sources, 's')
-%     error('Please run VIE_MOD and VIE_INIT again for session %s! The format of the "sources" structure is not supported any more (sub-strucutre sources.q missing).', fname);
+%     error('Please run VIE_MOD and VIE_INIT again for session %s! The format of the "sources" structure is not supported any more (sub-strucutre sources.q missing).', parameter.session_name);
     sources_tmp = sources;
     clear sources;
     sources.q = sources_tmp;
@@ -219,7 +373,7 @@ if ~isfield(sources, 'q') && ~isfield(sources, 's')
     % In case an older scan structure (from LEVEL1) is loaded without the field scan.obs_type:
     % ==> Assume, that only quasars were observed and add the field!
     [scan.obs_type] = deal('q');
-    warning('The format of the "sources" structure of session %s is not supported any more => "sources" copied to "sources.q".', fname);
+    warning('The format of the "sources" structure of session %s is not supported any more => "sources" copied to "sources.q".', parameter.session_name);
 end
 
 % ##### Get session info #####
@@ -344,7 +498,7 @@ else
 end
 
 %---------------------------
-if isempty(stations)==0
+if ~isempty(stations)
     nmi_observ = (addnoise/c).^2+(mi_observ).^2;  % [seconds2]
     an_weight = parameter.vie_init.stat_co; 
     numbers = find(ismember ({antenna.name},stations)==1);  
@@ -476,7 +630,7 @@ oc_observ = ([temp.obs]-[temp.com])'.*c*100; % [cm]
 if opt.first ~= 1
     first_solution.ref_st = [];
 elseif opt.first == 1
-    [oc_observ,first_solution,opt] = reduce_oc(n_observ,na,n_scan,scan,Pobserv,oc_observ,opt,per_stat,fname,dirpth);
+    [oc_observ,first_solution,opt] = reduce_oc(n_observ,na,n_scan,scan,Pobserv,oc_observ,opt,per_stat,parameter.session_name,dirpth);
 end
 
 if opt.second == 0
@@ -1052,7 +1206,7 @@ if ess == 1 % +hana 10Nov10
     
     % ##### write residuals/outlier info to new variable #####
     % if the res file already exist, ie if it was written in first solution
-    resFilename = ['../DATA/LEVEL3/', dirpth, '/res_', fname, '.mat'];
+    resFilename = ['../DATA/LEVEL3/', dirpth, '/res_', parameter.session_name, '.mat'];
     
     if exist(resFilename, 'file') && opt.first
         load(resFilename);
@@ -1154,31 +1308,40 @@ if ess == 1 % +hana 10Nov10
     [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, number_pwlo_per_sat);
 
     [atpa_.mat] = N;
-    [atpl_.vec] = n;
+    % [atpl_.vec] = n;
     [opt_] = opt;
     % save files
 
     fprintf('----------\n');
     test_significance(x_,opt_,5);
-
-    fprintf('estimated parameters are saved as ../VieVS/DATA/LEVEL3/%s/x_%s.mat\n',dirpth,fname);
-    save(['../DATA/LEVEL3/',dirpth,'/x_',fname,'.mat'],'x_');
-
-    fprintf('estimation options are saved as ../VieVS/DATA/LEVEL3/%s/opt_%s.mat\n',dirpth,fname);
-    save(['../DATA/LEVEL3/',dirpth,'/opt_',fname,'.mat'],'opt_');
-
-    fprintf('normal equation matrix is saved as ../VieVS/DATA/LEVEL3/%s/atpa_%s.mat\n',dirpth,fname);
-    save(['../DATA/LEVEL3/',dirpth,'/atpa_',fname,'.mat'],'atpa_');
-
-    fprintf('right hand side vector is saved as ../VieVS/DATA/LEVEL3/%s/atpl_%s.mat\n',dirpth,fname);
-    save(['../DATA/LEVEL3/',dirpth,'/atpl_',fname,'.mat'],'atpl_');
     
-    fprintf('residuals are saved as ../VieVS/DATA/LEVEL3/%s/res_%s.mat\n',dirpth,fname);
-    save(['../DATA/LEVEL3/',dirpth,'/res_',fname,'.mat'],'res');
+    % Save the "cleaned" VieVS structures (consistent withe the results in x_ and res_):
+    fprintf('Save VieVS data structures (oultiers and OPT file options applied!)\n');
+    fprintf('  ../VieVS/DATA/LEVEL3/%s/%s_antenna.mat\n',dirpth,parameter.session_name);
+    save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_antenna.mat'],'antenna');
+    fprintf('  ../VieVS/DATA/LEVEL3/%s/%s_source.mat\n',dirpth,parameter.session_name);
+    save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_sources.mat'],'sources');
+    fprintf('  ../VieVS/DATA/LEVEL3/%s/%s_parameter.mat\n',dirpth,parameter.session_name);
+    save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_parameter.mat'],'parameter');
+    fprintf('  ../VieVS/DATA/LEVEL3/%s/%s_scan.mat\n',dirpth,parameter.session_name);
+    save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_scan.mat'],'scan');
+    
 
+    fprintf('Estimated parameters are saved as ../VieVS/DATA/LEVEL3/%s/x_%s.mat\n',dirpth,parameter.session_name);
+    save(['../DATA/LEVEL3/',dirpth,'/x_',parameter.session_name,'.mat'],'x_');
+
+    fprintf('Estimation options are saved as ../VieVS/DATA/LEVEL3/%s/opt_%s.mat\n',dirpth,parameter.session_name);
+    save(['../DATA/LEVEL3/',dirpth,'/opt_',parameter.session_name,'.mat'],'opt_');
     
+    fprintf('normal equation matrix is saved as ../VieVS/DATA/LEVEL3/%s/atpa_%s.mat\n',dirpth,parameter.session_name);
+    save(['../DATA/LEVEL3/',dirpth,'/atpa_',parameter.session_name,'.mat'],'atpa_');
+
+%     fprintf('right hand side vector is saved as ../VieVS/DATA/LEVEL3/%s/atpl_%s.mat\n',dirpth,parameter.session_name);
+%     save(['../DATA/LEVEL3/',dirpth,'/atpl_',parameter.session_name,'.mat'],'atpl_');
     
-    
+    fprintf('Residuals are saved as ../VieVS/DATA/LEVEL3/%s/res_%s.mat\n',dirpth,parameter.session_name);
+    save(['../DATA/LEVEL3/',dirpth,'/res_',parameter.session_name,'.mat'],'res');
+
 end
 
 [opt_] = opt;
@@ -1483,9 +1646,9 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
 %             mkdir(['../DATA/LEVEL2/',dirpthL2])
 %         end
         
-        fprintf('Data for GLOBAL SOLUTION is saved as ../VieVS/DATA/LEVEL2/%s/%s_an_glob.mat\n',dirpthL2,fname);
-        fprintf('Data for GLOBAL SOLUTION is saved as ../VieVS/DATA/LEVEL2/%s/%s_par_glob.mat\n',dirpthL2,fname);
-        fprintf('Data for GLOBAL SOLUTION is saved as ../VieVS/DATA/LEVEL2/%s/%s_Nb_glob.mat\n',dirpthL2,fname);
+        fprintf('Data for GLOBAL SOLUTION is saved as ../VieVS/DATA/LEVEL2/%s/%s_an_glob.mat\n',dirpthL2,parameter.session_name);
+        fprintf('Data for GLOBAL SOLUTION is saved as ../VieVS/DATA/LEVEL2/%s/%s_par_glob.mat\n',dirpthL2,parameter.session_name);
+        fprintf('Data for GLOBAL SOLUTION is saved as ../VieVS/DATA/LEVEL2/%s/%s_Nb_glob.mat\n',dirpthL2,parameter.session_name);
         
         % hana 26March13 - needed for Vie_GLOB
         if ess == 0
@@ -1518,9 +1681,9 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
             mkdir(['../DATA/LEVEL2/',dirpthL2])
         end
 
-        save(['../DATA/LEVEL2/',dirpthL2,'/',fname,'_an_glob.mat'],'glob1');
-        save(['../DATA/LEVEL2/',dirpthL2,'/',fname,'_par_glob.mat'],'glob2');
-        save(['../DATA/LEVEL2/',dirpthL2,'/',fname,'_Nb_glob.mat'],'glob3');
+        save(['../DATA/LEVEL2/',dirpthL2,'/',parameter.session_name,'_an_glob.mat'],'glob1');
+        save(['../DATA/LEVEL2/',dirpthL2,'/',parameter.session_name,'_par_glob.mat'],'glob2');
+        save(['../DATA/LEVEL2/',dirpthL2,'/',parameter.session_name,'_Nb_glob.mat'],'glob3');
     end
 end
 
@@ -1588,14 +1751,14 @@ if opt.ascii_snx == 1
     
     
     % Save info about columns
-    col_sinex=snx_newcol(col_est,x_,antenna,outsnx);
+    col_sinex = snx_newcol(col_est, x_, antenna, outsnx);
     % Save info about statistic
     col_sinex.lTPlreduc = lTPlreduc;
     col_sinex.nr_unknowns = total_est(end);
     col_sinex.nr_obs = real_obs; % write only the real observations into sinex
     col_sinex.vTPv = vTPv;
     col_sinex.varfac = mo^2; % hana 24 Apr 2013
-    col_sinex.outsnx=outsnx;
+    col_sinex.outsnx = outsnx;
     
     % Change units of the N matrix and b vector !!!
     [N_sinex, b_sinex]=snx_changeunits(N_sinex,b_sinex,col_sinex,outsnx);   
@@ -1608,15 +1771,15 @@ if opt.ascii_snx == 1
     end
     
     fprintf('\nReduced N and b for SINEX output are saved in ../VieVS/DATA/LEVEL3/%s/SINEX/ \n',dirpth);
-    save(['../DATA/LEVEL3/',dirpth,'/SINEX/N_sinex_',fname,'.mat'],'N_sinex');
-    save(['../DATA/LEVEL3/',dirpth,'/SINEX/b_sinex_',fname,'.mat'],'b_sinex');
-    save(['../DATA/LEVEL3/',dirpth,'/SINEX/col_sinex_',fname,'.mat'],'col_sinex');
+    save(['../DATA/LEVEL3/',dirpth,'/SINEX/N_sinex_',parameter.session_name,'.mat'],'N_sinex');
+    save(['../DATA/LEVEL3/',dirpth,'/SINEX/b_sinex_',parameter.session_name,'.mat'],'b_sinex');
+    save(['../DATA/LEVEL3/',dirpth,'/SINEX/col_sinex_',parameter.session_name,'.mat'],'col_sinex');
 
     % create an ascii sinex file in DATA/SNX
     disp(sprintf('\nWriting SINEX file ... '));
-    write_sinex_vievs(fname, [dirpth '/'], [opt.level1OutDir '/'], ...
+    write_sinex_vievs(parameter.session_name, [dirpth '/'], [opt.level1OutDir '/'], ...
     outsnx.firstname, outsnx.lastname, outsnx.email);
-    disp(sprintf('SINEX file is saved as ../VieVS/DATA/SNX/%s.SNX',fname));
+    disp(sprintf('SINEX file is saved as ../VieVS/DATA/SNX/%s.SNX',parameter.session_name));
     
 end
 

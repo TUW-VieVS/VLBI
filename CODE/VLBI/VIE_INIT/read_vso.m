@@ -71,7 +71,6 @@
 %  - trf_name_str           - Name of selected TRF realiation within the trf structure (string)
 %  - crf                    - VieVS crf data strucure
 %  - crf_name_str           - Name of selected CRF realiation within the crf structure (string)
-%  - ini_opt                - input options (structure)
 %  - sat_orbit_file_path    - 
 %  - sat_orbit_file_name    - 
 %  - sat_orbit_file_type    - 
@@ -112,7 +111,7 @@
 %  - 2018-07-06, D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
 %
 %
-function [antenna, sources, scan, parameter] = read_vso(vso_file_path, vso_file_name, trf, trf_name_str, crf, crf_name_str, ini_opt, sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type, parameter)
+function [antenna, sources, scan, parameter] = read_vso(vso_file_path, vso_file_name, trf, trf_name_str, crf, crf_name_str, sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type, parameter)
 
 % ##### Load constants #####
 
@@ -146,32 +145,8 @@ end
 
 
 % Init.:
-small = 1e-11; % for matching mjd epochs (e.g. outliers)
+% small = 1e-11; % for matching mjd epochs (e.g. outliers)
 vso_format = 0;
-
-% ##### Check input options (ini_opt) and initialise them, if required #####
-if ~isfield(ini_opt,'minel') % Min. elevation
-    ini_opt.minel=0;
-end
-if ~isfield(ini_opt,'Qlim') % Quality code limit (NOT CONDSIDERED HERE!)
-    ini_opt.Qlim=0;
-end
-%if sta_excl, sour_excl, or scan_excl not specified, initialize them as empty matrices
-if ~isfield(ini_opt,'sta_excl')     % Excluded stations from OPT file
-    ini_opt.sta_excl=[];
-end
-if ~isfield(ini_opt,'sour_excl')    % Excluded sources from OPT file
-    ini_opt.sour_excl=[];
-end
-if ~isfield(ini_opt,'scan_excl')    % From outlier file: | stat. 1 name | stat.2 name | MJD |
-    ini_opt.scan_excl=[];
-end
-if ~isfield(ini_opt,'no_cab')       % There is no cable cal. information in the vso format so far
-    ini_opt.no_cab=[];
-end
-if ~isfield(ini_opt,'bas_excl')     % Excluded baselines from OPT file
-    ini_opt.bas_excl=[];
-end
 
 
 % ##### preallocate structures #####
@@ -339,155 +314,14 @@ mjd = modjuldat(year, mon, day, hour, minu, sec);
 % DOY:
 [itim,doy] = dday(year, mon, day, hour, minu);
 
-
 [~, ~, local_soure_id] = unique(source_name_str);
-number_of_all_scans = size(unique([mjd, local_soure_id], 'rows'), 1); % Individual scans differ in epoch ("mjd") AND observed source ("local_soure_id")!
 
-% ###############################
-% ##### Check scans         #####
-% ###############################
-
-% Init. index of valid scans:
-index_valid_scans = ones(number_of_all_obs, 1);
-
-
-% Throw out all invalid scans
-% Checks:
-% - Outliers
-% - Excluded stations
-% - Excluded baselines
-% - Excluded sources
-% - 
-
-% => Just get the indices of invalid scans and exclude them! 
-
-% #### Check if outliers should be excluded ####
-excl_outliers_ind = false(number_of_all_obs, 1);
-if ~isempty(ini_opt.scan_excl)
-    for i_tmp = 1 : length(ini_opt.scan_excl)
-        
-        % Check outlier epoch:
-        excl_out_mjd_tmp_ind = abs(mjd - ini_opt.scan_excl(i_tmp).mjd) < small;
-        
-        % Check stations of baseline:
-        excl_out_bl_ind = (strcmp(stat_1_name_str, deblank(ini_opt.scan_excl(i_tmp).sta1)) & strcmp(stat_2_name_str, deblank(ini_opt.scan_excl(i_tmp).sta2))) | (strcmp(stat_1_name_str, deblank(ini_opt.scan_excl(i_tmp).sta2)) & strcmp(stat_2_name_str, deblank(ini_opt.scan_excl(i_tmp).sta1)));        
-   
-        excl_outliers_tmp_ind = excl_out_mjd_tmp_ind & excl_out_bl_ind;
-        excl_outliers_ind = excl_outliers_ind | excl_outliers_tmp_ind;
-    end
-end
-
-% #### Check if any of the stations are in the list of stations to be excluded ####
-excl_stat_ind = false(number_of_all_obs, 1);
-if ~isempty(ini_opt.sta_excl)
-    for i_tmp = 1 : size(ini_opt.sta_excl, 1)
-        
-        % Get obs. indizes for station to be excluded:
-        excl_stat_1_ind = strcmp(stat_1_name_str, deblank(ini_opt.sta_excl(i_tmp,:)));
-        excl_stat_2_ind = strcmp(stat_2_name_str, deblank(ini_opt.sta_excl(i_tmp,:)));
-        excl_stat_ind_tmp = excl_stat_1_ind | excl_stat_2_ind;
-        
-        % Check, if only a certain time span should be excluded:
-        if ini_opt.sta_excl_start(i_tmp) ~= 0
-           excl_time_ind = (mjd > ini_opt.sta_excl_start(i_tmp)) & (mjd < ini_opt.sta_excl_end(i_tmp));
-           excl_stat_ind_tmp = excl_stat_ind_tmp & excl_time_ind;
-        end
-        excl_stat_ind = excl_stat_ind | excl_stat_ind_tmp;
-    end
-end
-
-% #### Check if any of the sources are in the list of sources to be excluded ####
-excl_src_ind = false(number_of_all_obs, 1);
-if ~isempty(ini_opt.sour_excl)
-    for i_tmp = 1 : size(ini_opt.sour_excl, 1)
-        
-        % Get obs. indizes for sources to be excluded:
-        excl_src_ind_tmp = strcmp(source_name_str, deblank(ini_opt.sour_excl(i_tmp,:)));
-        
-        % Check, if only a certain time span should be excluded:
-        if ini_opt.sour_excl_start(i_tmp) ~= 0
-           excl_time_ind = (mjd > ini_opt.sour_excl_start(i_tmp)) & (mjd < ini_opt.sour_excl_end(i_tmp));
-           excl_src_ind_tmp = excl_src_ind_tmp & excl_time_ind;
-        end
-        excl_src_ind = excl_src_ind | excl_src_ind_tmp;
-    end
-end
-
-% #### Check if baselines should be excluded ####
-excl_bl_ind = false(number_of_all_obs, 1);
-if ~isempty(ini_opt.bas_excl)
-    for i_tmp = 1 : length(ini_opt.bas_excl)
-        excl_bl_ind = excl_bl_ind | ((strcmp(stat_1_name_str, deblank(ini_opt.bas_excl(i_tmp).sta1)) & strcmp(stat_2_name_str, deblank(ini_opt.bas_excl(i_tmp).sta2))) | (strcmp(stat_1_name_str, deblank(ini_opt.bas_excl(i_tmp).sta2)) & strcmp(stat_2_name_str, deblank(ini_opt.bas_excl(i_tmp).sta1))));
-    end
-end
-
-% Combine all indices to exclude observations:
-index_valid_scans = ~(excl_outliers_ind | excl_stat_ind | excl_src_ind | excl_bl_ind);
-
-% Apply indices to exclude observations:
-year 			= year(index_valid_scans);
-mon 			= mon(index_valid_scans);
-day 			= day(index_valid_scans);
-hour 			= hour(index_valid_scans);
-minu 			= minu(index_valid_scans);
-sec 			= sec(index_valid_scans);
-stat_1_name_str = stat_1_name_str(index_valid_scans);
-stat_2_name_str = stat_2_name_str(index_valid_scans);
-source_name_str = source_name_str(index_valid_scans);
-obs_type_str 	= obs_type_str(index_valid_scans);
-% delay           = delay(index_valid_scans);
-mjd             = mjd(index_valid_scans);  
-doy             = doy(index_valid_scans); 
-
-% if vso_format == 2
-%     delay_sig       = delay_sig(index_valid_scans);
-% elseif vso_format == 3
-%     delay_sig       = delay_sig(index_valid_scans);
-%     ion_del         = ion_del(index_valid_scans);
-%     ion_sig         = ion_sig(index_valid_scans);
-% end
-
-if vso_format == 1
-    delay           = delay(index_valid_scans);	
-elseif vso_format == 2
-    delay           = delay(index_valid_scans);	
-    delay_sig       = delay_sig(index_valid_scans);
-elseif vso_format == 3
-    delay           = delay(index_valid_scans);	
-    delay_sig       = delay_sig(index_valid_scans);
-    ion_del         = ion_del(index_valid_scans);
-    ion_sig         = ion_sig(index_valid_scans);
-elseif vso_format == 5
-    delay           = delay(index_valid_scans);	
-    delay_sig       = delay_sig(index_valid_scans);
-    ion_del         = ion_del(index_valid_scans);
-    ion_sig         = ion_sig(index_valid_scans);
-    cab_stat1       = cab_stat1(index_valid_scans);
-    cab_stat2       = cab_stat2(index_valid_scans);
-elseif vso_format == 6
-    delay           = delay(index_valid_scans);	
-    delay_sig       = delay_sig(index_valid_scans);
-    ion_del         = ion_del(index_valid_scans);
-    ion_sig         = ion_sig(index_valid_scans);
-    cab_stat1       = cab_stat1(index_valid_scans);
-    cab_stat2       = cab_stat2(index_valid_scans);    
-    t_stat1         = t_stat1(index_valid_scans);	% Ambient atmospheric temperature at site 1 [deg. C]
-    p_stat1         = p_stat1(index_valid_scans);   % Ambient atmospheric barometric pressure at site 1 [mbar]
-    e_stat1         = e_stat1(index_valid_scans);   % Realative humitity at site 1 
-    t_stat2         = t_stat2(index_valid_scans);   % Ambient atmospheric temperature at site 2 [deg. C]
-    p_stat2         = p_stat2(index_valid_scans);   % Ambient atmospheric barometric pressure at site 2 [mbar]
-    e_stat2         = e_stat2(index_valid_scans);   % Realative humitityat site 2
-end
-
-% Get names of all stations with observations left:
+% Get names of all stations and sources:
 stat_names_remaining_str            = unique([stat_1_name_str; stat_2_name_str]);
 [source_names_remaining_str, ia, local_soure_id]    = unique(source_name_str);
 
 % Get the type of the sources:
 source_type_str = obs_type_str(ia);
-
-number_of_remaining_obs = sum(index_valid_scans);
-
 
 
 % Get number of remaining scans and the indices to assign observations to scans (obs2scan_ind)
@@ -499,6 +333,7 @@ else
 end
 mjd_scan = mjd_scan(:, 1);
 number_of_remaining_scans = length(mjd_scan);
+number_of_remaining_obs = length(mjd);
 
 
 
@@ -507,16 +342,9 @@ number_of_remaining_scans = length(mjd_scan);
 
 
 % ##### Write some information on excluded observations to CW #####
+fprintf(1, ' - Number of observations: %d\n', number_of_remaining_obs);
+fprintf(1, ' - Number of scans:        %d\n', number_of_remaining_scans);
 fprintf(1, '\n');
-fprintf(1, 'Number of excluded observations due to...\n');
-fprintf(1, '  ...outliers:          %d\n', sum(excl_outliers_ind));
-fprintf(1, '  ...excluded stations: %d\n', sum(excl_stat_ind));
-fprintf(1, '  ...excluded sources:  %d\n', sum(excl_src_ind));
-fprintf(1, '  ...excluded baslines: %d\n', sum(excl_bl_ind));
-fprintf(1, '%d observations of %d excluded. %d observations left.\n', sum(~index_valid_scans), number_of_all_obs, number_of_remaining_obs);
-fprintf(1, '%d scans of %d excluded. %d scans left.\n', number_of_all_scans - number_of_remaining_scans, number_of_all_scans, number_of_remaining_scans);
-fprintf(1, '\n');
-
 
 
 
@@ -941,6 +769,15 @@ scan(number_of_remaining_scans) = struct('mjd', [], 'stat', [], 'tim', [], 'nobs
 [scan.space] = deal(struct('source', zeros(3,3), 'xp', 0,'yp', 0, 'era', 0, 'xnut', 0, 'ynut', 0, 't2c', zeros(3,3)));
 [scan.stat] = deal(struct('x', [], 'temp', [], 'pres', [], 'e', [], 'az', [], 'zd', [], 'zdry', [], 'cab', [], 'axkt', [], 'therm', [], 'pantd', [], 'trop', [], 'psd', []));
 [scan.obs] = deal(struct('i1', [], 'i2', [], 'obs', [], 'sig', [], 'com', 0, 'q_code', [], 'q_code_ion', [], 'delion', [], 'sgdion', []));
+
+
+% Handle options for ionosphere corrections
+% - If ion. corrections is taken from separate ion. file => Do not apply correction from VSO file!
+% - parameter.vie_init.iono
+
+if ~strcmp(parameter.vie_init.iono, 'ngs') && exist('ion_del', 'var') % use ion. correction from external source (ion file)
+    ion_del = zeros(length(ion_del),1); % Set to zero
+end
 
 year_scan   = year(scan2obs_ind);
 mon_scan    = mon(scan2obs_ind);

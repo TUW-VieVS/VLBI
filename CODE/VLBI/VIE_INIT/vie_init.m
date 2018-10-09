@@ -8,10 +8,10 @@
 %      ngsfile, containing the name of NGS-file to be processed must exist
 %      in the workspace.
 %   Input arguments:
-%    - ngsfile                  - directory and name of the input file (e.g. "2005/05APR04XA_N004")
+%    - obs_file_name            - directory and name of the input file (e.g. "2005/05APR04XA_N004")
 %    - parameter                - VieVS parameter structure (contains GUI parameters)
 %    - out_vie_init_subdir      - sub-directory for VIE_INIT (LEVEL0)
-%    - ngsdir                   - Input file directiory (if it is empty the default path is used for different input file formats: "ngsdir_tmp")
+%    - obs_file_dir             - Input file directiory (if it is empty the default path is used for different input file formats: "obs_fle_dir_tmp")
 %    - trf                      - TRF data structure (optional)
 %    - crf                      - CRF data structure (optional)
 %
@@ -103,7 +103,7 @@
 
 % ************************************************************************
 %
-function [antenna,sources,scan,parameter]=vie_init(ngsfile, parameter, out_vie_init_subdir, ngsdir, varargin)
+function [antenna,sources,scan,parameter]=vie_init(obs_file_name, parameter, out_vie_init_subdir, obs_file_dir, varargin)
 disp('---------------------------------------------------------------')
 disp('|                  Welcome to VIE_INIT!!!!!                   |')
 disp('---------------------------------------------------------------')
@@ -114,42 +114,22 @@ constants;
 % Get the session name:
 switch(parameter.data_type)
     case 'ngs'
-%         parameter.session_name  = ngsfile(6 : end);
-        ngsdir_tmp              = 'NGS';
-        index_underscore_in_name = strfind(parameter.session_name, '_');
-        if size(index_underscore_in_name,2) == 1
-            optfil                  = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name(1 : (index_underscore_in_name(1) - 1)), '.OPT'];
-        elseif size(index_underscore_in_name,2) == 2
-            optfil                  = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name(1 : (index_underscore_in_name(2) - 1)), '.OPT'];
-        else
-            warning('More than 2 underscores found in session name! OPT file is not loaded correctly.')
-        end
-        clear index_underscore_in_name
-        outfile                 = ['../DATA/OUTLIER/', parameter.vie_init.dirout, '/', parameter.year, '/', parameter.session_name, '.OUT'];
-%         fprintf(' ==> Input file format: NGS\n');
+        obs_fle_dir_tmp              = 'NGS';
     case 'vso'
-%         parameter.session_name  = ngsfile(6 : (strfind(ngsfile, ' [VSO]')-1));
-        ngsdir_tmp              = 'VSO';
-        optfil                  = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name, '.OPT'];
-        outfile                 = ['../DATA/OUTLIER/', parameter.vie_init.dirout, '/', parameter.year, '/', parameter.session_name, '.OUT'];
-%         fprintf(' ==> Input file format: VSO\n');
+        obs_fle_dir_tmp              = 'VSO';
     case 'vgosdb'
-%         parameter.session_name  = ngsfile(6 : (strfind(ngsfile, ' [vgosDB]')-1));
-        ngsdir_tmp              = 'vgosDB';
-        optfil                  = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name, '.OPT'];
-        outfile                 = ['../DATA/OUTLIER/', parameter.vie_init.dirout, '/', parameter.year, '/', parameter.session_name, '.OUT'];
-%         fprintf(' ==> Input file format: vgosDB\n');
+        obs_fle_dir_tmp              = 'vgosDB';
 end % switch(parameter.data_type)
 
 session = parameter.session_name;
 
 % check if ngsdir exists:
 if exist('ngsdir', 'var')
-    if isempty(ngsdir)
-        ngsdir = ngsdir_tmp;
+    if isempty(obs_file_dir)
+        obs_file_dir = obs_fle_dir_tmp;
     end
 else
-    ngsdir = ngsdir_tmp;
+    obs_file_dir = obs_fle_dir_tmp;
 end
 
 
@@ -165,142 +145,6 @@ else
     crf = varargin{2};
 end
 
-
-%%  +++++++++++++++++ GET OPT STUFF +++++++
-
-ini_opt.sta_excl='';
-ini_opt.sour_excl='';
-ini_opt.stat_dw=''; 
-ini_opt.bas_excl=[];
-ini_opt.no_cab='';
-ini_opt.scan_excl=[];
-bas_excl='';
-remove_sprecial_stations = false;
-stations_to_be_removed = {''; ''; ''; ''};
-
-% read OPT-file (clock breaks exclusion, etc...), if parameter.vie_init.use_opt_files - flag is set.
-if parameter.vie_init.use_opt_files
-    if exist(optfil, 'file')
-        [ini_opt, bas_excl]=readOPT(optfil,remove_sprecial_stations,stations_to_be_removed);
-        parameter.vie_init.ref_clk_name     = ini_opt.refclock;         % If no reference clock is defined in the OPt file, this field conatin an empty string ('')!
-        parameter.vie_init.num_clk_breaks   = ini_opt.num_clk_breaks;   % Number of clock braeks in OPT file
-        parameter.vie_init.clk_break        = ini_opt.clk_break;        % Clock break info (structure)
-    else
-        fprintf('No OPT file was found\n');
-        parameter.vie_init.ref_clk_name     = ''; % If no reference clock is defined in the OPt file, this field conatin an empty string ('')!
-        parameter.vie_init.num_clk_breaks   = 0;
-        parameter.vie_init.clk_break        = [];
-        if remove_sprecial_stations
-            ini_opt.sta_excl = char(stations_to_be_removed);
-            ini_opt.sta_excl_start = zeros(1,size(stations_to_be_removed,1));
-        end
-    end
-end
-% --------------------------------------- (get opt stuff)
-
-% write info about excluded baselines, stations, sources +++++++++++ 
-fprintf('Stations to be excluded: %1.0f\n', size(ini_opt.sta_excl,1))
-for k=1:size(ini_opt.sta_excl,1)
-    if ini_opt.sta_excl_start(k)==0
-        fprintf('%s \n', ini_opt.sta_excl(k,:));
-    else
-        fprintf('%s %f %f\n', ini_opt.sta_excl(k,:), ini_opt.sta_excl_start(k),ini_opt.sta_excl_end(k));
-    end
-end
-  
-fprintf('Stations to be down-weighted: %1.0f\n', size(ini_opt.stat_dw,1))
-if size(ini_opt.stat_dw,1) == 0
-    parameter.vie_init.stat_dw = [];
-else
-	parameter.vie_init.stat_dw = {};
-    for k=1:size(ini_opt.stat_dw,1)
-        fprintf('%s', ini_opt.stat_dw(k,:),' ', ini_opt.stat_co(k,:))
-        fprintf('\n')
-        parameter.vie_init.stat_dw(k,:) = {ini_opt.stat_dw(k,:)};
-        parameter.vie_init.stat_co(k,:) = str2num(ini_opt.stat_co(k,:));
-    end
-end
-    
-fprintf('Sources to be excluded: %1.0f\n', size(ini_opt.sour_excl,1))
-for k=1:size(ini_opt.sour_excl,1)
-    %fprintf('%s\n', ini_opt.sour_excl(k,:))
-    if ini_opt.sour_excl_start(k)==0                                    
-        fprintf('%s \n', ini_opt.sour_excl(k,:));
-    else
-        fprintf('%s %f %f\n', ini_opt.sour_excl(k,:), ini_opt.sour_excl_start(k),ini_opt.sour_excl_end(k));
-    end 
-end
-
-remove_sources_from_list = false;
-if remove_sources_from_list
-    path2sourcelist = '';     %add the path of your .txt file here. Format is the same as glob input .txt files   
-    fid = fopen(path2sourcelist);
-    if fid == -1
-        warning('File with list of removed sources can not be found\n');
-    else
-        remove_sources = textscan(fid, '%8s','Delimiter','\n');
-        remove_sources = remove_sources{1};
-        ini_opt.sour_excl = [ini_opt.sour_excl;char(remove_sources)];
-        disp('+ sources from external file removed');
-        if isfield(ini_opt, 'sour_excl_start')
-            ini_opt.sour_excl_start = [ini_opt.sour_excl_start, zeros(1,length(remove_sources))];
-            ini_opt.sour_excl_end = [ini_opt.sour_excl_end, zeros(1,length(remove_sources))];
-        else
-            ini_opt.sour_excl_start = zeros(1,length(remove_sources));
-            ini_opt.sour_excl_end = zeros(1,length(remove_sources));
-        end
-    end
-    fclose(fid);
-end
-
-fprintf('Baselines to be excluded: %1.0f\n', size(bas_excl,1))
-for k=1:size(bas_excl,1)
-    fprintf('%s\n', bas_excl(k,:))
-end
-fprintf('No cable calibration: %1.0f\n', size(ini_opt.no_cab,1))
-for k=1:size(ini_opt.no_cab,1)
-    fprintf('%s\n', ini_opt.no_cab(k,:))
-end
-fprintf('\n')
-% -------------------------------------------------------------------    
-
-% +++++++++++++++ OUTLIERS +++++++++++++++++++++++++++++++++++++++++
-if (exist(outfile, 'file'))&&(parameter.vie_init.rm_outlier==1)
-    [ini_opt.scan_excl]=readOUT(outfile);
-    fprintf('the %2d outliers are applied \n',size(ini_opt.scan_excl,2));        %%%=> A. Girdiuk 2015-07-21
-    for k=1:size(ini_opt.scan_excl,2)
-        fprintf(' %10s %10s %5.2f\n', ini_opt.scan_excl(k).sta1,ini_opt.scan_excl(k).sta2,ini_opt.scan_excl(k).mjd);
-    end
-else
-    fprintf('outliers list is not applied \n');
-    if exist(outfile, 'file')==0
-        fprintf('outliers list does not exist \n');
-    end
-end
-fprintf('\n')  
-% ------------------- OUTLIERS -------------------------------------
-   
-
-% +++++++++++++++++++ read jet ang file ++++++++++++++++++++++++++++++++++
-% parameter.vie_init.jetfilnam=['../DATA/JETANG/',session(1:min([length(session),14])),'.JETUV'];
-parameter.vie_init.jetfilnam    = ['../DATA/JETANG/',session(1:min([length(session),14])),'.JET'];
-parameter.vie_init.jetfilnamuv  = ['../DATA/JETANG/',session(1:min([length(session),14])),'.JETUV'];
-parameter.vie_init.jetfilnamjb  = ['../DATA/JETANG/',session(1:min([length(session),14])),'.JETJB'];
-if parameter.vie_init.ex_jet == 1
-    jamax = parameter.vie_init.jetang;
-    [ini_opt.scan_jet] = readJET(parameter.vie_init.jetfilnam,jamax);
-    fprintf('read JET file: %s\n',parameter.vie_init.jetfilnam)
-    fprintf('Number of obs to be excluded due to jet angle: %2.1f %3.0f\n', jamax,length(ini_opt.scan_jet))
-else
-    ini_opt.scan_jet = [];  
-end
-% ------------------- read jet ang file -------------------------------------
-    
-% Set ini_opt parameters
-ini_opt.iono    = parameter.vie_init.iono;
-ini_opt.minel   = parameter.vie_init.min_elev;
-ini_opt.Qlim    = parameter.vie_init.Qlim;
-    
 
 
 %% ##### Load observation data #####
@@ -342,20 +186,18 @@ switch(parameter.data_type)
         
         % Read wrapper
         wrapper_data = read_vgosdb_wrapper(curNcFolder, parameter.session_name, in, wrapper_k, wrapper_v);
-
-        % check out_struct
-        % out_struct = check_out_struct( out_struct, in, wrapper_data);
         
         % get scan, antenna, source struct from netCDF files
-        scan        = nc2scan(out_struct, nc_info, fb, wrapper_data);
+        scan        = nc2scan(out_struct, nc_info, fb, wrapper_data, parameter);
         antenna     = nc2antenna(out_struct, trf, trffile{2}, wrapper_data);
         sources     = nc2sources(out_struct, crf, crffile{2}, wrapper_data);
         
         % "clean" scan struct (because of exclusions)
-        [scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.vie_init.Qlim, parameter.vie_init.min_elev);
+        % [scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.vie_init.Qlim, parameter.vie_init.min_elev);
 
     
         % Create a sub-structure in "sources" for quasars sources:
+        % => If observations of near field sources will be supported by vgosDB in future, the nc2sources.m script has to be adopted!
         q = sources;
         clear sources,
         sources.q   = q;
@@ -367,11 +209,40 @@ switch(parameter.data_type)
     % #####     NGS           #####
     % #############################
     case 'ngs'
-        fprintf(' => Start reading %s\n',ngsfile);
-        if isnan(str2double(ngsfile(1))) % if first element in ngsfile is character - absolute path of NGS file is given
-            [antenna,sources,scan] = read_ngs(ngsfile, trffile, crffile, ini_opt, trf, crf);
+        
+        % Create "dummy" ini_opt structure which was used to apply OPT file options, observations restriction, and outliers!
+        ini_opt.sta_excl    = '';
+        ini_opt.sour_excl   = '';
+        ini_opt.stat_dw     = ''; % Not needed in VIE_INIT anyway...
+        ini_opt.bas_excl    = []; % Keep all obs.!
+        ini_opt.no_cab      = ''; % Apply cable cal on all obs. (removed in VIE_LSM (cleanScan.m), if wanted)!
+        ini_opt.scan_excl   = []; % Keep all obs.!
+        ini_opt.iono        = parameter.vie_init.iono; % Use Iono. corrections from NGS file or from .ion files?
+        ini_opt.minel       = 0; % Keep all obs.!
+        ini_opt.Qlim        = 0; % Keep all obs.!
+        
+        % +++++++++++++++++++ read jet ang file ++++++++++++++++++++++++++++++++++
+        %  => Only works for NGS files!
+        % parameter.vie_init.jetfilnam=['../DATA/JETANG/',session(1:min([length(session),14])),'.JETUV'];
+        parameter.vie_init.jetfilnam    = ['../DATA/JETANG/',session(1:min([length(session),14])),'.JET'];
+        parameter.vie_init.jetfilnamuv  = ['../DATA/JETANG/',session(1:min([length(session),14])),'.JETUV'];
+        parameter.vie_init.jetfilnamjb  = ['../DATA/JETANG/',session(1:min([length(session),14])),'.JETJB'];
+        if parameter.vie_init.ex_jet == 1
+            jamax = parameter.vie_init.jetang;
+            [ini_opt.scan_jet] = readJET(parameter.vie_init.jetfilnam,jamax);
+            fprintf('read JET file: %s\n',parameter.vie_init.jetfilnam)
+            fprintf('Number of obs to be excluded due to jet angle: %2.1f %3.0f\n', jamax,length(ini_opt.scan_jet))
         else
-            [antenna,sources,scan] = read_ngs(['../DATA/' ngsdir '/' ngsfile], trffile, crffile, ini_opt, trf, crf);
+            ini_opt.scan_jet = [];  
+        end
+        % ------------------- read jet ang file -------------------------------------
+        
+        
+        fprintf(' => Start reading %s\n',obs_file_name);
+        if isnan(str2double(obs_file_name(1))) % if first element in ngsfile is character - absolute path of NGS file is given
+            [antenna,sources,scan] = read_ngs(obs_file_name, trffile, crffile, ini_opt, trf, crf);
+        else
+            [antenna,sources,scan] = read_ngs(['../DATA/' obs_file_dir '/' obs_file_name], trffile, crffile, ini_opt, trf, crf);
         end
         fprintf('...reading the NGS file finished!\n');
         
@@ -439,7 +310,7 @@ switch(parameter.data_type)
             sat_orbit_file_type = '';
         end
         
-        [antenna, sources, scan, parameter] = read_vso(vso_file_path, vso_file_name, trf, trffile{2}, crf, crffile{2}, ini_opt, sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type, parameter);
+        [antenna, sources, scan, parameter] = read_vso(vso_file_path, vso_file_name, trf, trffile{2}, crf, crffile{2}, sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type, parameter);
         fprintf('...reading the VSO file finished!\n');
         
 end % switch(parameter.data_type)
@@ -453,9 +324,11 @@ for i_ant = 1:length(antenna)
   fprintf('%2.0f%s%s\n',i_ant,'. ',antenna(i_ant).name)
 end
 
-% ????????? Needed:
-antenna(1).ngsfile=ngsfile;
+% ????????? Needed: % Yes, currently (2018-10-04) it is still needed for VIE_SIM!!! This is stupid => Theses parameters are stored in the "parameters" struct!
+% => Problem: If antenna(1) is removed via "cleanScan.m" in VIE_LSM, these parameters are not accessible any more!
+antenna(1).ngsfile=obs_file_name;
 antenna(1).session=session;
+% ???????????????????????????????????????
 
 fprintf('\nvie_init successfully finished!\n');
 

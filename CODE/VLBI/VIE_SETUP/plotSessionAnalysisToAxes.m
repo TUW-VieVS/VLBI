@@ -121,10 +121,9 @@ elseif get(handles.radiobutton_plot_sessionAnalysis_baselLeRep, 'Value')
     rigFormErr=0;
     printToCommand=0;
     process_list = handles.data.plot.sessionAnalysis.sessionnamesShort{1}.list;
-    [blr,wblr,bl,blnames]=repeatab([], process_list(coordsAvail,:), limitation, outfile, [],...
-        0, printToCommand, [], rigFormErr,...
+    [blr,wblr,bl,blnames]=repeatab([], process_list(coordsAvail,:), limitation, outfile, [],  0, printToCommand, [], rigFormErr,...
         { {handles.data.plot.sessionAnalysis.x_files(1).x_(coordsAvail)},...
-        {handles.data.plot.sessionAnalysis.antennaFiles(1).antenna(coordsAvail).antenna},...
+        {handles.data.plot.sessionAnalysis.antennaFiles(1).antenna(coordsAvail).antenna},... % CHeck here!
         {handles.data.plot.sessionAnalysis.atpaFiles(1).atpa(coordsAvail).atpa},...
         {handles.data.plot.sessionAnalysis.optFiles(1).opt(coordsAvail).opt} });
     nanVals=isnan(blr);
@@ -248,6 +247,9 @@ elseif get(handles.radiobutton_plot_sessionAnalysis_corMatrix, 'Value')
         collast = x_.(lastpar)(end).col;
         if isempty(collast) % If there are no estimates for the "last" station, e.g. ref. station for clock estimates
             collast = x_.(lastpar)(end-1).col;
+            if isempty(collast) % If there are no estimates for the "last" station, e.g. ref. station for clock estimates
+                collast = x_.(lastpar)(end-2).col;
+            end
         end
     end
     collast = collast(end);

@@ -19,14 +19,15 @@
 % ************************************************************************
 function [scan_excl_field]=readOUT(outfile)
 scan_excl_field = [];
-fid=fopen(outfile,'r');
-  a=1;
+
+fid = fopen(outfile,'r');
+  a = 1;
   while ~feof(fid)
-    str=fgetl(fid);
+    str = fgetl(fid);
     if length(str)>19
-        scan_excl_field(a).sta1=str(1:8);
-        scan_excl_field(a).sta2=str(10:17);
-        scan_excl_field(a).mjd=str2num(str(19:end));
+        scan_excl_field(a).sta1 = str(1:8);
+        scan_excl_field(a).sta2 = str(10:17);
+        scan_excl_field(a).mjd = str2num(str(19:end));
         a=a+1;
     end
   end

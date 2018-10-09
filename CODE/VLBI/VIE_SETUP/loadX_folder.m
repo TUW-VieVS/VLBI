@@ -89,20 +89,22 @@ for iFile = 1 : nX_Files
     % Load parameter file (opt_)
     load(['../DATA/LEVEL3/', curSubfolder, '/', strrep(allX_Files(iFile).name, 'x_', 'opt_')]);
     
-    % get LEVEL1 subfolder (for antenne file) from parameter file in LEVEL3
-    if ~isfield(opt_, 'level1OutDir')
-        curLevel1SubDir = curSubfolder;
-    else
-        curLevel1SubDir = opt_.level1OutDir;
-    end    
+%     % get LEVEL1 subfolder (for antenne file) from parameter file in LEVEL3
+%     if ~isfield(opt_, 'level1OutDir')
+%         curLevel1SubDir = curSubfolder;
+%     else
+%         curLevel1SubDir = opt_.level1OutDir;
+%     end    
     
     
     
-    % define antenna file
-    curAntFile = ['../DATA/LEVEL1/', curLevel1SubDir, '/', strrep(strrep(allX_Files(iFile).name, 'x_', ''), '.mat', '_antenna.mat')];
+    % define antenna file (in LEVEL3 directory!)
+%     curAntFile = ['../DATA/LEVEL1/', curLevel1SubDir, '/', strrep(strrep(allX_Files(iFile).name, 'x_', ''), '.mat', '_antenna.mat')];
+    curAntFile = ['../DATA/LEVEL3/', curSubfolder, '/', strrep(strrep(allX_Files(iFile).name, 'x_', ''), '.mat', '_antenna.mat')];
     
     if ~exist(curAntFile, 'file')
         antennaFileNotExist(iFile) = 1;
+        fprintf('WARNING: antenna structure cannot be found: %s!\n', curAntFile);
     else
         % load x_ file
         load(['../DATA/LEVEL3/', curSubfolder, '/', allX_Files(iFile).name]);
