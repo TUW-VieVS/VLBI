@@ -142,17 +142,17 @@ fprintf('\n\n');
 dut1_mean_sig = cellfun(@(x) mean(x), dut1_mx);
 dut1_rep      = cellfun(@(x) std(x),  dut1_val);
 
-xpol_mean_sig = cellfun(@(x) mean(x), dut1_mx);
-xpol_rep      = cellfun(@(x) std(x),  dut1_val);
+xpol_mean_sig = cellfun(@(x) mean(x), xpol_mx);
+xpol_rep      = cellfun(@(x) std(x),  xpol_val);
 
-ypol_mean_sig = cellfun(@(x) mean(x), dut1_mx);
-ypol_rep      = cellfun(@(x) std(x),  dut1_val);
+ypol_mean_sig = cellfun(@(x) mean(x), ypol_mx);
+ypol_rep      = cellfun(@(x) std(x),  ypol_val);
 
-nutdx_mean_sig = cellfun(@(x) mean(x), dut1_mx);
-nutdx_rep      = cellfun(@(x) std(x),  dut1_val);
+nutdx_mean_sig = cellfun(@(x) mean(x), nutdx_mx);
+nutdx_rep      = cellfun(@(x) std(x),  nutdx_val);
 
-nutdy_mean_sig = cellfun(@(x) mean(x), dut1_mx);
-nutdy_rep      = cellfun(@(x) std(x),  dut1_val);
+nutdy_mean_sig = cellfun(@(x) mean(x), nutdy_mx);
+nutdy_rep      = cellfun(@(x) std(x),  nutdy_val);
 
 
 % do the same for stations (sessions can have varying station networks)
