@@ -57,7 +57,7 @@
 %
 % call this function:
 %
-%  - output files are in LEVEL1-LEVEL3 folder:
+%  - output files are in LEVEL3 folder:
 %       write_sinex_vievs('C:/process_list.mat')
 %
 %  - there is a subfolder between:
@@ -69,28 +69,28 @@ function write_sinex_vievs(fname, varargin)
 
 ispc = false; % quick fix --> should be properly implemented for early matlab versions
 % if subfolder is given as an input
-if nargin>1
+
+
+if nargin>1     % Subfolder defined 
     subfolder=varargin{1};
-    subfolder_level1 = varargin{2};
-else
+else            % No subfolder defined
     subfolder='/';
-    subfolder_level1 = '/';
 end
 
-if nargin>3
-    firstname=varargin{3};
+if nargin>2     % Email Adress and name defined
+    firstname=varargin{2};
     if isempty(firstname)
-        firstname='Hana';
+        firstname='TU';
     end
     
-    lastname=varargin{4};
+    lastname=varargin{3};
     if isempty(lastname)
-        lastname='Krasna';
+        lastname='Wien';
     end
     
-    email=varargin{5};
+    email=varargin{4};
     if isempty(email)
-        email='hana.krasna@tuwien.ac.at';
+        email='vlbi@geo.tuwien.ac.at';
     end
 end
 
@@ -126,15 +126,15 @@ end
 
 % for all sessions in the process list
 for pl=1:size(process_list,1)
-    files.scan=['../DATA/LEVEL1/', subfolder_level1, '/', process_list(pl,6:end), '_scan.mat'];
+    files.scan=['../DATA/LEVEL3/', subfolder, '/', process_list(pl,6:end), '_scan.mat'];
     % x_ --> later, is only loaded when parameters were estimated!
     % opt_ --> later, is only loaded when parameters were estimated!
     files.N_sinex=['../DATA/LEVEL3/', subfolder, '/SINEX/N_sinex_', process_list(pl,6:end), '.mat'];
     files.b_sinex=['../DATA/LEVEL3/', subfolder, '/SINEX/b_sinex_', process_list(pl,6:end), '.mat'];
     files.col_sinex=['../DATA/LEVEL3/', subfolder, '/SINEX/col_sinex_', process_list(pl,6:end), '.mat'];
-    files.parameter=['../DATA/LEVEL1/', subfolder_level1, '/', process_list(pl,6:end), '_parameter.mat'];
-    files.antenna=['../DATA/LEVEL1/', subfolder_level1, '/', process_list(pl,6:end), '_antenna.mat'];
-    files.sources=['../DATA/LEVEL1/', subfolder_level1, '/', process_list(pl,6:end), '_sources.mat'];
+    files.parameter=['../DATA/LEVEL3/', subfolder, '/', process_list(pl,6:end), '_parameter.mat'];
+    files.antenna=['../DATA/LEVEL3/', subfolder, '/', process_list(pl,6:end), '_antenna.mat'];
+    files.sources=['../DATA/LEVEL3/', subfolder, '/', process_list(pl,6:end), '_sources.mat'];
     
     snxFile=['../DATA/SNX/', subfolder, process_list(pl,6:end), '.SNX'];
     files.superstation=['../TRF/superstation.mat'];
@@ -761,10 +761,8 @@ for pl=1:size(process_list,1)
         end
     end
  end
-%%
     
-    
-    
+   
         
     %% write 23 SOLUTION/ESTIMATES block if tickbox is ticked
     
