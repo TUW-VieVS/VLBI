@@ -31,7 +31,7 @@
 function [ in, fb, wrapper_k, wrapper_v ] = read_vgosdb_input_settings( ptf )
 
 in_tag          = 'institute:';         % => in
-fb_tag          = 'frequency_band:';    % => in
+fb_tag          = 'frequency_band:';    % => fb
 wrapper_k_tag   = 'wrapper_k:';         % => wrapper_k
 wrapper_v_tag   = 'wrapper_version:';   % => wrapper_v
 

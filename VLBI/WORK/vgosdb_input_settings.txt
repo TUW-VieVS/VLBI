@@ -1,15 +1,31 @@
 % This file can be used to specify the institute provider of the data files in the vgos database which should be used for processing.
-% Two settings are possible: institute, frequencyband
-% If a institute parameter is set only data from this institute will be used
-% - Here a list of institution flags can be provided, separated by white space
-% VieVS supports 4 possibilites for the frequencyband parameters:
-% GroupDelayFull_bX (final X-band group delay with ambiguity correction, corresponds to the delay in the NGS file)
-% GroupDelayFull_bS (final S-band group delay with ambiguity correction)
-% GroupDelay_bX (X-band group delay without ambiguity correction)
-% GroupDelay_bS (S-band group delay without ambiguity correction)
-% e.g.
-institute: 			IVS GSFC GSF
-frequency_band: 	GroupDelayFull_bX
-wrapper_k: 			all
+%
+% ### Possible settings ###
+%
+% => institute: 
+%      - List of institution flags, separtated by white space. 
+%      - All provided institutions will be considerd when selecting a wrapper file. 
+%      - The 1st entry (left) has the highest priority, the 2nd the 2nd-highest priority, and so on...
+%      - The entry "noInst" declares that wrapper without any institution flag should be considered 
+%        - The priority ranking is alao taken into account for the "noInst" tag, i.e. if it is the first in the list, wrappers with no institution flag will be selected first.
+%
+% => frequency_band:
+%      - VieVS supports 4 possibilites for the frequencyband parameters:
+%          - GroupDelayFull_bX (final X-band group delay with ambiguity correction, corresponds to the delay in the NGS file)
+%          - GroupDelayFull_bS (final S-band group delay with ambiguity correction)
+%          - GroupDelay_bX (X-band group delay without ambiguity correction)
+%          - GroupDelay_bS (S-band group delay without ambiguity correction)
+
+% => wrapper_k:
+%     - Define the k-flag (usually "all" or "ngs")
+%
+% => wrapper_version:
+%     - Declare the version flag (minimum version 4 is required!)
+%     - If this information is not provided, the highest version will be taken automatically (min. version 4).
+%
+institute: 						IVS GSFC GSF noInst
+% consider_no_institution:     	1
+frequency_band: 				GroupDelayFull_bX
+wrapper_k: 						all
 % wrapper_version: 
 

@@ -67,14 +67,14 @@ for i = 1 : length(tmp)
     end
 end
 
-num_of_length_wrappers = length(wrapper_filenames);
+num_of_wrappers = length(wrapper_filenames);
 
 % Get i, k, V flags of wrapper names
-i_list = cell(num_of_length_wrappers, 1);
-V_list = nan(num_of_length_wrappers, 1);
-k_list = cell(num_of_length_wrappers, 1);
+i_list = cell(num_of_wrappers, 1);
+V_list = nan(num_of_wrappers, 1);
+k_list = cell(num_of_wrappers, 1);
 
-for i = 1 : num_of_length_wrappers
+for i = 1 : num_of_wrappers
     % _i
     str_id_start = strfind(wrapper_filenames{i}, '_i');
     if  ~isempty(str_id_start)
@@ -120,7 +120,7 @@ end
 %  col 1: version
 %  col 2: k
 %  col 3 to n: institution(s)
-flag_array = zeros(num_of_length_wrappers, (2 + num_institutions));
+flag_array = zeros(num_of_wrappers, (2 + num_institutions));
 
 nc_filename = '';
 
@@ -152,6 +152,14 @@ else
 end
 
 %_i
+if sum(strcmp(institute, 'noInst')) == 1 % If wrappers without institution flag should be considered
+    for i = 1 : num_of_wrappers
+        if isempty(i_list{i})
+            i_list{i} = 'noInst';
+        end
+    end
+end
+
 for i_int = 1 : num_institutions
     i_col = i_int+2;
     flag_array(:, i_col) = strcmp(i_list, institute{i_int});
