@@ -126,7 +126,6 @@ end
 
 % for all sessions in the process list
 for pl=1:size(process_list,1)
-%     files.scan=['../DATA/LEVEL1/', subfolder, '/', process_list(pl,6:end), '_scan.mat'];
     files.scan=['../DATA/LEVEL3/', subfolder, '/', process_list(pl,6:end), '_scan.mat'];
     % x_ --> later, is only loaded when parameters were estimated!
     % opt_ --> later, is only loaded when parameters were estimated!
@@ -134,9 +133,6 @@ for pl=1:size(process_list,1)
     files.b_sinex=['../DATA/LEVEL3/', subfolder, '/SINEX/b_sinex_', process_list(pl,6:end), '.mat'];
     files.col_sinex=['../DATA/LEVEL3/', subfolder, '/SINEX/col_sinex_', process_list(pl,6:end), '.mat'];
     files.parameter=['../DATA/LEVEL3/', subfolder, '/', process_list(pl,6:end), '_parameter.mat'];
-% files.parameter=['../DATA/LEVEL1/', subfolder, '/', process_list(pl,6:end), '_parameter.mat'];
-%     files.antenna=['../DATA/LEVEL1/', subfolder, '/', process_list(pl,6:end), '_antenna.mat'];
-%     files.sources=['../DATA/LEVEL1/', subfolder, '/', process_list(pl,6:end), '_sources.mat'];
     files.antenna=['../DATA/LEVEL3/', subfolder, '/', process_list(pl,6:end), '_antenna.mat'];
     files.sources=['../DATA/LEVEL3/', subfolder, '/', process_list(pl,6:end), '_sources.mat'];
     
