@@ -243,7 +243,13 @@ stations_to_be_removed = {''; ''; ''; ''}; % Can be set here in cell array!
 parameter.vie_init.stat_dw = [];
 
 % read OPT-file
-opt_file_path_name = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name, '.OPT'];
+if length(parameter.session_name) == 14
+    opt_file_path_name = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name(1:end-5), '.OPT'];
+elseif length(parameter.session_name) == 9
+    opt_file_path_name = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name, '.OPT'];
+else
+    error('Session name does not follow convention');
+end
 if parameter.opt.use_opt_files
     if exist(opt_file_path_name, 'file')
         [clean_opt, ~] = readOPT(opt_file_path_name,remove_sprecial_stations,stations_to_be_removed);
