@@ -14,7 +14,7 @@
 %   stations given in '../DATA/MASTER/exclude.txt':
 %      [list,sessionnames]=mk_list('R1','R4','YEARS',2005:2010,...
 %             'EXCLUDE','../DATA/MASTER/exclude.txt')
-%   To get all EURO experiments where ONSALA60 has participated run:
+%   To get all EURO experiments where ONSALA60 has participated in:
 %      [list,sessionnames]=mk_list('EURO','REQSTAT','On')
 %
 % Usage:
@@ -55,6 +55,7 @@
 %    20 Apr 2015 by David Mayer: MINSTANUM added
 %    31 Mar 2017 by David Mayer: corrected NOINT option 
 %    23 Aug 2018 by Daniel Landskron: option ONLYINT added
+%    22 Oct 2018 by Daniel Landskron: also enabled for vgosDB
 %
 % ************************************************************************
 
@@ -62,19 +63,24 @@ function [list,names]=mk_list(varargin)
 
 
 % set initial values 
+session_data_format = 'VGOSDB';
 years = 1979:(clock*[1;0;0;0;0;0]);
 exclude = {};
 expes ={};
 reqstat = {};
 all_versions = 0;
 no_intensives = 0;
+only_intensives = 0;
 min_station_num = 0;
 
 
 i_input = 1;
 while i_input <= nargin
+    
     str=varargin{i_input};
     switch upper(str)
+        case 'NGS'
+            session_data_format = 'NGS';
         case 'YEARS'
             i_input = i_input+1;
             years = varargin{i_input};
@@ -103,6 +109,7 @@ while i_input <= nargin
             end
     end
     i_input = i_input+1;
+    
 end
 
 excllist = [];
@@ -124,7 +131,13 @@ list = [];
 for i_year = 1:length(years)
     year = years(i_year);
     year_short = year-100*floor(year/100);
-    path_NGS = sprintf('../DATA/NGS/%4d/',year);
+    
+    if strcmpi(session_data_format,'VGOSDB')
+        path_session = sprintf('../DATA/vgosDB/%4d/',year);
+    else
+        path_session = sprintf('../DATA/NGS/%4d/',year);
+    end
+        
     for intf = 0:1
         if intf
             if no_intensives==1
@@ -138,6 +151,7 @@ for i_year = 1:length(years)
             path_master_file = sprintf('../DATA/MASTER/master%02d.txt',year_short);
         end
         if exist(path_master_file)
+            
             fid = fopen(path_master_file,'r');
             while ~feof(fid)
                 str = [fgetl(fid) '   '];
@@ -199,12 +213,16 @@ for i_year = 1:length(years)
                         end
                     end
                     if incl
-                        NGS_file = dir([path_NGS sess '*']);   % can be >1, in case there are several versions
+                        session_file = dir([path_session sess '*']);   % can be >1, in case there are several versions
                         listtmp = [];
                         ver=[];
-                        for i_NGS_file = 1:length(NGS_file)
-                            listtmp = [listtmp;sprintf('%4d/%s',year,NGS_file(i_NGS_file).name)];
-                            ver = [ver str2num(NGS_file(i_NGS_file).name(12:14))];
+                        for i_session_file = 1:length(session_file)
+                            listtmp = [listtmp;sprintf('%4d/%s',year,session_file(i_session_file).name)];
+                            if strcmpi(session_data_format,'NGS')
+                                ver = [ver str2num(session_file(i_session_file).name(12:14))];
+                            elseif strcmpi(session_data_format,'VGOSDB')    
+                                all_versions = 0;   % for vgosDB file only the latest version is used
+                            end
                         end
                         if all_versions
                             list = [list;listtmp];
@@ -215,9 +233,13 @@ for i_year = 1:length(years)
                             [~,i_max] = max(ver);
                             list = [list;listtmp(i_max,:)];
                             names = [names;expnam];
+                        elseif strcmpi(session_data_format,'VGOSDB') 
+                            list = [list;listtmp];
+                            names = [names;expnam];
                         end
                     end
                 end
+                
             end
             fclose(fid);
         end
