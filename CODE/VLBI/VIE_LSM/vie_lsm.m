@@ -243,7 +243,13 @@ stations_to_be_removed = {''; ''; ''; ''}; % Can be set here in cell array!
 parameter.vie_init.stat_dw = [];
 
 % read OPT-file
-opt_file_path_name = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name, '.OPT'];
+if length(parameter.session_name) == 14
+    opt_file_path_name = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name(1:end-5), '.OPT'];
+elseif length(parameter.session_name) == 9
+    opt_file_path_name = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name, '.OPT'];
+else
+    error('Session name does not follow convention');
+end
 if parameter.opt.use_opt_files
     if exist(opt_file_path_name, 'file')
         [clean_opt, ~] = readOPT(opt_file_path_name,remove_sprecial_stations,stations_to_be_removed);
@@ -1677,7 +1683,7 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
 %             mkdir(['../DATA/LEVEL2/',dirpthL2])
 %         end
 
-        if ~isempty(dirpthL2) & ~exist(['../DATA/LEVEL2/',dirpthL2])
+        if ~isempty(dirpthL2) && ~exist(['../DATA/LEVEL2/',dirpthL2])
             mkdir(['../DATA/LEVEL2/',dirpthL2])
         end
 
@@ -1776,10 +1782,9 @@ if opt.ascii_snx == 1
     save(['../DATA/LEVEL3/',dirpth,'/SINEX/col_sinex_',parameter.session_name,'.mat'],'col_sinex');
 
     % create an ascii sinex file in DATA/SNX
-    disp(sprintf('\nWriting SINEX file ... '));
-    write_sinex_vievs(parameter.session_name, [dirpth '/'], [opt.level1OutDir '/'], ...
-    outsnx.firstname, outsnx.lastname, outsnx.email);
-    disp(sprintf('SINEX file is saved as ../VieVS/DATA/SNX/%s.SNX',parameter.session_name));
+    fprintf('\nWriting SINEX file ... \n');
+    write_sinex_vievs(parameter.session_name, [dirpth '/'], outsnx.firstname, outsnx.lastname, outsnx.email);
+    fprintf('SINEX file is saved as ../VieVS/DATA/SNX/%s.SNX\n',parameter.session_name);
     
 end
 
