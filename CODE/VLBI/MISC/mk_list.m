@@ -21,6 +21,8 @@
 %    [list,sessionnames]=mk_list(s1,s1,...)
 %      where s1,s2,... are the names of the types of sessions you want to
 %      include (R1, R4, EURO, etc.). Use all for all sessions
+%    [list,sessionnames]=mk_list(...'VGOSDB') or process_list=mk_list(...,'NGS')
+%      to define whether vgosDB or NGS input files are used
 %    [list,sessionnames]=mk_list(...,'YEARS',yrs)
 %      Only use sessions from the years 'yrs'.
 %    [list,sessionnames]=mk_list(...,'EXCLUDE',excllist)
@@ -233,8 +235,8 @@ for i_year = 1:length(years)
                             [~,i_max] = max(ver);
                             list = [list;listtmp(i_max,:)];
                             names = [names;expnam];
-                        elseif strcmpi(session_data_format,'VGOSDB') 
-                            list = [list;listtmp];
+                        elseif strcmpi(session_data_format,'VGOSDB')    && ~isempty(listtmp)
+                            list = [list;listtmp ' [vgosDB]'];
                             names = [names;expnam];
                         end
                     end
