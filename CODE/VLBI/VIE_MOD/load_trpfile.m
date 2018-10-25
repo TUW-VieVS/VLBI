@@ -43,6 +43,7 @@
 %   13 Sep 2017 by D. Landskron: 'tropSource' shifted into 'vie_init' 
 %   09 Jul 2018 by D. Landskron: also enabled for input of .radiate files
 %   01 Aug 2018 by D. Landskron: .radiate files made priority input
+%   24 Oct 2018 by D. Landskron: adapted so that files with "_N004" and also without can be read
 %
 %
 function [trpdata,trpFileFoundLog] = load_trpfile (parameter,session)
@@ -61,25 +62,27 @@ if ~strcmp(parameter.vie_init.tropSource.name,'raytr')
 end
     
 
-% define the raytracing file
+% define the raytracing file (check for session names with "_N004" and without)
 trpFolder = '../TRP/RAYTRACING_DATA/';
-if exist([trpFolder,parameter.year,'/'])==7
-    trpFile=[trpFolder,parameter.year,'/' session, '.trp'];
+if exist([trpFolder,parameter.year,'/'],'dir')==7
     radiateFile=[trpFolder,parameter.year,'/' session, '.radiate'];
+    radiateFile_short=[trpFolder,parameter.year,'/' session(1:9), '.radiate'];
+    trpFile=[trpFolder,parameter.year,'/' session, '.trp'];
+    trpFile_short=[trpFolder,parameter.year,'/' session(1:9), '.trp'];
 else
-    trpFile=[trpFolder, session, '.trp'];
     radiateFile=[trpFolder, session, '.radiate'];
+    trpFile=[trpFolder, session, '.trp'];
 end
 
    
 % if both .radiate-file and .trp file of a session are available, then the .radiate-file is read, because it's more accurate
-if exist(radiateFile, 'file')
+if exist(radiateFile, 'file')   ||   exist(radiateFile_short, 'file')
     radiateFileFoundLog=1;
     trpFileFoundLog=0;
-elseif exist(trpFile, 'file')
+elseif exist(trpFile, 'file')   ||   exist(trpFile_short, 'file')
     radiateFileFoundLog=0;
     trpFileFoundLog=1;
-elseif ~exist(trpFile, 'file') 
+else
     error('No ray-tracing file (.trp) available for this session! Specify another source for the tropospheric delays.')
 end
 
@@ -122,7 +125,11 @@ if radiateFileFoundLog==1
     c = 299792458;   % speed of light in [m/s]
     
     % open the file
-    fidRadiate=fopen(radiateFile);
+    fidRadiate = fopen(radiateFile);
+    if fidRadiate == -1
+        fidRadiate = fopen(radiateFile_short);
+    end
+        
     
     % get the current line
     curr_line=fgetl(fidRadiate);
@@ -133,7 +140,10 @@ if radiateFileFoundLog==1
     fclose(fidRadiate);
     
     % open the file again and read all data
-    fidRadiate=fopen(radiateFile);    
+    fidRadiate = fopen(radiateFile);    
+    if fidRadiate == -1
+        fidRadiate = fopen(radiateFile_short);
+    end
     radiate_data = textscan(fidRadiate,'%f%f%f%f%f%f%f%s%f%f%s%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f','CommentStyle','%');
     
     mjd = radiate_data{2};
@@ -175,7 +185,10 @@ end
 if trpFileFoundLog==1
     
     % open the file
-    fidTrp=fopen(trpFile);
+    fidTrp = fopen(trpFile);
+    if fidTrp == -1
+        fidTrp = fopen(trpFile_short);
+    end
     
     % set variable for determining the index of the current O-record 
     ind=0;
