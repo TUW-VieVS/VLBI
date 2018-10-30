@@ -44,9 +44,10 @@
 %   09 Jul 2018 by D. Landskron: also enabled for input of .radiate files
 %   01 Aug 2018 by D. Landskron: .radiate files made priority input
 %   24 Oct 2018 by D. Landskron: adapted so that files with "_N004" and also without can be read
+%   30 Oct 2018 by D. Landskron: bug corrected
 %
 %
-function [trpdata,trpFileFoundLog] = load_trpfile (parameter,session)
+function [trpdata,fileFoundLog] = load_trpfile (parameter,session)
 
 
 %% Get .trp-file or .radiate-file for the desired session
@@ -76,10 +77,13 @@ end
 
    
 % if both .radiate-file and .trp file of a session are available, then the .radiate-file is read, because it's more accurate
+fileFoundLog = 0;
 if exist(radiateFile, 'file')   ||   exist(radiateFile_short, 'file')
+    fileFoundLog = 1;
     radiateFileFoundLog=1;
     trpFileFoundLog=0;
 elseif exist(trpFile, 'file')   ||   exist(trpFile_short, 'file')
+    fileFoundLog = 1;
     radiateFileFoundLog=0;
     trpFileFoundLog=1;
 else
