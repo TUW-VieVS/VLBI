@@ -65,7 +65,7 @@
 *
 * Parameters for satellite scheduling
  PARA.TRF_FILENAME       	vievsTrf.txt           % File name of TRF File (containing VLBI site location and velocity)
- PARA.TRF_FILEPATH       	../TRF/create/superstation/neededFiles/                % File path of TRF File (containing VLBI site location and velocity)
+ PARA.TRF_FILEPATH       	../TRF/data/               % File path of TRF File (containing VLBI site location and velocity)
  PARA.EOP_FILENAME       	finals_all_IAU2000.txt % Name of VieVS EOP file (IAU 2000)
  PARA.EOP_FILEPATH       	../EOP/                % Directory of VieVS EOP file
  PARA.REPOS_INT          	10                     % Antenna repositioning interval for satellite tracking [sec] 
@@ -79,9 +79,9 @@
  * Parameters for automatic satellite scheduling
  PARA.SAT_BLOCK_DUR_MIN		50 						% Duration of the individual satellite scan blocks [min]
  PARA.Q_BLOCK_DUR_MIN		10 						% Duration of the individual quasar scan blocks [min]
- PARA.SAT_SCAN_DUR_SEC      300  					% Duration of individual satellite scans (on-source time) [sec]
+ PARA.SAT_SCAN_DUR_SEC      600  					% Duration of individual satellite scans (on-source time) [sec]
  PARA.INIT_SCAN_TYPE        q 						% Scan type for the initial scan block (s = satellites, q = quasars)
  PARA.CALC_SKYCOV_SAT       1  			 			% Select, wether the scykoverage is calculated separately fort quasar (SKYDT)/sat.(SKYDT_SAT) observations (Flag: 1=yes, 0=no)
- PARA.SKYDT_SAT             60                      % Interval for calculating the sky coverage (sliding window) for satellite observations
- PARA.MIN_SRCRP_SAT         14             			% Interval in which the same satellite won't be observed twice [min]
+ PARA.SKYDT_SAT             10                      % Interval for calculating the sky coverage (sliding window) for satellite observations
+ PARA.MIN_SRCRP_SAT         15             			% Interval in which the same satellite won't be observed twice [min]
  PARA.CENTER_TRACK_EPOCHS   1						% Select whether the epochs for calculating tracking points (step-wise tracking) should be centerd withing the repos. interval (1=yes; 0=no)
