@@ -74,6 +74,16 @@ function [sched_data, obs_data, error_code, error_msg] = auto_sched(stat_data, s
         end
     end
     
+    % Initialize empty fields in obs_data struct.
+    for i = 1 : number_of_sat
+       if isempty(obs_data.sat(i).last_obs_jd)    
+           obs_data.sat(i).last_obs_jd = 0;
+       end
+       if isempty(obs_data.sat(i).number_of_scans)
+           obs_data.sat(i).number_of_scans      = 0;
+       end
+    end
+    
     
     % ##### Options #####
     % Use the earliest possible scan start time (one baseline = 2 stations), or the earliest possible observation time of an individual station as reference time for the PARA.MAX_WAIT condition:
