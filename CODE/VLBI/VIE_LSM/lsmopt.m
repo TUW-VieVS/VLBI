@@ -44,7 +44,7 @@
 %                             added for the SINEX output
 %   10 Apr 2012 by Tobias Nilsson: For the estimation of sources as pwlo,
 %                     the default sources to esimate ar now the non-crf ones
-%   20 Jun 2012 by Hana Krásná: 
+%   20 Jun 2012 by Hana Krï¿½snï¿½: 
 %       Love and Shida numbers 
 %       FCN period from solid Earth tides
 %       acceleration of SSB 
@@ -364,7 +364,7 @@ if ns_q ~= 0
             if (opt.global_solve == 1) && (opt.est_source == 1)
                     opt.source(isou).rade_inc = opt.est_source; 
             end
-
+            
             if opt.est_sourceNNR == 1
                 %             if (sources.q(isou).in_crf==0) || (sources.q(isou).defining==0)  %LuciaNNR
                 if opt.est_sourceNNR_defining == 1
@@ -375,6 +375,10 @@ if ns_q ~= 0
                     if (sources.q(isou).in_crf==0)
                         opt.source(isou).nnr_inc = 0;
                     end
+                    
+                end
+                if sources.q(isou).numobs < 3  
+                	opt.source(isou).nnr_inc = 0;
                 end
             end
         end

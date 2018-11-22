@@ -246,33 +246,6 @@ switch(parameter.data_type)
         end
         fprintf('...reading the NGS file finished!\n');
         
-        
-		
-        %Sources which were observed less than 3 times in the NGS file.
-        NumObs12=find([sources.numobs]<3);
-        for i=1:length(NumObs12)
-            % if the sources are estimated with the NNR, exclude those
-            % sources from the NNR constraint
-            if parameter.lsmopt.est_sourceNNR ==1
-                sources(NumObs12(i)).in_crf=0;
-                sources(NumObs12(i)).flag_defining=0;
-                if i==1
-                    fprintf('%d sources with <3 observations found. They will not be included in NNR.\n',length(NumObs12));
-                end
-
-            % if the sources are estimated as pwl offsets, only non-CRF
-            % sources are always estimated, therefore put 1 to the poor
-            % observed sources to fixed them and avoid the singularity.
-            elseif parameter.lsmopt.pw_sou ==1
-                sources(NumObs12(i)).in_crf=1;
-                if i==1
-                    fprintf('%d sources with <3 observations found. Their coordinates will not be estimated.\n',length(NumObs12));
-                end
-            end
-        end
-
-        
-        
         % Create a sub-structure in "sources" for quasars sources:
         q = sources;
         clear sources
