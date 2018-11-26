@@ -2,7 +2,7 @@
 echo "user name:"
 read user
 
-echo "years: (e.g.: \"2012\" or \"*\" if you want all years - you can use regular expressions)"
+echo "years: (e.g.: \"2012\" or \"*\" if you want all years)"
 read years
 
 echo "download NGS files? (y for yes)"
