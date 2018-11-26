@@ -2,7 +2,7 @@
 echo "user name:"
 read user
 
-echo "years: (e.g.: \"2012\" or \"*\" if you want all years)"
+echo "years: (e.g.: \"2012\" or \"*\" if you want all years - you can use regular expressions)"
 read years
 
 echo "download NGS files? (y for yes)"
@@ -17,13 +17,13 @@ echo "download APL"
 scp $user@vievs:/home/members/vievs/VLBI/ATM/APL_VIENNA/$years*.mat ../../../VLBI/ATM/APL_VIENNA
 if [ "$ngs" = "y" ]; then
 	echo "download NGS"
-	scp -r $user@vievs:/home/members/vievs/VLBI/DATA/NGS/$years* ../../../VLBI/DATA/NGS
+	rsync -avzh $user@vievs:/home/members/vievs/VLBI/DATA/NGS/$years* ../../../VLBI/DATA/NGS
 else
 	echo "skipping NGS"
 fi
 if [ "$vgosDB" = "y" ]; then
 	echo "download vgosDB"
-	scp -r $user@vievs:/home/members/vievs/VLBI/DATA/vgosDB/$years* ../../../VLBI/DATA/vgosDB
+	rsync -avzh $user@vievs:/home/members/vievs/VLBI/DATA/vgosDB/$years* ../../../VLBI/DATA/vgosDB
 else
 	echo "skipping vgosDB"
 fi
