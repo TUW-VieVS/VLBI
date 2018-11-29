@@ -152,6 +152,7 @@
 %   14 Feb 2017 by M. Schartner: changes to improve speed
 %   22 Feb 2017 by A. Hellerschmied: antenna.psd initialized
 %   05 Jul 2018 by D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
+%   28 Nov 2018 by D. Landskron: workaround concerning OPT files changed: now NO observations are excluded, because everything will be done in vie_lsm later
 % ************************************************************************
 
 
@@ -165,29 +166,6 @@ function [antenna,sources,scan]=read_ngs(ngsfil,trffil,crffil,ini_opt, trf, crf)
 url_vievswiki_create_superstation   = 'http://vievswiki.geo.tuwien.ac.at/doku.php?id=public:vievs_manual:data#create_a_superstation_file';
 error_code_invalid_met_data         = -999; % Error corde for missing met. data in NGS file (numerical)
 
-% ##### Check inoput options (ini_opt) #####
-if ~isfield(ini_opt,'minel')
-    ini_opt.minel=0;
-end
-if ~isfield(ini_opt,'Qlim')
-    ini_opt.Qlim=0;
-end
-%if sta_excl, sour_excl, or scan_excl not specified, initialize them as empty matrices
-if ~isfield(ini_opt,'sta_excl')
-    ini_opt.sta_excl=[];
-end
-if ~isfield(ini_opt,'sour_excl')
-    ini_opt.sour_excl=[];
-end
-if ~isfield(ini_opt,'scan_excl')
-    ini_opt.scan_excl=[];
-end
-if ~isfield(ini_opt,'no_cab')
-    ini_opt.no_cab=[];
-end
-if ~isfield(ini_opt,'bas_excl')
-    ini_opt.bas_excl=[];
-end
 
 % ##### preallocate structures #####
 scan        = struct('mjd', []);
@@ -365,16 +343,6 @@ while (idx_line <= nlines)
                 cab1        = trmp_input(1); % Cable calibration correction (one-way) for site 1 (ns)
                 cab2        = trmp_input(2); % Cable calibration correction (one-way) for site 2 (ns)
 
-                % Apply OPT file options:
-                % Set cable cal. value =0, if defined in OPT file!
-                for i_tmp = 1 : size(ini_opt.no_cab,1)
-                    if strcmp(ini_opt.no_cab(i_tmp, :), sta_names(1,:))
-                        cab1 = 0;
-                    end
-                    if strcmp(ini_opt.no_cab(i_tmp,:), sta_names(2,:))
-                        cab2 = 0;
-                    end
-                end
                 cor_cabel_cal = cab2 - cab1;
 
                 % ##### Card 6: met data #####
@@ -434,10 +402,7 @@ while (idx_line <= nlines)
     % Init.:
     flag_obs_ok = 1;
 
-    % #### Check the quality code ####
-    if (q_code > ini_opt.Qlim) || (q_iono > ini_opt.Qlim)
-        continue;
-    end
+    
     % ???
     % #### Exclude observations between twin telescopes ####
     if strcmp(sta_names(1,1:7), sta_names(2,1:7))
@@ -445,95 +410,24 @@ while (idx_line <= nlines)
         continue;
     end
     % ???
-    % #### Check if any of the stations are in the list of stations to be excluded
-    if ~isempty(ini_opt.sta_excl)
-        for i_tmp = 1 : size(ini_opt.sta_excl, 1)
-            if strcmp(sta_names(1,:), ini_opt.sta_excl(i_tmp,:)) || strcmp(sta_names(2,:), ini_opt.sta_excl(i_tmp,:))
-                if ini_opt.sta_excl_start(i_tmp) ~= 0
-                    if (mjd > ini_opt.sta_excl_start(i_tmp)) && (mjd < ini_opt.sta_excl_end(i_tmp))
-                        flag_obs_ok = 0;
-                        break;
-                    end
-                else
-                    flag_obs_ok = 0;
-                    break;
-                end
-            end
-        end
-        if ~flag_obs_ok
-            continue;
-        end
-    end
+    
 
-    % #### Check if the sources should be excluded ####
-    if ~isempty(ini_opt.sour_excl)
-        for i_tmp = 1 : size(ini_opt.sour_excl,1)
-            if strcmp(source_name, ini_opt.sour_excl(i_tmp,:))
-                if (mjd > ini_opt.sour_excl_start(i_tmp)) && (mjd < ini_opt.sour_excl_end(i_tmp))
-                    flag_obs_ok = 0;
-                    break;
-                end
-                if ~logical(ini_opt.sour_excl_start(i_tmp))
-                    flag_obs_ok = 0;
-                    break;
-                end
-            end
-        end
-        if ~flag_obs_ok
-            continue;
-        end
-    end
-
-    % #### Check if scan is in the list of outliers ####
-    if ~isempty(ini_opt.scan_excl)
-        %                idout=find(abs([ini_opt.scan_excl.mjd]-mjd)<10^-6);
-        idout = find([ini_opt.scan_excl.mjd] == mjd);            %%%>> A. Girdiuk 2015-07-21
-        for i_tmp = 1 : length(idout)
-            if (strcmp(ini_opt.scan_excl(idout(i_tmp)).sta1,sta_names(1,:)) && ...
-                    strcmp(ini_opt.scan_excl(idout(i_tmp)).sta2,sta_names(2,:))) || ...
-                    (strcmp(ini_opt.scan_excl(idout(i_tmp)).sta1,sta_names(2,:)) && ...
-                    strcmp(ini_opt.scan_excl(idout(i_tmp)).sta2,sta_names(1,:)))
-                flag_obs_ok = 0;
-                break;
-            end
-        end
-        if ~flag_obs_ok
-            continue;
-        end
-    end
-
-    % #### Check if scan is in the list of removed baselines ####
-    if ~isempty(ini_opt.bas_excl)
-        for i_tmp = 1 : length(ini_opt.bas_excl)
-            if (strcmp(sta_names(1,:), ini_opt.bas_excl(i_tmp).sta1) &&...
-                    strcmp(sta_names(2,:), ini_opt.bas_excl(i_tmp).sta2)) ||...
-                    (strcmp(sta_names(1,:), ini_opt.bas_excl(i_tmp).sta2) &&...
-                    strcmp(sta_names(2,:), ini_opt.bas_excl(i_tmp).sta1))
-                flag_obs_ok = 0;
-                break;
-            end
-        end
-        if ~flag_obs_ok
-            continue;
-        end
-    end
-
-    % #### Check for bad jet angles ####
-    if ~isempty(ini_opt.scan_jet)
-        idout=find(abs([ini_opt.scan_jet.mjd]-mjd)<10^-6);
-        for i_tmp=1:length(idout)
-            if (strcmp(ini_opt.scan_jet(idout(i_tmp)).sta1,sta_names(1,:)) && ...
-                    strcmp(ini_opt.scan_jet(idout(i_tmp)).sta2,sta_names(2,:))) || ...
-                    (strcmp(ini_opt.scan_jet(idout(i_tmp)).sta1,sta_names(2,:)) && ...
-                    strcmp(ini_opt.scan_jet(idout(i_tmp)).sta2,sta_names(1,:)))
-                flag_obs_ok = 0;
-                break;
-            end
-        end
-        if ~flag_obs_ok
-            continue;
-        end
-    end
+%     % #### Check for bad jet angles ####
+%     if ~isempty(ini_opt.scan_jet)
+%         idout=find(abs([ini_opt.scan_jet.mjd]-mjd)<10^-6);
+%         for i_tmp=1:length(idout)
+%             if (strcmp(ini_opt.scan_jet(idout(i_tmp)).sta1,sta_names(1,:)) && ...
+%                     strcmp(ini_opt.scan_jet(idout(i_tmp)).sta2,sta_names(2,:))) || ...
+%                     (strcmp(ini_opt.scan_jet(idout(i_tmp)).sta1,sta_names(2,:)) && ...
+%                     strcmp(ini_opt.scan_jet(idout(i_tmp)).sta2,sta_names(1,:)))
+%                 flag_obs_ok = 0;
+%                 break;
+%             end
+%         end
+%         if ~flag_obs_ok
+%             continue;
+%         end
+%     end
 
 
 
@@ -956,143 +850,120 @@ while (idx_line <= nlines)
         % #################################################################
         %Look for the scan in the scan structure array. If not found, add it
 
-        % Calc. elevation of observed source:
-        el1 = elev(mjd, [antenna(stat_id_vec(1)).x, antenna(stat_id_vec(1)).y, antenna(stat_id_vec(1)).z], sources(indOfNewSourceInSources).de2000, sources(indOfNewSourceInSources).ra2000,phi(stat_id_vec(1)),lam(stat_id_vec(1)));
-        el2 = elev(mjd, [antenna(stat_id_vec(2)).x, antenna(stat_id_vec(2)).y, antenna(stat_id_vec(2)).z], sources(indOfNewSourceInSources).de2000, sources(indOfNewSourceInSources).ra2000,phi(stat_id_vec(2)),lam(stat_id_vec(2)));
+        % Init.:
+        i_scan = 0; % Scan index
+        
+        % Check, if we have that scan date already and at same epoch the current source was observed:
+        id_sc = find((scansource == indOfNewSourceInSources) & ([scan.mjd] == mjd));
+        if ~isempty(id_sc)
+            i_scan = id_sc;
+        end
+        
+        % if we have a new scan:
+        if i_scan == 0
+            num_of_scans = num_of_scans + 1;
+            scansource(num_of_scans) = indOfNewSourceInSources;
+            i_scan = num_of_scans;
+            
+            % Init. scan structure:
+            scan(i_scan).stat(stat_id_vec(1))   = sta0;
+            scan(i_scan).stat(stat_id_vec(2))   = sta0;
+            scan(num_of_scans).mjd              = mjd;
+            scan(num_of_scans).tim              = [tim; doy];
+            scan(num_of_scans).nobs             = 0;
+            scan(num_of_scans).space            = space0;
+            scan(num_of_scans).src_name         = sources(indOfNewSourceInSources).name;
+        end
+        
+        % Write observation data to scan:
+        num_of_obs          = num_of_obs + 1;
+        delay               = (delay + cor_cabel_cal + coride) / 1000;
+        rate                = rate + corira;
+        sigdel              = sqrt(sigdel^2 + corsgd^2);
+        sigrat              = sqrt(sigrat^2+corsgr^2);
+        scan(i_scan).nobs   = scan(i_scan).nobs + 1;
+        
+        scan(i_scan).obs(scan(i_scan).nobs).i1          = stat_id_vec(1);
+        scan(i_scan).obs(scan(i_scan).nobs).i2          = stat_id_vec(2);
+        scan(i_scan).obs(scan(i_scan).nobs).obs         = delay * 1e-6;
+        scan(i_scan).obs(scan(i_scan).nobs).sig         = sigdel * 1e-9;
+        scan(i_scan).obs(scan(i_scan).nobs).com         = 0;
+        scan(i_scan).iso                                = indOfNewSourceInSources;
+        scan(i_scan).obs(scan(i_scan).nobs).q_code      = q_code;
+        scan(i_scan).obs(scan(i_scan).nobs).q_code_ion  = q_iono;
+        
+        scan(i_scan).obs(scan(i_scan).nobs).delion      = delion;   % Jing SUN, Jan 10, 2012
+        scan(i_scan).obs(scan(i_scan).nobs).sgdion      = sgdion;   % Jing SUN, Jan 10, 2012
+        
+        scan(i_scan).stat(stat_id_vec(1))               = sta0;
+        scan(i_scan).stat(stat_id_vec(2))               = sta0;
+        
+        scan(i_scan).stat(stat_id_vec(1)).cab           = cab1;
+        scan(i_scan).stat(stat_id_vec(2)).cab           = cab2;
+        
+        scan(i_scan).space                              = space0;
+        
+        scan(i_scan).obs_type                           = 'q'; % Specify observation type (q = quasar)
+        
+        
+        % Met. data:
+        %  => Save valid measured data
+        %  => Init. empty fields, if no valid data is available
+        
+        % Check, if the temp. value at station 1 from NGS file is valid:
+        if tdry1 > -99
+            scan(i_scan).stat(stat_id_vec(1)).temp = tdry1;
+        else
+            scan(i_scan).stat(stat_id_vec(1)).temp = error_code_invalid_met_data;
+        end
+        
+        % Check, if the temp. value at station 2 from NGS file is valid:
+        if tdry2 > -99
+            scan(i_scan).stat(stat_id_vec(2)).temp = tdry2;
+        else
+            scan(i_scan).stat(stat_id_vec(2)).temp = error_code_invalid_met_data;
+        end
+        
+        % Check, if the pres. value at station 1 from NGS file is valid:
+        if press1 > 0
+            scan(i_scan).stat(stat_id_vec(1)).pres = press1;
+        else
+            scan(i_scan).stat(stat_id_vec(1)).pres = error_code_invalid_met_data;
+        end
+        
+        % Check, if the pres. value at station 2 from NGS file is valid:
+        if press2 > 0
+            scan(i_scan).stat(stat_id_vec(2)).pres = press2;
+        else
+            scan(i_scan).stat(stat_id_vec(2)).pres = error_code_invalid_met_data;
+        end
+        
+        % Check, if the water vapor pressure at station 1 from NGS file is valid:
+        % => Also check temp. here, because "e" is calculated from "tdry" and "hum".
+        if (e1 > 0) && (tdry1 > -99) && (hum1 > 0)
+            scan(i_scan).stat(stat_id_vec(1)).e = e1;
+        else
+            scan(i_scan).stat(stat_id_vec(1)).e = error_code_invalid_met_data;
+        end
+        
+        % Check, if the water vapor pressure at station 2 from NGS file is valid:
+        % => Also check temp. here, because "e" is calculated from "tdry" and "hum".
+        if (e2 > 0) && (tdry2 > -99) && (hum2 > 0)
+            scan(i_scan).stat(stat_id_vec(2)).e = e2;
+        else
+            scan(i_scan).stat(stat_id_vec(2)).e = error_code_invalid_met_data;
+        end
+        
+        
+        % #### Update antenna and sources structures: ####
+        antenna(stat_id_vec(1)).numobs          = antenna(stat_id_vec(1)).numobs + 1;
+        antenna(stat_id_vec(2)).numobs          = antenna(stat_id_vec(2)).numobs + 1;
+        antenna(stat_id_vec(1)).lastObsMjd      = mjd;
+        antenna(stat_id_vec(2)).lastObsMjd      = mjd;
+        
+        sources(indOfNewSourceInSources).numobs = sources(indOfNewSourceInSources).numobs + 1;
+        sources(indOfNewSourceInSources).lastObsMjd = mjd;
 
-        % Check min elevation:
-        if (el1 >= ini_opt.minel) && (el2 >= ini_opt.minel)
-
-            % Init.:
-            i_scan = 0; % Scan index
-
-            % Check, if we have that scan date already and at same epoch the current source was observed:
-            id_sc = find((scansource == indOfNewSourceInSources) & ([scan.mjd] == mjd));
-            if ~isempty(id_sc)
-                i_scan = id_sc;
-            end
-
-            % if we have a new scan:
-            if i_scan == 0
-                num_of_scans = num_of_scans + 1;
-                scansource(num_of_scans) = indOfNewSourceInSources;
-                i_scan = num_of_scans;
-
-                % Init. scan structure:
-                scan(i_scan).stat(stat_id_vec(1))   = sta0;
-                scan(i_scan).stat(stat_id_vec(2))   = sta0;
-                scan(num_of_scans).mjd              = mjd;
-                scan(num_of_scans).tim              = [tim; doy];
-                scan(num_of_scans).nobs             = 0;
-                scan(num_of_scans).space            = space0;
-                scan(num_of_scans).src_name         = sources(indOfNewSourceInSources).name;
-%                         fprintf('%3d : %s\n', num_of_scans, scan(num_of_scans).src_name);
-            end
-
-            % Write observation data to scan:
-            num_of_obs          = num_of_obs + 1;
-            delay               = (delay + cor_cabel_cal + coride) / 1000;
-            rate                = rate + corira;
-            sigdel              = sqrt(sigdel^2 + corsgd^2);
-            sigrat              = sqrt(sigrat^2+corsgr^2);
-            scan(i_scan).nobs   = scan(i_scan).nobs + 1;
-
-            scan(i_scan).obs(scan(i_scan).nobs).i1          = stat_id_vec(1);
-            scan(i_scan).obs(scan(i_scan).nobs).i2          = stat_id_vec(2);
-            scan(i_scan).obs(scan(i_scan).nobs).obs         = delay * 1e-6;
-            scan(i_scan).obs(scan(i_scan).nobs).sig         = sigdel * 1e-9;
-            scan(i_scan).obs(scan(i_scan).nobs).com         = 0;
-            scan(i_scan).iso                                = indOfNewSourceInSources;
-            scan(i_scan).obs(scan(i_scan).nobs).q_code      = q_code;
-            scan(i_scan).obs(scan(i_scan).nobs).q_code_ion  = q_iono;
-
-            scan(i_scan).obs(scan(i_scan).nobs).delion      = delion;   % Jing SUN, Jan 10, 2012
-            scan(i_scan).obs(scan(i_scan).nobs).sgdion      = sgdion;   % Jing SUN, Jan 10, 2012
-
-            scan(i_scan).stat(stat_id_vec(1))               = sta0;
-            scan(i_scan).stat(stat_id_vec(2))               = sta0;
-
-            scan(i_scan).stat(stat_id_vec(1)).cab           = cab1;
-            scan(i_scan).stat(stat_id_vec(2)).cab           = cab2;
-
-            scan(i_scan).space                              = space0;
-
-            scan(i_scan).obs_type                           = 'q'; % Specify observation type (q = quasar)
-
-
-            % Met. data:
-            %  => Save valid measured data
-            %  => Init. empty fields, if no valid data is available
-
-            % Check, if the temp. value at station 1 from NGS file is valid:
-            if tdry1 > -99
-                scan(i_scan).stat(stat_id_vec(1)).temp = tdry1;
-            else
-                scan(i_scan).stat(stat_id_vec(1)).temp = error_code_invalid_met_data;
-            end
-
-            % Check, if the temp. value at station 2 from NGS file is valid:
-            if tdry2 > -99
-                scan(i_scan).stat(stat_id_vec(2)).temp = tdry2;
-            else
-                scan(i_scan).stat(stat_id_vec(2)).temp = error_code_invalid_met_data;
-            end
-
-            % Check, if the pres. value at station 1 from NGS file is valid:
-            if press1 > 0
-                scan(i_scan).stat(stat_id_vec(1)).pres = press1;
-            else
-                scan(i_scan).stat(stat_id_vec(1)).pres = error_code_invalid_met_data;
-            end
-
-            % Check, if the pres. value at station 2 from NGS file is valid:
-            if press2 > 0
-                scan(i_scan).stat(stat_id_vec(2)).pres = press2;
-            else
-                scan(i_scan).stat(stat_id_vec(2)).pres = error_code_invalid_met_data;
-            end
-
-            % Check, if the water vapor pressure at station 1 from NGS file is valid:
-            % => Also check temp. here, because "e" is calculated from "tdry" and "hum".
-            if (e1 > 0) && (tdry1 > -99) && (hum1 > 0)
-                scan(i_scan).stat(stat_id_vec(1)).e = e1;
-            else
-                scan(i_scan).stat(stat_id_vec(1)).e = error_code_invalid_met_data;
-            end
-
-            % Check, if the water vapor pressure at station 2 from NGS file is valid:
-            % => Also check temp. here, because "e" is calculated from "tdry" and "hum".
-            if (e2 > 0) && (tdry2 > -99) && (hum2 > 0)
-                scan(i_scan).stat(stat_id_vec(2)).e = e2;
-            else
-                scan(i_scan).stat(stat_id_vec(2)).e = error_code_invalid_met_data;
-            end
-
-
-            % #### Update antenna and sources structures: ####
-            antenna(stat_id_vec(1)).numobs          = antenna(stat_id_vec(1)).numobs + 1;
-            antenna(stat_id_vec(2)).numobs          = antenna(stat_id_vec(2)).numobs + 1;
-            antenna(stat_id_vec(1)).lastObsMjd      = mjd;
-            antenna(stat_id_vec(2)).lastObsMjd      = mjd;
-
-            sources(indOfNewSourceInSources).numobs = sources(indOfNewSourceInSources).numobs + 1;
-            sources(indOfNewSourceInSources).lastObsMjd = mjd;
-        else % Invalid scan => Remove it!
-
-            if antenna(stat_id_vec(2)).numobs == 0
-                antenna(stat_id_vec(2))     = [];
-                num_of_stat                 = num_of_stat - 1;
-            end
-            if antenna(stat_id_vec(1)).numobs == 0
-                antenna(stat_id_vec(1))     = [];
-                num_of_stat                 = num_of_stat - 1;
-            end
-            if sources(indOfNewSourceInSources).numobs == 0
-                sources(indOfNewSourceInSources)    = [];
-                num_of_sources                      = num_of_sources - 1;
-            end
-
-        end % if (el1 >= ini_opt.minel) && (el2 >= ini_opt.minel)
     end % if ngs_card_num == 1
 end
 
@@ -1110,9 +981,13 @@ if count_obs_delay_increased || count_obs_delay_decreased
     
 end
 
+% actually, variables "num_of_obs_in_ngs_file" and "num_of_obs" should be merged to one!
 fprintf('Total number of observations in NGS file: %d\n', num_of_obs_in_ngs_file);
-fprintf('Number of valid observations:             %d\n', num_of_obs);
-fprintf('Number of excluded observations:          %d\n', num_of_obs_in_ngs_file - num_of_obs);
+% fprintf('Number of valid observations:             %d\n', num_of_obs);
+% fprintf('Number of excluded observations:          %d\n', num_of_obs_in_ngs_file - num_of_obs);
+if num_of_obs_in_ngs_file ~= num_of_obs
+    error('There still seems to be a problem with excluding data within read_NGS, which actually should not be done here anymore!')
+end
 
 
 fclose(fid_ngs);

@@ -24,6 +24,7 @@
 %   16 Jan 2018 by J. Gruber: Ion code flag is also considered, only ion code zero values are taken
 %   17 Jan 2018 by J. Gruber: bug fix in "Excluded baselines" section
 %   28 Aug 2018 by D. Landskron: shape of output slightly changed
+%   28 Nov 2018 by D. Landskron: observations restrictions clarified
 
 % ************************************************************************
 function [scan, sources, antenna]=cleanScan(scan, sources, antenna, parameter)
@@ -366,7 +367,7 @@ for iScan = 1 : nScans
     
     qualOfObsOfCurScan_deluflag = [scan(iScan).obs.q_code];    
     qualOfObsOfCurScan_IonCode = [scan(iScan).obs.q_code_ion]; % ACHTUNG! scan(iScan).obs.q_code_ion vorhanden bei NGS und VSO?
-    obs2Delete_deluflag = qualOfObsOfCurScan_deluflag > parameter.obs_restrictions.q_code_limit; 
+    obs2Delete_deluflag = qualOfObsOfCurScan_deluflag > parameter.obs_restrictions.Qlim; 
     obs2Delete_IonCode =  qualOfObsOfCurScan_IonCode ~= 0; % fixed to zero
     
     obs2Delete = obs2Delete_deluflag | obs2Delete_IonCode; % 2018/01/16 Jakob, Ion code is also considered
@@ -388,7 +389,7 @@ for iScan = 1 : nScans
     end   
 end
 if flag_pring_debug_info
-    fprintf(' - Observations removed due to quality code limit (%d): %d\n', parameter.obs_restrictions.q_code_limit, sum_del_q_limit)
+    fprintf(' - Observations removed due to quality code limit (%d): %d\n', parameter.obs_restrictions.Qlim, sum_del_q_limit)
 end
 
 % (7) Minimum elevation angle

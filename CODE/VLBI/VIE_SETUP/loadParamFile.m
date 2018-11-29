@@ -51,6 +51,7 @@
 %   2017-09-13, D. Landskron: 'tropSource' shifted into 'vie_init' 
 %   2018-01-11, D. Landskron: external troposphere modeling removed
 %   2018-07-06, D. Landskron: VMF3 added to the troposphere models 
+%   2018-11-29, D. Landskron: structure of observation restrictions standardized
 %
 function loadParamFile(hObject, handles, fullFileName)
 
@@ -183,8 +184,8 @@ end
 
 
 % set min elevation and quality max
-set(handles.edit_parameter_obsRestr_cutOff, 'String', parameter.vie_init.min_elev*180/pi)
-set(handles.edit_parameter_obsRestr_qualityCode, 'String', parameter.vie_init.Qlim)
+set(handles.edit_parameter_obsRestr_cutOff, 'String', parameter.obs_restrictions.cut_off_elev*180/pi)
+set(handles.edit_parameter_obsRestr_qualityCode, 'String', parameter.obs_restrictions.Qlim)
 
 % set tropodelay model
 try

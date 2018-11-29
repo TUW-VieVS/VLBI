@@ -100,6 +100,7 @@
 %   			version name and frequency band (read_vgosdb_input_settings.m)
 %   06 Jan 2018 by J. Gruber: Changed call of cleanScan.m
 %   28 Aug 2018 by D. Landskron: shape of output slightly changed
+%   28 Nov 2018 by D. Landskron: workaround concerning OPT files changed: now NO observations are excluded, because everything will be done in vie_lsm later
 
 % ************************************************************************
 %
@@ -193,7 +194,7 @@ switch(parameter.data_type)
         sources     = nc2sources(out_struct, crf, crffile{2}, wrapper_data);
         
         % "clean" scan struct (because of exclusions)
-        % [scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.vie_init.Qlim, parameter.vie_init.min_elev);
+        % [scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.obs_restrictions.Qlim, parameter.obs_restrictions.cut_off_elev);
 
     
         % Create a sub-structure in "sources" for quasars sources:
@@ -210,17 +211,7 @@ switch(parameter.data_type)
     % #############################
     case 'ngs'
         
-        % Create "dummy" ini_opt structure which was used to apply OPT file options, observations restriction, and outliers!
-        ini_opt.sta_excl    = '';
-        ini_opt.sour_excl   = '';
-        ini_opt.stat_dw     = ''; % Not needed in VIE_INIT anyway...
-        ini_opt.bas_excl    = []; % Keep all obs.!
-        ini_opt.no_cab      = ''; % Apply cable cal on all obs. (removed in VIE_LSM (cleanScan.m), if wanted)!
-        ini_opt.scan_excl   = []; % Keep all obs.!
-        ini_opt.iono        = parameter.vie_init.iono; % Use Iono. corrections from NGS file or from .ion files?
-        ini_opt.minel       = 0; % Keep all obs.!
-        ini_opt.Qlim        = 0; % Keep all obs.!
-        
+         
         % +++++++++++++++++++ read jet ang file ++++++++++++++++++++++++++++++++++
         %  => Only works for NGS files!
         % parameter.vie_init.jetfilnam=['../DATA/JETANG/',session(1:min([length(session),14])),'.JETUV'];
@@ -236,6 +227,10 @@ switch(parameter.data_type)
             ini_opt.scan_jet = [];  
         end
         % ------------------- read jet ang file -------------------------------------
+        
+        
+        % this is necessary in read_NGS, for whatever reason
+        ini_opt.iono = parameter.vie_init.iono; % Use Iono. corrections from NGS file or from .ion files?
         
         
         fprintf(' => Start reading %s\n',obs_file_name);
