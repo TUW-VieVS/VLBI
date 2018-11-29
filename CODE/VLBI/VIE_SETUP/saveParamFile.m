@@ -46,6 +46,7 @@
 %   2017-09-13, D. Landskron: 'tropSource' shifted into 'vie_init' 
 %   2018-01-11, D. Landskron: external troposphere modeling removed
 %   2018-07-06, D. Landskron: VMF3 added to the troposphere models 
+%   2018-11-29, D. Landskron: structure of observation restrictions standardized
 
 function saveParamFile(hObject, handles, fullOutName)
 
@@ -98,9 +99,9 @@ end
 % Quality code limit:
 qLimitInputNum = str2double(get(handles.edit_parameter_obsRestr_qualityCode, 'String'));
 if isnan(qLimitInputNum)
-    parameter.obs_restrictions.q_code_limit = 0;
+    parameter.obs_restrictions.Qlim=0;
 else
-    parameter.obs_restrictions.q_code_limit = qLimitInputNum;
+    parameter.obs_restrictions.Qlim=qLimitInputNum;
 end
 
 
@@ -158,21 +159,6 @@ end
 
 % station info file (not variable yet)
 % parameter.vie_init.sta_info='../TRF/STAT_INFO';
-
-% minimum elevation/quality limit/jet angle
-minElevInputNum=str2double(get(handles.edit_parameter_obsRestr_cutOff, 'String'));
-if isnan(minElevInputNum)
-    parameter.vie_init.min_elev=0;
-else
-    parameter.vie_init.min_elev=minElevInputNum*pi/180;
-end
-
-qLimitInputNum=str2double(get(handles.edit_parameter_obsRestr_qualityCode, 'String'));
-if isnan(qLimitInputNum)
-    parameter.vie_init.Qlim=0;
-else
-    parameter.vie_init.Qlim=qLimitInputNum;
-end
 
 jetangleInput=get(handles.edit_parameter_obsRestr_jetang,'String');
 if strcmp(jetangleInput,'none')

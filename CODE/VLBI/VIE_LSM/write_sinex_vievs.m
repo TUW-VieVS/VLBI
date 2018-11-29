@@ -54,6 +54,7 @@
 %   25 Jan 2017 by Daniel Landskron: adapted for splitted mf and gradients
 %   06 Jul 2018 by Daniel Landskron: VMF3 added to the troposphere models 
 %   23 Aug 2018 by Daniel Landskron: adapted for vgosDB
+%   29 Nov 2018 by Daniel Landskron: structure of observation restrictions standardized
 %
 % call this function:
 %
@@ -454,7 +455,7 @@ for pl=1:size(process_list,1)
     else
         estsou = ' a) fix all positions to their a prioris';
     end
-    cutoff = parameter.vie_init.min_elev/pi*180; % rad --> deg
+    cutoff = parameter.obs_restrictions.cut_off_elev/pi*180; % rad --> deg
         
     comment={'Analysis description - template by Axel Nothnagel';
         'Version 2.0 (2011-05-26)'; 
@@ -509,7 +510,7 @@ for pl=1:size(process_list,1)
         ' troposphere horizontal gradients: ';
         tgr;
         '10. Outlier elimination';
-        [' c) other (we do not use outliers with quality flag higher than ' num2str(parameter.vie_init.Qlim)];
+        [' c) other (we do not use outliers with quality flag higher than ' num2str(parameter.obs_restrictions.Qlim)];
         outlr;
         '11. Handling of source positions';
         estsou;

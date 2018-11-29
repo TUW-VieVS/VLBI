@@ -15,6 +15,7 @@
 % 25 Jan 2017 by Daniel Landskron: output changed due to troposphere model change
 % 13 Sep 2017 by Daniel Landskron: 'tropSource' shifted into 'vie_init' 
 % 11 May 2018 by Daniel Landskron: remaining variable 'ext' removed
+% 29 Nov 2018 by Daniel Landskron: structure of observation restrictions standardized
 %%
 
 function create_input_protocol(parameter, outfile)
@@ -47,9 +48,9 @@ function create_input_protocol(parameter, outfile)
     fprintf(fid, '\n\n a priori CRF: %s ', parameter.vie_init.crf{1}); % change according to supersource file
     fprintf(fid, '\n CRF field (for main station file): %s ', parameter.vie_init.crf{2}); % change according to supersource file
     
-    cutoff = parameter.vie_init.min_elev/pi*180; % rad --> deg
+    cutoff = parameter.obs_restrictions.cut_off_elev/pi*180; % rad --> deg
     fprintf(fid, '\n\n cut-off elevation angle: %2.0f degree', cutoff);
-    fprintf(fid, '\n quality code limit: %1.0f', parameter.vie_init.Qlim);
+    fprintf(fid, '\n quality code limit: %1.0f', parameter.obs_restrictions.Qlim);
 
     fprintf(fid, '\n info about temperature: %s', parameter.vie_init.tp);
     fprintf(fid, '\n info about ionosphere: %s', parameter.vie_init.iono);
