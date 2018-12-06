@@ -101,12 +101,13 @@
 %   06 Jan 2018 by J. Gruber: Changed call of cleanScan.m
 %   28 Aug 2018 by D. Landskron: shape of output slightly changed
 %   28 Nov 2018 by D. Landskron: workaround concerning OPT files changed: now NO observations are excluded, because everything will be done in vie_lsm later
+%   05 Dec 2018 by D. Landskron: command window output slightly extended
 
 % ************************************************************************
 %
 function [antenna,sources,scan,parameter]=vie_init(obs_file_name, parameter, out_vie_init_subdir, obs_file_dir, varargin)
 disp('---------------------------------------------------------------')
-disp('|                  Welcome to VIE_INIT!!!!!                   |')
+disp('|                     Welcome to VIE_INIT                     |')
 disp('---------------------------------------------------------------')
 disp(' ')
 
@@ -286,7 +287,7 @@ end % switch(parameter.data_type)
 
 % ##### Write info to CW #####
 fprintf('\n');
-fprintf('A total of %d stations, %d sources (quasars) and %d scans were found\n', length(antenna), length(sources.q), length(scan));
+fprintf('A total of %d stations, %d sources (quasars), %d scans and %d observations were found.\n', length(antenna), length(sources.q), length(scan), length([scan.obs]));
 disp('The following stations were found:')
 for i_ant = 1:length(antenna)
   fprintf('%2.0f%s%s\n',i_ant,'. ',antenna(i_ant).name)

@@ -12,7 +12,8 @@
 %  Nov 05 2012 by Benedikt Soja
 %  Revision 2: corrected small error related to aposteriori sigmas
 %  Mar 26 2013 by Benedikt Soja
-%  - 2017-11-20, A. Hellerschmied: Call of function xyz2ell.m changed
+%   20 Nov 2017 by A. Hellerschmied: Call of function xyz2ell.m changed
+%   05 Dec 2018 by D. Landskron: clarification quality code / quality flag
 % *************************************************************************
 
 % *************************************************************************
@@ -120,7 +121,7 @@ for i = 1:length(scan)
         zd2(k) = scan(i).stat(i2(k)).zd;
         dion(k) = scan(i).obs(j).delion;
         sdion(k) = scan(i).obs(j).sgdion;
-        qdion(k) = scan(i).obs(j).q_code_ion;
+        qdion(k) = scan(i).obs(j).q_flag_ion;
     end
 end
 clear scan

@@ -89,26 +89,27 @@
 %  - modjuldat.m
 %
 % CHANGES
-%  - 2016-08-01, A. Hellerschmied:  - Orbit data can be read from SP3 files (read_sp3.m) and written to the sources.s structure (orbit_data2sources.m) 
+%  2016-08-01, A. Hellerschmied:  - Orbit data can be read from SP3 files (read_sp3.m) and written to the sources.s structure (orbit_data2sources.m) 
 %                                   - possibility added to have VSO files with different columns (VSO versions 1, 2 and 3; see header for description) 
-%  - 2016-08-04, A. Hellerschmied:  CW notifications changed. 
-%  - 2016-08-08, A. Hellerschmied:  Fields added to sources.s structure: x_crf, y_crf, z_crf (filled in vie_mod)
-%  - 2016-09-01, A. Hellerschmied:  Unit of delay values in scan.obs.obs cahnged from [ns] to [sec].
+%  2016-08-04, A. Hellerschmied:  CW notifications changed. 
+%  2016-08-08, A. Hellerschmied:  Fields added to sources.s structure: x_crf, y_crf, z_crf (filled in vie_mod)
+%  2016-09-01, A. Hellerschmied:  Unit of delay values in scan.obs.obs cahnged from [ns] to [sec].
 %                                   - Added option to select wheter the input delays (+ formal errors, + ion. delays, + Ion. formal error) are given in [sec] or in [nsec]; var.: delay_format
-%  - 2016-09-21, A. Hellerschmied:  - Possibility added to read space craft ephemerids (TRF posit vions and velocities) from an external file usign the function read_sat_ephem_trf.m
+%  2016-09-21, A. Hellerschmied:  - Possibility added to read space craft ephemerids (TRF posit vions and velocities) from an external file usign the function read_sat_ephem_trf.m
 %                                   - Possibility added to load vso files without observation data (= vso_format 4) => see info in the header!
-%  - 2016-09-26, H. Krasna: Changes related to updated supersource file: CommonNames do not exist anymore
-%  - 2016-10-24, A. Hellerschmied: - Added VSO format 5 and 6, see description in header
+%  2016-09-26, H. Krasna: Changes related to updated supersource file: CommonNames do not exist anymore
+%  2016-10-24, A. Hellerschmied: - Added VSO format 5 and 6, see description in header
 %                                  - Corrected inout units (see header)
-%  - 2016-11-28, A. Hellerschmied  - modjuldat.m used instead of juliandate.m (more significant decimal figures)
-%  - 2016-12-05, A. Hellerschmied: Added fields 'mjd', 'sec_of_day', 'year', 'month', 'day', 'hour', 'minu', 'sec' to sources structure preallocation
-%  - 2017-01-24, D. Landskron: preallocation of GPT2 changed to GPT3, GPT removed
-%  - 2017-02-06, A. Hellerschmied: - Support of sub-netting added => Observations belonging to two scans distinguish in "scan epoch" AND/OR "observed source"!
+%  2016-11-28, A. Hellerschmied  - modjuldat.m used instead of juliandate.m (more significant decimal figures)
+%  2016-12-05, A. Hellerschmied: Added fields 'mjd', 'sec_of_day', 'year', 'month', 'day', 'hour', 'minu', 'sec' to sources structure preallocation
+%  2017-01-24, D. Landskron: preallocation of GPT2 changed to GPT3, GPT removed
+%  2017-02-06, A. Hellerschmied: - Support of sub-netting added => Observations belonging to two scans distinguish in "scan epoch" AND/OR "observed source"!
 %                                  - Option added to sort scans (read from the input vso file) by the scan epoch ("flag_sort_scans_by_epoch"). Default: "flag_sort_scans_by_epoch = false"
 %                                  - parameter struct added as in/output argument
-%  - 2017-02-09, D. Landskron: Preallocation extended
-%  - 2017-02-22, A. Hellerschmied: antenna.psd initialized
-%  - 2018-07-06, D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
+%  2017-02-09, D. Landskron: Preallocation extended
+%  2017-02-22, A. Hellerschmied: antenna.psd initialized
+%  2018-07-06, D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
+%  2018-12-05, D. Landskron: clarification quality code / quality flag
 %
 %
 function [antenna, sources, scan, parameter] = read_vso(vso_file_path, vso_file_name, trf, trf_name_str, crf, crf_name_str, sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type, parameter)
@@ -121,9 +122,9 @@ error_code_invalid_met_data = -999; % Error corde for missing met. data in NGS f
 flag_sort_scans_by_epoch    = true; % Sort scans (read from the input vso file) by the scan epoch? [true=t/false]
 url_vievswiki_create_superstation = 'http://vievswiki.geo.tuwien.ac.at/doku.php?id=public:vievs_manual:data#create_a_superstation_file';
 
-% => Define parameters (for all scans) which are not available in the VSO fils:
-scan_obs_q_code_ion     = 0;
-scan_obs_q_code         = 0;
+% => Define parameters (for all scans) which are not available in the VSO files:
+scan_obs_q_flag     = 0;
+scan_obs_q_flag_ion = 0;
 
 % => Define formal error of baseline delay and ion. delay [sec], if these values are not available in the input vso file:
 % - For satellite observations (formal error of baseline delay):
@@ -768,7 +769,7 @@ end
 scan(number_of_remaining_scans) = struct('mjd', [], 'stat', [], 'tim', [], 'nobs', [], 'space', [], 'obs', [], 'iso', []);
 [scan.space] = deal(struct('source', zeros(3,3), 'xp', 0,'yp', 0, 'era', 0, 'xnut', 0, 'ynut', 0, 't2c', zeros(3,3)));
 [scan.stat] = deal(struct('x', [], 'temp', [], 'pres', [], 'e', [], 'az', [], 'zd', [], 'zdry', [], 'cab', [], 'axkt', [], 'therm', [], 'pantd', [], 'trop', [], 'psd', []));
-[scan.obs] = deal(struct('i1', [], 'i2', [], 'obs', [], 'sig', [], 'com', 0, 'q_code', [], 'q_code_ion', [], 'delion', [], 'sgdion', []));
+[scan.obs] = deal(struct('i1', [], 'i2', [], 'obs', [], 'sig', [], 'com', 0, 'q_flag', [], 'q_flag_ion', [], 'delion', [], 'sgdion', []));
 
 
 % Handle options for ionosphere corrections
@@ -896,7 +897,7 @@ for i_scan = 1 : number_of_remaining_scans
                 scan(i_scan).stat(antenna_2_id).e       = e_stat2(obs_id);
         end
         
-        scan(i_scan).obs(i_obs) = struct('i1', antenna_1_id, 'i2', antenna_2_id, 'obs', obs, 'sig', sig, 'com', 0, 'q_code', scan_obs_q_code, 'q_code_ion', scan_obs_q_code_ion, 'delion', delion, 'sgdion', sgdion);
+        scan(i_scan).obs(i_obs) = struct('i1', antenna_1_id, 'i2', antenna_2_id, 'obs', obs, 'sig', sig, 'com', 0, 'q_flag', scan_obs_q_flag, 'q_flag_ion', scan_obs_q_flag_ion, 'delion', delion, 'sgdion', sgdion);
     end
 
 end % for i_scan = 1 : number_of_remaining_scans

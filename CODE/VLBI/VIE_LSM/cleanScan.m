@@ -25,6 +25,7 @@
 %   17 Jan 2018 by J. Gruber: bug fix in "Excluded baselines" section
 %   28 Aug 2018 by D. Landskron: shape of output slightly changed
 %   28 Nov 2018 by D. Landskron: observations restrictions clarified
+%   05 Dec 2018 by D. Landskron: clarification quality code / quality flag
 
 % ************************************************************************
 function [scan, sources, antenna]=cleanScan(scan, sources, antenna, parameter)
@@ -365,12 +366,24 @@ end
 sum_del_q_limit = 0;
 for iScan = 1 : nScans
     
-    qualOfObsOfCurScan_deluflag = [scan(iScan).obs.q_code];    
-    qualOfObsOfCurScan_IonCode = [scan(iScan).obs.q_code_ion]; % ACHTUNG! scan(iScan).obs.q_code_ion vorhanden bei NGS und VSO?
+    qualOfObsOfCurScan_deluflag = [scan(iScan).obs.q_flag];    
+    qualOfObsOfCurScan_IonFlag = [scan(iScan).obs.q_flag_ion];
     obs2Delete_deluflag = qualOfObsOfCurScan_deluflag > parameter.obs_restrictions.Qlim; 
-    obs2Delete_IonCode =  qualOfObsOfCurScan_IonCode ~= 0; % fixed to zero
+    obs2Delete_IonFlag =  qualOfObsOfCurScan_IonFlag ~= 0; % fixed to zero
     
-    obs2Delete = obs2Delete_deluflag | obs2Delete_IonCode; % 2018/01/16 Jakob, Ion code is also considered
+    % due to a bug by GSFC, for all observations before December 2000 also the quality code (not only the quality flag) must be checked. As long as they do not fix this bug and upload ALL vgosDB files before this date anew, this following step must be done
+    % as soon as GSFC has fixed the bug and updated ALL vgosDB sessions from 1979-2000, please remove the section inside the "if" again and leave only the part after "else". Also remove the fprintf part with the variable "code_print_info" below
+    if scan(1).tim(1) < 2001   &&   isfield(scan(iScan).obs,'q_code_X')   &&   isfield(scan(iScan).obs,'q_code_S')
+        qualOfObsOfCurScan_q_code_X = str2double({scan(iScan).obs.q_code_X});
+        qualOfObsOfCurScan_q_code_S = str2double({scan(iScan).obs.q_code_S});
+        obs2Delete_q_code_X = ~(qualOfObsOfCurScan_q_code_X > 0);
+        obs2Delete_q_code_S = ~(qualOfObsOfCurScan_q_code_S > 0);
+        
+        obs2Delete = obs2Delete_deluflag | obs2Delete_IonFlag | obs2Delete_q_code_X | obs2Delete_q_code_S;
+        code_print_info = 1;
+    else
+        obs2Delete = obs2Delete_deluflag | obs2Delete_IonFlag;
+    end
     
     if sum(obs2Delete) > 0
         sum_del_q_limit = sum_del_q_limit + sum(obs2Delete);
@@ -389,8 +402,12 @@ for iScan = 1 : nScans
     end   
 end
 if flag_pring_debug_info
-    fprintf(' - Observations removed due to quality code limit (%d): %d\n', parameter.obs_restrictions.Qlim, sum_del_q_limit)
+    fprintf(' - Observations removed due to quality flag limit (%d): %d\n', parameter.obs_restrictions.Qlim, sum_del_q_limit)
 end
+
+if exist('code_print_info','var')
+    fprintf('%s\n%s\n\n','For all vgosDB sessions before 2001, a special handling is necessary due to a bug by GSFC. Please use NGS files instead.','Please remove this hardcoded part as soon as GSFC has updated all vgosDB files from 1979-2000 and the chis-squared are in a reasonable range..');
+end        
 
 % (7) Minimum elevation angle
 sum_del_cut_off_elev = 0;
