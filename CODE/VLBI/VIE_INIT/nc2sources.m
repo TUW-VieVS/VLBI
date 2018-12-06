@@ -74,9 +74,9 @@ for iSource=1:nSources
     end
     %David - always add information about defining sources
     %from the ICRF2
-    if isfield(crf(indSourceInCrf),'icrf2')
-        if ~isempty(crf(indSourceInCrf).icrf2)
-            sources(iSource).flag_defining=crf(indSourceInCrf).icrf2.defining;
+    if isfield(crf(indSourceInCrf),'icrf3sx')
+        if ~isempty(crf(indSourceInCrf).icrf3sx)
+            sources(iSource).flag_defining=crf(indSourceInCrf).icrf3sx.defining;
         else
             sources(iSource).flag_defining=0;
         end

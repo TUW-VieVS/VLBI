@@ -2,8 +2,8 @@
 % dependent information is stored
 % 18.09.2012, Matthias Madzak
 
-% 27 March 2013 changed by Hana Krásná
-% 29 April 2013 by Hana Krásná bug corrected for negativ deglinations with zero degree
+% 27 March 2013 changed by Hana Krï¿½snï¿½
+% 29 April 2013 by Hana Krï¿½snï¿½ bug corrected for negativ deglinations with zero degree
 % 27 Jan 2014 by Hana Krasna: icrf2nonVCS added into supersource struct
 % 14 Jul 2016 by David Mayer: added IVSnames and GSFC2015b catalogue to supersource struct
 % 24 Sep 2016 by Hana Krasna: IVS_SrcNamesTable.txt instead of
@@ -26,7 +26,7 @@ function [varargout]=mk_supersourceFile(inFiles, outFile, UserCrfNames)
 
 ICRF2File=inFiles(1).name;
 ICRF2FileVCS=inFiles(2).name;
-ICRF1Ext2File=inFiles(3).name;
+ICRF3sxFile=inFiles(3).name;
 VieCRF13File=inFiles(4).name;
 vievsCrfFile=inFiles(5).name;
 GSFC2015bFile =inFiles(6).name;
@@ -388,75 +388,53 @@ end
 
 
 
-fprintf('Loading ext2.all (ICRF1 Ext.2)\n\n')
-fid=fopen(ICRF1Ext2File);
-data=textscan(fid, '%21c  %8s   %f %f %f %03s %f %f %f    %16c %f %f %f %f %f', ...
-    'headerlines', 17, 'delimiter', '\n');
+fprintf('Loading ICRF3sx\n\n')
+fid=fopen(ICRF3sxFile);
+data=textscan(fid, '%21c  %11c  %f %f %f %03s %f %f %f %f %f %f %f %f %f %f %f', ...
+    'headerlines', 22, 'delimiter', '\n');
+
 fclose(fid);
 
-% match the coordinates from this catalogue
-for k=1:size(data{1},1)
-    % try to find source name
-    antennaFound=strcmp(data{2}{k}, {source.IERSname});
-
-    % find index where to put the new data
-    if sum(antennaFound)>0
-        if sum(antennaFound)>1
-            fprintf('More than one source with name %-8s found in struct.\n', data{2}{k});
+for i = 1: length(data{1})
+    index_bool = strcmp(data{2}(i,1:8), {source.IERSname}');
+    if ~sum(index_bool)
+        index_bool = strcmp(data{2}(i,1:8), {source.IVSname}');
+        if ~sum(index_bool) 
+            fprintf(1,'Source %s is in ICRF3 but was not found in supersource file. It is not written into the supersource file.\n', data{2}(i,1:8));
+            continue
         end
-        indexInSourceStruct=find(antennaFound);
-    else
-        fprintf('Source %-8s in ICRF1Ext2 was not found in vievsCrf - append to struct.\n', data{2}{k});
-        
-        indexInSourceStruct=size(source,2)+1;
-            
-        % names should only be written if there is a "new" source
-        source(indexInSourceStruct).designation=data{1}(k,:);
-        source(indexInSourceStruct).IERSname=data{2}{k};
     end
     
-    % since there might be more sources found with the same IAU_name - go
-    % through all of them and add data
-    for iFoundIndices=1:length(indexInSourceStruct)
-        % one of the found sources
-        curIndInSourceStruct=indexInSourceStruct(iFoundIndices);      
-
-        % Right Ascension
-        source(curIndInSourceStruct).icrf1Ext2.ra=(data{3}(k)+data{4}(k)/60+...
-            data{5}(k)/3600)*pi/12;                                 % [rad]
-
-        % Declination 
-        declchar = data{6}{k}; %(hana 29Apr13 - corrected for negative declinations -00deg)
-        if strcmp(declchar(1), '-')
-            signum=-1;
-        else
-            signum=1;
-        end
-        source(curIndInSourceStruct).icrf1Ext2.de=signum*...
-            (abs(str2double(declchar))+data{7}(k)/60+data{8}(k)/3600)*pi/180; % [rad]
-
-        % sigmas
-        source(curIndInSourceStruct).icrf1Ext2.ra_sigma=data{9}(k)/3600*pi/12;  % [rad]
-        source(curIndInSourceStruct).icrf1Ext2.de_sigma=str2double(data{10}(k,1:7))/3600*pi/180; % [rad]
-        
-        % correlation (if given, otherwise empty)
-        if strcmp(data{10}(k,11:16), '      ')
-            source(curIndInSourceStruct).icrf1Ext2.corr=[];
-        else
-            source(curIndInSourceStruct).icrf1Ext2.corr=str2double(...
-                data{10}(k,11:16));
-        end
-
-        % observation span
-        source(curIndInSourceStruct).icrf1Ext2.meanMjd=data{11}(k);
-        source(curIndInSourceStruct).icrf1Ext2.firstMjd=data{12}(k);
-        source(curIndInSourceStruct).icrf1Ext2.lastMjd=data{13}(k);
-
-        % number of sources/observations
-        source(curIndInSourceStruct).icrf1Ext2.numberSess=data{14}(k);
-        source(curIndInSourceStruct).icrf1Ext2.numberObs=data{15}(k);
+    RA = deg2rad((data{3}(i) + data{4}(i)/60 + data{5}(i)/3600)*15); %[rad]
+    if strncmp('-', data{6}(i),1)
+        DE = deg2rad((str2double(data{6}(i)) - data{7}(i)/60 - data{8}(i)/3600)); %[rad]
+    else
+        DE = deg2rad((str2double(data{6}(i)) + data{7}(i)/60 + data{8}(i)/3600)); %[rad]
     end
+    
+    ang_sep = sqrt(((RA-source(index_bool).vievsCrf.ra)*cos(DE))^2 + (DE-source(index_bool).vievsCrf.de)^2);
+    if ang_sep > deg2rad(10/3600) % check if sources is less than 10 as from vievsCrf --> if yes than it is a wrong match
+        fprintf(1,'Possible wrong match (angular separation of %4.0f as) for source %s it will still be written into the supersource file. Please check by hand\n', rad2deg(ang_sep)*3600, data{2}(i,1:8));
+    end
+    
+    if strcmp('D', data{2}(i,end))
+        source(index_bool).icrf3sx.defining = 1;
+    else
+        source(index_bool).icrf3sx.defining = 0;
+    end
+    source(index_bool).icrf3sx.ra = RA; %[rad]
+    source(index_bool).icrf3sx.de = DE; %[rad]
+    source(index_bool).icrf3sx.ra_sigma = deg2rad(data{9}(i)*15/3600); %[rad]
+    source(index_bool).icrf3sx.de_sigma = deg2rad(data{10}(i)/3600); %[rad]
+    source(index_bool).icrf3sx.corr = data{11}(i); 
+    source(index_bool).icrf3sx.meanMjd = data{12}(i); 
+    source(index_bool).icrf3sx.firstMjd = data{13}(i); 
+    source(index_bool).icrf3sx.lastMjd = data{14}(i); 
+    source(index_bool).icrf3sx.numberSess = data{15}(i); 
+    source(index_bool).icrf3sx.numberObs = data{16}(i); 
+    
 end
+
 
 
 fprintf('Loading VieCRF13.txt\n\n')

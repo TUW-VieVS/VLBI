@@ -22,7 +22,7 @@ function varargout = createSupersourcesFile(varargin)
 
 % Edit the above text to modify the response to help createSupersourcesFile
 
-% Last Modified by GUIDE v2.5 24-Sep-2016 21:01:08
+% Last Modified by GUIDE v2.5 05-Dec-2018 09:57:17
 % Revision:
 %   26 Sep 2016 by Hana Krasna: VieCRF13 instead of VieCRF10a, IERS or IVS
 %   names can be choosen in UserCRF
@@ -59,11 +59,11 @@ superstatFolder='../CRF/create/supersource/';
 
 % define names of all files and save it in handles struct
 handles.data.allFileDescriptions={...
-    'ICRF2', 'icrf2VcsOnly', 'ICRF1Ext2', 'VieCRF10a', 'vievsCrf', 'gsf2015b',...
+    'ICRF2', 'icrf2VcsOnly', 'ICRF3sx', 'VieCRF10a', 'vievsCrf', 'gsf2015b',...
     'userCrf', 'translation'};
 
 handles.data.allFileNames={'icrf2-non-vcs.dat', 'icrf2-vcs-only.dat',...
-    'ext2.all', 'VieCRF13.txt', 'vievsCrf.txt','gsf2015b_astro.sou.txt', '''userdefined''', ...
+    'icrf3sx.txt', 'VieCRF13.txt', 'vievsCrf.txt','gsf2015b_astro.sou.txt', '''userdefined''', ...
     'IVS_SrcNamesTable.txt'};
 
 % load gui state if file exist
@@ -246,18 +246,18 @@ end
 
 
 
-function edit_ICRF1Ext2_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_ICRF1Ext2 (see GCBO)
+function edit_ICRF3sx_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_ICRF3sx (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit_ICRF1Ext2 as text
-%        str2double(get(hObject,'String')) returns contents of edit_ICRF1Ext2 as a double
+% Hints: get(hObject,'String') returns contents of edit_ICRF3sx as text
+%        str2double(get(hObject,'String')) returns contents of edit_ICRF3sx as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function edit_ICRF1Ext2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_ICRF1Ext2 (see GCBO)
+function edit_ICRF3sx_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_ICRF3sx (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -268,9 +268,9 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in pushbutton_ICRF1Ext2_browse.
-function pushbutton_ICRF1Ext2_browse_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_ICRF1Ext2_browse (see GCBO)
+% --- Executes on button press in pushbutton_ICRF3sx_browse.
+function pushbutton_ICRF3sx_browse_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_ICRF3sx_browse (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
@@ -447,13 +447,13 @@ function uipanel3_SelectionChangeFcn(hObject, eventdata, handles)
 %	NewValue: handle of the currently selected object
 % handles    structure with handles and user data (see GUIDATA)
 
-if get(handles.radiobutton_ICRF1Ext2_download, 'Value')
+if get(handles.radiobutton_ICRF3sx_download, 'Value')
     state='Off';
 else
     state='On';
 end
-set(handles.edit_ICRF1Ext2, 'Enable', state)
-set(handles.pushbutton_ICRF1Ext2_browse, 'Enable', state)
+set(handles.edit_ICRF3sx, 'Enable', state)
+set(handles.pushbutton_ICRF3sx_browse, 'Enable', state)
 
 saveGuiDataToDisk(handles)
 
