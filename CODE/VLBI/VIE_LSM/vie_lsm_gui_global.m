@@ -51,7 +51,7 @@ function varargout = vie_lsm_gui_global(varargin)
 
 % Edit the above text to modify the response to help vie_lsm_gui_global
 
-% Last Modified by GUIDE v2.5 24-Oct-2013 14:49:51
+% Last Modified by GUIDE v2.5 06-Dec-2018 09:36:51
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -412,5 +412,3 @@ function cb_opt_ao_Callback(hObject, eventdata, handles)
 handles.opt.est_AO = get(handles.cb_opt_ao,'Value');
 % Update handles structure
 guidata(hObject, handles);
-
-
