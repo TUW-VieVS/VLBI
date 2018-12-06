@@ -98,8 +98,14 @@ else
             
             % Selected Data (Outliers) in residuals plot window:
             outlierEpochsHours = get(handles.data.plot.outlierMarksHandle, 'XData');
+            if(length(outlierEpochsHours)>1)
+                outlierEpochsHours = outlierEpochsHours{1};
+            end
             OutlierValues = get(handles.data.plot.outlierMarksHandle, 'YData');
-            
+            if(length(OutlierValues)>1)
+                OutlierValues = OutlierValues{1};
+            end
+
             % Conversion of x-values: "hours from session start" => "MJD": 
             SessionStartTimeMJD =  handles.data.plot.res(chosenSessionInd).mjd(1);
             selectedOutlierEpochsMJD = SessionStartTimeMJD + outlierEpochsHours / 24;

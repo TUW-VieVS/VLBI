@@ -145,12 +145,17 @@ end
 
 handles.data.plot.lineHandle=line(...
     [x(1), x(2), x(2), x(1), x(1)], [y(2), y(2), y(1), y(1), y(2)],...
-        'color', 'k');
- 
+        'color', 'k', 'DisplayName', 'selection');
+set(get(get(handles.data.plot.lineHandle,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+
+handles.data.plot.lineHandle=line(...
+    [x(1), x(2), x(2), x(1), x(1)], [-y(2), -y(2), -y(1), -y(1), -y(2)],...
+        'color', 'k', 'DisplayName', 'selection');
+ set(get(get(handles.data.plot.lineHandle,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+
 
 % Check Y-Values:
-valsWithinValues=curVals<=y(2) & ...
-    curVals>=y(1);
+valsWithinValues = (curVals<=y(2) &  curVals>=y(1)) | (curVals<=-y(1) &  curVals>=-y(2));
 % Check X-Values:
 temp=DurationHours(valsWithinValues)<=x(2) & DurationHours(valsWithinValues)>=x(1);
 
@@ -164,9 +169,11 @@ if get(handles.togglebutton_plot_residuals_selectOutliers,'Value')
     set(handles.pushbutton_plot_residuals_removeOutliers, 'String', ...
         sprintf('Remove %1.0f Outliers', length(indToPlot)))
     % plotting
-	handles.data.plot.outlierMarksHandle=plot(handles.axes_plot_residuals, DurationHours(indToPlot), ...
-        curVals(indToPlot), 'x', 'color', 'k', 'markersize', 10);
-
+	handles.data.plot.outlierMarksHandle=plot(handles.axes_plot_residuals, [DurationHours(indToPlot) DurationHours(indToPlot)], ...
+        [curVals(indToPlot) -curVals(indToPlot)], 'x', 'color', 'k', 'markersize', 10, 'DisplayName', 'selection','LineWidth',3);
+	for i = 1:length(handles.data.plot.outlierMarksHandle)
+        set(get(get(handles.data.plot.outlierMarksHandle(i),'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+	end
     hold(handles.axes_plot_residuals, 'off');
 else
     % if old lines exist - delete them
@@ -209,10 +216,14 @@ else
     end
     
     % plotting
-    plot(handles.axes_plot_residuals, [x(1) x(1)],y, ...
-         'color', 'k', 'markersize', 10);
-    plot(handles.axes_plot_residuals, [x(2) x(2)],y, ...
-         'color', 'k', 'markersize', 10);
+    p = plot(handles.axes_plot_residuals, [x(1) x(1)],y, ...
+         'color', 'k', 'markersize', 10, 'DisplayName', 'selection');
+    set(get(get(p,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+
+    p = plot(handles.axes_plot_residuals, [x(2) x(2)],y, ...
+         'color', 'k', 'markersize', 10, 'DisplayName', 'selection');
+    set(get(get(p,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+
     hold(handles.axes_plot_residuals, 'off');
 
 %    curSession=get(handles.popupmenu_plot_residuals_session, 'Value');

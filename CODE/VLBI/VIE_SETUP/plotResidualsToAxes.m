@@ -341,13 +341,24 @@ switch plotstyle
             
         % ### plot source ###
         else
-            name=allSourcesInMenu{get(handles.popupmenu_plot_residuals_source, 'Value')};
-            
-            if isempty(valsOfCurSelection)
-                legend({'all'});
-            else
-                legend({'all',name});
+            obsWithCurSelection=strcmp(sources, curSource);
+            names = {};
+            h = [];
+            allStationsInMenu=get(handles.popupmenu_plot_residuals_station, 'String');
+            for i=1:length(allStationsInMenu)
+                curStation=allStationsInMenu{i};
+                tmp = contains(baselines, curStation);
+                pos = tmp(:,1);
+                neg = tmp(:,2);
+                obsWithCurStation = [val(pos & obsWithCurSelection); val(neg & obsWithCurSelection)*-1];
+                timWithCurStation = [DurationHours(pos & obsWithCurSelection); DurationHours(neg & obsWithCurSelection)];
+                if ~isempty(obsWithCurStation)
+                    h(end+1) = plot(handles.axes_plot_residuals, timWithCurStation, obsWithCurStation,'LineStyle','none','Marker','o','MarkerEdgeColor',mec(i,:),'MarkerFaceColor',mfc(i,:),'MarkerSize',8,'HitTest','off');
+                    names{end+1} = curStation;
+                end
             end
+            legend(h,names);
+
         end
         
         hold off
@@ -358,7 +369,7 @@ end
 % Label X- and Y-Axis:
 xlabel('Hours from session start');
 ylabel('Residuals [cm]');
-title(sprintf('* Residuals in limits [%5.0f: %5.0f] [cm]',floor(min(valsOfCurSelection)),ceil(max(valsOfCurSelection))));
+title(sprintf('residual limits [%5.0f: %5.0f] [cm]',floor(min(valsOfCurSelection)),ceil(max(valsOfCurSelection))));
 
 % #### plot outliers ####
 if plotOutliers==1 && ...
@@ -389,6 +400,5 @@ if plotOutliers==1 && ...
             curStr], 'HitTest', 'off')
     end
 end
-
 
 hold(handles.axes_plot_residuals, 'off')   

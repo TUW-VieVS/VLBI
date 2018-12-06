@@ -8588,6 +8588,7 @@ if get(hObject, 'Value')
     set(handles.axes_plot_residuals,        'ButtonDownFcn', {@startSelectingOutliers,handles})
     set(handles.figure_vievs2,              'WindowButtonUpFcn', {@endSelectingOutliers, handles})
     set(handles.pushbutton_plot_residuals_removeOutliers, 'Enable', 'On')
+    
 
 else
     set(handles.axes_plot_residuals,                'ButtonDownFcn', '')
