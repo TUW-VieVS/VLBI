@@ -153,6 +153,7 @@
 %   22 Feb 2017 by A. Hellerschmied: antenna.psd initialized
 %   05 Jul 2018 by D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
 %   28 Nov 2018 by D. Landskron: workaround concerning OPT files changed: now NO observations are excluded, because everything will be done in vie_lsm later
+%   05 Dec 2018 by D. Landskron: clarification quality code / quality flag
 % ************************************************************************
 
 
@@ -323,7 +324,7 @@ while (idx_line <= nlines)
                 sigdel      =trmp_input(2); % Formal error for the observed delay (ns)
                 rate        =trmp_input(3); % Observed delay rate (ps/sec)
                 sigrat      =trmp_input(4); % Formal error for the observed delay rate (ps/sec)
-                q_code      =trmp_input(5); % Data quality flag (blank or 0 indicates good data)
+                q_flag      =trmp_input(5); % Data quality flag (blank or 0 indicates good data)
 
                 % Lucia:
                 if delay < -4e8
@@ -381,7 +382,7 @@ while (idx_line <= nlines)
                 sgdion      = trmp_input(2); % Delay ionosphere correction formal error (ns)
                 ration      = trmp_input(3); % Delay rate ionosphere correction (ps/s)
                 sgrion      = trmp_input(4); % Delay rate ionosphere correction formal error (ps/s)
-                q_iono      = trmp_input(5); % Ionosphere error flag (0=ionosphere correction OK)
+                q_flag_iono = trmp_input(5); % Ionosphere error flag (0=ionosphere correction OK)
                 coride      = -1 * delion; % change sign
                 corira      = -1 * ration; % change sign
                 corsgd      = sgdion;
@@ -889,8 +890,8 @@ while (idx_line <= nlines)
         scan(i_scan).obs(scan(i_scan).nobs).sig         = sigdel * 1e-9;
         scan(i_scan).obs(scan(i_scan).nobs).com         = 0;
         scan(i_scan).iso                                = indOfNewSourceInSources;
-        scan(i_scan).obs(scan(i_scan).nobs).q_code      = q_code;
-        scan(i_scan).obs(scan(i_scan).nobs).q_code_ion  = q_iono;
+        scan(i_scan).obs(scan(i_scan).nobs).q_flag      = q_flag;
+        scan(i_scan).obs(scan(i_scan).nobs).q_flag_ion  = q_flag_iono;
         
         scan(i_scan).obs(scan(i_scan).nobs).delion      = delion;   % Jing SUN, Jan 10, 2012
         scan(i_scan).obs(scan(i_scan).nobs).sgdion      = sgdion;   % Jing SUN, Jan 10, 2012

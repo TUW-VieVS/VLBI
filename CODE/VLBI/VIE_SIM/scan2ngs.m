@@ -48,8 +48,9 @@
 %   June 2011 by Andrea Pany
 %
 %   Revision:
-%   October 2015 by David Mayer - added possibility to use subfolders
-%   November 2016 by Matthias Schartner - new name of ngs file if it is a *_V* file
+%   xx Oct 2015 by D. Mayer: added possibility to use subfolders
+%   xx Nov 2016 by M. Schartner: new name of ngs file if it is a *_V* file
+%   05 Dec 2018 by D. Landskron: clarification quality code / quality flag
 % ************************************************************************
 
 
@@ -215,7 +216,7 @@ for iday = 1:nday
             % write data
             line = ([sprintf('%20.8f',vo),sprintf('%10.5f',sigdel),...      % delay and formal delay error
                 sprintf('%20.10f',0),sprintf('%10.5f',0),...           % delay rate and formal error (set to 0)
-                sprintf('%2.0f',scan(iscan).obs(iobs).q_code),' ',...  % data quality flag is set to the original value
+                sprintf('%2.0f',scan(iscan).obs(iobs).q_flag),' ',...  % data quality flag is set to the original value
                 '  ',' ','  ','I',' ',sprintf('%8.0f',seqnum),'02']);
             fprintf(fid2,'%s\n',line);
             
@@ -264,7 +265,7 @@ for iday = 1:nday
             line = ([sprintf('%20.10f',scan(iscan).obs(iobs).delion),...
                 sprintf('%10.5f',scan(iscan).obs(iobs).sgdion),...    % iono correction
                 sprintf('%20.10f',0),sprintf('%10.5f',0),' ',...
-                sprintf('%2.0f',scan(iscan).obs(iobs).q_code_ion),'       ',...
+                sprintf('%2.0f',scan(iscan).obs(iobs).q_flag_ion),'       ',...
                 sprintf('%8.0f',seqnum),'08']);
             fprintf(fid2,'%s\n',line);
         end

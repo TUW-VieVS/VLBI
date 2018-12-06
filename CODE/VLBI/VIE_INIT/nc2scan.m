@@ -24,8 +24,8 @@
 %   2017-11-13, J.Gruber: General update. +It is now possible to choose a certain frequency band
 %   2017-12-13, A. Hellerschmied: function modjuldat.m instead of date2mjd.m used.
 %   2018-16-01, J.Gruber: Second redundant exception for Ion code Flag removed
-%   2018-08-01, D. Landskron: bug corrected with storing the "Second" in
-%               vgosDB files
+%   2018-08-01, D. Landskron: bug corrected with storing the "Second" in vgosDB files
+%   2018-12-05, D. Landskron: reading also the quality codes; clarification quality code / quality flag
 
 % ************************************************************************
 function scan=nc2scan(out_struct, nc_info, fband, wrapper_data, parameter)
@@ -43,7 +43,7 @@ subStruct_stat=struct('x', [], 'temp', [], 'pres', [], 'e', [], 'az', ...
     [], 'zd', [], 'zdry', [], 'cab', [], 'axkt', [], 'therm', [], ...
     'pantd', [], 'trop', []);
 subStruct_obs=struct('i1', [], 'i2', [], 'obs', [], 'sig', [], 'com', ...
-    [], 'delion', [], 'sgdion', [], 'q_code', [], 'q_code_ion', []);
+    [], 'delion', [], 'sgdion', [], 'q_flag', [], 'q_flag_ion', [], 'q_code_X', [], 'q_code_S', []);
 scan(nScans+1)=struct('mjd', [], 'stat', [], 'tim', [], ...
     'nobs', [], 'space', [], 'obs', [], 'iso', []); % +1: not working otherwise - is deleted after loop
 space0.source = zeros(3,3);
@@ -241,10 +241,28 @@ end
 %% DELAY FLAG DELAY:
 nc_filename = get_nc_filename({'Edit'}, wrapper_data.Observation.ObsEdit.files, 0);
 if ~isempty(nc_filename) % not mathc found in wrapper data
-    delayFlagLikeNGS    = num2cell(out_struct.ObsEdit.(nc_filename).DelayFlag.val);
+    delayQualityFlag = num2cell(out_struct.ObsEdit.(nc_filename).DelayFlag.val);
 else
     fprintf(' - No delay flags defined in wrapper file: delay flag is set to "0" for all observations!\n')
-    delayFlagLikeNGS = {0};
+    delayQualityFlag = {0};
+end
+
+%% QUALITY CODES FOR X-BAND and S-BAND:
+
+nc_filename = get_nc_filename({'QualityCode_bX'}, wrapper_data.Observation.Observables.files, 0);
+if ~isempty(nc_filename) % not mathc found in wrapper data
+    qualityCode_X = num2cell(out_struct.Observables.(nc_filename).QualityCode.val);
+else
+    fprintf(' - No quality codes for X-band defined in wrapper file: Quality code is set to "0" for all X-band observations!\n')
+    qualityCode_X = {0};
+end
+
+nc_filename = get_nc_filename({'QualityCode_bS'}, wrapper_data.Observation.Observables.files, 0);
+if ~isempty(nc_filename) % not mathc found in wrapper data
+    qualityCode_S = num2cell(out_struct.Observables.(nc_filename).QualityCode.val);
+else
+    fprintf(' - No quality codes for S-band defined in wrapper file: Quality code is set to "0" for all S-band observations!\n')
+    qualityCode_S = {0};
 end
 
 %% SIGMA FINAL DELAY:  
@@ -420,17 +438,28 @@ for iScan=1:nScans
     [scan(iScan).obs.sgdion]=   deal(ionoDelSigCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [nano-sec]
     
     
-    if length(delayFlagLikeNGS)==1 % check length of delay flag vector, if it is only 1 value for the whole session, this value will be assigned to all observations
-        [scan(iScan).obs.q_code]=deal(double(delayFlagLikeNGS{1}).*ones(scan(iScan).nobs,1));          
+    if length(delayQualityFlag)==1 % check length of delay flag vector, if it is only 1 value for the whole session, this value will be assigned to all observations
+        [scan(iScan).obs.q_flag] = deal(double(delayQualityFlag{1}).*ones(scan(iScan).nobs,1));          
     else
-        [scan(iScan).obs.q_code]=deal(delayFlagLikeNGS{obsI1Index:obsI1Index+scan(iScan).nobs-1});   
+        [scan(iScan).obs.q_flag] = deal(delayQualityFlag{obsI1Index:obsI1Index+scan(iScan).nobs-1});   
     end
     
     if length(ionoDelFlagcell)==1 % check length of delay flag vector, if it is only 1 value for the whole session, this value will be assigned to all observations
-        % [scan(iScan).obs.q_code_ion]    = deal(ionoDelFlagcell{1}.*ones(scan(iScan).nobs,1)); 
-        [scan(iScan).obs.q_code_ion]    = deal(ionoDelFlagcell{1}); 
+        %[scan(iScan).obs.q_flag_ion] = deal(ionoDelFlagcell{1}.*ones(scan(iScan).nobs,1)); 
+        [scan(iScan).obs.q_flag_ion] = deal(ionoDelFlagcell{1}); 
     else
-        [scan(iScan).obs.q_code_ion]=   deal(ionoDelFlagcell{obsI1Index:obsI1Index+scan(iScan).nobs-1});  
+        [scan(iScan).obs.q_flag_ion] = deal(ionoDelFlagcell{obsI1Index:obsI1Index+scan(iScan).nobs-1});  
+    end
+    
+    if length(qualityCode_X)==1 % check length of quality code X vector, if it is only 1 value for the whole session, this value will be assigned to all observations
+        [scan(iScan).obs.q_code_X] = deal(double(qualityCode_X{1}).*ones(scan(iScan).nobs,1));          
+    else
+        [scan(iScan).obs.q_code_X] = deal(qualityCode_X{obsI1Index:obsI1Index+scan(iScan).nobs-1});   
+    end
+    if length(qualityCode_S)==1 % check length of quality code S vector, if it is only 1 value for the whole session, this value will be assigned to all observations
+        [scan(iScan).obs.q_code_S] = deal(double(qualityCode_S{1}).*ones(scan(iScan).nobs,1));          
+    else
+        [scan(iScan).obs.q_code_S] = deal(qualityCode_S{obsI1Index:obsI1Index+scan(iScan).nobs-1});   
     end
     
 
