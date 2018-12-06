@@ -64,6 +64,33 @@ curSession=get(handles.popupmenu_plot_residuals_session, 'Value');
 SessionStartTimeMJD =  handles.data.plot.res(curSession).mjd(1);
 SessionEndTimeMJD   =  (handles.data.plot.res(curSession).mjd(end)-SessionStartTimeMJD)*24;
 
+mfc = [31,120,180
+      51,160,44
+      227,26,28
+      255,127,0
+      202,178,214
+      106,61,154
+      177,89,40
+      166,206,227
+      178,223,138
+      251,154,153
+      253,191,111
+      202,178,214
+      255,255,153
+      ]/255;
+  
+mfc = repmat(mfc,8,1);
+
+mec = [repmat([0 0 0],12,1)
+       repmat([1 1 1],12,1)
+       repmat([1 0 0],12,1)
+       repmat([0 1 0],12,1)
+       repmat([0 0 1],12,1)
+       repmat([1 1 0],12,1)
+       repmat([1 0 1],12,1)
+       repmat([0 1 1],12,1)
+       ];
+
 % ##### Choose between First / Main Solution #####
 
 % if first solution is chosen
@@ -106,6 +133,8 @@ set(gcf,'CurrentAxes',handles.axes_plot_residuals)
 
 plotOutliers=0;
 
+background = [val; -val];
+backgroundTime = [DurationHours; DurationHours];
 
 % ##### Selection of Residual Values for Plotting #####
     
@@ -113,8 +142,8 @@ plotOutliers=0;
 % if all residuals should be plotted
 if get(handles.radiobutton_plot_residuals_perAll, 'Value')
     % all residuals should be plotted when "per All" is chosen!
-    valsOfCurSelection=val;
-    horAxis = DurationHours;
+    valsOfCurSelection=[val; -val];
+    horAxis = [DurationHours; DurationHours];
     
     % see if there are outliers
     allOutliersLog=zeros(length(val),1);
@@ -266,7 +295,62 @@ switch plotstyle
     case 1 % lines only
         handles.data.plot.plottedResiduals = plot(handles.axes_plot_residuals, horAxis, valsOfCurSelection, 'b-','HitTest','off');
     case 2 % lines and markers
-        handles.data.plot.plottedResiduals = plot(handles.axes_plot_residuals, horAxis, valsOfCurSelection, 'b*-','HitTest','off');
+        hold on
+        plot(handles.axes_plot_residuals, backgroundTime, background, 'Marker','.', 'LineStyle','none','MarkerSize',5,'Color',[.7 .7 .7],'HitTest','off');
+        handles.data.plot.plottedResiduals = plot(handles.axes_plot_residuals, horAxis, valsOfCurSelection, 'LineStyle','none','Marker','o','MarkerEdgeColor','k','MarkerFaceColor',[55,126,184]/255,'MarkerSize',8,'HitTest','off');
+
+        % ### plot all ###
+        if get(handles.radiobutton_plot_residuals_perAll, 'Value')
+            h = [];
+            allStationsInMenu=get(handles.popupmenu_plot_residuals_station, 'String');
+            for i=1:length(allStationsInMenu)
+                curStation=allStationsInMenu{i};
+                tmp = contains(baselines, curStation);
+                pos = tmp(:,1);
+                neg = tmp(:,2);
+                obsWithCurStation = [val(pos); val(neg)*-1];
+                timWithCurStation = [DurationHours(pos); DurationHours(neg)];
+                h(i) = plot(handles.axes_plot_residuals, timWithCurStation, obsWithCurStation,'LineStyle','none','Marker','o','MarkerEdgeColor',mec(i,:),'MarkerFaceColor',mfc(i,:),'MarkerSize',8,'HitTest','off');
+            end
+            legend(h,allStationsInMenu);
+            % get values where chosen station takes part
+            
+        % ### plot station ###
+        elseif get(handles.radiobutton_plot_residuals_perStat, 'Value')
+
+            idx=get(handles.popupmenu_plot_residuals_station, 'Value');
+            name = allStationsInMenu{idx};
+            handles.data.plot.plottedResiduals.MarkerFaceColor = mfc(idx,:);
+            handles.data.plot.plottedResiduals.MarkerEdgeColor = mec(idx,:);
+
+            if isempty(valsOfCurSelection)
+                legend({'all'});
+            else
+                legend({'all',name});
+            end
+            
+        % ### plot baseline ###
+        elseif get(handles.radiobutton_plot_residuals_perBasel, 'Value') 
+            name=allBaselinesInMenu{get(handles.popupmenu_plot_residuals_baseline, 'Value')};
+            
+            if isempty(valsOfCurSelection)
+                legend({'all'});
+            else
+                legend({'all',name});
+            end
+            
+        % ### plot source ###
+        else
+            name=allSourcesInMenu{get(handles.popupmenu_plot_residuals_source, 'Value')};
+            
+            if isempty(valsOfCurSelection)
+                legend({'all'});
+            else
+                legend({'all',name});
+            end
+        end
+        
+        hold off
     case 3 % scatterplot
         handles.data.plot.plottedResiduals = plot(handles.axes_plot_residuals, horAxis, valsOfCurSelection, 'b*','HitTest','off');
 end
@@ -274,7 +358,7 @@ end
 % Label X- and Y-Axis:
 xlabel('Hours from session start');
 ylabel('Residuals [cm]');
-title(sprintf('* Residuals in limits [%5.0f: %5.0f] [cm], maximal scattering  [%5.0f: %5.0f] [cm]',floor(min(valsOfCurSelection)),ceil(max(valsOfCurSelection)), ResLim));
+title(sprintf('* Residuals in limits [%5.0f: %5.0f] [cm]',floor(min(valsOfCurSelection)),ceil(max(valsOfCurSelection))));
 
 % #### plot outliers ####
 if plotOutliers==1 && ...
@@ -305,5 +389,6 @@ if plotOutliers==1 && ...
             curStr], 'HitTest', 'off')
     end
 end
-    
+
+
 hold(handles.axes_plot_residuals, 'off')   
