@@ -247,7 +247,7 @@ if length(parameter.session_name) == 14
     opt_file_path_name = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name(1:end-5), '.OPT'];
 elseif length(parameter.session_name) == 9
     opt_file_path_name = ['../DATA/OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name, '.OPT'];
-else
+elseif length(parameter.session_name) ~= 19
     error('Session name does not follow convention');
 end
 if parameter.opt.use_opt_files

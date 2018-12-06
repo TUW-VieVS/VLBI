@@ -22,7 +22,7 @@ function varargout = guiglob_hl(varargin)
 
 % Edit the above text to modify the response to help guiglob_hl
 
-% Last Modified by GUIDE v2.5 25-Jun-2012 16:55:21
+% Last Modified by GUIDE v2.5 06-Dec-2018 09:38:52
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -767,7 +767,3 @@ path_level='../';
 save([path_level 'DATA/GLOB/parGS_hl'],'parGS_hl');
 
 close
-
-
-
-

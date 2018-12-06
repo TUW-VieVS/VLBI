@@ -146,12 +146,12 @@
 %   25 Oct 2016 by A. Hellerschmied: - Changed warning msg. when den obs. delay is decreased/increased here by 1 sec
 %                                    - Added additional status msg. to CW (total number of obs., number of valid/excluded obs.)
 %                                    - Added field "scan.src_name"
-%   23 Jan 2017 by M. Schartner: bug-fix: if you find multiple breaks in your TRF the first one is taken and a warning is displayed. 
+%   23 Jan 2017 by M. Schartner: bug-fix: if you find multiple breaks in your TRF the first one is taken and a warning is displayed.
 %   24 Jan 2017 by D. Landskron: preallocation of GPT2 changed to GPT3
 %   09 Feb 2017 by D. Landskron: Preallocation extended
 %   14 Feb 2017 by M. Schartner: changes to improve speed
 %   22 Feb 2017 by A. Hellerschmied: antenna.psd initialized
-%   05 Jul 2018 by D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
+%   05 Jul 2018 by D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models
 %   28 Nov 2018 by D. Landskron: workaround concerning OPT files changed: now NO observations are excluded, because everything will be done in vie_lsm later
 %   05 Dec 2018 by D. Landskron: clarification quality code / quality flag
 % ************************************************************************
@@ -244,40 +244,40 @@ while (idx_line <= nlines)
     % Get sequence and card number
     sequ_num        = input_str(71:78); % Sequence number (= observation number)
     ngs_card_num    = sscanf(input_str(79:80),'%d'); % NGS card number
-
+    
     % #### Read station and source names of current observation/sequence ####
     sta_names(1,:)  = input_str(1:8);
     sta_names(2,:)  = input_str(11:18);
     source_name     = input_str(21:28);
-
+    
     % check if there is blanks in the station name and replace them with "_";
     sta_names(1, sta_names(1, 1:max(find(sta_names(1,:) ~= ' '))) == ' ') = '_';
     sta_names(2, sta_names(2, 1:max(find(sta_names(2,:) ~= ' '))) == ' ') = '_';
-
-
+    
+    
     % #### Read epoch and convert to MJD ####
     tim = sscanf(input_str(30:60),'%f');
     [~,doy] = dday(tim(1), tim(2), tim(3), tim(4), tim(5));
     mjd = modjuldat(tim(1), tim(2), tim(3), tim(4), tim(5), tim(6));
     mjd_floor = floor(mjd);
-
+    
     % Look init.:
     flag_next_sequ = 0;
-
+    
     % ##############################################################################
     % ##### Loop over all other NGS cards of current sequence and read in data #####
     % ##############################################################################
     while (flag_next_sequ == 0) && (idx_line <= nlines)
-
+        
         % Get next line:
         input_str = wholeFile{idx_line};
         idx_line = idx_line+1;
         
         new_sequ_num    = input_str(71:78);
         ngs_card_num    = input_str(79:80);
-
+        
         if all(new_sequ_num == sequ_num) % Still the same sequence?
-
+            
             % #### Check the current line ####
             % Check, if there are asterisks in the input line:
             id_ast = find(input_str=='*');
@@ -301,7 +301,7 @@ while (idx_line <= nlines)
                 end
                 input_str(id_ast(i_tmp+1))='0';
             end
-
+            
             % Check if there is a #INF.... in the line (occurs in some NGS
             % files). If so, replace with inf to avoid error later.
             id_inf = strfind(input_str,'#INF');
@@ -316,7 +316,7 @@ while (idx_line <= nlines)
                     end
                 end
             end
-
+            
             % ##### Card 2: observed values #####
             if all(ngs_card_num == '02')
                 trmp_input  = sscanf(input_str(1:62),'%f');
@@ -328,24 +328,24 @@ while (idx_line <= nlines)
 
                 % Lucia:
                 if delay < -4e8
-%                             warning('PLUSSSSSSS: delay = delay + 1e9');
+                    %                             warning('PLUSSSSSSS: delay = delay + 1e9');
                     delay = delay + 1e9;
                     count_obs_delay_increased = count_obs_delay_increased + 1;
                 elseif delay > 4e8
-%                             warning('MINUSSSSSSSS: delay = delay - 1e9');
+                    %                             warning('MINUSSSSSSSS: delay = delay - 1e9');
                     delay = delay - 1e9;
                     count_obs_delay_decreased = count_obs_delay_decreased + 1;
                 end
-                num_of_obs_in_ngs_file = num_of_obs_in_ngs_file + 1; 
-
+                num_of_obs_in_ngs_file = num_of_obs_in_ngs_file + 1;
+                
                 % ##### Card 5: cable cal & wvr corrections #####
             elseif all(ngs_card_num == '05')
                 trmp_input  = sscanf(input_str(1:20),'%f');
                 cab1        = trmp_input(1); % Cable calibration correction (one-way) for site 1 (ns)
                 cab2        = trmp_input(2); % Cable calibration correction (one-way) for site 2 (ns)
-
+                
                 cor_cabel_cal = cab2 - cab1;
-
+                
                 % ##### Card 6: met data #####
             elseif all(ngs_card_num == '06')
                 trmp_input  = sscanf(input_str(1:64),'%f');
@@ -366,7 +366,7 @@ while (idx_line <= nlines)
                 if (hum_par_1 ~= 0) || (hum_par_2 ~= 0)
                     warning('The unit of the hunidity parameter in the NGS file is NOT relative humidity (%) as expected!\n');
                 end
-
+                
                 % ##### Card 8: ionospheric corrections #####
             elseif all(ngs_card_num == '08')
                 % Check, if there is an "*":
@@ -393,16 +393,16 @@ while (idx_line <= nlines)
             idx_line = idx_line-1;
         end % if new_sequ_num == sequ_num
     end % while (flag_next_sequ == 0) && (~feof(fid_ngs))
-
-
-
+    
+    
+    
     % #####################################################################
     % ##### Check if the observation is OK and apply OPT file options #####
     % #####################################################################
-
+    
     % Init.:
     flag_obs_ok = 1;
-
+    
     
     % ???
     % #### Exclude observations between twin telescopes ####
@@ -412,38 +412,38 @@ while (idx_line <= nlines)
     end
     % ???
     
-
-%     % #### Check for bad jet angles ####
-%     if ~isempty(ini_opt.scan_jet)
-%         idout=find(abs([ini_opt.scan_jet.mjd]-mjd)<10^-6);
-%         for i_tmp=1:length(idout)
-%             if (strcmp(ini_opt.scan_jet(idout(i_tmp)).sta1,sta_names(1,:)) && ...
-%                     strcmp(ini_opt.scan_jet(idout(i_tmp)).sta2,sta_names(2,:))) || ...
-%                     (strcmp(ini_opt.scan_jet(idout(i_tmp)).sta1,sta_names(2,:)) && ...
-%                     strcmp(ini_opt.scan_jet(idout(i_tmp)).sta2,sta_names(1,:)))
-%                 flag_obs_ok = 0;
-%                 break;
-%             end
-%         end
-%         if ~flag_obs_ok
-%             continue;
-%         end
-%     end
-
-
-
+    
+    %     % #### Check for bad jet angles ####
+    %     if ~isempty(ini_opt.scan_jet)
+    %         idout=find(abs([ini_opt.scan_jet.mjd]-mjd)<10^-6);
+    %         for i_tmp=1:length(idout)
+    %             if (strcmp(ini_opt.scan_jet(idout(i_tmp)).sta1,sta_names(1,:)) && ...
+    %                     strcmp(ini_opt.scan_jet(idout(i_tmp)).sta2,sta_names(2,:))) || ...
+    %                     (strcmp(ini_opt.scan_jet(idout(i_tmp)).sta1,sta_names(2,:)) && ...
+    %                     strcmp(ini_opt.scan_jet(idout(i_tmp)).sta2,sta_names(1,:)))
+    %                 flag_obs_ok = 0;
+    %                 break;
+    %             end
+    %         end
+    %         if ~flag_obs_ok
+    %             continue;
+    %         end
+    %     end
+    
+    
+    
     % ########################################################################################
     % ##### Update the antenna-, scan-, and sources-structure, if the curretn scan is OK #####
     % ########################################################################################
-
+    
     % Look for the stations in the antenna struct. array. If not found, add it.
     if flag_obs_ok == 1
-
-
+        
+        
         % ##### Get station IDs #####
         % Loop init.:
         stat_id_vec = zeros(2,1); % Station IDF vector of curretn baseline
-
+        
         % Loop over two station of baseline
         for i_stat = 1 : 2
             %                     stat_id_vec(i_stat) = 0;
@@ -456,39 +456,39 @@ while (idx_line <= nlines)
             % #################################################################
             % ##### ANTENNA                                               #####
             % #################################################################
-
+            
             % If the station ID is not already in the antenna structure ==> add it!
             if stat_id_vec(i_stat) == 0 % If station not in antenna, add it
-
+                
                 % Increase of the station index:
                 num_of_stat = num_of_stat + 1;
                 stat_id_vec(i_stat)=num_of_stat; % New station ID
-
-
-
-
+                
+                
+                
+                
                 % ##### Get data from superstation file #####
                 % The data from "Manual TRF files" is also available in the trf structure (as the data from the superstation file.), TRF-name: "manualTrf":
                 % To disinguish between different TRF realisations take the trffil variable:
                 %  - trffil{1} ... path + name of TRF file (superstaion.mat or "manual" TRF file (.txt)).
                 %  - trffil{2} ... Name of TRF realisation (e.g. vieTrf, etc.); "manualTrf", if a "manual" TRF file (.txt) was selected in the GUI.
-
-
+                
+                
                 trf_id = find(strcmpi({trf.name}, sta_names(i_stat,:)));
-
+                
                 % #### Check, if there is an entry for the current station in the superstation file. If not => Error Msg. and abort! ####
                 if isempty(trf_id)
                     error('Station %s not found in the superstation file. Add this station to the superstation file by following the steps described at %s\n', sta_names(i_stat,:), url_vievswiki_create_superstation);
                 end
-
+                
                 % Save the ID of the antenna in the superstation file (needed for finding of the corrections in Vie_MOD)
                 antenna(stat_id_vec(i_stat)).IDsuper = trf_id;
-
+                
                 % #### Get break (coordinate epoch) ####
-
+                
                 % ### Check, if there are coordinates for the chosen TRF available and get the "break_id" ###
                 if ~isempty(trf(trf_id).(trffil{2}))
-
+                    
                     % if a break is empty - put 99999 to start and 0 to end
                     if ~isfield(trf(trf_id).(trffil{2}).break(1),'start') % 25/06/2014
                         trf(trf_id).(trffil{2}).break.start=[];
@@ -506,25 +506,25 @@ while (idx_line <= nlines)
                     if sum(emptyEndLog) > 0
                         trf(trf_id).(trffil{2}).break(emptyEndLog).end = repmat(99999, sum(emptyEndLog), 1); % 25/06/2014
                     end
-
+                    
                     break_id = find(mjd >= [trf(trf_id).(trffil{2}).break.start] & mjd <= [trf(trf_id).(trffil{2}).break.end]);
                     if length(break_id) > 1
                         break_id = break_id(1);
                         warning(['Multiple breaks found in TRF data for station: ' trf(trf_id).name]);
                     end
-
+                    
                 else % Not found...
                     fprintf('Station not found in %s!\n', trffil{2});
                     break_id = [];
                 end
-
-
+                
+                
                 % #### If the "break_id" was not found in selected TRF ####
                 % => Get coordinates from VieVS TRF (= backup TRF!)
                 if isempty(break_id)
-
+                    
                     fprintf('No %s coordinates for %s in %s ... get vievsTrf coordinates\n', trffil{2},sta_names(i_stat,:),trffil{1});
-
+                    
                     % if there is no start break - only approx coords (e.g. station "VLA     ")
                     if ~isempty(trf(trf_id).vievsTrf)
                         if ~isfield(trf(trf_id).vievsTrf.break, 'start')
@@ -539,27 +539,27 @@ while (idx_line <= nlines)
                     else
                         error('Station %s has no vievsTRF coordinates in the superstation file. Add this station to the superstation file (to vievsTRF.txt) by following the steps described at %s\n', sta_names(i_stat,:), url_vievswiki_create_superstation);
                     end
-
+                    
                     % ### Check, if VieVS TRF coordinates were found: ###
                     if isempty(break_id)
                         error('Station %s not found in the superstation file (vievsTRF). Add this station to the superstation file by following the steps described at %s\n', trf(trf_id).name, url_vievswiki_create_superstation);
                     end
-
+                    
                     % ### Get the break sub-structure from the trf structure where coords should be taken ###
                     curBreak_substruct = trf(trf_id).vievsTrf.break(break_id);
-
+                    
                     % ### Define, that the station (coordiantes from VieVS TRF, as BACKUP!) is NO datum station!
                     antenna(stat_id_vec(i_stat)).in_trf = 0;
-
+                    
                 else % Station coordinates were taken from selected TRF file
-
-
+                    
+                    
                     % ### Get the break sub-structure from the trf structure where coords should be taken ###
                     curBreak_substruct = trf(trf_id).(trffil{2}).break(break_id);
-
-
-
-
+                    
+                    
+                    
+                    
                     % ### Define if the current station should be a datum station ###
                     % => since station is found in chosen trf, it would be 1 by default, but it could be 0, if it is set to 0 in "manual" trf file
                     % => If the "indatum" flag has a "NaN" value => in_trf = 1
@@ -568,14 +568,14 @@ while (idx_line <= nlines)
                     else
                         antenna(stat_id_vec(i_stat)).in_trf = 1;
                     end
-
+                    
                 end % if isempty(break_id)
                 %                         end
-
-
-
+                
+                
+                
                 % ##### Add data to antenna structure #####
-
+                
                 antenna(stat_id_vec(i_stat)).name           = trf(trf_id).name;
                 antenna(stat_id_vec(i_stat)).x              = curBreak_substruct.x;
                 antenna(stat_id_vec(i_stat)).y              = curBreak_substruct.y;
@@ -583,7 +583,7 @@ while (idx_line <= nlines)
                 
                 % ### Transform Cartesian coordinates X,Y,Z to ellipsoidal to improve speed
                 [phi(stat_id_vec(i_stat)),lam(stat_id_vec(i_stat))] =xyz2ell([antenna(stat_id_vec(i_stat)).x, antenna(stat_id_vec(i_stat)).y, antenna(stat_id_vec(i_stat)).z]);
-
+                
                 antenna(stat_id_vec(i_stat)).firstObsMjd    = mjd;
                 % Check, if velocity information is available:
                 if isfield(curBreak_substruct, 'vx')
@@ -617,13 +617,13 @@ while (idx_line <= nlines)
                     antenna(stat_id_vec(i_stat)).vy_sigma   = [];
                     antenna(stat_id_vec(i_stat)).vz_sigma   = [];
                 end
-
+                
                 antenna(stat_id_vec(i_stat)).thermal        = trf(trf_id).antenna_info;	%%% Girdiuk 3 Nov 2015
                 antenna(stat_id_vec(i_stat)).comments       = trf(trf_id).comments;
                 antenna(stat_id_vec(i_stat)).domes          = trf(trf_id).domes;
                 antenna(stat_id_vec(i_stat)).code           = trf(trf_id).code;
-
-
+                
+                
                 % Eccentricity from superstation file
                 if isempty(trf(trf_id).ecc)
                     antenna(stat_id_vec(i_stat)).ecc        = [0 0 0];
@@ -653,7 +653,7 @@ while (idx_line <= nlines)
                     antenna(stat_id_vec(i_stat)).ecc        = [trf(trf_id).ecc.break(i_tmp).FCE, trf(trf_id).ecc.break(i_tmp).SCE, trf(trf_id).ecc.break(i_tmp).TCE];
                     antenna(stat_id_vec(i_stat)).ecctype    = trf(trf_id).ecc.break(i_tmp).type_e;
                 end
-
+                
                 % mounting type from superstation file
                 antenna(stat_id_vec(i_stat)).axtyp      = '';
                 if ~isempty(trf(trf_id).antenna_info) % if there was information in antenna-info.txt
@@ -662,14 +662,14 @@ while (idx_line <= nlines)
                 if strcmp(antenna(stat_id_vec(i_stat)).axtyp, 'XYNO')
                     antenna(stat_id_vec(i_stat)).axtyp  = 'X-Y1';
                 end
-
+                
                 % axis offset from superstation file
                 antenna(stat_id_vec(i_stat)).offs = 0;
                 if ~isempty(trf(trf_id).antenna_info) % if there was information in antenna-info.txt
                     antenna(stat_id_vec(i_stat)).offs = trf(trf_id).antenna_info.axis_offset; %m
                 end
-
-
+                
+                
                 % Init. flags:
                 antenna(stat_id_vec(i_stat)).gpt3pres   = 0;
                 antenna(stat_id_vec(i_stat)).gpt3temp   = 0;
@@ -690,47 +690,47 @@ while (idx_line <= nlines)
                 antenna(stat_id_vec(i_stat)).gpt3.Ge_h   = [];
                 antenna(stat_id_vec(i_stat)).gpt3.Gn_w   = [];
                 antenna(stat_id_vec(i_stat)).gpt3.Ge_w   = [];
-
+                
                 antenna(stat_id_vec(i_stat)).cto        = [];
                 antenna(stat_id_vec(i_stat)).cta        = [];
                 antenna(stat_id_vec(i_stat)).cnta_dx    = [];
                 antenna(stat_id_vec(i_stat)).vmf3       = [];
                 antenna(stat_id_vec(i_stat)).vmf1       = [];
                 antenna(stat_id_vec(i_stat)).opl        = [];
-
+                
                 antenna(stat_id_vec(i_stat)).numobs     = 0;
                 
                 antenna(stat_id_vec(i_stat)).lastObsMjd = [];
                 
                 antenna(stat_id_vec(i_stat)).psd        = [];
-
+                
             end %
         end
-
-
+        
+        
         % #################################################################
         % ##### SOURCES                                               #####
         % #################################################################
-
+        
         % Find source in sources structure array. If not found, add it!
         foundSource = strcmp(source_name, {sources.name});
         if sum(foundSource) == 0
-
+            
             % find index of current source in crf (crf ~=superstation file)
             % search at first within IERS names
             curSourceInCrf = strcmp(source_name, {crf.IERSname});
-
-            % if not found within IERS names, search within 
+            
+            % if not found within IERS names, search within
             % IVS names
             actIVSName = 0;
             if sum(curSourceInCrf) == 0
-%                 curSourceInCrf = strcmp(strtrim(cellstr(char(crf.IVSname))), strtrim(source_name));
+                %                 curSourceInCrf = strcmp(strtrim(cellstr(char(crf.IVSname))), strtrim(source_name));
                 curSourceInCrf = strcmp(strtrim({crf.IVSname}),strtrim({source_name}));
                 if sum(curSourceInCrf) > 0
                     actIVSName = 1; % 1 if the name of the actual source is the IVS one
                 end
             end
-
+            
             % number of sources we already have put to sources
             if length(sources) > 0 % in case the first source has zero observations,
                 % the field structure is deleted and the source
@@ -743,16 +743,16 @@ while (idx_line <= nlines)
             else
                 nOldSources = 0;
             end
-
+            
             % get index of new source in sources struct
             indOfNewSourceInSources = nOldSources + 1;
-
+            
             % if not existing in supersource file (should not
             % happen)
             if sum(curSourceInCrf) == 0
                 fprintf('ERROR: Source %s does not exist in supersource file (%s) - add there!\n', source_name,crffil{1});
             end
-
+            
             % check if chosen-catalog coordinates exist
             if isempty(crf(curSourceInCrf).(crffil{2}))
                 fprintf('No %s coordinates for %s in %s ... get vievsCrf coordinates\n',crffil{2},source_name,crffil{1});
@@ -760,7 +760,7 @@ while (idx_line <= nlines)
             else
                 crfCatalogToTake = crffil{2};
             end
-
+            
             % add information
             sources(indOfNewSourceInSources).name = source_name;
             if actIVSName == 1
@@ -769,14 +769,14 @@ while (idx_line <= nlines)
                 sources(indOfNewSourceInSources).IERSname = source_name;
             end
             sources(indOfNewSourceInSources).IVSname = crf(curSourceInCrf).IVSname;
-
+            
             % Check if source.name from NGS file is equal to
             % source.IVSname from translation table
             if ~strcmp(sources(indOfNewSourceInSources).name,sources(indOfNewSourceInSources).IVSname)
                 fprintf('WARNING: Source name from NGS file %s does not correspond to the IVS name %s from translation table!\n', sources(indOfNewSourceInSources).name,sources(indOfNewSourceInSources).IVSname);
             end
-
-
+            
+            
             if ~isempty(crf(curSourceInCrf).designation)
                 sources(indOfNewSourceInSources).ICRFdes = crf(curSourceInCrf).designation(6:end);
             else
@@ -784,7 +784,7 @@ while (idx_line <= nlines)
             end
             sources(indOfNewSourceInSources).ra2000 = crf(curSourceInCrf).(crfCatalogToTake).ra;
             sources(indOfNewSourceInSources).de2000 = crf(curSourceInCrf).(crfCatalogToTake).de;
-
+            
             % add sigmas if exist
             if isfield(crf(curSourceInCrf).(crffil{2}), 'ra_sigma')
                 sources(indOfNewSourceInSources).ra_sigma = crf(curSourceInCrf).(crfCatalogToTake).ra_sigma;
@@ -793,16 +793,16 @@ while (idx_line <= nlines)
                 sources(indOfNewSourceInSources).ra_sigma = [];
                 sources(indOfNewSourceInSources).de_sigma = [];
             end
-
+            
             sources(indOfNewSourceInSources).firstObsMjd    = mjd;
-
+            
             % add correlation if exist
             if isfield(crf(curSourceInCrf).(crfCatalogToTake), 'corr')
                 sources(indOfNewSourceInSources).corr = crf(curSourceInCrf).(crfCatalogToTake).corr;
             else
                 sources(indOfNewSourceInSources).corr = [];
             end
-
+            
             % in_crf (important for estimating sources)
             if strcmp(crffil{2}, 'vievsCrf') % if the user has chosen vievsCrf
                 sources(indOfNewSourceInSources).in_crf = crf(curSourceInCrf).(crffil{2}).in_crf; % take the in_crf from the "source.cat" "textfile"
@@ -814,43 +814,47 @@ while (idx_line <= nlines)
                     sources(indOfNewSourceInSources).in_crf = 1;
                 end
             end
-
+            
             %LuciaNNR + (uncomment this and also change
             %LSMopt_INTERNAL)
             % add information about defining
-%                     if isfield(crf(curSourceInCrf).(crfCatalogToTake),'defining')
-%                         sources(indOfNewSourceInSources).defining=crf(curSourceInCrf).(crfCatalogToTake).defining;
-%                     else
-%                         sources(indOfNewSourceInSources).defining=[];
-%                     end
+            %                     if isfield(crf(curSourceInCrf).(crfCatalogToTake),'defining')
+            %                         sources(indOfNewSourceInSources).defining=crf(curSourceInCrf).(crfCatalogToTake).defining;
+            %                     else
+            %                         sources(indOfNewSourceInSources).defining=[];
+            %                     end
             %LuciaNNR -
-
+            
             %David - always add information about defining sources
             %from the ICRF2
-            if ~isempty(crf(curSourceInCrf).icrf2)
-                sources(indOfNewSourceInSources).flag_defining=crf(curSourceInCrf).icrf2.defining;
+            
+            if isfield(crf(curSourceInCrf),'icrf3sx')
+                if ~isempty(crf(curSourceInCrf).icrf3sx)
+                    sources(indOfNewSourceInSources).flag_defining=crf(curSourceInCrf).icrf3sx.defining;
+                else
+                    sources(indOfNewSourceInSources).flag_defining=0;
+                end
             else
                 sources(indOfNewSourceInSources).flag_defining=0;
             end
-
-
+            
 
             % set number of observations to zero
             sources(indOfNewSourceInSources).numobs = 0;
-
+            
         else
             % the source of this obs was already put to sources struct
             indOfNewSourceInSources = find(foundSource);
         end
-
-
-
-
+        
+        
+        
+        
         % #################################################################
         % ##### SCAN                                                  #####
         % #################################################################
         %Look for the scan in the scan structure array. If not found, add it
-
+        
         % Init.:
         i_scan = 0; % Scan index
         
@@ -964,7 +968,7 @@ while (idx_line <= nlines)
         
         sources(indOfNewSourceInSources).numobs = sources(indOfNewSourceInSources).numobs + 1;
         sources(indOfNewSourceInSources).lastObsMjd = mjd;
-
+        
     end % if ngs_card_num == 1
 end
 
