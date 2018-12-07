@@ -415,7 +415,7 @@ if get(handles.radiobutton_plot_residuals_firstSolution, 'Value')
     txt = [txt sprintf('#obs: %d of %d\n',nObs,length(val))];
 
     if ~isempty(handles.data.plot.res(curSession).mo_first)
-        txt = [txt sprintf('chi^2: %.3f',handles.data.plot.res(curSession).mo_first)];
+        txt = [txt sprintf('chi^2: %.3f',handles.data.plot.res(curSession).mo_first^2)];
     end
 else
     if get(handles.radiobutton_plot_residuals_perAll, 'Value')
@@ -429,7 +429,7 @@ else
     end
 
     if ~isempty(handles.data.plot.res(curSession).mo)
-        txt = [txt sprintf('chi^2: %.3f',handles.data.plot.res(curSession).mo)];
+        txt = [txt sprintf('chi^2: %.3f',handles.data.plot.res(curSession).mo^2)];
     end
 end
 
