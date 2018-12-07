@@ -401,4 +401,42 @@ if plotOutliers==1 && ...
     end
 end
 
+ylim=get(gca,'ylim');
+xlim=get(gca,'xlim');
+
+
+txt = '';
+if get(handles.radiobutton_plot_residuals_firstSolution, 'Value')
+    if get(handles.radiobutton_plot_residuals_perAll, 'Value')
+        nObs = length(valsOfCurSelection)/2;
+    else 
+        nObs = length(valsOfCurSelection);
+    end
+    txt = [txt sprintf('#obs: %d of %d\n',nObs,length(val))];
+
+    if ~isempty(handles.data.plot.res(curSession).mo_first)
+        txt = [txt sprintf('chi^2: %.3f',handles.data.plot.res(curSession).mo_first)];
+    end
+else
+    if get(handles.radiobutton_plot_residuals_perAll, 'Value')
+        nObs = length(valsOfCurSelection)/2;
+    else 
+        nObs = length(valsOfCurSelection);
+    end
+    txt = [txt sprintf('#obs: %d of %d\n',nObs,length(val))];
+    if ~isempty(handles.data.plot.res(curSession).wrms)
+        txt = [txt sprintf('wrms: %.3f cm (%.3f ps)\n', handles.data.plot.res(curSession).wrms, handles.data.plot.res(curSession).wrms*100/2.99792458)];
+    end
+
+    if ~isempty(handles.data.plot.res(curSession).mo)
+        txt = [txt sprintf('chi^2: %.3f',handles.data.plot.res(curSession).mo)];
+    end
+end
+
+text(xlim(1)+(xlim(2)-xlim(1))*0.025,ylim(2)-(ylim(2)-ylim(1))*0.025,txt,'VerticalAlignment','top');
+
+txt2 = datestr(datetime(SessionStartTimeMJD,'ConvertFrom','modifiedJulianDate'));
+text(xlim(1)+(xlim(2)-xlim(1))*0.025,ylim(1)+(ylim(2)-ylim(1))*0.05,['first observation: ' txt2],'VerticalAlignment','top');
+
+
 hold(handles.axes_plot_residuals, 'off')   

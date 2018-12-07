@@ -108,7 +108,10 @@ if ~isempty(allResFiles)
         'outlier', [],...
         'allSatelliteNames', [],...
         'obs_type', [],...
-        'firstVal', []);
+        'firstVal', [],...
+        'mo',[],...
+        'mo_first',[],...
+        'wrms',[]);
     for iFile=1:nResFiles
 
 
@@ -133,9 +136,12 @@ if ~isempty(allResFiles)
         end
         fields=fieldnames(handles.data.plot.res);
         for iF=1:length(fields)
-            handles.data.plot.res(iFile).(fields{iF})=res.(fields{iF}); % this manual adding of fields is required when the order of the fields is differnt (Matthias)
+            if isfield (res, fields{iF})
+                handles.data.plot.res(iFile).(fields{iF})=res.(fields{iF}); % this manual adding of fields is required when the order of the fields is differnt (Matthias)
+            else
+                handles.data.plot.res(iFile).(fields{iF})=[]; % this manual adding of fields is required when the order of the fields is differnt (Matthias)
+            end
         end
-        
         % update waitbar
         waitbar(iFile/nResFiles,h_waitbar,sprintf('res_ file %1.0f / %1.0f is loaded.', iFile, nResFiles))
     end % for allres files
