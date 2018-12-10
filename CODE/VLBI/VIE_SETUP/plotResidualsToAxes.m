@@ -60,6 +60,8 @@ allLineHandles=findobj(handles.axes_plot_residuals,'Type','line', ...
 delete(allLineHandles);
 
 curSession=get(handles.popupmenu_plot_residuals_session, 'Value');
+curSessionName = get(handles.popupmenu_plot_residuals_session, 'String');
+curSessionName = curSessionName{curSession};
 
 SessionStartTimeMJD =  handles.data.plot.res(curSession).mjd(1);
 SessionEndTimeMJD   =  (handles.data.plot.res(curSession).mjd(end)-SessionStartTimeMJD)*24;
@@ -138,9 +140,11 @@ backgroundTime = [DurationHours; DurationHours];
 
 % ##### Selection of Residual Values for Plotting #####
     
+plotName = '';
 % #### 1.) ALL RESIDUALS ####
 % if all residuals should be plotted
 if get(handles.radiobutton_plot_residuals_perAll, 'Value')
+    plotName = 'all';
     % all residuals should be plotted when "per All" is chosen!
     valsOfCurSelection=[val; -val];
     horAxis = [DurationHours; DurationHours];
@@ -171,6 +175,7 @@ elseif get(handles.radiobutton_plot_residuals_perStat, 'Value')
     % get chosen station
     allStationsInMenu=get(handles.popupmenu_plot_residuals_station, 'String');
     curStation=allStationsInMenu{get(handles.popupmenu_plot_residuals_station, 'Value')};
+    plotName = curStation;
     % get values where chosen station takes part
     obsWithCurStation=sum(~cellfun(@isempty, strfind(baselines, curStation)),2);
     valsOfCurSelection=val(logical(obsWithCurStation));
@@ -210,6 +215,7 @@ elseif get(handles.radiobutton_plot_residuals_perBasel, 'Value')
     % get chosen baseline
     allBaselinesInMenu=get(handles.popupmenu_plot_residuals_baseline, 'String');
     curBaseline=allBaselinesInMenu{get(handles.popupmenu_plot_residuals_baseline, 'Value')};
+    plotName = curBaseline;
 
     % get values of chosen baseline
     obsWithCurSelection=sum(~cellfun(@isempty, strfind(baselines, curBaseline(1:8))),2) & ...
@@ -248,6 +254,7 @@ else
     % get chosen source
     allSourcesInMenu=get(handles.popupmenu_plot_residuals_source, 'String');
     curSource=allSourcesInMenu{get(handles.popupmenu_plot_residuals_source, 'Value')};
+    plotName = curSource;
 
     % get values of chosen source
     obsWithCurSelection=strcmp(sources, curSource);
@@ -287,9 +294,22 @@ hold(handles.axes_plot_residuals, 'on');
 handles.data.plot.plottedResiduals=[];
 
 % Set X-Lim Mode to 'auto'
-set(handles.axes_plot_residuals, 'XLimMode', 'auto')
-set(handles.axes_plot_residuals, 'XLim', [-1 SessionEndTimeMJD+1]);
-set(handles.axes_plot_residuals, 'XTick',0:6:24);
+% set(handles.axes_plot_residuals, 'XLimMode', 'auto')
+set(handles.axes_plot_residuals, 'XLim', [-SessionEndTimeMJD*0.1 SessionEndTimeMJD*1.1]);
+% set(handles.axes_plot_residuals, 'XTick',0:6:24);
+xTicksLabel = datetime(get(handles.axes_plot_residuals,'XTick')/24+SessionStartTimeMJD,'ConvertFrom','ModifiedJulianDate');
+hhmm = datestr(xTicksLabel,'hh:MM');
+date = unique(datestr(xTicksLabel,'dd.mm.yyyy'),'rows');
+set(handles.axes_plot_residuals, 'XTickLabel',hhmm);
+dateLab = '';
+for i=1:size(date,1)
+    if i == 1
+        dateLab = [dateLab date(i,:)];
+    else
+        dateLab = [dateLab ' - ' date(i,:)];
+    end
+end
+xlabel(dateLab);
 
 switch plotstyle
     case 1 % lines only
@@ -367,9 +387,10 @@ switch plotstyle
 end
 
 % Label X- and Y-Axis:
-xlabel('Hours from session start');
 ylabel('Residuals [cm]');
-title(sprintf('residual limits [%5.0f: %5.0f] [cm]',floor(min(valsOfCurSelection)),ceil(max(valsOfCurSelection))));
+title(strrep(sprintf('%s (%s)',curSessionName,plotName),'_','\_'));
+% title(sprintf('residual limits [%5.0f: %5.0f] [cm]',floor(min(valsOfCurSelection)),ceil(max(valsOfCurSelection))));
+
 
 % #### plot outliers ####
 if plotOutliers==1 && ...
