@@ -58,6 +58,7 @@
 %    31 Mar 2017 by David Mayer: corrected NOINT option 
 %    23 Aug 2018 by Daniel Landskron: option ONLYINT added
 %    22 Oct 2018 by Daniel Landskron: also enabled for vgosDB
+%    07 Dec 2018 by Daniel Landskron: command window output extended and bug corrected
 %
 % ************************************************************************
 
@@ -219,7 +220,9 @@ for i_year = 1:length(years)
                         listtmp = [];
                         ver=[];
                         for i_session_file = 1:length(session_file)
-                            listtmp = [listtmp;sprintf('%4d/%s',year,session_file(i_session_file).name)];
+                            if length(session_file(i_session_file).name) <= 9   % because there are some sessions with '_p1' or '.tmp', which shall not be considered
+                                listtmp = [listtmp;sprintf('%4d/%s',year,session_file(i_session_file).name)];
+                            end
                             if strcmpi(session_data_format,'NGS')
                                 ver = [ver str2num(session_file(i_session_file).name(12:14))];
                             elseif strcmpi(session_data_format,'VGOSDB')    
@@ -244,6 +247,19 @@ for i_year = 1:length(years)
                 
             end
             fclose(fid);
+            
+        else
+            
+            % give a message that the necessary master file can't be found, but make exceptions:
+            % - there are no Intensive master files before 1992
+            if ~contains(path_master_file,'-int')
+                fprintf('%s%s%s\n','The Intensives master file ',path_master_file,' is missing! However, If you don''t consider Intenive sessions, this is no problem.');
+            elseif contains(path_master_file,'-int') && years(i_year)>=1992 
+                fprintf('%s%s%s\n','The master file ',path_master_file,' is missing! However, If you only consider Intenive sessions, this is no problem.');
+            end
+            
         end
     end
 end
+
+fclose('all');

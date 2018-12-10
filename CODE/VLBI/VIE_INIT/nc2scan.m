@@ -216,7 +216,6 @@ if strcmp(parameter.vie_init.iono, 'ngs')
             ionoDelSigCell = num2cell(1e9*out_struct.(sigma_tau_ion_folder).(sigma_tau_ion_file).(sigma_tau_ion_field).val(1,:)); % cell: 1 x nObs
             if isfield(out_struct.(tau_ion_folder).(tau_ion_file), 'Cal_SlantPathIonoGroupDataFlag') % if iono flag is given
                 ionoDelFlagcell = num2cell(double(out_struct.(tau_ion_folder).(tau_ion_file).Cal_SlantPathIonoGroupDataFlag.val));
-                fprintf('Ionospheric delay Flag will be used\n')
                 if length(ionoDelFlagcell) == 1
                     fprintf(' - Same ionospheric delay flag (= %1.0f) used for all scans!\n', ionoDelFlagcell{1})
                 end
