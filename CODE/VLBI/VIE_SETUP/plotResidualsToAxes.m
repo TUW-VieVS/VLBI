@@ -81,14 +81,14 @@ mfc = [31,120,180
   
 mfc = repmat(mfc,8,1);
 
-mec = [repmat([0 0 0],12,1)
-       repmat([1 1 1],12,1)
-       repmat([1 0 0],12,1)
-       repmat([0 1 0],12,1)
-       repmat([0 0 1],12,1)
-       repmat([1 1 0],12,1)
-       repmat([1 0 1],12,1)
-       repmat([0 1 1],12,1)
+mec = [repmat([0 0 0],13,1)
+       repmat([1 1 0],13,1)
+       repmat([1 0 1],13,1)
+       repmat([0 1 1],13,1)
+       repmat([1 1 1],13,1)
+       repmat([1 0 0],13,1)
+       repmat([0 1 0],13,1)
+       repmat([0 0 1],13,1)
        ];
 
 % ##### Choose between First / Main Solution #####
