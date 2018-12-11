@@ -8574,7 +8574,12 @@ if length(allLineHandles == 2)
     SessionStartTimeMJD =  handles.data.plot.res(curSession).mjd(1);
 
     timeSpan = SessionStartTimeMJD+sort([allLineHandles(1).XData(1) allLineHandles(2).XData(1)])/24;
-    WriteSelectDatatobeExcluded(handles, handles.data.plot.currentStation, timeSpan)
+    
+    if get(handles.radiobutton_plot_residuals_perStat, 'Value')
+        WriteSelectDatatobeExcluded(handles, handles.data.plot.currentStation, timeSpan)
+    else
+        WriteSelectDatatobeExcluded(handles, handles.data.plot.currentSources, timeSpan)
+    end
 else
     
 end
