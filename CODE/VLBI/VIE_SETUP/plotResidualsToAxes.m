@@ -387,7 +387,7 @@ end
 
 % Label X- and Y-Axis:
 ylabel('Residuals [cm]');
-title(strrep(sprintf('%s (%s)',curSessionName,plotName),'_','\_'));
+% title(strrep(sprintf('%s (%s)',curSessionName,plotName),'_','\_'));
 % title(sprintf('residual limits [%5.0f: %5.0f] [cm]',floor(min(valsOfCurSelection)),ceil(max(valsOfCurSelection))));
 
 
@@ -395,9 +395,16 @@ title(strrep(sprintf('%s (%s)',curSessionName,plotName),'_','\_'));
 if plotOutliers==1 && ...
         get(handles.radiobutton_plot_residuals_mainSolution, 'Value')
 
-    handles.data.plot.plottedOutlierBoxes=...
-        plot(horAxis(indOutliersOfCurSelection), valsOfCurSelection(indOutliersOfCurSelection), 'rs', 'HitTest', 'off');
-
+    if get(handles.radiobutton_plot_residuals_perStat, 'Value') || get(handles.radiobutton_plot_residuals_perBasel, 'Value')
+        handles.data.plot.plottedOutlierBoxes=...
+            plot(horAxis(indOutliersOfCurSelection), valsOfCurSelection(indOutliersOfCurSelection), 'x', 'color', 'k', 'markersize', 10, 'DisplayName', 'outliers','LineWidth',3);
+    else
+        handles.data.plot.plottedOutlierBoxes=...
+            plot([horAxis(indOutliersOfCurSelection); horAxis(indOutliersOfCurSelection)], ...
+            [valsOfCurSelection(indOutliersOfCurSelection); -valsOfCurSelection(indOutliersOfCurSelection)], ...
+            'x', 'color', 'k', 'markersize', 10, 'DisplayName', 'outliers','LineWidth',3);
+    end
+    
     % plot station indices / source names to outliers
     for k=1:length(indOutliersOfCurSelection)
         curStr='';
@@ -455,8 +462,8 @@ end
 
 text(xlim(1)+(xlim(2)-xlim(1))*0.025,ylim(2)-(ylim(2)-ylim(1))*0.025,txt,'VerticalAlignment','top');
 
-txt2 = datestr(datetime(SessionStartTimeMJD,'ConvertFrom','modifiedJulianDate'));
-text(xlim(1)+(xlim(2)-xlim(1))*0.025,ylim(1)+(ylim(2)-ylim(1))*0.05,['first observation: ' txt2],'VerticalAlignment','top');
+% txt2 = datestr(datetime(SessionStartTimeMJD,'ConvertFrom','modifiedJulianDate'));
+% text(xlim(1)+(xlim(2)-xlim(1))*0.025,ylim(1)+(ylim(2)-ylim(1))*0.05,['first observation: ' txt2],'VerticalAlignment','top');
 
 hold off
 

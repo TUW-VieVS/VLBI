@@ -170,8 +170,8 @@ if get(handles.togglebutton_plot_residuals_selectOutliers,'Value')
         sprintf('Remove %1.0f Outliers', length(indToPlot)))
     % plotting
 	handles.data.plot.outlierMarksHandle=plot(handles.axes_plot_residuals, [DurationHours(indToPlot) DurationHours(indToPlot)], ...
-        [curVals(indToPlot) -curVals(indToPlot)], 'x', 'color', 'k', 'markersize', 10, 'DisplayName', 'selection','LineWidth',3);
-	for i = 1:length(handles.data.plot.outlierMarksHandle)
+        [curVals(indToPlot) -curVals(indToPlot)], 'x', 'color', 'k', 'markersize', 10, 'DisplayName', 'outlier','LineWidth',3);
+	for i = 2:length(handles.data.plot.outlierMarksHandle)
         set(get(get(handles.data.plot.outlierMarksHandle(i),'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
 	end
     hold(handles.axes_plot_residuals, 'off');

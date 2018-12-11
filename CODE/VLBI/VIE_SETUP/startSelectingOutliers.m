@@ -76,8 +76,8 @@ hold(handles.axes_plot_residuals, 'on');
 handles.data.plot.outlierMarksHandle=plot(handles.axes_plot_residuals,...
     [plottedX(abs(distances)==min(abs(distances))) plottedX(abs(distances)==min(abs(distances)))],...
     [plottedY(abs(distances)==min(abs(distances))) -plottedY(abs(distances)==min(abs(distances)))], 'x',...
-    'color', [0 0 0.04], 'markersize', 10, 'LineWidth', 3);
-for i = 1:length(handles.data.plot.outlierMarksHandle)
+    'color', [0 0 0.04], 'markersize', 10, 'LineWidth', 3, 'DisplayName', 'outlier');
+for i = 2:length(handles.data.plot.outlierMarksHandle)
     set(get(get(handles.data.plot.outlierMarksHandle(i),'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
 end
 
