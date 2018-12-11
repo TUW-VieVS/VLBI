@@ -50,7 +50,7 @@ set(handles.popupmenu_plot_residuals_baseline, 'Enable', 'off')
 set(handles.radiobutton_plot_residuals_perSource, 'Enable', 'off')
 set(handles.popupmenu_plot_residuals_source, 'Enable', 'off')
 set(handles.radiobutton_plot_residuals_perAll, 'Enable', 'off')
-set(handles.checkbox_plot_residuals_showStatNumbers, 'Enable', 'off')
+% set(handles.checkbox_plot_residuals_showStatNumbers, 'Enable', 'off')
 set(handles.checkbox_plot_residuals_showSourceNames, 'Enable', 'off')
 set(handles.popupmenu_plot_residuals_refClock, 'Enable', 'off')
 set(handles.pushbutton_plot_residuals_clockRef_get, 'Enable', 'off')
@@ -59,11 +59,11 @@ set(handles.pushbutton_plot_residuals_clockBreak, 'Enable', 'off')
 set(handles.togglebutton_plot_residuals_selectOutliers, 'Enable', 'off')
 set(handles.pushbutton_plot_residuals_removeOutliers, 'Enable', 'off')
 set(handles.togglebutton_plot_residuals_selectData, 'Enable', 'off')
-set(handles.togglebutton_plot_residuals_SelectedData_output, 'Enable', 'off')
+% set(handles.togglebutton_plot_residuals_SelectedData_output, 'Enable', 'off')
 
-set(handles.radiobutton_unit_plot, 'Enable', 'Off')
-set(handles.radiobutton_unit_UTC, 'Enable', 'Off')
-set(handles.radiobutton_unit_MJD, 'Enable', 'Off')
+% set(handles.radiobutton_unit_plot, 'Enable', 'Off')
+% set(handles.radiobutton_unit_UTC, 'Enable', 'Off')
+% set(handles.radiobutton_unit_MJD, 'Enable', 'Off')
 
 % get all res_ files in folder
 allSubfolders=get(handles.popupmenu_plot_residuals_folder, 'string');
@@ -82,7 +82,7 @@ if ~isempty(allResFiles)
     set(handles.radiobutton_plot_residuals_perBasel, 'Enable', 'On')
     set(handles.radiobutton_plot_residuals_perSource, 'Enable', 'On')
     set(handles.radiobutton_plot_residuals_perAll, 'Enable', 'On')
-    set(handles.checkbox_plot_residuals_showStatNumbers, 'Enable', 'On')
+%     set(handles.checkbox_plot_residuals_showStatNumbers, 'Enable', 'On')
     set(handles.checkbox_plot_residuals_showSourceNames, 'Enable', 'On')
     set(handles.popupmenu_plot_residuals_refClock, 'Enable', 'On')
     set(handles.pushbutton_plot_residuals_clockRef_get, 'Enable', 'On')
@@ -108,7 +108,10 @@ if ~isempty(allResFiles)
         'outlier', [],...
         'allSatelliteNames', [],...
         'obs_type', [],...
-        'firstVal', []);
+        'firstVal', [],...
+        'mo',[],...
+        'mo_first',[],...
+        'wrms',[]);
     for iFile=1:nResFiles
 
 
@@ -133,9 +136,12 @@ if ~isempty(allResFiles)
         end
         fields=fieldnames(handles.data.plot.res);
         for iF=1:length(fields)
-            handles.data.plot.res(iFile).(fields{iF})=res.(fields{iF}); % this manual adding of fields is required when the order of the fields is differnt (Matthias)
+            if isfield (res, fields{iF})
+                handles.data.plot.res(iFile).(fields{iF})=res.(fields{iF}); % this manual adding of fields is required when the order of the fields is differnt (Matthias)
+            else
+                handles.data.plot.res(iFile).(fields{iF})=[]; % this manual adding of fields is required when the order of the fields is differnt (Matthias)
+            end
         end
-        
         % update waitbar
         waitbar(iFile/nResFiles,h_waitbar,sprintf('res_ file %1.0f / %1.0f is loaded.', iFile, nResFiles))
     end % for allres files

@@ -30,16 +30,16 @@ function outlierSelection(hObject, eventdata, handles)
 
 handles.data.plot.intervalSelectedatPlot = 1;
 
-if ~get(handles.togglebutton_plot_residuals_SelectedData_output,'Value')
-    % get current position
-    curPoint=get(get(hObject, 'CurrentAxes'), 'CurrentPoint');
-    curPoint=curPoint(1,1:2);
-    % draw lines ...
-    x=[min(curPoint(1), handles.data.plot.outlierBoxStart(1)), ...
-        max(curPoint(1), handles.data.plot.outlierBoxStart(1))];
-    y=[min(curPoint(2), handles.data.plot.outlierBoxStart(2)), ...
-        max(curPoint(2), handles.data.plot.outlierBoxStart(2))];
-end
+% if ~get(handles.togglebutton_plot_residuals_SelectedData_output,'Value')
+% get current position
+curPoint=get(get(hObject, 'CurrentAxes'), 'CurrentPoint');
+curPoint=curPoint(1,1:2);
+% draw lines ...
+x=[min(curPoint(1), handles.data.plot.outlierBoxStart(1)), ...
+    max(curPoint(1), handles.data.plot.outlierBoxStart(1))];
+y=[min(curPoint(2), handles.data.plot.outlierBoxStart(2)), ...
+    max(curPoint(2), handles.data.plot.outlierBoxStart(2))];
+% end
 
 % get current position
 %curPoint=get(get(hObject, 'CurrentAxes'), 'CurrentPoint');
@@ -124,33 +124,40 @@ SessionStartTimeMJD =  handles.data.plot.res(curSession).mjd(1);
 mjd = handles.data.plot.res(curSession).mjd;
 DurationHours = (mjd(logical(obsWithCurSelection)) - SessionStartTimeMJD) * 24; 
 
-if get(handles.togglebutton_plot_residuals_SelectedData_output,'Value')
-    if ~strcmp(get(handles.edit_plot_residuals_interval_input_1_unit,'String'),'hh') && ...
-        ~strcmp(get(handles.edit_plot_residuals_interval_input_2_unit,'String'),'hh') 
-            
-        x(1) = sscanf(get(handles.edit_plot_residuals_interval_input_1_unit,'String'),'%f');
-        x(2) = sscanf(get(handles.edit_plot_residuals_interval_input_2_unit,'String'),'%f');
-        y(2)=max(curVals);y(1)=min(curVals);
-    else
-        % get current position
-        curPoint=get(get(hObject, 'CurrentAxes'), 'CurrentPoint');
-        curPoint=curPoint(1,1:2);
-        % draw lines ...
-        x=[min(curPoint(1), handles.data.plot.outlierBoxStart(1)), ...
-            max(curPoint(1), handles.data.plot.outlierBoxStart(1))];
-        y=[min(curPoint(2), handles.data.plot.outlierBoxStart(2)), ...
-            max(curPoint(2), handles.data.plot.outlierBoxStart(2))];
-    end
-end
+% if get(handles.togglebutton_plot_residuals_SelectedData_output,'Value')
+%     if ~strcmp(get(handles.edit_plot_residuals_interval_input_1_unit,'String'),'hh') && ...
+%         ~strcmp(get(handles.edit_plot_residuals_interval_input_2_unit,'String'),'hh') 
+%             
+%         x(1) = sscanf(get(handles.edit_plot_residuals_interval_input_1_unit,'String'),'%f');
+%         x(2) = sscanf(get(handles.edit_plot_residuals_interval_input_2_unit,'String'),'%f');
+%         y(2)=max(curVals);y(1)=min(curVals);
+%     else
+
+% get current position
+curPoint=get(get(hObject, 'CurrentAxes'), 'CurrentPoint');
+curPoint=curPoint(1,1:2);
+% draw lines ...
+x=[min(curPoint(1), handles.data.plot.outlierBoxStart(1)), ...
+    max(curPoint(1), handles.data.plot.outlierBoxStart(1))];
+y=[min(curPoint(2), handles.data.plot.outlierBoxStart(2)), ...
+    max(curPoint(2), handles.data.plot.outlierBoxStart(2))];
+
+%     end
+% end
 
 handles.data.plot.lineHandle=line(...
     [x(1), x(2), x(2), x(1), x(1)], [y(2), y(2), y(1), y(1), y(2)],...
-        'color', 'k');
- 
+        'color', 'k', 'DisplayName', 'selection');
+set(get(get(handles.data.plot.lineHandle,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+
+handles.data.plot.lineHandle=line(...
+    [x(1), x(2), x(2), x(1), x(1)], [-y(2), -y(2), -y(1), -y(1), -y(2)],...
+        'color', 'k', 'DisplayName', 'selection');
+ set(get(get(handles.data.plot.lineHandle,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+
 
 % Check Y-Values:
-valsWithinValues=curVals<=y(2) & ...
-    curVals>=y(1);
+valsWithinValues = (curVals<=y(2) &  curVals>=y(1)) | (curVals<=-y(1) &  curVals>=-y(2));
 % Check X-Values:
 temp=DurationHours(valsWithinValues)<=x(2) & DurationHours(valsWithinValues)>=x(1);
 
@@ -161,12 +168,13 @@ hold(handles.axes_plot_residuals, 'on');
 
 if get(handles.togglebutton_plot_residuals_selectOutliers,'Value')
     % write number of outliers to button where they can be removed
-    set(handles.pushbutton_plot_residuals_removeOutliers, 'String', ...
-        sprintf('Remove %1.0f Outliers', length(indToPlot)))
+    set(handles.pushbutton_plot_residuals_removeOutliers, 'String','Remove')
     % plotting
-	handles.data.plot.outlierMarksHandle=plot(handles.axes_plot_residuals, DurationHours(indToPlot), ...
-        curVals(indToPlot), 'x', 'color', 'k', 'markersize', 10);
-
+	handles.data.plot.outlierMarksHandle=plot(handles.axes_plot_residuals, [DurationHours(indToPlot) DurationHours(indToPlot)], ...
+        [curVals(indToPlot) -curVals(indToPlot)], 'x', 'color', 'k', 'markersize', 10, 'DisplayName', 'outlier','LineWidth',3);
+	for i = 2:length(handles.data.plot.outlierMarksHandle)
+        set(get(get(handles.data.plot.outlierMarksHandle(i),'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+	end
     hold(handles.axes_plot_residuals, 'off');
 else
     % if old lines exist - delete them
@@ -178,23 +186,23 @@ else
 	[~, ~, ~, hour, minu, sec] = mjd2date(SessionStartTimeMJD);
     SessionStartTimeUTC = hour + minu/60 + sec/3600;    
     handles.data.plot.foget_unit =0;
-    if ~get(handles.togglebutton_plot_residuals_SelectedData_output,'Value')    
-
-        data_utc=x+SessionStartTimeUTC;
-        if sum(data_utc>24)>0
-            data_utc(data_utc>24)=data_utc(data_utc>24)-24;
-        end
-        handles.data.plot.unit_plot = x;
-        handles.data.plot.unit_UTC = data_utc;
-        handles.data.plot.unit_MJD = SessionStartTimeMJD + x/24;
-        
-    else
-        data_utc = x;
-        handles.data.plot.foget_unit =1;
-    end
+%     if ~get(handles.togglebutton_plot_residuals_SelectedData_output,'Value')    
+% 
+%         data_utc=x+SessionStartTimeUTC;
+%         if sum(data_utc>24)>0
+%             data_utc(data_utc>24)=data_utc(data_utc>24)-24;
+%         end
+%         handles.data.plot.unit_plot = x;
+%         handles.data.plot.unit_UTC = data_utc;
+%         handles.data.plot.unit_MJD = SessionStartTimeMJD + x/24;
+%         
+%     else
+%         data_utc = x;
+%         handles.data.plot.foget_unit =1;
+%     end
     % for non-intensive
-    if get(handles.radiobutton_unit_UTC,'Value') && ...
-            get(handles.togglebutton_plot_residuals_SelectedData_output,'Value')    
+%     if get(handles.radiobutton_unit_UTC,'Value') && ...
+%             get(handles.togglebutton_plot_residuals_SelectedData_output,'Value')    
         if DurationHours(end)>5
             ind=x<SessionStartTimeUTC;
             if sum(x<SessionStartTimeUTC)>0
@@ -206,27 +214,31 @@ else
         else
                 x = x - SessionStartTimeUTC;
         end
-    end
+%     end
     
     % plotting
-    plot(handles.axes_plot_residuals, [x(1) x(1)],y, ...
-         'color', 'k', 'markersize', 10);
-    plot(handles.axes_plot_residuals, [x(2) x(2)],y, ...
-         'color', 'k', 'markersize', 10);
+    p = plot(handles.axes_plot_residuals, [x(1) x(1)],y, ...
+         'color', 'k', 'markersize', 10, 'DisplayName', 'selection');
+    set(get(get(p,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+
+    p = plot(handles.axes_plot_residuals, [x(2) x(2)],y, ...
+         'color', 'k', 'markersize', 10, 'DisplayName', 'selection');
+    set(get(get(p,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+
     hold(handles.axes_plot_residuals, 'off');
 
 %    curSession=get(handles.popupmenu_plot_residuals_session, 'Value');
  %   SessionStartTimeMJD =  handles.data.plot.res(curSession).mjd(1);
-    if get(handles.radiobutton_unit_MJD,'Value')
-        set(handles.edit_plot_residuals_interval_show, 'String', ...
-            sprintf('%2.3f - %2.3f',x(1)/24+SessionStartTimeMJD,x(2)/24+SessionStartTimeMJD))
-    elseif get(handles.radiobutton_unit_UTC,'Value')
-        set(handles.edit_plot_residuals_interval_show, 'String', ...
-            sprintf('%2.3f - %2.3f',data_utc(1),data_utc(2)))     
-	elseif get(handles.radiobutton_unit_plot,'Value')
-        set(handles.edit_plot_residuals_interval_show, 'String', ...
-            sprintf('%2.3f - %2.3f',x(1),x(2)))
-    end
+%     if get(handles.radiobutton_unit_MJD,'Value')
+%         set(handles.edit_plot_residuals_interval_show, 'String', ...
+%             sprintf('%2.3f - %2.3f',x(1)/24+SessionStartTimeMJD,x(2)/24+SessionStartTimeMJD))
+%     elseif get(handles.radiobutton_unit_UTC,'Value')
+%         set(handles.edit_plot_residuals_interval_show, 'String', ...
+%             sprintf('%2.3f - %2.3f',data_utc(1),data_utc(2)))     
+% 	elseif get(handles.radiobutton_unit_plot,'Value')
+%         set(handles.edit_plot_residuals_interval_show, 'String', ...
+%             sprintf('%2.3f - %2.3f',x(1),x(2)))
+%     end
 end
 
 % Save the change you made to the structure

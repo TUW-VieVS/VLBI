@@ -8458,12 +8458,12 @@ if get(hObject, 'Value')
     set(handles.axes_plot_residuals,        'ButtonDownFcn', {@startSelectingOutliers,handles})
 	set(handles.figure_vievs2,              'WindowButtonUpFcn', {@endSelectingOutliers, handles})
 
-    set(handles.togglebutton_plot_residuals_SelectedData_output, 'Enable', 'On')
-    set(handles.radiobutton_unit_plot, 'Enable', 'On')
-    set(handles.radiobutton_unit_UTC, 'Enable', 'On')
-    set(handles.radiobutton_unit_MJD, 'Enable', 'On')
-    set(handles.edit_plot_residuals_interval_input_1_unit, 'Enable', 'On')
-    set(handles.edit_plot_residuals_interval_input_2_unit, 'Enable', 'On')
+%     set(handles.togglebutton_plot_residuals_SelectedData_output, 'Enable', 'On')
+%     set(handles.radiobutton_unit_plot, 'Enable', 'On')
+%     set(handles.radiobutton_unit_UTC, 'Enable', 'On')
+%     set(handles.radiobutton_unit_MJD, 'Enable', 'On')
+%     set(handles.edit_plot_residuals_interval_input_1_unit, 'Enable', 'On')
+%     set(handles.edit_plot_residuals_interval_input_2_unit, 'Enable', 'On')
     
     set(handles.pushbutton_plot_residuals_removeOutliers, 'Enable', 'Off')
     if  get(handles.radiobutton_plot_residuals_perAll, 'Value') || get(handles.radiobutton_plot_residuals_perBasel, 'Value') 
@@ -8474,17 +8474,17 @@ if get(hObject, 'Value')
 else
 	set(handles.axes_plot_residuals,                'ButtonDownFcn', '')
     set(handles.figure_vievs2,              'WindowButtonUpFcn', '')
-    set(handles.togglebutton_plot_residuals_SelectedData_output, 'Enable', 'Off')
+%     set(handles.togglebutton_plot_residuals_SelectedData_output, 'Enable', 'Off')
     set(handles.pushbutton_selectedData_writeOPT,'Enable','Off');
-	set(handles.radiobutton_unit_plot, 'Enable', 'Off')
-    set(handles.radiobutton_unit_UTC, 'Enable', 'Off')
-    set(handles.radiobutton_unit_MJD, 'Enable', 'Off')
-    set(handles.edit_plot_residuals_interval_input_1_unit, 'Enable', 'Off')
-    set(handles.edit_plot_residuals_interval_input_2_unit, 'Enable', 'Off')
-    set(handles.edit_plot_residuals_interval_show,'String','xx.xx - xx.xx')
+% 	set(handles.radiobutton_unit_plot, 'Enable', 'Off')
+%     set(handles.radiobutton_unit_UTC, 'Enable', 'Off')
+%     set(handles.radiobutton_unit_MJD, 'Enable', 'Off')
+%     set(handles.edit_plot_residuals_interval_input_1_unit, 'Enable', 'Off')
+%     set(handles.edit_plot_residuals_interval_input_2_unit, 'Enable', 'Off')
+%     set(handles.edit_plot_residuals_interval_show,'String','xx.xx - xx.xx')
 
-	set(handles.edit_plot_residuals_interval_input_1_unit, 'String', 'hh')
-    set(handles.edit_plot_residuals_interval_input_2_unit, 'String', 'hh')
+% 	set(handles.edit_plot_residuals_interval_input_1_unit, 'String', 'hh')
+%     set(handles.edit_plot_residuals_interval_input_2_unit, 'String', 'hh')
 
     % remove all black object (box and crosses)
     allLineHandles=findobj(handles.axes_plot_residuals,'Type','line', 'color', 'k');
@@ -8568,12 +8568,20 @@ end
 
 function pushbutton_selectedData_writeOPT_Callback(hObject, eventdata, handles)
 
-if get(handles.radiobutton_plot_residuals_perStat,'Value') && handles.data.plot.intervalSelectedatPlot
-	WriteSelectDatatobeExcluded(handles,handles.data.plot.currentStation,handles.data.plot.unit_MJD)
-end
+allLineHandles=findobj(handles.axes_plot_residuals,'Type','line', 'color', 'k');
+if length(allLineHandles == 2)
+    curSession=get(handles.popupmenu_plot_residuals_session, 'Value');
+    SessionStartTimeMJD =  handles.data.plot.res(curSession).mjd(1);
 
-if get(handles.radiobutton_plot_residuals_perSource,'Value') && handles.data.plot.intervalSelectedatPlot
-    WriteSelectDatatobeExcluded(handles,handles.data.plot.currentSources,handles.data.plot.unit_MJD)
+    timeSpan = SessionStartTimeMJD+sort([allLineHandles(1).XData(1) allLineHandles(2).XData(1)])/24;
+    
+    if get(handles.radiobutton_plot_residuals_perStat, 'Value')
+        WriteSelectDatatobeExcluded(handles, handles.data.plot.currentStation, timeSpan)
+    else
+        WriteSelectDatatobeExcluded(handles, handles.data.plot.currentSources, timeSpan)
+    end
+else
+    
 end
  
 
@@ -8581,13 +8589,14 @@ function togglebutton_plot_residuals_selectOutliers_Callback(hObject, eventdata,
 
 % button was selected
 if get(hObject, 'Value')
-	set(handles.radiobutton_unit_plot, 'Enable', 'Off')
-    set(handles.radiobutton_unit_UTC, 'Enable', 'Off')
-    set(handles.radiobutton_unit_MJD, 'Enable', 'Off')
+% 	set(handles.radiobutton_unit_plot, 'Enable', 'Off')
+%     set(handles.radiobutton_unit_UTC, 'Enable', 'Off')
+%     set(handles.radiobutton_unit_MJD, 'Enable', 'Off')
     
     set(handles.axes_plot_residuals,        'ButtonDownFcn', {@startSelectingOutliers,handles})
     set(handles.figure_vievs2,              'WindowButtonUpFcn', {@endSelectingOutliers, handles})
     set(handles.pushbutton_plot_residuals_removeOutliers, 'Enable', 'On')
+    
 
 else
     set(handles.axes_plot_residuals,                'ButtonDownFcn', '')
