@@ -34,11 +34,11 @@ startPointBox=get(get(handles.figure_vievs2, 'CurrentAxes'), 'CurrentPoint');
 startPointBox=startPointBox(1,1:2);
 handles.data.plot.outlierBoxStart=startPointBox;
 
-if ~get(handles.togglebutton_plot_residuals_selectOutliers,'Value')
-    set(handles.radiobutton_unit_plot, 'Enable', 'On')
-    set(handles.radiobutton_unit_UTC, 'Enable', 'On')
-    set(handles.radiobutton_unit_MJD, 'Enable', 'On')
-end
+% if ~get(handles.togglebutton_plot_residuals_selectOutliers,'Value')
+%     set(handles.radiobutton_unit_plot, 'Enable', 'On')
+%     set(handles.radiobutton_unit_UTC, 'Enable', 'On')
+%     set(handles.radiobutton_unit_MJD, 'Enable', 'On')
+% end
 
 % ##### IF MOUSE IS MOVED WHILE CLICKING - BOX! #####
 handles.data.plot.foget_unit =0;
@@ -106,16 +106,16 @@ else
     % get values which are currently plotted
     % get index of currently selected session
 
-	if get(handles.radiobutton_unit_MJD,'Value')
-        set(handles.edit_plot_residuals_interval_show, 'String', ...
-            sprintf(num2str(startPointBox(1)/24+SessionStartTimeMJD)))
-    elseif get(handles.radiobutton_unit_UTC,'Value')
-         set(handles.edit_plot_residuals_interval_show, 'String', ...
-            sprintf(num2str(SessionTimeUTC)))
-	elseif get(handles.radiobutton_unit_plot,'Value')
-         set(handles.edit_plot_residuals_interval_show, 'String', ...
-            sprintf(num2str(startPointBox(1))))
-    end
+% 	if get(handles.radiobutton_unit_MJD,'Value')
+%         set(handles.edit_plot_residuals_interval_show, 'String', ...
+%             sprintf(num2str(startPointBox(1)/24+SessionStartTimeMJD)))
+%     elseif get(handles.radiobutton_unit_UTC,'Value')
+%          set(handles.edit_plot_residuals_interval_show, 'String', ...
+%             sprintf(num2str(SessionTimeUTC)))
+% 	elseif get(handles.radiobutton_unit_plot,'Value')
+%          set(handles.edit_plot_residuals_interval_show, 'String', ...
+%             sprintf(num2str(startPointBox(1))))
+%     end
 end
 
 % Save the change you made to the structure

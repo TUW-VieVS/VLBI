@@ -40,17 +40,17 @@ set(handles.pushbutton_plot_residuals_removeOutliers, 'Enable', 'Off')
 set(handles.pushbutton_plot_residuals_removeOutliers, 'String', 'Remove Outliers')
 
 set(handles.togglebutton_plot_residuals_selectData,'Value',0)
-set(handles.togglebutton_plot_residuals_SelectedData_output, 'Enable', 'Off')
+% set(handles.togglebutton_plot_residuals_SelectedData_output, 'Enable', 'Off')
 set(handles.pushbutton_selectedData_writeOPT,'Enable','Off');
-set(handles.radiobutton_unit_plot, 'Enable', 'Off')
-set(handles.radiobutton_unit_UTC, 'Enable', 'Off')
-set(handles.radiobutton_unit_MJD, 'Enable', 'Off')
-set(handles.edit_plot_residuals_interval_input_1_unit, 'Enable', 'Off')
-set(handles.edit_plot_residuals_interval_input_2_unit, 'Enable', 'Off')
-set(handles.edit_plot_residuals_interval_show,'String','xx.xx - xx.xx')
+% set(handles.radiobutton_unit_plot, 'Enable', 'Off')
+% set(handles.radiobutton_unit_UTC, 'Enable', 'Off')
+% set(handles.radiobutton_unit_MJD, 'Enable', 'Off')
+% set(handles.edit_plot_residuals_interval_input_1_unit, 'Enable', 'Off')
+% set(handles.edit_plot_residuals_interval_input_2_unit, 'Enable', 'Off')
+% set(handles.edit_plot_residuals_interval_show,'String','xx.xx - xx.xx')
 
-set(handles.edit_plot_residuals_interval_input_1_unit, 'String', 'hh')
-set(handles.edit_plot_residuals_interval_input_2_unit, 'String', 'hh')
+% set(handles.edit_plot_residuals_interval_input_1_unit, 'String', 'hh')
+% set(handles.edit_plot_residuals_interval_input_2_unit, 'String', 'hh')
     
 % remove all black object (box and crosses)
 allLineHandles=findobj(handles.axes_plot_residuals,'Type','line', 'color', 'k');
@@ -167,7 +167,8 @@ if get(handles.radiobutton_plot_residuals_perAll, 'Value')
             baselinesForOutlier(k,2)=baselines(outlier(k),2);
         end
     end
-            
+    set(handles.togglebutton_plot_residuals_selectData, 'Enable', 'Off');
+
     
 % #### 2.) STATION-WISE ####
 % if station-wise residuals should be plotted    
@@ -208,7 +209,8 @@ elseif get(handles.radiobutton_plot_residuals_perStat, 'Value')
         end
     end
         
-    
+    set(handles.togglebutton_plot_residuals_selectData, 'Enable', 'On');
+
 % #### 3.) BASELINE-WISE ####
 % baseline wise plot
 elseif get(handles.radiobutton_plot_residuals_perBasel, 'Value') 
@@ -247,6 +249,7 @@ elseif get(handles.radiobutton_plot_residuals_perBasel, 'Value')
         end
     end
     
+    set(handles.togglebutton_plot_residuals_selectData, 'Enable', 'Off');
     
 % #### 4.) SOURCE-WISE ####    
 % source wise residuals
@@ -282,6 +285,8 @@ else
             baselinesForOutlier(k,2)=baselines(outlier(outlierIndIWantToFind(k)),2);
         end
     end
+    
+    set(handles.togglebutton_plot_residuals_selectData, 'Enable', 'On');
 
 end % end - all/sourcewise/stationwise/baselinewise
     
@@ -409,11 +414,11 @@ if plotOutliers==1 && ...
     for k=1:length(indOutliersOfCurSelection)
         curStr='';
         % if station numbers should be printed
-        if get(handles.checkbox_plot_residuals_showStatNumbers, 'Value')
-            ant1=find(~cellfun(@isempty, strfind(antennas, baselinesForOutlier{k,1})));
-            ant2=find(~cellfun(@isempty, strfind(antennas, baselinesForOutlier{k,2})));
-            curStr=[curStr, num2str(ant1),'-',num2str(ant2)];
-        end
+%         if get(handles.checkbox_plot_residuals_showStatNumbers, 'Value')
+%             ant1=find(~cellfun(@isempty, strfind(antennas, baselinesForOutlier{k,1})));
+%             ant2=find(~cellfun(@isempty, strfind(antennas, baselinesForOutlier{k,2})));
+%             curStr=[curStr, num2str(ant1),'-',num2str(ant2)];
+%         end
 
         % if source names should be printed
         if get(handles.checkbox_plot_residuals_showSourceNames, 'Value')
