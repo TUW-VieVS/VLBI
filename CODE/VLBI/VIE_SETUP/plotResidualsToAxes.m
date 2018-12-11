@@ -381,7 +381,6 @@ switch plotstyle
 
         end
         
-        hold off
     case 3 % scatterplot
         handles.data.plot.plottedResiduals = plot(handles.axes_plot_residuals, horAxis, valsOfCurSelection, 'b*','HitTest','off');
 end
@@ -459,5 +458,6 @@ text(xlim(1)+(xlim(2)-xlim(1))*0.025,ylim(2)-(ylim(2)-ylim(1))*0.025,txt,'Vertic
 txt2 = datestr(datetime(SessionStartTimeMJD,'ConvertFrom','modifiedJulianDate'));
 text(xlim(1)+(xlim(2)-xlim(1))*0.025,ylim(1)+(ylim(2)-ylim(1))*0.05,['first observation: ' txt2],'VerticalAlignment','top');
 
+hold off
 
 hold(handles.axes_plot_residuals, 'off')   
