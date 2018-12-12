@@ -101,7 +101,7 @@ for iStat=1:nStat
 
     % no break is found for the "trfToTake"
     if isempty(bnr)
-        fprintf('No valid %s coordinates for %s => get vievsTrf coordinates (no NNT/NNR conditions applied!)\n', trfToTake, curName)
+        fprintf('No valid %s coordinates for %s => get vievsTrf coordinates (no NNT/NNR conditions applied!)\n', chosenTrf, curName)
         % so: no valid epoch for official (e.g.. VTRF2008) TRF -> get vievsTrf break
         trfToTake='vievsTrf';
         
