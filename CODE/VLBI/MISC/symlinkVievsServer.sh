@@ -1,6 +1,6 @@
 #!/bin/bash
 
-declare -a folders=("DATA/NGS" "DATA/vgosDB" "DATA/MASTER" "TRP/VMF1" "TRP/VMF3" "TRP/GRAD" "TRP/LHG" "TRP/RAYTRACING_DATA" "ATM/APL_VIENNA" "ATM/GSFC")
+declare -a folders=("DATA/NGS" "DATA/vgosDB" "DATA/MASTER" "TRP/VMF1" "TRP/VMF3" "TRP/GRAD" "TRP/RAYTRACING_DATA" "ATM/APL_VIENNA" "ATM/GSFC")
 
 for i in "${folders[@]}" 
 do

@@ -11,6 +11,9 @@ read ngs
 echo "download vgosDB files? (y for yes)"
 read vgosDB
 
+echo "download RATRACING_DATA files? (y for yes)"
+read radiate
+
 echo "download EOPs"
 scp $user@vievs:/home/members/vievs/VLBI/EOP/*.txt ../../../VLBI/EOP/
 echo "download APL"
@@ -27,11 +30,15 @@ if [ "$vgosDB" = "y" ]; then
 else
 	echo "skipping vgosDB"
 fi
+if [ "$radiate" = "y" ]; then
+        echo "download RAYTRACING_DATA"
+        rsync -avzh $user@vievs:/home/members/vievs/VLBI/TRP/RAYTRACING_DATA/$years* ../../../VLBI/TRP/RAYTRACING_DATA
+else
+        echo "skipping RAYTRACING_DATA"
+fi
 echo "download VMF1"
 scp  $user@vievs:/home/members/vievs/VLBI/TRP/VMF1/y$years.vmf1_r ../../../VLBI/TRP/VMF1
 echo "download VMF3"
 scp  $user@vievs:/home/members/vievs/VLBI/TRP/VMF3/y$years.vmf3_r ../../../VLBI/TRP/VMF3
 echo "download GRAD"
 scp  $user@vievs:/home/members/vievs/VLBI/TRP/GRAD/y$years.grad_r ../../../VLBI/TRP/GRAD
-echo "download LHG"
-scp  $user@vievs:/home/members/vievs/VLBI/TRP/LHG/y$years.lhg_r ../../../VLBI/TRP/LHG
