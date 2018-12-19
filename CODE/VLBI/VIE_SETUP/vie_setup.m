@@ -505,6 +505,8 @@ end
 % Menu - File - Set input files, set data panel at the front when openining GUI
 menu_file_setInputFiles_Callback(hObject, eventdata, handles)
 
+
+
 % Choose default command line output for vie_setup
 handles.output = hObject;
 
@@ -8437,6 +8439,7 @@ handles=updatePopupmenusInResidualPlot(hObject, handles);
 
 % plot right away
 handles=plotResidualsToAxes(handles);
+
 
 % Update handles structure
 guidata(hObject, handles);

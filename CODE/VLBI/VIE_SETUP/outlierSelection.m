@@ -186,59 +186,35 @@ else
 	[~, ~, ~, hour, minu, sec] = mjd2date(SessionStartTimeMJD);
     SessionStartTimeUTC = hour + minu/60 + sec/3600;    
     handles.data.plot.foget_unit =0;
-%     if ~get(handles.togglebutton_plot_residuals_SelectedData_output,'Value')    
-% 
-%         data_utc=x+SessionStartTimeUTC;
-%         if sum(data_utc>24)>0
-%             data_utc(data_utc>24)=data_utc(data_utc>24)-24;
-%         end
-%         handles.data.plot.unit_plot = x;
-%         handles.data.plot.unit_UTC = data_utc;
-%         handles.data.plot.unit_MJD = SessionStartTimeMJD + x/24;
-%         
-%     else
-%         data_utc = x;
-%         handles.data.plot.foget_unit =1;
-%     end
+
     % for non-intensive
 %     if get(handles.radiobutton_unit_UTC,'Value') && ...
 %             get(handles.togglebutton_plot_residuals_SelectedData_output,'Value')    
-        if DurationHours(end)>5
-            ind=x<SessionStartTimeUTC;
-            if sum(x<SessionStartTimeUTC)>0
-                x(ind) = x(ind)+24-SessionStartTimeUTC;
-                x(~ind) = x(~ind) - SessionStartTimeUTC;
-            else
-                x = x - SessionStartTimeUTC;
-            end
-        else
-                x = x - SessionStartTimeUTC;
-        end
+%         if DurationHours(end)>5
+%             ind=x<SessionStartTimeUTC;
+%             if sum(x<SessionStartTimeUTC)>0
+%                 x(ind) = x(ind)+24-SessionStartTimeUTC;
+%                 x(~ind) = x(~ind) - SessionStartTimeUTC;
+%             else
+%                 x = x - SessionStartTimeUTC;
+%             end
+%         else
+%                 x = x - SessionStartTimeUTC;
+%         end
 %     end
-    
+    yLimits = get(handles.axes_plot_residuals,'YLim');
+
     % plotting
-    p = plot(handles.axes_plot_residuals, [x(1) x(1)],y, ...
+    p = plot(handles.axes_plot_residuals, [x(1) x(1)],yLimits, ...
          'color', 'k', 'markersize', 10, 'DisplayName', 'selection');
     set(get(get(p,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
 
-    p = plot(handles.axes_plot_residuals, [x(2) x(2)],y, ...
+    p = plot(handles.axes_plot_residuals, [x(2) x(2)],yLimits, ...
          'color', 'k', 'markersize', 10, 'DisplayName', 'selection');
     set(get(get(p,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
 
     hold(handles.axes_plot_residuals, 'off');
 
-%    curSession=get(handles.popupmenu_plot_residuals_session, 'Value');
- %   SessionStartTimeMJD =  handles.data.plot.res(curSession).mjd(1);
-%     if get(handles.radiobutton_unit_MJD,'Value')
-%         set(handles.edit_plot_residuals_interval_show, 'String', ...
-%             sprintf('%2.3f - %2.3f',x(1)/24+SessionStartTimeMJD,x(2)/24+SessionStartTimeMJD))
-%     elseif get(handles.radiobutton_unit_UTC,'Value')
-%         set(handles.edit_plot_residuals_interval_show, 'String', ...
-%             sprintf('%2.3f - %2.3f',data_utc(1),data_utc(2)))     
-% 	elseif get(handles.radiobutton_unit_plot,'Value')
-%         set(handles.edit_plot_residuals_interval_show, 'String', ...
-%             sprintf('%2.3f - %2.3f',x(1),x(2)))
-%     end
 end
 
 % Save the change you made to the structure
