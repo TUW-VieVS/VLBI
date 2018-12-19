@@ -133,6 +133,20 @@ cla(handles.axes_plot_residuals);
 set(gcf,'CurrentAxes',handles.axes_plot_residuals)
 %hold(handles.axes_plot_residuals, 'on');
 
+% ##### Listener for Axes Changes ####
+if isfield(handles, 'axesListener')
+    delete(handles.axesListener);
+end
+hax1 = handles.axes_plot_residuals;
+prop1 = findPropertyHandle( hax1 , 'XLim' ) ;
+handles.axesListener = addlistener( hax1, prop1 , 'PostSet', @() [] ) ;
+pl.props2link = 'XLim' ;   % name of properties to link
+pl.listeners  = handles.axesListener ;         % listener handle
+pl.metaprops2link = prop1; % metaproperty handles
+pl.handles = handles;
+handles.axesListener.Callback = @(h,e) AxesLimitsChanged(h,e,pl) ;
+
+
 plotOutliers=0;
 
 background = [val; -val];
@@ -302,19 +316,19 @@ handles.data.plot.plottedResiduals=[];
 % set(handles.axes_plot_residuals, 'XLimMode', 'auto')
 set(handles.axes_plot_residuals, 'XLim', [-SessionEndTimeMJD*0.1 SessionEndTimeMJD*1.1]);
 % set(handles.axes_plot_residuals, 'XTick',0:6:24);
-xTicksLabel = datetime(get(handles.axes_plot_residuals,'XTick')/24+SessionStartTimeMJD,'ConvertFrom','ModifiedJulianDate');
-hhmm = datestr(xTicksLabel,'hh:MM');
-date = unique(datestr(xTicksLabel,'dd.mm.yyyy'),'rows');
-set(handles.axes_plot_residuals, 'XTickLabel',hhmm);
-dateLab = '';
-for i=1:size(date,1)
-    if i == 1
-        dateLab = [dateLab date(i,:)];
-    else
-        dateLab = [dateLab ' - ' date(i,:)];
-    end
-end
-xlabel(dateLab);
+% xTicksLabel = datetime(get(handles.axes_plot_residuals,'XTick')/24+SessionStartTimeMJD,'ConvertFrom','ModifiedJulianDate');
+% hhmm = datestr(xTicksLabel,'hh:MM');
+% date = unique(datestr(xTicksLabel,'dd.mm.yyyy'),'rows');
+% set(handles.axes_plot_residuals, 'XTickLabel',hhmm);
+% dateLab = '';
+% for i=1:size(date,1)
+%     if i == 1
+%         dateLab = [dateLab date(i,:)];
+%     else
+%         dateLab = [dateLab ' - ' date(i,:)];
+%     end
+% end
+% xlabel(dateLab);
 
 switch plotstyle
     case 1 % lines only
