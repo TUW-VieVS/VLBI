@@ -51,7 +51,6 @@ switch ocf
     otherwise
         parameter.vie_mod.eophf =1;
         [ocx,ocy,ocut] = eop_eanes(TT,ocf);         %[as,sec]
-        %[ocx2,ocy2,ocut2] = eop_ocean(TT,ocf);         %[as,sec]
 
         CORUT = CORUT + ocut;
         CORX  = CORX + as2rad(ocx);
@@ -62,27 +61,13 @@ end
 % px, py (recommended by the IERS conventions 2003, chap. 5.4.2) 
 if parameter.vie_mod.lib_pm == 1
     parameter.vie_mod.eophf =1;
-    if strcmp(ocf,'boehm08.dat')||strcmp(ocf,'boehm09.dat')
-        disp('THE EFFECT OF EARTHS TRIAXIALITY ON POLAR MOTION IS ALREADY INCLUDED IN YOUR')
-        disp('SUBDAILY OCEAN TIDES MODEL')
-        disp('pm_gravi is not applied !!!')
-        parameter.vie_mod.lib_pm = 0;
-    else
-        [trix,triy] = pm_libration(TT);   % [rad]
-        CORX = CORX + trix;
-        CORY = CORY + triy;
-    end
+    [trix,triy] = pm_libration(TT);   % [rad]
+    CORX = CORX + trix;
+    CORY = CORY + triy;
 end
 if parameter.vie_mod.lib_ut == 1
     parameter.vie_mod.eophf =1;
-    if strcmp(ocf,'boehm08.dat')||strcmp(ocf,'boehm09.dat')
-        disp('THE EFFECT OF EARTHS TRIAXIALITY ON UT1 IS ALREADY INCLUDED IN YOUR')
-        disp('SUBDAILY OCEAN TIDES MODEL')
-        disp('spinlibV is not applied !!!')
-        parameter.vie_mod.lib_ut = 0;
-    else
-        [triut] = ut_libration(TT);   % [sec]
-        CORUT = CORUT + triut;
-    end
+    [triut] = ut_libration(TT);   % [sec]
+    CORUT = CORUT + triut;
 end
 

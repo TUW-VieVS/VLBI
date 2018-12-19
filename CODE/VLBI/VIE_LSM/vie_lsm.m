@@ -1339,29 +1339,29 @@ if ess == 1 % +hana 10Nov10
     
     % Save the "cleaned" VieVS structures (consistent withe the results in x_ and res_):
     fprintf('Save VieVS data structures (oultiers and OPT file options applied!)\n');
-    fprintf('  ../VieVS/DATA/LEVEL3/%s/%s_antenna.mat\n',dirpth,parameter.session_name);
+    fprintf('  ../DATA/LEVEL3/%s/%s_antenna.mat\n',dirpth,parameter.session_name);
     save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_antenna.mat'],'antenna');
-    fprintf('  ../VieVS/DATA/LEVEL3/%s/%s_source.mat\n',dirpth,parameter.session_name);
+    fprintf('  ../DATA/LEVEL3/%s/%s_source.mat\n',dirpth,parameter.session_name);
     save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_sources.mat'],'sources');
-    fprintf('  ../VieVS/DATA/LEVEL3/%s/%s_parameter.mat\n',dirpth,parameter.session_name);
+    fprintf('  ../DATA/LEVEL3/%s/%s_parameter.mat\n',dirpth,parameter.session_name);
     save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_parameter.mat'],'parameter');
-    fprintf('  ../VieVS/DATA/LEVEL3/%s/%s_scan.mat\n',dirpth,parameter.session_name);
+    fprintf('  ../DATA/LEVEL3/%s/%s_scan.mat\n',dirpth,parameter.session_name);
     save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_scan.mat'],'scan');
     
 
-    fprintf('Estimated parameters are saved as ../VieVS/DATA/LEVEL3/%s/x_%s.mat\n',dirpth,parameter.session_name);
+    fprintf('Estimated parameters are saved as ../DATA/LEVEL3/%s/x_%s.mat\n',dirpth,parameter.session_name);
     save(['../DATA/LEVEL3/',dirpth,'/x_',parameter.session_name,'.mat'],'x_');
 
-    fprintf('Estimation options are saved as ../VieVS/DATA/LEVEL3/%s/opt_%s.mat\n',dirpth,parameter.session_name);
+    fprintf('Estimation options are saved as ../DATA/LEVEL3/%s/opt_%s.mat\n',dirpth,parameter.session_name);
     save(['../DATA/LEVEL3/',dirpth,'/opt_',parameter.session_name,'.mat'],'opt_');
     
-    fprintf('normal equation matrix is saved as ../VieVS/DATA/LEVEL3/%s/atpa_%s.mat\n',dirpth,parameter.session_name);
+    fprintf('normal equation matrix is saved as ../DATA/LEVEL3/%s/atpa_%s.mat\n',dirpth,parameter.session_name);
     save(['../DATA/LEVEL3/',dirpth,'/atpa_',parameter.session_name,'.mat'],'atpa_');
 
 %     fprintf('right hand side vector is saved as ../VieVS/DATA/LEVEL3/%s/atpl_%s.mat\n',dirpth,parameter.session_name);
 %     save(['../DATA/LEVEL3/',dirpth,'/atpl_',parameter.session_name,'.mat'],'atpl_');
     
-    fprintf('Residuals are saved as ../VieVS/DATA/LEVEL3/%s/res_%s.mat\n',dirpth,parameter.session_name);
+    fprintf('Residuals are saved as ../DATA/LEVEL3/%s/res_%s.mat\n',dirpth,parameter.session_name);
     save(['../DATA/LEVEL3/',dirpth,'/res_',parameter.session_name,'.mat'],'res');
 
 end

@@ -110,6 +110,11 @@ $ Antenna Information File  Format Version of 2008.04.22
 #  22) 171:177 -- Sub-reflector/primary focus mounting legs thermal expansion coefficient (1/K)
 #
 #----------------------------------------------------------------------------------------
+ANTENNA_INFO  AGGO      FO_PRIM MO_AZEL RA_NO   ME_COMP  12.6  0    0    999.0    6.0  0.2000   1.50  1.00E-5   1.4600 1.20E-5   0.0000 1.20E-5   0.7500 1.20E-5   4.5000 1.20E-5
+# Information copied from TIGOCONC
+# axis offset reported by Hayo Hase BKG, 2004 on the basis of local measurements
+# 0.0000 +- 0.0003
+#----------------------------------------------------------------------------------------
 ANTENNA_INFO  AIRA      FO_SECN MO_AZEL RA_NO   ME_INCM  16.4  0    0    978.2   10.0  3.0000  0      1.00E-5   6.7000 1.20E-5  -0.0081 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Email of Kensuke Kokado, 2008-07-29; X band: secondary focus, S band: primary focus
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0126 +- 0.0022

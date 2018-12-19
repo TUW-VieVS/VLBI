@@ -45,6 +45,7 @@ clc;
 
 % ##### Add path of the /CODE/ directory to the Matlab search path: #####
 addpath(genpath('../../CODE/'));
+addpath(genpath('../../../COMMON/'));
 
 % ##### Check optional input arguments #####
 for a = 1 : nargin
