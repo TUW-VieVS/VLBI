@@ -6,7 +6,7 @@
 %   variations (OCCAM).
 %   (UT1 values presented at IAU 2009 in Rio de Janeiro).
 %   The effect of the triaxiality of the Earth has been reduced from the
-%   series before the estimation of the tidal terms (pm_gravi, spinlibV).
+%   series before the estimation of the tidal terms (pm_libration, ut_libration).
 %     
 %   N.B.:  The fundamental lunisolar arguments are those of Simon et al.  
 % 
