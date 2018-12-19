@@ -121,6 +121,7 @@ function varargout = vie_setup(varargin)
 % 18 Jan 2018 by A. Hellerschmied: Changes for transition to GIT (call of vie_batch.m)
 % 06 Jul 2018 by D. Landskron: VMF3 added to the troposphere models
 % 25 Sep 2018 by D. Landskron: specific warning message suppressed
+% 18 Dec 2018 by D. Landskron: VieVS now starts with File - Set input files
 %*************************************************************************
 
 % Begin initialization code - DO NOT EDIT
@@ -501,6 +502,8 @@ if exist(filename, 'file')
 end
 % get vie_sched GUI startup options ------------------------------
 
+% Menu - File - Set input files, set data panel at the front when openining GUI
+menu_file_setInputFiles_Callback(hObject, eventdata, handles)
 
 % Choose default command line output for vie_setup
 handles.output = hObject;
