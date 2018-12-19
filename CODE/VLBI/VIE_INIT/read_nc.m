@@ -37,6 +37,7 @@
 %   2016-06-16, M. Madzak: Errors when loading intensive sesssions: - Error, when variable name ("varname_new") contained "+" => Replaced with "_" in "varname_new"
 %   2017-11-13, J. Gruber: Now the version number in the header file (Head.nc) which is stored in the top level of the vgosDb of a session is considered. By default the highest version will be used for processing.
 %   2017-11-14, J. Gruber: Stations with spaces in their names can be processed
+%   2018-12-19, D. Landskron: Bug with selection of highest version Head.nc file corrected
 
 function [out_struct, nc_info]=read_nc(headNcFile)
 % define head-filename, !! should NOT be changed !!
@@ -72,6 +73,7 @@ for i_toplev_head = 1:length(Head_files)
     curr_headFile = Head_files{i_toplev_head};
     Head_version(i_toplev_head) = getVerNr( curr_headFile,id_ver );  
 end
+Head_version(Head_version==-1) = 99;   % because the file "Head.nc" is the one with the highest Version number: Attention: perhaps GSFC changes this one day, because it actually contradicts the naming convention of other files (e.g. in station folders)
 [~,i_max_ver]=max(Head_version);
 headNcFile=dir([directory,top_level(i_head_files(i_max_ver)).name]);
 headNcFile=[directory,'/',headNcFile(1).name];
@@ -318,8 +320,7 @@ for iFolder=1:length(folders2read)
         % eval([lower(curStatName), '=struct;']);
 
         % get files in stationName-folder
-        files=dir([directory, ...
-            dirContentOfSession(properFolderLogical).name, '/*.nc']);
+        files=dir([directory,dirContentOfSession(properFolderLogical).name, '/*.nc']);
 
         % write stationname to nc_info (output) and create file_list cell and
         % variable_list cell. 
@@ -349,8 +350,7 @@ for iFolder=1:length(folders2read)
             nc_info(nStat+iFolder).file_list{k, 1}=struct_name;
 
             % open nc-file
-            ncid=netcdf.open([directory, ...
-                dirContentOfSession(properFolderLogical).name, '/', curFile], mode);
+            ncid=netcdf.open([directory,dirContentOfSession(properFolderLogical).name, '/', curFile], mode);
 
             % get # of dimensions, variables, global attributes and index of
             % unlimited dimension
@@ -380,7 +380,7 @@ for iFolder=1:length(folders2read)
                     out_struct.(curFolderName).(struct_name).(varname_new).val=netcdf.getVar(ncid, varid);
                 catch
                     happy_birthday
-                   disp('test'); 
+                    disp('test'); 
                 end
   %         eval([lower(curStatName), '.', struct_name, '.', varname_new, '=netcdf.getVar(ncid, varid);']);
                 
@@ -389,10 +389,8 @@ for iFolder=1:length(folders2read)
                     % Get attribute name, given variable id.
                     attname = netcdf.inqAttName(ncid,varid,attnum);
                     attval  = netcdf.getAtt(ncid,varid,attname);
-                    out_struct.(curFolderName).(struct_name).(varname_new).attr(attnum+1).name=...
-                        attname;
-                    out_struct.(curFolderName).(struct_name).(varname_new).attr(attnum+1).val=...
-                        attval;
+                    out_struct.(curFolderName).(struct_name).(varname_new).attr(attnum+1).name = attname;
+                    out_struct.(curFolderName).(struct_name).(varname_new).attr(attnum+1).val = attval;
                 end
                 % PRINT - commented!
                 %fprintf('          Variable ''%11s'' ----> %8s.%s.%s\n', varname, lower(curStatName), struct_name, varname_new);
