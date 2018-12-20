@@ -54,7 +54,7 @@ function varargout = vie_setup(varargin)
 %   (button in Run/Run Options added to the GUI)
 % 19 Aug 2015 by A. Girdiuk: New Output options were added for writing EOP files (eop_out.m).
 % 30 Sep 2015 by A. Hellerschmied: function "updateSeveralPopupmenus" extracted to a separate file and updated.
-% 02 Oct 2015 by A. Hellerschmied: A sub-folder named "DEFAULT" is created automatically, if the "../DATA/OPT/" directory is empty!
+% 02 Oct 2015 by A. Hellerschmied: A sub-folder named "DEFAULT" is created automatically, if the "../../../VLBI_OPT/" directory is empty!
 % 27 Oct 2015 by A. Hellerschmied: Minor change: default TRF is now defined/set in function "loadSuperstationFile".
 % 06 Nov 2015 by S. Boehm: option to estimate tidal ERP variations added
 % 16 Nov 2015 by A. Hellerschmied: Bug-fix: Problem with finding "superstation.mat" in the TRF folder while starting vievs fixed.
@@ -203,7 +203,7 @@ allMainUiPanels=[handles.uipanel_file_setInputFiles, ...
 handles.allMainUiPanels=allMainUiPanels;
 
 % get directories' content
-dirsInOptFolder=dir('../DATA/OPT/');
+dirsInOptFolder=dir('../../../VLBI_OPT/');
 dirsInOutlierFolder=dir('../DATA/OUTLIER/');
 dirsInTrpFolder=dir('../TRP/OUTPUT_DATA/');
 dirsInIonFolder=dir('../ION/FILES/');
@@ -272,9 +272,9 @@ else
 end
 
 % remove '.', '..' and entries which are not directories (eg files)
-dirsInOptFolder(strcmp({dirsInOptFolder.name}, '.')|strcmp({dirsInOptFolder.name}, '..')|~[dirsInOptFolder.isdir])=[];
-if isempty(dirsInOptFolder) % If thre is not subfolder in the OPT directory => Create a "DEFAULT" folder!
-    mkdir('../DATA/OPT/DEFAULT/');
+dirsInOptFolder(strcmp({dirsInOptFolder.name}, '.')|strcmp({dirsInOptFolder.name}, '..')|strcmp({dirsInOptFolder.name}, '.git')|~[dirsInOptFolder.isdir])=[];
+if isempty(dirsInOptFolder) % If there is no subfolder in the OPT directory => Create a "DEFAULT" folder!
+    mkdir('../../../VLBI_OPT/DEFAULT/');
 end
 yrsToDelete=~cellfun(@isnan, cellfun(@str2double, {dirsInOutlierFolder.name}, 'UniformOutput', false));
 dirsInOutlierFolder(strcmp({dirsInOutlierFolder.name}, '.')|strcmp({dirsInOutlierFolder.name}, '..')|~[dirsInOutlierFolder.isdir]|yrsToDelete)=[];
@@ -5506,8 +5506,8 @@ switch(datatype_str)
         optFileName = [session(1 : (strfind(session, ' [vgosDB]')-1)), '.OPT'];
 end % switch(datatype_str)
 
-wantedOPTfile = ['../DATA/OPT/', selectedOPTdir, '/', optFileName];
-yrFolder = ['../DATA/OPT/', selectedOPTdir, '/', session(1:4)];
+wantedOPTfile = ['../../../VLBI_OPT/', selectedOPTdir, '/', optFileName];
+yrFolder = ['../../../VLBI_OPT/', selectedOPTdir, '/', session(1:4)];
 
 % if the year folder does not exist - create it
 if ~exist(yrFolder, 'dir')
@@ -10248,7 +10248,7 @@ OPTdirs=get(handles.popupmenu_setInput_optDir, 'String');
 selectedOPTdir=OPTdirs{get(handles.popupmenu_setInput_optDir, 'value')};
 
 % check if file exist
-wantedOPTfile=['../DATA/OPT/', selectedOPTdir, '/', yearStr, '/', session(1:9), '.OPT'];
+wantedOPTfile=['../../../VLBI_OPT/', selectedOPTdir, '/', yearStr, '/', session(1:9), '.OPT'];
 % if the year folder does not exist - create it
 if exist(wantedOPTfile, 'file')
     OptFileExist=1;
