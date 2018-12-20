@@ -367,7 +367,7 @@ opt.nutdy.model = opt.nutdy.model;        % 1 piecewise linear offsets
                                               % (e.g. 0.0001 creates just one offset, 3 is loose)
 
 % open opt-file
-optname = ['../DATA/OPT/',opt.diropt,'/',antenna(1).ngsfile(1:14),'.OPT'];
+optname = ['../../../VLBI_OPT/',opt.diropt,'/',antenna(1).ngsfile(1:14),'.OPT'];
 fid = fopen(optname);
 
 for istat = 1:na

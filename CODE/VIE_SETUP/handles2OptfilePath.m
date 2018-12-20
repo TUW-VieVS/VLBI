@@ -87,5 +87,5 @@ else
     OPTFileName = [session, '.OPT'];
 end
 
-OPTfolder = ['../DATA/OPT/', selectedOPTdir, '/', yearStr, '/'];
+OPTfolder = ['../../../VLBI_OPT/', selectedOPTdir, '/', yearStr, '/'];
 
