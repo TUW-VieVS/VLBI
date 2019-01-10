@@ -52,7 +52,7 @@
 %    12 Feb 2010 by Tobias Nilsson
 %
 % Revision:
-%    19 Jan 2015 by Caroline Schönberger: KEYWORD 'NOINT' inlcude all
+%    19 Jan 2015 by Caroline SchÃ¶nberger: KEYWORD 'NOINT' inlcude all
 %    non-intensive sessions
 %    20 Apr 2015 by David Mayer: MINSTANUM added
 %    31 Mar 2017 by David Mayer: corrected NOINT option 
@@ -253,9 +253,9 @@ for i_year = 1:length(years)
             % give a message that the necessary master file can't be found, but make exceptions:
             % - there are no Intensive master files before 1992
             if ~contains(path_master_file,'-int')
-                fprintf('%s%s%s\n','The Intensives master file ',path_master_file,' is missing! However, If you don''t consider Intenive sessions, this is no problem.');
+                fprintf('%s%s%s\n','The Intensives master file ',path_master_file,' is missing! However, If you don''t consider Intensive sessions, this is no problem.');
             elseif contains(path_master_file,'-int') && years(i_year)>=1992 
-                fprintf('%s%s%s\n','The master file ',path_master_file,' is missing! However, If you only consider Intenive sessions, this is no problem.');
+                fprintf('%s%s%s\n','The master file ',path_master_file,' is missing! However, If you only consider Intensive sessions, this is no problem.');
             end
             
         end
