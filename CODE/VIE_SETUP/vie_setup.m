@@ -203,11 +203,7 @@ allMainUiPanels=[handles.uipanel_file_setInputFiles, ...
 handles.allMainUiPanels=allMainUiPanels;
 
 % get directories' content
-OptFolder='../../VLBI_OPT/';
-if ~exist(OptFolder, 'dir')
-    mkdir(OptFolder);
-end
-dirsInOptFolder=dir(OptFolder);
+dirsInOptFolder=dir('../../VLBI_OPT/');
 dirsInOutlierFolder=dir('../DATA/OUTLIER/');
 dirsInTrpFolder=dir('../TRP/OUTPUT_DATA/');
 dirsInIonFolder=dir('../ION/FILES/');
