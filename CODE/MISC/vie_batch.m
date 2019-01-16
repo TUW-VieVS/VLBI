@@ -115,17 +115,17 @@ if runp.parallel
     elseif flag_release_r2013b_or_later == 1
         % close matlabpool if it is already open
         poolobj = gcp('nocreate'); % Get current pool (object)
-        if ~isempty(poolobj)
-            delete(poolobj)
-        end
-        % Create a parallel pool
-        % ...with the default profile:
-        if strcmp(nCores, 'auto')
-            poolobj = parpool;
-            %...with the specified number of workers:
-        else
-            nCores = str2double(nCores);
-            poolobj = parpool(nCores);
+        if isempty(poolobj)
+%             delete(poolobj)
+            % Create a parallel pool
+            % ...with the default profile:
+            if strcmp(nCores, 'auto')
+                poolobj = parpool;
+                %...with the specified number of workers:
+            else
+                nCores = str2double(nCores);
+                poolobj = parpool(nCores);
+            end
         end
     end
 end
