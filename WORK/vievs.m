@@ -43,9 +43,13 @@ flag_runsetup = 0;
 flag_runbatch = 0;
 clc;
 
-% ##### Add path of the /CODE/ directory to the Matlab search path: #####
-addpath(genpath('../../../COMMON/'));
-addpath(genpath('../../CODE/'));
+% ##### Add path of the /COMMON/ and /CODE/ directories to the Matlab search path
+% Give a warning if the COMMON directory does not exist: #####
+if ~exist('../../COMMON/', 'dir')
+    msgbox('ERROR: The /COMMON directory does not exist - please clone/copy the COMMON repository to the level of your VLBI repository!!!');
+end
+addpath(genpath('../../COMMON/'));
+addpath(genpath('../CODE/'));
 
 % ##### Check optional input arguments #####
 for a = 1 : nargin

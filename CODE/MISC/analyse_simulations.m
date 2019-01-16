@@ -10,7 +10,7 @@ path = pwd;
 if strcmp(path(end-3:end),'WORK')
     path = '../DATA/LEVEL3/';
 elseif strcmp(path(end-3:end),'MISC')
-    path = '../../VLBI/DATA/LEVEL3/';
+    path = '../../DATA/LEVEL3/';
 end
 
 
