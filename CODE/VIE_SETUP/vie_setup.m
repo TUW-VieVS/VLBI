@@ -203,7 +203,7 @@ allMainUiPanels=[handles.uipanel_file_setInputFiles, ...
 handles.allMainUiPanels=allMainUiPanels;
 
 % get directories' content
-dirsInOptFolder=dir('../../../VLBI_OPT/');
+dirsInOptFolder=dir('../../VLBI_OPT/');
 dirsInOutlierFolder=dir('../DATA/OUTLIER/');
 dirsInTrpFolder=dir('../TRP/OUTPUT_DATA/');
 dirsInIonFolder=dir('../ION/FILES/');
@@ -274,7 +274,7 @@ end
 % remove '.', '..' and entries which are not directories (eg files)
 dirsInOptFolder(strcmp({dirsInOptFolder.name}, '.')|strcmp({dirsInOptFolder.name}, '..')|strcmp({dirsInOptFolder.name}, '.git')|~[dirsInOptFolder.isdir])=[];
 if isempty(dirsInOptFolder) % If there is no subfolder in the OPT directory => Create a "DEFAULT" folder!
-    mkdir('../../../VLBI_OPT/DEFAULT/');
+    mkdir('../../VLBI_OPT/DEFAULT/');
 end
 yrsToDelete=~cellfun(@isnan, cellfun(@str2double, {dirsInOutlierFolder.name}, 'UniformOutput', false));
 dirsInOutlierFolder(strcmp({dirsInOutlierFolder.name}, '.')|strcmp({dirsInOutlierFolder.name}, '..')|~[dirsInOutlierFolder.isdir]|yrsToDelete)=[];
@@ -5506,8 +5506,8 @@ switch(datatype_str)
         optFileName = [session(1 : (strfind(session, ' [vgosDB]')-1)), '.OPT'];
 end % switch(datatype_str)
 
-wantedOPTfile = ['../../../VLBI_OPT/', selectedOPTdir, '/', optFileName];
-yrFolder = ['../../../VLBI_OPT/', selectedOPTdir, '/', session(1:4)];
+wantedOPTfile = ['../../VLBI_OPT/', selectedOPTdir, '/', optFileName];
+yrFolder = ['../../VLBI_OPT/', selectedOPTdir, '/', session(1:4)];
 
 % if the year folder does not exist - create it
 if ~exist(yrFolder, 'dir')
@@ -10248,7 +10248,7 @@ OPTdirs=get(handles.popupmenu_setInput_optDir, 'String');
 selectedOPTdir=OPTdirs{get(handles.popupmenu_setInput_optDir, 'value')};
 
 % check if file exist
-wantedOPTfile=['../../../VLBI_OPT/', selectedOPTdir, '/', yearStr, '/', session(1:9), '.OPT'];
+wantedOPTfile=['../../VLBI_OPT/', selectedOPTdir, '/', yearStr, '/', session(1:9), '.OPT'];
 % if the year folder does not exist - create it
 if exist(wantedOPTfile, 'file')
     OptFileExist=1;

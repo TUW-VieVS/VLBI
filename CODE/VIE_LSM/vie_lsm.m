@@ -245,9 +245,9 @@ parameter.vie_init.stat_dw = [];
 
 % read OPT-file
 if length(parameter.session_name) == 14
-    opt_file_path_name = ['../../../VLBI_OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name(1:end-5), '.OPT'];
+    opt_file_path_name = ['../../VLBI_OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name(1:end-5), '.OPT'];
 elseif length(parameter.session_name) == 9
-    opt_file_path_name = ['../../../VLBI_OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name, '.OPT'];
+    opt_file_path_name = ['../../VLBI_OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name, '.OPT'];
 elseif length(parameter.session_name) ~= 19
     error('Session name does not follow convention');
 end
@@ -1196,20 +1196,6 @@ if ess == 1 % +hana 10Nov10
     if ~isempty(out_v)
         out = write_outlier_file(out_v, antenna, scan, parameter);
     end
-
-    % ##### Create residual plot #####
-    figure(1)
-    plot(v_real);
-    hold on
-    title('residuals of total observations in the session')
-    xlabel('[number of total observations]')
-    ylabel('[cm]')
-    plot(out_v,v_real(out_v),'rs');
-    for ico = 1 : length(out_v)
-        text(out_v(ico),v_real(out_v(ico)),['\fontsize{14}','\color[rgb]{0 0 0}',num2str(scan(out(ico,1)).obs(out(ico,2)).i1), '-',num2str(scan(out(ico,1)).obs(out(ico,2)).i2)]);
-    end
-    hold off
-
 
     % ##### write residuals/outlier info to new variable #####
     % if the res file already exist, ie if it was written in first solution

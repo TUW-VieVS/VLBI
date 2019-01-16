@@ -42,7 +42,7 @@ function updateSeveralPopupmenus(hObject, handles)
 % #########################################################################
 
 % ### OPT-directory ###
-path_dir               = '../../../VLBI_OPT/';
+path_dir               = '../../VLBI_OPT/';
 popupmenu_tag          = 'popupmenu_setInput_optDir';
 folder_description_str = 'OPT file directory';
 update_popupmenu_folder_in_dir(path_dir, popupmenu_tag, folder_description_str, handles)
