@@ -60,13 +60,33 @@
 
 %*************************************************************************
 
-function vie_batch
-
+function vie_batch(varargin)
 
 %% load('currentf_pa.mat','parameter');
 load('process_list','process_list');
 load('runp','runp')
 load('guiparameter.mat');
+%% if you passed a argument interpret it as session name
+if(nargin > 0)
+    session = varargin{1};
+    found = false;
+    for i=1:size(process_list,1)
+        if(contains(process_list(i,:),session))
+            found = true;
+            break
+        end
+    end
+    if(~found)
+        error('Session not found in process_list');
+    end
+    process_list = process_list(i,:);
+    fprintf('Only running VIE_LSM for session: %s',process_list)
+    runp.init = 0;
+    runp.mod = 0;
+    runp.lsm = 1;
+    runp.parallel = 0;
+end
+
 fid = fopen('failed_sess_temp.txt', 'w'); %delete content of file - this file is only temporary. It's purpose is to save the failed sessions even when Matlab is aborted by hand
 fclose(fid);
 % guiparameter=parameter;
@@ -793,7 +813,7 @@ if ~isempty(process_list)
             if flag_release_r2013b_or_later == 0
                 matlabpool close
             elseif flag_release_r2013b_or_later == 1
-                delete(poolobj)
+%                 delete(poolobj)
             end
 
         end % if parallel
