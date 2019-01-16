@@ -11823,3 +11823,9 @@ function popupmenu_plot_select_time_ref_format_CreateFcn(hObject, eventdata, han
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+function rerun_vie_lsm(hObject, eventdata, handles)
+idx = handles.popupmenu_plot_residuals_session.Value;
+name = handles.popupmenu_plot_residuals_session.String{idx};
+vie_batch(name);
+pushbutton_plot_residuals_load_Callback(handles.pushbutton_plot_residuals_load, eventdata, handles);
