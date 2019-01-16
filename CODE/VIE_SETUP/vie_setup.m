@@ -11826,6 +11826,45 @@ end
 
 function rerun_vie_lsm(hObject, eventdata, handles)
 idx = handles.popupmenu_plot_residuals_session.Value;
+
+if handles.radiobutton_plot_residuals_perAll.Value
+    flag = 0;
+elseif handles.radiobutton_plot_residuals_perBasel.Value
+    flag = 1;
+    flag_idx = handles.popupmenu_plot_residuals_baseline.Value;
+elseif handles.radiobutton_plot_residuals_perStat.Value
+    flag = 2;
+    flag_idx = handles.popupmenu_plot_residuals_station.Value;
+else
+    flag = 3;
+    flag_idx = handles.popupmenu_plot_residuals_source.Value;
+end
+ax = gca;
+xlim = ax.XLim;
+ylim = ax.YLim;
+
 name = handles.popupmenu_plot_residuals_session.String{idx};
 vie_batch(name);
-pushbutton_plot_residuals_load_Callback(handles.pushbutton_plot_residuals_load, eventdata, handles);
+handles=loadResFiles(hObject, handles);
+handles.popupmenu_plot_residuals_session.Value = idx;
+handles=updatePopupmenusInResidualPlot(hObject, handles);
+
+if flag == 0
+    handles.radiobutton_plot_residuals_perAll.Value = 1;
+elseif flag == 1
+    handles.radiobutton_plot_residuals_perBasel.Value = 1;
+    handles.popupmenu_plot_residuals_baseline.Value = flag_idx;
+    handles.popupmenu_plot_residuals_baseline.Enable = 'on';
+elseif flag == 2
+    handles.radiobutton_plot_residuals_perStat.Value = 1;
+    handles.popupmenu_plot_residuals_station.Value = flag_idx;
+    handles.popupmenu_plot_residuals_station.Enable = 'on';
+else
+    handles.radiobutton_plot_residuals_perSource.Value = 1;
+    handles.popupmenu_plot_residuals_source.Value = flag_idx;
+    handles.popupmenu_plot_residuals_source.Enable = 'on';
+end
+handles=plotResidualsToAxes(handles);
+ax.XLim = xlim;
+ax.YLim = ylim;
+guidata(hObject, handles)

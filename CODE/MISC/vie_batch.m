@@ -84,6 +84,7 @@ if(nargin > 0)
     runp.init = 0;
     runp.mod = 0;
     runp.lsm = 1;
+    runp.parallel = 0;
 end
 
 fid = fopen('failed_sess_temp.txt', 'w'); %delete content of file - this file is only temporary. It's purpose is to save the failed sessions even when Matlab is aborted by hand
@@ -812,7 +813,7 @@ if ~isempty(process_list)
             if flag_release_r2013b_or_later == 0
                 matlabpool close
             elseif flag_release_r2013b_or_later == 1
-                delete(poolobj)
+%                 delete(poolobj)
             end
 
         end % if parallel
