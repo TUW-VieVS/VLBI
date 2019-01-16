@@ -139,7 +139,7 @@ end
 if nargout
     [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
 else
-    gui_mainfcn(gui_State, varargin{:});
+   gui_mainfcn(gui_State, varargin{:});
 end
 % End initialization code - DO NOT EDIT
 
@@ -273,9 +273,6 @@ end
 
 % remove '.', '..' and entries which are not directories (eg files)
 dirsInOptFolder(strcmp({dirsInOptFolder.name}, '.')|strcmp({dirsInOptFolder.name}, '..')|strcmp({dirsInOptFolder.name}, '.git')|~[dirsInOptFolder.isdir])=[];
-if isempty(dirsInOptFolder) % If there is no subfolder in the OPT directory => Create a "DEFAULT" folder!
-    mkdir('../../VLBI_OPT/DEFAULT/');
-end
 yrsToDelete=~cellfun(@isnan, cellfun(@str2double, {dirsInOutlierFolder.name}, 'UniformOutput', false));
 dirsInOutlierFolder(strcmp({dirsInOutlierFolder.name}, '.')|strcmp({dirsInOutlierFolder.name}, '..')|~[dirsInOutlierFolder.isdir]|yrsToDelete)=[];
 dirsInTrpFolder(strcmp({dirsInTrpFolder.name}, '.')|strcmp({dirsInTrpFolder.name}, '..')|~[dirsInTrpFolder.isdir])=[];
