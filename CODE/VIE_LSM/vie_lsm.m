@@ -1153,13 +1153,6 @@ if ess == 1 % +hana 10Nov10
     opt.wrms = wrms;
 
     mi = mo*sqrt(diag(Qxx)); % std. dev. of estimated parameters [cm,mas]
-    fprintf('\n');
-    fprintf('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n')
-    fprintf('chi-squared of main solution vTPv/degOfFreedom: %.3f\n',mo^2);
-    fprintf('WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights): %.3f cm (%.3f ps)\n',wrms,wrms*100/2.99792458);  % for post-fit residual check
-    fprintf('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n')
-    fprintf('\n')
-%    [mo_stat,mo_bas]=calc_chi2(na,ntim,nobserv,scan,Pobserv,v_real,antenna);
 
 
     % Outlier test begins here
@@ -1792,6 +1785,14 @@ if opt.ascii_snx == 1
 end
 
 
+% Command window output of resulting statistics
+fprintf('\n');
+fprintf('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n')
+fprintf('chi-squared of main solution vTPv/degOfFreedom: %.3f\n',mo^2);
+fprintf('WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights): %.3f cm (%.3f ps)\n',wrms,wrms*100/2.99792458);  % for post-fit residual check
+fprintf('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n')
+fprintf('\n')
+
 % -------------------------------------------------------------------------
-fprintf('\nvie_lsm is successfully finished after %.2f seconds!\n',toc);
+fprintf('vie_lsm is successfully finished after %.2f seconds!\n',toc);
 fprintf('\n\n')
