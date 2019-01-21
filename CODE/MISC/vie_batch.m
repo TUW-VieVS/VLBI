@@ -66,6 +66,8 @@ function vie_batch(varargin)
 load('process_list','process_list');
 load('runp','runp')
 load('guiparameter.mat');
+cleanVgosDB();
+
 %% if you passed a argument interpret it as session name
 if(nargin > 0)
     session = varargin{1};
@@ -860,6 +862,7 @@ t = clock;
 tstr1 = sprintf('%4d/%02d/%02d', t(1), t(2), t(3));
 tstr2 = sprintf('%02d:%02d:%02d', t(4), t(5), round(t(6)));
 fprintf('VieVS processing ends at %s, %s\n', tstr2, tstr1);
+cleanVgosDB();
 
 
 end % function vie_batch
