@@ -849,9 +849,13 @@ if ~isempty(process_list)
 
 end
 
+if runp.lsm && runp.init && runp.sim && runp.mod
+    analyse_simulations(runp.lsm_path);
+end
+
 if isfield(runp, 'sched') && runp.sched && exist('process_list_orig', 'var') && size(process_list_orig,1)>1 && runp.lsm && runp.init && runp.sim && runp.mod
     try
-        writeLEVEL3toXLSX( runp );
+        writeLEVEL3toXLSX( runp.lsm_path );
     catch
     end
 end

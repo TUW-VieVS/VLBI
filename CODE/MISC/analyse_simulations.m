@@ -1,10 +1,12 @@
 %% summarize results from VieVS simulations
 % written by: Matthias Schartner
-clc, clear, close all;
+function analyse_simulations(name)
+
 
 % change sub-direcotry name here:
-name = 'dummy';
-
+if isempty(name)
+    name = 'DUMMY';
+end
 
 path = pwd;
 if strcmp(path(end-3:end),'WORK')
@@ -207,3 +209,7 @@ fprintf('\nmean formal error:\n')
 disp(t_mean_sig)
 fprintf('\nrepeatability:\n')
 disp(t_rep)
+
+save(sprintf('../OUT/%s.mat',name),'t_mean_sig','t_rep', 'dut1_mx', 'dut1_val', 'xpol_mx', 'xpol_val', 'ypol_mx', 'ypol_val', 'nutdx_mx', 'nutdx_val', 'nutdy_mx', 'nutdy_val', 'stations', 'station_mx', 'station_val')
+
+end

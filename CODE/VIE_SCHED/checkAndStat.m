@@ -122,7 +122,7 @@ for ista = 1:nsta
         if iobs>1
             totalSlewTime(ista) = totalSlewTime(ista)+st;
             totalConstTime(ista) = totalConstTime(ista)+const;            
-            if thisObs.startscan < (staobs(ista).endmjd+(st+const-1)/86400)    % 1 second tolerance 
+            if thisObs.startscan < (staobs(ista).endmjd+(st+const-2)/86400)    % 1 second tolerance 
                 errorNr = errorNr +1;
                 fprintf(PARA.fid_footer,'ERROR NR %d:\n',errorNr);
                 fprintf(PARA.fid_footer,'Not enough slew time for %s to scan %s (between sched nr: %d-%d)\n',station(ista).name,source(thisObs.srcid).name,istaObs(iobs-1).schedNr,thisObs.schedNr);
