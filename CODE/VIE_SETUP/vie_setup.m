@@ -831,7 +831,7 @@ set(handles.uipanel_plot_parameters, 'Visible', 'On');
 % set bar for plotting options to visible
 set(handles.uitoolbar_plotOptions, 'Visible', 'On');
 
-% update the folders (since there could have been created antoher subfolder)
+% update the folders (since there could have been created another subfolder)
 dirsInDataFolder=dir('../DATA/LEVEL3/');
 dirsInDataFolder(strcmp({dirsInDataFolder.name}, '.')|strcmp({dirsInDataFolder.name}, '..')|~[dirsInDataFolder.isdir])=[];
 set(handles.popupmenu_plot_folder1_subfolder, 'String', ['/', {dirsInDataFolder.name}])
@@ -1819,7 +1819,7 @@ if ischar(FileName) || iscell(FileName)
     end
 
     if fileWasChosen
-        % Distinguish between NGS and VSO (VieVS simple obseration files) files:
+        % Distinguish between NGS and VSO (VieVS simple observation files) files:
         if ~isempty(strfind(PathName, 'NGS'))
             filetype_str = 'ngs';
         elseif ~isempty(strfind(PathName, 'SIM')) || ~isempty(strfind(PathName, 'SCHED'))
@@ -1879,7 +1879,7 @@ end
 function updateInputFilesBox(hObject, eventdata,handles,newFiles)
 
 % if something was given
-if ~isempty(newFiles) && sum(strcmpi(newFiles,''))==0 % second: if cell, reutnred is [0 0]
+if ~isempty(newFiles) && sum(strcmpi(newFiles,''))==0 % second: if cell, returned is [0 0]
     newFiles=cellstr(newFiles);
     
     % \ -> /
@@ -4126,7 +4126,7 @@ function pushbutton_run_Callback(hObject, eventdata, handles)
 % save gui parameters (again)
 auto_save_parameterfile(hObject, handles)
  
-% prepare everything for calling vie_batch1e
+% prepare everything for calling vie_batch
 save_runp(hObject, handles)
 
 % call vie_batch
@@ -5434,7 +5434,7 @@ function listbox_setInput_processList_ButtonDownFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% if there is an entrie in the listbox at all
+% if there is an entry in the listbox at all
 if ~isempty(get(handles.listbox_setInput_processList, 'String'))
 
     % create the menu at proper position
@@ -5461,7 +5461,7 @@ if ~isempty(get(handles.listbox_setInput_processList, 'String'))
 end
 
 function analyseNetcdfFile(src,eventdata,hObject,handles)
-% This function opens the GUI to visiulise the content of netCDF datasets
+% This function opens the GUI to visualise the content of netCDF datasets
 
 % get selected file
 allSessionsInList=get(handles.listbox_setInput_processList, 'String');
@@ -7598,16 +7598,16 @@ function pushbutton_save_Callback(hObject, eventdata, handles)
 % save gui parameters (again)
 auto_save_parameterfile(hObject, handles)
  
-% prepare everything for calling vie_batch1e
+% prepare everything for calling vie_batch
 save_runp(hObject, handles)
 
-msgbox('Variable runp saved! Please run vie_batch', 'Saving funished', 'help');
+msgbox('Variable runp saved! Please run vie_batch', 'Saving finished', 'help');
 
 
 
 function save_runp(hObject, handles)
 % This function saves the runp variable which is needed for running
-% vie_batch1e.
+% vie_batch.
 
 % create textfile containing all infos
 % first - get latest auto saved file
@@ -11141,7 +11141,8 @@ if iscell(out)
     
     for iF = 1 : length(out)
         curSlash = sort([strfind(out{iF},'/'), strfind(out{iF},'\')]);
-        out{iF} = [out{iF}(curSlash(end-1)+1 : end), ' [vgosDB]'];
+        tgzDot = sort(strfind(out{iF},'.'));
+        out{iF} = [out{iF}(curSlash(end-1)+1 : tgzDot(3)-1), ' [vgosDB]'];
     end
 
     updateInputFilesBox(hObject, eventdata,handles,out)   

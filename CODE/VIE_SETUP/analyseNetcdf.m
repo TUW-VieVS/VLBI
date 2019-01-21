@@ -254,8 +254,22 @@ set(fig,'Visible','on')
         % get edit textbox entry
         vgosFolder=get(edit_vgosFolder,'String');
         
-        if ~strcmp(vgosFolder, '/') && ~strcmp(vgosFolder,'\')
+        if ~strcmp(vgosFolder(end), '/') && ~strcmp(vgosFolder(end),'\')
             vgosFolder=[vgosFolder,'/'];
+        end
+        
+        % uncompress vgosDB *.tar.gz or *.tgz file
+        vgosTargz = [vgosFolder(1:end-1),'.tar.gz'];
+        vgosTgz = [vgosFolder(1:end-1),'.tgz'];
+        curSlash = sort([strfind(vgosFolder,'/'), strfind(vgosFolder,'\')]);
+        vgosTgzFolder = vgosFolder(1:curSlash(end-1));
+        
+        if exist(vgosTgz,'file')
+            untar(vgosTgz,vgosTgzFolder);
+        elseif exist(vgosTargz,'file')
+            untar(vgosTargz,vgosTgzFolder);
+        else
+            writeLog('Compressed vgosDB not found'); 
         end
         
         % load data from netcdf files
@@ -278,6 +292,8 @@ set(fig,'Visible','on')
             writeLog('Loading done');
             set(table_wrapper,'Data', {wrprs.name}');
             %             end
+            % remove the unpacked vgosDB folder
+            rmdir(vgosFolder, 's');
         else
             writeLog('Folder not found');
         end
@@ -357,7 +373,8 @@ set(fig,'Visible','on')
             
             for iF=1:length(out)
                 curSlash=sort([strfind(out{iF},'/'), strfind(out{iF},'\')]);
-                out{iF}=out{iF}(curSlash(end)+1:end);
+                tgzDot = sort(strfind(out{iF},'.'));
+                out{iF}=out{iF}(curSlash(end)+1:tgzDot(3)-1);
             end
             set(edit_vgosFolder,'String', [vgosDir, num2str(yy2yyyy(out{1}(1:2))),...
                 '/', out{1}]);
