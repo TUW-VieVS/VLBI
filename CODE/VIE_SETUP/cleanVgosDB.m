@@ -15,7 +15,7 @@ function [] = cleanVgosDB()
             end
             
             if files(j).isdir
-                rmdir([files(j).folder '/' files(j).name])
+                rmdir([files(j).folder '/' files(j).name],'s')
             end
         end
     end
