@@ -43,6 +43,6 @@ If your main directory is called 'VieVS' for example, your folder structure shou
 Please be aware that this repository containes more or less only the program code. The data files necessary for processing have to be downloaded from external sources.
 
 ### Observation data
-* NGS can be downloaded for example from ftp://cddis.nasa.gov/vlbi/ivsdata/ngs/ and have to be stored in year folders (NGS-files have to be uncompressed): ' /VLBI/DATA/NGS/yyyy/'
-* vgosDB can be downloaded from https://ivscc.gsfc.nasa.gov/hfeop_wg/vgosDB_IVS/ and have to be stored in year folders as you download them (compressed tar files, *.tgz or *.tar.gz)
+* NGS can be downloaded for example from ftp://cddis.nasa.gov/vlbi/ivsdata/ngs/ and have to be stored in year folders (NGS-files have to be uncompressed): `/VLBI/DATA/NGS/yyyy/`
+* vgosDB can be downloaded from https://ivscc.gsfc.nasa.gov/hfeop_wg/vgosDB_IVS/ and have to be stored in year folders as you download them (compressed tar files, *.tgz or *.tar.gz): `/VLBI/DATA/vgosDB/yyyy/`
  
