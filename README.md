@@ -2,7 +2,7 @@
 
 VLBI module of VieVS
 
-Written by former and present members of the TU Wien VieVS-team
+Written present and former members of the TU Wien VieVS-team
 
 Administraded by Sigrid Böhm (sigrid.boehm@geo.tuwien.ac.at)
 
@@ -11,7 +11,7 @@ Documentation: https://vievswiki.geo.tuwien.ac.at
 # License
 > VieVS-VLBI VLBI module of Vienna VLBI and Satellite Software
 >
-> Copyright (C) 2019  TU Wien>
+> Copyright (C) 2019  TU Wien
 >
 > This program is free software: you can redistribute it and/or modify
 > it under the terms of the GNU General Public License as published by
