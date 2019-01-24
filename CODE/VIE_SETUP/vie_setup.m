@@ -196,7 +196,8 @@ allMainUiPanels=[handles.uipanel_file_setInputFiles, ...
     handles.uipanel_plot_sessionAnalysis,...
     handles.uipanel_plot_scheduling,...
 	handles.uipanel_plot_eopOut,...
-    handles.uipanel_models_space_crafts];
+    handles.uipanel_models_space_crafts,...
+    handles.uipanel_welcome];
 
 
 % save all ui panels to handles struct
@@ -499,8 +500,39 @@ if exist(filename, 'file')
 end
 % get vie_sched GUI startup options ------------------------------
 
-% Menu - File - Set input files, set data panel at the front when openining GUI
-menu_file_setInputFiles_Callback(hObject, eventdata, handles)
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_welcome, 'Visible', 'On');
+bc = get(handles.uipanel_welcome, 'BackgroundColor');
+
+axes(handles.axes_logo);
+set(gca, 'Color', 'none');
+
+RGB = imread('../CODE/VIE_SETUP/vievs.png');
+mask = sum(RGB,3)==765;
+R = RGB(:,:,1);
+R(mask)=bc(1)*255;
+
+G = RGB(:,:,2);
+G(mask)=bc(2)*255;
+
+B = RGB(:,:,3);
+B(mask)=bc(3)*255;
+RGB = cat(3,R,G,B);
+
+imshow(RGB)
+
+try
+    [status,out] = system('git rev-parse --short HEAD');
+    if status == 0 && length(out) == 8
+        handles.text_version.String = sprintf('v3.1 (%s)',strtrim(out));
+    else
+        handles.text_version.String = 'v3.1';
+    end
+catch
+    handles.text_version.String = 'v3.1';
+end
 
 
 
@@ -11884,4 +11916,26 @@ try
     guidata(hObject, handles)
 catch ex
     warning('ERROR while rerunning vie_lsm!\nMessage: %s',ex.message);
+end
+
+
+function reference(hObject, eventdata, handles)
+try
+    web('http://vievswiki.geo.tuwien.ac.at/doku.php?id=public:vievs_publications:publications','-browser')
+catch
+    warning('An error occured when opening: http://vievswiki.geo.tuwien.ac.at/doku.php?id=public:vievs_publications:publications')
+end
+
+function wiki(hObject, eventdata, handles)
+try
+    web('http://vievswiki.geo.tuwien.ac.at/doku.php','-browser')
+catch
+    warning('An error occured when opening: http://vievswiki.geo.tuwien.ac.at/doku.php')
+end
+
+function github(hObject, eventdata, handles)
+try
+    web('https://github.com/TUW-VieVS','-browser')
+catch
+    warning('An error occured when opening: https://github.com/TUW-VieVS')
 end
