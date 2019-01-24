@@ -70,6 +70,8 @@ cleanVgosDB();
 
 %% if you passed a argument interpret it as session name
 if(nargin > 0)
+    
+    % get session
     session = varargin{1};
     found = false;
     for i=1:size(process_list,1)
@@ -83,6 +85,29 @@ if(nargin > 0)
     end
     process_list = process_list(i,:);
     fprintf('Only running VIE_LSM for session: %s',process_list)
+    
+    % outlier test
+    outlierTest = varargin{2};
+    if strcmp(outlierTest,'simple')
+        parameter.lsmopt.simple_outlier = 1;
+        parameter.lsmopt.basic_outlier = 0;
+    elseif strcmp(outlierTest,'normal')
+        parameter.lsmopt.simple_outlier = 0;
+        parameter.lsmopt.basic_outlier = 1;
+    else
+        parameter.lsmopt.simple_outlier = 0;
+        parameter.lsmopt.basic_outlier = 0;
+    end
+        
+    % eliminate outlier
+    outlierDirectory = varargin{3};
+    if strcmp(outlierDirectory,'none')
+        parameter.outlier.flag_remove_outlier = 0;
+    else
+        parameter.outlier.flag_remove_outlier = 1;
+        parameter.outlier.out_file_dir = outlierDirectory;
+    end
+    
     runp.init = 0;
     runp.mod = 0;
     runp.lsm = 1;
