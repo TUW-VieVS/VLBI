@@ -40,7 +40,7 @@ If your main directory is called 'VieVS' for example, your folder structure shou
     /VieVS/COMMON/
     /VieVS/VLBI/
     
-Please be aware that this repository containes more or less only the program code. The data files necessary for processing have to be downloaded from external sources.
+Please be aware that this repository contains more or less only the program code. The data files necessary for processing have to be downloaded from external sources.
 
 ### Observation data
 * NGS can be downloaded for example from ftp://cddis.nasa.gov/vlbi/ivsdata/ngs/ and have to be stored in year folders (NGS-files have to be uncompressed): `/VLBI/DATA/NGS/yyyy/`
