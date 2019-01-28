@@ -131,7 +131,7 @@ switch fband
         % sigma delay, groupDelaySigCell: /Observables/GroupDelay_bX
         % ionospheric delay, ionoDelCell: 
         % sigma ionospheric delay, ionoDelSigCell: 
-        nc_filename = get_nc_filename({'GroupDelay', '_bx'}, wrapper_data.Observation.Observables.files, 1);
+        nc_filename = get_nc_filename({'GroupDelay', '_bX'}, wrapper_data.Observation.Observables.files, 1);
         tau_folder = 'Observables';
         tau_file = nc_filename;
         tau_field = 'GroupDelay';
@@ -238,14 +238,17 @@ end
 
 
 %% DELAY FLAG DELAY:
-nc_filename = get_nc_filename({'Edit'}, wrapper_data.Observation.ObsEdit.files, 0);
-if ~isempty(nc_filename) % not mathc found in wrapper data
-    delayQualityFlag = num2cell(out_struct.ObsEdit.(nc_filename).DelayFlag.val);
+if isfield(wrapper_data.Observation,'ObsEdit')
+    nc_filename = get_nc_filename({'Edit'}, wrapper_data.Observation.ObsEdit.files, 0);
+    if ~isempty(nc_filename) % not mathc found in wrapper data
+        delayQualityFlag = num2cell(out_struct.ObsEdit.(nc_filename).DelayFlag.val);
+    else
+        fprintf(' - No delay flags defined in wrapper file: delay flag is set to "0" for all observations!\n')
+        delayQualityFlag = {0};
+    end
 else
-    fprintf(' - No delay flags defined in wrapper file: delay flag is set to "0" for all observations!\n')
     delayQualityFlag = {0};
 end
-
 %% QUALITY CODES FOR X-BAND and S-BAND:
 
 nc_filename = get_nc_filename({'QualityCode_bX'}, wrapper_data.Observation.Observables.files, 0);
