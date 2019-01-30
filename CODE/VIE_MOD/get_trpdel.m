@@ -26,6 +26,7 @@
 %   27 Jan 2016 by Armin Hofmeister: Increase allowed difference in seconds between observation from
 %          VieVS and from trp-file to up to 0.1 seconds.
 %   11 May 2018 by Daniel Landskron: minor bug fix
+%   30 Jan 2019 by Daniel Landskron: minor bug fix
 %   
 % ************************************************************************
 function [scan] = get_trpdel(trpdata,scan,isc,ist,antenna,trpFileFoundLog,sourceNames)
@@ -44,7 +45,7 @@ if trpFileFoundLog==1
     % note: The check of the seconds being different by up to 0.1 is needed since the trp-file
     %       reports only 1 decimal place for the seconds and rounding effects may lead to a
     %       difference compared to the VieVS seconds of up to 0.1 seconds.
-    curLine = trpdata{3} == year   &   trpdata{4} == month   &   trpdata{5} == day   &   trpdata{6} == hour   &   trpdata{7} == minu   &   abs(sec - trpdata{8}) <= 0.1   &   strcmpi(trpdata{9}, antenna(ist).name)   &   strcmpi(trpdata{1},sourceNames(isc));
+    curLine = trpdata{3} == year   &   trpdata{4} == month   &   trpdata{5} == day   &   trpdata{6} == hour   &   trpdata{7} == minu   &   abs(sec - trpdata{8}) <= 1   &   strcmpi(trpdata{9}, antenna(ist).name)   &   strcmpi(trpdata{1},sourceNames(isc));
     
 %                         if sum(curLine)~=1
 %                             fprintf('No (or more than one) trp line found for scan %1.0f (station %s)\nTry to find offset of 0.5 -> some intensives...', isc, deblank(antenna(ist).name));
