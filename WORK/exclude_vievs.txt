@@ -1,3 +1,4 @@
+$18MAY24XE  iono delay missing
 $17AUG07XA  extremely high chi-squared
 $15MAR31XN  chi-squared is 0.038 and about 90 percent of observations are marked as outliers (_N005 ) Nastja (Hana: The reason is, that there is no ionospheric correction in the NGS file!!!)
 $15DEC05XF  JADE session with only 2 non-datum stations, undefined datum - Sigrid
