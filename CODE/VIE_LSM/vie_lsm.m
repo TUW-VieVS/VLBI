@@ -1317,18 +1317,7 @@ if ess == 1 % +hana 10Nov10
     fprintf('----------\n');
     test_significance(x_,opt_,5);
 
-    % Save the "cleaned" VieVS structures (consistent withe the results in x_ and res_):
-    fprintf('Save VieVS data structures (oultiers and OPT file options applied!)\n');
-    fprintf('  ../DATA/LEVEL3/%s/%s_antenna.mat\n',dirpth,parameter.session_name);
-    save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_antenna.mat'],'antenna');
-    fprintf('  ../DATA/LEVEL3/%s/%s_source.mat\n',dirpth,parameter.session_name);
-    save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_sources.mat'],'sources');
-    fprintf('  ../DATA/LEVEL3/%s/%s_parameter.mat\n',dirpth,parameter.session_name);
-    save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_parameter.mat'],'parameter');
-    fprintf('  ../DATA/LEVEL3/%s/%s_scan.mat\n',dirpth,parameter.session_name);
-    save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_scan.mat'],'scan');
-
-
+    % Save the "cleaned" VieVS structures (consistent with the results in x_ and res_):
     fprintf('Estimated parameters are saved as ../DATA/LEVEL3/%s/x_%s.mat\n',dirpth,parameter.session_name);
     save(['../DATA/LEVEL3/',dirpth,'/x_',parameter.session_name,'.mat'],'x_');
 
@@ -1345,6 +1334,18 @@ if ess == 1 % +hana 10Nov10
     save(['../DATA/LEVEL3/',dirpth,'/res_',parameter.session_name,'.mat'],'res');
 
 end
+
+
+% Save the "cleaned" VieVS structures (consistent withe the results in x_ and res_):
+fprintf('Save VieVS data structures (oultiers and OPT file options applied!)\n');
+fprintf('  ../DATA/LEVEL3/%s/%s_antenna.mat\n',dirpth,parameter.session_name);
+save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_antenna.mat'],'antenna');
+fprintf('  ../DATA/LEVEL3/%s/%s_source.mat\n',dirpth,parameter.session_name);
+save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_sources.mat'],'sources');
+fprintf('  ../DATA/LEVEL3/%s/%s_parameter.mat\n',dirpth,parameter.session_name);
+save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_parameter.mat'],'parameter');
+fprintf('  ../DATA/LEVEL3/%s/%s_scan.mat\n',dirpth,parameter.session_name);
+save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_scan.mat'],'scan');
 
 [opt_] = opt;
 
