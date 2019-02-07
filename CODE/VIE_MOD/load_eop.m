@@ -24,7 +24,7 @@
 % - dY              : Celestial pole offsets [rad]
 %
 % CHANGES
-% - 2017-08-29: A. Girdiuk: in case of "eop_txt_file_vievs" the last 5 EOP values of the input time sereis are taken instead of EOP values of the last 5 days!
+% - 2017-08-29: A. Girdiuk: in case of "eop_txt_file_vievs" the last 5 EOP values of the input time series are taken instead of EOP values of the last 5 days!
 %
 
 function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, parameter)
@@ -38,7 +38,7 @@ mas2rad_const = (1/1000) * (pi/180) * (1/3600);
 as2rad_const  = (pi/180) * (1/3600);
 
 
-% ##### Distinguish between differnt input files #####
+% ##### Distinguish between different input files #####
 switch(parameter.vie_mod.EOPfile)
     
     case 'C04_14_1962_now.txt' % EOP C04 14 (IERS format)
@@ -229,7 +229,7 @@ end
 % ##### Exclude a priori Nutation correction dXdY #####
 if parameter.vie_mod.dXdY == 0
     dX_rad = 0 * dX_rad;
-    dX_rad = 0 * dX_rad;
+    dY_rad = 0 * dY_rad;
 end
 
 

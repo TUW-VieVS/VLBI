@@ -17,11 +17,11 @@
 %                
 %   Output:
 %      t2c    (3,3,n)      terrrestrial to celestial matrices             
-%      dQdx   (3,3,n)      parital derivative of t2c w.r.t. pole x
-%      dQdy   (3,3,n)      parital derivative of t2c w.r.t. pole y
-%      dQdut  (3,3,n)      parital derivative of t2c w.r.t. dut1
-%      dQdX   (3,3,n)      parital derivative of t2c w.r.t. celestial X
-%      dQdY   (3,3,n)      parital derivative of t2c w.r.t. celestial Y
+%      dQdx   (3,3,n)      partial derivative of t2c w.r.t. pole x
+%      dQdy   (3,3,n)      partial derivative of t2c w.r.t. pole y
+%      dQdut  (3,3,n)      partial derivative of t2c w.r.t. dut1
+%      dQdX   (3,3,n)      partial derivative of t2c w.r.t. celestial X
+%      dQdY   (3,3,n)      partial derivative of t2c w.r.t. celestial Y
 %      X      (n,1)        total value of celestial pole X [rad]
 %                           (X = nutationmodel X + dX)
 %      Y      (n,1)        total value of celestial pole Y [rad]
