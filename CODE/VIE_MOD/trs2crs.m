@@ -95,19 +95,20 @@ for i=1:n
     R     = rotm(-era(i),3);
     dRdut = - drotm(-era(i),3)*(fac+1);
     % precession/nutation matrix:
-    v     = -sqrt(X(i)^2+Y(i)^2);
-    E     = atan2((Y(i)/v),(X(i)/v));
+    v     = sqrt(X(i)^2+Y(i)^2);
+    E     = atan2(Y(i),X(i));
     z     = sqrt(1-(X(i)^2+Y(i)^2));
     d     = atan2(v,z);
     PN    = rotm(-E,3)*rotm(-d,2)*rotm(E,3)*rotm(S(i),3);
     dEdX  = -Y(i)/(X(i)^2+Y(i)^2);
-    dSdX  = -Y(i)/2;
-   
-    dddX  = -X(i)/(z*sqrt(X(i)^2+Y(i)^2)); 
     dEdY  =  X(i)/(X(i)^2+Y(i)^2);
+       
+    dddX  =  X(i)/(z*v); 
+    dddY  =  Y(i)/(z*v); 
+    
+    dSdX  = -Y(i)/2;
     dSdY  = -X(i)/2;
-    dddY  = -Y(i)/(z*sqrt(X(i)^2+Y(i)^2)); 
-
+    
     dPNdX = drotm(-E,3)* rotm(-d,2)* rotm(E,3)* rotm(S(i),3)* -dEdX + ...
              rotm(-E,3)*drotm(-d,2)* rotm(E,3)* rotm(S(i),3)* -dddX + ...
              rotm(-E,3)* rotm(-d,2)*drotm(E,3)* rotm(S(i),3)*  dEdX + ...
