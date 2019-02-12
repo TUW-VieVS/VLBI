@@ -264,7 +264,7 @@ if ~isempty(supersourcefile)
     set(handles.text_parameters_refFrames_selected_supersource_file, 'String', handles.data.supersourceFile);
     
     % make vievsCRF default if available
-    logCRFFound=~cellfun(@isempty, strfind(get(handles.popupmenu_parameters_refFrames_supersourceCRF, 'String'), 'vievsCRF'));
+    logCRFFound=~cellfun(@isempty, strfind(get(handles.popupmenu_parameters_refFrames_supersourceCRF, 'String'), 'icrf3sx'));
     if sum(logCRFFound)>0
         set(handles.popupmenu_parameters_refFrames_supersourceCRF, 'Value', find(logCRFFound));
     end

@@ -46,7 +46,7 @@ newPopupmenuEntries=superstatFields(ismember(superstatFields, allCoordinateFrame
 set(handles.popupmenu_parameters_refFrames_superstationTRF, 'String', newPopupmenuEntries);
 
 % make vievsTrf default if available
-logTRFFound=~cellfun(@isempty, strfind(get(handles.popupmenu_parameters_refFrames_superstationTRF, 'String'), 'vievsTrf'));
+logTRFFound=~cellfun(@isempty, strfind(get(handles.popupmenu_parameters_refFrames_superstationTRF, 'String'), 'itrf2014'));
 if sum(logTRFFound)>0
     set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Value', find(logTRFFound));
 else
