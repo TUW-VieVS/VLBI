@@ -41,6 +41,7 @@
 %   - error_msg           : Error Message (empty, if no errors occured)
 %
 % CHANGES:
+%   - 2018-12-20: A. Corbin       : unnecessary entries in legend removed
 %
 
 function [sched_handles, error_code, error_msg] = update_sky_plots_pointer(sched_handles, station_id_list, obs_data, plot_opt, PARA)
@@ -243,7 +244,9 @@ function [sched_handles, error_code, error_msg] = update_sky_plots_pointer(sched
                 xx_pointer_2 = elSpherical_2 .* sin(pointer_az_rad_eolo); 
 
                 % Plot pointer
-                sched_handles.sky_plots(station_id).h_az_end_of_last_obs_pointer = line([xx_pointer_1, xx_pointer_2], [yy_pointer_1, yy_pointer_2], 'color', sched_handles.color_markers_end_of_last_scan); 
+                sched_handles.sky_plots(station_id).h_az_end_of_last_obs_pointer = line([xx_pointer_1, xx_pointer_2], [yy_pointer_1, yy_pointer_2], ...
+                                                                                        'color', sched_handles.color_markers_end_of_last_scan, ...
+                                                                                        'DisplayName','end epoch last scan'); 
 
                 % Update displayed azimuth value:
                 text_antenna_un_az_str_start = sprintf('%5.1f', pointer_az_rad_eolo * 180/pi);
@@ -260,7 +263,7 @@ function [sched_handles, error_code, error_msg] = update_sky_plots_pointer(sched
                     xx_pointer_3 = elSpherical_3 .* sin(pointer_az_rad_eolo);
 
                     % Plot pointer
-                    sched_handles.sky_plots(station_id).h_el_end_of_last_obs_pointer = plot(xx_pointer_3, yy_pointer_3, 'x', 'color', sched_handles.color_markers_end_of_last_scan);
+                    sched_handles.sky_plots(station_id).h_el_end_of_last_obs_pointer = plot(xx_pointer_3, yy_pointer_3, 'x', 'color', sched_handles.color_markers_end_of_last_scan, 'HandleVisibility','off');
 
                     % Update displayed elevation value:
                     text_antenna_el_str_eolo = sprintf('%5.1f', pointer_el_rad_eolo * 180/pi);
@@ -300,7 +303,9 @@ function [sched_handles, error_code, error_msg] = update_sky_plots_pointer(sched
                 xx_pointer_2 = elSpherical_2 .* sin(pointer_az_rad_start); 
 
                 % Plot pointer
-                sched_handles.sky_plots(station_id).h_azimuth_start_pointer = line([xx_pointer_1, xx_pointer_2], [yy_pointer_1, yy_pointer_2], 'color', sched_handles.color_markers_scan_start); 
+                sched_handles.sky_plots(station_id).h_azimuth_start_pointer = line([xx_pointer_1, xx_pointer_2], [yy_pointer_1, yy_pointer_2], ...
+                                                                                    'color', sched_handles.color_markers_scan_start, ...
+                                                                                    'DisplayName', 'start epoch new scan'); 
 
                 % Update displayed azimuth value:
                 text_antenna_un_az_str_start = sprintf('%5.1f', pointer_az_rad_start * 180/pi);
@@ -317,7 +322,7 @@ function [sched_handles, error_code, error_msg] = update_sky_plots_pointer(sched
                     xx_pointer_3 = elSpherical_3 .* sin(pointer_az_rad_start);
 
                     % Plot pointer
-                    sched_handles.sky_plots(station_id).h_elevation_start_pointer = plot(xx_pointer_3, yy_pointer_3, 'x', 'color', sched_handles.color_markers_scan_start);
+                    sched_handles.sky_plots(station_id).h_elevation_start_pointer = plot(xx_pointer_3, yy_pointer_3, 'x', 'color', sched_handles.color_markers_scan_start, 'HandleVisibility','off');
 
                     % Update displayed elevation value:
                     text_antenna_el_str_start = sprintf('%5.1f', pointer_el_rad_start * 180/pi);
@@ -355,7 +360,9 @@ function [sched_handles, error_code, error_msg] = update_sky_plots_pointer(sched
                 xx_pointer_2 = elSpherical_2 .* sin(pointer_az_rad_end); 
 
                 % Plot pointer
-                sched_handles.sky_plots(station_id).h_azimuth_end_pointer = line([xx_pointer_1, xx_pointer_2], [yy_pointer_1, yy_pointer_2], 'color', sched_handles.color_markers_scan_end); 
+                sched_handles.sky_plots(station_id).h_azimuth_end_pointer = line([xx_pointer_1, xx_pointer_2], [yy_pointer_1, yy_pointer_2], ...
+                                                                                  'color', sched_handles.color_markers_scan_end, ...
+                                                                                  'DisplayName', 'end epoch new scan'); 
 
                 % Update displayed azimuth value:
                 text_antenna_un_az_str_end = sprintf('%5.1f', pointer_az_rad_end * 180/pi);
@@ -372,7 +379,7 @@ function [sched_handles, error_code, error_msg] = update_sky_plots_pointer(sched
                     xx_pointer_3 = elSpherical_3 .* sin(pointer_az_rad_end);
 
                     % Plot pointer
-                    sched_handles.sky_plots(station_id).h_elevation_end_pointer = plot(xx_pointer_3, yy_pointer_3, 'x', 'color', sched_handles.color_markers_scan_end);
+                    sched_handles.sky_plots(station_id).h_elevation_end_pointer = plot(xx_pointer_3, yy_pointer_3, 'x', 'color', sched_handles.color_markers_scan_end, 'HandleVisibility','off');
 
                     % Update displayed elevation value:
                     text_antenna_el_str_end = sprintf('%5.1f', pointer_el_rad_end * 180/pi);

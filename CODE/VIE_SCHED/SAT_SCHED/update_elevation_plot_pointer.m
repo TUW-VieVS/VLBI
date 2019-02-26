@@ -31,6 +31,7 @@
 %   - error_msg           : Error Message (empty, if no errors occured)
 %
 % CHANGES:
+%   - 2018-12-20: A. Corbin       : unnecessary entries in legend removed
 %
 
 function [sched_handles, error_code, error_msg] = update_elevation_plot_pointer(sched_handles, obs_data, plot_opt, t_epoch_jd, PARA, current_station_id_list)
@@ -221,7 +222,7 @@ function [sched_handles, error_code, error_msg] = update_elevation_plot_pointer(
                 temp = get(gca, 'YLim');
                 y_min = temp(1);
                 y_max = temp(2); 
-                sched_handles.el_plot.stat(i_stat).h_epoch_marker_end_of_last_obs = line([antenna_pos_time_eolo, antenna_pos_time_eolo], [y_min, y_max], 'color', sched_handles.color_markers_end_of_last_scan);
+                sched_handles.el_plot.stat(i_stat).h_epoch_marker_end_of_last_obs = line([antenna_pos_time_eolo, antenna_pos_time_eolo], [y_min, y_max], 'color', sched_handles.color_markers_end_of_last_scan, 'DisplayName', 'end epoch last scan');
             end
 
 
@@ -230,7 +231,7 @@ function [sched_handles, error_code, error_msg] = update_elevation_plot_pointer(
                 temp = get(gca, 'YLim');
                 y_min = temp(1);
                 y_max = temp(2); 
-                sched_handles.el_plot.stat(i_stat).h_epoch_marker_start = line([antenna_pos_time_start, antenna_pos_time_start], [y_min, y_max], 'color', sched_handles.color_markers_scan_start); % error: Vectors must be the same length.
+                sched_handles.el_plot.stat(i_stat).h_epoch_marker_start = line([antenna_pos_time_start, antenna_pos_time_start], [y_min, y_max], 'color', sched_handles.color_markers_scan_start, 'DisplayName', 'start epoch new scan'); % error: Vectors must be the same length.
             end
 
 
@@ -240,7 +241,7 @@ function [sched_handles, error_code, error_msg] = update_elevation_plot_pointer(
                 temp = get(gca, 'YLim');
                 y_min = temp(1);
                 y_max = temp(2); 
-                sched_handles.el_plot.stat(i_stat).h_epoch_marker_end = line([antenna_pos_time_end, antenna_pos_time_end], [y_min, y_max], 'color', sched_handles.color_markers_scan_end);
+                sched_handles.el_plot.stat(i_stat).h_epoch_marker_end = line([antenna_pos_time_end, antenna_pos_time_end], [y_min, y_max], 'color', sched_handles.color_markers_scan_end, 'DisplayName', 'end epoch new scan');
             end
 
             if flag_update_current_epoch_marker
@@ -248,7 +249,7 @@ function [sched_handles, error_code, error_msg] = update_elevation_plot_pointer(
                 temp = get(gca, 'YLim');
                 y_min = temp(1);
                 y_max = temp(2); 
-                sched_handles.el_plot.stat(i_stat).h_current_epoch_marker = line([t_epoch_jd, t_epoch_jd], [y_min, y_max], 'color', sched_handles.color_current_epoch_marker);
+                sched_handles.el_plot.stat(i_stat).h_current_epoch_marker = line([t_epoch_jd, t_epoch_jd], [y_min, y_max], 'color', sched_handles.color_current_epoch_marker, 'DisplayName','current epoch');
             end
 
         

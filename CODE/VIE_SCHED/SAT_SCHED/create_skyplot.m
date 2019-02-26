@@ -12,6 +12,7 @@
 %   - 2014-08.28: A. Hellerschmied: plot markers as "timescale" in skyplot. 
 %   - 2015-07-29: A. Hellerschmied: Horizintal mask is plotted additionally to the cut-off elevation
 %   - 2016-12-22, A. Hellerschmied: - PARA.INIT_PROP_INTERVAL in [sec] instead of [min]
+%   - 2018-12-20: A. Corbin       : unnecessary entries in legend removed
 %           
 %
 %   inputs        :
@@ -143,9 +144,9 @@ function [error_code, error_msg, sched_handles] = create_skyplot(stat_data, obs_
             % Timescale markers:
             if mod(marker_int_min / prop_int_min, 1) == 0 % plot markers
                 marker_int = marker_int_min / prop_int_min;
-                [h_plot, h_axis, plotted_sats] = skyplot(az_data, el_data, prn, marker_int, line_style);          
+                [h_plot, h_axis, plotted_sats] = skyplot(az_data, el_data, prn, marker_int, line_style);
             else % do not plot time markers
-                [h_plot, h_axis, plotted_sats] = skyplot(az_data, el_data, prn); 
+                [h_plot, h_axis, plotted_sats] = skyplot(az_data, el_data, prn);
             end
             
             % Save handles to structure:
@@ -222,7 +223,7 @@ function [error_code, error_msg, sched_handles] = create_skyplot(stat_data, obs_
             end % if flag_plot_h_mask
             
             % Plot:
-            sched_handles.sky_plots(i_stat).h_cut_off_el_marker = line(xx_mask, yy_mask, 'Linestyle', '-.', 'Color', 'red', 'LineWidth', 0.1);
+            sched_handles.sky_plots(i_stat).h_cut_off_el_marker = line(xx_mask, yy_mask, 'Linestyle', '-.', 'Color', 'red', 'LineWidth', 0.1,  'HandleVisibility','off');
             
             
             % ##### Get observation type of the antenna #####
@@ -340,7 +341,7 @@ function [error_code, error_msg, sched_handles] = create_skyplot(stat_data, obs_
             xx_pointer_2 = elSpherical_2 .* sin(pointer_az_rad);  
 
             % Plot pointer
-            sched_handles.sky_plots(i_stat).h_az_end_of_last_obs_pointer = line([xx_pointer_1, xx_pointer_2], [yy_pointer_1, yy_pointer_2], 'color', color_last_scan_end);
+            sched_handles.sky_plots(i_stat).h_az_end_of_last_obs_pointer = line([xx_pointer_1, xx_pointer_2], [yy_pointer_1, yy_pointer_2], 'color', color_last_scan_end,  'HandleVisibility','off');
             
             
             
@@ -358,7 +359,7 @@ function [error_code, error_msg, sched_handles] = create_skyplot(stat_data, obs_
                 xx_pointer_3 = elSpherical_3 .* sin(pointer_az_rad);
 
                 % Plot pointer
-                sched_handles.sky_plots(i_stat).h_el_end_of_last_obs_pointer = plot(xx_pointer_3, yy_pointer_3, 'x', 'color', color_last_scan_end);
+                sched_handles.sky_plots(i_stat).h_el_end_of_last_obs_pointer = plot(xx_pointer_3, yy_pointer_3, 'x', 'color', color_last_scan_end,  'HandleVisibility','off');
 
             end
 
