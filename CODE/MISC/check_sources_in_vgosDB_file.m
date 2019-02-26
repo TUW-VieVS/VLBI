@@ -34,11 +34,26 @@ else
 end
 
 vgosdb_path = ['../DATA/vgosDB/', num2str(session_year), '/', session_name];
+
+% uncompress vgosDB *.tgz file
+        vgosTgz = [vgosdb_path(1:end),'.tgz'];
+        curSlash = sort([strfind(vgosdb_path,'/'), strfind(vgosdb_path,'\')]);
+        vgosTgzFolder = vgosdb_path(1:curSlash(end));
+        if exist(vgosTgz,'file')
+            untar(vgosTgz,vgosTgzFolder);
+        else
+            fprintf('ERROR: %s does not exist!\n',vgosTgz);
+        end       
+        
 vgosdb_src_name_list = cellstr(ncread([vgosdb_path, '/Apriori/Source.nc'], 'AprioriSourceList')');
 tmp = ncread([vgosdb_path, '/Apriori/Source.nc'], 'AprioriSource2000RaDec')';
 vgosdb_src_ra = tmp(:, 1);
 vgosdb_src_dec = tmp(:, 2);
 
+% remove the unpacked vgosDB folder
+if exist(vgosdb_path,'dir')
+  rmdir(vgosdb_path, 's');
+end
 
 % Check, if sources in the vgosDB file are missing in the supersource file:
 
