@@ -120,7 +120,7 @@ for a = 1:length(exclude)
     fid = fopen(exclude{a},'r');
     while ~feof(fid)
         str = [fgetl(fid) '           '];
-        if (str(1)=='$')  &  (str(2)~='$')
+        if (str(1)=='$')  &&  (str(2)~='$')
             tmp = str(2:10);
             tmp(tmp==' ') = '_';
             excllist = [excllist;tmp];
@@ -153,7 +153,7 @@ for i_year = 1:length(years)
             end
             path_master_file = sprintf('../DATA/MASTER/master%02d.txt',year_short);
         end
-        if exist(path_master_file)
+        if exist(path_master_file,'file')
             
             fid = fopen(path_master_file,'r');
             while ~feof(fid)
@@ -167,7 +167,7 @@ for i_year = 1:length(years)
                     incl = 0;
                     for i_expes = 1:length(expes)
                         ids = id(2)+1:id(2)+length(expes{i_expes});
-                        if strcmp(str(ids),expes{i_expes})  &  (length(str2num(str(ids(end)+1)))==1)
+                        if strcmp(str(ids),expes{i_expes})  &&  (length(str2num(str(ids(end)+1)))==1)
                             incl = 1;
                             break
                         end
@@ -187,14 +187,14 @@ for i_year = 1:length(years)
                     sess = sprintf('%02d%s%s',year_short,date,code);
                     
                     a = 1;
-                    while  (a<=size(excllist,1))  &  incl
+                    while  (a<=size(excllist,1))  &&  incl
                         if strcmp(excllist(a,:),sess)
                             incl = 0;
                         end
                         a = a+1;
                     end
                     
-                    if incl  &  (~isempty(reqstat))
+                    if incl  &&  (~isempty(reqstat))
                         tmp = str(id(7)+1:id(8));
                         ids = find(tmp==' ');
                         tmp = tmp(1:ids(1)-1);
@@ -205,7 +205,7 @@ for i_year = 1:length(years)
                         end
                         
                     end
-                    if incl  &  (min_station_num>0)
+                    if incl  &&  (min_station_num>0)
                         tmp = deblank(str(id(7)+1:id(8)-1)); % remove blanks from string
                         find_dash = strfind(tmp, ' -');
                         if ~isempty(find_dash)
@@ -216,6 +216,19 @@ for i_year = 1:length(years)
                         end
                     end
                     if incl
+                        if strcmpi(session_data_format,'VGOSDB')
+                           % unpack vgosDB *.tgz or *.tar.gz
+                           sess_tgz = [sess,'.tgz'];
+                           sess_targz = [sess,'.tar.gz'];
+                           if exist([path_session sess_tgz],'file')
+                              untar([path_session sess_tgz],path_session);
+                           elseif exist([path_session sess_targz],'file')
+                              untar([path_session sess_targz],path_session);
+                           else
+                           fprintf('ERROR: %s is not available in /DATA/vgosDB!\n',sess_tgz);
+                           end 
+                         end
+                        
                         session_file = dir([path_session sess '*']);   % can be >1, in case there are several versions
                         listtmp = [];
                         ver=[];
@@ -224,6 +237,7 @@ for i_year = 1:length(years)
                                 listtmp = [listtmp;sprintf('%4d/%s',year,session_file(i_session_file).name)];
                             end
                             if strcmpi(session_data_format,'NGS')
+                                listtmp = [listtmp;sprintf('%4d/%s',year,session_file(i_session_file).name)];
                                 ver = [ver str2num(session_file(i_session_file).name(12:14))];
                             elseif strcmpi(session_data_format,'VGOSDB')    
                                 all_versions = 0;   % for vgosDB file only the latest version is used
@@ -241,6 +255,10 @@ for i_year = 1:length(years)
                         elseif strcmpi(session_data_format,'VGOSDB')    && ~isempty(listtmp)
                             list = [list;listtmp ' [vgosDB]'];
                             names = [names;expnam];
+                        end
+                        % remove the unpacked vgosDB folder
+                        if strcmpi(session_data_format,'VGOSDB') && exist([path_session sess],'dir')
+                        rmdir([path_session sess], 's');
                         end
                     end
                 end
