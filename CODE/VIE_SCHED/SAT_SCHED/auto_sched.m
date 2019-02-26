@@ -293,6 +293,7 @@ function [sched_data, obs_data, error_code, error_msg] = auto_sched(stat_data, s
                     
                 else % Not enough stations left!
                     flag_next_scan_con = true;
+					fprintf('WARNING: not enough stations left due to slew-time condition\n');
                     break;
                 end % if length(start_jd_list_temp) >= max(2, PARA.MIN_STANUM)
                 
@@ -306,6 +307,7 @@ function [sched_data, obs_data, error_code, error_msg] = auto_sched(stat_data, s
                 
                 else % Not enough stations left!
                     flag_next_scan_con = true;
+					fprintf('WARNING: not enough stations left due to arrive-time condition. Consider increasing PARA.MAX_WAIT\n');
                     break;
                 end % if length(start_jd_list_temp) >= max(2, PARA.MIN_STANUM)
                 
