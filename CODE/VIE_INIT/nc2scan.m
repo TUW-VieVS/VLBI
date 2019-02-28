@@ -419,7 +419,11 @@ for iScan=1:nScans
         nc_filename = strrep(nc_filename,'-','_');
         % scan.stat.cab
         if isfield(out_struct.stat(stationIndices(iStat)), nc_filename)
-            scan(iScan).stat(stationIndices(iStat)).cab = 1e9*out_struct.stat(stationIndices(iStat)).(nc_filename).Cal_Cable.val(scan2Station(iScan,stationIndices(iStat))); % [nano-sec]
+            if length(out_struct.stat(stationIndices(iStat)).(nc_filename).Cal_Cable.val)>1
+                scan(iScan).stat(stationIndices(iStat)).cab = 1e9*out_struct.stat(stationIndices(iStat)).(nc_filename).Cal_Cable.val(scan2Station(iScan,stationIndices(iStat))); % [nano-sec]
+            else
+                scan(iScan).stat(stationIndices(iStat)).cab = 0; % [nano-sec]
+            end
         else
             scan(iScan).stat(stationIndices(iStat)).cab = 0; % [nano-sec]            
         end
