@@ -306,7 +306,7 @@ path = [pathGS.path_in dir_in];
 tmp = dir(path);
 lse = 0;
 for it = 1 : length(tmp)
-    if ((length(tmp(it).name)==27) & (tmp(it).name(15:27)=='_par_glob.mat'));
+    if ~isempty(strfind(tmp(it).name,'_par_glob.mat'))    
         lse = lse + 1;
         dir_all(lse)=tmp(it);
     end
@@ -324,7 +324,7 @@ aposteriori=[];
 for ise = 1:lse
     load ([path dir_all(ise).name]);
     sesname=dir_all(ise).name;
-    ses(ise,:)=[sesname(1:14)];
+    ses(ise,:)=[sesname(1:strfind(sesname,'_par_glob.mat')-1)];
     if isfield(glob2.opt, 'mo') %failes if only N matrices are calculated in previous run
         if ~isempty(glob2.opt.mo)
             aposteriori(ise) = glob2.opt.mo;
