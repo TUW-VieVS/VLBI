@@ -2465,7 +2465,7 @@ while(~flag_exit_user_input)
                         commandwindow
                         input_str = input(' t_start = ', 's');
                         if (length(input_str) == 19)
-                            [flag_t_epoch_jd_ok, t_epoch_jd_ok] = check_t_input_19char(input_str, sched_data, PARA);
+                            [flag_t_epoch_jd_ok, t_epoch_jd_ok] = check_t_input_19char(input_str, sched_data, PARA, false);
                             if flag_t_epoch_jd_ok
                                 t_min_jd = t_epoch_jd_ok;
                                 sched_stats_state = 4.62;
@@ -2490,7 +2490,7 @@ while(~flag_exit_user_input)
                         commandwindow
                         input_str = input(' t_end = ', 's');
                         if (length(input_str) == 19)
-                            [flag_t_epoch_jd_ok, t_epoch_jd_ok] = check_t_input_19char(input_str, sched_data, PARA);
+                            [flag_t_epoch_jd_ok, t_epoch_jd_ok] = check_t_input_19char(input_str, sched_data, PARA, false);
                             if flag_t_epoch_jd_ok
                                 t_max_jd = t_epoch_jd_ok;
                                 sched_stats_state = 4.7;
@@ -2956,12 +2956,16 @@ end
     
 %% ##### Sub routines #####
 
-function [flag_t_epoch_jd_ok, t_epoch_jd_ok] = check_t_input_19char(input_str, sched_data, PARA)
+function [flag_t_epoch_jd_ok, t_epoch_jd_ok] = check_t_input_19char(input_str, sched_data, PARA, checkWithinExisting)
 % This function checks the time input with the format: <yyyy-mm-dd HH:MM:SS>
 % Checks:
 %  1.) Format (<yyyy-mm-dd HH:MM:SS>)
 %  2.) Epoch intersect with existing schedule?
 %  3.) Epoch within the defined session time?
+
+	if nargin < 4
+        checkWithinExisting=true;
+    end
 
     % ### Init.: ###
     mjd2jd = 2.400000500000000e+006;
@@ -2991,12 +2995,14 @@ function [flag_t_epoch_jd_ok, t_epoch_jd_ok] = check_t_input_19char(input_str, s
         t_epoch_jd_temp = jday(yr, mon, day, hr, min, sec);
         
         % ##### 2.) Check if t_epoch_jd_temp do not intersect with the existing schedule #####
-        if ~isempty(sched_data.t_nominal_start_jd) && ~isempty(sched_data.t_nominal_end_jd) % If at least one scan has been scheduled already
-            if (t_epoch_jd_temp >= sched_data.t_nominal_start_jd) && (t_epoch_jd_temp <= sched_data.t_nominal_end_jd)
-                flag_within_existing_schedule = true;
-                fprintf(1, ' Input epoch intersect with the existing schedule. Please try again!\n');
-            end
-        end
+		if(checkWithinExisting)
+		    if ~isempty(sched_data.t_nominal_start_jd) && ~isempty(sched_data.t_nominal_end_jd) % If at least one scan has been scheduled already
+		        if (t_epoch_jd_temp >= sched_data.t_nominal_start_jd) && (t_epoch_jd_temp <= sched_data.t_nominal_end_jd)
+		            flag_within_existing_schedule = true;
+		            fprintf(1, ' Input epoch intersect with the existing schedule. Please try again!\n');
+		        end
+		    end
+		end
         
         % ##### 3.) Check, if t_epoch_jd_temp is within the defined session time #####
         if ~flag_within_existing_schedule
