@@ -52,6 +52,7 @@
 %   2018-01-11, D. Landskron: external troposphere modeling removed
 %   2018-07-06, D. Landskron: VMF3 added to the troposphere models 
 %   2018-11-29, D. Landskron: structure of observation restrictions standardized
+%   2018-03-06, D. Landskron: suffix checkbox added to the sinex files
 %
 function loadParamFile(hObject, handles, fullFileName)
 
@@ -828,6 +829,7 @@ set(handles.radiobutton_run_sinex_clockParam_excl, 'Enable', snxState)
 set(handles.checkbox_run_sinex_sources, 'Enable', snxState)
 set(handles.checkbox_run_sinex_changeAnalystsName, 'Enable', snxState)
 set(handles.text300, 'Enable', snxState)
+set(handles.checkbox_run_sinex_addSuffix, 'Enable', snxState)
 
 % estimation of ZWDs
 % input interval of zwd
@@ -1070,6 +1072,9 @@ set(handles.edit_run_sinex_email, 'String', parameter.lsmopt.outsnx.email)
 set(handles.edit_run_sinex_firstname,'Enable', 'on');
 set(handles.edit_run_sinex_lastname,'Enable', 'on');
 set(handles.edit_run_sinex_email,'Enable', 'on');
+set(handles.edit_run_sinex_suffix, 'String', parameter.lsmopt.outsnx.suffix)
+set(handles.edit_run_sinex_suffix,'Enable', 'on');
+
 try
     set(handles.checkbox_run_sinex_changeAnalystsName, 'Value', parameter.lsmopt.outsnx.changeAnalystsName)
 catch
@@ -1078,6 +1083,13 @@ catch
     set(handles.edit_run_sinex_lastname,'Enable', 'off');
     set(handles.edit_run_sinex_email,'Enable', 'off');
     warning('Information about analyst name for sinex not in parameter file');
+end
+try 
+    set(handles.checkbox_run_sinex_addSuffix, 'Value', parameter.lsmopt.outsnx.addSuffix)
+catch
+    set(handles.checkbox_run_sinex_addSuffix, 'Value', 0)
+    set(handles.edit_run_sinex_suffix,'Enable', 'off');
+    warning('Information about adding a suffix to the sinex file not in parameter file');
 end
 
 if parameter.lsmopt.addSnxSource && parameter.lsmopt.ascii_snx

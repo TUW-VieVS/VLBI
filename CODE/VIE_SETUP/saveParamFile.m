@@ -47,6 +47,7 @@
 %   2018-01-11, D. Landskron: external troposphere modeling removed
 %   2018-07-06, D. Landskron: VMF3 added to the troposphere models 
 %   2018-11-29, D. Landskron: structure of observation restrictions standardized
+%   2018-03-06, D. Landskron: suffix checkbox added to the sinex files
 
 function saveParamFile(hObject, handles, fullOutName)
 
@@ -691,16 +692,27 @@ else
     parameter.lsmopt.outsnx.eop=get(handles.radiobutton_run_sinex_eop_incl, 'Value');
 end
 
+parameter.lsmopt.addSnxSource=get(handles.checkbox_run_sinex_sources, 'Value');
+
 if get(handles.checkbox_run_sinex_changeAnalystsName, 'Value')
     parameter.lsmopt.outsnx.changeAnalystsName=1;
+    parameter.lsmopt.outsnx.firstname=get(handles.edit_run_sinex_firstname, 'String');
+    parameter.lsmopt.outsnx.lastname=get(handles.edit_run_sinex_lastname, 'String');
+    parameter.lsmopt.outsnx.email=get(handles.edit_run_sinex_email, 'String');
 else
     parameter.lsmopt.outsnx.changeAnalystsName=0;
+    parameter.lsmopt.outsnx.firstname='';
+    parameter.lsmopt.outsnx.lastname='';
+    parameter.lsmopt.outsnx.email='';
 end
 
-parameter.lsmopt.outsnx.firstname=get(handles.edit_run_sinex_firstname, 'String');
-parameter.lsmopt.outsnx.lastname=get(handles.edit_run_sinex_lastname, 'String');
-parameter.lsmopt.outsnx.email=get(handles.edit_run_sinex_email, 'String');
-parameter.lsmopt.addSnxSource=get(handles.checkbox_run_sinex_sources, 'Value');
+if get(handles.checkbox_run_sinex_addSuffix, 'Value')
+    parameter.lsmopt.outsnx.addSuffix=1;
+    parameter.lsmopt.outsnx.suffix=get(handles.edit_run_sinex_suffix, 'String');
+else
+    parameter.lsmopt.outsnx.addSuffix=0;
+    parameter.lsmopt.outsnx.suffix='';
+end
 
 % EOP estimation
 % xpol

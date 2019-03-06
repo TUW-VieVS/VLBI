@@ -122,7 +122,11 @@ function varargout = vie_setup(varargin)
 % 06 Jul 2018 by D. Landskron: VMF3 added to the troposphere models
 % 25 Sep 2018 by D. Landskron: specific warning message suppressed
 % 18 Dec 2018 by D. Landskron: VieVS now starts with File - Set input files
+% 06 Mar 2019 by D. Landskron: suffix checkbox added to the sinex files
+%
 %*************************************************************************
+
+
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -729,6 +733,12 @@ if get(handles.checkbox_run_sinex_changeAnalystsName, 'Value')==0
     set(handles.edit_run_sinex_firstname, 'Enable', 'Off')
     set(handles.edit_run_sinex_lastname, 'Enable', 'Off')
     set(handles.edit_run_sinex_email, 'Enable', 'Off')
+end
+
+set(handles.checkbox_run_sinex_addSuffix, 'Enable', newState)
+set(handles.edit_run_sinex_suffix, 'Enable', newState)
+if get(handles.checkbox_run_sinex_addSuffix, 'Value')==0
+    set(handles.edit_run_sinex_suffix, 'Enable', 'Off')
 end
 
 % save parameter file automatically 
@@ -10484,6 +10494,45 @@ function edit_run_sinex_email_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in checkbox_run_sinex_addSuffix.
+function checkbox_run_sinex_addSuffix_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_sinex_addSuffix (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_sinex_addSuffix
+if get(hObject, 'Value')
+    newState='On';
+else
+    newState='Off';
+end
+
+set(handles.edit_run_sinex_suffix, 'Enable', newState);
+
+
+function edit_run_sinex_suffix_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_run_sinex_suffix (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_run_sinex_suffix as text
+%        str2double(get(hObject,'String')) returns contents of edit_run_sinex_suffix as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_run_sinex_suffix_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_run_sinex_suffix (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
 
 
 % --------------------------------------------------------------------
