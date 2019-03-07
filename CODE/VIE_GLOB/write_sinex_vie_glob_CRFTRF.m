@@ -40,7 +40,7 @@ function write_sinex_vie_glob_CRFTRF(globsol,paths,trf,crf)
         mkdir(['../OUT/GLOB/SNX/' paths.out]);
     end
 
-    snxFile=['../OUT/GLOB/SNX/' paths.out '/' paths.L2 '_Nb.SNX'];
+    snxFile=['../OUT/GLOB/SNX/' paths.out '/' paths.L2 '_Nb.snx'];
     
     
     
@@ -781,7 +781,7 @@ function write_sinex_vie_glob_CRFTRF(globsol,paths,trf,crf)
     
     
     if CreateSinex_Cov ==1    
-        copyfile(snxFile,[snxFile(:,1:end-7) '_Cov.SNX' ])
+        copyfile(snxFile,[snxFile(:,1:end-7) '_Cov.snx' ])
     end
     
     %% write 27. SOLUTION/NORMAL_EQUATION_VECTOR block if tickbox is ticked
@@ -949,7 +949,7 @@ function write_sinex_vie_glob_CRFTRF(globsol,paths,trf,crf)
     
     
     if CreateSinex_Cov ==1
-        fidCov = fopen([snxFile(:,1:end-7) '_Cov.SNX'], 'a');
+        fidCov = fopen([snxFile(:,1:end-7) '_Cov.snx'], 'a');
     
         %% write 25. SOLUTION/MATRIX_ESTIMATE block if tickbox is ticked
         blockName='SOLUTION/MATRIX_ESTIMATE L COVA';

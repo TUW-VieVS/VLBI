@@ -55,6 +55,7 @@
 %   06 Jul 2018 by Daniel Landskron: VMF3 added to the troposphere models 
 %   23 Aug 2018 by Daniel Landskron: adapted for vgosDB
 %   29 Nov 2018 by Daniel Landskron: structure of observation restrictions standardized
+%   06 Mar 2019 by Daniel Landskron: suffix checkbox added to the sinex files
 %
 % call this function:
 %
@@ -78,7 +79,7 @@ else            % No subfolder defined
     subfolder='/';
 end
 
-if nargin>2     % Email Adress and name defined
+if nargin>2     % Email Adress, name and suffix defined
     firstname=varargin{2};
     if isempty(firstname)
         firstname='TU';
@@ -92,6 +93,11 @@ if nargin>2     % Email Adress and name defined
     email=varargin{4};
     if isempty(email)
         email='vlbi@geo.tuwien.ac.at';
+    end
+    
+    suffix=varargin{5};
+    if ~isempty(suffix)
+       suffix = ['_' suffix];
     end
 end
 
@@ -137,7 +143,7 @@ for pl=1:size(process_list,1)
     files.antenna=['../DATA/LEVEL3/', subfolder, '/', process_list(pl,6:end), '_antenna.mat'];
     files.sources=['../DATA/LEVEL3/', subfolder, '/', process_list(pl,6:end), '_sources.mat'];
     
-    snxFile=['../DATA/SNX/', subfolder, process_list(pl,6:end), '.SNX'];
+    snxFile=['../DATA/SNX/', subfolder, process_list(pl,6:end), suffix, '.snx'];
     files.superstation=['../TRF/superstation.mat'];
     
     
@@ -194,7 +200,6 @@ for pl=1:size(process_list,1)
 
     % open file ('a': writing, append, 'w': discharge content if any)
     fid=fopen(snxFile, 'w');
-    clear snxFile
     
    
     % add site code and itrfXYZ to x_.antenna struct
@@ -1640,6 +1645,9 @@ for pl=1:size(process_list,1)
     clear obsCode
     fclose(fid);
     
-   
-    %fprintf('%2.0f', pl)
+    
+    fprintf('%s%s\n','SINEX file is saved as ',snxFile);
+    
 end %for - process_list
+
+

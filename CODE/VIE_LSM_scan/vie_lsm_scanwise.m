@@ -1160,7 +1160,7 @@ if opt.ascii_snx == 1
     % create an ascii sinex file in DATA/SNX
     fprintf('\nWriting SINEX file ... \n');
     write_sinex_vievs(fname, [dirpth '/']);
-    fprintf('\nSINEX file is saved in ../VieVS/DATA/SNX/%s.SNX \n\n',fname);
+    fprintf('\nSINEX file is saved in ../VieVS/DATA/SNX/%s.snx \n\n',fname);
     
 end
 

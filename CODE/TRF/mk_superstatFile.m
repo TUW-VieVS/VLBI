@@ -393,9 +393,9 @@ fprintf('\n2.3 Terrestrial reference frames\n')
 
 
 % --------------------------
-% 2.3.1 ITRF2014-IVS-TRF.SNX
+% 2.3.1 ITRF2014-IVS-TRF.snx
 % --------------------------
-fprintf('\n2.3.1 ITRF2014-IVS-TRF.SNX\n\n');
+fprintf('\n2.3.1 ITRF2014-IVS-TRF.snx\n\n');
 if exist(itrf2014File, 'file')
 	itrf2014File_name = 'itrf2014';
 	[ns_codes] = trf_by_snx_reader(ns_codes,itrf2014File,itrf2014File_name,break0);
@@ -471,7 +471,7 @@ if exist(itrf2014File, 'file')
         pause(2);
     end
 else
-    fprintf('ITRF2014-IVS-TRF.SNX is not available\n\n');
+    fprintf('ITRF2014-IVS-TRF.snx is not available\n\n');
     flag_trf_itrf2014 = false;
 end
 
@@ -479,14 +479,14 @@ end
 % 2.3.2 DTRF2014
 % --------------------------
 
-fprintf('\n2.3.2 DTRF2014_VLBI.SNX\n\n');
+fprintf('\n2.3.2 DTRF2014_VLBI.snx\n\n');
 if exist(dtrf2014File, 'file')
 	dtrf2014File_name = 'dtrf2014';
 	[ns_codes] = trf_by_snx_reader(ns_codes,dtrf2014File,dtrf2014File_name,break0);
 
     setStartEndEpoch('dtrf2014');
 else
-    fprintf('DTRF2014_VLBI.SNX is not available\n\n');
+    fprintf('DTRF2014_VLBI.snx is not available\n\n');
     flag_trf_dtrf2014 = false;
 end
 
@@ -503,7 +503,7 @@ if exist(vtrf2014File, 'file')
 
     setStartEndEpoch('vtrf2014');
 else
-    fprintf('VTRF2014_final.SNX is not available\n\n');
+    fprintf('VTRF2014_final.snx is not available\n\n');
     flag_trf_vtrf2014 = false;
 end
         

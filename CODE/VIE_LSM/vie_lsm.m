@@ -165,6 +165,7 @@
 %   04 May 2017 by A. Hellerschmied: - Added some functions to estimate pwl offsets to a priori satellite positions (preliminary implementation!)
 %                                    - Some minor general revisions were done
 %   21 Sep 2017 by H. Krasna: bugs corrected which appeared after the implemenation of satellite positions update w.r.t. global solution
+%   06 Mar 2019 by D. Landskron: suffix checkbox added to the sinex files
 % ************************************************************************
 
 function vie_lsm(antenna, sources, scan, parameter, dirpth, dirpthL2)
@@ -1780,8 +1781,7 @@ if opt.ascii_snx == 1
 
     % create an ascii sinex file in DATA/SNX
     fprintf('\nWriting SINEX file ... \n');
-    write_sinex_vievs(parameter.session_name, [dirpth '/'], outsnx.firstname, outsnx.lastname, outsnx.email);
-    fprintf('SINEX file is saved as ../VieVS/DATA/SNX/%s.SNX\n',parameter.session_name);
+    write_sinex_vievs(parameter.session_name, [dirpth '/'], outsnx.firstname, outsnx.lastname, outsnx.email, outsnx.suffix);
 
 end
 
