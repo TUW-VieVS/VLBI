@@ -74,12 +74,12 @@
 %       part of opt
 %   10 Oct 2016 by A. Hellerschmied: support of s/c targets enabled (field "opt.satellite" added, etc.)
 %   28 Feb 2017 by A. Hellerschmied: station/source-wise parameterization revised
-%   01 Mar 2017 by A. Hellerschmied: Now it is checked if OPT file infromation is available in the parameter structure
+%   01 Mar 2017 by A. Hellerschmied: Now it is checked if OPT file information is available in the parameter structure
 %   03 May 2017 by A. Hellerschmied: Adoptions for estimation of satellite positions (pwl offsets)
 % ************************************************************************
 function [opt] = lsmopt(antenna, sources, na, ns_q, ns_s, obs_per_source, obs_per_satellite, parameter, opt)
 
-% Add general session infor to the opt struct:
+% Add general session info to the opt struct:
 % Session name:
 opt.session_name    = parameter.session_name;
 % Year:
@@ -169,6 +169,8 @@ opt.constr_abs_egr = opt.constr_abs_egr;  % absolute constraints between east gr
 % how to estimate station coordinates 
 opt.stc = opt.stc;         % 0 not estimate station coordinates (stationwise) 
                            % 1 estimate station coordinates (stationwise)
+opt.datum = opt.datum;     % 'trf' NNT/NNR or fixing is applied to TRF stations
+                           % 'all' NNT/NNR or fixing is applied to all stations
 opt.pw_stc = opt.pw_stc;      % 0 estimate all selected stations as one offset per session (NNT/NNR is available)
                               % 1 estimate all selected station coordinates as pwl offsets (NNT/NNR is NOT available - fix at least 3 stations)
     % case 1 introduce constraints between station coordinates (only if pwl offsets)
@@ -266,7 +268,7 @@ end
            
 % Boehm 19 August 2009 (Excluding station from NNT/NNR)
 for istat = 1:na
-    if antenna(istat).in_trf == 0
+    if antenna(istat).in_trf == 0 && strcmp(opt.datum,'trf')
         opt.stat(istat).nnt_inc = 0;
         opt.stat(istat).nnr_inc = 0;
         opt.stat(istat).nns_inc = 0;

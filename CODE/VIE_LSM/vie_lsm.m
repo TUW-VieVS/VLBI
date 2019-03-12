@@ -1338,7 +1338,7 @@ end
 
 
 % Save the "cleaned" VieVS structures (consistent withe the results in x_ and res_):
-fprintf('Save VieVS data structures (oultiers and OPT file options applied!)\n');
+fprintf('Save VieVS data structures (outliers and OPT file options applied!)\n');
 fprintf('  ../DATA/LEVEL3/%s/%s_antenna.mat\n',dirpth,parameter.session_name);
 save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_antenna.mat'],'antenna');
 fprintf('  ../DATA/LEVEL3/%s/%s_source.mat\n',dirpth,parameter.session_name);

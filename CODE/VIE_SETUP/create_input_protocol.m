@@ -7,11 +7,11 @@
 
 % updates:
 % 27 March 2012 by Hana Spicakova: hydrology loading added
-% 15 Nov 2012 by Hana Krásná: distinction between pressure and temperature
+% 15 Nov 2012 by Hana Krï¿½snï¿½: distinction between pressure and temperature
 % values
-% 19 Dec 2012 by Hana Krásná: changes according to changes of constrain's representation in
+% 19 Dec 2012 by Hana Krï¿½snï¿½: changes according to changes of constrain's representation in
 % the GUI 2.1
-% 18 March 2013 by Hana Krásná: change according to new supersource file
+% 18 March 2013 by Hana Krï¿½snï¿½: change according to new supersource file
 % 25 Jan 2017 by Daniel Landskron: output changed due to troposphere model change
 % 13 Sep 2017 by Daniel Landskron: 'tropSource' shifted into 'vie_init' 
 % 11 May 2018 by Daniel Landskron: remaining variable 'ext' removed
@@ -215,7 +215,7 @@ function create_input_protocol(parameter, outfile)
     end
     
     fprintf(fid, '\n\n stations');
-    fprintf(fid, '\n parametrization: %s', stat);
+    fprintf(fid, '\n parametrization: %s', [stat ',' parameter.lsmopt.datum]);
     fprintf(fid, '\n conditions: %s', stat_con);
     
     % EOP

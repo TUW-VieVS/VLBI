@@ -432,7 +432,7 @@ else
     parameter.lsmopt.level1OutDir=get(handles.edit_run_outDirs_oneSub, 'String');
 end
 
-% opt and outlier direcotry (copied)
+% opt and outlier directory (copied)
 parameter.lsmopt.diropt=parameter.vie_init.diropt;
 parameter.lsmopt.dirout=parameter.vie_init.dirout;
 
@@ -575,7 +575,12 @@ parameter.lsmopt.pw_stc=0; % is changed in sessionwise parameterization
 parameter.lsmopt.nnt_stc=get(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Value');
 parameter.lsmopt.nnr_stc=get(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Value');
 parameter.lsmopt.sca_stc=get(handles.checkbox_estimation_leastSquares_coordinates_NNS, 'Value');
-
+parameter.lsmopt.datum='trf';
+if get(handles.radiobutton_estimation_leastSquares_coordinates_datum_all, 'Value')
+    parameter.lsmopt.datum='all';
+else
+    parameter.lsmopt.datum='trf';
+end
 parameter.lsmopt.constr_xyz=1;
 parameter.lsmopt.coef_xyz=10;
 parameter.lsmopt.int_xyz=360;
