@@ -977,7 +977,14 @@ if ~isfield(parameter.lsmopt, 'datum')
     parameter.lsmopt.datum = 'trf';
     msgbox('Loaded parameter file (from older VieVS version) does not contain the "datum (trf/all)" option!', 'Warning', 'warn');
 end
-set(handles.radiobutton_estimation_leastSquares_coordinates_datum_all, 'Value', parameter.lsmopt.datum)
+if strcmp(parameter.lsmopt.datum,'trf')
+    set(handles.radiobutton_estimation_leastSquares_coordinates_datum_trf, 'Value', 1)
+elseif strcmp(parameter.lsmopt.datum,'all')
+    set(handles.radiobutton_estimation_leastSquares_coordinates_datum_all, 'Value', 1)
+else
+    msgbox('"parameter.lsmopt.datum" does not contain a valid option (trf/all)!', 'Warning', 'warn');
+end
+    
 set(handles.radiobutton_run_sinex_stationCoords_incl, 'Enable', snxState)
 set(handles.text_run_sinex_stationCoords, 'Enable', snxState)
 
