@@ -1084,8 +1084,10 @@ set(handles.edit_run_sinex_email, 'String', parameter.lsmopt.outsnx.email)
 set(handles.edit_run_sinex_firstname,'Enable', 'on');
 set(handles.edit_run_sinex_lastname,'Enable', 'on');
 set(handles.edit_run_sinex_email,'Enable', 'on');
-set(handles.edit_run_sinex_suffix, 'String', parameter.lsmopt.outsnx.suffix)
-set(handles.edit_run_sinex_suffix,'Enable', 'on');
+if isfield(parameter.lsmopt.outsnx, 'suffix')
+    set(handles.edit_run_sinex_suffix, 'String', parameter.lsmopt.outsnx.suffix)
+    set(handles.edit_run_sinex_suffix,'Enable', 'on');
+end
 
 try
     set(handles.checkbox_run_sinex_changeAnalystsName, 'Value', parameter.lsmopt.outsnx.changeAnalystsName)
