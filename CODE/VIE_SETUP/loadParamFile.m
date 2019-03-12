@@ -973,6 +973,11 @@ end
 set(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Value', parameter.lsmopt.nnt_stc)
 set(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Value', parameter.lsmopt.nnr_stc)
 set(handles.checkbox_estimation_leastSquares_coordinates_NNS, 'Value', parameter.lsmopt.sca_stc)
+if ~isfield(parameter.lsmopt, 'datum')
+    parameter.lsmopt.datum = 'trf';
+    msgbox('Loaded parameter file (from older VieVS version) does not contain the "datum (trf/all)" option!', 'Warning', 'warn');
+end
+set(handles.radiobutton_estimation_leastSquares_coordinates_datum_all, 'Value', parameter.lsmopt.datum)
 set(handles.radiobutton_run_sinex_stationCoords_incl, 'Enable', snxState)
 set(handles.text_run_sinex_stationCoords, 'Enable', snxState)
 
