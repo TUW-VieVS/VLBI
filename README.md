@@ -44,7 +44,7 @@ Please be aware that this repository contains more or less only the program code
 
 ### Observation data
 * NGS can be downloaded for example from ftp://cddis.nasa.gov/vlbi/ivsdata/ngs/ and have to be stored in year folders (NGS-files have to be uncompressed): `/VLBI/DATA/NGS/yyyy/`
-* vgosDB can be downloaded from https://ivscc.gsfc.nasa.gov/hfeop_wg/vgosDB_IVS/ and have to be stored in year folders as you download them (compressed tar files, *.tgz or *.tar.gz): `/VLBI/DATA/vgosDB/yyyy/`
+* vgosDB can be downloaded from ftp://cddis.gsfc.nasa.gov/vlbi/ivsdata/vgosdb/ and have to be stored in year folders as you download them (compressed tar files, *.tgz or *.tar.gz): `/VLBI/DATA/vgosDB/yyyy/`
 * Master files are needed for the automatic generation of a process list, they can be downloaded from ftp://cddis.gsfc.nasa.gov/pub/vlbi/ivscontrol/ as yearly *.txt files and have to be stored in : `/VLBI/DATA/MASTER`
 
 ### Earth Orientation parameters
