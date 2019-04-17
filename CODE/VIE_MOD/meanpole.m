@@ -37,20 +37,16 @@ t0 = 2000;       % year
 
 switch ctpm
     case 'linear'
-% if strcmp(ctpm,'linear') %IERS Conv. 2003
+% if strcmp(ctpm,'linear') %IERS Conv. 2019
 
-    x0 = 54;         %  mas
-    x1 = 0.83;       %  mas/year
-    x2 = 0;
-    x3 = 0;
-
-    y0 = 357;        %  mas
-    y1 = 3.95;       %  mas/year
-    y2 = 0;
-    y3 = 0;
+    x0 = 55.0;       %  mas
+    x1 = 1.677;      %  mas/year
     
-    xpm = x0 + x1*(t-t0) + x2*(t-t0)^2 + x3*(t-t0)^3; %[mas]
-    ypm = y0 + y1*(t-t0) + y2*(t-t0)^2 + y3*(t-t0)^3; %[mas]
+    y0 = 320.5;        %  mas
+    y1 = 3.460;       %  mas/year
+        
+    xpm = x0 + x1*(t-t0); %[mas]
+    ypm = y0 + y1*(t-t0); %[mas]
 
     case 'cubic' %IERS Conv. 2010
         if t < 2010         % (Cubic model only over the period (1976-2010))
