@@ -428,83 +428,83 @@ end
 disp '    '
 disp 'saving simulated data...'
 
-if ~exist(dirpt1,'dir')
-    mkdir(dirpt1)
-end
-
-try
-    if sind < 10
-        save([dirpt1 '/' session '_S00' num2str(sind) '_sim.mat'],'sim');
-    elseif sind < 100
-        save([dirpt1 '/' session '_S0' num2str(sind) '_sim.mat'],'sim');
-    else
-        save([dirpt1 '/' session '_S' num2str(sind) '_sim.mat'],'sim');
-    end
-catch
-    try
-        if sind < 10
-            save([dirpt1 '/' session '_S00' num2str(sind) '_sim.mat'],'sim');
-        elseif sind < 100
-            save([dirpt1 '/' session '_S0' num2str(sind) '_sim.mat'],'sim');
-        else
-            save([dirpt1 '/' session '_S' num2str(sind) '_sim.mat'],'sim');
-        end
-    catch
-        if sind < 10
-            save([dirpt1 '/' session '_S00' num2str(sind) '_sim.mat'],'sim');
-        elseif sind < 100
-            save([dirpt1 '/' session '_S0' num2str(sind) '_sim.mat'],'sim');
-        else
-            save([dirpt1 '/' session '_S' num2str(sind) '_sim.mat'],'sim');
-        end
-    end
-end
-try
-    if sind < 10
-        save([dirpt1 '/' session '_S00' num2str(sind) '_cov.mat'],'cov');
-    elseif sind < 100
-        save([dirpt1 '/' session '_S0' num2str(sind) '_cov.mat'],'cov');
-    else
-        save([dirpt1 '/' session '_S' num2str(sind) '_cov.mat'],'cov');
-    end
-catch
-    try
-        if sind < 10
-            save([dirpt1 '/' session '_S00' num2str(sind) '_cov.mat'],'cov');
-        elseif sind < 100
-            save([dirpt1 '/' session '_S0' num2str(sind) '_cov.mat'],'cov');
-        else
-            save([dirpt1 '/' session '_S' num2str(sind) '_cov.mat'],'cov');
-        end
-    catch
-        if sind < 10
-            save([dirpt1 '/' session '_S00' num2str(sind) '_cov.mat'],'cov');
-        elseif sind < 100
-            save([dirpt1 '/' session '_S0' num2str(sind) '_cov.mat'],'cov');
-        else
-            save([dirpt1 '/' session '_S' num2str(sind) '_cov.mat'],'cov');
-        end
-    end
-end
+% if ~exist(dirpt1,'dir')
+%     mkdir(dirpt1)
+% end
+% 
+% try
+%     if sind < 10
+%         save([dirpt1 '/' session '_S00' num2str(sind) '_sim.mat'],'sim');
+%     elseif sind < 100
+%         save([dirpt1 '/' session '_S0' num2str(sind) '_sim.mat'],'sim');
+%     else
+%         save([dirpt1 '/' session '_S' num2str(sind) '_sim.mat'],'sim');
+%     end
+% catch
+%     try
+%         if sind < 10
+%             save([dirpt1 '/' session '_S00' num2str(sind) '_sim.mat'],'sim');
+%         elseif sind < 100
+%             save([dirpt1 '/' session '_S0' num2str(sind) '_sim.mat'],'sim');
+%         else
+%             save([dirpt1 '/' session '_S' num2str(sind) '_sim.mat'],'sim');
+%         end
+%     catch
+%         if sind < 10
+%             save([dirpt1 '/' session '_S00' num2str(sind) '_sim.mat'],'sim');
+%         elseif sind < 100
+%             save([dirpt1 '/' session '_S0' num2str(sind) '_sim.mat'],'sim');
+%         else
+%             save([dirpt1 '/' session '_S' num2str(sind) '_sim.mat'],'sim');
+%         end
+%     end
+% end
+% try
+%     if sind < 10
+%         save([dirpt1 '/' session '_S00' num2str(sind) '_cov.mat'],'cov');
+%     elseif sind < 100
+%         save([dirpt1 '/' session '_S0' num2str(sind) '_cov.mat'],'cov');
+%     else
+%         save([dirpt1 '/' session '_S' num2str(sind) '_cov.mat'],'cov');
+%     end
+% catch
+%     try
+%         if sind < 10
+%             save([dirpt1 '/' session '_S00' num2str(sind) '_cov.mat'],'cov');
+%         elseif sind < 100
+%             save([dirpt1 '/' session '_S0' num2str(sind) '_cov.mat'],'cov');
+%         else
+%             save([dirpt1 '/' session '_S' num2str(sind) '_cov.mat'],'cov');
+%         end
+%     catch
+%         if sind < 10
+%             save([dirpt1 '/' session '_S00' num2str(sind) '_cov.mat'],'cov');
+%         elseif sind < 100
+%             save([dirpt1 '/' session '_S0' num2str(sind) '_cov.mat'],'cov');
+%         else
+%             save([dirpt1 '/' session '_S' num2str(sind) '_cov.mat'],'cov');
+%         end
+%     end
+% end
 % save([dirpt1 '/' session '_scan.mat'],'scan');
-try
-    save([dirpt1 '/' session '_mf.mat'],'mf');
-catch
-    try
-        save([dirpt1 '/' session '_mf.mat'],'mf');
-    catch
-        save([dirpt1 '/' session '_mf.mat'],'mf');
-    end
-end
-try
-    save([dirpt1 '/' session '_azel.mat'],'azel');
-catch
-    try
-        save([dirpt1 '/' session '_azel.mat'],'azel');
-    catch
-        save([dirpt1 '/' session '_azel.mat'],'azel');
-    end
-end
+% try
+%     save([dirpt1 '/' session '_mf.mat'],'mf');
+% catch
+%     try
+%         save([dirpt1 '/' session '_mf.mat'],'mf');
+%     catch
+%         save([dirpt1 '/' session '_mf.mat'],'mf');
+%     end
+% end
+% try
+%     save([dirpt1 '/' session '_azel.mat'],'azel');
+% catch
+%     try
+%         save([dirpt1 '/' session '_azel.mat'],'azel');
+%     catch
+%         save([dirpt1 '/' session '_azel.mat'],'azel');
+%     end
+% end
 
 % ##### Write output #####
 
@@ -536,7 +536,7 @@ for iscan = 1:length(scan)
             % if zero input -> o = c -> o-c = 0
             scan(iscan).obs(iobs).obs = scan(iscan).obs(iobs).com;
         else
-            scan(iscan).obs(iobs).obs = scan(iscan).obs(iobs).com + [scan(iscan).obs(iobs).obs];
+            scan(iscan).obs(iobs).obs = scan(iscan).obs(iobs).com + [scan(iscan).obs(iobs).obs]';
         end
         % the sigma of the simulated delay observable is set to
         % the value of the simulated thermal noise, ionospheric formal
@@ -596,47 +596,47 @@ else
     end
 end
 % ### write output in LEVEL1 folder ###
-allScans = scan;
-allSessionName = parameter.session_name;
-parameter.session_name = [];
-allInitJetfilnam = parameter.vie_init.jetfilnam;
-parameter.vie_init.jetfilnam=[];
-allInitJetfilnamuv = parameter.vie_init.jetfilnamuv;
-parameter.vie_init.jetfilnamuv=[];
-allInitJetfilnamjb = parameter.vie_init.jetfilnamjb;
-parameter.vie_init.jetfilnamjb = [];
-for isim = 1:sim_idays
-    if sim_idays == 1
-        parameter.session_name = allSessionName;
-        parameter.vie_init.jetfilnam   = allInitJetfilnam;
-        parameter.vie_init.jetfilnamuv = allInitJetfilnamuv;
-        parameter.vie_init.jetfilnamjb = allInitJetfilnamjb;
-        antenna(1).session = allSessionName;
-    else
-        parameter.session_name = allSessionName{isim};
-        parameter.vie_init.jetfilnam   = allInitJetfilnam{isim};
-        parameter.vie_init.jetfilnamuv = allInitJetfilnamuv{isim};
-        parameter.vie_init.jetfilnamjb = allInitJetfilnamjb{isim};
-        antenna(1).session = allSessionName{isim};
-    end
-    
-    for iscan = 1:length(scan)
-        for iobs = 1:length(scan(iscan).obs)
-            scan(iscan).obs(iobs).obs = allScans(iscan).obs(iobs).obs(isim);
-        end
-    end
-    save(sprintf('%s/%s_parameter.mat',dirpt,parameter.session_name),'parameter');
-    save(sprintf('%s/%s_antenna.mat',dirpt,parameter.session_name),'antenna');
-    save(sprintf('%s/%s_scan.mat',dirpt,parameter.session_name),'scan');
-    save(sprintf('%s/%s_sources.mat',dirpt,parameter.session_name),'sources');
-end
-
-parameter.session_name = allSessionName;
-parameter.vie_init.jetfilnam = allInitJetfilnam;
-parameter.vie_init.jetfilnamuv = allInitJetfilnamuv;
-parameter.vie_init.jetfilnamjb = allInitJetfilnamjb;
-scan = allScans;
-antenna(1).session = allSessionName;
-
-disp '    '
+% allScans = scan;
+% allSessionName = parameter.session_name;
+% parameter.session_name = [];
+% allInitJetfilnam = parameter.vie_init.jetfilnam;
+% parameter.vie_init.jetfilnam=[];
+% allInitJetfilnamuv = parameter.vie_init.jetfilnamuv;
+% parameter.vie_init.jetfilnamuv=[];
+% allInitJetfilnamjb = parameter.vie_init.jetfilnamjb;
+% parameter.vie_init.jetfilnamjb = [];
+% for isim = 1:sim_idays
+%     if sim_idays == 1
+%         parameter.session_name = allSessionName;
+%         parameter.vie_init.jetfilnam   = allInitJetfilnam;
+%         parameter.vie_init.jetfilnamuv = allInitJetfilnamuv;
+%         parameter.vie_init.jetfilnamjb = allInitJetfilnamjb;
+%         antenna(1).session = allSessionName;
+%     else
+%         parameter.session_name = allSessionName{isim};
+%         parameter.vie_init.jetfilnam   = allInitJetfilnam{isim};
+%         parameter.vie_init.jetfilnamuv = allInitJetfilnamuv{isim};
+%         parameter.vie_init.jetfilnamjb = allInitJetfilnamjb{isim};
+%         antenna(1).session = allSessionName{isim};
+%     end
+%     
+%     for iscan = 1:length(scan)
+%         for iobs = 1:length(scan(iscan).obs)
+%             scan(iscan).obs(iobs).obs = allScans(iscan).obs(iobs).obs(isim);
+%         end
+%     end
+%     save(sprintf('%s/%s_parameter.mat',dirpt,parameter.session_name),'parameter');
+%     save(sprintf('%s/%s_antenna.mat',dirpt,parameter.session_name),'antenna');
+%     save(sprintf('%s/%s_scan.mat',dirpt,parameter.session_name),'scan');
+%     save(sprintf('%s/%s_sources.mat',dirpt,parameter.session_name),'sources');
+% end
+% 
+% parameter.session_name = allSessionName;
+% parameter.vie_init.jetfilnam = allInitJetfilnam;
+% parameter.vie_init.jetfilnamuv = allInitJetfilnamuv;
+% parameter.vie_init.jetfilnamjb = allInitJetfilnamjb;
+% scan = allScans;
+% antenna(1).session = allSessionName;
+% 
+% disp '    '
 disp 'vie_sim successfully finished!'

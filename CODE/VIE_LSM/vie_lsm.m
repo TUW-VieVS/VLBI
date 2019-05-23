@@ -250,7 +250,7 @@ if length(parameter.session_name) == 14
 elseif length(parameter.session_name) == 9
     opt_file_path_name = ['../../VLBI_OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name, '.OPT'];
 elseif length(parameter.session_name) ~= 19
-    error('Session name does not follow convention');
+    warning('Session name does not follow convention');
 end
 if parameter.opt.use_opt_files
     if exist(opt_file_path_name, 'file')
@@ -633,7 +633,8 @@ fprintf('4. FORMING THE REDUCED OBSERVATION VECTOR "oc_observ"\n');
 % -------------------------------------------------------------------------
 % FORMING THE REDUCED OBSERVATION VECTOR (oc_observ)
 % oc_observ = [];
-oc_observ = ([temp.obs]-[temp.com])'.*c*100; % [cm]
+numberOfLSMs = length(temp(1).obs);
+oc_observ = ([temp.obs]-repmat([temp.com],numberOfLSMs,1))'.*c*100; % [cm]
 
 if opt.first ~= 1
     first_solution.ref_st = [];
@@ -991,26 +992,26 @@ for i = 1 : length(A)
     Ablk        = sparse(horzcat(Ablk,A(i).sm));
     Hblk        = sparse(blkdiag(Hblk,H(i).sm));
     Pobserv     = sparse(blkdiag(Pobserv,Ph(i).sm));
-    oc_observ   = sparse(vertcat(oc_observ,och(i).sv));
+    oc_observ   = vertcat(oc_observ,repmat(och(i).sv,1,numberOfLSMs));
 	sum_dj(i+1) = sum_dj(i) + dj(i);
 	num_psob(i) = length(find((any(H(i).sm,1) == 1)));      % number of pseudo-observations for each parameter (hana 17May11)
 end
 
 if sibling == 1
     if opt.pw_stc == 0
-        oc_observ(length(oc_observ)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:length(oc_observ)-length(och(14).sv)-length(och(15).sv)-1) = [];
-        oc_observ(length(oc_observ)-length(och(14).sv)-length(och(15).sv)+1:length(oc_observ)-length(och(15).sv)-1) = [];
-        oc_observ(length(oc_observ)-length(och(15).sv)+1:length(oc_observ)-1) = [];
+        oc_observ(length(oc_observ)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:length(oc_observ)-length(och(14).sv)-length(och(15).sv)-1,:) = [];
+        oc_observ(length(oc_observ)-length(och(14).sv)-length(och(15).sv)+1:length(oc_observ)-length(och(15).sv)-1,:) = [];
+        oc_observ(length(oc_observ)-length(och(15).sv)+1:length(oc_observ)-1,:) = [];
     end
 elseif common==1 && (nlt > 0)
     if opt.pw_stc == 0
-        oc_observ(length(oc_observ)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:length(oc_observ)-length(och(14).sv)-length(och(15).sv)-nlt) = [];
-        oc_observ(length(oc_observ)-length(och(14).sv)-length(och(15).sv)+1:length(oc_observ)-length(och(15).sv)-nlt) = [];
-        oc_observ(length(oc_observ)-length(och(15).sv)+1:length(oc_observ)-nlt) = [];
+        oc_observ(length(oc_observ)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:length(oc_observ)-length(och(14).sv)-length(och(15).sv)-nlt,:) = [];
+        oc_observ(length(oc_observ)-length(och(14).sv)-length(och(15).sv)+1:length(oc_observ)-length(och(15).sv)-nlt,:) = [];
+        oc_observ(length(oc_observ)-length(och(15).sv)+1:length(oc_observ)-nlt,:) = [];
     end
 else
     if opt.pw_stc == 0 % 1 estimate all selected station coordinates as pwl offsets (NNT/NNR is NOT available - fix at least 3 stations)
-        oc_observ(length(oc_observ)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:length(oc_observ)) = []; % omc values for rel. constraints are removed again here (from the END of the vector)!
+        oc_observ(length(oc_observ)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:length(oc_observ),:) = []; % omc values for rel. constraints are removed again here (from the END of the vector)!
     end
 end
 
@@ -1082,7 +1083,7 @@ if ess == 1 % +hana 10Nov10
     % -------------------------------------------------------------------------
     % ACCURACY CRITERIA
     v = A*x - oc_observ; % RESIDUALS OF THE OBSERVATIONS -------01 [cm]
-    v_real = v(1:n_observ,1);
+    v_real = v(1:n_observ,:);
 
     if opt.bsldep ==1 % Do you want to apply baseline dependent weights?
         fprintf('VERSION WITH BASELINE DEPENDENT WEIGHTS\n')
@@ -1144,16 +1145,16 @@ if ess == 1 % +hana 10Nov10
 
 
     %mo = sqrt((v_real'*pobserv*v_real)/(nobserv-length(x)));  % RMS [1]
-    vTPv=v'*Pobserv*v;
+    vTPv=diag(v'*Pobserv*v)';
     mo = sqrt(vTPv/(n_observ+size(Hblk,1)-length(x)));  % RMS [2] SINEX V2.01 Appendix(2) Eq.(20)
     opt.mo = mo;
 
-    vTPv_real=v_real'*Pobserv(1:n_observ,1:n_observ)*v_real;     %% numerator of wrms
+    vTPv_real=diag(v_real'*Pobserv(1:n_observ,1:n_observ)*v_real);     %% numerator of wrms
     weightsum=sum(sum(Pobserv(1:n_observ,1:n_observ)));          %% denominator of wrms
     wrms=sqrt(vTPv_real/weightsum);                            %% wrms of post-fit residual
     opt.wrms = wrms;
 
-    mi = mo*sqrt(diag(Qxx)); % std. dev. of estimated parameters [cm,mas]
+    mi = repmat(mo,length(Qxx),1).*repmat(sqrt(diag(Qxx)),1,numberOfLSMs); % std. dev. of estimated parameters [cm,mas]
 
 
     % Outlier test begins here
@@ -1193,72 +1194,76 @@ if ess == 1 % +hana 10Nov10
 
     % ##### write residuals/outlier info to new variable #####
     % if the res file already exist, ie if it was written in first solution
-    resFilename = ['../DATA/LEVEL3/', dirpth, '/res_', parameter.session_name, '.mat'];
+    if numberOfLSMs == 1
+        resFilename = ['../DATA/LEVEL3/', dirpth, '/res_', parameter.session_name, '.mat'];
+        
+        if exist(resFilename, 'file') && opt.first
+            load(resFilename);
+        else  % else: first solution was not run - 'res' variable does not exist
 
-    if exist(resFilename, 'file') && opt.first
-        load(resFilename);
-    else  % else: first solution was not run - 'res' variable does not exist
-
-        % Station names:
-        res.allStatNames = {antenna.name};
-        % Quasar names:
-        if isfield(sources, 'q')
-            if isfield(sources.q, 'name')
-                res.allSourceNames={sources.q.name};
+            % Station names:
+            res.allStatNames = {antenna.name};
+            % Quasar names:
+            if isfield(sources, 'q')
+                if isfield(sources.q, 'name')
+                    res.allSourceNames={sources.q.name};
+                else
+                    res.allSourceNames = {};
+                end
             else
                 res.allSourceNames = {};
             end
-        else
-            res.allSourceNames = {};
-        end
-        % Satellite names:
-        if isfield(sources, 's')
-            if isfield(sources.s, 'name')
-                res.allSatelliteNames={sources.s.name};
+            % Satellite names:
+            if isfield(sources, 's')
+                if isfield(sources.s, 'name')
+                    res.allSatelliteNames={sources.s.name};
+                else
+                    res.allSatelliteNames = {};
+                end
             else
                 res.allSatelliteNames = {};
             end
-        else
-            res.allSatelliteNames = {};
-        end
 
-        lengthOfScans       = cellfun(@length, {scan.obs});
-        mjdOfObs            = zeros(sum(lengthOfScans), 1);
-        res.baselineOfObs   = zeros(sum(lengthOfScans),2);
-        res.source          = zeros(sum(lengthOfScans),1);
+            lengthOfScans       = cellfun(@length, {scan.obs});
+            mjdOfObs            = zeros(sum(lengthOfScans), 1);
+            res.baselineOfObs   = zeros(sum(lengthOfScans),2);
+            res.source          = zeros(sum(lengthOfScans),1);
 
-        runningInd = 1;
-        for iScan = 1 : size(scan, 2)
+            runningInd = 1;
+            for iScan = 1 : size(scan, 2)
 
-            % source index of current scan
-            res.source(runningInd:runningInd+lengthOfScans(iScan)-1) = repmat(scan(iScan).iso, lengthOfScans(iScan),1);
+                % source index of current scan
+                res.source(runningInd:runningInd+lengthOfScans(iScan)-1) = repmat(scan(iScan).iso, lengthOfScans(iScan),1);
 
-            % obs type
-            res.obs_type(runningInd:runningInd+lengthOfScans(iScan)-1) = repmat(scan(iScan).obs_type, lengthOfScans(iScan),1);
+                % obs type
+                res.obs_type(runningInd:runningInd+lengthOfScans(iScan)-1) = repmat(scan(iScan).obs_type, lengthOfScans(iScan),1);
 
-            % get station names for each observation of this scan
-            res.baselineOfObs(runningInd:runningInd+lengthOfScans(iScan)-1, :) = [[scan(iScan).obs.i1]', [scan(iScan).obs.i2]'];
-            for iObs=1:lengthOfScans(iScan)
-                mjdOfObs(runningInd,1)=scan(iScan).mjd;
-                runningInd=runningInd+1;
+                % get station names for each observation of this scan
+                res.baselineOfObs(runningInd:runningInd+lengthOfScans(iScan)-1, :) = [[scan(iScan).obs.i1]', [scan(iScan).obs.i2]'];
+                for iObs=1:lengthOfScans(iScan)
+                    mjdOfObs(runningInd,1)=scan(iScan).mjd;
+                    runningInd=runningInd+1;
+                end
             end
+            res.obs_type = res.obs_type';
+
+            % save mjd/baselines if this was not done in first solution
+            res.mjd = mjdOfObs;
         end
-        res.obs_type = res.obs_type';
 
-        % save mjd/baselines if this was not done in first solution
-        res.mjd = mjdOfObs;
+        % main solution residuals and outliers should be saved in any case
+        res.mainVal = v_real;
+        res.outlier = out_v;
+
+
+        if ~isempty(dirpth) && ~exist(['../DATA/LEVEL3/',dirpth])
+            mkdir(['../DATA/LEVEL3/',dirpth])
+        end
+        % save file (again)
+        save(resFilename, 'res');
     end
+    
 
-    % main solution residuals and outliers should be saved in any case
-    res.mainVal = v_real;
-    res.outlier = out_v;
-
-
-    if ~isempty(dirpth) && ~exist(['../DATA/LEVEL3/',dirpth])
-        mkdir(['../DATA/LEVEL3/',dirpth])
-    end
-    % save file (again)
-    save(resFilename, 'res');
 
 
     % -------------------------------------------------------------------------
@@ -1292,62 +1297,83 @@ if ess == 1 % +hana 10Nov10
     fprintf('---------------------------------------------------------\n');
 
 
-    [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, number_pwlo_per_sat);
-    x_.mo = mo;
-    x_.mo_first = first_solution.mo;
-    x_.units.mo = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
-    x_.units.mo_first = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
-    x_.wrms = wrms;
-    x_.units.m02 = 'WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights) [cm]';
+    if numberOfLSMs == 1
+        
+        [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, number_pwlo_per_sat);
+        x_.mo = mo;
+        x_.mo_first = first_solution.mo;
+        x_.units.mo = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
+        x_.units.mo_first = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
+        x_.wrms = wrms;
+        x_.units.m02 = 'WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights) [cm]';
+        
+        
+        res.mo = mo;
+        res.mo_first = first_solution.mo;
+        res.units.mo = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
+        res.units.mo_first = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
+        res.wrms = wrms;
+        res.units.m02 = 'WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights) [cm]';
 
 
-    res.mo = mo;
-    res.mo_first = first_solution.mo;
-    res.units.mo = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
-    res.units.mo_first = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
-    res.wrms = wrms;
-    res.units.m02 = 'WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights) [cm]';
 
+        [atpa_.mat] = N;
+        % [atpl_.vec] = n;
+        [opt_] = opt;
+        % save files
 
+        fprintf('----------\n');
+        test_significance(x_,opt_,5);
 
-    [atpa_.mat] = N;
-    % [atpl_.vec] = n;
-    [opt_] = opt;
-    % save files
+        % Save the "cleaned" VieVS structures (consistent with the results in x_ and res_):
+        fprintf('Estimated parameters are saved as ../DATA/LEVEL3/%s/x_%s.mat\n',dirpth,parameter.session_name);
+        save(['../DATA/LEVEL3/',dirpth,'/x_',parameter.session_name,'.mat'],'x_');
 
-    fprintf('----------\n');
-    test_significance(x_,opt_,5);
+        fprintf('Estimation options are saved as ../DATA/LEVEL3/%s/opt_%s.mat\n',dirpth,parameter.session_name);
+        save(['../DATA/LEVEL3/',dirpth,'/opt_',parameter.session_name,'.mat'],'opt_');
 
-    % Save the "cleaned" VieVS structures (consistent with the results in x_ and res_):
-    fprintf('Estimated parameters are saved as ../DATA/LEVEL3/%s/x_%s.mat\n',dirpth,parameter.session_name);
-    save(['../DATA/LEVEL3/',dirpth,'/x_',parameter.session_name,'.mat'],'x_');
+        fprintf('normal equation matrix is saved as ../DATA/LEVEL3/%s/atpa_%s.mat\n',dirpth,parameter.session_name);
+        save(['../DATA/LEVEL3/',dirpth,'/atpa_',parameter.session_name,'.mat'],'atpa_');
 
-    fprintf('Estimation options are saved as ../DATA/LEVEL3/%s/opt_%s.mat\n',dirpth,parameter.session_name);
-    save(['../DATA/LEVEL3/',dirpth,'/opt_',parameter.session_name,'.mat'],'opt_');
+    %     fprintf('right hand side vector is saved as ../VieVS/DATA/LEVEL3/%s/atpl_%s.mat\n',dirpth,parameter.session_name);
+    %     save(['../DATA/LEVEL3/',dirpth,'/atpl_',parameter.session_name,'.mat'],'atpl_');
 
-    fprintf('normal equation matrix is saved as ../DATA/LEVEL3/%s/atpa_%s.mat\n',dirpth,parameter.session_name);
-    save(['../DATA/LEVEL3/',dirpth,'/atpa_',parameter.session_name,'.mat'],'atpa_');
+        fprintf('Residuals are saved as ../DATA/LEVEL3/%s/res_%s.mat\n',dirpth,parameter.session_name);
+        save(['../DATA/LEVEL3/',dirpth,'/res_',parameter.session_name,'.mat'],'res');
 
-%     fprintf('right hand side vector is saved as ../VieVS/DATA/LEVEL3/%s/atpl_%s.mat\n',dirpth,parameter.session_name);
-%     save(['../DATA/LEVEL3/',dirpth,'/atpl_',parameter.session_name,'.mat'],'atpl_');
+    else
+        
+        for iLSM = 1:numberOfLSMs
+            
+            [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, number_pwlo_per_sat, iLSM);
+            x_.mo = mo;
+            x_.mo_first = first_solution.mo;
+            x_.units.mo = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
+            x_.units.mo_first = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
+            x_.wrms = wrms;
+            x_.units.m02 = 'WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights) [cm]';
 
-    fprintf('Residuals are saved as ../DATA/LEVEL3/%s/res_%s.mat\n',dirpth,parameter.session_name);
-    save(['../DATA/LEVEL3/',dirpth,'/res_',parameter.session_name,'.mat'],'res');
+            
+            fprintf('Estimated parameters are saved as ../DATA/LEVEL3/%s/x_%s.mat\n',dirpth,parameter.session_name{iLSM});
+            save(['../DATA/LEVEL3/',dirpth,'/x_',parameter.session_name{iLSM},'.mat'],'x_');
+        end
+       
+    end
 
 end
 
-
-% Save the "cleaned" VieVS structures (consistent withe the results in x_ and res_):
-fprintf('Save VieVS data structures (outliers and OPT file options applied!)\n');
-fprintf('  ../DATA/LEVEL3/%s/%s_antenna.mat\n',dirpth,parameter.session_name);
-save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_antenna.mat'],'antenna');
-fprintf('  ../DATA/LEVEL3/%s/%s_source.mat\n',dirpth,parameter.session_name);
-save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_sources.mat'],'sources');
-fprintf('  ../DATA/LEVEL3/%s/%s_parameter.mat\n',dirpth,parameter.session_name);
-save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_parameter.mat'],'parameter');
-fprintf('  ../DATA/LEVEL3/%s/%s_scan.mat\n',dirpth,parameter.session_name);
-save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_scan.mat'],'scan');
-
+if numberOfLSMs == 1
+    % Save the "cleaned" VieVS structures (consistent withe the results in x_ and res_):
+    fprintf('Save VieVS data structures (outliers and OPT file options applied!)\n');
+    fprintf('  ../DATA/LEVEL3/%s/%s_antenna.mat\n',dirpth,parameter.session_name);
+    save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_antenna.mat'],'antenna');
+    fprintf('  ../DATA/LEVEL3/%s/%s_source.mat\n',dirpth,parameter.session_name);
+    save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_sources.mat'],'sources');
+    fprintf('  ../DATA/LEVEL3/%s/%s_parameter.mat\n',dirpth,parameter.session_name);
+    save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_parameter.mat'],'parameter');
+    fprintf('  ../DATA/LEVEL3/%s/%s_scan.mat\n',dirpth,parameter.session_name);
+    save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_scan.mat'],'scan');
+end
 [opt_] = opt;
 
 %%
@@ -1787,12 +1813,14 @@ end
 
 
 % Command window output of resulting statistics
-fprintf('\n');
-fprintf('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n')
-fprintf('chi-squared of main solution vTPv/degOfFreedom: %.3f\n',mo^2);
-fprintf('WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights): %.3f cm (%.3f ps)\n',wrms,wrms*100/2.99792458);  % for post-fit residual check
-fprintf('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n')
-fprintf('\n')
+if numberOfLSMs == 1
+    fprintf('\n');
+    fprintf('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n')
+    fprintf('chi-squared of main solution vTPv/degOfFreedom: %.3f\n',mo.^2);
+    fprintf('WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights): %.3f cm (%.3f ps)\n',wrms,wrms*100/2.99792458);  % for post-fit residual check
+    fprintf('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n')
+    fprintf('\n')
+end
 
 % -------------------------------------------------------------------------
 fprintf('vie_lsm is successfully finished after %.2f seconds!\n',toc);
