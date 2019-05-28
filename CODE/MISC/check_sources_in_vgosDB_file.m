@@ -56,9 +56,9 @@ if exist(vgosdb_path,'dir')
 end
 
 % Check, if sources in the vgosDB file are missing in the supersource file:
-
+IVSname_trim = strtrim(IVSname);
 for i_src = 1 : length(vgosdb_src_name_list)
-    src_ind = strcmp(IVSname, vgosdb_src_name_list{i_src});
+    src_ind = strcmp(IVSname_trim, strtrim(vgosdb_src_name_list{i_src}));
     
     if sum(src_ind) == 1 % Found source
         
