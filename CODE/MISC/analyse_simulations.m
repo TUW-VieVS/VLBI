@@ -1,6 +1,6 @@
 %% summarize results from VieVS simulations
 % written by: Matthias Schartner
-function analyse_simulations(name)
+function [t_mean_sig, t_rep] = analyse_simulations(name)
 
 
 % change sub-direcotry name here:
@@ -180,7 +180,7 @@ end
 
 %% summarize results for mean sigma
 t_mean_sig = table(nSim, dut1_mean_sig, xpol_mean_sig, ypol_mean_sig, nutdx_mean_sig, nutdy_mean_sig,'RowNames',sessionIds);
-t_mean_sig.Properties.VariableNames = {'nr_sim','dUT1','x_pol','y_pol','x_nut','y_nut'};
+t_mean_sig.Properties.VariableNames = {'n_sim','dUT1','x_pol','y_pol','x_nut','y_nut'};
 t_mean_sig.Properties.VariableDescriptions = {'number of simulations', 'dUT1', 'x polar motion', 'y polar motion', 'x nutation', 'y nutation'};
 t_mean_sig.Properties.VariableUnits = {'','mus','muas','muas','muas','muas'};
 for iSta = 1:nStations
@@ -193,7 +193,7 @@ end
 
 %% summarize results for repeatability
 t_rep = table(nSim, dut1_rep, xpol_rep, ypol_rep, nutdx_rep, nutdy_rep,'RowNames',sessionIds);
-t_rep.Properties.VariableNames = {'nr_sim','dUT1','x_pol','y_pol','x_nut','y_nut'};
+t_rep.Properties.VariableNames = {'n_sim','dUT1','x_pol','y_pol','x_nut','y_nut'};
 t_rep.Properties.VariableDescriptions = {'number of simulations', 'dUT1', 'x polar motion', 'y polar motion', 'x nutation', 'y nutation'};
 t_rep.Properties.VariableUnits = {'','mus','muas','muas','muas','muas'};
 for iSta = 1:nStations

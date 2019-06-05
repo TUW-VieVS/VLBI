@@ -189,6 +189,13 @@ if simparam.rng_use_seed
 
 end
 
+if(~strcmp(handles.edit_vie_sim_statistics_csv.String,'path/to/statistics.csv'))
+    simparam.pathToStatisticsFile = handles.edit_vie_sim_statistics_csv.String;
+else
+    simparam.pathToStatisticsFile = '';
+end
+    
+
 % Save sim. parameters, if no errors occured:
 if err == 0
     save('../DATA/LEVEL4/simparam.mat','simparam');

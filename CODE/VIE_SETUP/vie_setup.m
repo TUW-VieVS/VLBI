@@ -11988,3 +11988,7 @@ try
 catch
     warning('An error occured when opening: https://github.com/TUW-VieVS')
 end
+
+function pushbutton_vie_sim_browseStatistics_Callback(hObject,eventdata,handles)
+    [file,path] = uigetfile('*.csv','Browse for VieSched++ statistics.csv file');
+    handles.edit_vie_sim_statistics_csv.String = [path file];

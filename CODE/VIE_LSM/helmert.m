@@ -61,6 +61,28 @@ nnt = [opt.stat.nnt_inc]==0;
 nnr = [opt.stat.nnr_inc]==0;
 nns = [opt.stat.nns_inc]==0;
 
+fprintf('Station not in NNT: ')
+for i=1:na
+    if nnt(i)
+        fprintf('%s ',opt.stat(i).name)
+    end
+end
+fprintf('\n')
+fprintf('Station not in NNR: ')
+for i=1:na
+    if nnr(i)
+        fprintf('%s ',opt.stat(i).name)
+    end
+end
+fprintf('\n')
+fprintf('Station not in NNS: ')
+for i=1:na
+    if nns(i)
+        fprintf('%s ',opt.stat(i).name)
+    end
+end
+fprintf('\n')
+
 if ~any(nns==0)
     k=6;
     B1(7,:)=[];

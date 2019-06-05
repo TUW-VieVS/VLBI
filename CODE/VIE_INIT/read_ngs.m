@@ -406,10 +406,10 @@ while (idx_line <= nlines)
     
     % ???
     % #### Exclude observations between twin telescopes ####
-    if strcmp(sta_names(1,1:7), sta_names(2,1:7))
-        fprintf(1, '=> Exclude observation between twin telescopes\n');
-        continue;
-    end
+%     if strcmp(sta_names(1,1:7), sta_names(2,1:7))
+%         fprintf(1, '=> Exclude observation between twin telescopes\n');
+%         continue;
+%     end
     % ???
     
     

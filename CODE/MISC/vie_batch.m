@@ -877,13 +877,23 @@ if ~isempty(process_list)
 end
 
 if runp.lsm && runp.init && runp.sim && runp.mod
-    analyse_simulations(runp.lsm_path);
+    [t_mean_sig, t_rep] = analyse_simulations(runp.lsm_path);
+    
+    load ('../DATA/LEVEL4/simparam.mat','simparam');
+    if(~isempty(simparam.pathToStatisticsFile))
+        try
+            updateVieSchedppStatisticsFile(simparam.pathToStatisticsFile, t_mean_sig, t_rep);
+        catch exception
+            error(getReport(exception, 'extended')) % display error message and abort
+        end
+    end
 end
 
 if isfield(runp, 'sched') && runp.sched && exist('process_list_orig', 'var') && size(process_list_orig,1)>1 && runp.lsm && runp.init && runp.sim && runp.mod
     try
         writeLEVEL3toXLSX( runp );
-    catch
+    catch exception
+        error(getReport(exception, 'extended')) % display error message and abort
     end
 end
 
