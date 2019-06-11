@@ -1,6 +1,7 @@
 *
 !.gitignore
 !supersource.mat
-!create
+!data
 !SOURCE_STRUCTURE_CAT
 !CRF_test.txt
+!SavedGuiData_supersources.txt

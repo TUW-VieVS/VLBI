@@ -3,7 +3,7 @@ function nam=sounamivs2iers(ivsnam)
 % created by Lucia, 3-9-2014
 % modifies by Lucia, 15-10-2014
 
-[iers,ivs]=textread('..\CRF\create\supersource\neededFiles\source_translation_IERS_IVS.dat','%s%s','delimiter','  ','headerlines',4);
+[iers,ivs]=textread('..\CRF\data\source_translation_IERS_IVS.dat','%s%s','delimiter','  ','headerlines',4);
 
  ind = strmatch(ivsnam,iers);
  

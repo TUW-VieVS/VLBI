@@ -1,5 +1,5 @@
 % This script reads in Goddard's source.cat as well as the most complete 
-% ICRF2 list, vievsCrf, blokq.dat and makes on vievsCrf out of it.
+% ICRF2 list, vievsCrf, blokq.dat and makes one vievsCrf out of it.
 
 % created by Matthias Madzak
 
@@ -9,19 +9,19 @@ clear all
 close all
 clc
 
-% run from /vievs/CRF/create/supersource/code/
-pathF = '../';
+% run from /VieVS/VLBI/CODE/MISC
+pathF = '../../CRF/';
 
 % filenames
-icrf2nonVCSFilename=[pathF 'neededFiles/icrf2-non-vcs.dat'];
-icrf2VCSFilename=[pathF 'neededFiles/icrf2-vcs-only.dat'];
-vieCrf10aFilename=[pathF 'neededFiles/VieCRF10a.txt'];
-sourceCatFilename=[pathF 'neededFiles/source.cat'];
-blokqFilename=[pathF '../../../TRF/create/superstation/neededFiles/blokq.dat'];
+icrf2nonVCSFilename=[pathF 'data/icrf2-non-vcs.dat'];
+icrf2VCSFilename=[pathF 'data/icrf2-vcs-only.dat'];
+vieCrf10aFilename=[pathF 'data/VieCRF10a.txt'];
+sourceCatFilename=[pathF 'data/source.cat'];
+blokqFilename=[pathF '../TRF/data/blokq.dat'];
 
-translationFile=[pathF 'neededFiles/source_translation_IERS_IVS.dat'];
+translationFile=[pathF 'data/source_translation_IERS_IVS.dat'];
 
-vievsCrfFilename=[pathF 'neededFiles/vievsCrf.txt'];
+vievsCrfFilename=[pathF 'data/vievsCrf.txt'];
 
 
 % load translation table

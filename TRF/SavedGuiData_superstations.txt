@@ -7,7 +7,7 @@
 # ECCDAT.ecc --------------
               eccdat, editTextBox | ../TRF/data/ECCDAT.ecc
 #
-# ITRF2014-IVS-TRF.SNX --------------
+# ITRF2014-IVS-TRF.snx --------------
             itrf2014, editTextBox | ../TRF/data/ITRF2014-IVS-TRF.SNX
 #
 # DTRF2014_VLBI.snx --------------
@@ -66,4 +66,4 @@
 #
 
 #
-                          outFile | D:\Weitere Dokumente\Weitere Programme\vievs\VLBI\TRF\superstation.mat
+                          outFile | ../TRF/superstation.mat

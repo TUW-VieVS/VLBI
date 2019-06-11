@@ -26,7 +26,7 @@
 
 function [varargout] = readSnx(infile, varargin)
 
-% infile='D:\VieVS\TRF\create\superstation\neededFiles\VTRF2014_final.snx';
+% infile='D:\VieVS\TRF\data\VTRF2014_final.snx';
 
 % varargin{1}='blocks2read';
 % varargin{2}={'SOLUTION/EPOCHS', 'SITE/ID'};

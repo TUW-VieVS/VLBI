@@ -55,7 +55,7 @@ function createSupersourcesFile_OpeningFcn(hObject, eventdata, handles, varargin
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to createSupersourcesFile (see VARARGIN)
 
-superstatFolder='../CRF/create/supersource/';
+superstatFolder='../CRF/';
 
 % define names of all files and save it in handles struct
 handles.data.allFileDescriptions={...
@@ -106,7 +106,7 @@ guidata(hObject, handles);
 function saveGuiDataToDisk(handles)
 % This function saves the current state of the gui to a textfile.
 
-outFile='../CRF/create/supersource/SavedGuiData_supersources.txt';
+outFile='../CRF/SavedGuiData_supersources.txt';
 
 fid=fopen(outFile, 'w');
 
@@ -155,7 +155,7 @@ function pushbutton_searchForFiles_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-searchPath='../CRF/create/supersource/neededFiles/';
+searchPath='../CRF/data/';
 
 nFiles=size(handles.data.allFileDescriptions,2);
 
@@ -225,7 +225,7 @@ tagOfHObject=get(hObject,'Tag');
 curEditString=get(eval(['handles.edit_', tagOfHObject(12:end-7)]), 'String');
 
 if isempty(curEditString)
-    curEditString='../CRF/create/supersource/neededFiles/';
+    curEditString='../CRF/data/';
 end
 
 % get file from explorer

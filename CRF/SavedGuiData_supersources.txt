@@ -1,0 +1,41 @@
+# icrf2-non-vcs.dat --------------
+                ICRF2, download | 0
+                 ICRF2, specify | 1
+             ICRF2, editTextbox | ../CRF/data/icrf2-non-vcs.dat
+#
+# icrf2-vcs-only.dat --------------
+         icrf2VcsOnly, download | 0
+          icrf2VcsOnly, specify | 1
+      icrf2VcsOnly, editTextbox | ../CRF/data/icrf2-vcs-only.dat
+#
+# icrf3sx.txt --------------
+              ICRF3sx, download | 0
+               ICRF3sx, specify | 1
+           ICRF3sx, editTextbox | ../CRF/data/icrf3sx.txt
+#
+# VieCRF13.txt --------------
+            VieCRF10a, download | 0
+             VieCRF10a, specify | 1
+         VieCRF10a, editTextbox | ../CRF/data/VieCRF13.txt
+#
+# vievsCrf.txt --------------
+             vievsCrf, download | 0
+              vievsCrf, specify | 1
+          vievsCrf, editTextbox | ../CRF/data/vievsCrf.txt
+#
+# gsf2015b_astro.sou.txt --------------
+             gsf2015b, download | 0
+              gsf2015b, specify | 1
+          gsf2015b, editTextbox | ../CRF/data/gsf2015b_astro.sou.txt
+#
+# 'userdefined' --------------
+              userCrf, download | 0
+               userCrf, specify | 1
+           userCrf, editTextbox | 
+#
+# IVS_SrcNamesTable.txt --------------
+          translation, download | 0
+           translation, specify | 1
+       translation, editTextbox | ../CRF/data/IVS_SrcNamesTable.txt
+#
+                        outFile | ../CRF/data/supersource.mat
