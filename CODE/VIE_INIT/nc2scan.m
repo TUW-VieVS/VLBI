@@ -204,7 +204,7 @@ groupDelayWAmbigCell = num2cell(out_struct.(tau_folder).(tau_file).(tau_field).v
 %% SIGMA DELAY:
 groupDelaySigCell = num2cell(out_struct.(sigma_tau_folder).(sigma_tau_file).(sigma_tau_field).val);
 %% IONOSPHERIC DELAY, SIGMA IONOSPHERIC DELAY and DELAY FLAG IONOSPHERIC DELAY::
-if strcmp(parameter.vie_init.iono, 'ngs')
+if strcmp(parameter.vie_init.iono, 'observation_database')
     if isempty(tau_ion_folder)
         ionoDelCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
         ionoDelSigCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
@@ -240,7 +240,7 @@ end
 %% DELAY FLAG DELAY:
 if isfield(wrapper_data.Observation,'ObsEdit')
     nc_filename = get_nc_filename({'Edit'}, wrapper_data.Observation.ObsEdit.files, 0);
-    if ~isempty(nc_filename) % not mathc found in wrapper data
+    if ~isempty(nc_filename) % not match found in wrapper data
         delayQualityFlag = num2cell(out_struct.ObsEdit.(nc_filename).DelayFlag.val);
     else
         fprintf(' - No delay flags defined in wrapper file: delay flag is set to "0" for all observations!\n')
@@ -249,6 +249,7 @@ if isfield(wrapper_data.Observation,'ObsEdit')
 else
     delayQualityFlag = {0};
 end
+
 %% QUALITY CODES FOR X-BAND and S-BAND:
 
 nc_filename = get_nc_filename({'QualityCode_bX'}, wrapper_data.Observation.Observables.files, 0);

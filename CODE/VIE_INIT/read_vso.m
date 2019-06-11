@@ -32,7 +32,7 @@
 % | YYYY MM DD hh mm ss.ssssssssssss | <max 8 char.> | <max 8 char.> | <string>    |   s/q     |      float                  |      float                      |      float       |      float              |  float                   |  float                   |
 %
 % 6.) ##### Baseline delay + formal error, Ion. delay + formal error, cable corr, met. data (T, p, e): #####
-% | Delay reference epoch            | Stat. 1 name  | Stat. 2 name  | source name | obs. type | baseline delay [nsec]/[sec] | delay formal error [nsec]/[sec] | Ion delay [nsec] | Ion formal error [nsec] | cable corr. stat. 1 [ns] | cable corr. stat. 2 [ns] | T stat. 1 [°C] | p stat. 1 [mbar] | Rel. humidity e stat. 1 |T stat. 2 [°C] | p stat. 2 [mbar] | Rel. humidity e stat. 2 |
+% | Delay reference epoch            | Stat. 1 name  | Stat. 2 name  | source name | obs. type | baseline delay [nsec]/[sec] | delay formal error [nsec]/[sec] | Ion delay [nsec] | Ion formal error [nsec] | cable corr. stat. 1 [ns] | cable corr. stat. 2 [ns] | T stat. 1 [ï¿½C] | p stat. 1 [mbar] | Rel. humidity e stat. 1 |T stat. 2 [ï¿½C] | p stat. 2 [mbar] | Rel. humidity e stat. 2 |
 % | YYYY MM DD hh mm ss.ssssssssssss | <max 8 char.> | <max 8 char.> | <string>    |   s/q     |      float                  |      float                      |      float       |      float              |  float                   |  float                   | float          | float            | float                   |float          | float            | float                   |    
 %
 % Note 1:
@@ -776,7 +776,7 @@ scan(number_of_remaining_scans) = struct('mjd', [], 'stat', [], 'tim', [], 'nobs
 % - If ion. corrections is taken from separate ion. file => Do not apply correction from VSO file!
 % - parameter.vie_init.iono
 
-if ~strcmp(parameter.vie_init.iono, 'ngs') && exist('ion_del', 'var') % use ion. correction from external source (ion file)
+if ~strcmp(parameter.vie_init.iono, 'observation_database') && exist('ion_del', 'var') % use ion. correction from external source (ion file)
     ion_del = zeros(length(ion_del),1); % Set to zero
 end
 

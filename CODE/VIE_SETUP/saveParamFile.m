@@ -178,7 +178,7 @@ end
 
 % ionospheric correction
 if get(handles.radiobutton_parameters_iono_fromNGS, 'Value')
-    parameter.vie_init.iono='ngs';
+    parameter.vie_init.iono='observation_database';
 else % external file was chosen
     parameter.vie_init.iono='ext';
     
