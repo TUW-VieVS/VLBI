@@ -23,9 +23,19 @@
 %     - Declare the version flag (minimum version 4 is required!)
 %     - If this information is not provided, the highest version will be taken automatically (min. version 4).
 %
+% => ionosphere_correction (default = on):
+%     - on (ionosphere correction will be applied to observation)
+%     - off (ionosphere correction will NOT be applied to observation)
+%
+% => ambiguity correction (default = on):
+%     - on (ambiguities are resolved in observables)
+%     - off (ambiguities are not resolved in observables)
+%
 institute: 						IVS GSFC GSF noInst
 % consider_no_institution:     	1
 frequency_band: 				GroupDelayFull_bX
 wrapper_k: 						all
 % wrapper_version: 
+% ionosphere_correction: on
+% ambiguity_correction: on
 

@@ -169,7 +169,7 @@ switch(parameter.data_type)
         [out_struct, nc_info]=read_nc(curNcFolder);
                   
         % read vievs input settings from vgosdb_input_settings.txt file 
-        [ in, fb, wrapper_k, wrapper_v ] = read_vgosdb_input_settings( 'vgosdb_input_settings.txt' );
+        [ in, fb, wrapper_k, wrapper_v, ioncorr, ambcorr  ] = read_vgosdb_input_settings( 'vgosdb_input_settings.txt' );
         
         % Standard settings, which are used if not defined differently in settings file:
         if isempty(in{1}) % institute
@@ -188,12 +188,20 @@ switch(parameter.data_type)
             wrapper_v = 'highest_version';
             fprintf('Set wrapper version to default: %s\n', wrapper_v)
         end
+        if isempty(ioncorr) % ionosphere correction
+            ioncorr = 'on';
+            fprintf('Set ionosphere correction: %s (default)\n', ioncorr)
+        end
+        if isempty(ambcorr) % ambiguity correction
+            ambcorr = 'on';
+            fprintf('Set ambiguity correction: %s (default)\n', ambcorr)
+        end
         
         % Read wrapper
         wrapper_data = read_vgosdb_wrapper(curNcFolder, parameter.session_name, in, wrapper_k, wrapper_v);
         
         % get scan, antenna, source struct from netCDF files
-        scan        = nc2scan(out_struct, nc_info, fb, wrapper_data, parameter);
+        scan        = nc2scan(out_struct, nc_info, fb, ioncorr, ambcorr, wrapper_data, parameter);
         antenna     = nc2antenna(out_struct, trf, trffile{2}, wrapper_data);
         sources     = nc2sources(out_struct, crf, crffile{2}, wrapper_data);
         
