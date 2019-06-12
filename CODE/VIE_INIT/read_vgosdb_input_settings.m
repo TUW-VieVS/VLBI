@@ -28,18 +28,22 @@
 % 2018-09-12, A. Hellerschmied: "Priority list option" for institution flag added
 %
 
-function [ in, fb, wrapper_k, wrapper_v ] = read_vgosdb_input_settings( ptf )
+function [ in, fb, wrapper_k, wrapper_v, ioncorr, ambcorr ] = read_vgosdb_input_settings( ptf )
 
-in_tag          = 'institute:';         % => in
-fb_tag          = 'frequency_band:';    % => fb
-wrapper_k_tag   = 'wrapper_k:';         % => wrapper_k
-wrapper_v_tag   = 'wrapper_version:';   % => wrapper_v
+in_tag          = 'institute:';             % => in
+fb_tag          = 'frequency_band:';        % => fb
+wrapper_k_tag   = 'wrapper_k:';             % => wrapper_k
+wrapper_v_tag   = 'wrapper_version:';       % => wrapper_v
+ioncorr_tag     = 'ionosphere_correction:';  % => ioncorr
+ambcorr_tag     = 'ambiguity_correction:';   % => ambcorr
 
 
 in{1} = '';
 fb = '';
 wrapper_k = '';
 wrapper_v = '';
+ioncorr = '';
+ambcorr = '';
 
 % ##### Open file #####
 fid = fopen(ptf,'r');
@@ -61,7 +65,7 @@ else
             if ~isempty(temp_str{1}) % not a comment
 
                 switch(temp_str{1}{1})
-
+                    
                     case in_tag
                         % in = temp_str{1}{2};
                         in = {temp_str{1}{2:length(temp_str{1})}};
@@ -74,6 +78,12 @@ else
 
                     case wrapper_v_tag
                         wrapper_v = temp_str{1}{2};
+                        
+                    case ioncorr_tag
+                        ioncorr = temp_str{1}{2};
+                        
+                    case ambcorr_tag
+                        ambcorr = temp_str{1}{2};
 
                 end
             end
