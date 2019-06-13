@@ -165,6 +165,7 @@ switch(parameter.data_type)
         % uncompress vgosDB *.tar.gz or *.tgz file
         untarVgosDb( curNcFolder )
         
+        try
         % read netCDF data
         [out_struct, nc_info]=read_nc(curNcFolder);
                   
@@ -216,6 +217,11 @@ switch(parameter.data_type)
         sources.q   = q;
         sources.s 	= [];
         fprintf('...reading the vgosDB file finished!\n');
+        
+        catch ME
+           rmdir(curNcFolder, 's');
+           rethrow(ME)
+        end
         
         % remove the unpacked vgosDB folder
         rmdir(curNcFolder, 's');
