@@ -404,8 +404,12 @@ else
             end
             
             % generating the (o-c) delay observables
+            sim_st1 = sim(st1);
+            sim_st2 = sim(st2);
+            st_st1 = st(st1);
+            st_st2 = st(st2);
             for iday = 1:sim_idays
-                scan(i).obs(j).obs(iday) = sim(st2).swd(st(st2),iday) + sim(st2).clk(st(st2),iday) - sim(st1).swd(st(st1),iday) - sim(st1).clk(st(st1),iday) + wn(k,iday) + soucorr; % [s]
+                scan(i).obs(j).obs(iday) = sim_st2.swd(st_st2,iday) + sim_st2.clk(st_st2,iday) - sim_st1.swd(st_st1,iday) - sim_st1.clk(st_st1,iday) + wn(k,iday) + soucorr; % [s]
             end
             
             % if a white noise was specified in the turbulence parameter file or in the GUI 

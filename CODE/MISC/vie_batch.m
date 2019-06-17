@@ -68,6 +68,7 @@ load('runp','runp')
 load('guiparameter.mat');
 cleanVgosDB();
 
+startTime = tic;
 %% if you passed a argument interpret it as session name
 if(nargin > 0)
     
@@ -791,7 +792,8 @@ tstr2 = sprintf('%02d:%02d:%02d', t(4), t(5), round(t(6)));
 fprintf('VieVS processing ends at %s, %s\n', tstr2, tstr1);
 cleanVgosDB();
 
-
+runtime = toc(startTime);
+fprintf('VieVS runtime: %d seconds (%.2f hours)\n', uint64(runtime), runtime/3600)
 end % function vie_batch
 
 

@@ -10,7 +10,7 @@
 %   References: 
 %    - Nilsson et al. 2007 "Simulations of atmospheric path delays using
 %       turbulence models"
-%    - Böhm et al. 2007 "Simulation of zenith wet delays and clocks"
+%    - Bï¿½hm et al. 2007 "Simulation of zenith wet delays and clocks"
 %    - Treuhaft and Lanyi 1987 "The effect of the dynamic wet troposphere
 %      on radio interferometric measurements"
 %
@@ -39,7 +39,7 @@
 %       
 %   Coded for VieVS: 
 %   adopted to VieVS July 2010 by Andrea Pany
-%   (original function coded by J. Böhm, Sep 6 2007)
+%   (original function coded by J. Bï¿½hm, Sep 6 2007)
 %
 %   Revision: 
 %   ---
@@ -268,7 +268,11 @@ else
             D21 = cov(i1).D(cov(i1).num1+1:cov(i1).num3,1:cov(i1).num1);
             D22 = cov(i1).D(cov(i1).num1+1:cov(i1).num3,cov(i1).num1+1:cov(i1).num3);
             x = randn(cov(i1).num2,1);
-            l1 = D21*inv(D11)*l1 + D22*x;
+            if all(size(D21) > 0) && all(size(D11) > 0)
+                l1 = D21*(D11\l1) + D22*x;
+            else
+                l1 = D22*x;
+            end
             l = [l; l1];
         end
         % add an initial value
