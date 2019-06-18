@@ -62,58 +62,46 @@ for iSession=1:nSessions
     fprintf('Processing file %s (%d of %d)\n',thisId(3:end), iSession, nSessions);
     idx = cellfun(@(x) [any(x)], strfind(names, thisId));
     thisNSim = sum(idx);
+    
     fprintf('    %4d simulations found\n', thisNSim);
     
     files = l3(idx);
     
-    dut1_mx{iSession}  = zeros(thisNSim,1);
-    dut1_val{iSession} = zeros(thisNSim,1);
-
-    xpol_mx{iSession}  = zeros(thisNSim,1);
-    xpol_val{iSession} = zeros(thisNSim,1);
-
-    ypol_mx{iSession}  = zeros(thisNSim,1);
-    ypol_val{iSession} = zeros(thisNSim,1);
-
-    nutdx_mx{iSession}  = zeros(thisNSim,1);
-    nutdx_val{iSession} = zeros(thisNSim,1);
-
-    nutdy_mx{iSession}  = zeros(thisNSim,1);
-    nutdy_val{iSession} = zeros(thisNSim,1);
-
     load([path name '/' files(1).name])
     nSta(iSession) = length(x_.coorx);
     nSrc(iSession) = length(x_.soura);
-    nSim(iSession) = thisNSim;
+    nSim(iSession) = 0;
     stations{iSession} = {x_.antenna.name};
-
-    station_mx{iSession}  = zeros(thisNSim,nSta(iSession));
-    station_val{iSession} = zeros(thisNSim,nSta(iSession));
 
         
     if(~isempty(x_.dut1.col))
         dut1_mx{iSession} = mean(x_.dut1.mx) * 1000;
         dut1_val{iSession} = mean(x_.dut1.val) * 1000;
+        nSim(iSession) = length(dut1_mx{iSession});
     end
 
     if(~isempty(x_.xpol.col))
         xpol_mx{iSession} = mean(x_.xpol.mx) * 1000;
         xpol_val{iSession} = mean(x_.xpol.val) * 1000;
+        nSim(iSession) = length(xpol_mx{iSession});
     end
 
     if(~isempty(x_.ypol.col))
         ypol_mx{iSession} = mean(x_.ypol.mx) * 1000;
         ypol_val{iSession} = mean(x_.ypol.val) * 1000;
+        nSim(iSession) = length(ypol_mx{iSession});
     end
 
     if(~isempty(x_.nutdx.col))
         nutdx_mx{iSession} = mean(x_.nutdx.mx) * 1000;
         nutdx_val{iSession} = mean(x_.nutdx.val) * 1000;
+        nSim(iSession) = length(nutdx_mx{iSession});
     end
 
     if(~isempty(x_.nutdy.col))
         nutdy_mx{iSession} = mean(x_.nutdy.mx) * 1000;
         nutdy_val{iSession} = mean(x_.nutdy.val) * 1000;
+        nSim(iSession) = length(nutdy_mx{iSession});
     end
 
 
@@ -141,6 +129,7 @@ for iSession=1:nSessions
         % sum coordinates up to 3d vector
         station_mx{iSession} = sqrt(coorx_mx.^2+coory_mx.^2+coorz_mx.^2) * 10;
         station_val{iSession} = sqrt(coorx_val.^2+coory_val.^2+coorz_val.^2) * 10;
+        nSim(iSession) = length(station_mx{iSession});
     end
         
 end
