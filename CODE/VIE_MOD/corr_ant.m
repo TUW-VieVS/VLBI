@@ -74,6 +74,7 @@
 %  11 Jan 2018 by D. Landskron: VM1 folder moved to TRP and renamed to VMF1
 %  07 Feb 2018 by D. Landskron: bug-fix with VM1 close to New Year
 %  06 Jul 2018 by D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
+%  06 Jun 2019 by D. Landskron: reading of non-tidal APL coefficients adapted to ascii files
 % *************************************************************************
 %
 function [antenna, flagmess] = corr_ant(time_lim, tim, antenna, parameter, flagmess)
@@ -171,18 +172,35 @@ for ist=1:nant
         
         antenna(ist).cnta_dx=[];
         for idyr=0:numyrs-1
-            fil=num2str(sprintf(['../ATM/' parameter.vie_mod.cntam '/%4d_ATM.mat'],iye+idyr));
+            fil=num2str(sprintf(['../ATM/' parameter.vie_mod.cntam '/y%4d.apl_r'],iye+idyr));
             if exist(fil,'file')
-            	load (fil);
-                if ~isempty(find(strcmpi({atm.ivsname},aname)))
-                	matm = greploaddata(atm,aname,mjd1,mjd2); 
-                    if ~isempty(matm)
-                        [nta_dxyz] = call_ren2xyz(matm,ant);
-                        antenna(ist).cnta_dx = [antenna(ist).cnta_dx;nta_dxyz];
+                fid = fopen(fil);
+                apl_data = textscan(fid,'%s%f%f%f%f','CommentStyle','!');
+                fclose(fid);
+                if ~isempty(find(strcmpi(apl_data{1},strtrim(aname))))
+                   
+                    % reduce VMF3 data to lines that contain the respective station
+                    wantedLines = ismember(apl_data{1,1}, strtrim(aname));
+                    for k=1:length(apl_data)
+                        apl_data{k} = apl_data{k}(wantedLines);
+                    end
+                    
+                    % make VMF3 data smaller by extracting only data on the respective day + 1 day before and after
+                    wantedLines = apl_data{2}>mjd1-1.25 & apl_data{2}<mjd2+1;
+                    for k=1:length(apl_data)
+                        apl_data{k} = apl_data{k}(wantedLines);
+                    end
+                    
+                    if ~isempty(apl_data)
+                        % Save into antenna.cnta_dx
+                        matm2 = [apl_data{2} apl_data{3} apl_data{4} apl_data{5}];
+                        [nta_dxyz] = call_ren2xyz(matm2,ant);
+                        antenna(ist).cnta_dx = [antenna(ist).cnta_dx ; nta_dxyz];  % = [station,tmjd,ah,aw,zhd,zwd]
                     end
                 end
             end
         end
+        
         % Reduce data, if it contains 2 years
         if isempty(antenna(ist).cnta_dx)
             flagmess.cnta(ist)=1;
@@ -321,7 +339,7 @@ for ist=1:nant
                     
                     if ~isempty(vmf3_data)
                         % Save into antenna.vmf3
-                        antenna(ist).vmf3 = [antenna(ist).vmf3;vmf3_data{2},vmf3_data{3},vmf3_data{4},vmf3_data{5},vmf3_data{6}];  % = [station,tmjd,ah,aw,zhd,zwd]
+                        antenna(ist).vmf3 = [antenna(ist).vmf3 ; vmf3_data{2},vmf3_data{3},vmf3_data{4},vmf3_data{5},vmf3_data{6}];  % = [station,tmjd,ah,aw,zhd,zwd]
                     end
                 end
             end
