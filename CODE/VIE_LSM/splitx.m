@@ -42,14 +42,9 @@
 %   05 May 2017 by A. Hellerschmied: - general revision
 %                                    - Satellite coordinate estimates considered
 % ************************************************************************
-function [x_] = splitx(x, first_solution, mi, na, sum_dj, n_, mjd0, mjd1, t, T, opt, antenna, ns_q, nso, tso, ess, ns_s, number_pwlo_per_sat, varargin)
+function [x_] = splitx(x, first_solution, mi, na, sum_dj, n_, mjd0, mjd1, t, T, opt, antenna, ns_q, nso, tso, ess, ns_s, number_pwlo_per_sat)
 
-sim = false;
-iLSM = 1;
-if nargin == 19
-   sim = true;
-   iLSM = varargin{1}; 
-end
+
 
 % -------------------------------------------------------------------------
 % DIVIDING THE VECTOR X
@@ -77,24 +72,24 @@ if opt.first == 1
                 x_.pwclk(istat).first_mjd = first_solution.breaks(istat).clk; % First clock functions offsets' epochs [mjd]
                 for k = 1 : length(first_solution.breaks(istat).clk) - 1
                     counti = counti + 1;
-                    x_.pwclk(istat).first_val(k) = first_solution.clk_val(counti,iLSM); % First clock functions offsets [cm]
-                    x_.pwclk(istat).first_mx(k) = first_solution.clk_mx(counti,iLSM); % formal errors of clock offsets [cm]
+                    x_.pwclk(istat).first_val(k,:) = first_solution.clk_val(counti,:); % First clock functions offsets [cm]
+                    x_.pwclk(istat).first_mx(k,:) = first_solution.clk_mx(counti,:); % formal errors of clock offsets [cm]
                 end
             end
             if opt.firstclock == 1 || opt.firstclock == 2
                 x_.rclk(istat).first_mjd = first_solution.breaks(istat).clk; % First clock functions offsets' epochs [mjd]
                 for k = 1 : length(first_solution.breaks(istat).clk) - 1
                     countj = countj + 1;
-                    x_.rclk(istat).first_val(k) = first_solution.clk_val(countj,iLSM); % First clock functions rates [cm/day]
-                    x_.rclk(istat).first_mx(k) = first_solution.clk_mx(countj,iLSM); % formal errors of clock rates
+                    x_.rclk(istat).first_val(k,:) = first_solution.clk_val(countj,:); % First clock functions rates [cm/day]
+                    x_.rclk(istat).first_mx(k,:) = first_solution.clk_mx(countj,:); % formal errors of clock rates
                 end
             end
             if opt.firstclock == 2
                 x_.qclk(istat).first_mjd = first_solution.breaks(istat).clk; % First clock functions offsets' epochs [mjd]
                 for k = 1 : length(first_solution.breaks(istat).clk) - 1
                     countk = countk + 1;
-                    x_.qclk(istat).first_val(k) = first_solution.clk_val(countk,iLSM); % First clock functions quadratic terms [cm/day^2]
-                    x_.qclk(istat).first_mx(k) = first_solution.clk_mx(countk,iLSM); % formal errors of clock quadratic terms
+                    x_.qclk(istat).first_val(k,:) = first_solution.clk_val(countk,:); % First clock functions quadratic terms [cm/day^2]
+                    x_.qclk(istat).first_mx(k,:) = first_solution.clk_mx(countk,:); % formal errors of clock quadratic terms
                 end
             end
         end
@@ -112,8 +107,8 @@ for istat = 1 : na
     x_.pwclk(istat).col=[]; % 11Nov10 hana
     for ioffset = 1 : n_(istat).clk
         if ess==1
-            x_.pwclk(istat).val(ioffset) = x(sum_dj(1) + sumclk + ioffset,iLSM); % [cm] - estimated VALue
-            x_.pwclk(istat).mx(ioffset) = mi(sum_dj(1) + sumclk + ioffset,iLSM); % [cm] - STD deviation of the estimate
+            x_.pwclk(istat).val(ioffset,:) = x(sum_dj(1) + sumclk + ioffset,:); % [cm] - estimated VALue
+            x_.pwclk(istat).mx(ioffset,:) = mi(sum_dj(1) + sumclk + ioffset,:); % [cm] - STD deviation of the estimate
         end
         x_.pwclk(istat).mjd(ioffset) = t(istat).clk(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate
         x_.pwclk(istat).col(ioffset) = sum_dj(1) + sumclk + ioffset; % [1] - COLumn of the estimate in A or N
@@ -134,8 +129,8 @@ for istat = 1 : na
     x_.rqclk(istat).col=[]; % 11Nov10 hana
     for irate = 1 : n_(istat).qclk
         if ess==1
-            x_.rqclk(istat).val(irate) = x(sum_dj(2) + sumqclk + irate,iLSM); % estimated VALue
-            x_.rqclk(istat).mx(irate) = mi(sum_dj(2) + sumqclk + irate,iLSM); % STD deviation of the estimate
+            x_.rqclk(istat).val(irate,:) = x(sum_dj(2) + sumqclk + irate,:); % estimated VALue
+            x_.rqclk(istat).mx(irate,:) = mi(sum_dj(2) + sumqclk + irate,:); % STD deviation of the estimate
         end
         x_.rqclk(istat).col(irate) = sum_dj(2) + sumqclk + irate; % [1] - COLumn of the estimate in A or N
     end
@@ -157,8 +152,8 @@ for istat = 1:na
     x_.antenna(istat).name = antenna(istat).name;
     for ioffset = 1 : n_(istat).zwd
         if ess==1
-            x_.zwd(istat).val(ioffset) = x(sum_dj(3) + sumzwd + ioffset,iLSM); % [cm] estimated VALue
-            x_.zwd(istat).mx(ioffset) = mi(sum_dj(3) + sumzwd + ioffset,iLSM); % [cm] STD deviation of the estimate
+            x_.zwd(istat).val(ioffset,:) = x(sum_dj(3) + sumzwd + ioffset,:); % [cm] estimated VALue
+            x_.zwd(istat).mx(ioffset,:) = mi(sum_dj(3) + sumzwd + ioffset,:); % [cm] STD deviation of the estimate
         end
         x_.zwd(istat).mjd(ioffset) = t(istat).zwd(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate
         x_.zwd(istat).col(ioffset) = sum_dj(3) + sumzwd + ioffset; % [1] - COLumn of the estimate in A or N
@@ -177,8 +172,8 @@ for istat = 1:na
     x_.ngr(istat).mjd=[]; % 16Sep11 hana
     for ioffset = 1 : n_(istat).ngr
         if ess==1
-            x_.ngr(istat).val(ioffset) = x(sum_dj(4) + sumngr + ioffset,iLSM); % [cm] estimated VALue
-            x_.ngr(istat).mx(ioffset) = mi(sum_dj(4) + sumngr + ioffset,iLSM);  % [cm] STD deviation of the estimate
+            x_.ngr(istat).val(ioffset,:) = x(sum_dj(4) + sumngr + ioffset,:); % [cm] estimated VALue
+            x_.ngr(istat).mx(ioffset,:) = mi(sum_dj(4) + sumngr + ioffset,:);  % [cm] STD deviation of the estimate
         end
         x_.ngr(istat).mjd(ioffset) = t(istat).ngr(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate
         x_.ngr(istat).col(ioffset) = sum_dj(4) + sumngr + ioffset; % [1] - COLumn of the estimate in A or N
@@ -197,8 +192,8 @@ for istat = 1:na
     x_.egr(istat).mjd=[]; % 16Sep11 hana
     for ioffset = 1 : n_(istat).egr
         if ess==1
-            x_.egr(istat).val(ioffset) = x(sum_dj(5) + sumegr + ioffset,iLSM); % [cm] estimated VALue
-            x_.egr(istat).mx(ioffset) = mi(sum_dj(5) + sumegr + ioffset,iLSM);  % [cm] STD deviation of the estimate
+            x_.egr(istat).val(ioffset,:) = x(sum_dj(5) + sumegr + ioffset,:); % [cm] estimated VALue
+            x_.egr(istat).mx(ioffset,:) = mi(sum_dj(5) + sumegr + ioffset,:);  % [cm] STD deviation of the estimate
         end
         x_.egr(istat).mjd(ioffset) = t(istat).egr(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate
         x_.egr(istat).col(ioffset) = sum_dj(5) + sumegr + ioffset; % [1] - COLumn of the estimate in A or N
@@ -216,8 +211,8 @@ x_.xpol.mjd=[]; %19May11 hana
 
 for ioffset = 1 : size(T.xpol,2)
     if ess==1
-        x_.xpol.val(ioffset) = x(sum_dj(6) + ioffset,iLSM); % [mas] estimated VALue
-        x_.xpol.mx(ioffset) = mi(sum_dj(6) + ioffset,iLSM); % [mas] STD deviation of the estimate
+        x_.xpol.val(ioffset,:) = x(sum_dj(6) + ioffset,:); % [mas] estimated VALue
+        x_.xpol.mx(ioffset,:) = mi(sum_dj(6) + ioffset,:); % [mas] STD deviation of the estimate
     end
     x_.xpol.mjd(ioffset) = T.xpol(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate
     x_.xpol.col(ioffset) = sum_dj(6) + ioffset; % [1] - COLumn of the estimate in A or N
@@ -233,8 +228,8 @@ x_.ypol.mjd=[]; %19May11 hana
 
 for ioffset = 1 : size(T.ypol,2)
     if ess==1
-        x_.ypol.val(ioffset) = x(sum_dj(7) + ioffset,iLSM); % [mas] estimated VALue
-        x_.ypol.mx(ioffset) = mi(sum_dj(7) + ioffset,iLSM); % [mas] STD deviation of the estimate
+        x_.ypol.val(ioffset,:) = x(sum_dj(7) + ioffset,:); % [mas] estimated VALue
+        x_.ypol.mx(ioffset,:) = mi(sum_dj(7) + ioffset,:); % [mas] STD deviation of the estimate
     end
     x_.ypol.mjd(ioffset) = T.ypol(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate
     x_.ypol.col(ioffset) = sum_dj(7) + ioffset; % [1] - COLumn of the estimate in A or N
@@ -251,8 +246,8 @@ x_.dut1.mjd=[]; %19May11 hana
 
 for ioffset = 1 : size(T.dut1,2)
     if ess==1
-        x_.dut1.val(ioffset) = x(sum_dj(8) + ioffset,iLSM)/15; % [ms] estimated VALue
-        x_.dut1.mx(ioffset) = mi(sum_dj(8) + ioffset,iLSM)/15; % [ms] STD deviation of the estimate
+        x_.dut1.val(ioffset,:) = x(sum_dj(8) + ioffset,:)/15; % [ms] estimated VALue
+        x_.dut1.mx(ioffset,:) = mi(sum_dj(8) + ioffset,:)/15; % [ms] STD deviation of the estimate
     end
     x_.dut1.mjd(ioffset) = T.dut1(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate
     x_.dut1.col(ioffset) = sum_dj(8) + ioffset; % [1] - COLumn of the estimate in A or N
@@ -268,8 +263,8 @@ x_.nutdx.mjd=[]; %19May11 hana
 
 for ioffset = 1 : size(T.nutdx,2)
     if ess==1
-        x_.nutdx.val(ioffset) = x(sum_dj(9) + ioffset,iLSM); % [mas] estimated VALue
-        x_.nutdx.mx(ioffset) = mi(sum_dj(9) + ioffset,iLSM); % [mas] STD deviation of the estimate
+        x_.nutdx.val(ioffset,:) = x(sum_dj(9) + ioffset,:); % [mas] estimated VALue
+        x_.nutdx.mx(ioffset,:) = mi(sum_dj(9) + ioffset,:); % [mas] STD deviation of the estimate
     end
     x_.nutdx.mjd(ioffset) = T.nutdx(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate
     x_.nutdx.col(ioffset) = sum_dj(9) + ioffset; % [1] - COLumn of the estimate in A or N
@@ -285,8 +280,8 @@ x_.nutdy.mjd=[]; %19May11 hana
 
 for ioffset = 1 : size(T.nutdy,2)
     if ess==1
-        x_.nutdy.val(ioffset) = x(sum_dj(10) + ioffset,iLSM); % [mas] estimated VALue
-        x_.nutdy.mx(ioffset) = mi(sum_dj(10) + ioffset,iLSM); % [mas] STD deviation of the estimate
+        x_.nutdy.val(ioffset,:) = x(sum_dj(10) + ioffset,:); % [mas] estimated VALue
+        x_.nutdy.mx(ioffset,:) = mi(sum_dj(10) + ioffset,:); % [mas] STD deviation of the estimate
     end
     x_.nutdy.mjd(ioffset) = T.nutdy(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate
     x_.nutdy.col(ioffset) = sum_dj(10) + ioffset; % [1] - COLumn of the estimate in A or N
@@ -332,9 +327,9 @@ if opt.pw_sou == 1
             x_.soura(jsou).name = opt.source(isou).name;
             if ess==1
                 for ioffset = 1 : nso(isou).sources
-                    x_.soura(jsou).val(ioffset) = x(sum_dj(11) + sumsou + ioffset,iLSM)/15; % [ms] estimated value
+                    x_.soura(jsou).val(ioffset,:) = x(sum_dj(11) + sumsou + ioffset,:)/15; % [ms] estimated value
                     x_.soura(jsou).mjd(ioffset) = tso(jsou).sources(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate
-                    x_.soura(jsou).mx(ioffset) = mi(sum_dj(11) + sumsou + ioffset,iLSM)/15; % [ms] std. dev. of the estimate
+                    x_.soura(jsou).mx(ioffset,:) = mi(sum_dj(11) + sumsou + ioffset,:)/15; % [ms] std. dev. of the estimate
                     x_.soura(jsou).col(ioffset) = sum_dj(11) + sumsou + ioffset; % [1] - COLumn of the estimate in A or N
                 end
             end
@@ -343,9 +338,9 @@ if opt.pw_sou == 1
             x_.soude(jsou).name = opt.source(isou).name;
             if ess==1
                 for ioffset = 1 : nso(isou).sources
-                    x_.soude(jsou).val(ioffset) = x(sum_dj(12) + sumsou + ioffset,iLSM); % [mas] estimated value
+                    x_.soude(jsou).val(ioffset,:) = x(sum_dj(12) + sumsou + ioffset,:); % [mas] estimated value
                     x_.soude(jsou).mjd(ioffset) = tso(jsou).sources(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate
-                    x_.soude(jsou).mx(ioffset) = mi(sum_dj(12) + sumsou + ioffset,iLSM); % [mas] std. dev. of the estimate
+                    x_.soude(jsou).mx(ioffset,:) = mi(sum_dj(12) + sumsou + ioffset,:); % [mas] std. dev. of the estimate
                     x_.soude(jsou).col(ioffset) = sum_dj(12) + sumsou + ioffset; % [1] - COLumn of the estimate in A or N
                 end
             end
@@ -358,15 +353,15 @@ end
 if ess==1
     if opt.est_sourceNNR==1
         for jsou = 1 : ns_q
-            x_.soura(jsou).val = x(sum_dj(11) + jsou ,iLSM)/15; % [ms] estimated value
+            x_.soura(jsou).val = x(sum_dj(11) + jsou ,:)/15; % [ms] estimated value
             x_.soura(jsou).mjd = ceil(mjd1); % mjd1 : midnight
-            x_.soura(jsou).mx = mi(sum_dj(11) + jsou ,iLSM)/15; % [ms] std. dev. of the estimate
+            x_.soura(jsou).mx = mi(sum_dj(11) + jsou ,:)/15; % [ms] std. dev. of the estimate
             x_.soura(jsou).col = sum_dj(11) + jsou ; % [1] - COLumn of the estimate in A or N
             x_.soura(jsou).inNNR = opt.source(jsou).nnr_inc; % included in NNR 1/0
             
-            x_.soude(jsou).val = x(sum_dj(12) + jsou ,iLSM); % [mas] estimated value
+            x_.soude(jsou).val = x(sum_dj(12) + jsou ,:); % [mas] estimated value
             x_.soude(jsou).mjd = ceil(mjd1); % mjd1 : midnight
-            x_.soude(jsou).mx = mi(sum_dj(12) + jsou ,iLSM); % [mas] std. dev. of the estimate
+            x_.soude(jsou).mx = mi(sum_dj(12) + jsou ,:); % [mas] std. dev. of the estimate
             x_.soude(jsou).col = sum_dj(12) + jsou ; % [1] - COLumn of the estimate in A or N
             x_.soude(jsou).inNNR = opt.source(jsou).nnr_inc; % included in NNR 1/0
             
@@ -392,8 +387,8 @@ for istat = 1:na
     % coordinate X pw offsets (Split x vector)
     for ioffset = 1 : n_(istat).xyz
         if ess==1
-            x_.coorx(istat).val(ioffset) = x(sum_dj(13) + sumxyz + ioffset,iLSM); % [cm] estimated VALue
-            x_.coorx(istat).mx(ioffset) = mi(sum_dj(13) + sumxyz + ioffset,iLSM); % [cm] STD deviation of the estimate
+            x_.coorx(istat).val(ioffset,:) = x(sum_dj(13) + sumxyz + ioffset,:); % [cm] estimated VALue
+            x_.coorx(istat).mx(ioffset,:) = mi(sum_dj(13) + sumxyz + ioffset,:); % [cm] STD deviation of the estimate
         end
         if opt.pw_stc == 0 % one offset per session
             x_.coorx(istat).mjd(ioffset) =  ceil(mjd1); % mjd1 : midnight
@@ -407,8 +402,8 @@ for istat = 1:na
     % coordinate Y pw offsets (Split x vector)
     for ioffset = 1 : n_(istat).xyz
         if ess==1
-            x_.coory(istat).val(ioffset) = x(sum_dj(14) + sumxyz + ioffset,iLSM); % [cm] estimated VALue
-            x_.coory(istat).mx(ioffset) = mi(sum_dj(14) + sumxyz + ioffset,iLSM); % [cm] STD deviation of the estimate
+            x_.coory(istat).val(ioffset,:) = x(sum_dj(14) + sumxyz + ioffset,:); % [cm] estimated VALue
+            x_.coory(istat).mx(ioffset,:) = mi(sum_dj(14) + sumxyz + ioffset,:); % [cm] STD deviation of the estimate
         end
         if opt.pw_stc == 0 % one offset per session
             x_.coory(istat).mjd(ioffset) =  ceil(mjd1); % mjd1 : midnight
@@ -422,8 +417,8 @@ for istat = 1:na
     % coordinate Z pw offsets (Split x vector)
     for ioffset = 1 : n_(istat).xyz
         if ess==1
-            x_.coorz(istat).val(ioffset) = x(sum_dj(15) + sumxyz + ioffset,iLSM); % [cm] estimated VALue
-            x_.coorz(istat).mx(ioffset) = mi(sum_dj(15) + sumxyz + ioffset,iLSM); % [cm] STD deviation of the estimate
+            x_.coorz(istat).val(ioffset,:) = x(sum_dj(15) + sumxyz + ioffset,:); % [cm] estimated VALue
+            x_.coorz(istat).mx(ioffset,:) = mi(sum_dj(15) + sumxyz + ioffset,:); % [cm] STD deviation of the estimate
         end
         if opt.pw_stc == 0 % one offset per session
             x_.coorz(istat).mjd(ioffset) =  ceil(mjd1); % mjd1 : midnight
@@ -492,9 +487,9 @@ if opt.pw_sat == 1
             if ess == 1
                 % Loop over all pwl offsets per satellite
                 for ioffset = 1 : number_pwlo_per_sat(i_sat)
-                    x_.sat_pos1(i_sat_2).val(ioffset)  = x(sum_dj(16) + sum_sat + ioffset,iLSM);             % [cm] estimated value
+                    x_.sat_pos1(i_sat_2).val(ioffset,:)  = x(sum_dj(16) + sum_sat + ioffset,:);             % [cm] estimated value
                     x_.sat_pos1(i_sat_2).mjd(ioffset)  = tso(i_sat_2).sat(ioffset)/(24*60) + mjd0;      % [MJD] - time of the estimate
-                    x_.sat_pos1(i_sat_2).mx(ioffset)   = mi(sum_dj(16) + sum_sat + ioffset,iLSM);            % [cm] std. dev. of the estimate
+                    x_.sat_pos1(i_sat_2).mx(ioffset,:)   = mi(sum_dj(16) + sum_sat + ioffset,:);            % [cm] std. dev. of the estimate
                     x_.sat_pos1(i_sat_2).col(ioffset)  = sum_dj(16) + sum_sat + ioffset;                % [1] - COLumn of the estimate in A or N
                 end
             end
@@ -504,9 +499,9 @@ if opt.pw_sat == 1
             x_.sat_pos2(i_sat_2).name = opt.satellite(i_sat).name;
             if ess==1
                 for ioffset = 1 : number_pwlo_per_sat(i_sat)
-                    x_.sat_pos2(i_sat_2).val(ioffset)   = x(sum_dj(17) + sum_sat + ioffset,iLSM);            % [mas] estimated value
+                    x_.sat_pos2(i_sat_2).val(ioffset,:)   = x(sum_dj(17) + sum_sat + ioffset,:);            % [mas] estimated value
                     x_.sat_pos2(i_sat_2).mjd(ioffset)   = tso(i_sat_2).sat(ioffset)/(24*60) + mjd0;     % [MJD] - time of the estimate
-                    x_.sat_pos2(i_sat_2).mx(ioffset)    = mi(sum_dj(17) + sum_sat + ioffset,iLSM);           % [mas] std. dev. of the estimate
+                    x_.sat_pos2(i_sat_2).mx(ioffset,:)    = mi(sum_dj(17) + sum_sat + ioffset,:);           % [mas] std. dev. of the estimate
                     x_.sat_pos2(i_sat_2).col(ioffset)   = sum_dj(17) + sum_sat + ioffset;               % [1] - COLumn of the estimate in A or N
                 end
             end
@@ -517,9 +512,9 @@ if opt.pw_sat == 1
             if ess == 1
                 % Loop over all pwl offsets per satellite
                 for ioffset = 1 : number_pwlo_per_sat(i_sat)
-                    x_.sat_pos3(i_sat_2).val(ioffset)  = x(sum_dj(18) + sum_sat + ioffset,iLSM);             % [cm] estimated value
+                    x_.sat_pos3(i_sat_2).val(ioffset,:)  = x(sum_dj(18) + sum_sat + ioffset,:);             % [cm] estimated value
                     x_.sat_pos3(i_sat_2).mjd(ioffset)  = tso(i_sat_2).sat(ioffset)/(24*60) + mjd0;      % [MJD] - time of the estimate
-                    x_.sat_pos3(i_sat_2).mx(ioffset)   = mi(sum_dj(18) + sum_sat + ioffset,iLSM);            % [cm] std. dev. of the estimate
+                    x_.sat_pos3(i_sat_2).mx(ioffset,:)   = mi(sum_dj(18) + sum_sat + ioffset,:);            % [cm] std. dev. of the estimate
                     x_.sat_pos3(i_sat_2).col(ioffset)  = sum_dj(18) + sum_sat + ioffset;                % [1] - COLumn of the estimate in A or N
                 end
             end

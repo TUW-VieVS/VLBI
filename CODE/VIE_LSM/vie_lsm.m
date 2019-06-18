@@ -1296,69 +1296,48 @@ if ess == 1 % +hana 10Nov10
     fprintf('total number of estimated parameters:         %4d\n',sum_dj(end));
     fprintf('---------------------------------------------------------\n');
 
-
-    if numberOfLSMs == 1
         
-        [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, number_pwlo_per_sat);
-        x_.mo = mo;
-        x_.mo_first = first_solution.mo;
-        x_.units.mo = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
-        x_.units.mo_first = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
-        x_.wrms = wrms;
-        x_.units.m02 = 'WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights) [cm]';
-        
-        
-        res.mo = mo;
-        res.mo_first = first_solution.mo;
-        res.units.mo = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
-        res.units.mo_first = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
-        res.wrms = wrms;
-        res.units.m02 = 'WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights) [cm]';
+    [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, number_pwlo_per_sat);
+    x_.mo = mo;
+    x_.mo_first = first_solution.mo;
+    x_.units.mo = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
+    x_.units.mo_first = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
+    x_.wrms = wrms;
+    x_.units.m02 = 'WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights) [cm]';
+
+
+    res.mo = mo;
+    res.mo_first = first_solution.mo;
+    res.units.mo = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
+    res.units.mo_first = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
+    res.wrms = wrms;
+    res.units.m02 = 'WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights) [cm]';
 
 
 
-        [atpa_.mat] = N;
-        % [atpl_.vec] = n;
-        [opt_] = opt;
-        % save files
+    [atpa_.mat] = N;
+    % [atpl_.vec] = n;
+    [opt_] = opt;
+    % save files
 
-        fprintf('----------\n');
-        test_significance(x_,opt_,5);
+    fprintf('----------\n');
+    test_significance(x_,opt_,5);
 
-        % Save the "cleaned" VieVS structures (consistent with the results in x_ and res_):
-        fprintf('Estimated parameters are saved as ../DATA/LEVEL3/%s/x_%s.mat\n',dirpth,parameter.session_name);
-        save(['../DATA/LEVEL3/',dirpth,'/x_',parameter.session_name,'.mat'],'x_');
+    % Save the "cleaned" VieVS structures (consistent with the results in x_ and res_):
+    fprintf('Estimated parameters are saved as ../DATA/LEVEL3/%s/x_%s.mat\n',dirpth,parameter.session_name);
+    save(['../DATA/LEVEL3/',dirpth,'/x_',parameter.session_name,'.mat'],'x_');
 
-        fprintf('Estimation options are saved as ../DATA/LEVEL3/%s/opt_%s.mat\n',dirpth,parameter.session_name);
-        save(['../DATA/LEVEL3/',dirpth,'/opt_',parameter.session_name,'.mat'],'opt_');
+    fprintf('Estimation options are saved as ../DATA/LEVEL3/%s/opt_%s.mat\n',dirpth,parameter.session_name);
+    save(['../DATA/LEVEL3/',dirpth,'/opt_',parameter.session_name,'.mat'],'opt_');
 
-        fprintf('normal equation matrix is saved as ../DATA/LEVEL3/%s/atpa_%s.mat\n',dirpth,parameter.session_name);
-        save(['../DATA/LEVEL3/',dirpth,'/atpa_',parameter.session_name,'.mat'],'atpa_');
+    fprintf('normal equation matrix is saved as ../DATA/LEVEL3/%s/atpa_%s.mat\n',dirpth,parameter.session_name);
+    save(['../DATA/LEVEL3/',dirpth,'/atpa_',parameter.session_name,'.mat'],'atpa_');
 
-    %     fprintf('right hand side vector is saved as ../VieVS/DATA/LEVEL3/%s/atpl_%s.mat\n',dirpth,parameter.session_name);
-    %     save(['../DATA/LEVEL3/',dirpth,'/atpl_',parameter.session_name,'.mat'],'atpl_');
+%     fprintf('right hand side vector is saved as ../VieVS/DATA/LEVEL3/%s/atpl_%s.mat\n',dirpth,parameter.session_name);
+%     save(['../DATA/LEVEL3/',dirpth,'/atpl_',parameter.session_name,'.mat'],'atpl_');
 
-        fprintf('Residuals are saved as ../DATA/LEVEL3/%s/res_%s.mat\n',dirpth,parameter.session_name);
-        save(['../DATA/LEVEL3/',dirpth,'/res_',parameter.session_name,'.mat'],'res');
-
-    else
-        
-        for iLSM = 1:numberOfLSMs
-            
-            [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, number_pwlo_per_sat, iLSM);
-            x_.mo = mo;
-            x_.mo_first = first_solution.mo;
-            x_.units.mo = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
-            x_.units.mo_first = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
-            x_.wrms = wrms;
-            x_.units.m02 = 'WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights) [cm]';
-
-            
-            fprintf('Estimated parameters are saved as ../DATA/LEVEL3/%s/x_%s.mat\n',dirpth,parameter.session_name{iLSM});
-            save(['../DATA/LEVEL3/',dirpth,'/x_',parameter.session_name{iLSM},'.mat'],'x_');
-        end
-       
-    end
+    fprintf('Residuals are saved as ../DATA/LEVEL3/%s/res_%s.mat\n',dirpth,parameter.session_name);
+    save(['../DATA/LEVEL3/',dirpth,'/res_',parameter.session_name,'.mat'],'res');
 
 end
 

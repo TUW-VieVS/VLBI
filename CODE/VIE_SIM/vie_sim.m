@@ -576,29 +576,29 @@ for iant = 1:length(antenna)
 end
 
 % update parameter structure
-parameter.session_name = [];
-jetfilnam = parameter.vie_init.jetfilnam;
-parameter.vie_init.jetfilnam=[];
-jetfilnamuv = parameter.vie_init.jetfilnamuv;
-parameter.vie_init.jetfilnamuv=[];
-jetfilnamjb = parameter.vie_init.jetfilnamjb;
-parameter.vie_init.jetfilnamjb = [];
-
-parameter.filepath = ['../DATA/' sdir(4:end)];
-
-if sim_idays == 1
-    parameter.session_name = sprintf('%s_S%03d',fname,sind+isim-1);
-    parameter.vie_init.jetfilnam = sprintf('%s_S%03d.JET',jetfilnam(1:end-4-5),sind+isim-1);
-    parameter.vie_init.jetfilnamuv = sprintf('%s_S%03d.JETUV',jetfilnamuv(1:end-6-5),sind+isim-1);
-    parameter.vie_init.jetfilnamjb = sprintf('%s_S%03d.JETJB',jetfilnamjb(1:end-6-5),sind+isim-1);
-else
-    for isim = 1:sim_idays
-        parameter.session_name{isim} = sprintf('%s_S%03d',fname,sind+isim-1);
-        parameter.vie_init.jetfilnam{isim} = sprintf('%s_S%03d.JET',jetfilnam(1:end-4-5),sind+isim-1);
-        parameter.vie_init.jetfilnamuv{isim} = sprintf('%s_S%03d.JETUV',jetfilnamuv(1:end-6-5),sind+isim-1);
-        parameter.vie_init.jetfilnamjb{isim} = sprintf('%s_S%03d.JETJB',jetfilnamjb(1:end-6-5),sind+isim-1);
-    end
-end
+% parameter.session_name = [];
+% jetfilnam = parameter.vie_init.jetfilnam;
+% parameter.vie_init.jetfilnam=[];
+% jetfilnamuv = parameter.vie_init.jetfilnamuv;
+% parameter.vie_init.jetfilnamuv=[];
+% jetfilnamjb = parameter.vie_init.jetfilnamjb;
+% parameter.vie_init.jetfilnamjb = [];
+% 
+% parameter.filepath = ['../DATA/' sdir(4:end)];
+% 
+% if sim_idays == 1
+%     parameter.session_name = sprintf('%s_S%03d',fname,sind+isim-1);
+%     parameter.vie_init.jetfilnam = sprintf('%s_S%03d.JET',jetfilnam(1:end-4-5),sind+isim-1);
+%     parameter.vie_init.jetfilnamuv = sprintf('%s_S%03d.JETUV',jetfilnamuv(1:end-6-5),sind+isim-1);
+%     parameter.vie_init.jetfilnamjb = sprintf('%s_S%03d.JETJB',jetfilnamjb(1:end-6-5),sind+isim-1);
+% else
+%     for isim = 1:sim_idays
+%         parameter.session_name{isim} = sprintf('%s_S%03d',fname,sind+isim-1);
+%         parameter.vie_init.jetfilnam{isim} = sprintf('%s_S%03d.JET',jetfilnam(1:end-4-5),sind+isim-1);
+%         parameter.vie_init.jetfilnamuv{isim} = sprintf('%s_S%03d.JETUV',jetfilnamuv(1:end-6-5),sind+isim-1);
+%         parameter.vie_init.jetfilnamjb{isim} = sprintf('%s_S%03d.JETJB',jetfilnamjb(1:end-6-5),sind+isim-1);
+%     end
+% end
 % ### write output in LEVEL1 folder ###
 % allScans = scan;
 % allSessionName = parameter.session_name;

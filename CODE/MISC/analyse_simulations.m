@@ -90,53 +90,59 @@ for iSession=1:nSessions
     station_mx{iSession}  = zeros(thisNSim,nSta(iSession));
     station_val{iSession} = zeros(thisNSim,nSta(iSession));
 
-    
-    for iSim=1:thisNSim
-        load([path name '/' files(iSim).name])
         
-        if(~isempty(x_.dut1.col))
-            dut1_mx{iSession}(iSim) = mean(x_.dut1.mx) * 1000;
-            dut1_val{iSession}(iSim) = mean(x_.dut1.val) * 1000;
-        end
-        
-        if(~isempty(x_.xpol.col))
-            xpol_mx{iSession}(iSim) = mean(x_.xpol.mx) * 1000;
-            xpol_val{iSession}(iSim) = mean(x_.xpol.val) * 1000;
-        end
-        
-        if(~isempty(x_.ypol.col))
-            ypol_mx{iSession}(iSim) = mean(x_.ypol.mx) * 1000;
-            ypol_val{iSession}(iSim) = mean(x_.ypol.val) * 1000;
-        end
-        
-        if(~isempty(x_.nutdx.col))
-            nutdx_mx{iSession}(iSim) = mean(x_.nutdx.mx) * 1000;
-            nutdx_val{iSession}(iSim) = mean(x_.nutdx.val) * 1000;
-        end
-        
-        if(~isempty(x_.nutdy.col))
-            nutdy_mx{iSession}(iSim) = mean(x_.nutdy.mx) * 1000;
-            nutdy_val{iSession}(iSim) = mean(x_.nutdy.val) * 1000;
-        end
-        
-        
-        if(~isempty([x_.coorx.col]))
-            coorx_mx = [x_.coorx.mx];
-            coory_mx = [x_.coory.mx];
-            coorz_mx = [x_.coorz.mx];
-            
-            coorx_val = [x_.coorx.val];
-            coory_val = [x_.coory.val];
-            coorz_val = [x_.coorz.val];
-            
-            % sum coordinates up to 3d vector
-            station_mx{iSession}(iSim,:) = ...
-                sqrt(coorx_mx.^2+coory_mx.^2+coorz_mx.^2) * 10;
-            station_val{iSession}(iSim,:) = ...
-                sqrt(coorx_val.^2+coory_val.^2+coorz_val.^2) * 10;
-        end
-        
+    if(~isempty(x_.dut1.col))
+        dut1_mx{iSession} = mean(x_.dut1.mx) * 1000;
+        dut1_val{iSession} = mean(x_.dut1.val) * 1000;
     end
+
+    if(~isempty(x_.xpol.col))
+        xpol_mx{iSession} = mean(x_.xpol.mx) * 1000;
+        xpol_val{iSession} = mean(x_.xpol.val) * 1000;
+    end
+
+    if(~isempty(x_.ypol.col))
+        ypol_mx{iSession} = mean(x_.ypol.mx) * 1000;
+        ypol_val{iSession} = mean(x_.ypol.val) * 1000;
+    end
+
+    if(~isempty(x_.nutdx.col))
+        nutdx_mx{iSession} = mean(x_.nutdx.mx) * 1000;
+        nutdx_val{iSession} = mean(x_.nutdx.val) * 1000;
+    end
+
+    if(~isempty(x_.nutdy.col))
+        nutdy_mx{iSession} = mean(x_.nutdy.mx) * 1000;
+        nutdy_val{iSession} = mean(x_.nutdy.val) * 1000;
+    end
+
+
+    if(~isempty([x_.coorx.col]))
+        nant = length(x_.coorx);
+        nsim = length(x_.coorx(1).mx);
+        
+        coorx_mx = zeros(nant,nsim);
+        coory_mx = zeros(nant,nsim);
+        coorz_mx = zeros(nant,nsim);
+        coorx_val = zeros(nant,nsim);
+        coory_val = zeros(nant,nsim);
+        coorz_val = zeros(nant,nsim);
+        
+        for s = 1:nant
+        	coorx_mx(s,:) = x_.coorx(s).mx;
+            coory_mx(s,:) = x_.coory(s).mx;
+            coorz_mx(s,:) = x_.coorz(s).mx;
+
+            coorx_val(s,:) = x_.coorx(s).val;
+            coory_val(s,:) = x_.coory(s).val;
+            coorz_val(s,:) = x_.coorz(s).val;
+        end
+
+        % sum coordinates up to 3d vector
+        station_mx{iSession} = sqrt(coorx_mx.^2+coory_mx.^2+coorz_mx.^2) * 10;
+        station_val{iSession} = sqrt(coorx_val.^2+coory_val.^2+coorz_val.^2) * 10;
+    end
+        
 end
 fprintf('\n\n');
 
