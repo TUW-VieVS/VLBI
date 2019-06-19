@@ -4,7 +4,7 @@ VLBI module of VieVS
 
 Written by present and former members of the TU Wien VieVS-team
 
-Administrated by Sigrid Böhm (sigrid.boehm@geo.tuwien.ac.at)
+Administrated by Sigrid Böhm (vievsadmin@tuwien.ac.at)
 
 Documentation: https://vievswiki.geo.tuwien.ac.at
 
