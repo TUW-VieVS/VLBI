@@ -51,10 +51,11 @@ Please be aware that this repository contains more or less only the program code
 * EOP C04 can be downloaded from ftp://ftp.iers.org/products/eop/long-term/ . Take for example "eopc04_14_IAU2000.62-now" and store it as `C04_14_1962_now.txt` in `/VLBI/EOP/`.
 * EOP finals can be downloaded from ftp://ftp.iers.org/products/eop/rapid/standard/ . Take for example "finals2000A.all" and store it as `finals_all_IAU2000.txt` in `/VLBI/EOP/`.
 
-### Troposphere delay models and ray-tracing data
+### Troposphere delay models, ray-tracing data and atmosphere non-tidal loading
 * Mapping functions: VMF1 and VMF3 can be retrieved from http://vmf.geo.tuwien.ac.at/trop_products/VLBI/ . Choose the yearly files and store them in the respective folder (VMF1 or VMF3) in `/VLBI/TRP/`.
 * Gradients are available from http://vmf.geo.tuwien.ac.at/trop_products/VLBI/GRAD/ . Choose the yearly files and store them in the respective folder in `/VLBI/TRP/GRAD`. 
-* Ray-traced delays are available from http://vmf.geo.tuwien.ac.at/trop_products/VLBI/RAYTR/RADIATE/. The *.radiate files have to be stored in year folders in `/VLBI/TRP/RAYTRACING_DATA/yyyy/` .
+* Ray-traced delays are available from http://vmf.geo.tuwien.ac.at/trop_products/VLBI/RAYTR/RADIATE/. The *.radiate files have to be stored in year folders in `/VLBI/TRP/RAYTRACING_DATA/yyyy/`.
+* Atmosphere non-tidal loading: yearly files are available from http://vmf.geo.tuwien.ac.at/APL_products/VLBI/yearly/. The *.apl_r files have to be stored in `/VLBI/ATM/APL_VIENNA/`.
 
 ### Running the software
 Start Matlab, go to `VLBI/WORK` and type `vievs` in the command window to start the VieVS graphical user interface.
