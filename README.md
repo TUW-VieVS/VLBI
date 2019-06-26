@@ -33,7 +33,7 @@ Johannes Böhm, Sigrid Böhm, Janina Boisits, Anastasiia Girdiuk, Jakob Gruber, 
 
 ## Getting started
 
-You need a recent Matlab installation (R2014b or later). VieVS is tested on Windows and Linux.
+You need a recent Matlab installation (R2016b or later). VieVS is tested on Windows and Linux.
 Download or clone the VLBI repository and(!) the COMMON repository and put them to the same directory.
 If your main directory is called 'VieVS' for example, your folder structure should look like this:
 
