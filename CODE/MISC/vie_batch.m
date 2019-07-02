@@ -68,6 +68,8 @@ load('runp','runp')
 load('guiparameter.mat');
 cleanVgosDB();
 
+
+
 startTime = tic;
 %% if you passed a argument interpret it as session name
 if(nargin > 0)
@@ -125,9 +127,9 @@ end
 
 %% get parallel
 if isfield(runp, 'parallel')
-    parallel=runp.parallel;
+    VieVS_parallel=runp.parallel;
 else
-    parallel=0;
+    VieVS_parallel=0;
 end
 
 if runp.parallel
@@ -179,6 +181,7 @@ if runp.parallel
 end
 
 
+
 %% VIE_SCHED
 
 if isfield(runp, 'sched')
@@ -192,13 +195,30 @@ if runp.init
     [trf, crf, parameter] = get_trf_and_crf(parameter);
 end
 
+
+number_of_sessions = size(process_list, 1);
+D = parallel.pool.DataQueue;
+h = waitbar(0, 'Please wait ...');
+afterEach(D, @nUpdateWaitbar);
+counter = 0;
+function nUpdateWaitbar(~)
+    counter = counter + 1;
+    time = toc(startTime);
+    frac = counter/number_of_sessions;
+    dtime = time/frac*(1-frac)/60;
+    
+    if isvalid(h)
+        waitbar(counter/number_of_sessions, h, sprintf('finished: %d of %d (%.0f min left)',counter,number_of_sessions, dtime));
+    end
+    dispSessionNumber(counter, number_of_sessions)
+end
+
 %% number of sessions to process:
 % Only start VIE_INT, VIE_MOD, VIE_LSM, VIE_SIM and VIE_GLOB, if the process list is not empty!
 if ~isempty(process_list)
     
     % Get the number of sessions in the current process list:
     % - Remove invalid entries (only one blank)
-    number_of_sessions = size(process_list, 1);
     while isempty(find(process_list(number_of_sessions,:)~=' ',1))
         number_of_sessions  = number_of_sessions - 1;
     end
@@ -214,7 +234,8 @@ if ~isempty(process_list)
     %% main 
     if runp.init || runp.mod || runp.lsm || runp.lsm_scanwise || runp.sim
         %% default - no parallel:
-        if parallel==0
+        if VieVS_parallel==0
+            delete(h);
             for isess=1:number_of_sessions
                 %% parameters for each session 
                 fprintf('%s %4.0f %s %4.0f\n','session ',isess,' of ',number_of_sessions)
@@ -465,12 +486,16 @@ if ~isempty(process_list)
             end % for isess=1:num
         else %--> parallel
             %% parallel processing
+            
+
             parfor isess = 1:number_of_sessions
                 %% parameters for each session 
-                
+%                 tmp = sessionCounter;
                 % Get one instance of the parameter structure for each loop instance:
                 parameter = parameter_tmp;
 
+%                 dispSessionNumber(tmp);
+                
                 fprintf('%s %4.0f %s %4.0f\n','session ',isess,' of ',number_of_sessions)
                 session_name = process_list(isess,:);
 
@@ -721,8 +746,10 @@ if ~isempty(process_list)
                     fprintf(fail_temp, '%s\n', sess_err{isess});
                     fclose(fail_temp);
                 end
-
+                
+                send(D, isess);
             end % parfor isess = 1:num
+            
 
 
             % ##### Close parallel computing #####
@@ -731,10 +758,13 @@ if ~isempty(process_list)
             elseif flag_release_r2013b_or_later == 1
 %                 delete(poolobj)
             end
-
+            if isvalid(h)
+                delete(h);
+            end
         end % if parallel
+        
     end
-
+    
     %% VIE_GLOB
 
     if runp.glob
@@ -762,7 +792,6 @@ if ~isempty(process_list)
     if exist('failed_sess_temp.txt', 'file') == 2
         delete 'failed_sess_temp.txt'; % delete temporary file
     end
-
 end
 
 if runp.lsm && runp.init && runp.sim && runp.mod
@@ -794,6 +823,7 @@ cleanVgosDB();
 
 runtime = toc(startTime);
 fprintf('VieVS runtime: %d seconds (%.2f hours)\n', uint64(runtime), runtime/3600)
+
 end % function vie_batch
 
 
@@ -805,4 +835,174 @@ function savestruct(fil,parameter,antenna,scan,sources)
     save([fil '_scan.mat'],'scan');
     save([fil '_parameter.mat'],'parameter');
 end
+
+function dispSessionNumber(number, total)
+    
+    t = number;
+    v = [];
+    while t > 0
+        v = [mod(t,10) v];
+        t = floor(t/10);
+    end
+
+    t = total;
+    tot = [];
+    while t > 0
+        tot = [mod(t,10) tot];
+        t = floor(t/10);
+    end
+
+
+    string0 = '';
+    string1 = '';
+    string2 = '';
+    string3 = '';
+    string4 = '';
+    for i = 1:length(v)
+        d = v(i);
+        
+        switch d
+            case 0
+                string0 = [string0 '  ___  '];
+                string1 = [string1 ' / _ \\ '];
+                string2 = [string2 '| | | |'];
+                string3 = [string3 '| |_| |'];
+                string4 = [string4 ' \\___/ '];
+
+            case 1
+                string0 = [string0 ' _ '];
+                string1 = [string1 '/ |'];
+                string2 = [string2 '| |'];
+                string3 = [string3 '| |'];
+                string4 = [string4 '|_|'];
+            case 2
+                string0 = [string0 ' ____  '];
+                string1 = [string1 '|___ \\ '];
+                string2 = [string2 '  __) |'];
+                string3 = [string3 ' / __/ '];
+                string4 = [string4 '|_____|'];
+            case 3
+                string0 = [string0 ' _____ '];
+                string1 = [string1 '|___ / '];
+                string2 = [string2 '  |_ \\ '];
+                string3 = [string3 ' ___) |'];
+                string4 = [string4 '|____/ '];
+            case 4
+                string0 = [string0 ' _  _   '];
+                string1 = [string1 '| || |  '];
+                string2 = [string2 '| || |_ '];
+                string3 = [string3 '|__   _|'];
+                string4 = [string4 '   |_|  '];
+            case 5
+                string0 = [string0 ' ____  '];
+                string1 = [string1 '| ___| '];
+                string2 = [string2 '|___ \\ '];
+                string3 = [string3 ' ___) |'];
+                string4 = [string4 '|____/ '];
+            case 6
+                string0 = [string0 '  __   '];
+                string1 = [string1 ' / /_  '];
+                string2 = [string2 '| ''_ \\ '];
+                string3 = [string3 '| (_) |'];
+                string4 = [string4 ' \\___/ '];
+            case 7
+                string0 = [string0 ' _____ '];
+                string1 = [string1 '|___  |'];
+                string2 = [string2 '   / / '];
+                string3 = [string3 '  / /  '];
+                string4 = [string4 ' /_/   '];
+            case 8
+                string0 = [string0 '  ___  '];
+                string1 = [string1 ' ( _ ) '];
+                string2 = [string2 ' / _ \\ '];
+                string3 = [string3 '| (_) |'];
+                string4 = [string4 ' \\___/ '];
+            case 9
+                string0 = [string0 '  ___  '];
+                string1 = [string1 ' / _ \\ '];
+                string2 = [string2 '| (_) |'];
+                string3 = [string3 ' \\__, |'];
+                string4 = [string4 '   /_/ '];
+        end
+    end
+    
+    string0 = [string0 '     __ '];
+    string1 = [string1 '    / / '];
+    string2 = [string2 '   / /  '];
+    string3 = [string3 '  / /   '];
+    string4 = [string4 ' /_/    '];
+
+    for i = 1:length(tot)
+        d = tot(i);
+        
+        switch d
+            case 0
+                string0 = [string0 '  ___  '];
+                string1 = [string1 ' / _ \\ '];
+                string2 = [string2 '| | | |'];
+                string3 = [string3 '| |_| |'];
+                string4 = [string4 ' \\___/ '];
+
+            case 1
+                string0 = [string0 ' _ '];
+                string1 = [string1 '/ |'];
+                string2 = [string2 '| |'];
+                string3 = [string3 '| |'];
+                string4 = [string4 '|_|'];
+            case 2
+                string0 = [string0 ' ____  '];
+                string1 = [string1 '|___ \\ '];
+                string2 = [string2 '  __) |'];
+                string3 = [string3 ' / __/ '];
+                string4 = [string4 '|_____|'];
+            case 3
+                string0 = [string0 ' _____ '];
+                string1 = [string1 '|___ / '];
+                string2 = [string2 '  |_ \\ '];
+                string3 = [string3 ' ___) |'];
+                string4 = [string4 '|____/ '];
+            case 4
+                string0 = [string0 ' _  _   '];
+                string1 = [string1 '| || |  '];
+                string2 = [string2 '| || |_ '];
+                string3 = [string3 '|__   _|'];
+                string4 = [string4 '   |_|  '];
+            case 5
+                string0 = [string0 ' ____  '];
+                string1 = [string1 '| ___| '];
+                string2 = [string2 '|___ \\ '];
+                string3 = [string3 ' ___) |'];
+                string4 = [string4 '|____/ '];
+            case 6
+                string0 = [string0 '  __   '];
+                string1 = [string1 ' / /_  '];
+                string2 = [string2 '| ''_ \\ '];
+                string3 = [string3 '| (_) |'];
+                string4 = [string4 ' \\___/ '];
+            case 7
+                string0 = [string0 ' _____ '];
+                string1 = [string1 '|___  |'];
+                string2 = [string2 '   / / '];
+                string3 = [string3 '  / /  '];
+                string4 = [string4 ' /_/   '];
+            case 8
+                string0 = [string0 '  ___  '];
+                string1 = [string1 ' ( _ ) '];
+                string2 = [string2 ' / _ \\ '];
+                string3 = [string3 '| (_) |'];
+                string4 = [string4 ' \\___/ '];
+            case 9
+                string0 = [string0 '  ___  '];
+                string1 = [string1 ' / _ \\ '];
+                string2 = [string2 '| (_) |'];
+                string3 = [string3 ' \\__, |'];
+                string4 = [string4 '   /_/ '];
+        end
+    end
+    
+    string = [string0 '\n' string1 '\n' string2 '\n' string3 '\n' string4 '\n'];
+    
+    fprintf(string);
+end
+
 
