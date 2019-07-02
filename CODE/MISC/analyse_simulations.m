@@ -24,7 +24,7 @@ end
 % get list of files from level 3 output
 l3 = dir([path name '/x_*.mat']);
 names = {l3.name};
-sessionIds = unique(cellfun(@(x){x(1:end-9)}, names))';
+sessionIds = unique(cellfun(@(x){x(1:end-4)}, names))';
 nSessions = length(sessionIds);
 
 %% preallocate memory
@@ -161,8 +161,8 @@ station_rep      = zeros(nSessions, nStations);
 
 for iSession=1:nSessions
     thisStas = stations{iSession};
-    this_station_mean_sig = mean(station_mx{iSession},1);
-    this_station_rep = std(station_val{iSession},0,1);
+    this_station_mean_sig = mean(station_mx{iSession},2);
+    this_station_rep = std(station_val{iSession},0,2);
     
     for iSta=1:length(thisStas)
         thisSta = thisStas(iSta);
