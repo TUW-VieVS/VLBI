@@ -55,6 +55,9 @@
 % ************************************************************************
 function [oc_observ,first_solution,opt] = reduce_oc(nobserv,na,ntim,scan,Pobserv,oc_observ,opt,per_stat,fname,dirpth)
 
+numberOfLSMs = size(oc_observ,2);
+
+
 % Forming clock breaks vector
 breaks = [];
 for istat = 1 : na
@@ -131,15 +134,16 @@ disp(['clock ',first_solution.ref_st_name,' is selected as the ref. clock for th
 first_solution.breaks = breaks;
 first_solution.clk_val = Q_clk*b_clk; % [cm]
 first_solution.v_clk = A*first_solution.clk_val - oc_observ; % [cm]
-first_solution.mo = sqrt((first_solution.v_clk'*Pobserv*first_solution.v_clk) / (size(A,1)-length(first_solution.clk_val))); % [cm]
-disp(['chi-squared of first solution: ',num2str(first_solution.mo.^2)]);
-first_solution.clk_mx = first_solution.mo*sqrt(diag(Q_clk)); % std. dev. of estimated clock offsets [cm]
+first_solution.mo = sqrt(diag((first_solution.v_clk'*Pobserv*first_solution.v_clk)) / (size(A,1)-length(first_solution.clk_val))); % [cm]
+disp(['chi-squared of first solution: ',num2str(first_solution.mo'.^2)]);
+nP = length(Q_clk);
+first_solution.clk_mx = repmat(first_solution.mo',nP,1).*repmat(sqrt(diag(Q_clk)),1,numberOfLSMs); % std. dev. of estimated clock offsets [cm]
 
 % Residuals of first solution
 oc_observ_first = oc_observ - A * [first_solution.clk_val];
 
 % Reduction of clock functions (first treatment); the zenith delays are kept
-oc_observ = oc_observ - A(:,1:colclk) * first_solution.clk_val(1:colclk);
+oc_observ = oc_observ - A(:,1:colclk) * first_solution.clk_val(1:colclk,:);
 
 
 % +++ save first-solution residuals to variable +++
@@ -193,6 +197,8 @@ res.firstVal = oc_observ_first * -1;
 if ~isempty(dirpth) && ~exist(['../DATA/LEVEL3/',dirpth], 'dir')
     mkdir(['../DATA/LEVEL3/',dirpth])
 end
-save(['../DATA/LEVEL3/', dirpth, '/res_', fname, '.mat'], 'res');
 
+if numberOfLSMs == 1
+    save(['../DATA/LEVEL3/', dirpth, '/res_', fname, '.mat'], 'res');
+end
 
