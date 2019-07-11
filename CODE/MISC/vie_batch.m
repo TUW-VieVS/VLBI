@@ -196,17 +196,26 @@ if runp.init
 end
 
 
+% setup for parallel counter in case MATLAB version > 9.1 (2017a). 
 number_of_sessions = size(process_list, 1);
-D = parallel.pool.DataQueue;
-h = waitbar(0, 'Please wait ...');
-afterEach(D, @nUpdateWaitbar);
-counter = 0;
+if ~verLessThan('Matlab','9.2')
+    D = parallel.pool.DataQueue;
+    h = waitbar(0, 'Please wait ...');
+    afterEach(D, @nUpdateWaitbar);
+    counter = 0;
+else
+    h = [];
+    D = [];
+end
+
+% define function for increment the parallel counter. Only used if
+% Matlab version is > 9.1 (2017a)
 function nUpdateWaitbar(~)
     counter = counter + 1;
     time = toc(startTime);
     frac = counter/number_of_sessions;
     dtime = time/frac*(1-frac)/60;
-    
+
     if isvalid(h)
         waitbar(counter/number_of_sessions, h, sprintf('finished: %d of %d (%.0f min left)',counter,number_of_sessions, dtime));
     end
@@ -747,7 +756,9 @@ if ~isempty(process_list)
                     fclose(fail_temp);
                 end
                 
-                send(D, isess);
+                if ~verLessThan('Matlab','9.2')
+                    send(D, isess);
+                end
             end % parfor isess = 1:num
             
 
@@ -758,8 +769,10 @@ if ~isempty(process_list)
             elseif flag_release_r2013b_or_later == 1
 %                 delete(poolobj)
             end
-            if isvalid(h)
-                delete(h);
+            if ~verLessThan('Matlab','9.2')
+                if isvalid(h)
+                    delete(h);
+                end
             end
         end % if parallel
         
