@@ -187,9 +187,7 @@ if isfield(runp, 'sched')
 end
 
 %% if you run vie_init get TRF and CRF
-if runp.init
     [trf, crf, parameter] = get_trf_and_crf(parameter);
-end
 
 %% number of sessions to process:
 % Only start VIE_INT, VIE_MOD, VIE_LSM, VIE_SIM and VIE_GLOB, if the process list is not empty!
