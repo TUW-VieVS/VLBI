@@ -68,6 +68,9 @@ load('runp','runp')
 load('guiparameter.mat');
 cleanVgosDB();
 
+
+
+startTime = tic;
 %% if you passed a argument interpret it as session name
 if(nargin > 0)
     
@@ -124,9 +127,9 @@ end
 
 %% get parallel
 if isfield(runp, 'parallel')
-    parallel=runp.parallel;
+    VieVS_parallel=runp.parallel;
 else
-    parallel=0;
+    VieVS_parallel=0;
 end
 
 if runp.parallel
@@ -178,6 +181,7 @@ if runp.parallel
 end
 
 
+
 %% VIE_SCHED
 
 if isfield(runp, 'sched')
@@ -189,13 +193,39 @@ end
 %% if you run vie_init get TRF and CRF
     [trf, crf, parameter] = get_trf_and_crf(parameter);
 
+
+% setup for parallel counter in case MATLAB version > 9.1 (2017a). 
+number_of_sessions = size(process_list, 1);
+if ~verLessThan('Matlab','9.2')
+    D = parallel.pool.DataQueue;
+    h = waitbar(0, 'Please wait ...');
+    afterEach(D, @nUpdateWaitbar);
+    counter = 0;
+else
+    h = [];
+    D = [];
+end
+
+% define function for increment the parallel counter. Only used if
+% Matlab version is > 9.1 (2017a)
+function nUpdateWaitbar(~)
+    counter = counter + 1;
+    time = toc(startTime);
+    frac = counter/number_of_sessions;
+    dtime = time/frac*(1-frac)/60;
+
+    if isvalid(h)
+        waitbar(counter/number_of_sessions, h, sprintf('finished: %d of %d (%.0f min left)',counter,number_of_sessions, dtime));
+    end
+    dispSessionNumber(counter, number_of_sessions)
+end
+
 %% number of sessions to process:
 % Only start VIE_INT, VIE_MOD, VIE_LSM, VIE_SIM and VIE_GLOB, if the process list is not empty!
 if ~isempty(process_list)
     
     % Get the number of sessions in the current process list:
     % - Remove invalid entries (only one blank)
-    number_of_sessions = size(process_list, 1);
     while isempty(find(process_list(number_of_sessions,:)~=' ',1))
         number_of_sessions  = number_of_sessions - 1;
     end
@@ -211,7 +241,8 @@ if ~isempty(process_list)
     %% main 
     if runp.init || runp.mod || runp.lsm || runp.lsm_scanwise || runp.sim
         %% default - no parallel:
-        if parallel==0
+        if VieVS_parallel==0
+            delete(h);
             for isess=1:number_of_sessions
                 %% parameters for each session 
                 fprintf('%s %4.0f %s %4.0f\n','session ',isess,' of ',number_of_sessions)
@@ -418,35 +449,7 @@ if ~isempty(process_list)
                                 tmp=load([fil '_antenna.mat']);antenna=tmp.antenna;
                                 tmp=load([fil '_sources.mat']);sources=tmp.sources;
                             end
-                            %check if there are more than 1 observations in
-                            %this structure. This means you have simulated data 
-                            %and more than one day. 
-                            ndata = length(scan(1).obs(1).obs);
-                            % if there is only one observation everything
-                            % stays the same. Otherwise the session names
-                            % are changed. 
-                            if ndata ==1 
-                                vie_lsm(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
-                            else
-                                allScans = scan;
-                                allSessionName = parameter.session_name;
-                                allInitJetfilnam = parameter.vie_init.jetfilnam;
-                                allInitJetfilnamuv = parameter.vie_init.jetfilnamuv;
-                                allInitJetfilnamjb = parameter.vie_init.jetfilnamjb;
-                                for isim = 1:ndata
-                                    parameter.session_name = allSessionName{isim};
-                                    parameter.vie_init.jetfilnam = allInitJetfilnam{isim};
-                                    parameter.vie_init.jetfilnamuv = allInitJetfilnamuv{isim};
-                                    parameter.vie_init.jetfilnamjb = allInitJetfilnamjb{isim};
-                                    antenna(1).session = allSessionName{isim};
-                                    for iscan = 1:length(scan)
-                                        for iobs = 1:length(scan(iscan).obs)
-                                            scan(iscan).obs(iobs).obs = allScans(iscan).obs(iobs).obs(isim);
-                                        end
-                                    end
-                                    vie_lsm(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
-                                end
-                            end
+                            vie_lsm(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
                         else
                             fprintf('You need to run VIE_MOD for session %s before you can run VIE_LSM\n', session);
                         end
@@ -469,35 +472,7 @@ if ~isempty(process_list)
                                 tmp=load([fil '_antenna.mat']);antenna=tmp.antenna;
                                 tmp=load([fil '_sources.mat']);sources=tmp.sources;
                             end
-                            %check if there are more than 1 observations in
-                            %this structure. This means you have simulated data 
-                            %and more than one day. 
-                            ndata = length(scan(1).obs(1).obs);
-                            % if there is only one observation everything
-                            % stays the same. Otherwise the session names
-                            % are changed. 
-                            if ndata ==1 
-                                vie_lsm_scanwise(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
-                            else
-                                allScans = scan;
-                                allSessionName = parameter.session_name;
-                                allInitJetfilnam = parameter.vie_init.jetfilnam;
-                                allInitJetfilnamuv = parameter.vie_init.jetfilnamuv;
-                                allInitJetfilnamjb = parameter.vie_init.jetfilnamjb;
-                                for isim = 1:ndata
-                                    parameter.session_name = allSessionName{isim};
-                                    parameter.vie_init.jetfilnam = allInitJetfilnam{isim};
-                                    parameter.vie_init.jetfilnamuv = allInitJetfilnamuv{isim};
-                                    parameter.vie_init.jetfilnamjb = allInitJetfilnamjb{isim};
-                                    antenna(1).session = allSessionName{isim};
-                                    for iscan = 1:length(scan)
-                                        for iobs = 1:length(scan(iscan).obs)
-                                            scan(iscan).obs(iobs).obs = allScans(iscan).obs(iobs).obs(isim);
-                                        end
-                                    end
-                                    vie_lsm_scanwise(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
-                                end
-                            end
+                            vie_lsm_scanwise(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
                         else
                             fprintf('You need to run VIE_MOD for session %s before you can run VIE_LSM\n', session);
                         end
@@ -518,12 +493,16 @@ if ~isempty(process_list)
             end % for isess=1:num
         else %--> parallel
             %% parallel processing
+            
+
             parfor isess = 1:number_of_sessions
                 %% parameters for each session 
-                
+%                 tmp = sessionCounter;
                 % Get one instance of the parameter structure for each loop instance:
                 parameter = parameter_tmp;
 
+%                 dispSessionNumber(tmp);
+                
                 fprintf('%s %4.0f %s %4.0f\n','session ',isess,' of ',number_of_sessions)
                 session_name = process_list(isess,:);
 
@@ -731,35 +710,7 @@ if ~isempty(process_list)
                                 tmp=load([fil '_antenna.mat']);antenna=tmp.antenna;
                                 tmp=load([fil '_sources.mat']);sources=tmp.sources;
                             end
-                            %check if there are more than 1 observations in
-                            %this structure. This means you have simulated data 
-                            %and more than one day. 
-                            ndata = length(scan(1).obs(1).obs);
-                            % if there is only one observation everything
-                            % stays the same. Otherwise the session names
-                            % are changed. 
-                            if ndata ==1 
-                                vie_lsm(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
-                            else
-                                allScans = scan;
-                                allSessionName = parameter.session_name;
-                                allInitJetfilnam = parameter.vie_init.jetfilnam;
-                                allInitJetfilnamuv = parameter.vie_init.jetfilnamuv;
-                                allInitJetfilnamjb = parameter.vie_init.jetfilnamjb;
-                                for isim = 1:ndata
-                                    parameter.session_name = allSessionName{isim};
-                                    parameter.vie_init.jetfilnam = allInitJetfilnam{isim};
-                                    parameter.vie_init.jetfilnamuv = allInitJetfilnamuv{isim};
-                                    parameter.vie_init.jetfilnamjb = allInitJetfilnamjb{isim};
-                                    antenna(1).session = allSessionName{isim};
-                                    for iscan = 1:length(scan)
-                                        for iobs = 1:length(scan(iscan).obs)
-                                            scan(iscan).obs(iobs).obs = allScans(iscan).obs(iobs).obs(isim);
-                                        end
-                                    end
-                                    vie_lsm(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
-                                end
-                            end
+                            vie_lsm(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
                         else
                             fprintf('You need to run VIE_MOD for session %s before you can run VIE_LSM\n', session);
                         end
@@ -781,35 +732,7 @@ if ~isempty(process_list)
                                 tmp=load([fil '_antenna.mat']);antenna=tmp.antenna;
                                 tmp=load([fil '_sources.mat']);sources=tmp.sources;
                             end
-                            %check if there are more than 1 observations in
-                            %this structure. This means you have simulated data 
-                            %and more than one day. 
-                            ndata = length(scan(1).obs(1).obs);
-                            % if there is only one observation everything
-                            % stays the same. Otherwise the session names
-                            % are changed. 
-                            if ndata ==1 
-                                vie_lsm_scanwise(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
-                            else
-                                allScans = scan;
-                                allSessionName = parameter.session_name;
-                                allInitJetfilnam = parameter.vie_init.jetfilnam;
-                                allInitJetfilnamuv = parameter.vie_init.jetfilnamuv;
-                                allInitJetfilnamjb = parameter.vie_init.jetfilnamjb;
-                                for isim = 1:ndata
-                                    parameter.session_name = allSessionName{isim};
-                                    parameter.vie_init.jetfilnam = allInitJetfilnam{isim};
-                                    parameter.vie_init.jetfilnamuv = allInitJetfilnamuv{isim};
-                                    parameter.vie_init.jetfilnamjb = allInitJetfilnamjb{isim};
-                                    antenna(1).session = allSessionName{isim};
-                                    for iscan = 1:length(scan)
-                                        for iobs = 1:length(scan(iscan).obs)
-                                            scan(iscan).obs(iobs).obs = allScans(iscan).obs(iobs).obs(isim);
-                                        end
-                                    end
-                                    vie_lsm_scanwise(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
-                                end
-                            end
+                            vie_lsm_scanwise(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
                         else
                             fprintf('You need to run VIE_MOD for session %s before you can run VIE_LSM\n', session);
                         end
@@ -830,8 +753,12 @@ if ~isempty(process_list)
                     fprintf(fail_temp, '%s\n', sess_err{isess});
                     fclose(fail_temp);
                 end
-
+                
+                if ~verLessThan('Matlab','9.2')
+                    send(D, isess);
+                end
             end % parfor isess = 1:num
+            
 
 
             % ##### Close parallel computing #####
@@ -840,10 +767,15 @@ if ~isempty(process_list)
             elseif flag_release_r2013b_or_later == 1
 %                 delete(poolobj)
             end
-
+            if ~verLessThan('Matlab','9.2')
+                if isvalid(h)
+                    delete(h);
+                end
+            end
         end % if parallel
+        
     end
-
+    
     %% VIE_GLOB
 
     if runp.glob
@@ -871,7 +803,6 @@ if ~isempty(process_list)
     if exist('failed_sess_temp.txt', 'file') == 2
         delete 'failed_sess_temp.txt'; % delete temporary file
     end
-
 end
 
 if runp.lsm && runp.init && runp.sim && runp.mod
@@ -901,6 +832,8 @@ tstr2 = sprintf('%02d:%02d:%02d', t(4), t(5), round(t(6)));
 fprintf('VieVS processing ends at %s, %s\n', tstr2, tstr1);
 cleanVgosDB();
 
+runtime = toc(startTime);
+fprintf('VieVS runtime: %d seconds (%.2f hours)\n', uint64(runtime), runtime/3600)
 
 end % function vie_batch
 
@@ -913,4 +846,174 @@ function savestruct(fil,parameter,antenna,scan,sources)
     save([fil '_scan.mat'],'scan');
     save([fil '_parameter.mat'],'parameter');
 end
+
+function dispSessionNumber(number, total)
+    
+    t = number;
+    v = [];
+    while t > 0
+        v = [mod(t,10) v];
+        t = floor(t/10);
+    end
+
+    t = total;
+    tot = [];
+    while t > 0
+        tot = [mod(t,10) tot];
+        t = floor(t/10);
+    end
+
+
+    string0 = '';
+    string1 = '';
+    string2 = '';
+    string3 = '';
+    string4 = '';
+    for i = 1:length(v)
+        d = v(i);
+        
+        switch d
+            case 0
+                string0 = [string0 '  ___  '];
+                string1 = [string1 ' / _ \\ '];
+                string2 = [string2 '| | | |'];
+                string3 = [string3 '| |_| |'];
+                string4 = [string4 ' \\___/ '];
+
+            case 1
+                string0 = [string0 ' _ '];
+                string1 = [string1 '/ |'];
+                string2 = [string2 '| |'];
+                string3 = [string3 '| |'];
+                string4 = [string4 '|_|'];
+            case 2
+                string0 = [string0 ' ____  '];
+                string1 = [string1 '|___ \\ '];
+                string2 = [string2 '  __) |'];
+                string3 = [string3 ' / __/ '];
+                string4 = [string4 '|_____|'];
+            case 3
+                string0 = [string0 ' _____ '];
+                string1 = [string1 '|___ / '];
+                string2 = [string2 '  |_ \\ '];
+                string3 = [string3 ' ___) |'];
+                string4 = [string4 '|____/ '];
+            case 4
+                string0 = [string0 ' _  _   '];
+                string1 = [string1 '| || |  '];
+                string2 = [string2 '| || |_ '];
+                string3 = [string3 '|__   _|'];
+                string4 = [string4 '   |_|  '];
+            case 5
+                string0 = [string0 ' ____  '];
+                string1 = [string1 '| ___| '];
+                string2 = [string2 '|___ \\ '];
+                string3 = [string3 ' ___) |'];
+                string4 = [string4 '|____/ '];
+            case 6
+                string0 = [string0 '  __   '];
+                string1 = [string1 ' / /_  '];
+                string2 = [string2 '| ''_ \\ '];
+                string3 = [string3 '| (_) |'];
+                string4 = [string4 ' \\___/ '];
+            case 7
+                string0 = [string0 ' _____ '];
+                string1 = [string1 '|___  |'];
+                string2 = [string2 '   / / '];
+                string3 = [string3 '  / /  '];
+                string4 = [string4 ' /_/   '];
+            case 8
+                string0 = [string0 '  ___  '];
+                string1 = [string1 ' ( _ ) '];
+                string2 = [string2 ' / _ \\ '];
+                string3 = [string3 '| (_) |'];
+                string4 = [string4 ' \\___/ '];
+            case 9
+                string0 = [string0 '  ___  '];
+                string1 = [string1 ' / _ \\ '];
+                string2 = [string2 '| (_) |'];
+                string3 = [string3 ' \\__, |'];
+                string4 = [string4 '   /_/ '];
+        end
+    end
+    
+    string0 = [string0 '     __ '];
+    string1 = [string1 '    / / '];
+    string2 = [string2 '   / /  '];
+    string3 = [string3 '  / /   '];
+    string4 = [string4 ' /_/    '];
+
+    for i = 1:length(tot)
+        d = tot(i);
+        
+        switch d
+            case 0
+                string0 = [string0 '  ___  '];
+                string1 = [string1 ' / _ \\ '];
+                string2 = [string2 '| | | |'];
+                string3 = [string3 '| |_| |'];
+                string4 = [string4 ' \\___/ '];
+
+            case 1
+                string0 = [string0 ' _ '];
+                string1 = [string1 '/ |'];
+                string2 = [string2 '| |'];
+                string3 = [string3 '| |'];
+                string4 = [string4 '|_|'];
+            case 2
+                string0 = [string0 ' ____  '];
+                string1 = [string1 '|___ \\ '];
+                string2 = [string2 '  __) |'];
+                string3 = [string3 ' / __/ '];
+                string4 = [string4 '|_____|'];
+            case 3
+                string0 = [string0 ' _____ '];
+                string1 = [string1 '|___ / '];
+                string2 = [string2 '  |_ \\ '];
+                string3 = [string3 ' ___) |'];
+                string4 = [string4 '|____/ '];
+            case 4
+                string0 = [string0 ' _  _   '];
+                string1 = [string1 '| || |  '];
+                string2 = [string2 '| || |_ '];
+                string3 = [string3 '|__   _|'];
+                string4 = [string4 '   |_|  '];
+            case 5
+                string0 = [string0 ' ____  '];
+                string1 = [string1 '| ___| '];
+                string2 = [string2 '|___ \\ '];
+                string3 = [string3 ' ___) |'];
+                string4 = [string4 '|____/ '];
+            case 6
+                string0 = [string0 '  __   '];
+                string1 = [string1 ' / /_  '];
+                string2 = [string2 '| ''_ \\ '];
+                string3 = [string3 '| (_) |'];
+                string4 = [string4 ' \\___/ '];
+            case 7
+                string0 = [string0 ' _____ '];
+                string1 = [string1 '|___  |'];
+                string2 = [string2 '   / / '];
+                string3 = [string3 '  / /  '];
+                string4 = [string4 ' /_/   '];
+            case 8
+                string0 = [string0 '  ___  '];
+                string1 = [string1 ' ( _ ) '];
+                string2 = [string2 ' / _ \\ '];
+                string3 = [string3 '| (_) |'];
+                string4 = [string4 ' \\___/ '];
+            case 9
+                string0 = [string0 '  ___  '];
+                string1 = [string1 ' / _ \\ '];
+                string2 = [string2 '| (_) |'];
+                string3 = [string3 ' \\__, |'];
+                string4 = [string4 '   /_/ '];
+        end
+    end
+    
+    string = [string0 '\n' string1 '\n' string2 '\n' string3 '\n' string4 '\n'];
+    
+    fprintf(string);
+end
+
 

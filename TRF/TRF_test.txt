@@ -1,16 +1,7 @@
-% Reference: Hana Spicakova, L. Plank, T. Nilsson, J. Böhm, H. Schuh. Terrestrial reference frame solution with the Vienna VLBI
+% Reference: Hana Spicakova, L. Plank, T. Nilsson, J. Bï¿½hm, H. Schuh. Terrestrial reference frame solution with the Vienna VLBI
 % Software VieVS and implication of tropospheric gradient estimation. Proceedings of EVGA Conference (held in Bonn March 29-31, 2011).
-
 % The original file has been adapted for use with the VieVS Satelite Scheduling module.
-
-% --- change log: ---
-% 2013.12.03.  Hellerschmied Andreas: ONSALA85 added. Information taken from VEX file g0128o.vex
-% 2014.02.09.  Hellerschmied Andreas: MEDICINA commented.
-% 2014.02.25.  Hellerschmied Andreas: ZELENCHK commented.
-% 2015.06      Hellerschmied Andreas: WETTZ13S and WETTZ13N added
-% 2015.06      Hellerschmied Andreas: CEDUNA added (from wark1.vex; 11.4.2014)
-
-% station          x [m]           y [m]         z [m]            vx [m/y]    vy [m/y]    vz [m/y]      epoch   start    end 
+% station          x [m]           y [m]         z [m]            vx [m/y]    vy [m/y]    vz [m/y]      epoch   start    end
 
 ALGOPARK        918034.6948   -4346132.2778    4561971.1788        -0.0157     -0.0042      0.0042      51544       0   99999
 BR-VLBA       -2112065.0172   -3705356.5129    4726813.7718        -0.0143      0.0003     -0.0076      51544       0   99999
@@ -82,7 +73,6 @@ TIGOCONC       1492052.7271   -4887961.1025   -3803541.8315        -0.1351     -
 URUMQI          228310.6293    4631922.7819    4367063.9962        -0.0319     -0.0021      0.0063      51544       0   99999
 VNDNBERG      -2678095.0335   -4525450.4805    3597410.4053        -0.0298      0.0304      0.0211      51544       0   99999
 VERAMZSW      -3857241.8806    3108784.8430    4003900.6643         0.0031      0.0040     -0.0124      51544       0   55631
-WESTFORD       1492206.5412   -4458130.5144    4296015.5492        -0.0154     -0.0013      0.0036      51544       0   99999
 WETTZELL       4075539.8357     931735.3135    4801629.4020        -0.0157      0.0169      0.0101      51544       0   99999
 YLOW7296      -1224399.6338   -2689273.2724    5633620.2733        -0.0205     -0.0046      0.0004      51544       0   99999
 YEBES          4848780.2659    -261702.0212    4123035.7897        -0.0027      0.0186      0.0175      51544       0   99999
@@ -90,6 +80,11 @@ YEBES40M       4848761.7173    -261484.2296    4123084.9130         0.0082     -
 ZELENCHK       3451207.8130    3060375.2265    4391914.9322        -0.0216      0.0142      0.0097      51544       0   54282
 ZELENCHK       3451207.8210    3060375.2304    4391914.9324        -0.0216      0.0142      0.0097      51544   54282   99999
 ONSALA85       3370966.0847     711466.0038    5349664.0101        -0.0136      0.0150      0.0085      51544       0   99999
-WETTZ13S       4075659.2320     931824.5010    4801516.0970         0.0000      0.0000      0.0000      51544       0   99999
 WETTZ13N       4075627.9260     931774.0000    4801552.2210         0.0000      0.0000      0.0000      51544       0   99999
 CEDUNA        -3753442.7457    3912709.7530   -3348067.6095        -0.04173     0.00267     0.0499      50449       0   99999
+GGAO12M        1130730.24500  -4831245.95300   3994228.22800        0.0000      0.0000      0.0000      51544       0   99999
+KOKEE12M      -5543831.70500  -2054585.98300   2387828.77600        0.0000      0.0000      0.0000      51544       0   99999
+ONSA13NE       3370889.19       711570.78      5349691.10           0.0000      0.0000      0.0000      51544       0   99999
+RAEGYEB        4848831.10900   -261629.53600   4122976.48800        0.0000      0.0000      0.0000      51544       0   99999
+WESTFORD       1492206.59964  -4458130.50737   4296015.53210        0.0000      0.0000      0.0000      51544       0   99999
+WETTZ13S       4075659.10000    931824.64000   4801516.18000        0.0000      0.0000      0.0000      51544       0   99999
