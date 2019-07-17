@@ -286,6 +286,10 @@ if isfield(parameter.vie_init, 'iono') % older parameter files do not have that 
             set(handles.radiobutton_parameters_iono_fromNGS, 'Value', 1)
             set(handles.popupmenu_parameters_iono_ext, 'Enable', 'off')
             set(handles.pushbutton_parameters_iono_create, 'Enable', 'off')
+        case 'observation_database'
+            set(handles.radiobutton_parameters_iono_fromNGS, 'Value', 1)
+            set(handles.popupmenu_parameters_iono_ext, 'Enable', 'off')
+            set(handles.pushbutton_parameters_iono_create, 'Enable', 'off')
         otherwise % external iono delay
             set(handles.radiobutton_parameters_iono_ext, 'Value', 1)
             set(handles.popupmenu_parameters_iono_ext, 'Enable', 'on')
