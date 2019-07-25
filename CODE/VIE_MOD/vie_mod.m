@@ -156,6 +156,7 @@
 %   13 Sep 2017 by D. Landskron: 'tropSource' shifted into 'vie_init' 
 %   11 May 2018 by D. Landskron: bug with usage of raytr-files corrected
 %   05 Jul 2018 by D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
+%   27 Jul 2019 by D. Landskron: zwet parameter added to scan structure
 %
 % ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %  NOTATION:
@@ -1649,6 +1650,7 @@ for isc = 1:number_of_all_scans
                     % store in scan
                     scan(isc).stat(stnum).mfw   = mfw;   % used in vie_lsm as partial
                     scan(isc).stat(stnum).zdry  = zdry;
+                    scan(isc).stat(stnum).zwet  = zwet;
                     scan(isc).stat(stnum).aoalt   = aoalt; % antenna axis offset altitude correction [m]                    
                     scan(isc).stat(stnum).trop  = ((zdry+aoalt) * mfh + zwet * mfw + aprgrd)/c; % contains the whole (asymmetric) delay [sec]
  

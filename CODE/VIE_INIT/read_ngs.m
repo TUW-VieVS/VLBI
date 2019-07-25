@@ -154,6 +154,7 @@
 %   05 Jul 2018 by D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models
 %   28 Nov 2018 by D. Landskron: workaround concerning OPT files changed: now NO observations are excluded, because everything will be done in vie_lsm later
 %   05 Dec 2018 by D. Landskron: clarification quality code / quality flag
+%   25 Jul 2019 by D. Landskron: zwet parameter added to scan structure
 % ************************************************************************
 
 
@@ -188,6 +189,7 @@ sta0.e          =0;
 sta0.az         =0;
 sta0.zd         =[];
 sta0.zdry       =0;
+sta0.zwet       =0;
 sta0.cab        =0;
 sta0.axkt       =0;
 sta0.therm      =0;

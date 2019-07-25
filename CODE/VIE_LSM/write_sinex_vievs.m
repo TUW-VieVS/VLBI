@@ -24,18 +24,18 @@
 %   17 June 2011 by Hana Spicakova: fclose for ns-codes.txt was missing 
 %   05 July 2011 by Hana Spicakova: FILE/COMMENT block according to
 %      template from Axel Nothnagel - Version 2.0
-%   10 July 2012 by Hana Kr�sn�: compatibility of non-tidal APL with
+%   10 July 2012 by Hana Krasna: compatibility of non-tidal APL with
 %   version2.0
-%   10 July 2012 by Hana Kr�sn�: hydrology loading added
-%   30 Oct 2012 by Hana Kr�sn�: ns_codes.txt changed to superstation file
-%   30 Oct 2012 by Hana Kr�sn�: the total tropospheric zenith delay added
-%   18 Dec 2012 by Hana Kr�sn�: changes in header according to the new
+%   10 July 2012 by Hana Krasna: hydrology loading added
+%   30 Oct 2012 by Hana Krasna: ns_codes.txt changed to superstation file
+%   30 Oct 2012 by Hana Krasna: the total tropospheric zenith delay added
+%   18 Dec 2012 by Hana Krasna: changes in header according to the new
 %       representation of constraints in the GUI 2.1
-%   30 Apr 2013 by Hana Kr�sn�: TROWET changed to TROTOT
-%   18 Dec 2013 by Hana Kr�sn�: ICRF designation for sources added
-%   18 Dec 2013 by Hana Kr�sn�: change in the header
-%   20 Dec 2013 by Hana Kr�sn�: change to IERS name
-%   10 Feb 2014 by Hana Kr�sn�: information about tidal UT corrections
+%   30 Apr 2013 by Hana Krasna: TROWET changed to TROTOT
+%   18 Dec 2013 by Hana Krasna: ICRF designation for sources added
+%   18 Dec 2013 by Hana Krasna: change in the header
+%   20 Dec 2013 by Hana Krasna: change to IERS name
+%   10 Feb 2014 by Hana Krasna: information about tidal UT corrections
 %       added
 %   19 Jun 2014 by Hana Krasna: sources can be estimated in vie_lsm with
 %       NNR condition
@@ -56,6 +56,7 @@
 %   23 Aug 2018 by Daniel Landskron: adapted for vgosDB
 %   29 Nov 2018 by Daniel Landskron: structure of observation restrictions standardized
 %   06 Mar 2019 by Daniel Landskron: suffix checkbox added to the sinex files
+%   27 Jul 2019 by Daniel Landskron: zwet parameter added to scan structure
 %
 % call this function:
 %
@@ -741,6 +742,7 @@ for pl=1:size(process_list,1)
  if outsnx.zwd==1
     for k=1:numStat
         clear mjdZdry
+        clear mjdZwet
         % Interpolate (linear) the apriori (hydrostatic) delay from scan. to
         % the estimated mjds
         iscan1=1;
@@ -748,6 +750,7 @@ for pl=1:size(process_list,1)
             if length(scan(iscan).stat)>=k
                 if ~isempty(scan(iscan).stat(k).zdry)
                     mjdZdry(iscan1,:) = [scan(iscan).mjd scan(iscan).stat(k).zdry];
+                    mjdZwet(iscan1,:) = [scan(iscan).mjd scan(iscan).stat(k).zwet];
                     iscan1=iscan1+1;
                 end
             end
@@ -758,12 +761,14 @@ for pl=1:size(process_list,1)
             nul=mjdZdry(inu,1)- mjdZdry(inu+1,1);
             if nul==0
                  mjdZdry(inu+1,1) = mjdZdry(inu+1,1) + 1e-10;
+                 mjdZwet(inu+1,1) = mjdZwet(inu+1,1) + 1e-10;
             end
         end
 
         
         for imjd = 1:length(col_sinex.zwd(k).mjd)
             antenna(k).zdry(imjd) = interp1(mjdZdry(:,1),mjdZdry(:,2),col_sinex.zwd(k).mjd(imjd),'linear','extrap');
+            antenna(k).zwet(imjd) = interp1(mjdZwet(:,1),mjdZwet(:,2),col_sinex.zwd(k).mjd(imjd),'linear','extrap');
         end
     end
  end
@@ -1043,22 +1048,22 @@ for pl=1:size(process_list,1)
             end
 
             for k=1:numStat
-                clear zwdTime zwdTimeYrStr totZwd1 totZwdStdDev1    
+                clear zwdTime zwdTimeYrStr totZtd1 totZtdStdDev1    
                 zwdTime=mjd2yydoysecod(col_sinex.zwd(k).mjd);
                 zwdTimeYrStr=num2str(zwdTime(:,1));
                 numZwd=length(col_sinex.zwd(k).col);
                 
-                aprZwd=antenna(k).zdry;
+                aprZtd = antenna(k).zdry + antenna(k).zwet;
                 
-                totZwd1 = aprZwd +  x_.zwd(k).val./100; %m
-                totZwdStdDev1 = x_.zwd(k).mx./100; %m
+                totZtd1 = aprZtd +  x_.zwd(k).val./100; %m
+                totZtdStdDev1 = x_.zwd(k).mx./100; %m
                 for j=1:numZwd 
-                    totZwd=sprintf(formatEstVal, totZwd1(j));
-                    if ispc, totZwd = strrep(totZwd, 'e+0', 'e+'); totZwd = strrep(totZwd, 'e-0', 'e-');   end
-                    totZwdStdDev=sprintf(formatStDev, totZwdStdDev1(j));
-                    if ispc, totZwdStdDev = strrep(totZwdStdDev, 'e+0', 'e+'); totZwdStdDev = strrep(totZwdStdDev, 'e-0', 'e-');  end
+                    totZtd=sprintf(formatEstVal, totZtd1(j));
+                    if ispc, totZtd = strrep(totZtd, 'e+0', 'e+'); totZtd = strrep(totZtd, 'e-0', 'e-');   end
+                    totZtdStdDev=sprintf(formatStDev, totZtdStdDev1(j));
+                    if ispc, totZtdStdDev = strrep(totZtdStdDev, 'e+0', 'e+'); totZtdStdDev = strrep(totZtdStdDev, 'e-0', 'e-');  end
 
-                    fprintf(fid, writeFormat, curIndex, 'TROTOT', num2str(antenna(k).siteCode), antenna(k).pointCode, soln, zwdTimeYrStr(j,3:end), zwdTime(j,2), zwdTime(j,3), 'm', constrEstZwd, totZwd, totZwdStdDev);
+                    fprintf(fid, writeFormat, curIndex, 'TROTOT', num2str(antenna(k).siteCode), antenna(k).pointCode, soln, zwdTimeYrStr(j,3:end), zwdTime(j,2), zwdTime(j,3), 'm', constrEstZwd, totZtd, totZtdStdDev);
                     curIndex=curIndex+1;
                 end
             end
