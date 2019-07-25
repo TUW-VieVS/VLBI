@@ -110,6 +110,7 @@
 %  2017-02-22, A. Hellerschmied: antenna.psd initialized
 %  2018-07-06, D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
 %  2018-12-05, D. Landskron: clarification quality code / quality flag
+%  2019-07-25, D. Landskron: zwet parameter added to scan structure
 %
 %
 function [antenna, sources, scan, parameter] = read_vso(vso_file_path, vso_file_name, trf, trf_name_str, crf, crf_name_str, sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type, parameter)
@@ -768,7 +769,7 @@ end
 % Preallocate structure:
 scan(number_of_remaining_scans) = struct('mjd', [], 'stat', [], 'tim', [], 'nobs', [], 'space', [], 'obs', [], 'iso', []);
 [scan.space] = deal(struct('source', zeros(3,3), 'xp', 0,'yp', 0, 'era', 0, 'xnut', 0, 'ynut', 0, 't2c', zeros(3,3)));
-[scan.stat] = deal(struct('x', [], 'temp', [], 'pres', [], 'e', [], 'az', [], 'zd', [], 'zdry', [], 'cab', [], 'axkt', [], 'therm', [], 'pantd', [], 'trop', [], 'psd', []));
+[scan.stat] = deal(struct('x', [], 'temp', [], 'pres', [], 'e', [], 'az', [], 'zd', [], 'zdry', [], 'zwet', [], 'cab', [], 'axkt', [], 'therm', [], 'pantd', [], 'trop', [], 'psd', []));
 [scan.obs] = deal(struct('i1', [], 'i2', [], 'obs', [], 'sig', [], 'com', 0, 'q_flag', [], 'q_flag_ion', [], 'delion', [], 'sgdion', []));
 
 
@@ -819,7 +820,7 @@ for i_scan = 1 : number_of_remaining_scans
         stat_name_8char_str = sprintf('%s%s', stations_in_scan{i_stat}, blanks(8 - length(stations_in_scan{i_stat})));
         % Antenna ID (refering to the antenna structure)
         antenna_ind = strcmp({antenna.name}, stat_name_8char_str);
-        scan(i_scan).stat(antenna_ind) = struct('x', [0 0 0], 'temp', error_code_invalid_met_data, 'pres', error_code_invalid_met_data, 'e', error_code_invalid_met_data, 'az', 0, 'zd', [], 'zdry', 0, 'cab', 0, 'axkt', 0, 'therm', 0, 'pantd', [0 0 0], 'trop', [], 'psd', 0);
+        scan(i_scan).stat(antenna_ind) = struct('x', [0 0 0], 'temp', error_code_invalid_met_data, 'pres', error_code_invalid_met_data, 'e', error_code_invalid_met_data, 'az', 0, 'zd', [], 'zdry', 0, 'zwet', 0, 'cab', 0, 'axkt', 0, 'therm', 0, 'pantd', [0 0 0], 'trop', [], 'psd', 0);
     end
     
     % #### Add obs sub-structure ####

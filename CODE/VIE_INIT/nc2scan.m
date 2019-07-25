@@ -26,6 +26,7 @@
 %   2018-16-01, J.Gruber: Second redundant exception for Ion code Flag removed
 %   2018-08-01, D. Landskron: bug corrected with storing the "Second" in vgosDB files
 %   2018-12-05, D. Landskron: reading also the quality codes; clarification quality code / quality flag
+%   2019-07-25, D. Landskron: zwet parameter added to scan structure
 
 % ************************************************************************
 function scan=nc2scan(out_struct, nc_info, fband, ioncorr, ambcorr, wrapper_data, parameter)
@@ -40,7 +41,7 @@ nObs=out_struct.head.NumObs.val; % actually not required, however: nice for test
                            
 % substructs for internal vievs struct
 subStruct_stat=struct('x', [], 'temp', [], 'pres', [], 'e', [], 'az', ...
-    [], 'zd', [], 'zdry', [], 'cab', [], 'axkt', [], 'therm', [], ...
+    [], 'zd', [], 'zdry', [], 'zwet', [], 'cab', [], 'axkt', [], 'therm', [], ...
     'pantd', [], 'trop', []);
 subStruct_obs=struct('i1', [], 'i2', [], 'obs', [], 'sig', [], 'com', ...
     [], 'delion', [], 'sgdion', [], 'q_flag', [], 'q_flag_ion', [], 'q_code_X', [], 'q_code_S', []);
