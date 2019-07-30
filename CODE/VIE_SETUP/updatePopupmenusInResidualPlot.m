@@ -37,11 +37,13 @@ if ~isempty(allSessionsInMenu)
     % (a) station
     set(handles.popupmenu_plot_residuals_station, 'Value', 1)
     set(handles.popupmenu_plot_residuals_station, 'String', res.allStatNames)
+    set(handles.popupmenu_plot_residuals_station, 'Enable', 'off')
     % (b) baselines
     baselines=getAllStringCombinations(res.allStatNames);
     set(handles.popupmenu_plot_residuals_baseline, 'Value', 1)
     set(handles.popupmenu_plot_residuals_baseline, 'String', ...
         strcat(baselines(:,1), repmat('-', length(baselines),1), baselines(:,2)))
+    set(handles.popupmenu_plot_residuals_baseline, 'Enable', 'off')
     % (c) sources
     % Create list of all sources
     % => First, all quasars, followed by satellites (if available)!
@@ -53,6 +55,7 @@ if ~isempty(allSessionsInMenu)
         res.allSatelliteNames = res.allSatelliteNames';
     end
     set(handles.popupmenu_plot_residuals_source, 'String', [res.allSourceNames; res.allSatelliteNames])
+    set(handles.popupmenu_plot_residuals_source, 'Enable', 'off')
     % (d) statinos for clock reference
     set(handles.popupmenu_plot_residuals_refClock, 'Value', 1)
     set(handles.popupmenu_plot_residuals_refClock, 'String', res.allStatNames)
@@ -70,5 +73,8 @@ if ~isempty(allSessionsInMenu)
     else
         set(handles.radiobutton_plot_residuals_mainSolution, 'Enable', 'On')
     end
+    
+    set(handles.radiobutton_plot_residuals_perAll, 'Value', 1)
+    reset(handles.axes_plot_residuals)
 end
 
