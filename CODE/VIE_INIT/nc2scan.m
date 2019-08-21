@@ -88,15 +88,21 @@ switch fband
         sigma_tau_file = nc_filename;
         sigma_tau_field = 'GroupDelaySig';
         % Check, if Ionosphere corrections are defined in wrapper file:
+        flag_ion_corr_available = false;
         if isfield(wrapper_data.Observation, 'ObsDerived') 
             nc_filename = get_nc_filename({'Cal-SlantPathIonoGroup', '_bX'}, wrapper_data.Observation.ObsDerived.files);
+            if ~isempty(nc_filename)
+                flag_ion_corr_available = true;
+            end
+        end
+        if flag_ion_corr_available
             tau_ion_folder = 'ObsDerived';
             tau_ion_file = strrep(nc_filename,'-','_');
             tau_ion_field = 'Cal_SlantPathIonoGroup';
             sigma_tau_ion_folder = 'ObsDerived';
             sigma_tau_ion_file = strrep(nc_filename,'-','_');
             sigma_tau_ion_field = 'Cal_SlantPathIonoGroupSigma';
-        else
+        else % Ionosphere corrections not available!
             tau_ion_folder = {}; % ionospheric correction won't be used
             tau_ion_file = {}; % ionospheric correction won't be used
             tau_ion_field = {};
