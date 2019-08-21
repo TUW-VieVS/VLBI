@@ -1,4 +1,5 @@
 % ************************************************************************
+% High frequency EOP model as recommended by the IERS 07/2019
 % Desai and Sibois Model from 
 % "Evaluating predicted diurnal and semi-diurnal tidal variation..." supporting material
 % https://ivscc.gsfc.nasa.gov/hfeop_wg/models/desai_model_jgrb51665-sup-0002-ds01.txt
