@@ -139,6 +139,10 @@
 * 170216 dbb Add Onsala Twin Telescope (OTT), Sweden as Oe ONSA13NE and Ow ONSA13SW.
 * 170221 dbb Add DOMES and CDP numbers for ONSA13NE and ONSA13SW.
 * 170310 dbb Add DSS34.
+* 190627 dbb Add the twin telescope at Ny-Alesund as Nn NYALE13N and Ns NYALE13S.
+* 190708 dbb Add DOMES number for NYALE13N and NYALE13S.
+* 190722 dbb Add CDP number for NYALE13N and NYALE13S.
+* 190722 dbb Add DOMES and CDP numbers for AGGO.
 *
 * Fields:
 * 1. IVS 2-letter code. Not case sensitive, although the initial 
@@ -165,7 +169,7 @@
  61 ROBLED32 13407S003 1561 DSS61 Robledo, Spain
  65 DSS65    13407S010 1565 34-m HEF at Madrid, Spain
  6a DSS65A   13407S014 1567 34-m HEF at Madrid, Spain (new location)
- Ag AGGO     --------- ---- AGGO (formerly TIGO) at La Plata, Argentina
+ Ag AGGO     41596S002 7641 AGGO (formerly TIGO) at La Plata, Argentina
  Ai AIRA     21742S002 7348 Aira, Kagoshima, Japan
  Ap ALGOPARK 40104S001 7282 Algonquin Park, Canada
  Ar ARECIBO  --------- ---- Arecibo, Puerto Rico, USA
@@ -271,7 +275,8 @@
  Mc MEDICINA 12711S001 7230 Medicina, Italy 
  Md MARPOINT 40490S001 7217 Maryland Point, MD, USA
  Me MON_PEAK 40497M003 7274 mobile Monument Peak, CA, USA
- Mg -------- --------- ---- Mt. Graham, AZ, USA
+* Mg -------- --------- ---- Mt. Graham, AZ, USA  (code retired for Mt. Graham)
+ Mg MCDON12M --------- ---- McDonald Geodetic Observatory (MGO) near Ft. Davis, TX, USA
  Mh METSAHOV 10503S002 7385 Metsahovi, Finland (13.7 m astronomy antenna)
  Mi MIAMI20  40499S019 7201 Miami, FL, USA 
  Mk MK-VLBA  40477S001 7617 VLBA at Mauna Kea, HI, USA 
@@ -292,20 +297,18 @@
  Nb -------- --------- ---- mm array, Nobeyama, Japan
  Nl NL-VLBA  40465S001 7612 VLBA at North Liberty, IA, USA
  Nm NOME     40421M001 7279 mobile Nome, AK, USA
+ Nn NYALE13N 10338S002 7393 Ny-Alesund 13-m antenna north (north tower), Svalbard, Norway
  No NOBEYA45 --------- ---- 45-m at Nobeyama, Japan 
+ Ns NYALE13S 10338S001 7392 Ny-Alesund 13-m antenna south (south tower), Svalbard, Norway
  Nt NOTO     12717S001 7547 Noto, Italy 
  Nx NOTOX    12717S001 7547 Noto, Italy (different equipment)
  Ny NYALES20 10317S003 7331 Ny Alesund, Svalbard, Norway
- Na NTT20101 10317S004 7401 Ny Alesund, Svalbard, Norway 
- Nc NTT20102 10317S005 7402 Ny Alesund, Svalbard, Norway
  O8 ONSALA85 10402S001 7212 85-ft Onsala, Sweden
  Oc OCOTILLO 40449M001 7270 mobile Ocotillo, CA, USA
  Oe ONSA13NE 10402S014 7636 Onsala 13-m antenna north-east (north-east tower of OTT)
  Oh OHIGGINS 66008S001 7245 O'Higgins, Antarctica
  Om -------- --------- ---- 10-m antenna, Owens Valley, CA, USA
  On ONSALA60 10402S002 7213 60-ft Onsala, Sweden
- Oa OTT20101 10402S003 7501 12m Onsala, Sweden
- Oc OTT20102 10402S004 7502 12m Onsala, Sweden										  
  Oo OVRO_130 40439S002 7207 130-ft at Owens Valley, CA, USA 
  Or OVR_7853 40439M004 7853 mobile Owens Valley, CA, USA
  Ov OV-VLBA  40439S006 7616 VLBA at Owens Valley, CA, USA 
@@ -394,9 +397,3 @@
  Yu YUMA     40493M001 7894 mobile Yuma, CA, USA
  Zc ZELENCHK 12351S001 7381 Zelenchukskaya, Russia
  Zv ZELRT13V 12351S003 7383 13-m at Zelenchukskaya, Russia
- Yd YEBESDBC 13420S003 9999 40-m antenna at Yebes, Spain
- Yx YEBEDBBC 13420S003 9999 40-m antenna at Yebes, Spain 
- Ox ONSALAAN 10402S002 7213 60-ft Onsala with an analog converter, Sweden
- Wd WETTDBBC 14201S004 7224 Wettzell, Germany
- Ge GEOCENTR --------- ---- Geocenter
- Od ONSAVDIF 10402S002 7213 60-ft Onsala, Sweden											
