@@ -55,6 +55,8 @@ source_val = cell(nSessions,1);
 station_mx = cell(nSessions,1);
 station_val = cell(nSessions,1);
 
+flag_estimateStations = false;
+
 %% read x_ variables
 for iSession=1:nSessions
     
@@ -106,6 +108,7 @@ for iSession=1:nSessions
 
 
     if(~isempty([x_.coorx.col]))
+        flag_estimateStations = true;
         nant = length(x_.coorx);
         nsim = length(x_.coorx(1).mx);
         
@@ -159,19 +162,23 @@ nStations = length(allStations);
 station_mean_sig = zeros(nSessions, nStations);
 station_rep      = zeros(nSessions, nStations);
 
-for iSession=1:nSessions
-    thisStas = stations{iSession};
-    this_station_mean_sig = mean(station_mx{iSession},2);
-    this_station_rep = std(station_val{iSession},0,2);
-    
-    for iSta=1:length(thisStas)
-        thisSta = thisStas(iSta);
-        idx = strcmp(thisSta,allStations);
-        station_mean_sig(iSession, idx) = this_station_mean_sig(iSta);
-        station_rep(iSession, idx) = this_station_rep(iSta);
-    end
-end
+if flag_estimateStations
+    for iSession=1:nSessions
+        thisStas = stations{iSession};
+        this_station_mean_sig = mean(station_mx{iSession},2);
+        this_station_rep = std(station_val{iSession},0,2);
 
+        for iSta=1:length(thisStas)
+            thisSta = thisStas(iSta);
+            idx = strcmp(thisSta,allStations);
+            station_mean_sig(iSession, idx) = this_station_mean_sig(iSta);
+            station_rep(iSession, idx) = this_station_rep(iSta);
+        end
+    end
+else
+    station_mean_sig(:,:) = NaN;
+    station_rep(:,:) = NaN;
+end
 
 %% summarize results for mean sigma
 t_mean_sig = table(nSim, dut1_mean_sig, xpol_mean_sig, ypol_mean_sig, nutdx_mean_sig, nutdy_mean_sig,'RowNames',sessionIds);

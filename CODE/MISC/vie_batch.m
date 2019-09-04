@@ -196,7 +196,7 @@ end
 
 % setup for parallel counter in case MATLAB version > 9.1 (2017a). 
 number_of_sessions = size(process_list, 1);
-if ~verLessThan('Matlab','9.2')
+if ~verLessThan('Matlab','9.2') && runp.parallel
     D = parallel.pool.DataQueue;
     h = waitbar(0, 'Please wait ...');
     afterEach(D, @nUpdateWaitbar);

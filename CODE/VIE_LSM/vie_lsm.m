@@ -999,19 +999,19 @@ end
 
 if sibling == 1
     if opt.pw_stc == 0
-        oc_observ(length(oc_observ)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:length(oc_observ)-length(och(14).sv)-length(och(15).sv)-1,:) = [];
-        oc_observ(length(oc_observ)-length(och(14).sv)-length(och(15).sv)+1:length(oc_observ)-length(och(15).sv)-1,:) = [];
-        oc_observ(length(oc_observ)-length(och(15).sv)+1:length(oc_observ)-1,:) = [];
+        oc_observ(size(oc_observ,1)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:size(oc_observ,1)-length(och(14).sv)-length(och(15).sv)-1,:) = [];
+        oc_observ(size(oc_observ,1)-length(och(14).sv)-length(och(15).sv)+1:size(oc_observ,1)-length(och(15).sv)-1,:) = [];
+        oc_observ(size(oc_observ,1)-length(och(15).sv)+1:size(oc_observ,1)-1,:) = [];
     end
 elseif common==1 && (nlt > 0)
     if opt.pw_stc == 0
-        oc_observ(length(oc_observ)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:length(oc_observ)-length(och(14).sv)-length(och(15).sv)-nlt,:) = [];
-        oc_observ(length(oc_observ)-length(och(14).sv)-length(och(15).sv)+1:length(oc_observ)-length(och(15).sv)-nlt,:) = [];
-        oc_observ(length(oc_observ)-length(och(15).sv)+1:length(oc_observ)-nlt,:) = [];
+        oc_observ(size(oc_observ,1)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:size(oc_observ,1)-length(och(14).sv)-length(och(15).sv)-nlt,:) = [];
+        oc_observ(size(oc_observ,1)-length(och(14).sv)-length(och(15).sv)+1:size(oc_observ,1)-length(och(15).sv)-nlt,:) = [];
+        oc_observ(size(oc_observ,1)-length(och(15).sv)+1:size(oc_observ,1)-nlt,:) = [];
     end
 else
     if opt.pw_stc == 0 % 1 estimate all selected station coordinates as pwl offsets (NNT/NNR is NOT available - fix at least 3 stations)
-        oc_observ(length(oc_observ)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:length(oc_observ),:) = []; % omc values for rel. constraints are removed again here (from the END of the vector)!
+        oc_observ(size(oc_observ,1)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:size(oc_observ,1),:) = []; % omc values for rel. constraints are removed again here (from the END of the vector)!
     end
 end
 
