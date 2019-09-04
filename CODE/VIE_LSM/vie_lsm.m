@@ -1061,6 +1061,16 @@ if ess == 1 % +hana 10Nov10
             fprintf(1,'Not enough sources for NNR condition. All sources are used for NNR instead\n');
             [opt.source.nnr_inc] = deal(1);
         end
+%         
+%         
+%         
+%         for iSrc = 1:length(sources.q)
+%             if sources.q(iSrc).numobs < 20
+%                 opt.source(iSrc).nnr_inc = 0;
+%                 fprintf('Removing source %s from datum\n',opt.source(iSrc).name)
+%             end
+%         end
+%         
         [N] = nnr_cond(ns_q,ra,de,opt,sum_dj,N);
     end
 

@@ -15,7 +15,11 @@ function [] = cleanVgosDB()
             end
             
             if files(j).isdir
-                rmdir([files(j).folder '/' files(j).name],'s')
+                try
+                    rmdir([files(j).folder '/' files(j).name],'s')
+                catch
+                    warning('%s could not be removed from VgosDB folder!', files(j).name)
+                end
             end
         end
     end
