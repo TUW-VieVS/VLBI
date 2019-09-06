@@ -299,6 +299,11 @@ obs_type_s_ind = strcmp({scan.obs_type}, 's');
 if sum(obs_type_q_ind) ~= 0
     RA2000(obs_type_q_ind)          = deal([sources.q([scan(obs_type_q_ind).iso]).ra2000]);
     DE2000(obs_type_q_ind)          = deal([sources.q([scan(obs_type_q_ind).iso]).de2000]);
+
+    if strncmpi('icrf3',parameter.vie_init.crf(2),5) && (del_mod_q ~= 3)
+        [DE2000, RA2000] = correct_GA(DE2000,RA2000,mean([scan(:).mjd]));
+        fprintf(1, 'ICRF3 is used --> GA will be corrected to 2015 using 5.8 muas/year\n');
+    end
     sourceNames(obs_type_q_ind)     = deal({sources.q([scan(obs_type_q_ind).iso]).name});
 end
 if sum(obs_type_s_ind) ~= 0
@@ -681,15 +686,21 @@ end
 
 
 % acceleration of SSB - Galactocentric aberration
-% ZERO a priori
-acc = [0; 0; 0];
-% APRIORI value:
-% accMag = 2.3e-10; % m/sec^2 magnitude of acceleration
-% RAGC = (17+45/60+40/3600)/12*pi; %[rad] RA of Galactic center: 17h45min40sec
-% DeGC = (-29-28/3600)/180*pi;   %[rad]  De of Galactic center: -29deg 00min 28sec
-% acc=[accMag*cos(RAGC)*cos(DeGC)
-%      accMag*sin(RAGC)*cos(DeGC)
-%      accMag*sin(DeGC)]; %m/sec^2
+% GA value:
+GA=5.8; %[uas/y]
+RAGC = (17+45/60+40/3600)/12*pi; %[rad] RA of Galactic center: 17h45min40sec
+DeGC = (-29-28/3600)/180*pi;   %[rad]  De of Galactic center: -29deg 00min 28sec
+
+% num of sec in one year
+GA_T = 60*60*24*365.25;
+% conversion rad -> as
+GA_k=180/pi*60*60 *GA_T; % as*s
+accMag = GA* 1e-6 *c  / GA_k ; % m/s^2 magnitude of acceleration (~ 2.44e-10 m/s^2)
+
+acc=[accMag*cos(RAGC)*cos(DeGC)
+     accMag*sin(RAGC)*cos(DeGC)
+     accMag*sin(DeGC)]; %m/sec^2
+
 
 
 
@@ -767,11 +778,11 @@ for isc = 1:number_of_all_scans
     % recommended for implementation of ocean tidal loading in IERS
     % Conventions 2010.
     [cto_F, cto_P, cto_TAMP, cto_IDD1] = libiers_tdfrph_call(mjd, leap);
-    
+
     % reference epoch for SSB acceleration
-    refep_accSSB = 51544; % 2000.0
+    refep_accSSB = 57023; % 2015.0
     delt_accSSB  = (mjd - refep_accSSB) * 86400; % time since ref epoch in sec
-    
+ 
     % ***********************
     %  loop over stations in current scan
     % ***********************
@@ -1181,31 +1192,33 @@ for isc = 1:number_of_all_scans
                         % calculation of the time delay following the consensus model
                         % + Titov 2011
                         % ------------------------------------------------------------
-                        
+
                         %(1) barycentric station vector (eq. 6)
                         xb1 = earth + stat_1_gcrs;
                         xb2 = earth + stat_2_gcrs;
-                        
+
                         %(2)&(3) differential gravitational delay due to celestial bodies
-                        Tgrav = grav_delay(xb1,xb2,vearth,b_gcrs,rqu,ephem,isc);
-                        
+                        [Tgrav, pGammaSun] = grav_delay(xb1,xb2,vearth,b_gcrs,rqu,ephem,isc,opt);
+
                         %(4) differential gravitational delay due to the earth
                         Tgrave = 2*gme/c^3*...
                             log((norm(stat_1_gcrs)+rqu*stat_1_gcrs)/(norm(stat_2_gcrs)+rqu*stat_2_gcrs)); % (eq. 1)
-                        
+
                         %(5) total differential gravitational delay (eq. 2)
                         Tgrav = Tgrave + Tgrav;
-                        
+
                         %(6) vacuum delay
                         U     = gms/norm(sun); % gravitational potential at the geocenter
                         gamma = 1;
                         fac1  = (rqu*b_gcrs)/c;
                         term1 = 1-(1+gamma)*U/c^2-(norm(vearth))^2/(2*c^2)-(vearth'*v2)/c^2;
-                        fac2  = ((vearth+acc*delt)'*b_gcrs)/c^2;
+                        fac2  = ((vearth+acc*delt_accSSB)'*b_gcrs)/c^2;
                         term2 = 1+(rqu*vearth)/(2*c);
-                        quot  = 1+(rqu*(vearth+v2+acc*delt))/c;
+                        quot  = 1+(rqu*(vearth+v2+acc*delt_accSSB))/c;
                         tau   = (Tgrav - fac1*term1 - fac2*term2)/quot;          %(eq. 9)
-                        
+
+                        pGammaSun = pGammaSun/quot;
+
                         %(7) aberrated source vector (eq. 15)
                         k1a = rqu + (vearth+v1)'/c - rqu*((rqu*(vearth+v1))')/c;
                         k2a = rqu + (vearth+v2)'/c - rqu*((rqu*(vearth+v2))')/c;
