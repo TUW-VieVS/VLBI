@@ -1,11 +1,11 @@
 function [  ] = checkSkd( fname )
 clc, clear, close all;
 format compact
-file = '/home/mschartn/programming/tmp/analyzer/highSNR/t2129_v018.skd';
+file = '/home/mschartn/shares/home/Axel_scheduling/R1912/VieSchedpp/r1912_v086.skd';
 
 fid = fopen(file);
 
-obsmode.samprate = 32;
+obsmode.samprate = 16;
 obsmode.bits = 2;
 obsmode.chanumband = [10 6];
 

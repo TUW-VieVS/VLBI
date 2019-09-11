@@ -1156,7 +1156,7 @@ if ess == 1 % +hana 10Nov10
 
     %mo = sqrt((v_real'*pobserv*v_real)/(nobserv-length(x)));  % RMS [1]
     vTPv=diag(v'*Pobserv*v)';
-    mo = sqrt(vTPv/(n_observ+size(Hblk,1)-length(x)));  % RMS [2] SINEX V2.01 Appendix(2) Eq.(20)
+    mo = sqrt(vTPv/(n_observ+size(Hblk,1)-size(x,1)));  % RMS [2] SINEX V2.01 Appendix(2) Eq.(20)
     opt.mo = mo;
 
     vTPv_real=diag(v_real'*Pobserv(1:n_observ,1:n_observ)*v_real);     %% numerator of wrms
@@ -1179,7 +1179,7 @@ if ess == 1 % +hana 10Nov10
 
     count_out = 0; out_v = [];
     if opt.basic_outlier == 1 || opt.simple_outlier == 1
-       for v_i = 1 : length(v_real)
+       for v_i = 1 : size(v_real,1)
           if opt.basic_outlier == 1
             qvv = qll(v_i) - AQh(v_i,:)*AQh(v_i,:)';
           end
