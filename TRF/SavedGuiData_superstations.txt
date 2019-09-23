@@ -66,4 +66,4 @@
 #
 
 #
-                          outFile | ../TRF/superstations.mat
+                          outFile | ../TRF/superstation.mat
