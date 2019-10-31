@@ -33,9 +33,9 @@
 %
 institute: 						IVS GSFC GSF noInst
 % consider_no_institution:     	1
-frequency_band: 				GroupDelayFull_bX
+frequency_band: 				GroupDelay_bX
 wrapper_k: 						all
 % wrapper_version: 
-% ionosphere_correction: on
+ionosphere_correction: off
 % ambiguity_correction: on
 
