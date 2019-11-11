@@ -551,10 +551,14 @@ for iscan = 1:length(scan)
 end
 
 % update antenna structure
-if strcmpi(antenna(1).session(11),'V')
+if length(antenna(1).session) == 9
     fname = antenna(1).session;
 else
-    fname = antenna(1).session(1:9);
+    if strcmpi(antenna(1).session(11),'V')
+        fname = antenna(1).session;
+    else
+        fname = antenna(1).session(1:9);
+    end
 end
 
 if isempty(dirpt0)
