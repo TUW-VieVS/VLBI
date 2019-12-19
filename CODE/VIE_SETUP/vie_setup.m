@@ -3828,9 +3828,16 @@ if get(hObject, 'Value')==0 % Checkbox disabled
     % set(handles.checkbox_estimation_leastSquares_sources_est, 'Enable', 'on')
     set(handles.checkbox_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'off')
 	set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
+	set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
+    set(handles.checkbox_estimation_leastSquares_sources_obs_per_source, 'Enable', 'off')    
+    set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'Enable', 'off')
+
 else % == 1; Checkbox enabled
     set(handles.checkbox_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'on')
 	set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'on')
+	set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Enable', 'on')
+    set(handles.checkbox_estimation_leastSquares_sources_obs_per_source, 'Enable', 'on')    
+    set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'Enable', 'on')
     set(handles.checkbox_estimation_leastSquares_sources_est, 'Value',0)
 	set(handles.edit_estimation_leastSquares_sources_interval, 'Enable', 'off')
     set(handles.checkbox_estimation_leastSquares_sources_constr, 'Enable', 'off')
@@ -3843,7 +3850,43 @@ end
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
 
+% --- Executes on button press in checkbox_estimation_leastSquares_sources_NNR.
+function checkbox_estimation_leastSquares_sources_abs_constr_Callb(hObject, eventdata, handles)
+% hObject    handle to checkbox_estimation_leastSquares_sources_NNR (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 
+% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_sources_NNR
+
+% set enabling
+if get(hObject, 'Value')==0 % Checkbox disabled
+	set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
+else % == 1; Checkbox enabled
+	set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'on')
+
+end
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in checkbox_estimation_leastSquares_sources_NNR.
+function checkbox_estimation_leastSquares_sources_obs_per_source_Callb(hObject, eventdata, handles)
+% hObject    handle to checkbox_estimation_leastSquares_sources_NNR (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_sources_NNR
+
+% set enabling
+if get(hObject, 'Value')==0 % Checkbox disabled
+	set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'Enable', 'off')
+else % == 1; Checkbox enabled
+	set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'Enable', 'on')
+
+end
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+    
 
 
 
