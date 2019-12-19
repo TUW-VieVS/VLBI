@@ -365,7 +365,6 @@ fprintf('\n')
 % Required number of observations per source:
 % - If this threshold is not met => Remove observation(s) from vievs data structures (scan, antenna, sources)
 % - Only remove observations, if source coordinates are estimated!Otherwise they are fixed anyway.
-parameter.lsmopt.min_num_obs_per_est_source = 0; 
 
 % Check, if source coordinates are estimated and if a threchold for the num of observations per source is set:
 if (parameter.lsmopt.min_num_obs_per_est_source > 1) && (parameter.lsmopt.pw_sou || parameter.lsmopt.est_sourceNNR)

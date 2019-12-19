@@ -20,7 +20,7 @@
 function [scan, sources, antenna] = check_num_of_obs_per_parameter(scan, sources, antenna, parameter)
 
 %% Options
-flag_pring_debug_info = true;
+flag_pring_debug_info = false;
 
 
 %% Precallocations
