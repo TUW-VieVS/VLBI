@@ -358,9 +358,24 @@ fprintf('\n')
 % => Remove scans, observations, antennas and soures based on analysis options (obs. restrictions, OPT and OUTLIER files)
 [scan, sources, antenna] = cleanScan(scan, sources, antenna, parameter);
 
+% ##### Check minimum number of observations per estimated parameter #####
+
+% The following options have to be set in the GUI in futur (preliminary here):
+
+% Required number of observations per source:
+% - If this threshold is not met => Remove observation(s) from vievs data structures (scan, antenna, sources)
+% - Only remove observations, if source coordinates are estimated!Otherwise they are fixed anyway.
+parameter.lsmopt.min_num_obs_per_est_source = 0; 
+
+% Check, if source coordinates are estimated and if a threchold for the num of observations per source is set:
+if (parameter.lsmopt.min_num_obs_per_est_source > 1) && (parameter.lsmopt.pw_sou || parameter.lsmopt.est_sourceNNR)
+    fprintf(1, 'Remove observations to sources with less then %d observations in total.\n', parameter.lsmopt.min_num_obs_per_est_source);
+    % Check threchold and remove observations to sources, where the criteria is not met:
+    [scan, sources, antenna] = check_num_of_obs_per_parameter(scan, sources, antenna, parameter);
+end
 
 
-fprintf('1. LOADING THE FILES\n');
+fprintf('1. LOADE AND PREPARE DATA\n');
 
 opt = parameter.lsmopt;
 
