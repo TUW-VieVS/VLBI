@@ -608,10 +608,7 @@ else
     parameter.lsmopt.sour_coef_rade=sourceConstrCoefNum;
 end
 
-
-
-
-%#######################################sepcial parameters for source estimation
+%special parameters for source estimation
 
 parameter.lsmopt.sourceUseAbsConstrNNR = get(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Value');
 if parameter.lsmopt.sourceUseAbsConstrNNR
