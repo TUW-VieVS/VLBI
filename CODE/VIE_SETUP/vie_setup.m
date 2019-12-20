@@ -3834,10 +3834,21 @@ if get(hObject, 'Value')==0 % Checkbox disabled
 
 else % == 1; Checkbox enabled
     set(handles.checkbox_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'on')
-	%set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'on')
+    
 	set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Enable', 'on')
+    if get(handles.checkbox_estimation_leastSquares_sources_abs_constr,'Value')
+        set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'on')
+    else
+        set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
+    end
+
     set(handles.checkbox_estimation_leastSquares_sources_obs_per_source, 'Enable', 'on')    
-    %set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'Enable', 'on')
+    if get(handles.checkbox_estimation_leastSquares_sources_obs_per_source, 'Value')
+        set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'Enable', 'on')
+    else
+        set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'Enable', 'off')
+    end
+    
     set(handles.checkbox_estimation_leastSquares_sources_est, 'Value',0)
 	set(handles.edit_estimation_leastSquares_sources_interval, 'Enable', 'off')
     set(handles.checkbox_estimation_leastSquares_sources_constr, 'Enable', 'off')
