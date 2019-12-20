@@ -610,8 +610,8 @@ end
 
 %special parameters for source estimation
 
-parameter.lsmopt.sourceUseAbsConstrNNR = get(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Value');
-if parameter.lsmopt.sourceUseAbsConstrNNR
+parameter.lsmopt.UseSourceAbsConstrNNR = get(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Value');
+if parameter.lsmopt.UseSourceAbsConstrNNR
     sourceAbsConstrNNR=str2double(get(handles.edit_estimation_leastSquares_sources_abs_constr, 'String'));
     if isnan(sourceAbsConstrNNR)
         warning('Inappropriat input at Estimation/Leaste squares/Source coordinates ')
@@ -622,7 +622,8 @@ else
     parameter.lsmopt.sourceAbsConstrNNR = 1;
 end
 
-if get(handles.checkbox_estimation_leastSquares_sources_obs_per_source, 'Value')
+parameter.lsmopt.use_min_num_obs_per_est_source = get(handles.checkbox_estimation_leastSquares_sources_obs_per_source, 'Value');
+if parameter.lsmopt.use_min_num_obs_per_est_source
     parameter.lsmopt.min_num_obs_per_est_source=str2double(get(handles.edit_estimation_leastSquares_sources_obs_per_source, 'String'));
     if isnan(parameter.lsmopt.min_num_obs_per_est_source)
         warning('Inappropriat input at Estimation/Leaste squares/Source coordinates')
