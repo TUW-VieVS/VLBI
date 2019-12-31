@@ -41,7 +41,7 @@ antenna(nStat)=struct('IDsuper', [], 'in_trf', [], 'name', [],  'x', [], 'y', []
     'z', [], 'vx', [], 'vy', [], 'vz', [], 'epoch', [], 'start', [], ...
     'end', [], 'firstObsMjd', [], 'x_sigma', [], 'y_sigma', [], 'z_sigma', [],...
     'vx_sigma', [], 'vy_sigma', [], 'vz_sigma', [],...
-    'thermal', [], 'comments', [], 'domes', [], 'code', [], 'ecc', [], ...
+    'thermal', [], 'comments', [], 'domes', [], 'code', [], 'ecc', [], 'gravdef', [], ...
     'ecctype', [], 'axtyp', [], 'offs', [], 'gpt3pres', [],  'gpt3temp', [],  'gpt3e', [], 'gpt3', [], 'noGrad', [], ...
     'cto', [], 'cta', [], 'cnta_dx', [],  ...
     'vmf3', [], 'vmf1', [], 'opl', [], 'numobs', [],  'lastObsMjd', [],  'psd', []);
@@ -67,11 +67,21 @@ for iStat=1:nStat
     
     %% write data
     % get ~general infos from superstation file
-    antenna(iStat).IDsuper=indCurStatInTrf;
-    antenna(iStat).thermal=trf(indCurStatInTrf).antenna_info;
-    antenna(iStat).comments=trf(indCurStatInTrf).comments;
-    antenna(iStat).domes=trf(indCurStatInTrf).domes;
-    antenna(iStat).code=trf(indCurStatInTrf).code;  
+    antenna(iStat).IDsuper = indCurStatInTrf;
+    antenna(iStat).thermal = trf(indCurStatInTrf).antenna_info;
+    antenna(iStat).comments = trf(indCurStatInTrf).comments;
+    antenna(iStat).domes = trf(indCurStatInTrf).domes;
+    antenna(iStat).code = trf(indCurStatInTrf).code; 
+    
+    % find grav def break
+    if ~isempty(trf(indCurStatInTrf).gravdef)      
+        % find break
+        bnr=find(antenna(iStat).firstObsMjd>=[trf(indCurStatInTrf).gravdef.break.start] & ...
+            antenna(iStat).firstObsMjd<=[trf(indCurStatInTrf).gravdef.break.end]);
+        
+        antenna(iStat).gravdef = trf(indCurStatInTrf).gravdef.break(bnr);
+    end
+    
 
     % get first and last mjd
     curYMDHM=out_struct.stat(iStat).TimeUTC.YMDHM.val;

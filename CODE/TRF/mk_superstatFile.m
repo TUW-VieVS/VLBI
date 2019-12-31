@@ -23,6 +23,7 @@ idiF=1;
 nsCodesFile=inFiles(idiF).name; idiF=idiF+1;
 antennaInfoFile=inFiles(idiF).name; idiF=idiF+1;
 eccdatFile=inFiles(idiF).name; idiF=idiF+1;
+gravdefFile=inFiles(idiF).name; idiF=idiF+1;
 itrf2014File=inFiles(idiF).name; idiF=idiF+1;
 dtrf2014File=inFiles(idiF).name; idiF=idiF+1;
 vtrf2014File=inFiles(idiF).name; idiF=idiF+1;
@@ -86,7 +87,7 @@ ns_codes=struct('code', [], 'name', [],'domes', [], 'CDP', [], 'comments', [], .
     'itrf2014', [], 'dtrf2014', [], ...
     'vtrf2014', [], 'ivsTrf2014b', [], 'VieTRF13', [], 'vievsTrf', [], ...
     'atmosphere_tidal_loading', [], 'oceanPoleTideLoading', [], 'aplrg', [], ...
-    'gia', []);
+    'gia', [], 'gravdef', []);
 
 %% ============
 % 2. read files
@@ -275,6 +276,23 @@ else
     varargout{1} = 'ECCDAT.ecc is not specified!';
     return;
 end
+
+% ---------------
+% 2.1.4 Gravitational deformation
+% ---------------
+
+fprintf('\n2.1.4 Gravitational deformation\n\n');
+
+if ~isempty(gravdefFile)
+	fid=fopen(gravdefFile);
+    if (fid < 0)
+        varargout{1} = ['ERROR: Cannot open the file: ', gravdefFile];
+        return;
+    end
+
+    [ns_codes] = gravdef_parser(ns_codes, gravdefFile);
+end
+% Markus end
 
 
 % -----------------

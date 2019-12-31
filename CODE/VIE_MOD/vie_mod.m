@@ -1685,12 +1685,22 @@ for isc = 1:number_of_all_scans
                     therm_d = 0;
                 end
                 
+                % GRAVITATIONAL DEFORMATION
+                if ~isempty(antenna(stnum).gravdef)  % parameter.vie_mod.gravdef == 1
+                    gravdef_data = antenna(stnum).gravdef;
+                    gravdef_corr = spline(gravdef_data(:,1), gravdef_data(:,2), zd);  % [ps]
+                    gravdef_corr = gravdef_corr * 1e-12;  % [ps] --> [sec]
+                else
+                    gravdef_corr = 0;
+                end
+                
                 % store in scan
                 scan(isc).stat(stnum).axkt  = axkt;
                 scan(isc).stat(stnum).therm = therm_d;
                 scan(isc).stat(stnum).az    = azim;
                 scan(isc).stat(stnum).zd    = zd; % corrected for aberration, not for refraction!
                 scan(isc).stat(stnum).daxkt  = daxkt; % [-] partial derivative AO
+                scan(isc).stat(stnum).gravdef = gravdef_corr;
 
                 
             end % if zd is empty
@@ -1724,8 +1734,11 @@ for isc = 1:number_of_all_scans
         % thermal deformation (Attention: Station1 - Station2)
         c_therm = scan(isc).stat(stat_1_id).therm - scan(isc).stat(stat_2_id).therm; % [sec]
         
+        % gravitational deformation correction
+        c_gravdef = scan(isc).stat(stat_1_id).gravdef - scan(isc).stat(stat_2_id).gravdef; % [sec]
+        
         % add
-        tau = c_axis + c_therm + tau; % [sec]
+        tau = c_axis + c_therm + c_gravdef + tau; % [sec]
         
         % + EXTERNAL IONOSPERIC DELAY +
         if strcmp(parameter.vie_init.iono, 'ext')
