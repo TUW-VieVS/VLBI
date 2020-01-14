@@ -2,11 +2,11 @@
 %
 % ### Possible settings ###
 %
-% => institute: 
-%      - List of institution flags, separtated by white space. 
-%      - All provided institutions will be considerd when selecting a wrapper file. 
+% => institute:
+%      - List of institution flags, separtated by white space.
+%      - All provided institutions will be considerd when selecting a wrapper file.
 %      - The 1st entry (left) has the highest priority, the 2nd the 2nd-highest priority, and so on...
-%      - The entry "noInst" declares that wrapper without any institution flag should be considered 
+%      - The entry "noInst" declares that wrapper without any institution flag should be considered
 %        - The priority ranking is alao taken into account for the "noInst" tag, i.e. if it is the first in the list, wrappers with no institution flag will be selected first.
 %
 % => frequency_band:
@@ -31,11 +31,10 @@
 %     - on (ambiguities are resolved in observables)
 %     - off (ambiguities are not resolved in observables)
 %
-institute: 						IVS GSFC GSF noInst
+institute: 						TUW IVS GSFC GSF noInst
 % consider_no_institution:     	1
 frequency_band: 				GroupDelayFull_bX
 wrapper_k: 						all
-% wrapper_version: 
+% wrapper_version:
 % ionosphere_correction: on
 % ambiguity_correction: on
-
