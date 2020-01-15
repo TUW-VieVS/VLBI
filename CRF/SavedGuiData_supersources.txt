@@ -38,4 +38,4 @@
            translation, specify | 1
        translation, editTextbox | ../CRF/data/IVS_SrcNamesTable.txt
 #
-                        outFile | /home/hwolf/vievs/VieVS/VLBI/CRF/supersource_new2.mat
+                        outFile | ../CRF/supersource.mat
