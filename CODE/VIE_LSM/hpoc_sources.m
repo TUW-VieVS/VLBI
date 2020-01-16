@@ -66,12 +66,16 @@ if opt.pw_sou == 1 % piecewise
     end
 end
 
-p=1/opt.sourceAbsConstrNNR^2; % absolute constraints
 if opt.est_sourceNNR==1
     Hra=diag(ones(ns,1));
     Hde=diag(ones(ns,1));
-    Phra=eye(ns).*p;
-    Phde=eye(ns).*p;
+    Phra=eye(ns);
+    Phde=eye(ns);
+    if opt.UseSourceAbsConstrNNR
+        p=1/opt.sourceAbsConstrNNR^2; % absolute constraints
+        Phra=Phra.*p;
+        Phde=Phde.*p;
+    end
 end
 
 % -------------------------------------------------------------------------

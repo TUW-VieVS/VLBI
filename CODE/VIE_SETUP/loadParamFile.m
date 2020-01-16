@@ -1002,8 +1002,12 @@ set(handles.text321, 'String', sprintf('after %s minutes', num2str(parameter.lsm
 set(handles.checkbox_estimation_leastSquares_sources_NNR, 'Value', parameter.lsmopt.est_sourceNNR)
 if parameter.lsmopt.est_sourceNNR
     set(handles.checkbox_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'on')
+    set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Enable', 'on')
+    set(handles.checkbox_estimation_leastSquares_sources_obs_per_source, 'Enable', 'on')
 else
     set(handles.checkbox_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'off')
+    set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
+    set(handles.checkbox_estimation_leastSquares_sources_obs_per_source, 'Enable', 'off')
 end
 
 if isfield(parameter.lsmopt, 'est_sourceNNR_defining')
@@ -1015,8 +1019,44 @@ end
 if isfield(parameter.lsmopt, 'sourceAbsConstrNNR')
     set(handles.edit_estimation_leastSquares_sources_abs_constr, 'String', num2str(parameter.lsmopt.sourceAbsConstrNNR))
 else
-    set(handles.edit_estimation_leastSquares_sources_abs_constr, 'String', '1000')
+    set(handles.edit_estimation_leastSquares_sources_abs_constr, 'String', '1')
 end
+
+if isfield(parameter.lsmopt, 'UseSourceAbsConstrNNR')
+    if parameter.lsmopt.UseSourceAbsConstrNNR
+        set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Value', 1)
+        set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'on')
+    else
+        set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Value', 0)
+        set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
+    end
+else
+    set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Value', 0)
+    set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
+end
+
+
+if isfield(parameter.lsmopt, 'min_num_obs_per_est_source')
+    set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'String', num2str(parameter.lsmopt.min_num_obs_per_est_source))
+else
+    set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'String', '5')
+end
+
+if isfield(parameter.lsmopt, 'use_min_num_obs_per_est_source')
+    if parameter.lsmopt.use_min_num_obs_per_est_source
+        set(handles.checkbox_estimation_leastSquares_sources_obs_per_source, 'Value', 1)
+        set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'Enable', 'on')
+    else
+        set(handles.checkbox_estimation_leastSquares_sources_obs_per_source, 'Value', 0)
+        set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'Enable', 'off')
+    end
+
+else
+    set(handles.checkbox_estimation_leastSquares_sources_obs_per_source, 'Value', 1)
+    set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'Enable', 'on')
+end
+
+
 
 if parameter.lsmopt.pw_sou==0 || parameter.lsmopt.est_sourceNNR==1
     % set disable
