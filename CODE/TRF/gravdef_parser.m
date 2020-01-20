@@ -1,3 +1,38 @@
+% Helper function for the creation of the superstationfile with
+% mk_superstatFile.m
+% Reads the provided gravtiational deformation file, parses it and saves 
+% the information in the ns_codes struct. The text file is expected to
+% adhear to the following structure:
+% 
+% # Lines that start with "#" are comments and can be ignored.
+% For each antenna the general format is:
+%  ANTENNA NUM_PTS SCALE
+%  el1  delay1
+%  el2  delay2
+%  ....
+%  ANTEN2 NUM_PTS SCALE
+%  EPOCH YYYYMMDD  YYYYMMDD    optional beginning and ending epoch of model
+%  el1  delay1
+%  el2  delay2
+% ...
+% Some comments on format.
+% 1. ANTENNA is the name of the antenna.
+% 2. NUM_PTS are the number of points.
+% 3. SCALE is an optional scaling factor. This converts the delay into ps. 
+%    If SCALE is 3.336 than the raw values are in mm.   
+% 4. Epoch is the optional beginning and ending date for the model. 
+% 5. The pairs el1, delay1 are the delay as a function of elevation.
+%    The scale factor converts this to ps.
+% 
+% The delay is saved in ps in the ns_codes.
+% 
+% Reference for the gravitational deformation: 
+%    A complete VLBI delay model for deforming radio telescopes: the Effelsberg case
+%    T. Artz · A. Springer · A. Nothnagel
+%    J Geod (2014) 88:11451161
+%    DOI 10.1007/s00190-014-0749-1
+% 
+
 function [ns_codes] = gravdef_parser(ns_codes, gravdefFile)
     fid = fopen(gravdefFile, 'r');
     tline = fgetl(fid);

@@ -157,6 +157,7 @@
 %   11 May 2018 by D. Landskron: bug with usage of raytr-files corrected
 %   05 Jul 2018 by D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
 %   27 Jul 2019 by D. Landskron: zwet parameter added to scan structure
+%   15 Jan 2020 by M. Mikschi: gravitational deformation correction added
 %
 % ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %  NOTATION:
@@ -1686,9 +1687,9 @@ for isc = 1:number_of_all_scans
                 end
                 
                 % GRAVITATIONAL DEFORMATION
-                if ~isempty(antenna(stnum).gravdef)  % parameter.vie_mod.gravdef == 1
+                if parameter.vie_mod.gravDef == 1 && ~isempty(antenna(stnum).gravdef)
                     gravdef_data = antenna(stnum).gravdef;
-                    gravdef_corr = spline(gravdef_data(:,1), gravdef_data(:,2), zd);  % [ps]
+                    gravdef_corr = spline(gravdef_data.ez_delay(:,1), gravdef_data.ez_delay(:,2), rad2deg(zd));  % [ps]
                     gravdef_corr = gravdef_corr * 1e-12;  % [ps] --> [sec]
                 else
                     gravdef_corr = 0;

@@ -26,6 +26,7 @@
 %   2017-02-09, D. Landskron: Preallocation extended
 %   2017-02-22, A. Hellerschmied: antenna.psd initialized
 %   2018-07-06, D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
+%   2019-01-15, M. Mikschi: added gravitational deformation information
 %
 % ************************************************************************
 
@@ -73,6 +74,13 @@ for iStat=1:nStat
     antenna(iStat).domes = trf(indCurStatInTrf).domes;
     antenna(iStat).code = trf(indCurStatInTrf).code; 
     
+    % get first and last mjd
+    curYMDHM=out_struct.stat(iStat).TimeUTC.YMDHM.val;
+    curSecond=out_struct.stat(iStat).TimeUTC.Second.val;
+    
+    antenna(iStat).firstObsMjd=cal2jd(double(curYMDHM(1,1)), double(curYMDHM(2,1)), double(curYMDHM(3,1)))-2400000.5 +double(curYMDHM(4,1))/24+double(curYMDHM(5,1))/60/24+curSecond(1)/60/60/24;
+    antenna(iStat).lastObsMjd=cal2jd(double(curYMDHM(1,end)), double(curYMDHM(2,end)), double(curYMDHM(3,end)))-2400000.5 +double(curYMDHM(4,end))/24+double(curYMDHM(5,end))/60/24+curSecond(end)/60/60/24;
+    
     % find grav def break
     if ~isempty(trf(indCurStatInTrf).gravdef)      
         % find break
@@ -81,15 +89,7 @@ for iStat=1:nStat
         
         antenna(iStat).gravdef = trf(indCurStatInTrf).gravdef.break(bnr);
     end
-    
-
-    % get first and last mjd
-    curYMDHM=out_struct.stat(iStat).TimeUTC.YMDHM.val;
-    curSecond=out_struct.stat(iStat).TimeUTC.Second.val;
-    
-    antenna(iStat).firstObsMjd=cal2jd(double(curYMDHM(1,1)), double(curYMDHM(2,1)), double(curYMDHM(3,1)))-2400000.5 +double(curYMDHM(4,1))/24+double(curYMDHM(5,1))/60/24+curSecond(1)/60/60/24;
-    antenna(iStat).lastObsMjd=cal2jd(double(curYMDHM(1,end)), double(curYMDHM(2,end)), double(curYMDHM(3,end)))-2400000.5 +double(curYMDHM(4,end))/24+double(curYMDHM(5,end))/60/24+curSecond(end)/60/60/24;
-    
+       
     % get trf coordinates from chosen trf
     if isempty(trf(indCurStatInTrf).(chosenTrf))
         if strcmp(chosenTrf, 'vievsTrf') % Station not even in vievsTrf (backup)

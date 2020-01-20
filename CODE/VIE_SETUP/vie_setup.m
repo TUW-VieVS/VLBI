@@ -123,6 +123,7 @@ function varargout = vie_setup(varargin)
 % 25 Sep 2018 by D. Landskron: specific warning message suppressed
 % 18 Dec 2018 by D. Landskron: VieVS now starts with File - Set input files
 % 06 Mar 2019 by D. Landskron: suffix checkbox added to the sinex files
+% 15 Jan 2020 by M. Mikschi: added gravitational deformation checkbox
 %
 %*************************************************************************
 
@@ -1703,6 +1704,17 @@ function checkbox_parameters_statCorr_solidEarthTides_Callback(hObject, eventdat
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_solidEarthTides
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in checkbox_parameters_statCorr_gravitationalDef_Callback.
+function checkbox_parameters_statCorr_gravitationalDef_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_statCorr_solidEarthTides (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_gravitationalDef_Callback
 
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
