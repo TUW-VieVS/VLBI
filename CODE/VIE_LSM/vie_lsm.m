@@ -1328,7 +1328,8 @@ if ess == 1 % +hana 10Nov10
     x_.units.mo_first = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
     x_.wrms = wrms;
     x_.units.m02 = 'WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights) [cm]';
-
+    x_.nobs = n_observ;
+    x_.nscans = n_scan;
 
     res.mo = mo;
     res.mo_first = first_solution.mo;
