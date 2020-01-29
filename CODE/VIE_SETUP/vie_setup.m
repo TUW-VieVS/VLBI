@@ -11277,7 +11277,11 @@ if iscell(out)
     for iF = 1 : length(out)
         curSlash = sort([strfind(out{iF},'/'), strfind(out{iF},'\')]);
         tgzDot = sort(strfind(out{iF},'.'));
-        out{iF} = [out{iF}(curSlash(end-1)+1 : tgzDot(3)-1), ' [vgosDB]'];
+        if length(tgzDot) > 2
+            out{iF} = [out{iF}(curSlash(end-1)+1 : tgzDot(3)-1), ' [vgosDB]'];
+        else
+            out{iF} = [out{iF}(curSlash(end-1)+1 : end), ' [vgosDB]'];
+        end
     end
 
     updateInputFilesBox(hObject, eventdata,handles,out)   
