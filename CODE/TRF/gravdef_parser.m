@@ -65,14 +65,15 @@ function [ns_codes] = gravdef_parser(ns_codes, gravdefFile)
                     else
                         % get number of break (if there was already the stat found)
                         if isfield(ns_codes(iStat(1)).gravdef, 'break')
-                            curBreak=length(ns_codes(iStat).ecc.break)+1;
+                            curBreak=length(ns_codes(iStat).gravdef.break)+1;
                         else
                             curBreak=1;
                         end
                     end
                     iStat=iStat(1);
+                    current_el_delay(:,2) = current_el_delay(:,2) * str2double(current_block_info{1}{3});
                     ns_codes(iStat).gravdef.break(curBreak).ez_delay = ...
-                        current_el_delay * str2double(current_block_info{1}{3});
+                        current_el_delay;
                     if ~isempty(epoch_information)
                         ns_codes(iStat).gravdef.break(curBreak).start = ...
                             mjuliandate(epoch_information{1}{1}, 'yyyymmdd');
@@ -83,7 +84,7 @@ function [ns_codes] = gravdef_parser(ns_codes, gravdefFile)
                         ns_codes(iStat).gravdef.break(curBreak).end   = 99999;
                     end
                 else
-                    fprintf('%s (station in ECCDAT.ecc) not found in ns_codes ('' '' -> ''_'' checked)\n', current_block_info{1}{1});
+                    fprintf('%s (station in gravitational deformation file) not found in ns_codes ('' '' -> ''_'' checked)\n', current_block_info{1}{1});
                 end
             end
             current_block_info = header_regex_match;
@@ -128,14 +129,15 @@ function [ns_codes] = gravdef_parser(ns_codes, gravdefFile)
             else
                 % get number of break (if there was already the stat found)
                 if isfield(ns_codes(iStat(1)).gravdef, 'break')
-                    curBreak=length(ns_codes(iStat).ecc.break)+1;
+                    curBreak=length(ns_codes(iStat).gravdef.break)+1;
                 else
                     curBreak=1;
                 end
             end
             iStat=iStat(1);
+            current_el_delay(:,2) = current_el_delay(:,2) * str2double(current_block_info{1}{3});
             ns_codes(iStat).gravdef.break(curBreak).ez_delay = ...
-                current_el_delay * str2double(current_block_info{1}{3});
+                current_el_delay;
             if ~isempty(epoch_information)
                 ns_codes(iStat).gravdef.break(curBreak).start = ...
                     mjuliandate(epoch_information{1}{1}, 'yyyymmdd');
@@ -146,7 +148,7 @@ function [ns_codes] = gravdef_parser(ns_codes, gravdefFile)
                 ns_codes(iStat).gravdef.break(curBreak).end   = 99999;
             end
         else
-            fprintf('%s (station in ECCDAT.ecc) not found in ns_codes ('' '' -> ''_'' checked)\n', current_block_info{1}{1});
+            fprintf('%s (station in gravitational deformation file) not found in ns_codes ('' '' -> ''_'' checked)\n', current_block_info{1}{1});
         end
     end
 end

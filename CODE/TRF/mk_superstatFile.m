@@ -286,7 +286,8 @@ fprintf('\n2.1.4 Gravitational deformation\n\n');
 if ~isempty(gravdefFile)
 	fid=fopen(gravdefFile);
     if (fid < 0)
-        varargout{1} = ['ERROR: Cannot open the file: ', gravdefFile];
+        fprintf(['ERROR: Cannot open the file ', gravdefFile]);
+        varargout{1} = ['ERROR: Cannot open the file ', gravdefFile];
         return;
     end
 

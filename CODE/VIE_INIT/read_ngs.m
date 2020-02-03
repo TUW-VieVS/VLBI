@@ -674,7 +674,7 @@ while (idx_line <= nlines)
                 
                 % Gravitational deformation from superstationfile
                 % find grav def break
-                if ~isempty(trf(trf_id).gravdef)  
+                if isfield(trf(trf_id), 'gravdef') && ~isempty(trf(trf_id).gravdef)  
                     break_id = find(mjd >= [trf(trf_id).gravdef.break.start] & ...
                         mjd <= [trf(trf_id).gravdef.break.end]);
                     if length(break_id) > 1

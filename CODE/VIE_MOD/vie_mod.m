@@ -717,6 +717,24 @@ if strcmpi(parameter.vie_init.zhd,'gpt3')   ||   strcmpi(parameter.vie_init.zwd,
     cell_grid_GPT3 = gpt3_5_fast_readGrid;
 end
 
+% GRAVITATIONAL DEFORMATION
+% check if the antenna struct has a field for gravitational deformation. It
+% might have been created with an older version of vie_init. If not warn
+% the user.
+if parameter.vie_mod.gravDef == 1 && ~isfield(antenna, 'gravdef')
+    fprintf(['WARNING: Correction for gravitational antenna deformation is \n'...
+          'turned on but the used antenna struct has no gravdef field!'])
+end
+% check if any of the stations in the session has available gravdef data.
+% The user might use an old superstation-file without this information.
+if parameter.vie_mod.gravDef == 1 && isfield(antenna, 'gravdef') && ...
+        isempty([antenna.gravdef])
+    fprintf(['WARNING: Correction for gravitational antenna deformation is '...
+          'turned on \n but none of the stations in the session has gravdef '...
+          'information in the \n antenna struct! The superstation file might'...
+          ' not be up to date.'])
+end
+
 for isc = 1:number_of_all_scans
     
     % running variables for active scan
@@ -1689,7 +1707,7 @@ for isc = 1:number_of_all_scans
                 % GRAVITATIONAL DEFORMATION
                 if parameter.vie_mod.gravDef == 1 && ~isempty(antenna(stnum).gravdef)
                     gravdef_data = antenna(stnum).gravdef;
-                    gravdef_corr = spline(gravdef_data.ez_delay(:,1), gravdef_data.ez_delay(:,2), rad2deg(zd));  % [ps]
+                    gravdef_corr = spline(gravdef_data.ez_delay(:,1), gravdef_data.ez_delay(:,2), 90-rad2deg(zd));  % [ps]
                     gravdef_corr = gravdef_corr * 1e-12;  % [ps] --> [sec]
                 else
                     gravdef_corr = 0;
@@ -1736,7 +1754,7 @@ for isc = 1:number_of_all_scans
         c_therm = scan(isc).stat(stat_1_id).therm - scan(isc).stat(stat_2_id).therm; % [sec]
         
         % gravitational deformation correction
-        c_gravdef = scan(isc).stat(stat_1_id).gravdef - scan(isc).stat(stat_2_id).gravdef; % [sec]
+        c_gravdef = scan(isc).stat(stat_2_id).gravdef - scan(isc).stat(stat_1_id).gravdef; % [sec]
         
         % add
         tau = c_axis + c_therm + c_gravdef + tau; % [sec]
