@@ -1705,7 +1705,10 @@ for isc = 1:number_of_all_scans
                 end
                 
                 % GRAVITATIONAL DEFORMATION
-                if parameter.vie_mod.gravDef == 1 && ~isempty(antenna(stnum).gravdef)
+                if parameter.vie_mod.gravDef == 1 && ...
+                        ~isempty(antenna(stnum).gravdef)
+                    %  && isfield(antenna(stnum), 'gravdef')
+                    
                     gravdef_data = antenna(stnum).gravdef;
                     gravdef_corr = spline(gravdef_data.ez_delay(:,1), gravdef_data.ez_delay(:,2), 90-rad2deg(zd));  % [ps]
                     gravdef_corr = gravdef_corr * 1e-12;  % [ps] --> [sec]

@@ -683,6 +683,8 @@ while (idx_line <= nlines)
                     end
                     
                     antenna(stat_id_vec(i_stat)).gravdef = trf(trf_id).gravdef.break(break_id);
+                else
+                    antenna(stat_id_vec(i_stat)).gravdef = [];
                 end
                 
                 
