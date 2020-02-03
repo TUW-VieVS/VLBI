@@ -28,6 +28,9 @@ sessionIds = unique(cellfun(@(x){x(1:end-4)}, names))';
 nSessions = length(sessionIds);
 
 %% preallocate memory
+
+nObs = zeros(nSessions,1);
+nScans = zeros(nSessions,1);
 nSta = zeros(nSessions,1);
 nSrc = zeros(nSessions,1);
 nSim = zeros(nSessions,1);
@@ -73,6 +76,8 @@ for iSession=1:nSessions
     nSta(iSession) = length(x_.coorx);
     nSrc(iSession) = length(x_.soura);
     nSim(iSession) = 0;
+    nObs(iSession) = x_.nobs;
+    nScans(iSession) = x_.nscans;
     stations{iSession} = {x_.antenna.name};
 
         
@@ -154,7 +159,6 @@ nutdx_rep      = cellfun(@(x) std(x),  nutdx_val);
 nutdy_mean_sig = cellfun(@(x) mean(x), nutdy_mx);
 nutdy_rep      = cellfun(@(x) std(x),  nutdy_val);
 
-
 % do the same for stations (sessions can have varying station networks)
 allStations = unique([stations{:}]);
 nStations = length(allStations);
@@ -181,10 +185,10 @@ else
 end
 
 %% summarize results for mean sigma
-t_mean_sig = table(nSim, dut1_mean_sig, xpol_mean_sig, ypol_mean_sig, nutdx_mean_sig, nutdy_mean_sig,'RowNames',sessionIds);
-t_mean_sig.Properties.VariableNames = {'n_sim','dUT1','x_pol','y_pol','x_nut','y_nut'};
-t_mean_sig.Properties.VariableDescriptions = {'number of simulations', 'dUT1', 'x polar motion', 'y polar motion', 'x nutation', 'y nutation'};
-t_mean_sig.Properties.VariableUnits = {'','mus','muas','muas','muas','muas'};
+t_mean_sig = table(nSim, nObs, nScans, dut1_mean_sig, xpol_mean_sig, ypol_mean_sig, nutdx_mean_sig, nutdy_mean_sig,'RowNames',sessionIds);
+t_mean_sig.Properties.VariableNames = {'n_sim','n_obs','n_scans','dUT1','x_pol','y_pol','x_nut','y_nut'};
+t_mean_sig.Properties.VariableDescriptions = {'number of simulations', 'number of observations', 'number of scans', 'dUT1', 'x polar motion', 'y polar motion', 'x nutation', 'y nutation'};
+t_mean_sig.Properties.VariableUnits = {'','','','mus','muas','muas','muas','muas'};
 for iSta = 1:nStations
     tmp = table(station_mean_sig(:,iSta),'VariableNames',replace(strtrim(allStations(iSta)),'-','_'));
     tmp.Properties.VariableUnits = {'mm'};
@@ -194,10 +198,10 @@ end
 
 
 %% summarize results for repeatability
-t_rep = table(nSim, dut1_rep, xpol_rep, ypol_rep, nutdx_rep, nutdy_rep,'RowNames',sessionIds);
-t_rep.Properties.VariableNames = {'n_sim','dUT1','x_pol','y_pol','x_nut','y_nut'};
-t_rep.Properties.VariableDescriptions = {'number of simulations', 'dUT1', 'x polar motion', 'y polar motion', 'x nutation', 'y nutation'};
-t_rep.Properties.VariableUnits = {'','mus','muas','muas','muas','muas'};
+t_rep = table(nSim, nObs, nScans, dut1_rep, xpol_rep, ypol_rep, nutdx_rep, nutdy_rep,'RowNames',sessionIds);
+t_rep.Properties.VariableNames = {'n_sim','n_obs','n_scans','dUT1','x_pol','y_pol','x_nut','y_nut'};
+t_rep.Properties.VariableDescriptions = {'number of simulations','number of observations', 'number of scans', 'dUT1', 'x polar motion', 'y polar motion', 'x nutation', 'y nutation'};
+t_rep.Properties.VariableUnits = {'','','','mus','muas','muas','muas','muas'};
 for iSta = 1:nStations
     tmp = table(station_rep(:,iSta),'VariableNames',replace(strtrim(allStations(iSta)),'-','_'));
     tmp.Properties.VariableUnits = {'mm'};
@@ -212,6 +216,6 @@ disp(t_mean_sig)
 fprintf('\nrepeatability:\n')
 disp(t_rep)
 
-save(sprintf('../OUT/%s.mat',name),'t_mean_sig','t_rep', 'dut1_mx', 'dut1_val', 'xpol_mx', 'xpol_val', 'ypol_mx', 'ypol_val', 'nutdx_mx', 'nutdx_val', 'nutdy_mx', 'nutdy_val', 'stations', 'station_mx', 'station_val')
+save(sprintf('../OUT/%s.mat',name),'t_mean_sig','t_rep', 'nObs', 'dut1_mx', 'dut1_val', 'xpol_mx', 'xpol_val', 'ypol_mx', 'ypol_val', 'nutdx_mx', 'nutdx_val', 'nutdy_mx', 'nutdy_val', 'stations', 'station_mx', 'station_val')
 
 end

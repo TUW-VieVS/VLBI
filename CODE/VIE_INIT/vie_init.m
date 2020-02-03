@@ -163,7 +163,25 @@ switch(parameter.data_type)
         curNcFolder = ['../DATA/vgosDB/',parameter.year, '/',parameter.session_name,'/'];
 
         % uncompress vgosDB *.tar.gz or *.tgz file
-        untarVgosDb( curNcFolder )
+        wasCompressed = false;
+        if ~isfolder(curNcFolder)
+            wasCompressed = true;
+            
+            % uncompress vgosDB *.tar.gz or *.tgz file
+            vgosTargz = [curNcFolder(1:end-1),'.tar.gz'];
+            vgosTgz = [curNcFolder(1:end-1),'.tgz'];
+            curSlash = sort([strfind(curNcFolder,'/'), strfind(curNcFolder,'\')]);
+            vgosTgzFolder = curNcFolder(1:curSlash(end-1));
+
+            if exist(vgosTgz,'file')
+                untar(vgosTgz,vgosTgzFolder);
+            elseif exist(vgosTargz,'file')
+                untar(vgosTargz,vgosTgzFolder);
+            else
+                fprintf('ERROR: %s does not exist!\n',vgosTgz);
+            end       
+        end
+
         
         try
         % read netCDF data
@@ -224,11 +242,13 @@ switch(parameter.data_type)
         end
         
         % remove the unpacked vgosDB folder
-        rmdir(curNcFolder, 's');
+        if wasCompressed
+            rmdir(curNcFolder, 's');
+        end
     
 
     % #############################
-    % #####     NGS           #####
+    % #####        NGS        #####
     % #############################
     case 'ngs'
         
