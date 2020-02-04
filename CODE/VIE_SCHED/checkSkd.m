@@ -1,7 +1,7 @@
 function [  ] = checkSkd( fname )
 clc, clear, close all;
 format compact
-file = '/home/mschartn/shares/home/Axel_scheduling/R1912/VieSchedpp/r1912_v086.skd';
+file = '/home/mschartn/shares/hg/Projects/19_VieSchedpp/07_Work_Data/schedules/T2137/t2137.skd';
 
 fid = fopen(file);
 

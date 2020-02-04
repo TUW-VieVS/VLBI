@@ -376,7 +376,7 @@ while (idx_line <= nlines)
                     input_str(51:60) = '         0';
                 end
                 trmp_input  = sscanf(input_str(1:63),'%f');
-                if strcmp(ini_opt.iono, 'ngs')
+                if strcmp(ini_opt.iono, 'observation_database')
                     delion  = trmp_input(1); % Delay ionosphere correction (ns)
                 else
                     delion  = 0; % E.g. use ion. correction from external source

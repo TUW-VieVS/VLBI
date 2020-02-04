@@ -43,7 +43,7 @@ function [ wrapper_data ] = read_vgosdb_wrapper(path_nc, session_name, institute
 % Wrapper blocks which are considered (all others are neglected...):
 wraper_blocks = {'Session', 'Station', 'Scan', 'Observation'};
 wrapper_data = struct('Session', [], 'Station', [], 'Scan', [], 'Observation', [], 'wrapper_filename', []);
-min_wrapper_version = 4;
+min_wrapper_version = 1;
 
 
 % #### Init #####
@@ -195,6 +195,9 @@ for i_inst = 1 : num_institutions
        
    end
    
+end
+if max_version < 4
+    warning('vgosDB wrapper version: %d\nAmbiguity resolution and ionosphere correction might be missing!',max_version)
 end
 
 % Check, if wrapper is available!
