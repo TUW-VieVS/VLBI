@@ -723,16 +723,15 @@ end
 % the user.
 if parameter.vie_mod.gravDef == 1 && ~isfield(antenna, 'gravdef')
     fprintf(['WARNING: Correction for gravitational antenna deformation is \n'...
-          'turned on but the used antenna struct has no gravdef field!'])
+          'turned on but the used antenna struct has no gravdef field!\n'])
 end
 % check if any of the stations in the session has available gravdef data.
 % The user might use an old superstation-file without this information.
 if parameter.vie_mod.gravDef == 1 && isfield(antenna, 'gravdef') && ...
         isempty([antenna.gravdef])
-    fprintf(['WARNING: Correction for gravitational antenna deformation is '...
-          'turned on \n but none of the stations in the session has gravdef '...
-          'information in the \n antenna struct! The superstation file might'...
-          ' not be up to date.'])
+    fprintf(['WARNING: Correction for gravitational antenna deformation \n'...
+          'is turned on but none of the stations in the session has \n'...
+          ' gravdef information in the \n antenna struct!\n'])
 end
 
 for isc = 1:number_of_all_scans
@@ -1706,9 +1705,8 @@ for isc = 1:number_of_all_scans
                 
                 % GRAVITATIONAL DEFORMATION
                 if parameter.vie_mod.gravDef == 1 && ...
-                        ~isempty(antenna(stnum).gravdef)
-                    %  && isfield(antenna(stnum), 'gravdef')
-                    
+                         isfield(antenna(stnum), 'gravdef') && ...
+                        ~isempty(antenna(stnum).gravdef)                         
                     gravdef_data = antenna(stnum).gravdef;
                     gravdef_corr = spline(gravdef_data.ez_delay(:,1), gravdef_data.ez_delay(:,2), 90-rad2deg(zd));  % [ps]
                     gravdef_corr = gravdef_corr * 1e-12;  % [ps] --> [sec]
