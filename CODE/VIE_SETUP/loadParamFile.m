@@ -532,7 +532,12 @@ else
     set(handles.checkbox_parameters_statCorr_temp_GPT3, 'Enable', 'on')
 end
 
-
+% gravitational deformation
+if isfield(parameter.vie_mod, 'gravdef')
+    set(handles.checkbox_parameters_statCorr_gravitationalDef, 'Value', parameter.vie_mod.gravdef)
+else
+    set(handles.checkbox_parameters_statCorr_gravitationalDef, 'Value', 0)
+end
 
 % APL regression coefficients
 if isfield(parameter.vie_mod, 'crg') % this questin could be deleted when we are sure that no old parameter files (without this field) are used!!
