@@ -16,6 +16,7 @@ function writeNewOptFile(wantedOPTfile)
 
     % create new OPT file
     fid=fopen(wantedOPTfile, 'a');
+    disp(wantedOPTfile)
     % write some helping lines to OPT file
     fprintf(fid, ['CLOCK BREAKS: 0\n',...
         'STATIONS TO BE EXCLUDED: 0\n',...

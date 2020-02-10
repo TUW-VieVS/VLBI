@@ -26,6 +26,7 @@
 %   2017-02-09, D. Landskron: Preallocation extended
 %   2017-02-22, A. Hellerschmied: antenna.psd initialized
 %   2018-07-06, D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
+%   2019-01-15, M. Mikschi: added gravitational deformation
 %
 % ************************************************************************
 
@@ -41,7 +42,7 @@ antenna(nStat)=struct('IDsuper', [], 'in_trf', [], 'name', [],  'x', [], 'y', []
     'z', [], 'vx', [], 'vy', [], 'vz', [], 'epoch', [], 'start', [], ...
     'end', [], 'firstObsMjd', [], 'x_sigma', [], 'y_sigma', [], 'z_sigma', [],...
     'vx_sigma', [], 'vy_sigma', [], 'vz_sigma', [],...
-    'thermal', [], 'comments', [], 'domes', [], 'code', [], 'ecc', [], ...
+    'thermal', [], 'comments', [], 'domes', [], 'code', [], 'ecc', [], 'gravdef', [], ...
     'ecctype', [], 'axtyp', [], 'offs', [], 'gpt3pres', [],  'gpt3temp', [],  'gpt3e', [], 'gpt3', [], 'noGrad', [], ...
     'cto', [], 'cta', [], 'cnta_dx', [],  ...
     'vmf3', [], 'vmf1', [], 'opl', [], 'numobs', [],  'lastObsMjd', [],  'psd', []);
@@ -67,12 +68,12 @@ for iStat=1:nStat
     
     %% write data
     % get ~general infos from superstation file
-    antenna(iStat).IDsuper=indCurStatInTrf;
-    antenna(iStat).thermal=trf(indCurStatInTrf).antenna_info;
-    antenna(iStat).comments=trf(indCurStatInTrf).comments;
-    antenna(iStat).domes=trf(indCurStatInTrf).domes;
-    antenna(iStat).code=trf(indCurStatInTrf).code;  
-
+    antenna(iStat).IDsuper = indCurStatInTrf;
+    antenna(iStat).thermal = trf(indCurStatInTrf).antenna_info;
+    antenna(iStat).comments = trf(indCurStatInTrf).comments;
+    antenna(iStat).domes = trf(indCurStatInTrf).domes;
+    antenna(iStat).code = trf(indCurStatInTrf).code; 
+    
     % get first and last mjd
     curYMDHM=out_struct.stat(iStat).TimeUTC.YMDHM.val;
     curSecond=out_struct.stat(iStat).TimeUTC.Second.val;
@@ -80,6 +81,15 @@ for iStat=1:nStat
     antenna(iStat).firstObsMjd=cal2jd(double(curYMDHM(1,1)), double(curYMDHM(2,1)), double(curYMDHM(3,1)))-2400000.5 +double(curYMDHM(4,1))/24+double(curYMDHM(5,1))/60/24+curSecond(1)/60/60/24;
     antenna(iStat).lastObsMjd=cal2jd(double(curYMDHM(1,end)), double(curYMDHM(2,end)), double(curYMDHM(3,end)))-2400000.5 +double(curYMDHM(4,end))/24+double(curYMDHM(5,end))/60/24+curSecond(end)/60/60/24;
     
+    % Gravitational deformation
+    if isfield(trf(indCurStatInTrf), 'gravdef') && ~isempty(trf(indCurStatInTrf).gravdef)      
+        % find break
+        bnr=find(antenna(iStat).firstObsMjd>=[trf(indCurStatInTrf).gravdef.break.start] & ...
+            antenna(iStat).firstObsMjd<=[trf(indCurStatInTrf).gravdef.break.end]);
+        
+        antenna(iStat).gravdef = trf(indCurStatInTrf).gravdef.break(bnr);
+    end
+       
     % get trf coordinates from chosen trf
     if isempty(trf(indCurStatInTrf).(chosenTrf))
         if strcmp(chosenTrf, 'vievsTrf') % Station not even in vievsTrf (backup)

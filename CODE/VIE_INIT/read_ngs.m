@@ -155,6 +155,7 @@
 %   28 Nov 2018 by D. Landskron: workaround concerning OPT files changed: now NO observations are excluded, because everything will be done in vie_lsm later
 %   05 Dec 2018 by D. Landskron: clarification quality code / quality flag
 %   25 Jul 2019 by D. Landskron: zwet parameter added to scan structure
+%   15 Jan 2020 by M. Mikschi: gravitational deformation info added to station structure
 % ************************************************************************
 
 
@@ -669,6 +670,21 @@ while (idx_line <= nlines)
                 antenna(stat_id_vec(i_stat)).offs = 0;
                 if ~isempty(trf(trf_id).antenna_info) % if there was information in antenna-info.txt
                     antenna(stat_id_vec(i_stat)).offs = trf(trf_id).antenna_info.axis_offset; %m
+                end
+                
+                % Gravitational deformation from superstationfile
+                % find grav def break
+                if isfield(trf(trf_id), 'gravdef') && ~isempty(trf(trf_id).gravdef)  
+                    break_id = find(mjd >= [trf(trf_id).gravdef.break.start] & ...
+                        mjd <= [trf(trf_id).gravdef.break.end]);
+                    if length(break_id) > 1
+                        break_id = break_id(1);
+                        warning(['Multiple valid breaks found for gravitational deformation data for station: ' trf(trf_id).name]);
+                    end
+                    
+                    antenna(stat_id_vec(i_stat)).gravdef = trf(trf_id).gravdef.break(break_id);
+                else
+                    antenna(stat_id_vec(i_stat)).gravdef = [];
                 end
                 
                 

@@ -1,0 +1,640 @@
+Version 2019Nov16
+# This file contains gravitaional deformation information for various antennas.
+#
+# History: (Most recent first)
+# 2019Nov21 JMG. Added references for all the models. 
+#                Updated Onsala60 model using results from published paper.
+#                Signs of all models are consistent. 
+#
+# 2018Nov12 JMG. Changed sign of YEBES40M.  Did this by changing scale. This resulted from error in reading paper. 
+# 2018Nov11 JMGipson. All models redone by John Gipson. Now done in mm. 
+#           Added optional "EPOCH" line. If present specifies range for validity of model. 
+#
+#
+# 2018Aug16 JMGipson First version. Using models from Tilda Swinstrom, NVI summer intern. 
+#
+# Lines that start with "#" are comments and can be ignored.
+# For each antenna the general format is:
+#  ANTENNA NUM_PTS SCALE
+#  el1  delay1
+#  el2  delay2
+#....
+#  ANTEN2 NUM_PTS SCALE
+#  EPOCH YYYYMMDD  YYYYMMDD    beginning and ending epoch of model
+#  el1  delay1
+#  el2  delay2
+# ...
+# Some comments on format.
+# 1. ANTENNA is the name of the antenna.
+# 2. NUM_PTS are the number of points.
+# 3. SCALE is an optional scaling factor. This converts the delay into ps. 
+#    If SCALE is 3.336 than the raw values are in mm.   
+# 4. Epoch is the optional beginning and ending date for the model. 
+# 5. The pairs el1, delay1 are the delay as a function of elevation.
+#    The scale factor converts this to ps. 
+#
+#  The delay is calculated using a cubic spline interpoation.
+#  The number and spacing of the points is arbitrary, but should be chosen
+#  so that the error interpolation is under ~0.25 ps. 
+#
+# Reference: 
+#   A complete VLBI delay model for deforming radio telescopes: the Effelsberg case
+#   T. Artz · A. Springer · A. Nothnagel
+#   J Geod (2014) 88:11451161
+#   DOI 10.1007/s00190-014-0749-1
+#
+EFLSBERG  90   3.336
+   1  -97.137
+   2  -95.795
+   3  -94.446
+   4  -93.090
+   5  -91.728
+   6  -90.359
+   7  -88.983
+   8  -87.601
+   9  -86.212
+  10  -84.818
+  11  -83.417
+  12  -82.010
+  13  -80.597
+  14  -79.179
+  15  -77.755
+  16  -76.327
+  17  -74.894
+  18  -73.456
+  19  -72.014
+  20  -70.569
+  21  -69.120
+  22  -67.668
+  23  -66.213
+  24  -64.756
+  25  -63.298
+  26  -61.839
+  27  -60.378
+  28  -58.918
+  29  -57.458
+  30  -55.999
+  31  -54.542
+  32  -53.086
+  33  -51.634
+  34  -50.185
+  35  -48.740
+  36  -47.300
+  37  -45.866
+  38  -44.438
+  39  -43.017
+  40  -41.603
+  41  -40.199
+  42  -38.803
+  43  -37.418
+  44  -36.044
+  45  -34.681
+  46  -33.332
+  47  -31.995
+  48  -30.673
+  49  -29.367
+  50  -28.076
+  51  -26.803
+  52  -25.547
+  53  -24.311
+  54  -23.094
+  55  -21.898
+  56  -20.723
+  57  -19.571
+  58  -18.443
+  59  -17.339
+  60  -16.260
+  61  -15.208
+  62  -14.182
+  63  -13.185
+  64  -12.217
+  65  -11.279
+  66  -10.371
+  67   -9.495
+  68   -8.652
+  69   -7.843
+  70   -7.068
+  71   -6.328
+  72   -5.624
+  73   -4.957
+  74   -4.327
+  75   -3.736
+  76   -3.185
+  77   -2.674
+  78   -2.203
+  79   -1.774
+  80   -1.387
+  81   -1.043
+  82   -0.743
+  83   -0.487
+  84   -0.276
+  85   -0.110
+  86    0.010
+  87    0.083
+  88    0.109
+  89    0.087
+  90    0.018
+#
+# Reference:
+#   Deformation in VLBI Antennas
+#   T. A. Clark and Per Thomsen
+#   NASA Technical Memorandum 100696
+#   1988
+#
+GILCREEK  90   3.336
+   1   -2.358
+   2   -2.316
+   3   -2.274
+   4   -2.233
+   5   -2.191
+   6   -2.149
+   7   -2.108
+   8   -2.066
+   9   -2.025
+  10   -1.983
+  11   -1.942
+  12   -1.901
+  13   -1.860
+  14   -1.819
+  15   -1.779
+  16   -1.738
+  17   -1.698
+  18   -1.658
+  19   -1.619
+  20   -1.579
+  21   -1.540
+  22   -1.501
+  23   -1.462
+  24   -1.424
+  25   -1.386
+  26   -1.348
+  27   -1.310
+  28   -1.273
+  29   -1.236
+  30   -1.200
+  31   -1.164
+  32   -1.128
+  33   -1.093
+  34   -1.058
+  35   -1.023
+  36   -0.989
+  37   -0.956
+  38   -0.922
+  39   -0.890
+  40   -0.857
+  41   -0.825
+  42   -0.794
+  43   -0.763
+  44   -0.733
+  45   -0.703
+  46   -0.674
+  47   -0.645
+  48   -0.616
+  49   -0.589
+  50   -0.561
+  51   -0.535
+  52   -0.509
+  53   -0.483
+  54   -0.458
+  55   -0.434
+  56   -0.410
+  57   -0.387
+  58   -0.365
+  59   -0.343
+  60   -0.322
+  61   -0.301
+  62   -0.281
+  63   -0.262
+  64   -0.243
+  65   -0.225
+  66   -0.207
+  67   -0.191
+  68   -0.175
+  69   -0.159
+  70   -0.145
+  71   -0.131
+  72   -0.117
+  73   -0.105
+  74   -0.093
+  75   -0.082
+  76   -0.071
+  77   -0.062
+  78   -0.052
+  79   -0.044
+  80   -0.036
+  81   -0.030
+  82   -0.023
+  83   -0.018
+  84   -0.013
+  85   -0.009
+  86   -0.006
+  87   -0.003
+  88   -0.001
+  89   -0.000
+  90   -0.000
+#
+# Reference
+#   Geod (2009) 83:11151126
+#   DOI 10.1007/s00190-009-0331-4
+#   Gravity-dependent signal path variation in a large VLBI telescope
+#   modelled with a combination of surveying methods
+#    Pierguido Sarti · C. Abbondanza · L. Vittuari
+# See also the reference for NOTO below
+#  
+MEDICINA  90   3.336
+   1    0.219
+   2    0.435
+   3    0.649
+   4    0.861
+   5    1.070
+   6    1.277
+   7    1.481
+   8    1.683
+   9    1.883
+  10    2.080
+  11    2.275
+  12    2.467
+  13    2.657
+  14    2.845
+  15    3.030
+  16    3.213
+  17    3.393
+  18    3.571
+  19    3.747
+  20    3.920
+  21    4.091
+  22    4.259
+  23    4.425
+  24    4.589
+  25    4.750
+  26    4.909
+  27    5.065
+  28    5.219
+  29    5.371
+  30    5.520
+  31    5.667
+  32    5.811
+  33    5.953
+  34    6.093
+  35    6.230
+  36    6.365
+  37    6.497
+  38    6.627
+  39    6.755
+  40    6.880
+  41    7.003
+  42    7.123
+  43    7.241
+  44    7.357
+  45    7.470
+  46    7.581
+  47    7.689
+  48    7.795
+  49    7.899
+  50    8.000
+  51    8.099
+  52    8.195
+  53    8.289
+  54    8.381
+  55    8.470
+  56    8.557
+  57    8.641
+  58    8.723
+  59    8.803
+  60    8.880
+  61    8.955
+  62    9.027
+  63    9.097
+  64    9.165
+  65    9.230
+  66    9.293
+  67    9.353
+  68    9.411
+  69    9.467
+  70    9.520
+  71    9.571
+  72    9.619
+  73    9.665
+  74    9.709
+  75    9.750
+  76    9.789
+  77    9.825
+  78    9.859
+  79    9.891
+  80    9.920
+  81    9.947
+  82    9.971
+  83    9.993
+  84   10.013
+  85   10.030
+  86   10.045
+  87   10.057
+  88   10.067
+  89   10.075
+  90   10.080
+#
+# Reference
+#   ANNALS OF GEOPHYSICS, 53, 5-6, 2010; doi: 10.4401/ag-4739
+#
+#   Improved geodetic European very-long-baseline interferometry
+#   solution using models of antenna gravitational deformation
+#
+#   Pierguido Sarti, Monia Negusini, Claudio Abbondanza
+#
+NOTO  90   3.336
+   1    0.120
+   2    0.238
+   3    0.356
+   4    0.473
+   5    0.589
+   6    0.704
+   7    0.818
+   8    0.931
+   9    1.044
+  10    1.155
+  11    1.266
+  12    1.375
+  13    1.484
+  14    1.592
+  15    1.699
+  16    1.805
+  17    1.910
+  18    2.014
+  19    2.118
+  20    2.220
+  21    2.322
+  22    2.422
+  23    2.522
+  24    2.621
+  25    2.719
+  26    2.816
+  27    2.912
+  28    3.007
+  29    3.102
+  30    3.195
+  31    3.288
+  32    3.379
+  33    3.470
+  34    3.560
+  35    3.649
+  36    3.737
+  37    3.824
+  38    3.910
+  39    3.996
+  40    4.080
+  41    4.164
+  42    4.246
+  43    4.328
+  44    4.409
+  45    4.489
+  46    4.568
+  47    4.646
+  48    4.723
+  49    4.800
+  50    4.875
+  51    4.950
+  52    5.023
+  53    5.096
+  54    5.168
+  55    5.239
+  56    5.309
+  57    5.378
+  58    5.446
+  59    5.514
+  60    5.580
+  61    5.646
+  62    5.710
+  63    5.774
+  64    5.837
+  65    5.899
+  66    5.960
+  67    6.020
+  68    6.079
+  69    6.138
+  70    6.195
+  71    6.252
+  72    6.307
+  73    6.362
+  74    6.416
+  75    6.469
+  76    6.521
+  77    6.572
+  78    6.622
+  79    6.672
+  80    6.720
+  81    6.768
+  82    6.814
+  83    6.860
+  84    6.905
+  85    6.949
+  86    6.992
+  87    7.034
+  88    7.075
+  89    7.116
+  90    7.155
+# 
+# NOTE. The Onsala model is for a reference temperature of 19C.
+# The delay at other temperatures can be found by adding the elevation INDEPENDENT term
+#    (T-19C)*0.47 mm.  
+#  If the temperature is slowly varying then this is clock like (will be absorbed in the clocks).
+#
+# Reference
+#    Nothnagel, A., Holst, C. & Haas, R. J Geod (2019) 93: 2019. https://doi.org/10.1007/s00190-019-01299-x
+#
+#   A VLBI delay model for gravitational deformations of the Onsala 20 m radio 
+#   telescope and the impact on its global coordinates
+# 
+#    A. Nothnagel  C. Holst R. Haas
+#
+ONSALA60  90   3.336
+   1    9.877
+   2    9.797
+   3    9.717
+   4    9.637
+   5    9.557
+   6    9.477
+   7    9.396
+   8    9.316
+   9    9.235
+  10    9.154
+  11    9.073
+  12    8.993
+  13    8.912
+  14    8.831
+  15    8.751
+  16    8.670
+  17    8.590
+  18    8.510
+  19    8.429
+  20    8.350
+  21    8.270
+  22    8.190
+  23    8.111
+  24    8.032
+  25    7.954
+  26    7.875
+  27    7.798
+  28    7.720
+  29    7.643
+  30    7.566
+  31    7.490
+  32    7.414
+  33    7.339
+  34    7.264
+  35    7.190
+  36    7.117
+  37    7.044
+  38    6.971
+  39    6.900
+  40    6.828
+  41    6.758
+  42    6.688
+  43    6.619
+  44    6.551
+  45    6.484
+  46    6.417
+  47    6.351
+  48    6.286
+  49    6.222
+  50    6.158
+  51    6.096
+  52    6.034
+  53    5.974
+  54    5.914
+  55    5.855
+  56    5.797
+  57    5.741
+  58    5.685
+  59    5.630
+  60    5.576
+  61    5.524
+  62    5.472
+  63    5.422
+  64    5.372
+  65    5.324
+  66    5.277
+  67    5.231
+  68    5.186
+  69    5.143
+  70    5.100
+  71    5.059
+  72    5.019
+  73    4.980
+  74    4.943
+  75    4.906
+  76    4.871
+  77    4.838
+  78    4.805
+  79    4.774
+  80    4.744
+  81    4.716
+  82    4.688
+  83    4.662
+  84    4.638
+  85    4.615
+  86    4.593
+  87    4.572
+  88    4.553
+  89    4.535
+  90    4.519
+#
+# Reference
+#  Graviational Deformation Effects. The YEBES40M Case
+#  A. Nothnagel, A. Springer, E. Heinz, T. Artz, P. de Vicente
+#  Proceedings 2014 IVS General Meeting
+# 
+# This YEBES model is only valid after 2011Nov11. 
+# Notice the NEGATIVE value for the scale factor. 
+YEBES40M  90   3.336
+EPOCH 20111111   22000101  
+   1   49.376
+   2   48.477
+   3   47.579
+   4   46.682
+   5   45.787
+   6   44.895
+   7   44.005
+   8   43.118
+   9   42.233
+  10   41.352
+  11   40.475
+  12   39.601
+  13   38.731
+  14   37.866
+  15   37.005
+  16   36.149
+  17   35.298
+  18   34.452
+  19   33.612
+  20   32.777
+  21   31.949
+  22   31.126
+  23   30.311
+  24   29.502
+  25   28.699
+  26   27.905
+  27   27.117
+  28   26.337
+  29   25.565
+  30   24.801
+  31   24.045
+  32   23.298
+  33   22.560
+  34   21.830
+  35   21.109
+  36   20.398
+  37   19.696
+  38   19.004
+  39   18.322
+  40   17.650
+  41   16.988
+  42   16.337
+  43   15.696
+  44   15.066
+  45   14.447
+  46   13.839
+  47   13.242
+  48   12.657
+  49   12.084
+  50   11.522
+  51   10.972
+  52   10.434
+  53    9.908
+  54    9.395
+  55    8.894
+  56    8.405
+  57    7.930
+  58    7.467
+  59    7.017
+  60    6.581
+  61    6.157
+  62    5.747
+  63    5.350
+  64    4.967
+  65    4.597
+  66    4.242
+  67    3.899
+  68    3.571
+  69    3.257
+  70    2.957
+  71    2.671
+  72    2.399
+  73    2.142
+  74    1.899
+  75    1.670
+  76    1.456
+  77    1.256
+  78    1.071
+  79    0.900
+  80    0.745
+  81    0.603
+  82    0.477
+  83    0.365
+  84    0.269
+  85    0.187
+  86    0.120
+  87    0.067
+  88    0.030
+  89    0.008
+  90   -0.000
+
