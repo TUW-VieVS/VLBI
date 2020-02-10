@@ -157,6 +157,7 @@
 %   11 May 2018 by D. Landskron: bug with usage of raytr-files corrected
 %   05 Jul 2018 by D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
 %   27 Jul 2019 by D. Landskron: zwet parameter added to scan structure
+%   15 Jan 2020 by M. Mikschi: gravitational deformation correction added
 %
 % ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %  NOTATION:
@@ -714,6 +715,23 @@ cpsd_all = cPostSeismDeform(MJD,antenna); % [3 x nScans x nStat] matrix / meters
 
 if strcmpi(parameter.vie_init.zhd,'gpt3')   ||   strcmpi(parameter.vie_init.zwd,'gpt3')   ||   strcmpi(parameter.vie_mod.mfh,'gpt3')   ||   strcmpi(parameter.vie_mod.mfw,'gpt3')   ||   strcmpi(parameter.vie_mod.apgm_h,'gpt3')   ||  strcmpi(parameter.vie_mod.apgm_w,'gpt3')
     cell_grid_GPT3 = gpt3_5_fast_readGrid;
+end
+
+% GRAVITATIONAL DEFORMATION
+% check if the antenna struct has a field for gravitational deformation. It
+% might have been created with an older version of vie_init. If not warn
+% the user.
+if parameter.vie_mod.gravDef == 1 && ~isfield(antenna, 'gravdef')
+    fprintf(['WARNING: Correction for gravitational antenna deformation is \n'...
+          'turned on but the used antenna struct has no gravdef field!\n'])
+end
+% check if any of the stations in the session has available gravdef data.
+% The user might use an old superstation-file without this information.
+if parameter.vie_mod.gravDef == 1 && isfield(antenna, 'gravdef') && ...
+        isempty([antenna.gravdef])
+    fprintf(['WARNING: Correction for gravitational antenna deformation \n'...
+          'is turned on but none of the stations in the session has \n'...
+          ' gravdef information in the \n antenna struct!\n'])
 end
 
 for isc = 1:number_of_all_scans
@@ -1685,12 +1703,25 @@ for isc = 1:number_of_all_scans
                     therm_d = 0;
                 end
                 
+                % GRAVITATIONAL DEFORMATION
+                if isfield(parameter.vie_mod, 'gravDef') && ...
+                         parameter.vie_mod.gravDef == 1 && ...
+                         isfield(antenna(stnum), 'gravdef') && ...
+                        ~isempty(antenna(stnum).gravdef)                         
+                    gravdef_data = antenna(stnum).gravdef;
+                    gravdef_corr = spline(gravdef_data.ez_delay(:,1), gravdef_data.ez_delay(:,2), 90-rad2deg(zd));  % [ps]
+                    gravdef_corr = gravdef_corr * 1e-12;  % [ps] --> [sec]
+                else
+                    gravdef_corr = 0;
+                end
+                
                 % store in scan
                 scan(isc).stat(stnum).axkt  = axkt;
                 scan(isc).stat(stnum).therm = therm_d;
                 scan(isc).stat(stnum).az    = azim;
                 scan(isc).stat(stnum).zd    = zd; % corrected for aberration, not for refraction!
                 scan(isc).stat(stnum).daxkt  = daxkt; % [-] partial derivative AO
+                scan(isc).stat(stnum).gravdef = gravdef_corr;
 
                 
             end % if zd is empty
@@ -1724,8 +1755,11 @@ for isc = 1:number_of_all_scans
         % thermal deformation (Attention: Station1 - Station2)
         c_therm = scan(isc).stat(stat_1_id).therm - scan(isc).stat(stat_2_id).therm; % [sec]
         
+        % gravitational deformation correction
+        c_gravdef = scan(isc).stat(stat_2_id).gravdef - scan(isc).stat(stat_1_id).gravdef; % [sec]
+        
         % add
-        tau = c_axis + c_therm + tau; % [sec]
+        tau = c_axis + c_therm + c_gravdef + tau; % [sec]
         
         % + EXTERNAL IONOSPERIC DELAY +
         if strcmp(parameter.vie_init.iono, 'ext')
