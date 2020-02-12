@@ -533,8 +533,8 @@ else
 end
 
 % gravitational deformation
-if isfield(parameter.vie_mod, 'gravdef')
-    set(handles.checkbox_parameters_statCorr_gravitationalDef, 'Value', parameter.vie_mod.gravdef)
+if isfield(parameter.vie_mod, 'gravDef')
+    set(handles.checkbox_parameters_statCorr_gravitationalDef, 'Value', parameter.vie_mod.gravDef)
 else
     set(handles.checkbox_parameters_statCorr_gravitationalDef, 'Value', 0)
 end
