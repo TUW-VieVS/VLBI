@@ -280,6 +280,7 @@ parameter.vie_mod.ctp=get(handles.checkbox_parameters_statCorr_poleTides, 'Value
 parameter.vie_mod.ctop=get(handles.checkbox_parameters_statCorr_oceanPoleTides, 'Value');
 parameter.vie_mod.chl=get(handles.checkbox_parameters_statCorr_hydroLoading, 'Value');
 parameter.vie_mod.therm=get(handles.checkbox_parameters_statCorr_thermalDef, 'Value');
+parameter.vie_mod.gravDef=get(handles.checkbox_parameters_statCorr_gravitationalDef, 'Value');
 parameter.vie_mod.crg = get(handles.checkbox_parameters_statCorr_APLrg, 'Value');
 if parameter.vie_mod.crg == 1
     parameter.vie_mod.cnta = 0; parameter.vie_mod.cta = 0;

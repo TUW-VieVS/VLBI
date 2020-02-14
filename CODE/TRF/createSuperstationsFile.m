@@ -35,7 +35,7 @@ function varargout = createSuperstationsFile(varargin)
 
 % Edit the above text to modify the response to help createSuperstationsFile
 
-% Last Modified by GUIDE v2.5 20-Sep-2018 10:47:53
+% Last Modified by GUIDE v2.5 20-Dec-2019 13:16:49
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -71,7 +71,8 @@ handles.allPanels={'uipanel_mainInfoFiles', 'uipanel_trf', ...
     'uipanel_atmoLoading', 'uipanel_oceanLoading'};
 
 
-handles.data.allFileDescriptions={'nsCodes', 'antennaInfo', 'eccdat', ...
+handles.data.allFileDescriptions={'nsCodes', 'antennaInfo', 'eccdat',...
+        'gravdef',...
         'itrf2014','dtrf2014', 'vtrf2014dat', 'ivstrf2014b'...
         'vieTrf13', 's12vienna','s12vandam', 's12gsfc', 's12userOwn',...
         'oceanLoadingFES2004', 'oceanLoadingGOT00', 'oceanLoadingEOT08a', 'oceanLoadingTPXO72', 'oceanLoadingAG06', 'oceanLoadingUserOwn' ...
@@ -79,6 +80,7 @@ handles.data.allFileDescriptions={'nsCodes', 'antennaInfo', 'eccdat', ...
     
 
 handles.data.allFileNames={'ns-codes.txt', 'antenna-info.txt', 'ECCDAT.ecc',...
+    'gravitationalDeformation.txt',...
     'ITRF2014-IVS-TRF.snx', 'DTRF2014_VLBI.snx', 'VTRF2014_final.snx', ...
     'IVS_TRF2014b.SSC.txt', 'VieTRF13.txt',...
     's1_s2_s3_cm_noib_vlbi.dat','s12_cm_noib_vandam.dat', 's12_cm_noib_gsfc.dat',  's12userOwn.dat',...
@@ -173,6 +175,7 @@ fid=fopen(guiSateFile, 'w');
 text={'ns-codes, editTextbox', ...
     'antenna-info, editTextBox',...
     'eccdat, editTextBox',...
+    'gravdef, editTextBox',...
     'itrf2014, editTextBox',...
     'dtrf2014, editTextBox',...
     'vtrf2014dat, editTextBox',...
@@ -1634,3 +1637,44 @@ function Untitled_1_Callback(hObject, eventdata, handles)
 % hObject    handle to Untitled_1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+%Markus
+% --- Executes on button press in pushbutton_gravdefBrowse.
+function pushbutton_gravdefBrowse_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_gravdefBrowse (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+browseFunction(hObject, handles)
+
+
+
+function edit_gravdefFile_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_gravdefFile (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_gravdefFile as text
+%        str2double(get(hObject,'String')) returns contents of edit_gravdefFile as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_gravdefFile_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_gravdefFile (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over edit_gravdefFile.
+function edit_gravdefFile_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to edit_gravdefFile (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+rightClickOnEdit(hObject,eventdata,handles);
