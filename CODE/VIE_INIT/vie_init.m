@@ -181,7 +181,29 @@ switch(parameter.data_type)
                 fprintf('ERROR: %s does not exist!\n',vgosTgz);
             end       
         end
+        
+        % The folder within the .tgz file might have an name extension e.g.:
+        % 19JUN11VG.tgz contains 19JUN11VG_Wf_noOw
+        % check if the folder with the expected name exists and if not try
+        % to update the curNcFolder var.
+        if ~isfolder(curNcFolder)
+            fprintf('No folder with the name %s was found after uncompressing the .tgz file.\nChecking for name extensions.\n', parameter.session_name)
+            
+            potentialFolders = dir(['../DATA/vgosDB/',parameter.year, '/',parameter.session_name,'*']);
+            dirFlags = [potentialFolders.isdir];
+            potentialFolders = potentialFolders(dirFlags);
 
+            if numel(potentialFolders) == 0
+                fprintf('No folders found.\n')
+            elseif numel(potentialFolders) > 1
+                fprintf('Multiple folders with the name %s* found:\n', parameter.session_name)
+                fprintf('%s\n', potentialFolders.name)
+                fprintf('Aborting.\n')
+            else
+                fprintf('Found one matching folder: %s. Using this folder.\n', potentialFolders.name)
+                curNcFolder = ['../DATA/vgosDB/',parameter.year, '/', potentialFolders.name,'/'];
+            end
+        end
         
         try
         % read netCDF data
