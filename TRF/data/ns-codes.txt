@@ -271,6 +271,7 @@
  La LA-VLBA  40463S001 7611 VLBA at Los Alamos, NM, USA 
  Le LEONRDOK 40454M001 7292 mobile Leonard, OK, USA
  M2 MV2ONSLA 10402M006 7211 mobile at Onsala, Sweden
+ MG MACGO12M --------- ---- 12-m VGOS at McDonald Observatory, Texas, USA
  Ma MATERA   12734S005 7243 Matera, Italy 
  Mc MEDICINA 12711S001 7230 Medicina, Italy 
  Md MARPOINT 40490S001 7217 Maryland Point, MD, USA
