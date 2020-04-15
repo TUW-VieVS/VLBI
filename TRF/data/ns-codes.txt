@@ -143,6 +143,10 @@
 * 190708 dbb Add DOMES number for NYALE13N and NYALE13S.
 * 190722 dbb Add CDP number for NYALE13N and NYALE13S.
 * 190722 dbb Add DOMES and CDP numbers for AGGO.
+* 200127 dbb Add 13-m at Svetloe as Sw SVERT13V with DOMES and CDP numbers.
+* 200226 dbb Add DOMES and CDP numbers for McDonald Geodetic Observatory (MGO).
+*            Change IVS Station name from MCDON12M to MACGO12M.
+* 200228 dbb Add 13.2-m at Metsahovi as Mf METSA13M with DOMES and CDP numbers.
 *
 * Fields:
 * 1. IVS 2-letter code. Not case sensitive, although the initial 
@@ -276,8 +280,9 @@
  Mc MEDICINA 12711S001 7230 Medicina, Italy 
  Md MARPOINT 40490S001 7217 Maryland Point, MD, USA
  Me MON_PEAK 40497M003 7274 mobile Monument Peak, CA, USA
+ Mf METSA13M 10503S017 7398 13.2-m antenna at Metsahovi, Finland
 * Mg -------- --------- ---- Mt. Graham, AZ, USA  (code retired for Mt. Graham)
- Mg MCDON12M --------- ---- McDonald Geodetic Observatory (MGO) near Ft. Davis, TX, USA
+ Mg MACGO12M 40442S018 7624 McDonald Geodetic Observatory (MGO) near Ft. Davis, TX, USA
  Mh METSAHOV 10503S002 7385 Metsahovi, Finland (13.7 m astronomy antenna)
  Mi MIAMI20  40499S019 7201 Miami, FL, USA 
  Mk MK-VLBA  40477S001 7617 VLBA at Mauna Kea, HI, USA 
@@ -346,6 +351,7 @@
  St SANTIA12 41705S006 1404 12-m at Santiago, Chile 
  Su SUWON    23903S001 7353 3.8m antenna at Suwon, Korea 
  Sv SVETLOE  12350S001 7380 Svetloe, Russia
+ Sw SVERT13V 12350S003 7397 13-m at Svetloe, Russia
  Sy SYOWA    66006S004 7342 Syowa, Antarctica 
  T3 TSUKU3   21730S008 7360 3.8-m, Tsukuba, Japan
  T6 TIANMA65 21618S001 7379 Tianma 65-m antenna in the Sheshan Songjiang district of Shanghai, China

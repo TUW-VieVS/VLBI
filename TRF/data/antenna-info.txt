@@ -1,11 +1,11 @@
 $ Antenna Information File  Format Version of 2008.04.22
+## Content Version of 2020-04-03
 #
 # When using this file acknowledgement has to be given to
 #
 # Axel Nothnagel (2009) Conventions on thermal expansion 
 # modelling of radio telescopes for geodetic and astrometric VLBI;
 # Journal of Geodesy, Vol. 83(3), 787-792, DOI: 10.1007/s00190-008-0284-z
-#
 #
 #
 # The antenna information file contains information about 
@@ -15,40 +15,49 @@ $ Antenna Information File  Format Version of 2008.04.22
 # d) the axis offset 
 #
 #
-#
-# Version:    2008-05-09 Compiled and established by A. Nothnagel
-#             2008-06-26 Noto and Medicina corrected, A. Nothnagel
-#             2008-06-30 MV-3 mobiles in Europe copied, Clean-up, A. Nothnagel
-#             2008-07-28 NICT Japanese telescopes updated, Yasuhiro Koyama
-#             2008-07-31 Hobart included, Brett Reid
-#             2008-07-31 GSI Japanese telescopes updated, Kensuke Kokado
-#             2008-08-12 Haystack data included, Arthur Niell
-#             2008-10-16 Mobiles and axis offsets cleaned and commented
-#             2008-11-27 Corrected EQUA for POLA, -AN-
-#             2008-12-16 Corrected YEBES with radome, -AN-
-#             2008-12-17 Corrected MO_XYEW -> MO_XYEA and MO_XYNS -> MO_XYNO
-#             2009-03-16 Corrected axis offset of Svetloe
-#             2009-11-25 METSAHOV updated, info from Ari Mujunen
-#             2009-12-02 YEBES40M updated, info from Patricia Trigo
-#             2009-12-21 PARKES antenna axis offset updated, info from Alex Woods
-#             2010-09-10 WARK12M, YARRA12M, KATH12M, HOBART12, info from Cobham
-#             2011-02-10 UCHINOUR, info from Hiroshi Takeuchi
-#             2012-07-13 BR-VLBA, info by Kendall Fancher
-#             2012-07-13 FTD_7900, GBT-VLBA, JPL_MV1, NOBEY_6M, USUDA64, VERAMZSW, VLA-N8 corrected
-#             2012-07-23 WETTZ13N and WETTZ13S added
-#             2012-08-10 HART15M added
-#             2012-08-15 HRAS_085 corrected
-#             2013-03-27 WARK12M axis offset updated
-#             2013-06-17 ONSALA85 mount type corrected
-#             2013-07-25 VERAOGSW, VERAIRIK, VERAISGK, DSS13 added
-#             2013-08-26 FD-VLBA new axis offset from report by Fancher et al, 2013
-#             2013-11-29 KUNMING and TIANMA65 added
-#             2014-01-22 Axis offset estimates of multiple sites of Dan Macmillan of Jan 7, 2014 introduced
-#             2014-11-19 SEJONG added / completed 2014-11-20
+# Version:    
+#             2020-04-03 Revised WESTFORD expansion coefficients for 0.6 factor to allow direct use of outside tempertures 
+#                        in a general model
+#             2020-04-02 Assigned same axis offsets to DSS65 and DSS65a
+#             2020-03-19 ISHIOKA axis offset updated
+#             2020-03-02 Multiple new axis offset estimates by Dan Macmillan added for ITRF2020 computations
+#             2020-02-11 SVERT13V, BADRT13V, ZELRT13V, NYALE13N, NYALE13S added
+#             2020-02-11 AGGO, RAEGSMAR, MACGO12M added, reference temperatures of TIANMA65, GGAO12M and KOKEE12M corrected
+#             2020-01-06 ONSA13NE and ONSA13SW added as or email by Rüdiger Haas 2019-11-28
+#             2020-01-06 GGAO12M added as of emails with Arthur Niell 2019-11-04
+#             2020-01-06 WESTFORD focus type changed from FO_SECN to FO_PRIM, see Email of Arthur Niell of 2019-11-05
+#             2019-10-30 KOKEE12M added as of info by Arthur Niell 2019-07-08
+#             2015-08-13 ISHIOKA added as of info by Fukuzaki 2015-12-08
 #             2015-03-12 RAEGYEB added / completed 2015-03-13
-#             2015-08-13 ISHIOKA added as of info by Fukuzaki 12.08.2015
-#             2015-10-08 CEDUNA added (dummy) to get VM1 Data, Hellerschmied A.
-#             2018-09-26 GGAO12M and KOKEE12M added (dummy), Hellerschmied A.
+#             2014-11-19 SEJONG added / completed 2014-11-20
+#             2014-01-22 Axis offset estimates of multiple sites of Dan Macmillan of 2014-01-07 introduced
+#             2013-11-29 KUNMING and TIANMA65 added
+#             2013-08-26 FD-VLBA new axis offset from report by Fancher et al, 2013
+#             2013-07-25 VERAOGSW, VERAIRIK, VERAISGK, DSS13 added
+#             2013-06-17 ONSALA85 mount type corrected
+#             2013-03-27 WARK12M axis offset updated
+#             2012-08-15 HRAS_085 corrected
+#             2012-08-10 HART15M added
+#             2012-07-23 WETTZ13N and WETTZ13S added
+#             2012-07-13 FTD_7900, GBT-VLBA, JPL_MV1, NOBEY_6M, USUDA64, VERAMZSW, VLA-N8 corrected
+#             2012-07-13 BR-VLBA, info by Kendall Fancher
+#             2011-02-10 UCHINOUR, info from Hiroshi Takeuchi
+#             2010-09-10 WARK12M, YARRA12M, KATH12M, HOBART12, info from Cobham
+#             2009-12-21 PARKES antenna axis offset updated, info from Alex Woods
+#             2009-12-02 YEBES40M updated, info from Patricia Trigo
+#             2009-11-25 METSAHOV updated, info from Ari Mujunen
+#             2009-03-16 Corrected axis offset of Svetloe
+#             2008-12-17 Corrected MO_XYEW -> MO_XYEA and MO_XYNS -> MO_XYNO
+#             2008-12-16 Corrected YEBES with radome, -AN-
+#             2008-11-27 Corrected EQUA for POLA, -AN-
+#             2008-10-16 Mobiles and axis offsets cleaned and commented
+#             2008-08-12 Haystack data included, Arthur Niell
+#             2008-07-31 GSI Japanese telescopes updated, Kensuke Kokado
+#             2008-07-31 Hobart included, Brett Reid
+#             2008-07-28 NICT Japanese telescopes updated, Yasuhiro Koyama
+#             2008-06-30 MV-3 mobiles in Europe copied, Clean-up, A. Nothnagel
+#             2008-06-26 Noto and Medicina corrected, A. Nothnagel
+#             2008-05-09 Compiled and established by A. Nothnagel
 #
 #  N.B.: For direct use in Solve, the empty FO_ entries have to be filled with
 #        dummy SECN or PRIM. These entries have been left empty on purpose to express
@@ -110,20 +119,22 @@ $ Antenna Information File  Format Version of 2008.04.22
 #  22) 171:177 -- Sub-reflector/primary focus mounting legs thermal expansion coefficient (1/K)
 #
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  AGGO      FO_PRIM MO_AZEL RA_NO   ME_COMP  12.6  0    0    999.0    6.0  0.2000   1.50  1.00E-5   1.4600 1.20E-5   0.0000 1.20E-5   0.7500 1.20E-5   4.5000 1.20E-5
-# Information copied from TIGOCONC
+ANTENNA_INFO  AGGO      FO_PRIM MO_AZEL RA_NO   ME_COMP  17.0  0    0   1011.7    6.0  0.2700   4.73  1.00E-5   1.4600 1.20E-5   0.0000 1.20E-5   0.7500 1.20E-5   4.5000 1.20E-5
+# Information copied from TIGOCONC except ref. temp. and pres., height and depth of foundataion, see Email by Hayo Hase 2020-02-10
 # axis offset reported by Hayo Hase BKG, 2004 on the basis of local measurements
 # 0.0000 +- 0.0003
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  AIRA      FO_SECN MO_AZEL RA_NO   ME_INCM  16.4  0    0    978.2   10.0  3.0000  0      1.00E-5   6.7000 1.20E-5  -0.0081 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+ANTENNA_INFO  AIRA      FO_SECN MO_AZEL RA_NO   ME_INCM  16.4  0    0    978.2   10.0  3.0000  0      1.00E-5   6.7000 1.20E-5  -0.0065 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Email of Kensuke Kokado, 2008-07-29; X band: secondary focus, S band: primary focus
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0126 +- 0.0022
 # axis offset estimated by Dan Macmillan 2014.01.07, -0.0081 +- 0.0013
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0065 +- 0.0016
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  ALGOPARK  FO_PRIM MO_AZEL RA_NO   ME_COMP   4.7  0    0    984.2   46.0 13.0000  0      1.00E-5   9.6000 1.20E-5   0.0033 1.20E-5   6.3000 1.20E-5  18.3000 1.20E-5
 #  Information as from C. Klatt 990317
 # axis offset estimated by L.  Petrov    (pre 2008)  0.0014 +- 0.0004
 # axis offset estimated by Dan Macmillan 2014.01.07, 0.0033 +- 0.0004
+# axis offset estimated by Dan Macmillan 2020.02.14, 0.0033 +- 0.0003
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  AUSTINTX  FO_SECN MO_AZEL RA_NO   ME_INCM  25.3  0    0    993.3    5.0  0.0000  0      1.00E-5   4.3500 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-3, one time occupation by NGS
@@ -132,9 +143,18 @@ ANTENNA_INFO  AZORES    FO_SECN MO_AZEL RA_NO   ME_COMP  16.1  0    0   1019.6  
 # mobile site with MV-2,  from ECCDAT file
 # single occupation
 #----------------------------------------------------------------------------------------
+ANTENNA_INFO  BADRT13V  FO_SECN MO_AZEL RA_NO   ME_COMP   2.5  0    0    918.6   13.2  6.0000  0      1.00E-5   5.3000 1.20E-5   0.0000 1.20E-5   2.5000 1.20E-5   3.9000 1.20E-5
+#  Turning head ring focus antenna, design: Vertex Antennentechnik, Diameter of primary reflector = 13.2 m
+#  Focal length of primary reflector = 3.602 m
+#  Diameter of secondary reflector = 1.48 m
+#  Focal length of secondary reflector = 0.3 m
+#  Feed ilumination taper in dB unknown
+#  Information as from E. Skurikhina 2020-02-10
+#----------------------------------------------------------------------------------------
 ANTENNA_INFO  BADARY    FO_SECN MO_AZEL RA_NO   ME_COMP   2.4  0    0    917.2   32.0  1.0000  0      1.00E-5  21.9000 1.20E-5   0.0025 1.20E-5   1.9000 1.20E-5  10.6000 1.20E-5
-# Telescope dimensions as for Svetloe from Zinovy Malkin 040624, axis offset from Zinovy Malkin 051220
+# Telescope dimensions as for Svetloe from Zinovy Malkin 040624, axis offset from Zinovy Malkin 051220 = 0.0025 +- 0.0005
 # from geodetic measurements in Nov-Dec 2005
+# [axis offset estimated by Dan Macmillan 2020.02.14, -0.0027 +- 0.0002] ignored in cosultation with Dan.
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  BERMUDA   FO_SECN MO_AZEL RA_NO   ME_INCM  20.1  0    0   1016.7    5.0  0.0000  0      1.00E-5   4.2000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-3 
@@ -165,10 +185,11 @@ ANTENNA_INFO  CARNUSTY  FO_SECN MO_AZEL RA_NO   ME_COMP   9.6  0    0   1010.8  
 ANTENNA_INFO  CARROLGA  FO_SECN MO_AZEL RA_NO   ME_INCM  19.0  0    0    979.0    5.0  0.0000  0      1.00E-5   4.3000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # MV-3 one time occupation
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  CHICHI10  FO_SECN MO_AZEL RA_NO   ME_INCM  22.9  0    0   1005.4   10.0  3.0000  0      1.00E-5   6.7000 1.20E-5  -0.0047 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+ANTENNA_INFO  CHICHI10  FO_SECN MO_AZEL RA_NO   ME_INCM  22.9  0    0   1005.4   10.0  3.0000  0      1.00E-5   6.7000 1.20E-5  -0.018 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Email of Kensuke Kokado, 2008-07-29; X band: secondary focus, S band: primary focus
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0025 +- 0.0023
 # axis offset estimated by Dan Macmillan 2014.01.07, -0.0047 +- 0.0014
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0018 +- 0.0023
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  CHLBOLTN  FO_PRIM MO_AZEL RA_NO   ME_ROUG  10.5  0    0   1004.2   26.0  0.0000  0      1.00E-5  13.0000 1.20E-5   0.3060 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Hp = half of diameter
@@ -193,34 +214,45 @@ ANTENNA_INFO  DEADMANL  FO_SECN MO_AZEL RA_NO   ME_INCM  14.1  0    0    918.9  
 # 1985.01.09 - 1987.03.27 MV-2, Hp = 2.7 m
 # 1987.03.28 - 2000.01.01 MV-3. Hp = 4.3 m
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  DSS13     FO_SECN MO_AZEL RA_NO   ME_COMP  12.1  0    0    893.2   34.0  3.0000  0      1.00E-5  16.8000 1.20E-5   0.0157 1.20E-5   2.7000 1.20E-5  10.8000 1.20E-5
+ANTENNA_INFO  DSS13     FO_SECN MO_AZEL RA_NO   ME_COMP  12.1  0    0    893.2   34.0  3.0000  0      1.00E-5  16.8000 1.20E-5   0.0081 1.20E-5   2.7000 1.20E-5  10.8000 1.20E-5
 #  Information copied from DSS15, axis offset set to zero
 #  X/Y/Z = -2351112.531    -4655530.704     3660912.734
 # Axis offset estimated by Dan Macmillan 2014.01.07, 0.0157 +- 0.0035
+# axis offset estimated by Dan Macmillan 2020.02.14, 0.0081 +- 0.0030
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  DSS15     FO_SECN MO_AZEL RA_NO   ME_COMP  12.6  0    0    903.8   34.0  3.0000  0      1.00E-5  16.8000 1.20E-5  -0.0037 1.20E-5   2.7000 1.20E-5  10.8000 1.20E-5
+ANTENNA_INFO  DSS15     FO_SECN MO_AZEL RA_NO   ME_COMP  12.6  0    0    903.8   34.0  3.0000  0      1.00E-5  16.8000 1.20E-5  -0.0026 1.20E-5   2.7000 1.20E-5  10.8000 1.20E-5
 #  Information as from C. Jacobs 990311
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0039 +- 0.0015
 # axis offset estimated by Dan Macmillan 2014.01.07, -0.0037 +- 0.0016
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0026 +- 0.0015
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  DSS45     FO_SECN MO_AZEL RA_NO   ME_COMP  14.1  0    0    941.4   34.0  3.0000  0      1.00E-5  16.8000 1.20E-5  -0.0011 1.20E-5   2.7000 1.20E-5  10.8000 1.20E-5
+ANTENNA_INFO  XSS34     FO_SECN MO_AZEL RA_NO   ME_COMP  14.0  0    0    939.4   34.0  3.0000  0      1.00E-5  16.8000 1.20E-5  -0.0037 1.20E-5   2.7000 1.20E-5  10.8000 1.20E-5
+# Dummy for DSS34, temp. and pressure are correct
+#----------------------------------------------------------------------------------------
+ANTENNA_INFO  XSS36     FO_SECN MO_AZEL RA_NO   ME_COMP  14.0  0    0    940.1   34.0  3.0000  0      1.00E-5  16.8000 1.20E-5  -0.0037 1.20E-5   2.7000 1.20E-5  10.8000 1.20E-5
+# Dummy for DSS36, temp. and pressure are correct
+#----------------------------------------------------------------------------------------
+ANTENNA_INFO  DSS45     FO_SECN MO_AZEL RA_NO   ME_COMP  14.1  0    0    941.4   34.0  3.0000  0      1.00E-5  16.8000 1.20E-5  -0.0005 1.20E-5   2.7000 1.20E-5  10.8000 1.20E-5
 #  Information as from C. Jacobs 990311
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0013 +- 0.0018
 # axis offset estimated by Dan Macmillan 2014.01.07, -0.0011 +- 0.0018
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0005 +- 0.0016
 #-----------------------------------------------------------------------------------------
-ANTENNA_INFO  MADRID64  FO_SECN MO_AZEL RA_NO   ME_INCM  12.5  0    0    928.1   70.0  0.0000  0      1.00E-5  35.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+ANTENNA_INFO  DSS63     FO_SECN MO_AZEL RA_NO   ME_INCM  12.5  0    0    928.1   70.0  0.0000  0      1.00E-5  35.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Hp = half diameter
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  DSS65     FO_SECN MO_AZEL RA_NO   ME_COMP  12.5  0    0    928.1   34.0  3.0000  0      1.00E-5  16.8000 1.20E-5  -0.0026 1.20E-5   2.7000 1.20E-5  10.8000 1.20E-5
+ANTENNA_INFO  DSS65     FO_SECN MO_AZEL RA_NO   ME_COMP  12.5  0    0    928.1   34.0  3.0000  0      1.00E-5  16.8000 1.20E-5  -0.0053 1.20E-5   2.7000 1.20E-5  10.8000 1.20E-5
 #  Information as from A. Nothnagel 950523
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0026 +- 0.0009
 # axis offset estimated by Dan Macmillan 2014.01.07, -0.0026 +- 0.0009
-##----------------------------------------------------------------------------------------
-ANTENNA_INFO  DSS65A    FO_SECN MO_AZEL RA_NO   ME_COMP  12.5  0    0    928.1   34.0  3.0000  0      1.00E-5  16.8000 1.20E-5  -0.0026 1.20E-5   2.7000 1.20E-5  10.8000 1.20E-5
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0017 +- 0.0009, We agreed to use the same number as for DSS65a
+#----------------------------------------------------------------------------------------
+ANTENNA_INFO  DSS65A    FO_SECN MO_AZEL RA_NO   ME_COMP  12.5  0    0    928.1   34.0  3.0000  0      1.00E-5  16.8000 1.20E-5  -0.0053 1.20E-5   2.7000 1.20E-5  10.8000 1.20E-5
 #  Information as from A. Nothnagel 950523, identical to DSS65
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0026 +- 0.0009
-# axis offset estimated by Dan Macmillan 2014.01.07, -0.0054 +- 0.0015. We agrred to use the same number as for DSS65
-----------------------------------------------------------------------------------------
+# axis offset estimated by Dan Macmillan 2014.01.07, -0.0054 +- 0.0015. We agreed to use the same number as for DSS65 (obsolte as of 2020.04.02)
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0053 +- 0.0008
+#----------------------------------------------------------------------------------------
 ANTENNA_INFO  EFLSBERG  FO_SECN MO_AZEL RA_NO   ME_COMP   9.0  0    0    972.8   100.0 0.0000  0      1.00E-5  50.0000 1.20E-5   0.0103 1.20E-5   8.5000 1.20E-5  28.0000 1.20E-5
 # Information as from A. Nothnagel 950523, axis offset measured by
 # Miebach/Werntgen, Bonn, 1980,  0.0103 +- 0.0010 
@@ -248,10 +280,11 @@ ANTENNA_INFO  FLAGSTAF  FO_SECN MO_AZEL RA_NO   ME_INCM   7.5  0    0    783.1  
 # 1988.04.25 - 1988.10.14 MV-3. Hp = 4.3 m
 # 1988.10.15 - 2000.01.01 MV-2, Hp = 2.8 m
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  FORTLEZA  FO_PRIM MO_AZEL RA_NO   ME_COMP  26.7  0    0   1007.3   14.2  4.4400  0      1.00E-5   3.7100 1.20E-5   0.0035 1.20E-5   2.8400 1.20E-5   5.6800 1.20E-5
+ANTENNA_INFO  FORTLEZA  FO_PRIM MO_AZEL RA_NO   ME_COMP  26.7  0    0   1007.3   14.2  4.4400  0      1.00E-5   3.7100 1.20E-5   0.0015 1.20E-5   2.8400 1.20E-5   5.6800 1.20E-5
 #  Information as from P. Kaufmann 990319
 # axis offset estimated by L.  Petrov    (pre 2008)  0.0060 +- 0.0006
 # axis offset estimated by Dan Macmillan 2014.01.07, 0.0035 +- 0.0005
+# axis offset estimated by Dan Macmillan 2020.02.14, 0.0015 +- 0.0002
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  FORT_ORD  FO_SECN MO_AZEL RA_NO   ME_INCM  16.2  0    0   1012.9    5.0  0.0000  0      1.00E-5   4.4000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2 and MV-3
@@ -276,7 +309,13 @@ ANTENNA_INFO  GBT-VLBA  FO_SECN MO_AZEL RA_NO   ME_INCM   9.3  0    0    917.8  
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0883 +- 0.0066
 # axis offset estimated by Dan Macmillan 2014.01.07, -0.0879 +- 0.0067
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  GGAO7108  FO_SECN MO_AZEL RA_NO   ME_COMP  13.4  0    0   1010.5    5.0  0.0000  0      1.00E-5   4.4000 1.20E-5  -0.0026 1.20E-5   1.3000 1.20E-5   1.6000 1.20E-5
+ANTENNA_INFO  GGAO12M   FO_SECN MO_AZEL RA_NO   ME_COMP  13.3  0    0   1009.9   12.0  0.0000  0      1.00E-5   6.3000 1.20E-5   0.0018 1.20E-5   2.5000 1.20E-5   4.2620 1.20E-5
+# axis offset = +1.8 (+/-1.7) mm from the NGS survey of the Goddard complex made in 2012 Jun-Aug
+# (https://www.ngs.noaa.gov/corbin/iss/reports/WashingtonSiteLocalTieSurvey.pdf)
+# Info by email of Arthur Niell 2019-11-05
+# 2020-02-10: Mean temperature and pressure now correctly computed with GPT, previous values were taken from GGAO7108 
+#----------------------------------------------------------------------------------------
+ANTENNA_INFO  GGAO7108  FO_SECN MO_AZEL RA_NO   ME_COMP  13.4  0    0   1010.5    5.0  0.0000  0      1.00E-5   4.4000 1.20E-5  -0.0034 1.20E-5   1.3000 1.20E-5   1.6000 1.20E-5
 # mobile site with MV-3, occupied monument 7108 since 1993-04-01,
 # Dimensions measured by A. Nothnagel and E-mail by Rawland Covey 990119, S prime, X sec !!
 # Lowered from trailer to ground on 2003 Jan 01 according to Dan Macmillan
@@ -285,6 +324,7 @@ ANTENNA_INFO  GGAO7108  FO_SECN MO_AZEL RA_NO   ME_COMP  13.4  0    0   1010.5  
 # 2003.01.01 - 2050.01.01 MV-3, Hp = 3.1 m
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0021 +- 0.0024
 # axis offset estimated by Dan Macmillan 2014.01.07, -0.0026 +- 0.0025
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0034 +- 0.0002
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  GIFU11    FO_SECN MO_AZEL RA_NO   ME_COMP  15.0  0    0   1010.2   11.0  0.2000  0      1.00E-5   7.5000 1.20E-5   0.0011 1.20E-5   2.1500 1.20E-5   3.8100 1.20E-5
 # Info by Email of Yasuhiro Koyama, 2008-07-28
@@ -294,15 +334,17 @@ ANTENNA_INFO  GIFU11    FO_SECN MO_AZEL RA_NO   ME_COMP  15.0  0    0   1010.2  
 ANTENNA_INFO  GIFU3     FO_SECN MO_AZEL RA_NO   ME_COMP  15.0  0    0   1011.0    3.0  0.2000  0      1.00E-5   2.0000 1.20E-5   0.0000 1.20E-5   1.1000 1.20E-5   0.5000 1.20E-5
 # Info by Email of Yasuhiro Koyama, 2008-07-28, Moved here from KOGANEI3
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  GILCREEK  FO_PRIM MO_XYNO RA_NO   ME_COMP  -3.3  0    0    970.3   25.9  0.6000  0      1.00E-5  13.1000 1.20E-5   7.2846 1.20E-5   3.4000 1.20E-5  13.7000 1.20E-5
+ANTENNA_INFO  GILCREEK  FO_PRIM MO_XYNO RA_NO   ME_COMP  -3.3  0    0    970.3   25.9  0.6000  0      1.00E-5  13.1000 1.20E-5   7.2847 1.20E-5   3.4000 1.20E-5  13.7000 1.20E-5
 #  E-mail by Rich Strand 990126
-# axis offset estimated by L.  Petrov    (pre 2008)  7.2850 +- 0.0001
+# axis offset estimated by L.  Petrov    (pre 2008)   7.2850 +- 0.0001
 # axis offset estimated by Dan Macmillan 2014.01.07,  7.2846 +- 0.0001
+# axis offset estimated by Dan Macmillan 2020.02.14,  7.2847 +- 0.0001
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  GOLDVENU  FO_SECN MO_AZEL RA_NO   ME_ROUG  12.1  0    0    894.0   26.0  0.0000  0      1.00E-5  13.0000 1.20E-5   0.9257 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+ANTENNA_INFO  GOLDVENU  FO_SECN MO_AZEL RA_NO   ME_ROUG  12.1  0    0    894.0   26.0  0.0000  0      1.00E-5  13.0000 1.20E-5   0.9181 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # GOLDVENU a.k.a. old DSS13, Hp = half of diameter
 # axis offset estimated by L.  Petrov    (pre 2008)  0.9295 +- 0.0060
 # axis offset estimated by Dan Macmillan 2014.01.07,  0.9257 +- 0.0063
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.9181 +- 0.0057
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  GORF7102  FO_SECN MO_AZEL RA_NO   ME_INCM  13.3  0    0   1010.0    5.0  0.0000  0      1.00E-5   4.3000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site
@@ -328,27 +370,30 @@ ANTENNA_INFO  HART15M   FO_PRIM MO_AZEL RA_NO   ME_COMP  16.1  0    0    863.7  
 # length of 0.155 m at 3.5E-5 expansion coefficient.
 # Illumnation taper 13 dB at 51 degrees, diameter 15 m, f/D = 0.5
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  HATCREEK  FO_PRIM MO_EQUA RA_NO   ME_COMP   9.3  0    0    900.1   26.0  0.0000  0      1.00E-5  16.3000 1.20E-5  -0.0095 1.20E-5   4.4000 1.20E-5  13.0000 1.20E-5
+ANTENNA_INFO  HATCREEK  FO_PRIM MO_EQUA RA_NO   ME_COMP   9.3  0    0    900.1   26.0  0.0000  0      1.00E-5  16.3000 1.20E-5  -0.0100 1.20E-5   4.4000 1.20E-5  13.0000 1.20E-5
 #  no info, taken from picture by Axel Nothnagel 990806
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0097 +- 0.0011
-# Axis offset estimated by Dan Macmillan 2014.01.07,  -0.0095 +- 0.0012
+# Axis offset estimated by Dan Macmillan 2014.01.07, -0.0095 +- 0.0012
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0100 +- 0.0010
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  HAYSTACK  FO_SECN MO_AZEL RA_YES  ME_COMP   8.6  0    0    997.7   37.0 10.4500  0      1.00E-5  13.6000 1.20E-5  -0.0012 1.20E-5   4.3000 1.20E-5  13.950  2.30E-5
 # Infos by Arthur Niell, 2008-08-11
 # "The other effect is the gravitational sag of the subreflector, which is 
 # documented in Carter et al JGR Vol 85 B5 pp 2685-2687 as 13 mm sin elev."
-# axis offset estimated by L.  Petrov    (pre 2008)  0.0000 +- 0.0014
+# axis offset estimated by L.  Petrov    (pre 2008)   0.0000 +- 0.0014
 # Axis offset estimated by Dan Macmillan 2014.01.07, -0.0012 +- 0.0014
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0019 +- 0.0014
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  HN-VLBA   FO_SECN MO_AZEL RA_NO   ME_COMP   7.1  0    0    976.6   25.0  0.5000  0      1.00E-5  13.7000 1.20E-5   2.1301 1.20E-5   4.6000 1.20E-5   8.8000 1.20E-5
+ANTENNA_INFO  HN-VLBA   FO_SECN MO_AZEL RA_NO   ME_COMP   7.1  0    0    976.6   25.0  0.5000  0      1.00E-5  13.7000 1.20E-5   2.1296 1.20E-5   4.6000 1.20E-5   8.8000 1.20E-5
 #  Napier et al. Proc. IEEE Vol. 82, p. 658, 1994
-# axis offset estimated by L.  Petrov    (pre 2008)  2.1295 +- 0.0004
+# axis offset estimated by L.  Petrov    (pre 2008)   2.1295 +- 0.0004
 # Axis offset estimated by Dan Macmillan 2014.01.07,  2.1301 +- 0.0003
+# axis offset estimated by Dan Macmillan 2020.02.14,  2.1296 +- 0.0002
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  HOBART12  FO_SECN MO_AZEL RA_NO   ME_COMP  12.0  0    0   1005.7   12.0  0.0000  0      1.00E-5   6.7080 1.14E-5   0.0129 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
+ANTENNA_INFO  HOBART12  FO_SECN MO_AZEL RA_NO   ME_COMP  12.0  0    0   1005.7   12.0  0.0000  0      1.00E-5   6.7080 1.14E-5   0.0184 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
 # dimensions and expansion coefficients provided by Kevin Sinclair via Peter Shield of InterTronic Solutions Inc./Cobham plc
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0129 +- 0.0010
-# 
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0184 +- 0.0004
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  HOBART26  FO_PRIM MO_XYEA RA_NO   ME_COMP  13.2  0    0   1005.7   26.0  0.0000  0      1.00E-5  13.1500 1.20E-5   8.1913 1.20E-5   3.6500 1.20E-5  11.0300 1.20E-5
 # Axis offset of HOBART26 reported by John Dawson via Oleg Titov, 2005, 8.1913 +- 0.0015
@@ -367,15 +412,19 @@ ANTENNA_INFO  HOHNBERG  FO_SECN MO_AZEL RA_NO   ME_COMP   6.4  0    0    906.9  
 # mobile site with MV-2,  from ECCDAT file
 # one time occupation
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  HRAS_085  FO_PRIM MO_EQUA RA_NO   ME_COMP  15.5  0    0    837.8   25.9  0.0000  0      1.00E-5   9.3000 1.20E-5   6.7018 1.20E-5   2.3000 1.20E-5   9.4000 1.20E-5
+ANTENNA_INFO  HRAS_085  FO_PRIM MO_EQUA RA_NO   ME_COMP  15.5  0    0    837.8   25.9  0.0000  0      1.00E-5   9.3000 1.20E-5   6.7019 1.20E-5   2.3000 1.20E-5   9.4000 1.20E-5
 # no info, Hp taken from picture, rest as of HartRAO, Axel Nothnagel 990806
 # Prime focus confirmed by Ed Himwich and Brian Corey
 # axis offset estimated by L.  Petrov    (pre 2008)   6.7007 +- 0.0006
 # Axis offset estimated by Dan Macmillan 2014.01.07,  6.7018 +- 0.0006
+# axis offset estimated by Dan Macmillan 2020.02.14,  6.7019 +- 0.0006
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  ISHIOKA   FO_SECN MO_AZEL RA_NO   ME_COMP  13.7  0    0    998.1   13.2  8.1400  0      1.20E-5   2.8600 1.20E-5   0.0003 1.20E-5   3.2700 1.20E-5   3.9100 1.20E-5
-# Information as from Yoshihiro Fukuzaki 2015-08-12
+ANTENNA_INFO  ISHIOKA   FO_SECN MO_AZEL RA_NO   ME_COMP  13.7  0    0    998.1   13.2  8.1400  0      1.20E-5   2.8600 1.20E-5   0.0001 1.20E-5   3.2700 1.20E-5   3.9100 1.20E-5
+# Information as from Yoshihiro Fukuzaki 2015-08-12, Drawing says AO = 0.000287. Apparently this is not from a local measurement.
 # Turning head ring focus telescope
+# [axis offset estimated by Dan Macmillan 2020.02.14, -0.0007 +- 0.0002]
+# axis offset measurement reported by Saho Matsumoto (Email March 11, 2020) +0.1 +-0.1 mm. 
+# See also "VLBI-GNSS Collocation Survey at the Ishioka Geodetic Observing Station" by Saho Matsumoto, Michiko Umei, Haruka Ueshiba, Shinobu Kurihara, Takahiro Wakasugi, Tadao Kikkawa and Hirosi Munekane in the IVS NICT-TDC News #38. http://www2.nict.go.jp/sts/stmg/ivstdc/news_38/pctdc_news38.pdf
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  JPL_MV1   FO_SECN MO_AZEL RA_NO   ME_INCM  15.9  0    0    965.2    9.0  0.0000  0      1.00E-5   6.5000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site, Original position of MV-1 at JPL Pasadena
@@ -391,30 +440,34 @@ ANTENNA_INFO  KANOZAN   FO_SECN MO_AZEL RA_NO   ME_INCM  13.3  0    0    973.7  
 ANTENNA_INFO  KARLBURG  FO_SECN MO_AZEL RA_NO   ME_COMP   9.7  0    0   1010.7    3.9  0.0000  0      1.00E-5   2.9000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2,  from ECCDAT file
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  KASHIM11  FO_SECN MO_AZEL RA_NO   ME_COMP  14.6  0    0   1010.2   11.0  0.2000  0      1.00E-5   7.5000 1.20E-5   0.0026 1.20E-5   2.1500 1.20E-5   3.8100 1.20E-5
+ANTENNA_INFO  KASHIM11  FO_SECN MO_AZEL RA_NO   ME_COMP  14.6  0    0   1010.2   11.0  0.2000  0      1.00E-5   7.5000 1.20E-5   0.0067 1.20E-5   2.1500 1.20E-5   3.8100 1.20E-5
 #  Information as from R. Haas 981210, Augmented by Yasuhiro Koyama 2008-07-28
 # axis offset estimated by L.  Petrov    (pre 2008)  0.0013 +- 0.0023
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0026 +- 0.0019
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0067 +- 0.0008
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  KASHIM34  FO_SECN MO_AZEL RA_NO   ME_COMP  14.5  0    0   1008.3   34.0  0.3000  0      1.00E-5  16.4000 1.20E-5  -0.0019 1.20E-5   2.7300 1.20E-5  10.3100 1.20E-5
+ANTENNA_INFO  KASHIM34  FO_SECN MO_AZEL RA_NO   ME_COMP  14.5  0    0   1008.3   34.0  0.3000  0      1.00E-5  16.4000 1.20E-5   0.0101 1.20E-5   2.7300 1.20E-5  10.3100 1.20E-5
 #  Information as from Koyama 980804
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0090 +- 0.0014
 # Axis offset estimated by Dan Macmillan 2014.01.07, -0.0019 +- 0.0010
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0101 +- 0.0003
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  KASHIMA   FO_SECN MO_AZEL RA_NO   ME_COMP  14.5  0    0   1008.1   26.0  5.2000  0      1.20E-5  13.2000 1.20E-5  -0.0011 1.20E-5   0.0000 1.20E-5  12.3000 1.20E-5
+ANTENNA_INFO  KASHIMA   FO_SECN MO_AZEL RA_NO   ME_COMP  14.5  0    0   1008.1   26.0  5.2000  0      1.20E-5  13.2000 1.20E-5  -0.0015 1.20E-5   0.0000 1.20E-5  12.3000 1.20E-5
 #  Information as from Koyama 1998-08-04, Steel see Email of T. Yoshino 2002-07-27, Augmented by Yasuhiro Koyama 2008-07-28
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0023 +- 0.0011
 # Axis offset estimated by Dan Macmillan 2014.01.07, -0.0011 +- 0.0011
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0015 +- 0.0012
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  KATH12M   FO_SECN MO_AZEL RA_NO   ME_COMP  25.3  0    0    968.8   12.0  0.0000  0      1.00E-5   6.7080 1.14E-5   0.0043 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
+ANTENNA_INFO  KATH12M   FO_SECN MO_AZEL RA_NO   ME_COMP  25.3  0    0    968.8   12.0  0.0000  0      1.00E-5   6.7080 1.14E-5   0.0027 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
 # dimensions and expansion coefficients provided by Kevin Sinclair via Peter Shield of InterTronic Solutions Inc./Cobham plc
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0043 +- 0.0013
-# 
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0027 +- 0.0002
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  KAUAI     FO_SECN MO_XYNO RA_NO   ME_ROUG  17.0  0    0    885.3    9.0  0.0000  0      1.00E-5   7.7000 1.20E-5   2.4343 1.20E-5   1.7000 1.20E-5   2.9000 1.20E-5
+ANTENNA_INFO  KAUAI     FO_SECN MO_XYNO RA_NO   ME_ROUG  17.0  0    0    885.3    9.0  0.0000  0      1.00E-5   7.7000 1.20E-5   2.4356 1.20E-5   1.7000 1.20E-5   2.9000 1.20E-5
 #  no info, taken from picture, Axel Nothnagel 990806
-# axis offset estimated by L.  Petrov    (pre 2008)  2.4350 +- 0.0005
+# axis offset estimated by L.  Petrov    (pre 2008)   2.4350 +- 0.0005
 # Axis offset estimated by Dan Macmillan 2014.01.07,  2.4343 +- 0.0006
+# axis offset estimated by Dan Macmillan 2020.02.14,  2.4356 +- 0.0005
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  KIRSBERG  FO_SECN MO_AZEL RA_NO   ME_COMP   9.4  0    0    990.1    3.9  0.0000  0      1.00E-5   2.8000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2,  from ECCDAT file
@@ -426,59 +479,75 @@ ANTENNA_INFO  KODIAK    FO_SECN MO_AZEL RA_NO   ME_INCM   4.8  0    0   1003.2  
 # 1985.07.18 - 1987.07.14 MV-3. Hp = 4.5 m
 # 1987.07.15 - 2000.01.01 MV-2, Hp = 3.0 m
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  KOGANEI   FO_SECN MO_AZEL RA_NO   ME_COMP  14.4  0    0   1002.7   11.0  4.5000  0      1.20E-5   7.5000 1.20E-5   0.0056 1.20E-5   2.1500 1.20E-5   3.8100 1.20E-5
+ANTENNA_INFO  KOGANEI   FO_SECN MO_AZEL RA_NO   ME_COMP  14.4  0    0   1002.7   11.0  4.5000  0      1.20E-5   7.5000 1.20E-5   0.0091 1.20E-5   2.1500 1.20E-5   3.8100 1.20E-5
 #  Information as from R. Haas 981210, Augmented by Yasuhiro Koyama 2008-07-28
-# axis offset estimated by L.  Petrov    (pre 2008)  0.0077 +- 0.0023
+# axis offset estimated by L.  Petrov    (pre 2008)   0.0077 +- 0.0023
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0056 +- 0.0020
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0091 +- 0.0011
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  KOGANEI3  FO_SECN MO_AZEL RA_NO   ME_COMP  14.5  0    0   1004.0    3.0  0.2000  0      1.00E-5   2.0000 1.20E-5   0.0000 1.20E-5   1.1000 1.20E-5   0.5000 1.20E-5
 # Info by Email of Yasuhiro Koyama, 2008-07-28
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  KOKEE     FO_PRIM MO_AZEL RA_NO   ME_COMP  16.9  0    0    884.4   20.0  5.4900  0      1.00E-5   9.1900 1.20E-5   0.5180 1.20E-5   2.4400 1.20E-5   8.6000 1.20E-5
+ANTENNA_INFO  KOKEE     FO_PRIM MO_AZEL RA_NO   ME_COMP  16.9  0    0    884.4   20.0  5.4900  0      1.00E-5   9.1900 1.20E-5   0.5174 1.20E-5   2.4400 1.20E-5   8.6000 1.20E-5
 #  Identical to NRAO20 as indicated by Marshall Eubanks
-# axis offset estimated by L.  Petrov    (pre 2008)  0.5182 +- 0.0003
+# axis offset estimated by L.  Petrov    (pre 2008)   0.5182 +- 0.0003
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.5180 +- 0.0003
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.5174 +- 0.0002
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  KP-VLBA   FO_SECN MO_AZEL RA_NO   ME_COMP  10.2  0    0    806.2   25.0  0.5000  0      1.00E-5  13.7000 1.20E-5   2.1313 1.20E-5   4.6000 1.20E-5   8.8000 1.20E-5
+ANTENNA_INFO  KOKEE12M  FO_SECN MO_AZEL RA_NO   ME_COMP  17.0  0    0    885.3   12.0  0.0000  0      1.00E-5   6.3000 1.20E-5   0.0020 1.20E-5   2.5000 1.20E-5   4.2620 1.20E-5
+# Infos according to Arthur Niell, emails 2019-08-07 and following
+# 2020-02-10: Mean temperature and pressure now correctly computed with GPT, previous values were taken over from KOKEE 
+#----------------------------------------------------------------------------------------
+ANTENNA_INFO  KP-VLBA   FO_SECN MO_AZEL RA_NO   ME_COMP  10.2  0    0    806.2   25.0  0.5000  0      1.00E-5  13.7000 1.20E-5   2.1309 1.20E-5   4.6000 1.20E-5   8.8000 1.20E-5
 #  Napier et al. Proc. IEEE Vol. 82, p. 658, 1994
-# axis offset estimated by L.  Petrov    (pre 2008)  2.1327 +- 0.0003
+# axis offset estimated by L.  Petrov    (pre 2008)   2.1327 +- 0.0003
 # Axis offset estimated by Dan Macmillan 2014.01.07,  2.1313 +- 0.0003
+# axis offset estimated by Dan Macmillan 2020.02.14,  2.1309 +- 0.0001
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  KUNMING   FO_SECN MO_AZEL RA_NO   ME_COMP  13.0  0    0    799.4   40.0  10.100  0      1.00E-5  11.4000 1.20E-5  -0.0354 1.20E-5   2.4000 1.20E-5  12.0390 1.20E-5
+ANTENNA_INFO  KUNMING   FO_SECN MO_AZEL RA_NO   ME_COMP  13.0  0    0    799.4   40.0  10.100  0      1.00E-5  11.4000 1.20E-5  -0.0031 1.20E-5   2.4000 1.20E-5  12.0390 1.20E-5
 # From Lonfei Hao, 2013-11-12 via Fengchun Shu 
 # axis offset of 0.0000 provided by CECT39 antenna company
 # Axis offset estimated by Dan Macmillan 2014.01.07, -0.0354 +- 0.0069
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0031 +- 0.0008
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  KWAJAL26  FO_SECN MO_AZEL RA_NO   ME_ROUG  27.6  0    0   1006.3   25.6  0.0000  0      1.00E-5  13.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+ANTENNA_INFO  KWAJAL26  FO_SECN MO_AZEL RA_NO   ME_ROUG  27.6  0    0   1006.3   25.6  0.0000  0      1.00E-5  13.0000 1.20E-5  -0.0011 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Hp = Half diameter
 # Axis offset estimated by Dan Macmillan 2014.01.07, -0.0045 +- 0.0105, set to zero because of too big sigma
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0011 +- 0.0104
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  LA-VLBA   FO_SECN MO_AZEL RA_NO   ME_COMP  10.1  0    0    801.3   25.0  0.5000  0      1.00E-5  13.7000 1.20E-5   2.1321 1.20E-5   4.6000 1.20E-5   8.8000 1.20E-5
+ANTENNA_INFO  LA-VLBA   FO_SECN MO_AZEL RA_NO   ME_COMP  10.1  0    0    801.3   25.0  0.5000  0      1.00E-5  13.7000 1.20E-5   2.1309 1.20E-5   4.6000 1.20E-5   8.8000 1.20E-5
 #  Napier et al. Proc. IEEE Vol. 82, p. 658, 1994
-# axis offset estimated by L.  Petrov    (pre 2008)  2.1329 +- 0.0003
+# axis offset estimated by L.  Petrov    (pre 2008)   2.1329 +- 0.0003
 # Axis offset estimated by Dan Macmillan 2014.01.07,  2.1321 +- 0.0002
+# axis offset estimated by Dan Macmillan 2020.02.14,  2.1309 +- 0.0001
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  LEONRDOK  FO_SECN MO_AZEL RA_NO   ME_INCM  21.0  0    0    988.9    5.0  0.0000  0      1.00E-5   4.4000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-3 one time occupation
+#----------------------------------------------------------------------------------------
+ANTENNA_INFO  MACGO12M  FO_SECN MO_AZEL RA_NO   ME_COMP  13.6  0    0    808.6   12.0  0.0000  0      1.00E-5   6.3000 1.20E-5   0.0020 1.20E-5   2.5000 1.20E-5   4.2620 1.20E-5
+# Infos according to Arthur Niell identical to KOKEE12M, emails 2019-08-07 and following
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  MAMMOTHL  FO_SECN MO_AZEL RA_NO   ME_INCM   2.4  0    0    767.3    5.0  0.0000  0      1.00E-5   4.2000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2 and MV-3 
 # 1983.06.29 - 1984.10.21 MV-2, Hp = 2.8 m
 # 1984.10.22 - 2000.01.01 MV-3. Hp = 4.2 m
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  MARCUS    FO_SECN MO_AZEL RA_NO   ME_COMP  25.3  0    0   1011.7   10.0  0.2000  0      1.00E-5   6.8000 1.20E-5  -0.0129 1.20E-5   3.8000 1.20E-5   1.4000 1.20E-5
+ANTENNA_INFO  MARCUS    FO_SECN MO_AZEL RA_NO   ME_COMP  25.3  0    0   1011.7   10.0  0.2000  0      1.00E-5   6.8000 1.20E-5  -0.0113 1.20E-5   3.8000 1.20E-5   1.4000 1.20E-5
 # Email from Yasuhiro Koyama 2008-07-28
 # Axis offset estimated by Dan Macmillan 2014.01.07, -0.0129 +- 0.0132
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0113 +- 0.0149
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  MARPOINT  FO_PRIM MO_EQUA RA_NO   ME_ROUG  14.3  0    0   1013.9   25.9  0.0000  0      1.00E-5  13.0000 1.20E-5   6.6874 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+ANTENNA_INFO  MARPOINT  FO_PRIM MO_EQUA RA_NO   ME_ROUG  14.3  0    0   1013.9   25.9  0.0000  0      1.00E-5  13.0000 1.20E-5   6.6902 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Hp = Half diameter
-# axis offset estimated by L.  Petrov    (pre 2008)  6.6887 +- 0.0042
+# axis offset estimated by L.  Petrov    (pre 2008)   6.6887 +- 0.0042
 # Axis offset estimated by Dan Macmillan 2014.01.07,  6.6874 +- 0.0045
+# axis offset estimated by Dan Macmillan 2020.02.14,  6.6902 +- 0.0042
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  MATERA    FO_SECN MO_AZEL RA_NO   ME_COMP  14.0  0    0    957.7   20.0  3.0000  0      1.00E-5  10.5000 1.20E-5  -0.0020 1.20E-5   3.8000 1.20E-5   5.7000 1.20E-5
+ANTENNA_INFO  MATERA    FO_SECN MO_AZEL RA_NO   ME_COMP  14.0  0    0    957.7   20.0  3.0000  0      1.00E-5  10.5000 1.20E-5   0.0003 1.20E-5   3.8000 1.20E-5   5.7000 1.20E-5
 #  Information as from A. Nothnagel 950523
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0038 +- 0.0004
 # Axis offset estimated by Dan Macmillan 2014.01.07, -0.0020 +- 0.0003
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0003 +- 0.0002
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  MCD_7850  FO_SECN MO_AZEL RA_NO   ME_INCM  12.8  0    0    796.6    5.0  0.0000  0      1.00E-5   4.4000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-3 one time occupation at MacDonald
@@ -487,44 +556,49 @@ ANTENNA_INFO  MEDICINA  FO_PRIM MO_AZEL RA_NO   ME_COMP  14.6  0    0   1014.8  
 #  Information as from M. Negusini 2008.06.09
 # Axis offset reported by Pierguido Sarti, 2004, 1.8301 error unknown
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  METSAHOV  FO_SECN MO_AZEL RA_YES  ME_COMP   6.8  0    0   1006.7   14.0  0.8500  0      1.00E-5   9.4000 1.20E-5  -0.0024 1.20E-5   2.7400 1.74E-5   4.7000 2.30E-5
+ANTENNA_INFO  METSAHOV  FO_SECN MO_AZEL RA_YES  ME_COMP   6.8  0    0   1006.7   14.0  0.8500  0      1.00E-5   9.4000 1.20E-5  -0.0015 1.20E-5   2.7400 1.74E-5   4.7000 2.30E-5
 # Antenna infos by Ari Mujunen, Email 09.03.2009, Hv is 1.4 m steel (1.2E-5) plus 1.34 m aluminium (2.3E-5) resulting
 # in a weighted expansion coefficient of 1.74E-5, subreflector legs are aluminium, too.
-# axis offset estimated by L.  Petrov    (pre 2008)  0.0051 +- 0.0037
+# axis offset estimated by L.  Petrov    (pre 2008)   0.0051 +- 0.0037
 # Axis offset estimated by Dan Macmillan 2014.01.07, -0.0024 +- 0.0020
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0015 +- 0.0008
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  METSHOVI  FO_SECN MO_AZEL RA_NO   ME_COMP   6.9  0    0   1008.6    5.0  0.0000  0      1.00E-5   4.2000 1.20E-5   0.0000 1.20E-5   1.3000 1.20E-5   1.6000 1.20E-5
 # This is MV-3,  A. Nothnagel from recollection
 # Measured by A.N. at GORF, Email by Rawland Covey 990119, S prime, X sec !!
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  MIAMI20   FO_PRIM MO_AZEL RA_NO   ME_ROUG  24.6  0    0   1015.1   20.0  0.0500  0      1.00E-5  10.8700 1.20E-5   0.0046 1.20E-5   2.4400 1.20E-5   8.6000 1.20E-5
+ANTENNA_INFO  MIAMI20   FO_PRIM MO_AZEL RA_NO   ME_ROUG  24.6  0    0   1015.1   20.0  0.0500  0      1.00E-5  10.8700 1.20E-5   0.0022 1.20E-5   2.4400 1.20E-5   8.6000 1.20E-5
 # Dimensions copied from NyAlesund
-# axis offset estimated by L.  Petrov    (pre 2008)  0.0068 +- 0.0050
+# axis offset estimated by L.  Petrov    (pre 2008)   0.0068 +- 0.0050
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0046 +- 0.0052
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0022 +- 0.0050
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  MILESMON  FO_SECN MO_AZEL RA_NO   ME_INCM  10.5  0    0    932.2    3.9  0.0000  0      1.00E-5   2.8000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2 one time occupation
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  MIURA     FO_SECN MO_AZEL RA_NO   ME_COMP  15.1  0    0   1005.2   11.0  0.2000  0      1.00E-5   7.5000 1.20E-5   0.0047 1.20E-5   2.1500 1.20E-5   3.8100 1.20E-5
+ANTENNA_INFO  MIURA     FO_SECN MO_AZEL RA_NO   ME_COMP  15.1  0    0   1005.2   11.0  0.2000  0      1.00E-5   7.5000 1.20E-5   0.0092 1.20E-5   2.1500 1.20E-5   3.8100 1.20E-5
 #  Information as from R. Haas 981210, Moved to TOMAKO11
-# axis offset estimated by L.  Petrov    (pre 2008)  0.0065 +- 0.0024
+# axis offset estimated by L.  Petrov    (pre 2008)   0.0065 +- 0.0024
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0047 +- 0.0022
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0092 +- 0.0018
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  MIYAZAKI  FO_SECN MO_AZEL RA_NO   ME_INCM  17.6  0    0   1003.7    5.0  0.1000  3.0    1.00E-5   4.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Identical to SAGARA
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  MIZNAO10  FO_SECN MO_AZEL RA_NO   ME_ROUG  11.2  0    0   1003.8   10.0  0.0000  0      1.00E-5   5.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+ANTENNA_INFO  MIZNAO10  FO_SECN MO_AZEL RA_NO   ME_ROUG  11.2  0    0   1003.8   10.0  0.0000  0      1.00E-5   5.0000 1.20E-5   0.0030 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Hp = Half diameter
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0013 +- 0.0068
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0041 +- 0.0071, set to zero because of too big sigma
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0030 +- 0.0125
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  MIZUSGSI  FO_SECN MO_AZEL RA_NO   ME_INCM  10.8  0    0    996.4    5.0  0.1000  3.0    1.00E-5   4.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Identical to SAGARA
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  MK-VLBA   FO_SECN MO_AZEL RA_NO   ME_COMP   0.6  0    0    639.0   25.0  0.5000  0      1.00E-5  13.7000 1.20E-5   2.1341 1.20E-5   4.6000 1.20E-5   8.8000 1.20E-5
+ANTENNA_INFO  MK-VLBA   FO_SECN MO_AZEL RA_NO   ME_COMP   0.6  0    0    639.0   25.0  0.5000  0      1.00E-5  13.7000 1.20E-5   2.1338 1.20E-5   4.6000 1.20E-5   8.8000 1.20E-5
 #  Napier et al. Proc. IEEE Vol. 82, p. 658, 1994
-# axis offset estimated by L.  Petrov    (pre 2008)  2.1343 +- 0.0005
+# axis offset estimated by L.  Petrov    (pre 2008)   2.1343 +- 0.0005
 # Axis offset estimated by Dan Macmillan 2014.01.07,  2.1341 +- 0.0004
+# axis offset estimated by Dan Macmillan 2020.02.14,  2.1338 +- 0.0002
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  MOJ_7288  FO_SECN MO_AZEL RA_NO   ME_INCM  13.2  0    0    912.2    3.9  0.0000  0      1.00E-5   2.8000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2 one time occupation
@@ -534,6 +608,7 @@ ANTENNA_INFO  MOJAVE12  FO_SECN MO_XYNO RA_NO   ME_ROUG  13.1  0    0    910.7  
 #  no info, Estimated from picture Axel Nothnagel 990806
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0031 +- 0.0003
 # Axis offset estimated by Dan Macmillan 2014.01.07, -0.0025 +- 0.0003
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0025 +- 0.0003
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  MON_PEAK  FO_SECN MO_AZEL RA_NO   ME_INCM   7.9  0    0    812.6    5.0  0.0000  0      1.00E-5   4.4000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2 and MV-3
@@ -549,10 +624,11 @@ ANTENNA_INFO  MON_PEAK  FO_SECN MO_AZEL RA_NO   ME_INCM   7.9  0    0    812.6  
 ANTENNA_INFO  MV2ONSLA  FO_SECN MO_AZEL RA_NO   ME_INCM   9.1  0    0   1012.6    3.9  0.0000  0      1.00E-5   2.8000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2 one time occupation
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  NL-VLBA   FO_SECN MO_AZEL RA_NO   ME_COMP  13.9  0    0    987.6   25.0  0.5000  0      1.00E-5  13.7000 1.20E-5   2.1308 1.20E-5   4.6000 1.20E-5   8.8000 1.20E-5
+ANTENNA_INFO  NL-VLBA   FO_SECN MO_AZEL RA_NO   ME_COMP  13.9  0    0    987.6   25.0  0.5000  0      1.00E-5  13.7000 1.20E-5   2.1306 1.20E-5   4.6000 1.20E-5   8.8000 1.20E-5
 #  Napier et al. Proc. IEEE Vol. 82, p. 658, 1994
-# axis offset estimated by L.  Petrov    (pre 2008)  2.1296 +- 0.0003
+# axis offset estimated by L.  Petrov    (pre 2008)   2.1296 +- 0.0003
 # Axis offset estimated by Dan Macmillan 2014.01.07,  2.1308 +- 0.0003
+# axis offset estimated by Dan Macmillan 2020.02.14,  2.1306 +- 0.0002
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  NOBEY_6M  FO_SECN MO_AZEL RA_NO   ME_INCM   5.9  0    0    861.4    6.0  0.0000  0      1.00E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 #
@@ -562,41 +638,55 @@ ANTENNA_INFO  NOME      FO_SECN MO_AZEL RA_NO   ME_INCM  -4.8  0    0    970.6  
 # 1984.07.14 - 1985.07.17 MV-3. Hp = 4.4 m
 # 1985.07.18 - 2000.01.01 MV-2, Hp = 3.0 m
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  NOTO      FO_PRIM MO_AZEL RA_NO   ME_COMP  19.9  0    0   1003.6   32.0  1.9500  0      1.00E-5  15.6000 1.20E-5   1.8316 1.20E-5   4.3000 1.20E-5   9.3000 1.20E-5
+ANTENNA_INFO  NOTO      FO_PRIM MO_AZEL RA_NO   ME_COMP  19.9  0    0   1003.6   32.0  1.9500  0      1.00E-5  15.6000 1.20E-5   1.8285 1.20E-5   4.3000 1.20E-5   9.3000 1.20E-5
 #  Information as from M. Negusini 2008.06.09
-# axis offset estimated by L.  Petrov    (pre 2008)  1.8310 +- 0.0009
+# axis offset estimated by L.  Petrov    (pre 2008)   1.8310 +- 0.0009
 # Axis offset estimated by Dan Macmillan 2014.01.07,  1.8316 +- 0.0008
+# axis offset estimated by Dan Macmillan 2020.02.14,  1.8285 +- 0.0005
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  NRAO_140  FO_PRIM MO_EQUA RA_NO   ME_COMP   9.4  0    0    919.0   43.0 12.9600  0      1.00E-5  23.4600 1.20E-5  14.9392 1.20E-5   2.7500 1.20E-5  18.2900 2.31E-5
+ANTENNA_INFO  NRAO_140  FO_PRIM MO_EQUA RA_NO   ME_COMP   9.4  0    0    919.0   43.0 12.9600  0      1.00E-5  23.4600 1.20E-5  14.9455 1.20E-5   2.7500 1.20E-5  18.2900 2.31E-5
 #  Information as from F. Ghigo 980831
 # axis offset estimated by L.  Petrov    (pre 2008)  14.9398 +- 0.0009
 # Axis offset estimated by Dan Macmillan 2014.01.07, 14.9392 +- 0.0011
-#----------------------------------------------------------------------------------------
-ANTENNA_INFO  NRAO20    FO_PRIM MO_AZEL RA_NO   ME_COMP   9.4  0    0    919.7   20.0  5.4900  0      1.00E-5   9.1900 1.20E-5   0.5091 1.20E-5   2.4400 1.20E-5   8.6000 1.20E-5
+# axis offset estimated by Dan Macmillan 2020.02.14, 14.9455 +- 0.0015 #----------------------------------------------------------------------------------------
+ANTENNA_INFO  NRAO20    FO_PRIM MO_AZEL RA_NO   ME_COMP   9.4  0    0    919.7   20.0  5.4900  0      1.00E-5   9.1900 1.20E-5   0.5117 1.20E-5   2.4400 1.20E-5   8.6000 1.20E-5
 #  Information as from F. Ghigo 980831
-# axis offset estimated by L.  Petrov    (pre 2008)  0.5091 +- 0.0004
+# axis offset estimated by L.  Petrov    (pre 2008)   0.5091 +- 0.0004
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.5091 +- 0.0004
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.5117 +- 0.0004
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  NRAO85_1  FO_PRIM MO_EQUA RA_NO   ME_COMP   9.4  0    0    919.6   25.9  0.5600  0      1.00E-5  13.0800 1.20E-5   6.7073 1.20E-5   2.2200 1.20E-5  10.9700 1.20E-5
+ANTENNA_INFO  NRAO85_1  FO_PRIM MO_EQUA RA_NO   ME_COMP   9.4  0    0    919.6   25.9  0.5600  0      1.00E-5  13.0800 1.20E-5   6.7032 1.20E-5   2.2200 1.20E-5  10.9700 1.20E-5
 #  must be similar to NRAO85 3, Axel Nothnagel 990806
-# axis offset estimated by L.  Petrov    (pre 2008)  6.7074 +- 0.0058
+# axis offset estimated by L.  Petrov    (pre 2008)   6.7074 +- 0.0058
 # Axis offset estimated by Dan Macmillan 2014.01.07,  6.7073 +- 0.0061
+# axis offset estimated by Dan Macmillan 2020.02.14,  6.7032 +- 0.0055
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  NRAO85_3  FO_PRIM MO_EQUA RA_NO   ME_COMP   9.6  0    0    922.0   25.9  0.5600  0      1.00E-5  13.0800 1.20E-5   6.7065 1.20E-5   2.2200 1.20E-5  10.9700 1.20E-5
+ANTENNA_INFO  NRAO85_3  FO_PRIM MO_EQUA RA_NO   ME_COMP   9.6  0    0    922.0   25.9  0.5600  0      1.00E-5  13.0800 1.20E-5   6.7085 1.20E-5   2.2200 1.20E-5  10.9700 1.20E-5
 #  Information as from F. Ghigo 980831
-# axis offset estimated by L.  Petrov    (pre 2008)  6.7076 +- 0.0003
+# axis offset estimated by L.  Petrov    (pre 2008)   6.7076 +- 0.0003
 # Axis offset estimated by Dan Macmillan 2014.01.07,  6.7065 +- 0.0004
+# axis offset estimated by Dan Macmillan 2020.02.14,  6.7085 +- 0.0003
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  NYALES20  FO_PRIM MO_AZEL RA_NO   ME_COMP  -4.1  0    0    998.7   20.0  0.0500  0      1.00E-5  10.8700 1.20E-5   0.5242 1.20E-5   2.4400 1.20E-5   8.6000 1.20E-5
 #  Information as from Svein Rekkedal 990313
-# axxis offset published by Steinforth et al. (2003) 16th Working Meeting
-# on European VLBI, 524.2 +- 0.2 mm
+#  axis offset published by Steinforth et al. (2003) 16th Working Meeting on European VLBI, 524.2 +- 0.2 mm
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  NTT20101  FO_SECN MO_AZEL RA_NO   ME_COMP  -4.1  0    0    998.7   13.2  6.0000  0    1.00E-5   5.0000 1.20E-5   0.0000 1.20E-5   2.5000 1.20E-5   3.9000 1.20E-5
-#  weather parameter from nyAles20; telescope parameter by Wetz1001
+ANTENNA_INFO  NYALE13N  FO_SECN MO_AZEL RA_NO   ME_COMP  -3.9  0    0   1002.7   13.2  7.650   0      1.00E-5   2.9000 1.20E-5   0.0000 1.20E-5   3.2700 1.20E-5   3.9144 1.20E-5
+#  Dimensions from Leif Morten Tangen, Email of 2020-02-11  
+#  Turning head ring focus antenna, design: MT Mechatronics, Diameter of primary reflector = 13.2 m
+#  Axis offset 0 +-0.3 mm
+#  QRFH feed, diametre of the sub-reflector physical 1550 mm, optical 1480 mm
+#  focal length of the main reflector 3.61 m
+#  focal length of the sub-reflector 0.30 m
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  NTT20102  FO_SECN MO_AZEL RA_NO   ME_COMP  -4.1  0    0    998.7   13.2  6.0000  0    1.00E-5   5.0000 1.20E-5   0.0000 1.20E-5   2.5000 1.20E-5   3.9000 1.20E-5
-#  weather parameter from nyAles20; telescope parameter by Wetz1001
+ANTENNA_INFO  NYALE13S  FO_SECN MO_AZEL RA_NO   ME_COMP  -3.9  0    0   1002.7   13.2  9.490   0      1.00E-5   2.9000 1.20E-5   0.0000 1.20E-5   3.2700 1.20E-5   3.9144 1.20E-5
+#  Dimensions from Leif Morten Tangen, Email of 2020-02-11  
+#  Turning head ring focus antenna, design: MT Mechatronics, Diameter of primary reflector = 13.2 m
+#  Turning head ring focus antenna, by MT Mechatronics
+#  Axis offset 0 +-0.3 mm
+#  QRFH feed, diametre of the sub-reflector physical 1550 mm, optical 1480 mm
+#  focal length of the main reflector 3.61 m
+#  focal length of the sub-reflector 0.30 m
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  OCOTILLO  FO_SECN MO_AZEL RA_NO   ME_INCM  20.4  0    0   1018.9    3.9  0.0000  0      1.00E-5   2.8000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2 only, occupied twice
@@ -611,29 +701,47 @@ ANTENNA_INFO  ONSALA60  FO_SECN MO_AZEL RA_YES  ME_COMP   9.0  0    0   1010.7  
 # axis offset published by Eschelbach & Haas (2003) 16th Working Meeting
 # on European VLBI, -6.0 +- 0.4 mm (negative sign corrected)
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  OTT20101  FO_SECN MO_AZEL RA_YES  ME_COMP   9.0  0    0   1010.7   12.0 11.3000  0      1.00E-5   6.7080 1.14E-5   0.0000 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
-# weather parameter by onsala60, telescope parameter by hobart12
-#----------------------------------------------------------------------------------------
-ANTENNA_INFO  OTT20102  FO_SECN MO_AZEL RA_YES  ME_COMP   9.0  0    0   1010.7   12.0 11.3000  0      1.00E-5   6.7080 1.14E-5   0.0000 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
-# weather parameter by onsala60, telescope parameter by hobart12
-#----------------------------------------------------------------------------------------
-ANTENNA_INFO  ONSALAAN  FO_SECN MO_AZEL RA_YES  ME_COMP   9.0  0    0   1010.7   20.0 11.3000  0      1.00E-5   2.9000 1.20E-5  -0.0060 1.20E-5   3.4000 1.20E-5   5.5000 1.20E-5
-#----------------------------------------------------------------------------------------
 ANTENNA_INFO  ONSALA85  FO_SECN MO_EQUA RA_NO   ME_ROUG   9.0  0    0   1010.8   25.0  0.0000  0      1.00E-5  12.5000 1.20E-5   2.1500 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # HP = half diameter
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  OV-VLBA   FO_SECN MO_AZEL RA_NO   ME_COMP  10.1  0    0    880.0   25.0  0.5000  0      1.00E-5  13.7000 1.20E-5   2.1310 1.20E-5   4.6000 1.20E-5   8.8000 1.20E-5
+ANTENNA_INFO  ONSA13NE  FO_SECN MO_AZEL RA_NO   ME_COMP   9.0  0    0   1010.7   13.2  7.640   0      1.00E-5   2.8600 1.20E-5   0.0000 1.20E-5   3.2700 1.20E-5   3.9144 1.20E-5
+# Information as from R. Haas 2019-11-28
+# Turning head ring focus antenna, design: MT Mechatronics, Diameter of primary reflector = 13.2 m
+# Mean temperature and pressure copied from ONALA60
+# hf = 7640 mm (i.e. the concrete tower, wall thickness 400 mm, insulated from outside)
+# hp = 2860 mm (i.e. elevation axis is 2860 mm above top of concrete tower)
+# hv = 3270 mm (i.e. base of main reflector is 3270 mm above elevation axis)
+# hs = 3914.45 mm distance to "sub-reflector nose", but 3611.66 mm to sub-reflector focus
+# main reflector diameter 13200 mm, focal length 3700 mm
+# sub-reflector diameter 1480 mm (optical), 1550 mm (physical)
+# feed cone diameter at base of main reflector 1480 mm, at top 890 mm
+#----------------------------------------------------------------------------------------
+ANTENNA_INFO  ONSA13SW  FO_SECN MO_AZEL RA_NO   ME_COMP   9.0  0    0   1010.7   13.2  7.640   0      1.00E-5   2.8600 1.20E-5   0.0000 1.20E-5   3.2700 1.20E-5   3.9144 1.20E-5
+# Information as from R. Haas 2019-11-28
+# Turning head ring focus antenna, design: MT Mechatronics, Diameter of primary reflector = 13.2 m
+# Mean temperature and pressure copied from ONALA60
+# hf = 7640 mm (i.e. the concrete tower, wall thickness 400 mm, insulated from outside)
+# hp = 2860 mm (i.e. elevation axis is 2860 mm above top of concrete tower)
+# hv = 3270 mm (i.e. base of main reflector is 3270 mm above elevation axis)
+# hs = 3914.45 mm distance to "sub-reflector nose", but 3611.66 mm to sub-reflector focus
+# main reflector diameter 13200 mm, focal length 3700 mm
+# sub-reflector diameter 1480 mm (optical), 1550 mm (physical)
+# feed cone diameter at base of main reflector 1480 mm, at top 890 mm
+#----------------------------------------------------------------------------------------
+ANTENNA_INFO  OV-VLBA   FO_SECN MO_AZEL RA_NO   ME_COMP  10.1  0    0    880.0   25.0  0.5000  0      1.00E-5  13.7000 1.20E-5   2.1311 1.20E-5   4.6000 1.20E-5   8.8000 1.20E-5
 #  Napier et al. Proc. IEEE Vol. 82, p. 658, 1994
-# axis offset estimated by L.  Petrov    (pre 2008)  2.1323 +- 0.0003
+# axis offset estimated by L.  Petrov    (pre 2008)   2.1323 +- 0.0003
 # Axis offset estimated by Dan Macmillan 2014.01.07,  2.1310 +- 0.0003
+# axis offset estimated by Dan Macmillan 2020.02.14,  2.1311 +- 0.0001
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  OVR_7853  FO_SECN MO_AZEL RA_NO   ME_INCM  10.2  0    0    881.9    5.0  0.0000  0      1.00E-5   4.4000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-3 one time occupation
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  OVRO_130  FO_PRIM MO_AZEL RA_NO   ME_ROUG  10.0  0    0    879.5   43.0  0.0000  0      1.00E-5  21.5000 1.20E-5   0.0109 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+ANTENNA_INFO  OVRO_130  FO_PRIM MO_AZEL RA_NO   ME_ROUG  10.0  0    0    879.5   43.0  0.0000  0      1.00E-5  21.5000 1.20E-5   0.0121 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Hp = Half diameter
-# axis offset estimated by L.  Petrov    (pre 2008)  0.0106 +- 0.0022
+# axis offset estimated by L.  Petrov    (pre 2008)   0.0106 +- 0.0022
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0109 +- 0.0023
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0121 +- 0.0022
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  PARKES    FO_PRIM MO_AZEL RA_NO   ME_ROUG  17.3  0    0    971.8   64.0  0.0000  0      1.00E-5  32.0000 1.20E-5   0.0006 1.20E-5   0.0000 1.20E-5  26.2000 1.20E-5
 # Hp = Half diameter
@@ -649,10 +757,11 @@ ANTENNA_INFO  PBLOSSOM  FO_SECN MO_AZEL RA_NO   ME_INCM  12.9  0    0    912.7  
 ANTENNA_INFO  PENTICTN  FO_SECN MO_AZEL RA_NO   ME_INCM  10.0  0    0    950.4    3.9  0.0000  0      1.00E-5   2.8000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site, with only two occupations with MV-2
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  PIETOWN   FO_SECN MO_AZEL RA_NO   ME_COMP   7.7  0    0    762.0   25.0  0.5000  0      1.00E-5  13.7000 1.20E-5   2.1377 1.20E-5   4.6000 1.20E-5   8.8000 1.20E-5
+ANTENNA_INFO  PIETOWN   FO_SECN MO_AZEL RA_NO   ME_COMP   7.7  0    0    762.0   25.0  0.5000  0      1.00E-5  13.7000 1.20E-5   2.1375 1.20E-5   4.6000 1.20E-5   8.8000 1.20E-5
 #  Napier et al. Proc. IEEE Vol. 82, p. 658, 1994
-# axis offset estimated by L.  Petrov    (pre 2008)  2.1377 +- 0.0089
+# axis offset estimated by L.  Petrov    (pre 2008)   2.1377 +- 0.0089
 # Axis offset estimated by Dan Macmillan 2014.01.07,  2.1377 +- 0.0002
+# axis offset estimated by Dan Macmillan 2020.02.14,  2.1375 +- 0.0001
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  PINFLATS  FO_SECN MO_AZEL RA_NO   ME_INCM  11.6  0    0    875.1    5.0  0.0000  0      1.00E-5   4.3000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2 and MV-3
@@ -698,10 +807,10 @@ ANTENNA_INFO  QUINCY    FO_SECN MO_AZEL RA_NO   ME_INCM   9.0  0    0    889.8  
 # 1988.10.30 - 1989.05.04 MV-3. Hp = 4.3 m
 # 1989.05.05 - 2000.01.01 MV-2, Hp = 2.8 m
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  RAEGYEB   FO_SECN MO_AZEL RA_NO   ME_COMP  11.6  0    0    911.8   13.7  7.0000  0      1.00E-5   1.9000 1.20E-5   0.0000 1.20E-5   3.2700 1.20E-5   3.9100 1.20E-5
-# Information as from Pablo de Vicente 2015-03-09/2015-03-13
-# Turning head ring focus telescope
-# Mean temperature and pressure copied from YEBES
+ANTENNA_INFO  RAEGSMAR  FO_SECN MO_AZEL RA_NO   ME_COMP  14.9  0    0    990.6   13.2  7.0000  0      1.00E-5   1.9000 1.20E-5   0.0000 1.20E-5   3.2700 1.20E-5   3.9100 1.20E-5
+# Information as from José Antonio López-Pérez 2020-02-07 being identical to RAEGYEB
+# Turning head ring focus antenna, design: MT Mechatronics, Diameter of primary reflector = 13.2 m
+# Mean temperature and pressure computed from model with a priori position from SKED pos file
 # N.B.: hv and hs ignore the rather long cone holding the feed rather close to the subreflector
 # N.B.: Distance from VLBI reference point (invariant point) to feed horn is 6.88 m
 # N.B.: Distance from feed horn to most prominent part of the secondary focus is 0.30 m
@@ -709,10 +818,23 @@ ANTENNA_INFO  RAEGYEB   FO_SECN MO_AZEL RA_NO   ME_COMP  11.6  0    0    911.8  
 # 2) Diameter of primary reflector: 13.2 m. Focal length: 3.7 m
 # 3) Diameter of secondary reflector: 1.55 m. Focal length: 0.75 m. Distance from the vertex of the primary mirror: 3.91 m
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  RICHMOND  FO_SECN MO_RICH RA_NO   ME_COMP  24.6  0    0   1015.3   18.0  0.0000  0      1.00E-5   0.0000 1.20E-5   5.1801 1.20E-5   2.3000 1.20E-5   9.4000 1.20E-5
+ANTENNA_INFO  RAEGYEB   FO_SECN MO_AZEL RA_NO   ME_COMP  11.6  0    0    911.8   13.2  7.0000  0      1.00E-5   1.9000 1.20E-5   0.0027 1.20E-5   3.2700 1.20E-5   3.9100 1.20E-5
+# Information as from Pablo de Vicente 2015-03-09/2015-03-13
+# Turning head ring focus antenna, design: MT Mechatronics, Diameter of primary reflector = 13.2 m
+# Mean temperature and pressure copied from YEBES
+# N.B.: hv and hs ignore the rather long cone holding the feed rather close to the subreflector
+# N.B.: Distance from VLBI reference point (invariant point) to feed horn is 6.88 m
+# N.B.: Distance from feed horn to most prominent part of the secondary focus is 0.30 m
+# 1. Illumination taper 16 dB
+# 2) Diameter of primary reflector: 13.2 m. Focal length: 3.7 m
+# 3) Diameter of secondary reflector: 1.55 m. Focal length: 0.75 m. Distance from the vertex of the primary mirror: 3.91 m
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0027 +- 0.0011
+#----------------------------------------------------------------------------------------
+ANTENNA_INFO  RICHMOND  FO_SECN MO_RICH RA_NO   ME_COMP  24.6  0    0   1015.3   18.0  0.0000  0      1.00E-5   0.0000 1.20E-5   5.1848 1.20E-5   2.3000 1.20E-5   9.4000 1.20E-5
 #  must be similar to HartRAO  A. Nothnagel 990806
-# axis offset estimated by L.  Petrov    (pre 2008)  5.1822 +- 0.0005
+# axis offset estimated by L.  Petrov    (pre 2008)   5.1822 +- 0.0005
 # Axis offset estimated by Dan Macmillan 2014.01.07,  5.1801 +- 0.0006
+# axis offset estimated by Dan Macmillan 2020.02.14,  5.1848 +- 0.0005
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  ROBLED32  FO_SECN MO_EQUA RA_NO   ME_ROUG  12.4  0    0    927.4   32.0  0.0000  0      1.00E-5  16.0000 1.20E-5   6.7060 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # a.k.a. DSS61, Hp = half diameter
@@ -728,30 +850,34 @@ ANTENNA_INFO  SANPAULA  FO_SECN MO_AZEL RA_NO   ME_INCM  16.9  0    0    993.1  
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  SANTIA12  FO_SECN MO_XYNO RA_NO   ME_COMP  11.8  0    0    936.2   12.0  0.0000  0      1.00E-5   6.0000 1.20E-5   0.0021 1.20E-5   5.0000 1.20E-5   0.0000 1.20E-5
 #  no info, Estimated from picture, Axel Nothnagel, 990806
-# axis offset estimated by L.  Petrov    (pre 2008)  0.0023 +- 0.0013
+# axis offset estimated by L.  Petrov    (pre 2008)   0.0023 +- 0.0013
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0021 +- 0.0014
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0021 +- 0.0013
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  SC-VLBA   FO_SECN MO_AZEL RA_NO   ME_COMP  25.5  0    0   1011.6   25.0  0.5000  0      1.00E-5  13.7000 1.20E-5   2.1346 1.20E-5   4.6000 1.20E-5   8.8000 1.20E-5
+ANTENNA_INFO  SC-VLBA   FO_SECN MO_AZEL RA_NO   ME_COMP  25.5  0    0   1011.6   25.0  0.5000  0      1.00E-5  13.7000 1.20E-5   2.1356 1.20E-5   4.6000 1.20E-5   8.8000 1.20E-5
 #  Napier et al. Proc. IEEE Vol. 82, p. 658, 1994
-# axis offset estimated by L.  Petrov    (pre 2008)  2.1337 +- 0.0006
+# axis offset estimated by L.  Petrov    (pre 2008)   2.1337 +- 0.0006
 # Axis offset estimated by Dan Macmillan 2014.01.07,  2.1346 +- 0.0005
+# axis offset estimated by Dan Macmillan 2020.02.14,  2.1356 +- 0.0003
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  SEATTLE1  FO_SECN MO_AZEL RA_NO   ME_INCM  14.0  0    0   1014.9    3.9  0.0000  0      1.00E-5   2.8000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2, occupied only twice
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  SEJONG    FO_SECN MO_AZEL RA_NO   ME_COMP  13.2  0    0    992.4   22.0  4.5000  0      1.40E-5  11.2000 1.20E-5   0.0000 1.20E-5   4.7360 1.20E-5  10.5000 1.20E-5
+ANTENNA_INFO  SEJONG    FO_SECN MO_AZEL RA_NO   ME_COMP  13.2  0    0    992.4   22.0  4.5000  0      1.40E-5  11.2000 1.20E-5  -0.0058 1.20E-5   4.7360 1.20E-5  10.5000 1.20E-5
 # Info from Sangoh Yi, Nov 5, 2014, and from drawings. Axis offset still needs to be measured
 # Illumination taper of feed horn is 12 dB at S band and 17 dB at X band
 # primary reflector, diametre = 22.0 m, focal length = 5.7624 m
 # secondary reflector, diametre = 2.3 m, focal length = 1.5094 m
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0058 +- 0.0004
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  SESHAN25  FO_SECN MO_AZEL RA_NO   ME_COMP  18.9  0    0   1010.4   25.0  4.2000  0      1.00E-5  12.5000 1.20E-5  0.00017 1.20E-5   3.3400 1.20E-5   6.7000 2.31E-5
 #  Information as from Songlin Chen 990319
 # axis offset measured by Jinling Li (see email of Fengshun Shu 2013-11-14), see also survey report on ITRF web site (0.17 mm)
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  SEST      FO_SECN MO_AZEL RA_NO   ME_ROUG   3.5  0    0    763.0   15.0  0.0000  0      1.00E-5   0.0000 1.20E-5   0.0378 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+ANTENNA_INFO  SEST      FO_SECN MO_AZEL RA_NO   ME_ROUG   3.5  0    0    763.0   15.0  0.0000  0      1.00E-5   0.0000 1.20E-5   0.0449 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Hp = half diameter
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0378 +- 0.0401
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0449 +- 0.0355
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  SHANGHAI  FO_SECN MO_AZEL RA_NO   ME_ROUG  18.9  0    0   1011.8    6.0  0.0000  0      1.00E-5   3.0000 1.20E-5   1.1170 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Hp = half diameter
@@ -759,11 +885,12 @@ ANTENNA_INFO  SHANGHAI  FO_SECN MO_AZEL RA_NO   ME_ROUG  18.9  0    0   1011.8  
 ANTENNA_INFO  SINTOTU   FO_SECN MO_AZEL RA_NO   ME_INCM   7.2  0    0   1001.6    5.0  0.1000  3.0    1.00E-5   4.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Mails of Kensuke Kokado, 2008-07-29/30
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  SINTOTU3  FO_SECN MO_AZEL RA_NO   ME_INCM   7.2  0    0   1001.5    3.8  0.1000  3.9    1.00E-5   4.2500 1.20E-5   0.0076 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+ANTENNA_INFO  SINTOTU3  FO_SECN MO_AZEL RA_NO   ME_INCM   7.2  0    0   1001.5    3.8  0.1000  3.9    1.00E-5   4.2500 1.20E-5   0.0087 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # X band: secondary focus, S band: primary focus
 # Mails of Kensuke Kokado, 2008-07-29/30
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0030 +- 0.0054
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0076 +- 0.0037
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0087 +- 0.0141
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  SNDPOINT  FO_SECN MO_AZEL RA_NO   ME_INCM   4.7  0    0    995.7    3.9  0.0000  0      1.00E-5   2.9000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2 and MV-3 
@@ -780,29 +907,40 @@ ANTENNA_INFO  SUWON     FO_SECN MO_AZEL RA_NO   ME_INCM  14.2  0    0   1010.0  
 # Occupation of Korean site with transportable antenna; X band secondary focus, S band: primary focus
 # Mails of Kensuke Kokado, 2008-07-29/30
 #----------------------------------------------------------------------------------------
+ANTENNA_INFO  SVERT13V  FO_SECN MO_AZEL RA_NO   ME_COMP   5.9  0    0   1005.4   13.2  6.0000  0      1.00E-5   5.3000 1.20E-5   0.0000 1.20E-5   2.5000 1.20E-5   3.9000 1.20E-5
+#  Turning head ring focus antenna, design: Vertex Antennentechnik, Diameter of primary reflector = 13.2 m
+#  Focal length of primary reflector = 3.602 m
+#  Diameter of secondary reflector = 1.48 m
+#  Focal length of secondary reflector = 0.3 m
+#  Feed ilumination taper in dB unknown
+#  Information as from E. Skurikhina 2020-02-10
+#----------------------------------------------------------------------------------------
 ANTENNA_INFO  SVETLOE   FO_SECN MO_AZEL RA_NO   ME_COMP   5.8  0    0   1005.0   32.0  1.0000  0      1.00E-5  21.9000 1.20E-5  -0.0075 1.20E-5   1.9000 1.20E-5  10.6000 1.20E-5
 #  Information on telescope dimensions from Zinovy Malkin 040624
 # Axis offset reported by Iskander Gayazov and Elena Skurikhina 080528, -0.0075 +- 0.0050
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  SYOWA     FO_SECN MO_AZEL RA_NO   ME_INCM  -8.6  0    0    963.1   11.0  0.3000  0.46   1.00E-5   6.2000 1.20E-5   0.0233 1.20E-5   1.2500 1.20E-5   4.6100 1.20E-5
+ANTENNA_INFO  SYOWA     FO_SECN MO_AZEL RA_NO   ME_INCM  -8.6  0    0    963.1   11.0  0.3000  0.46   1.00E-5   6.2000 1.20E-5   0.0031 1.20E-5   1.2500 1.20E-5   4.6100 1.20E-5
 # From Koichiro Doi doi@nipr.ac.jp via Kazuhiro Takashima, 2008-09-08
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0056 +- 0.0079
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0233 +- 0.0045
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0031 +- 0.0022
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  TATEYAMA  FO_SECN MO_AZEL RA_NO   ME_COMP  15.2  0    0   1002.7   11.0  0.0000  0      1.00E-5   7.5000 1.20E-5   0.0021 1.20E-5   2.1500 1.20E-5   3.8100 1.20E-5
+ANTENNA_INFO  TATEYAMA  FO_SECN MO_AZEL RA_NO   ME_COMP  15.2  0    0   1002.7   11.0  0.0000  0      1.00E-5   7.5000 1.20E-5   0.0085 1.20E-5   2.1500 1.20E-5   3.8100 1.20E-5
 #  Information as from R. Haas 981210, Moved to GIFU11
-# axis offset estimated by L.  Petrov    (pre 2008)  0.0069 +- 0.0024
+# axis offset estimated by L.  Petrov    (pre 2008)   0.0069 +- 0.0024
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0021 +- 0.0022
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0085 +- 0.0017
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  TIANMA65  FO_SECN MO_AZEL RA_NO   ME_COMP  18.9  0    0   1010.4   65.0  0.8000  0      1.00E-5  33.8560 1.20E-5   0.0071 1.20E-5   6.6710 1.20E-5  19.5680 1.20E-5
+ANTENNA_INFO  TIANMA65  FO_SECN MO_AZEL RA_NO   ME_COMP  18.8  0    0   1008.0   65.0  0.8000  0      1.00E-5  33.8560 1.20E-5   0.0071 1.20E-5   6.6710 1.20E-5  19.5680 1.20E-5
 #  Information as from Qingyuan Fan and Bin Li 2013-10-25 via Fengshun Shu
 # axis offset measured by antenna company/ Jinling Li
-# reference temperature copied from SESHAN (should not change much when we get the first XYZ position)
+# 2020-02-10: reference temperature now correctly computed with GPT. Earlier numbers, 18.9/1010.4 had only been copied from SESHAN
 # D = 65 m, F/D = 0.32, F = 20.8 m, Subreflector: D = 6.5 m, F = 12.78, Illumination taper = -17dB
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  TIDBIN64  FO_SECN MO_AZEL RA_NO   ME_ROUG  14.0  0    0    939.7   64.0  0.0000  0      1.00E-5  32.0000 1.20E-5  -0.0485 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+ANTENNA_INFO  TIDBIN64  FO_SECN MO_AZEL RA_NO   ME_ROUG  14.0  0    0    939.7   64.0  0.0000  0      1.00E-5  32.0000 1.20E-5  -0.0240 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Hp = half diameter
 # Axis offset estimated by Dan Macmillan 2014.01.07, -0.0485 +- 0.0168
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0240 +- 0.0086
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  TIGOCONC  FO_PRIM MO_AZEL RA_NO   ME_COMP  12.6  0    0    999.0    6.0  0.2000   1.50  1.00E-5   1.4600 1.20E-5   0.0000 1.20E-5   0.7500 1.20E-5   4.5000 1.20E-5
 # Information as from H. HASE 050905 and Sergio Sobarzo 080514
@@ -838,24 +976,28 @@ ANTENNA_INFO  TSUKU3    FO_SECN MO_AZEL RA_NO   ME_INCM  14.4  0    0   1009.3  
 # Occupation with transportable antenna; X band secondary focus, S band: primary focus
 # Mails of Kensuke Kokado, 2008-07-29/30
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  TSUKUBA   FO_SECN MO_AZEL RA_NO   ME_INCM  14.4  0    0   1009.3    5.0  0.1000  3.0    1.00E-5   4.0000 1.20E-5   0.0056 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+ANTENNA_INFO  TSUKUBA   FO_SECN MO_AZEL RA_NO   ME_INCM  14.4  0    0   1009.3    5.0  0.1000  3.0    1.00E-5   4.0000 1.20E-5   0.0111 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Mails of Kensuke Kokado, 2008-07-29/30
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0056 +- 0.0141
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0111 +- 0.0134
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  TSUKUB32  FO_SECN MO_AZEL RA_NO   ME_COMP  14.3  0    0   1007.5   32.0  1.8000  0      1.00E-5  17.3000 1.20E-5   0.0049 1.20E-5   4.3000 1.20E-5  10.8000 1.20E-5
+ANTENNA_INFO  TSUKUB32  FO_SECN MO_AZEL RA_NO   ME_COMP  14.3  0    0   1007.5   32.0  1.8000  0      1.00E-5  17.3000 1.20E-5   0.0043 1.20E-5   4.3000 1.20E-5  10.8000 1.20E-5
 # Information as from S. Ogi 980818
 # Depth of foundation, Mails of Kensuke Kokado, 2008-07-29/30
 # axis offset estimated by L.  Petrov    (pre 2008)   0.0006 +- 0.0005
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0049 +- 0.0003
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0043 +- 0.0002
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  UCHINOUR  FO_SECN MO_AZEL RA_NO   ME_COMP  16.5  0    0    972.2   34.0  6.6500  0      1.00E-5  19.3000 1.20E-5  -0.0096 1.20E-5   4.6700 1.20E-5  10.7700 1.20E-5
+ANTENNA_INFO  UCHINOUR  FO_SECN MO_AZEL RA_NO   ME_COMP  16.5  0    0    972.2   34.0  6.6500  0      1.00E-5  19.3000 1.20E-5  -0.0010 1.20E-5   4.6700 1.20E-5  10.7700 1.20E-5
 # Information from Hiroshi Takeuchi, 2011-02-08
 # Axis offset estimated by Dan Macmillan 2014.01.07, -0.0096 +- 0.0061
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0010 +- 0.0082
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  URUMQI    FO_SECN MO_AZEL RA_NO   ME_COMP   4.5  0    0    794.8   25.0  1.0000  0      1.00E-5  12.5000 1.20E-5  -0.0058 1.20E-5   3.3000 1.20E-5   7.0000 2.31E-5
+ANTENNA_INFO  URUMQI    FO_SECN MO_AZEL RA_NO   ME_COMP   4.5  0    0    794.8   25.0  1.0000  0      1.00E-5  12.5000 1.20E-5  -0.0024 1.20E-5   3.3000 1.20E-5   7.0000 2.31E-5
 #  Information as from Liu Xiang 990406
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0057 +- 0.0020
 # Axis offset estimated by Dan Macmillan 2014.01.07, -0.0058 +- 0.0009
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0024 +- 0.0005
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  USUDA64   FO_SECN MO_AZEL RA_NO   ME_ROUG   4.8  0    0    846.5   64.0  0.0000  0      1.00E-5  32.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Hp = half diameter
@@ -864,14 +1006,16 @@ ANTENNA_INFO  USUDA64   FO_SECN MO_AZEL RA_NO   ME_ROUG   4.8  0    0    846.5  
 ANTENNA_INFO  VERAIRIK  FO_SECN MO_AZEL RA_NO   ME_INCM  14.8  0    0    949.3   20.0  0.0000  0      1.00E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # everything except T/P copied from VERAMZSW
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  VERAISGK  FO_SECN MO_AZEL RA_NO   ME_INCM  22.8  0    0   1006.4   20.0  0.0000  0      1.00E-5   0.0000 1.20E-5   0.0255 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+ANTENNA_INFO  VERAISGK  FO_SECN MO_AZEL RA_NO   ME_INCM  22.8  0    0   1006.4   20.0  0.0000  0      1.00E-5   0.0000 1.20E-5   0.0067 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # everything except T/P copied from VERAMZSW
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0255 +- 0.0032
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0067 +- 0.0054
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  VERAMZSW  FO_SECN MO_AZEL RA_NO   ME_INCM  11.1  0    0   1003.1   20.0  0.0000  0      1.00E-5   0.0000 1.20E-5   0.0022 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+ANTENNA_INFO  VERAMZSW  FO_SECN MO_AZEL RA_NO   ME_INCM  11.1  0    0   1003.1   20.0  0.0000  0      1.00E-5   0.0000 1.20E-5   0.0038 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+# VERA Status Report, Mizusawa, October 4, 2011
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0108 +- 0.0038
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0022 +- 0.0018
-# VERA Status Report, Mizusawa, October 4, 2011
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0038 +- 0.0014
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  VERAOGSW  FO_SECN MO_AZEL RA_NO   ME_INCM  21.8  0    0    985.9   20.0  0.0000  0      1.00E-5   0.0000 1.20E-5  -0.0108 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # everything except T/P copied from VERAMZSW
@@ -902,20 +1046,26 @@ ANTENNA_INFO  VNDNBERG  FO_SECN MO_AZEL RA_NO   ME_INCM  17.4  0    0   1016.7  
 # plus one occupation with MV-2 acoording to the ECCDAT file
 # 1983.02.20 - 1991.07.26 MV-1, Hp = 6.5 m
 # 1991.07.27 - 2000.01.01 MV-2. Hp = 2.9 m
-# axis offset estimate by L. Petrov    (pre 2008)  (-0.0029) unreliable due to alternating use
-# of MV-1 and MV-2
-# Axis offset estimated by Dan Macmillan 2014.01.07, -0.0031 +- 0.0020
-# not recommended for use since MV-1 and MV-2 were used on this site
+# [axis offset estimate by L. Petrov    (pre 2008)  (-0.0029)]
+# [Axis offset estimated by Dan Macmillan 2014.01.07, -0.0031 +- 0.0020]
+# [axis offset estimated by Dan Macmillan 2020.02.14, -0.0035 +- 0.0019]
+# application of axis offset estimates is not recommended since MV-1 and MV-2 were used on this site
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  WARK12M   FO_SECN MO_AZEL RA_NO   ME_COMP  14.5  0    0   1002.6   12.0  0.0000  0      1.00E-5   6.7080 1.14E-5   0.0010 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
 # dimensions and expansion coefficients provided by Kevin Sinclair via Peter Shield of InterTronic Solutions Inc./Cobham plc
 # Axis offset measured by John Dawson of Geoscience Austalia (+ 1.0 +/- 0.2mm) and reported by Paula Gentle, email of Feb 26, 2013
 #
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  WESTFORD  FO_SECN MO_AZEL RA_YES  ME_COMP   8.9  0    0   1001.3   18.0 10.6000  0      1.00E-5   8.3000 1.20E-5   0.3182 1.20E-5   3.0000 1.20E-5   3.6000 1.20E-5
-#  Information as from A. Nothnagel 950523, 10.6 m see Email by Arthur Niell 1999.08.10
+ANTENNA_INFO  WESTFORD  FO_PRIM MO_AZEL RA_YES  ME_COMP   8.9  0    0   1001.3   18.0 10.6000  0      0.60E-5   8.3000 0.72E-5   0.3186 0.72E-5   3.0000 0.72E-5   3.6000 0.720E-5
+#  Information as from A. Nothnagel 950523, 10.6 m see Email by Arthur Niell 1999-08-10
+#  Changed from FO_SECN to FO_PRIM on 2020-01-06, see Email of Arthur Niell of 2019-11-05
 # axis offset estimated by L.  Petrov    (pre 2008)   0.3163 +- 0.0002
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.3182 +- 0.0002
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.3186 +- 0.0002
+# 2020-04-03, On suggestion of Dan Macmillan, the original thermal expansion coefficients of 10.6 m concrete (1.00E-5) and the 
+# steel components (1.20E-5) are scaled by the temperature reduction factor of 0.6 as reported by A. Niell in 1999 for the 
+# temperature inside the radome. Through this conversion, the computations do not require a specific handling of the Westford
+# outside temperatures to reflect the damping to the inside.
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  WETTZELL  FO_SECN MO_AZEL RA_NO   ME_COMP   7.8  0    0    943.9   20.0  8.0000  0      1.00E-5   4.0000 1.20E-5  -0.0001 1.20E-5   3.7000 1.20E-5   7.9000 1.20E-5
 #  Information as from A. Nothnagel 950523
@@ -927,17 +1077,16 @@ ANTENNA_INFO  WETTZELL  FO_SECN MO_AZEL RA_NO   ME_COMP   7.8  0    0    943.9  
 #  Distance from Vertex to the Subreflector = 7.9 m (on axis)
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  WETTZ13N  FO_SECN MO_AZEL RA_NO   ME_COMP   7.8  0    0    943.9   13.2  6.0000  2.4    1.00E-5   5.0000 1.20E-5   0.0000 1.20E-5   2.5000 1.20E-5   3.9000 1.20E-5
-#  Turning head ring focus antenna
-#  Diameter of primary reflector = 13.2 m
+#  Turning head ring focus antenna, design: Vertex Antennentechnik, Diameter of primary reflector = 13.2 m
 #  Focal length of primary reflector = 3.7 m
 #  Diameter of secondary reflector = 1.48 m
 #  Focal length of secondary reflector = 0.3 m
 #  Triband feed ilumination taper 10 dB at 55 deg
 #  Information as from G. Kronschnabl 2012-07-20
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0004 +- 0.0001
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  WETTZ13S  FO_SECN MO_AZEL RA_NO   ME_COMP   7.8  0    0    943.9   13.2  6.0000  3.2    1.00E-5   5.0000 1.20E-5   0.0000 1.20E-5   2.5000 1.20E-5   3.9000 1.20E-5
-#  Turning head ring focus antenna
-#  Diameter of primary reflector = 13.2 m
+#  Turning head ring focus antenna, design: Vertex Antennentechnik, Diameter of primary reflector = 13.2 m
 #  Focal length of primary reflector = 3.7 m
 #  Diameter of secondary reflector = 1.48 m
 #  Focal length of secondary reflector = 0.3 m
@@ -950,33 +1099,33 @@ ANTENNA_INFO  WHTHORSE  FO_SECN MO_AZEL RA_NO   ME_INCM  -0.3  0    0    926.2  
 ANTENNA_INFO  YAKATAGA  FO_SECN MO_AZEL RA_NO   ME_INCM   4.3  0    0   1005.0    3.9  0.0000  0      1.00E-5   2.8000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2 only
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  YARRA12M  FO_SECN MO_AZEL RA_NO   ME_COMP  18.2  0    0    985.3   12.0  0.0000  0      1.00E-5   6.7080 1.14E-5   0.0000 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
+ANTENNA_INFO  YARRA12M  FO_SECN MO_AZEL RA_NO   ME_COMP  18.2  0    0    985.3   12.0  0.0000  0      1.00E-5   6.7080 1.14E-5  -0.0002 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
 # dimensions and expansion coefficients provided by Kevin Sinclair via Peter Shield of InterTronic Solutions Inc./Cobham plc
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0002 +- 0.0002
 #
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  YEBES     FO_PRIM MO_AZEL RA_YES  ME_INCM  11.6  0    0    911.8   13.7  0.5000  0      1.00E-5   9.0000 1.20E-5   0.0003 1.20E-5   2.4000 1.20E-5   3.0000 1.20E-5
+ANTENNA_INFO  YEBES     FO_PRIM MO_AZEL RA_YES  ME_INCM  11.6  0    0    911.8   13.7  0.5000  0      1.00E-5   9.0000 1.20E-5  -0.0015 1.20E-5   2.4000 1.20E-5   3.0000 1.20E-5
 #  Information as from F. Colomer 981111
 # From November to April, the temperature is kept at about 8° C by active heating, while the
 # rest of the year, the temperature flollows the outside temperature. Quoted from F. Colomer
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0005 +- 0.0028
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0003 +- 0.0028
+# axis offset estimated by Dan Macmillan 2020.02.14, -0.0015 +- 0.0027
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  YEBES40M  FO_SECN MO_AZEL RA_NO   ME_INCM  11.6  0    0    911.8   40.0 14.2250 2.25    1.00E-5   5.8000 1.20E-5   2.0004 1.20E-5   5.0000 1.20E-5  13.7960 1.20E-5
+ANTENNA_INFO  YEBES40M  FO_SECN MO_AZEL RA_NO   ME_INCM  11.6  0    0    911.8   40.0 14.2250 2.25    1.00E-5   5.8000 1.20E-5   1.9968 1.20E-5   5.0000 1.20E-5  13.7960 1.20E-5
 # Information from Patricia Trigo, 090126. Axis offset (2.0160) is according to construction specifications
 # and has to be confirmed by local measurements, 091202
 # Axis offset estimated by Dan Macmillan 2014.01.07,  2.0004 +- 0.0005
-#----------------------------------------------------------------------------------------
-ANTENNA_INFO  YEBESDBC  FO_SECN MO_AZEL RA_NO   ME_INCM  11.6  0    0    911.8   40.0 14.2250 2.25    1.00E-5   5.8000 1.20E-5   2.0650 1.20E-5   5.0000 1.20E-5  13.7960 1.20E-5
-#----------------------------------------------------------------------------------------
-ANTENNA_INFO  YEBEDBBC  FO_SECN MO_AZEL RA_NO   ME_INCM  11.6  0    0    911.8   40.0 14.2250 2.25    1.00E-5   5.8000 1.20E-5   2.0650 1.20E-5   5.0000 1.20E-5  13.7960 1.20E-5
+# axis offset estimated by Dan Macmillan 2020.02.14,  1.9968 +- 0.0002
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  YELLOWKN  FO_SECN MO_AZEL RA_NO   ME_INCM  -0.5  0    0    987.2    5.0  0.0000  0      1.00E-5   4.2000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # site of mobile occupation with MV-3
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  YLOW7296  FO_SECN MO_AZEL RA_NO   ME_INCM  -0.5  0    0    987.0    9.0  0.0000  0      1.00E-5   7.1000 1.20E-5   0.0056 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+ANTENNA_INFO  YLOW7296  FO_SECN MO_AZEL RA_NO   ME_INCM  -0.5  0    0    987.0    9.0  0.0000  0      1.00E-5   7.1000 1.20E-5   0.0071 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site occupied with MV1
 # axis offset estimated by L.  Petrov    (pre 2008)   0.0070 +- 0.0024
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0056 +- 0.0025
+# axis offset estimated by Dan Macmillan 2020.02.14,  0.0071 +- 0.0024
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  YUMA      FO_SECN MO_AZEL RA_NO   ME_INCM  19.4  0    0    986.3    3.9  0.0000  0      1.00E-5   2.8000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2 and MV-3
@@ -997,6 +1146,14 @@ ANTENNA_INFO  ZELENCHK  FO_SECN MO_AZEL RA_NO   ME_COMP   7.3  0    0    883.2  
 # from geodetic measurements in Nov-Dec 2005
 # Axis offset estimated by Dan Macmillan 2014.01.07, -0.0118 +- 0.0005, measured valued is recommended
 #----------------------------------------------------------------------------------------
+ANTENNA_INFO  ZELRT13V  FO_SECN MO_AZEL RA_NO   ME_COMP   7.4  0    0    884.4   13.2  6.0000  0      1.00E-5   5.3000 1.20E-5   0.0000 1.20E-5   2.5000 1.20E-5   3.9000 1.20E-5
+#  Turning head ring focus antenna, design: Vertex Antennentechnik, Diameter of primary reflector = 13.2 m
+#  Focal length of primary reflector = 3.602 m
+#  Diameter of secondary reflector = 1.48 m
+#  Focal length of secondary reflector = 0.3 m
+#  Feed ilumination taper in dB unknown
+#  Information as from E. Skurikhina 2020-02-10
+#----------------------------------------------------------------------------------------
 ANTENNA_INFO  WETTDBBC  FO_SECN MO_AZEL RA_NO   ME_COMP   7.8  0    0    943.9   20.0  8.0000  0      1.00E-5   4.0000 1.20E-5  -0.0001 1.20E-5   3.7000 1.20E-5   7.9000 1.20E-5
 # Infos copied from station WETTZELL (by A. Hellerschmied, 2015-05-07) 
 #  Information as from A. Nothnagel 950523
@@ -1016,6 +1173,5 @@ ANTENNA_INFO  ONSAVDIF  FO_SECN MO_AZEL RA_YES  ME_COMP   9.0  0    0   1010.7  
 # Infos copied from station ONSALA60 (by M. Schartner, 2017-03-16)
 $ Antenna Information File  Format Version of 2008.04.22
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  GGAO12M  
-#----------------------------------------------------------------------------------------
-ANTENNA_INFO  KOKEE12M  
+#
+$ Antenna Information File  Format Version of 2008.04.22
