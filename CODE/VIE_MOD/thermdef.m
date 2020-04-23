@@ -7,7 +7,7 @@
 %   Merit Standards, Appendix 11
 %
 %   Input:										
-%       temp               measured temperatur at the station      [°C]
+%       temp               measured temperatur at the station      [ï¿½C]
 %       thermal            data from superstation file (antenna-info.txt)
 %       azim               local source azimuth                    [rad]
 %       zd                 local source zenith distance            [rad]
@@ -30,7 +30,7 @@
 %   Revision:
 %   25 May 2010 by Lucia Plank: Error message
 %   24 Aug 2010 by Lucia Plank: antenna type 'RICH'
-%   08 Nov 2012 by Hana Krásná: changed to coefficients from superstation
+%   08 Nov 2012 by Hana Krï¿½snï¿½: changed to coefficients from superstation
 %   file
 %   26 Feb 2015 by Lucia Plank: bug fixed for antenna types with fixed axes
 %   1-(SZ*SAZ)--> 1-(SZ*SAZ)^2
@@ -66,6 +66,16 @@ end
 % => correction is zero
 if (temp == -999)
 	temp=temp0;
+else
+    % ### Correction for station WESTFORD: ### 
+    % For calculating the thermal deformation of the antenna the
+    % temperature within the radome is required. Therfor the measured or 
+    % modelled exterior temp. is corrected by a formular by Arthur Niell.
+    % (ref.: header of antenna-info.txt file):
+    if strcmp(aname, 'WESTFORD')
+       temp =  20 + 0.6 * (temp - 20); 
+    end
+    
 end
        
 % COPE WITH DIFFERENT FOCUS OF ANTENNAS
