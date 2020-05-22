@@ -7,16 +7,16 @@
 %   For each missing source one line is written to the MATLAB command window 
 %   which can directly be copied to the vievsCRF.txt file.
 %
-% CREATED  
-%   2018-08-20     Andreas Hellerschmied
-%
 % INPUT
 % - session_name              - Session name (= name of vgosDB folder in .../DATA/vgosDB/<year>/)
-% - supersource_name          - Name of supersource file in .../CRF/
+% - supersource_name          - Name of supersource file in .../CRF/ (default is "supersource.mat")
 %
-% CHANGES:
 %
 function check_sources_in_vgosDB_file(session_name, supersource_name)
+
+if ~exist('supersource_name','var')
+    supersource_name = 'supersource.mat';
+end
 
 % ##### Load supersource file #####
 load(['../CRF/', supersource_name]);
@@ -55,6 +55,7 @@ if exist(vgosdb_path,'dir')
   rmdir(vgosdb_path, 's');
 end
 
+storage = cell(0);
 % Check, if sources in the vgosDB file are missing in the supersource file:
 IVSname_trim = strtrim(IVSname);
 for i_src = 1 : length(vgosdb_src_name_list)
@@ -72,14 +73,31 @@ for i_src = 1 : length(vgosdb_src_name_list)
         dec_dms = degrees2dms(dec_deg);
         ra_hms = degrees2dms(ra_hr);
         
-        fprintf('%8s      %2d %2d %9.6f  %+3d %2d %9.6f 2000.0 0.0 %s         0\n', vgosdb_src_name_list{i_src}, ra_hms(1), ra_hms(2), ra_hms(3), dec_dms(1), dec_dms(2), dec_dms(3), session_name)
+        txt = sprintf('%8s      %2d %2d %9.6f  %+3d %2d %9.6f 2000.0 0.0 %s         0\n', vgosdb_src_name_list{i_src}, ra_hms(1), ra_hms(2), ra_hms(3), dec_dms(1), dec_dms(2), dec_dms(3), session_name);
+        fprintf(txt)
+        storage{end+1} = txt;
         
         
     else % More than 1 entry!
         fprintf(1, 'WARNING: There is more than one entry for source %s (src_ID = %d) in the superstation file!\n', vgosdb_src_name_list{i_src}, i_src);
-    end
+    end    
+end
+
+while 1
+    x = input('Add sources to vievsCrf.txt file? [Y,n]');
+    if isempty(x) || strcmpi(x,'y') || strcmpi(x,'yes')
+        if isfile('../CRF/data/vievsCrf.txt')
+            fid = fopen('../CRF/data/vievsCrf.txt','a');
+            for i = 1:length(storage)
+                fprintf(fid, storage{i});
+            end
+            fprintf('Now generate new CRF file in VieVS \n    VieVS -> Models -> Reference frames -> Celestial reference frame\n    click ''create file'', click create\n')
+        else
+            fprintf('ERROR: vievsCRF.txt file not found!')
+        end
         
-    
-    
-    
+        break;
+    elseif strcmpi(x,'n') || strcmpi(x,'no')
+        break;
+    end
 end
