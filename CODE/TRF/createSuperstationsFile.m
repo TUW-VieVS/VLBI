@@ -1607,8 +1607,7 @@ function pushbutton_dtrf2014Browse_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_dtrf2014Browse (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-
+browseFunction(hObject, handles)
 
 function edit_dtrf2014File_Callback(hObject, eventdata, handles)
 % hObject    handle to edit_dtrf2014File (see GCBO)
