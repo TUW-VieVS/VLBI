@@ -350,7 +350,7 @@ else
     set(handles.popupmenu_parameters_statCorr_hydroLoading, 'String', {dirsInHydloFolder.name});
 end
 set(handles.popupmenu_parameters_eop_aPriori_other, 'String', {dirsInEopFolder.name})
-set(handles.popupmenu_parameters_eop_oceanTideModel, 'String', ['interpf (Conventions)', {dirsInEophfFolder.name}, 'Combi_IGG_Bonn'])
+set(handles.popupmenu_parameters_eop_oceanTideModel, 'String', [{dirsInEophfFolder.name},'interpf (Conventions)','Combi_IGG_Bonn'])
 set(handles.popupmenu_plot_folder1_subfolder, 'String', ['/', {dirsInDataFolder.name}])
 set(handles.popupmenu_plot_folder2_subfolder, 'String', ['/', {dirsInDataFolder.name}])
 set(handles.popupmenu_plot_folder3_subfolder, 'String', ['/', {dirsInDataFolder.name}])

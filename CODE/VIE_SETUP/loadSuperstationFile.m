@@ -67,10 +67,10 @@ set(handles.popupmenu_parameters_statCorr_APLrg, 'String',...
 set(handles.popupmenu_parameters_statCorr_GIA, 'String',...
     GIALoadFields(2:end)) % 1st field is the reference epoch
 % make gsfc, fes2004
-fes2004Log=~cellfun(@isempty, strfind(ocLoadFields, 'FES2004'));
-if sum(fes2004Log)>0
+otldefaultLog=~cellfun(@isempty, strfind(ocLoadFields, 'TPXO72'));
+if sum(otldefaultLog)>0
     set(handles.popupmenu_parameters_statCorr_tidalOceanLoad, 'Value', ...
-        find(fes2004Log))
+        find(otldefaultLog))
 end
 gsfcLog=~cellfun(@isempty, strfind(atLoadFields, 'GSFC'));
 if sum(gsfcLog)>0
