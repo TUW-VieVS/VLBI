@@ -84,7 +84,7 @@ for i_src = 1 : length(vgosdb_src_name_list)
 end
 
 while 1
-    x = input('Add sources to vievsCrf.txt file? [Y,n]');
+    x = input('Add sources to vievsCrf.txt file? [Y,n]','s');
     if isempty(x) || strcmpi(x,'y') || strcmpi(x,'yes')
         if isfile('../CRF/data/vievsCrf.txt')
             fid = fopen('../CRF/data/vievsCrf.txt','a');
