@@ -1,5 +1,5 @@
 $ Antenna Information File  Format Version of 2008.04.22
-## Content Version of 2020-04-03
+## Content Version of 2020-04-23
 #
 # When using this file acknowledgement has to be given to
 #
@@ -16,6 +16,8 @@ $ Antenna Information File  Format Version of 2008.04.22
 #
 #
 # Version:    
+#             2020-04-23 Corrected typos for CHICHI10 and HAYSTACK, detected by Matthias Glomsda
+#             2020-04-14 WESTFORD revision reversed to old entries, YARRA12M, KATH12M, HOBART12, HOBART26 updated
 #             2020-04-03 Revised WESTFORD expansion coefficients for 0.6 factor to allow direct use of outside tempertures 
 #                        in a general model
 #             2020-04-02 Assigned same axis offsets to DSS65 and DSS65a
@@ -185,7 +187,7 @@ ANTENNA_INFO  CARNUSTY  FO_SECN MO_AZEL RA_NO   ME_COMP   9.6  0    0   1010.8  
 ANTENNA_INFO  CARROLGA  FO_SECN MO_AZEL RA_NO   ME_INCM  19.0  0    0    979.0    5.0  0.0000  0      1.00E-5   4.3000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # MV-3 one time occupation
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  CHICHI10  FO_SECN MO_AZEL RA_NO   ME_INCM  22.9  0    0   1005.4   10.0  3.0000  0      1.00E-5   6.7000 1.20E-5  -0.018 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
+ANTENNA_INFO  CHICHI10  FO_SECN MO_AZEL RA_NO   ME_INCM  22.9  0    0   1005.4   10.0  3.0000  0      1.00E-5   6.7000 1.20E-5  -0.0018 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # Email of Kensuke Kokado, 2008-07-29; X band: secondary focus, S band: primary focus
 # axis offset estimated by L.  Petrov    (pre 2008)  -0.0025 +- 0.0023
 # axis offset estimated by Dan Macmillan 2014.01.07, -0.0047 +- 0.0014
@@ -376,7 +378,7 @@ ANTENNA_INFO  HATCREEK  FO_PRIM MO_EQUA RA_NO   ME_COMP   9.3  0    0    900.1  
 # Axis offset estimated by Dan Macmillan 2014.01.07, -0.0095 +- 0.0012
 # axis offset estimated by Dan Macmillan 2020.02.14, -0.0100 +- 0.0010
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  HAYSTACK  FO_SECN MO_AZEL RA_YES  ME_COMP   8.6  0    0    997.7   37.0 10.4500  0      1.00E-5  13.6000 1.20E-5  -0.0012 1.20E-5   4.3000 1.20E-5  13.950  2.30E-5
+ANTENNA_INFO  HAYSTACK  FO_SECN MO_AZEL RA_YES  ME_COMP   8.6  0    0    997.7   37.0 10.4500  0      1.00E-5  13.6000 1.20E-5   0.0019 1.20E-5   4.3000 1.20E-5  13.950  2.30E-5
 # Infos by Arthur Niell, 2008-08-11
 # "The other effect is the gravitational sag of the subreflector, which is 
 # documented in Carter et al JGR Vol 85 B5 pp 2685-2687 as 13 mm sin elev."
@@ -390,14 +392,22 @@ ANTENNA_INFO  HN-VLBA   FO_SECN MO_AZEL RA_NO   ME_COMP   7.1  0    0    976.6  
 # Axis offset estimated by Dan Macmillan 2014.01.07,  2.1301 +- 0.0003
 # axis offset estimated by Dan Macmillan 2020.02.14,  2.1296 +- 0.0002
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  HOBART12  FO_SECN MO_AZEL RA_NO   ME_COMP  12.0  0    0   1005.7   12.0  0.0000  0      1.00E-5   6.7080 1.14E-5   0.0184 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
+ANTENNA_INFO  HOBART12  FO_SECN MO_AZEL RA_NO   ME_COMP  12.0  0    0   1005.7   12.0  0.0000  0      1.00E-5   6.7080 1.14E-5   0.0021 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
 # dimensions and expansion coefficients provided by Kevin Sinclair via Peter Shield of InterTronic Solutions Inc./Cobham plc
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0129 +- 0.0010
 # axis offset estimated by Dan Macmillan 2020.02.14,  0.0184 +- 0.0004
+# Axis offset remeasured 2009 "The 2009 Mount Pleasant (Hobart) Observatory Local Tie Survey, GEOSCIENCE AUSTRALIA RECORD 2010/XX,
+# by Ryan Ruddick and Alex Woods" (1.9 mm) and again 2014 (2.3 mm), Survey report pending, see Email by L. McCullum, 2020-04-08
+# no formal errors reported, using mean = 2.1 mm
+#
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  HOBART26  FO_PRIM MO_XYEA RA_NO   ME_COMP  13.2  0    0   1005.7   26.0  0.0000  0      1.00E-5  13.1500 1.20E-5   8.1913 1.20E-5   3.6500 1.20E-5  11.0300 1.20E-5
+ANTENNA_INFO  HOBART26  FO_PRIM MO_XYEA RA_NO   ME_COMP  13.2  0    0   1005.7   26.0  0.0000  0      1.00E-5  13.1500 1.20E-5   8.1905 1.20E-5   3.6500 1.20E-5  11.0300 1.20E-5
 # Axis offset of HOBART26 reported by John Dawson via Oleg Titov, 2005, 8.1913 +- 0.0015
 # Other diemsions measured by Brett Reid, Email of 2008-07-31
+# Axis offset remeasured 2009 "The 2009 Mount Pleasant (Hobart) Observatory Local Tie Survey, GEOSCIENCE AUSTRALIA RECORD 2010/XX,
+# by Ryan Ruddick and Alex Woods" (8.1901 m) and again 2014 (8.1909 m), Survey report pending, see Email by L. McCullum, 2020-04-08
+# no formal errors reported, using mean = 8.1905 m
+#
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  HOFN      FO_SECN MO_AZEL RA_NO   ME_COMP   6.9  0    0   1000.0    3.9  0.0000  0      1.00E-5   2.8000 1.20E-5   0.0000 1.20E-5   1.3000 1.20E-5   1.6000 1.20E-5
 # mobile site with MV-2,  from ECCDAT file
@@ -458,10 +468,13 @@ ANTENNA_INFO  KASHIMA   FO_SECN MO_AZEL RA_NO   ME_COMP  14.5  0    0   1008.1  
 # Axis offset estimated by Dan Macmillan 2014.01.07, -0.0011 +- 0.0011
 # axis offset estimated by Dan Macmillan 2020.02.14, -0.0015 +- 0.0012
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  KATH12M   FO_SECN MO_AZEL RA_NO   ME_COMP  25.3  0    0    968.8   12.0  0.0000  0      1.00E-5   6.7080 1.14E-5   0.0027 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
+ANTENNA_INFO  KATH12M   FO_SECN MO_AZEL RA_NO   ME_COMP  25.3  0    0    968.8   12.0  0.0000  0      1.00E-5   6.7080 1.14E-5   0.0031 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
 # dimensions and expansion coefficients provided by Kevin Sinclair via Peter Shield of InterTronic Solutions Inc./Cobham plc
 # Axis offset estimated by Dan Macmillan 2014.01.07,  0.0043 +- 0.0013
 # axis offset estimated by Dan Macmillan 2020.02.14,  0.0027 +- 0.0002
+# Axis offset remeasured 2010 "2010 Katherine VLBI Observatory Local Tie Survey, Technical Report, Record 2014/35 | GeoCat 78548
+# Ryan Ruddick" (3.1 mm), no formal error reported
+#
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  KAUAI     FO_SECN MO_XYNO RA_NO   ME_ROUG  17.0  0    0    885.3    9.0  0.0000  0      1.00E-5   7.7000 1.20E-5   2.4356 1.20E-5   1.7000 1.20E-5   2.9000 1.20E-5
 #  no info, taken from picture, Axel Nothnagel 990806
@@ -1050,13 +1063,16 @@ ANTENNA_INFO  VNDNBERG  FO_SECN MO_AZEL RA_NO   ME_INCM  17.4  0    0   1016.7  
 # [Axis offset estimated by Dan Macmillan 2014.01.07, -0.0031 +- 0.0020]
 # [axis offset estimated by Dan Macmillan 2020.02.14, -0.0035 +- 0.0019]
 # application of axis offset estimates is not recommended since MV-1 and MV-2 were used on this site
+#
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  WARK12M   FO_SECN MO_AZEL RA_NO   ME_COMP  14.5  0    0   1002.6   12.0  0.0000  0      1.00E-5   6.7080 1.14E-5   0.0010 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
 # dimensions and expansion coefficients provided by Kevin Sinclair via Peter Shield of InterTronic Solutions Inc./Cobham plc
 # Axis offset measured by John Dawson of Geoscience Austalia (+ 1.0 +/- 0.2mm) and reported by Paula Gentle, email of Feb 26, 2013
+# Axis offset measured by Paula Gentle of Land Information NZ (+ 1.0 +/- 0.1mm).
+# Reference: 2015 - Warkworth Observatory Local Tie Survey, Land Information New Zealand Record A1387321
 #
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  WESTFORD  FO_PRIM MO_AZEL RA_YES  ME_COMP   8.9  0    0   1001.3   18.0 10.6000  0      0.60E-5   8.3000 0.72E-5   0.3186 0.72E-5   3.0000 0.72E-5   3.6000 0.720E-5
+ANTENNA_INFO  WESTFORD  FO_PRIM MO_AZEL RA_YES  ME_COMP   8.9  0    0   1001.3   18.0 10.6000  0      1.00E-5   8.3000 1.20E-5   0.3186 1.20E-5   3.0000 1.20E-5   3.6000 1.20E-5
 #  Information as from A. Nothnagel 950523, 10.6 m see Email by Arthur Niell 1999-08-10
 #  Changed from FO_SECN to FO_PRIM on 2020-01-06, see Email of Arthur Niell of 2019-11-05
 # axis offset estimated by L.  Petrov    (pre 2008)   0.3163 +- 0.0002
@@ -1066,6 +1082,7 @@ ANTENNA_INFO  WESTFORD  FO_PRIM MO_AZEL RA_YES  ME_COMP   8.9  0    0   1001.3  
 # steel components (1.20E-5) are scaled by the temperature reduction factor of 0.6 as reported by A. Niell in 1999 for the 
 # temperature inside the radome. Through this conversion, the computations do not require a specific handling of the Westford
 # outside temperatures to reflect the damping to the inside.
+# 2020-04-14 Revision of 2020-04-03 reset to old expansion coefficients
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  WETTZELL  FO_SECN MO_AZEL RA_NO   ME_COMP   7.8  0    0    943.9   20.0  8.0000  0      1.00E-5   4.0000 1.20E-5  -0.0001 1.20E-5   3.7000 1.20E-5   7.9000 1.20E-5
 #  Information as from A. Nothnagel 950523
@@ -1099,9 +1116,12 @@ ANTENNA_INFO  WHTHORSE  FO_SECN MO_AZEL RA_NO   ME_INCM  -0.3  0    0    926.2  
 ANTENNA_INFO  YAKATAGA  FO_SECN MO_AZEL RA_NO   ME_INCM   4.3  0    0   1005.0    3.9  0.0000  0      1.00E-5   2.8000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2 only
 #----------------------------------------------------------------------------------------
-ANTENNA_INFO  YARRA12M  FO_SECN MO_AZEL RA_NO   ME_COMP  18.2  0    0    985.3   12.0  0.0000  0      1.00E-5   6.7080 1.14E-5  -0.0002 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
+ANTENNA_INFO  YARRA12M  FO_SECN MO_AZEL RA_NO   ME_COMP  18.2  0    0    985.3   12.0  0.0000  0      1.00E-5   6.7080 1.14E-5   0.0010 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
 # dimensions and expansion coefficients provided by Kevin Sinclair via Peter Shield of InterTronic Solutions Inc./Cobham plc
 # axis offset estimated by Dan Macmillan 2020.02.14, -0.0002 +- 0.0002
+# Axis offset remeasured 2007 "The 2007 Yarragadee (Moblas 5) Local Tie Survey, GEOSCIENCE AUSTRALIA RECORD 2007/19
+# by A. Woods, R. Ruddick" (0.5 mm) and again 2014 (1.5 +/- 0.5mm), Survey report pending, see Email by L. McCullum, 2020-04-08,
+# using mean = 1.0 mm
 #
 #----------------------------------------------------------------------------------------
 ANTENNA_INFO  YEBES     FO_PRIM MO_AZEL RA_YES  ME_INCM  11.6  0    0    911.8   13.7  0.5000  0      1.00E-5   9.0000 1.20E-5  -0.0015 1.20E-5   2.4000 1.20E-5   3.0000 1.20E-5
@@ -1153,25 +1173,6 @@ ANTENNA_INFO  ZELRT13V  FO_SECN MO_AZEL RA_NO   ME_COMP   7.4  0    0    884.4  
 #  Focal length of secondary reflector = 0.3 m
 #  Feed ilumination taper in dB unknown
 #  Information as from E. Skurikhina 2020-02-10
-#----------------------------------------------------------------------------------------
-ANTENNA_INFO  WETTDBBC  FO_SECN MO_AZEL RA_NO   ME_COMP   7.8  0    0    943.9   20.0  8.0000  0      1.00E-5   4.0000 1.20E-5  -0.0001 1.20E-5   3.7000 1.20E-5   7.9000 1.20E-5
-# Infos copied from station WETTZELL (by A. Hellerschmied, 2015-05-07) 
-#  Information as from A. Nothnagel 950523
-# Axis offset -0.08 mm +- 0.04 mm according to Report of Michael Loesler, TU Karlsruhe, 2008
-#  Infos from Gerhard Kronschnabl, Wettzell, 2010-05-27:
-#  Ilumination Taper  = 13 dB
-#  Primary Reflector: Parabolic; Main Dish Diameter = 20 m; Focal Length = 9 m
-#  Secundary Reflector: Hyperbolic Subreflector = 2.64m Diameter, Depth = 0.3 m;  Secundary Focal Length = 6.45 m
-#  Distance from Vertex to the Subreflector = 7.9 m (on axis)
-#----------------------------------------------------------------------------------------
-#
-ANTENNA_INFO  CEDUNA  
-#----------------------------------------------------------------------------------------
-ANTENNA_INFO  WARK30M   FO_SECN MO_AZEL RA_NO   ME_ROUG  14.5  0    0   1002.6   30.0  0.0000  0      1.00E-5   6.7080 1.14E-5   2.6100 1.20E-5   1.8009 2.24E-5   4.2620 2.24E-5
-# Mostly dummy values apart from diameter, mout type and axis offset!
-ANTENNA_INFO  ONSAVDIF  FO_SECN MO_AZEL RA_YES  ME_COMP   9.0  0    0   1010.7   20.0 11.3000  0      1.00E-5   2.9000 1.20E-5  -0.0060 1.20E-5   3.4000 1.20E-5   5.5000 1.20E-5
-# Infos copied from station ONSALA60 (by M. Schartner, 2017-03-16)
-$ Antenna Information File  Format Version of 2008.04.22
 #----------------------------------------------------------------------------------------
 #
 $ Antenna Information File  Format Version of 2008.04.22

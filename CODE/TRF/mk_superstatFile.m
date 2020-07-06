@@ -34,14 +34,14 @@ s12vandamFile=inFiles(idiF).name; idiF=idiF+1;
 s12gsfcFile=inFiles(idiF).name; idiF=idiF+1;
 s12UserOwnFile=inFiles(idiF).name; 
 s12UserOwnFieldname=inFiles(idiF).fieldName; idiF=idiF+1;
-oceanLoadingFES2004File=inFiles(idiF).name;
-oceanLoadingFES2004Fieldname=inFiles(idiF).fieldName; idiF=idiF+1;
+oceanLoadingTPXO72File=inFiles(idiF).name;
+oceanLoadingTPXO72Fieldname=inFiles(idiF).fieldName; idiF=idiF+1;
 oceanLoadingGOT00File=inFiles(idiF).name;
 oceanLoadingGOT00Fieldname=inFiles(idiF).fieldName; idiF=idiF+1;
 oceanLoadingEOT08aFile=inFiles(idiF).name;
 oceanLoadingEOT08aFieldname=inFiles(idiF).fieldName; idiF=idiF+1;
-oceanLoadingTPXO72File=inFiles(idiF).name;
-oceanLoadingTPXO72Fieldname=inFiles(idiF).fieldName; idiF=idiF+1;
+oceanLoadingFES2004File=inFiles(idiF).name;
+oceanLoadingFES2004Fieldname=inFiles(idiF).fieldName; idiF=idiF+1;
 oceanLoadingAG06File=inFiles(idiF).name;
 oceanLoadingAG06Fieldname=inFiles(idiF).fieldName; idiF=idiF+1;
 oceanLoadingUserOwnFilename=inFiles(idiF).name;
@@ -303,16 +303,16 @@ fprintf('\n2.2 Ocean loading\n')
 
 
 %fprintf('\n2.2.1 Loading ocean loading files\n\n');
-lines2print={'Loading ocean_loading_FES2004.txt', 'Loading ocean_loading_GOT00.txt',...
-    'Loading ocean_loading_EOT08a.txt', 'Loading ocean_loading_TPXO72.txt',...
+lines2print={'Loading ocean_loading_TPXO72.txt', 'Loading ocean_loading_GOT00.txt',...
+    'Loading ocean_loading_EOT08a.txt', 'Loading ocean_loading_FES2004.txt',...
     'Loading ocean_loading_AG06.txt'};
 nFiles=size(lines2print,2);
 
-files2load={oceanLoadingFES2004File, oceanLoadingGOT00File,...
-    oceanLoadingEOT08aFile, oceanLoadingTPXO72File, ...
+files2load={oceanLoadingTPXO72File, oceanLoadingGOT00File,...
+    oceanLoadingEOT08aFile, oceanLoadingFES2004File, ...
     oceanLoadingAG06File};
-ol_fieldnames={oceanLoadingFES2004Fieldname, oceanLoadingGOT00Fieldname,...
-    oceanLoadingEOT08aFieldname, oceanLoadingTPXO72Fieldname, ...
+ol_fieldnames={oceanLoadingTPXO72Fieldname, oceanLoadingGOT00Fieldname,...
+    oceanLoadingEOT08aFieldname, oceanLoadingFES2004Fieldname, ...
     oceanLoadingAG06Fieldname};
 
 % if the user own file is given - append to cell strings
