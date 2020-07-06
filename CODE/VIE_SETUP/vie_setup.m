@@ -529,17 +529,28 @@ RGB = cat(3,R,G,B);
 imshow(RGB)
 
 try
-    [status,out] = system('git rev-parse --short HEAD');
-    if status == 0 && length(out) == 8
-        handles.text_version.String = sprintf('v3.1 (%s)',strtrim(out));
+    [status_hash,hash] = system('git rev-parse --short HEAD');
+    hash = strtrim(hash);
+    [status_tag,tag] = system('git describe --abbrev=0');
+    tag = strtrim(tag);
+    
+    if status_tag && length(tag)>1
+        f = gcf;
+        f.Name = sprintf('Vienna VLBI and Satellite Software %s',hash);
+    end
+    
+    if status_hash == 0 && status_tag== 0 && length(tag) > 1 && length(hash) == 7
+        handles.text_version.String = sprintf('%s (%s)',tag, hash);
+    elseif status_hash == 0 && length(hash) == 7
+        handles.text_version.String = sprintf('%s', hash);
+    elseif status_tag == 0 && length(tag) > 1
+        handles.text_version.String = sprintf('%s',tag);
     else
-        handles.text_version.String = 'v3.1';
+        handles.text_version.String = 'no git';
     end
 catch
-    handles.text_version.String = 'v3.1';
+    handles.text_version.String = 'no git';
 end
-
-
 
 % Choose default command line output for vie_setup
 handles.output = hObject;
