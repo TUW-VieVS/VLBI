@@ -534,9 +534,9 @@ try
     [status_tag,tag] = system('git describe --abbrev=0');
     tag = strtrim(tag);
     
-    if status_tag && length(tag)>1
+    if status_tag == 0 && length(tag)>1
         f = gcf;
-        f.Name = sprintf('Vienna VLBI and Satellite Software %s',hash);
+        f.Name = sprintf('Vienna VLBI and Satellite Software %s',tag);
     end
     
     if status_hash == 0 && status_tag== 0 && length(tag) > 1 && length(hash) == 7
