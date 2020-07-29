@@ -72,8 +72,14 @@ for i_src = 1 : length(vgosdb_src_name_list)
         dec_deg = vgosdb_src_dec(i_src)*180/pi;
         dec_dms = degrees2dms(dec_deg);
         ra_hms = degrees2dms(ra_hr);
-        
-        txt = sprintf('%8s      %2d %2d %9.6f  %+3d %2d %9.6f 2000.0 0.0 %s         0\n', vgosdb_src_name_list{i_src}, ra_hms(1), ra_hms(2), ra_hms(3), dec_dms(1), dec_dms(2), dec_dms(3), session_name);
+        dec_ms_neg = dec_dms<0;
+        if ((dec_dms(1)==0) && ((dec_ms_neg(2)) || (dec_ms_neg(3))))
+            dec_dms(dec_ms_neg)=dec_dms(dec_ms_neg)*(-1);
+            dec_degchar='-00';
+            txt = sprintf('%8s      %2d %2d %9.6f  %3s %2d %9.6f 2000.0 0.0 %s         0\n', vgosdb_src_name_list{i_src}, ra_hms(1), ra_hms(2), ra_hms(3), dec_degchar, dec_dms(2), dec_dms(3), session_name);
+        else
+            txt = sprintf('%8s      %2d %2d %9.6f  %+3d %2d %9.6f 2000.0 0.0 %s         0\n', vgosdb_src_name_list{i_src}, ra_hms(1), ra_hms(2), ra_hms(3), dec_dms(1), dec_dms(2), dec_dms(3), session_name);
+        end
         fprintf(txt)
         storage{end+1} = txt;
         

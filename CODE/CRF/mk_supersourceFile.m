@@ -44,7 +44,7 @@ fprintf('Loading VieVSCrf.txt (BACKUP)\n\n')
 
 fid=fopen(vievsCrfFile);
 % get data from file
-data=textscan(fid, ' %8s %f %f %f %03s %f %f %f %f %17c %f', 'commentstyle', '*');
+data=textscan(fid, ' %8s %f %f %f %03s %f %f %f %f %s %f', 'commentstyle', '*');
 fclose(fid);
 
 
@@ -68,6 +68,10 @@ for iSource=1:nSources
         signum=-1;
     else
         signum=1;
+        if data{6}(iSource)<0 % consider format variant where sdd=0 and minus sign is written to mm
+           signum=-1;
+           data{6}(iSource)=data{6}(iSource)*signum;
+        end
     end
 
     source(iSource).vievsCrf.de=signum*...
