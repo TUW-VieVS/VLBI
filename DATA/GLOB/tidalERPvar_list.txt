@@ -1,9 +1,15 @@
+% These tides are used to set up the paritial derivatives
+% for diurnal and semi-diurnal tidal terms in ERP.
+% Do not change this file!!
+% The selection of terms for estimation in vie_glob is done
+% via the file tidalERPvar_globest.txt!
+%
 % tide  Multipliers of fundamental arguments
 % name  GMST+pi, l, l', F, D, OM,   Num 
 % K2  ,   2,  0,  0,  0,  0,  0,     68
 % K2' ,   2,  0,  0,  0,  0, -1,     69
 % tide,   2,  0,  0,  0,  0, -2,     70
-%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 tide,   1, -1,  0, -2, -2, -2,      1                                                             
 2Q1',   1, -2,  0, -2,  0, -1,      2 
 2Q1 ,   1, -2,  0, -2,  0, -2,      3 
