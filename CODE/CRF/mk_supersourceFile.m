@@ -134,8 +134,8 @@ for iSource=1:nSources
             iIERS = iIERS+1;
             cIERS = num2str(iIERS,'%04.0f');
             
-            fprintf('No IERS name found in IVS_SrcNamesTable.txt for %s. id(%1.0f) \nAt the moment the IERS name VIE_%04.0f will be written to supersourcefile.\n\n',...
-                curIVSname,iSource,iIERS);
+%             fprintf('No IERS name found in IVS_SrcNamesTable.txt for %s. id(%1.0f) \nAt the moment the IERS name VIE_%04.0f will be written to supersourcefile.\n\n',...
+%                 curIVSname,iSource,iIERS);
             source(iSource).IERSname = ['VIE_' cIERS];
         else
 %             fprintf('source(%1.0f).IVSname: %s \nsource(%1.0f).IERSname: %c%c%c%c%c%c%c%c \n\n',...
@@ -196,7 +196,7 @@ clear GSFC2015b_raw GSFC2015bFile
 fclose(fid);
 
 % write info about translation table
-fprintf('Compare GSFC2015b with the VieVSCRF backup:\n');
+fprintf('Compare GSFC2015b with the VieVSCRF backup.\n');
 
     %##############################
 for iSource = 1:size(GSFC2015b.IVSname,1)
