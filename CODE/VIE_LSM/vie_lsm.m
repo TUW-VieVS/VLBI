@@ -374,7 +374,7 @@ if (parameter.lsmopt.min_num_obs_per_est_source > 1) && (parameter.lsmopt.pw_sou
 end
 
 
-fprintf('1. LOADE AND PREPARE DATA\n');
+fprintf('1. LOAD AND PREPARE DATA\n');
 
 opt = parameter.lsmopt;
 
