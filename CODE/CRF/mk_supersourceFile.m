@@ -132,11 +132,11 @@ for iSource=1:nSources
     if strcmp(curIVSname,source(iSource).IERSname)==0
         if source(iSource).IERSname == '        '
             iIERS = iIERS+1;
-            cIERS = num2str(iIERS,'%04.0f');
+            cIERS = num2str(iIERS,'%05.0f');
             
 %             fprintf('No IERS name found in IVS_SrcNamesTable.txt for %s. id(%1.0f) \nAt the moment the IERS name VIE_%04.0f will be written to supersourcefile.\n\n',...
 %                 curIVSname,iSource,iIERS);
-            source(iSource).IERSname = ['VIE_' cIERS];
+            source(iSource).IERSname = ['VIE' cIERS];
         else
 %             fprintf('source(%1.0f).IVSname: %s \nsource(%1.0f).IERSname: %c%c%c%c%c%c%c%c \n\n',...
 %                 iSource, curIVSname, iSource, source(iSource).IERSname);
