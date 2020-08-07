@@ -323,7 +323,7 @@ for pl=1:size(process_list,1)
     blockName='FILE/REFERENCE';
 
     infoType={'DESCRIPTION', 'OUTPUT', 'CONTACT', 'SOFTWARE'};
-    info={'Vienna University of Technology', 'LEVEL3 output of Vienna VLBI Software', [firstname, ' ', lastname, ' <',email, '>'], 'VieVS - Vienna VLBI Software'};
+    info={'TU Wien', 'LEVEL3 output of Vienna VLBI Software', [firstname, ' ', lastname, ' <',email, '>'], 'VieVS - Vienna VLBI Software'};
     frBlock=[infoType; info];
 
     %write data
