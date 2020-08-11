@@ -273,11 +273,14 @@ if ~isempty(parameter.opt.options.sour_excl)
         % Get scan IDs at which a source is partly excluded (by time):
         if logical(parameter.opt.options.sour_excl_start(iSource2BeExcl)) % If parameter.opt.options.sour_excl_start ~= 0
             
-            exclSourcesInd_byTime_q = exclSourcesInd_byTime_q | (scansToExcludedSources_q & (([scan.mjd] >= parameter.opt.options.sour_excl_start(iSource2BeExcl)) & ([scan.mjd]<=parameter.opt.options.sour_excl_end(iSource2BeExcl))));
-            exclSourcesInd_q(iSource2BeExcl) = [];
-            
-            exclSourcesInd_byTime_s = exclSourcesInd_byTime_s | (scansToExcludedSources_s & (([scan.mjd] >= parameter.opt.options.sour_excl_start(iSource2BeExcl)) & ([scan.mjd]<=parameter.opt.options.sour_excl_end(iSource2BeExcl))));
-            exclSourcesInd_s(iSource2BeExcl) = [];
+            if ~isempty(allSourceNames_q) && (sum(strcmp(allSourceNames_q, strtrim(parameter.opt.options.sour_excl(iSource2BeExcl,:)))) > 0)
+                exclSourcesInd_byTime_q = exclSourcesInd_byTime_q | (scansToExcludedSources_q & (([scan.mjd] >= parameter.opt.options.sour_excl_start(iSource2BeExcl)) & ([scan.mjd]<=parameter.opt.options.sour_excl_end(iSource2BeExcl))));
+                exclSourcesInd_q(iSource2BeExcl) = [];
+            end
+            if ~isempty(allSourceNames_s) && (sum(strcmp(allSourceNames_s, strtrim(parameter.opt.options.sour_excl(iSource2BeExcl,:)))) > 0)
+                exclSourcesInd_byTime_s = exclSourcesInd_byTime_s | (scansToExcludedSources_s & (([scan.mjd] >= parameter.opt.options.sour_excl_start(iSource2BeExcl)) & ([scan.mjd]<=parameter.opt.options.sour_excl_end(iSource2BeExcl))));
+                exclSourcesInd_s(iSource2BeExcl) = [];
+            end
         end
     end
 end
