@@ -36,8 +36,11 @@ for iSource=1:nSources
     % find index in crf
     indSourceInCrf=strcmp(deblank({crf.IVSname}),deblank(curName));
     if sum(indSourceInCrf) == 0
+        indSourceInCrf=strcmp(deblank({crf.IERSname}),deblank(curName));
+        if sum(indSourceInCrf) == 0
         warning('ERROR: source %s not found in supersource file!\nAdd source to supersource file!', curName)
         fprintf('Run: check_sources_in_vgosDB_file or check_sources_in_NGS_file function\n')
+        end
     end
     
     % get index
