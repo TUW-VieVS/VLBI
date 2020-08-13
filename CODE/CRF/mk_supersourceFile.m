@@ -44,7 +44,7 @@ fprintf('Loading VieVSCrf.txt (BACKUP)\n\n')
 
 fid=fopen(vievsCrfFile);
 % get data from file
-data=textscan(fid, ' %8s %f %f %f %03s %f %f %f %f %s %f', 'commentstyle', '*');
+data=textscan(fid, '%8s %f %f %f %03s %f %f %f %f %19c %f', 'commentstyle', '*');
 fclose(fid);
 
 
