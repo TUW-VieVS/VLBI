@@ -27,11 +27,11 @@
 function [N] = nnr_cond(ns,ra,de,opt,sum_dj,N)
              Bra = []; Bde = []; B = [];
     
-                         
+                                      
 	for isou = 1 : ns
         
         %--------------------
-        bra(4,1) = 0; bde = bra;
+        bra(3,1) = 0; bde = bra;
         %--------------------
         bra(1,1) = tan(de(isou))*cos(ra(isou)); 
         bra(2,1) = tan(de(isou))*sin(ra(isou)); 
@@ -39,11 +39,11 @@ function [N] = nnr_cond(ns,ra,de,opt,sum_dj,N)
         %--------------------
         bde(1,1) = -sin(ra(isou)); 
         bde(2,1) =  cos(ra(isou)); 
-        bde(4,1) = 1; 
+        bde(3,1) = 0; 
         %--------------------
   
         if opt.source(isou).nnr_inc == 0;
-           clear bra, bra(4,1) = 0;
+           clear bra, bra(3,1) = 0;
            clear bde, bde = bra;
         end
 
