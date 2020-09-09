@@ -285,7 +285,9 @@ for k = 1 : 2 % loop over 2 days
             zippedFile = [curIonoPath, ionoFilename{k,1}, '.Z'];
             if ~exist(zippedFile, 'file') % if zipped file does not exist in folder -> download
                 fprintf('Compressed IGS TEC map file does not exist: (%s)\n', zippedFile);
-                url = ['ftp://ftp.unibe.ch/aiub/CODE/', num2str(curYr(k)), '/', ionoFilename{k,1}, '.Z'];
+%                 url = ['ftp://ftp.unibe.ch/aiub/CODE/', num2str(curYr(k)), '/', ionoFilename{k,1}, '.Z'];
+                url = ['http://ftp.aiub.unibe.ch/CODE/', num2str(curYr(k)), '/', ionoFilename{k,1}, '.Z'];
+
                 urlwrite(url, zippedFile);
                 fprintf(' ...finished downloading.\n');
             end

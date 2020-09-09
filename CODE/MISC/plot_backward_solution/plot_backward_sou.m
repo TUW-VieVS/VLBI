@@ -67,18 +67,18 @@ for i=1:nsou
        figure(i)
        subplot(2,1,1)
        errorbar(svalRA(:,1),svalRA(:,2),svalRA(:,3),'.','Color',[.4 .4 .4 ],'MarkerEdgeColor','k');
-       xlim([xmin xmax]) 
-       set(gca,'XTick',[51544-(365.25*10) 51544 51544+(365.25*10) 51544+(365.25*20)])
-       set(gca,'XTickLabel',[1990;2000;2010;2020],'FontSize',sfont)
+%        xlim([xmin xmax]) 
+%        set(gca,'XTick',[51544-(365.25*10) 51544 51544+(365.25*10) 51544+(365.25*20)])
+%        set(gca,'XTickLabel',[1990;2000;2010;2020],'FontSize',sfont)
        title(source)
        ylabel('\DeltaRA [mas]','FontSize',sfont)
        set(gca,'LineWidth',1,'FontSize',sfont);%,'fontweight','bold')  ;
 
        subplot(2,1,2)
        errorbar(svalDE(:,1),svalDE(:,2),svalDE(:,3),'.','Color',[.4 .4 .4 ],'MarkerEdgeColor','k');
-       xlim([xmin xmax]) 
-       set(gca,'XTick',[51544-(365.25*10) 51544 51544+(365.25*10) 51544+(365.25*20)])
-       set(gca,'XTickLabel',[1990;2000;2010;2020],'FontSize',sfont)
+%        xlim([xmin xmax]) 
+%        set(gca,'XTick',[51544-(365.25*10) 51544 51544+(365.25*10) 51544+(365.25*20)])
+%        set(gca,'XTickLabel',[1990;2000;2010;2020],'FontSize',sfont)
        ylabel('\DeltaDe [mas]','FontSize',sfont)
        set(gca,'LineWidth',1,'FontSize',sfont);%,'fontweight','bold')  ;
 

@@ -45,10 +45,12 @@ end
 fid=fopen([paths.path_out '_ESTIMATES/' paths.out '/glob_results_' paths.L2 '.txt'],'wt');
 
 fprintf(fid,' %% Sessions in the solution \n');
-fprintf(fid,'%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n',ses_time');
+for i=1:size(ses_time,2)
+    fprintf(fid,'%s   \n',ses_time{i});
+end
 
 fprintf(fid,'\n %% Number of sessions in the global adjustment\n');
-lse=size(globsol.sessions,1);
+lse=size(globsol.sessions,2);
 fprintf(fid,'%1.0f\n',lse);
 
 fprintf(fid,'\n %% Maximal RMS of the sessions in the solution\n');
@@ -57,8 +59,8 @@ maxRMS=globsol.maxRMS;
 fprintf(fid,'%3.2f\n',maxRMS);
 
 fprintf(fid,'\n %% Sessions which were excluded from the solution (RMS > %3.2f) \n',maxRMS);
-for i=1:size(badses,1)
-    fprintf(fid,'%c%c%c%c%c%c%c%c%c%c%c%c%c%c      %10.2f\n',badses(i,:),badses_mo(i)');
+for i=1:size(badses,2)
+	fprintf(fid,'%s      %10.2f\n',badses{i},badses_mo(i)');
 end
 
 

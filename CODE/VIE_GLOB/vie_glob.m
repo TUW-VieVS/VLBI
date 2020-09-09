@@ -324,7 +324,7 @@ aposteriori=[];
 for ise = 1:lse
     load ([path dir_all(ise).name]);
     sesname=dir_all(ise).name;
-    ses(ise,:)=[sesname(1:strfind(sesname,'_par_glob.mat')-1)];
+    ses(ise)={[sesname(1:strfind(sesname,'_par_glob.mat')-1)]};
     if isfield(glob2.opt, 'mo') %failes if only N matrices are calculated in previous run
         if ~isempty(glob2.opt.mo)
             aposteriori(ise) = glob2.opt.mo;
@@ -343,18 +343,18 @@ if ~isempty(aposteriori)
     else
         bad = [];
     end
-	badses=ses(bad,:);
+	badses=ses(bad);
     for i = 1:length(bad)
-        fprintf('\n Session %s has a high RMS and will be removed \n', badses(i,:));
+        fprintf('\n Session %s has a high RMS and will be removed \n', badses{i});
     end
     badses_mo=aposteriori(bad);
-    ses(bad,:)=[];
+    ses(bad)=[];
 end
 
-lse=size(ses,1);
+lse=size(ses,2);
 
 for ise=1:lse
-    load ([path ses(ise,:) '_par_glob.mat']);
+    load ([path ses{ise} '_par_glob.mat']);
     lTPl(ise)=glob2.opt.lTPl;
     nobserv(ise)=glob2.opt.total_obs;
     nconstr(ise)=glob2.opt.nconstr;
@@ -522,7 +522,7 @@ plot_antactiv(antname_plot,antactiv_plot)
 clear antactiv1 r i j k
 
 % session order according to time "ses_time" ( according to alphabet "ses")
-ses_time=ses(idses,:);
+ses_time=ses(idses);
 
 %%
 
@@ -648,9 +648,9 @@ if special_EOP
 end
 %------------------------------------------------------------
 for ise=1:lse
-	fprintf(1, ['load session ' ses(ise,:) '\n'])
-    load ([path ses(ise,:) '_par_glob.mat']);
-    load ([path ses(ise,:) '_an_glob.mat']);
+	fprintf(1, ['load session ' ses{ise} '\n'])
+    load ([path ses{ise} '_par_glob.mat']);
+    load ([path ses{ise} '_an_glob.mat']);
     
     %------------------------------special EOP-------------------
     if special_EOP
@@ -664,7 +664,15 @@ for ise=1:lse
             reduced_flag = 0;
         end
         
-        if (parGS(index_xpol).id == 2) && (sum(strcmp(ses(ise,1:end-5),special_EOP_sessions))>0)
+        if length(ses{ise})==9
+            ases = ses{ise};
+        else
+            ases = ses{ise}(1:end-5);
+        end
+            
+        
+%         if (parGS(index_xpol).id == 2) && (sum(strcmp(ses(ise,1:end-5),special_EOP_sessions))>0)
+        if (parGS(index_xpol).id == 2) && (sum(strcmp(ases,special_EOP_sessions))>0)
             parGS(index_xpol).id = 0; %xpol
             parGS(index_xpol+1).id = 0; %ypol
             parGS(index_xpol+2).id = 0; %dut1
@@ -783,8 +791,8 @@ fprintf(' 3 ... Sorting and splitting of the old N matrices \n\n')
 
 redparam=0;
 for ise=1:lse
-    load ([path ses(ise,:) '_Nb_glob.mat']);
-    fprintf('       session %4.0f out of %4.0f -- %s\n',ise,lse,ses(ise,:))
+    load ([path ses{ise} '_Nb_glob.mat']);
+    fprintf('       session %4.0f out of %4.0f -- %s\n',ise,lse,ses{ise})
     
     Norig = sparse(glob3.N);
     borig = sparse(glob3.b);
@@ -942,7 +950,7 @@ end
 if parGS(g.g_coord(1)).id==1
     
     % load the apriori trf catalogue (and rename it to 'trf.' structure)
-    load ([path ses(1,:) '_par_glob.mat']);
+    load ([path ses{1} '_par_glob.mat']);
     
     trffile=glob2.opt.trf;
     
@@ -1018,7 +1026,7 @@ Bq=[];
 
 if parGS(g.g_srade(1)).id==1
     
-    load ([path ses(1,:) '_par_glob.mat']);
+    load ([path ses{1} '_par_glob.mat']);
     crffile = glob2.opt.crf;
     
     % COPIED FROM VIE_INIT.MAT (March 2013)

@@ -40,10 +40,10 @@ qrefname.IVS=[''];
 
 
 s=0;
-lse=size(ses,1);
+lse=size(ses,2);
 
 for ise=1:lse
-    load ([path ses(ise,:) '_par_glob.mat'])
+    load ([path ses{ise} '_par_glob.mat'])
 
     qsize=length(glob2.opt.source);
     for iso=1:qsize

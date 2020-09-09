@@ -79,26 +79,26 @@ for i=1:nant
        figure(i)
        subplot(3,1,1)
        errorbar(svalX(:,1),svalX(:,2),svalX(:,3),'.','Color',[.4 .4 .4 ],'MarkerEdgeColor','k','LineWidth',1,'MarkerSize',12);
-       xlim([xmin xmax]) 
-       set(gca,'XTick',[51544-(365.25*10) 51544 51544+(365.25*10) 51544+(365.25*20)])
-       set(gca,'XTickLabel',[1990;2000;2010;2020],'FontSize',sfont)
+%        xlim([xmin xmax]) 
+%        set(gca,'XTick',[51544-(365.25*10) 51544 51544+(365.25*10) 51544+(365.25*20)])
+%        set(gca,'XTickLabel',[1990;2000;2010;2020],'FontSize',sfont)
        title(aname)
        ylabel('\Deltax [cm]','FontSize',sfont)
        set(gca,'LineWidth',1,'FontSize',sfont);%,'fontweight','bold')  ;
        
        subplot(3,1,2)
        errorbar(svalY(:,1),svalY(:,2),svalY(:,3),'.','Color',[.4 .4 .4 ],'MarkerEdgeColor','k','LineWidth',1,'MarkerSize',12);
-       xlim([xmin xmax]) 
-       set(gca,'XTick',[51544-(365.25*10) 51544 51544+(365.25*10) 51544+(365.25*20)])
-       set(gca,'XTickLabel',[1990;2000;2010;2020],'FontSize',sfont)
+%        xlim([xmin xmax]) 
+%        set(gca,'XTick',[51544-(365.25*10) 51544 51544+(365.25*10) 51544+(365.25*20)])
+%        set(gca,'XTickLabel',[1990;2000;2010;2020],'FontSize',sfont)
        ylabel('\Deltay [cm]','FontSize',sfont)
        set(gca,'LineWidth',1,'FontSize',sfont);%,'fontweight','bold')  ;
        
        subplot(3,1,3)
        errorbar(svalZ(:,1),svalZ(:,2),svalZ(:,3),'.','Color',[.4 .4 .4 ],'MarkerEdgeColor','k','LineWidth',1,'MarkerSize',12);
-       xlim([xmin xmax]) 
-       set(gca,'XTick',[51544-(365.25*10) 51544 51544+(365.25*10) 51544+(365.25*20)])
-       set(gca,'XTickLabel',[1990;2000;2010;2020],'FontSize',sfont)
+%        xlim([xmin xmax]) 
+%        set(gca,'XTick',[51544-(365.25*10) 51544 51544+(365.25*10) 51544+(365.25*20)])
+%        set(gca,'XTickLabel',[1990;2000;2010;2020],'FontSize',sfont)
        ylabel('\Deltaz [cm]','FontSize',sfont)
        set(gca,'LineWidth',1,'FontSize',sfont);%,'fontweight','bold')  ;
       
