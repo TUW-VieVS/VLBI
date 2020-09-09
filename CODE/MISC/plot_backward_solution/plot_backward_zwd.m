@@ -68,9 +68,9 @@ for i=1:size(anames,1)
        figure(i)
        subplot(2,1,1)
        errorbar(sval(:,1),sval(:,2),sval(:,3),'.','Color',[.4 .4 .4 ],'MarkerEdgeColor','k');
-       xlim([xmin xmax]) 
-       set(gca,'XTick',[51544-(365.25*10) 51544 51544+(365.25*10) 51544+(365.25*20)])
-       set(gca,'XTickLabel',[1990;2000;2010;2020],'FontSize',sfont)
+%        xlim([xmin xmax]) 
+%        set(gca,'XTick',[51544-(365.25*10) 51544 51544+(365.25*10) 51544+(365.25*20)])
+%        set(gca,'XTickLabel',[1990;2000;2010;2020],'FontSize',sfont)
        title(aname)
        ylabel('\Deltazwd [cm]','FontSize',sfont)
        set(gca,'LineWidth',1,'FontSize',sfont);%,'fontweight','bold')  ;

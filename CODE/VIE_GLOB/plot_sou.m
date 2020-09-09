@@ -29,7 +29,7 @@ figure(4)
     hold on
     scatter(RA_all(excidsouc),De_all(excidsouc),'o','SizeData',25,'MarkerEdgeColor',[0 0 0],'MarkerFaceColor',[1 0 0])
     hold on
-    title({'Radio sources in global adjustment';'blue: included in NNR condition; red: exluded from NNR condition'})
+    title({'Radio sources in global adjustment';'blue: included in NNR condition; red: excluded from NNR condition'})
     set(gca,'XLim',[0 2*pi],'YLim',[-pi/2 pi/2])
     set(get(gca,'XLabel'),'String','RA [h]');
     set(gca,'XTick',[0;pi/2;pi;1.5*pi;2*pi])

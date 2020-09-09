@@ -35,10 +35,10 @@ interv=[];
 mjd_all=[];
 refname=[''];
 
-lse=size(ses,1);
+lse=size(ses,2);
 
 for ise=1:lse % loop over all sessions
-    load ([path ses(ise,:) '_an_glob.mat']);
+    load ([path ses{ise} '_an_glob.mat']);
 
     antenna = glob1.an;  
            

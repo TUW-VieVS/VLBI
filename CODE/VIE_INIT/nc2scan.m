@@ -558,7 +558,8 @@ for iScan=1:nScans
     [scan(iScan).obs.amb]=   deal(tau_ambCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
     
     if length(delayQualityFlag)==1 % check length of delay flag vector, if it is only 1 value for the whole session, this value will be assigned to all observations
-        [scan(iScan).obs.q_flag] = deal(double(delayQualityFlag{1}).*ones(scan(iScan).nobs,1));          
+        %[scan(iScan).obs.q_flag] = deal(double(delayQualityFlag{1}).*ones(scan(iScan).nobs,1));  
+        [scan(iScan).obs.q_flag] = deal(double(delayQualityFlag{1}));
     else
         [scan(iScan).obs.q_flag] = deal(delayQualityFlag{obsI1Index:obsI1Index+scan(iScan).nobs-1});   
     end

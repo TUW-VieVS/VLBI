@@ -42,7 +42,7 @@ for ieop=g.g_eop
 end
     
 for ise=1:lse
-    load ([path ses(ise,:) '_par_glob.mat']);
+    load ([path ses{ise} '_par_glob.mat']);
     
     x_=glob2.x;
     

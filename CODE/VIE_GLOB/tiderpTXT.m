@@ -42,9 +42,9 @@ nr = globsol.tidnum.ret;
 period = tide_per([tide.gmstpi tide.l tide.lp tide.F tide.D tide.OM]);
 
 fprintf(fid,'Solution calculated: %s\n',date);
-fprintf(fid,'Date of first session: %c%c%c%c%c%c%c\n',ses_time(1,1:7));
-fprintf(fid,'Date of last session:  %c%c%c%c%c%c%c\n',ses_time(end,1:7));
-fprintf(fid,'Number of sessions in the solution: %1.0f\n',size(globsol.sessions,1));
+fprintf(fid,'Date of first session: %c%c%c%c%c%c%c\n',ses_time{1}(1:7));
+fprintf(fid,'Date of last session:  %c%c%c%c%c%c%c\n',ses_time{end}(1:7));
+fprintf(fid,'Number of sessions in the solution: %1.0f\n',size(globsol.sessions,2));
 fprintf(fid,'Number of estimated periods: %2.0f\n',length(np));
 fprintf(fid,'********************************************************************\n');
 fprintf(fid,'\n');
@@ -74,9 +74,9 @@ fid=fopen([paths.path_out '_ESTIMATES/' paths.out '/tidut_' paths.L2 '.txt'],'wt
 np = globsol.tidnum.ut1;
 
 fprintf(fid,'Solution calculated: %s\n',date);
-fprintf(fid,'Date of first session: %c%c%c%c%c%c%c\n',ses_time(1,1:7));
-fprintf(fid,'Date of last session:  %c%c%c%c%c%c%c\n',ses_time(end,1:7));
-fprintf(fid,'Number of sessions in the solution: %1.0f\n',size(globsol.sessions,1));
+fprintf(fid,'Date of first session: %c%c%c%c%c%c%c\n',ses_time{1}(1:7));
+fprintf(fid,'Date of last session:  %c%c%c%c%c%c%c\n',ses_time{end}(1:7));
+fprintf(fid,'Number of sessions in the solution: %1.0f\n',size(globsol.sessions,2));
 fprintf(fid,'Number of estimated periods: %2.0f\n',length(np));
 fprintf(fid,'********************************************************************\n');
 fprintf(fid,'\n');

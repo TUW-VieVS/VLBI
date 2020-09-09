@@ -71,18 +71,18 @@ for i=1:nant
        figure(i)
        subplot(2,1,1)
        errorbar(svalNGR(:,1),svalNGR(:,2),svalNGR(:,3),'.','Color',[.4 .4 .4 ],'MarkerEdgeColor','k');
-       xlim([xmin xmax]) 
-       set(gca,'XTick',[51544-(365.25*10) 51544 51544+(365.25*10) 51544+(365.25*20)])
-       set(gca,'XTickLabel',[1990;2000;2010;2020],'FontSize',sfont)
+%        xlim([xmin xmax]) 
+%        set(gca,'XTick',[51544-(365.25*10) 51544 51544+(365.25*10) 51544+(365.25*20)])
+%        set(gca,'XTickLabel',[1990;2000;2010;2020],'FontSize',sfont)
        title(aname)
        ylabel('\Deltangr [cm]','FontSize',sfont)
        set(gca,'LineWidth',1,'FontSize',sfont);%,'fontweight','bold')  ;
 
        subplot(2,1,2)
        errorbar(svalEGR(:,1),svalEGR(:,2),svalEGR(:,3),'.','Color',[.4 .4 .4 ],'MarkerEdgeColor','k');
-       xlim([xmin xmax]) 
-       set(gca,'XTick',[51544-(365.25*10) 51544 51544+(365.25*10) 51544+(365.25*20)])
-       set(gca,'XTickLabel',[1990;2000;2010;2020],'FontSize',sfont)
+%        xlim([xmin xmax]) 
+%        set(gca,'XTick',[51544-(365.25*10) 51544 51544+(365.25*10) 51544+(365.25*20)])
+%        set(gca,'XTickLabel',[1990;2000;2010;2020],'FontSize',sfont)
        ylabel('\Deltaegr [cm]','FontSize',sfont)
        set(gca,'LineWidth',1,'FontSize',sfont);%,'fontweight','bold')  ;
 

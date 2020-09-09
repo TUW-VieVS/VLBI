@@ -34,7 +34,7 @@ load([path_Nb 'parsplit_' DIRIN])  %parsplit
 load([path_Nb 'paths_' DIRIN])  %paths
    
 
-lse = size(globsol.sessions,1);
+lse = size(globsol.sessions,2);
 ncond=globsol.nr_of_conditions;
 Q11 = globsol.Q(1:end-ncond,1:end-ncond);
 x1 = globsol.x;
@@ -187,7 +187,7 @@ for ise= lse:-1:  1
     oldcol={parGS.oldcol};
     
 
-    load([pathGS.path_in pathGS.L2 '/' globsol.sessions(ise,:) '_par_glob.mat']); % compatible with version 2.1
+    load([pathGS.path_in pathGS.L2 '/' globsol.sessions{ise} '_par_glob.mat']); % compatible with version 2.1
         
     for i=1:size(bckdsol(ise).x,1)
         for j=1:length(oldcol)
@@ -206,7 +206,7 @@ for ise= lse:-1:  1
                         value=bckdsol(ise).x(i,1);
                         stdev=bckdsol(ise).x(i,2);
                         if strcmp(pname,'dut1'); value = value/15; stdev = stdev/15;  end % mas --> ms for UT
-                        fprintf(fidEOP, formatEOP, pname, mjd, value , stdev , globsol.sessions(ise,:));
+                        fprintf(fidEOP, formatEOP, pname, mjd, value , stdev , globsol.sessions{ise});
                         clear mjd value stdev
                     end
                 end
@@ -225,7 +225,7 @@ for ise= lse:-1:  1
                         mjd=parGS(j).mjd(k);
                         value=bckdsol(ise).x(i,1);
                         stdev=bckdsol(ise).x(i,2);
-                        fprintf(fidZWD, formatZWD, pname, antenna, mjd, value, stdev, globsol.sessions(ise,:));
+                        fprintf(fidZWD, formatZWD, pname, antenna, mjd, value, stdev, globsol.sessions{ise});
                         clear mjd value stdev antenna oldcolZWD
                     end
                 end
@@ -248,7 +248,7 @@ for ise= lse:-1:  1
                         mjd=parGS(j).mjd(k);
                         value=bckdsol(ise).x(i,1);
                         stdev=bckdsol(ise).x(i,2);
-                        fprintf(fidTGR, formatTGR, pname, antenna, mjd, value, stdev, globsol.sessions(ise,:));
+                        fprintf(fidTGR, formatTGR, pname, antenna, mjd, value, stdev, globsol.sessions{ise});
                         clear mjd value stdev antenna oldcolTGR
                     end
                 end     
@@ -275,7 +275,7 @@ for ise= lse:-1:  1
                         mjd=glob2.opt.midnight; % same for all stations, one estimate per session
                         value=bckdsol(ise).x(i,1);
                         stdev=bckdsol(ise).x(i,2);
-                        fprintf(fidANT, formatANT, pname, antenna, mjd, value, stdev, globsol.sessions(ise,:));
+                        fprintf(fidANT, formatANT, pname, antenna, mjd, value, stdev, globsol.sessions{ise});
                         clear mjd value stdev antenna oldcolANT
                     end
                 end
@@ -368,7 +368,7 @@ for ise= lse:-1:  1
                             Q = bckdsol(ise).Q;
                             corrRADe= Q(ilineRA,ilineDe) / sqrt(Q(ilineRA,ilineRA) * Q(ilineDe,ilineDe) );
                             
-                            fprintf(fidSOUCAT, formatSOUCAT, source_ivs, source_iers,  num2str(res(1)), num2str(res(2)), res(3), sign,   num2str(abs(res(4))), num2str(res(5)), res(6) , errRA, errDe, corrRADe, mjd, mjd, mjd, '1', numobs, '0', globsol.sessions(ise,:));
+                            fprintf(fidSOUCAT, formatSOUCAT, source_ivs, source_iers,  num2str(res(1)), num2str(res(2)), res(3), sign,   num2str(abs(res(4))), num2str(res(5)), res(6) , errRA, errDe, corrRADe, mjd, mjd, mjd, '1', numobs, '0', globsol.sessions{ise});
                             clear mjd dRA dDe stdevRA stdevDe source_ivs source_iers numobs oldcolSOU kkRA kkDe RAapr Deapr sign res corrRADe ilineRA ilineDe
                         end
                     end

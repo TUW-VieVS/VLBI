@@ -44,7 +44,7 @@ figure (2)
     text(lam,phi,refname,'HorizontalAlignment','left','VerticalAlignment','Top','FontSize',8)
     hold on
     hold on
-    title({'Stations in global adjustment';'blue: included in NNT/NNR condition; red: exluded from NNT/NNR condition'})
+    title({'Stations in global adjustment';'blue: included in NNT/NNR condition; red: excluded from NNT/NNR condition'})
     axis equal;
     set(gca,'XLim',[-180 180],'YLim',[-90 90])
     set(get(gca,'XLabel'),'String','longitude [°]');

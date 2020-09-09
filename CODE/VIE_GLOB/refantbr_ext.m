@@ -128,10 +128,10 @@ function [X0,Y0,Z0,brstart,brend,refantbr] = refantbr_ext(refantbr,refname,trf,t
     
     % apriori intervals --> find out, how many observations were in the
     % intervals of the trf catalogue
-    lse=size(ses,1);
+    lse=size(ses,2);
     for ise=1:lse
         
-        load ([path ses(ise,:) '_an_glob.mat']);
+        load ([path ses{ise} '_an_glob.mat']);
 
         antenna = glob1.an;
         asize = length(antenna.x);  % number of antennas in this session
@@ -168,7 +168,7 @@ function [X0,Y0,Z0,brstart,brend,refantbr] = refantbr_ext(refantbr,refname,trf,t
     for i=1:length(refantbr)
         if sum(refantbr(i).interv) ~= sum(refantbr(i).interv_apr)
             for ise=1:lse
-                load ([path ses(ise,:) '_an_glob.mat']);
+                load ([path ses{ise} '_an_glob.mat']);
                 antenna = glob1.an;
                 if antenna.firstscan_mjd>refantbr(i).break_apr(end)
                     f=find(strcmp(cellstr(refantbr(i).name),cellstr(glob1.an.name))==1);
@@ -189,7 +189,7 @@ function [X0,Y0,Z0,brstart,brend,refantbr] = refantbr_ext(refantbr,refname,trf,t
             end
             
             for ise=1:lse
-                load ([path ses(ise,:) '_an_glob.mat']);
+                load ([path ses{ise} '_an_glob.mat']);
                 antenna = glob1.an;
 
                 if ~isempty(find(strcmp(cellstr(refantbr(i).name),cellstr(glob1.an.name))==1))
