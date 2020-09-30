@@ -339,6 +339,7 @@ for pl=1:size(process_list,1)
     %comment={'Constraints for EOP are always relative.'};
     
     if strcmp(parameter.vie_init.zhd,'in situ'); zhd=[' b) use ' parameter.data_type ' file content'];
+    elseif strcmp(parameter.vie_init.zhd,'no'); zhd=' c) other (no)';
     elseif strcmp(parameter.vie_init.zhd,'vmf3'); zhd=' c) other (VMF3)';
     elseif strcmp(parameter.vie_init.zhd,'vmf1'); zhd=' c) other (VMF1)';
     elseif strcmp(parameter.vie_init.zhd,'gpt3'); zhd=' c) other (GPT3 function)';

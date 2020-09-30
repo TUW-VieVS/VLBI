@@ -1533,6 +1533,8 @@ for isc = 1:number_of_all_scans
                     if strcmpi(parameter.vie_init.zhd,'in situ')
                         pres = scan(isc).stat(stnum).pres;  % [hPa]
                         zdry = 0.0022768*pres / (1-0.00266*cos(2*phi)-(0.28e-6*hell));   %[m]
+                    elseif strcmpi(parameter.vie_init.zhd,'no')
+                        zdry = 0;
                     elseif strcmpi(parameter.vie_init.zhd,'vmf3')
                         zdry = scan(isc).stat(stnum).zhdt;
                     elseif strcmpi(parameter.vie_init.zhd,'vmf1')

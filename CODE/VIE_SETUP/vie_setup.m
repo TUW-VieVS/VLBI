@@ -9588,6 +9588,7 @@ function radiobutton_parameters_troposphere_indModeling_Callback(hObject, eventd
 % Hint: get(hObject,'Value') returns toggle state of radiobutton_parameters_troposphere_indModeling
 
 % set en/disable
+set(handles.radiobutton_parameters_troposphere_zhd_no, 'Enable', 'on')
 set(handles.radiobutton_parameters_troposphere_zhd_fromInSitu, 'Enable', 'on')
 set(handles.radiobutton_parameters_troposphere_zhd_VMF3, 'Enable', 'on')
 set(handles.radiobutton_parameters_troposphere_zhd_VMF1, 'Enable', 'on')
@@ -9623,6 +9624,7 @@ function radiobutton_parameters_troposphere_raytr_Callback(hObject, eventdata, h
 % Hint: get(hObject,'Value') returns toggle state of radiobutton_parameters_troposphere_raytr
 
 % set en/disable
+set(handles.radiobutton_parameters_troposphere_zhd_no, 'Enable', 'off')
 set(handles.radiobutton_parameters_troposphere_zhd_fromInSitu, 'Enable', 'off')
 set(handles.radiobutton_parameters_troposphere_zhd_VMF3, 'Enable', 'off')
 set(handles.radiobutton_parameters_troposphere_zhd_VMF1, 'Enable', 'off')

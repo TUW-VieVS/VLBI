@@ -197,6 +197,7 @@ try
             set(handles.radiobutton_parameters_troposphere_raytr, 'Value', 0)
             
             % set en/disable
+            set(handles.radiobutton_parameters_troposphere_zhd_no, 'Enable', 'on')
             set(handles.radiobutton_parameters_troposphere_zhd_fromInSitu, 'Enable', 'on')
             set(handles.radiobutton_parameters_troposphere_zhd_VMF3, 'Enable', 'on')
             set(handles.radiobutton_parameters_troposphere_zhd_VMF1, 'Enable', 'on')
@@ -224,6 +225,7 @@ try
             set(handles.radiobutton_parameters_troposphere_raytr, 'Value', 1)
             
             % set en/disable
+            set(handles.radiobutton_parameters_troposphere_zhd_no, 'Enable', 'off')
             set(handles.radiobutton_parameters_troposphere_zhd_fromInSitu, 'Enable', 'off')
             set(handles.radiobutton_parameters_troposphere_zhd_VMF3, 'Enable', 'off')
             set(handles.radiobutton_parameters_troposphere_zhd_VMF1, 'Enable', 'off')
@@ -250,6 +252,7 @@ try
 catch
     
     % set en/disable
+    set(handles.radiobutton_parameters_troposphere_zhd_no, 'Enable', 'on')
     set(handles.radiobutton_parameters_troposphere_zhd_fromInSitu, 'Enable', 'on')
     set(handles.radiobutton_parameters_troposphere_zhd_VMF3, 'Enable', 'on')
     set(handles.radiobutton_parameters_troposphere_zhd_VMF1, 'Enable', 'on')
@@ -593,6 +596,8 @@ end
 % zenith delay
 try
     switch parameter.vie_init.zhd
+        case 'no'
+            set(handles.radiobutton_parameters_troposphere_zhd_no, 'Value', 1)
         case 'in situ'
             set(handles.radiobutton_parameters_troposphere_zhd_fromInSitu, 'Value', 1)
         case 'vmf3'

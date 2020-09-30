@@ -352,6 +352,8 @@ end
 % zenith delay
 if get(handles.radiobutton_parameters_troposphere_zhd_fromInSitu, 'Value')
     parameter.vie_init.zhd='in situ';
+elseif get(handles.radiobutton_parameters_troposphere_zhd_no, 'Value')
+    parameter.vie_init.zhd='no';
 elseif get(handles.radiobutton_parameters_troposphere_zhd_VMF3, 'Value')
     parameter.vie_init.zhd='vmf3';
 elseif get(handles.radiobutton_parameters_troposphere_zhd_VMF1, 'Value')
