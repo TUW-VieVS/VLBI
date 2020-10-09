@@ -1705,6 +1705,7 @@ for isc = 1:number_of_all_scans
                     therm_d = 0;
                 end
                 
+                
                 % GRAVITATIONAL DEFORMATION
                 if isfield(parameter.vie_mod, 'gravDef') && ...
                          parameter.vie_mod.gravDef == 1 && ...
@@ -1712,7 +1713,20 @@ for isc = 1:number_of_all_scans
                         ~isempty(antenna(stnum).gravdef)                         
                     gravdef_data = antenna(stnum).gravdef;
                     gravdef_corr = spline(gravdef_data.ez_delay(:,1), gravdef_data.ez_delay(:,2), 90-rad2deg(zd));  % [ps]
+                    
                     gravdef_corr = gravdef_corr * 1e-12;  % [ps] --> [sec]
+                    
+                    
+                    % Exception for ONSALA60
+                    % elevation independent temperature term
+                    % delay_temp = (T-19C)*0.47 mm
+                    if strcmp(strtrim(antenna(stnum).name), 'ONSALA60')
+                        temp = scan(isc).stat(stnum).temp;
+                        delay_temp = (temp - 19) * 0.47 * 1e-3;  % [m]
+                        delay_temp = delay_temp / c;  % [m] --> [s]
+                        
+                        gravdef_corr = gravdef_corr + delay_temp;
+                    end                    
                 else
                     gravdef_corr = 0;
                 end
