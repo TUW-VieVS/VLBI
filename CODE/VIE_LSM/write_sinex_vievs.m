@@ -1130,12 +1130,12 @@ for pl=1:size(process_list,1)
     
     else %if writing estimates was not chosen in gui
         % only calculate a priori values for a priori block
-
+        cpsd_all = cPostSeismDeform(midmjd,antenna);
         for k=1:numStat % hana
             %                  coordx   +     vx      * (  mean scan mjd - itrf epoch mjd )/ diff(mjd)->years                                
-            antenna(k).aprX=antenna(k).x+antenna(k).vx*(midmjd-antenna(k).epoch)/365.25;
-            antenna(k).aprY=antenna(k).y+antenna(k).vy*(midmjd-antenna(k).epoch)/365.25;
-            antenna(k).aprZ=antenna(k).z+antenna(k).vz*(midmjd-antenna(k).epoch)/365.25;
+                antenna(k).aprX=antenna(k).x+antenna(k).vx*(midmjd-antenna(k).epoch)/365.25 + cpsd_all(1,1,k);
+                antenna(k).aprY=antenna(k).y+antenna(k).vy*(midmjd-antenna(k).epoch)/365.25 + cpsd_all(2,1,k);
+                antenna(k).aprZ=antenna(k).z+antenna(k).vz*(midmjd-antenna(k).epoch)/365.25 + cpsd_all(3,1,k);
         end
 
     end
