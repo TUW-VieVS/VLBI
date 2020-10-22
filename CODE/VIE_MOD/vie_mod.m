@@ -2038,9 +2038,8 @@ for isc = 1:number_of_all_scans
         scan(isc).obs(iobs).pShida   = pShida_bl;   % [cm] for Shida
         scan(isc).obs(iobs).pFCN     = pFCN_bl;     % [cm] for FCN
         scan(isc).obs(iobs).pacc     = pacc;        % dt/dacc SSB acceleration [sec^3/cm]
-        scan(isc).obs(iobs).pGamma   = pGammaSun;   % [sec]
-        
-        
+        scan(isc).obs(iobs).pGamma   = pGammaSun;   % [sec]       
+        scan(isc).obs(iobs).pscale   = -fac1;       % [sec] Correction to the scale factor
 
     if flag_save_results
         i_result = i_result + 1;

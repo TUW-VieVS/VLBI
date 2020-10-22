@@ -939,6 +939,23 @@ A(10).sm = Apwnutdy; H(10).sm = Hnutdy; Ph(10).sm = Phnutdy; och(10).sv = oc_hnu
 
 clear Apwxpol Apwypol Apwdut1 Apwnutdx Apwnutdy
 
+
+
+%%
+%  Correction to the scale factor
+if opt.est_scale==1
+    for n_obs_per_src = 1 : n_observ
+        % assigning observationwise partial derivatives
+        A(19).sm(n_obs_per_src,1) = temp(n_obs_per_src).pscale;  % [s] 
+        H(19).sm(1) = 0;
+        Ph(19).sm(1) = 0;
+        och(19).sv(1) = 0;
+        och(19).sv(1) = [];
+    end
+end
+%%
+
+
 fprintf('6. FORMING THE CONSTRAIN MATRIX and WEIGHT MATRIX OF CONSTRAINTS\n');
 
 % Constraints as pseudo observations - H, Ph, och
@@ -1320,7 +1337,7 @@ if ess == 1 % +hana 10Nov10
     fprintf('total number of estimated parameters:         %4d\n',sum_dj(end));
     fprintf('---------------------------------------------------------\n');
 
-        
+    
     [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, number_pwlo_per_sat);
     x_.mo = mo;
     x_.mo_first = first_solution.mo;
