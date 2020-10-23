@@ -44,7 +44,7 @@
 % ************************************************************************
 function [x_] = splitx(x, first_solution, mi, na, sum_dj, n_, mjd0, mjd1, t, T, opt, antenna, ns_q, nso, tso, ess, ns_s, number_pwlo_per_sat)
 
-
+global c
 
 % -------------------------------------------------------------------------
 % DIVIDING THE VECTOR X
@@ -431,6 +431,8 @@ for istat = 1:na
 end
 
 
+
+
 % -------------------------------------------------------------------------
 % Satellite coordinate offsets (PWL) 
 % -------------------------------------------------------------------------
@@ -524,6 +526,23 @@ if opt.pw_sat == 1
     end % for i_sat = 1 : ns_s
 end
 
+
+x_.units.scale = 'correction to the scale [ppb]';
+x_.scale.col = []; %[-]
+x_.scale.val = []; %[-]
+x_.scale.mx = []; %[-]
+x_.scale.mjd = []; %[-]
+
+
+% Correction to the scale factor
+if ess==1
+    if opt.est_scale==1
+        x_.scale.val = x(sum_dj(20)) /c/100 *1e9; %[ppb]
+        x_.scale.mx = mi(sum_dj(20)) /c/100 *1e9; %[ppb]
+        x_.scale.col = sum_dj(20);
+        x_.scale.mjd = ceil(mjd1); % mjd1 : midnight
+    end
+end
 
 
 

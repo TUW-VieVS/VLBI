@@ -255,7 +255,7 @@ elseif get(handles.radiobutton_plot_sessionAnalysis_corMatrix, 'Value')
     collast = collast(end);
     
     % get parameters which may be plotted
-    posspar = {'pwclk'; 'rqclk'; 'zwd'; 'ngr'; 'egr'; 'xpol'; 'ypol'; 'dut1'; 'nutdx'; 'nutdy'; 'soura'; 'soude'; 'coorx'; 'coory'; 'coorz'; 'sat_pos1'; 'sat_pos2'; 'sat_pos3'}; 
+    posspar = {'pwclk'; 'rqclk'; 'zwd'; 'ngr'; 'egr'; 'xpol'; 'ypol'; 'dut1'; 'nutdx'; 'nutdy'; 'soura'; 'soude'; 'coorx'; 'coory'; 'coorz'; 'sat_pos1'; 'sat_pos2'; 'sat_pos3'; 'scale'}; 
     
     % get parameters which were extimated for current session
     parest=cell(length(posspar),1);

@@ -43,7 +43,7 @@ if ~isempty(get(handles.popupmenu_plot_sessionAnalysis_session, 'String'))
     curSelSessionIndex=get(handles.popupmenu_plot_sessionAnalysis_session, 'Value');
     
        
-    possibleParameters={'pwclk'; 'rqclk'; 'zwd'; 'ngr'; 'egr'; 'xpol'; 'ypol'; 'dut1'; 'nutdx'; 'nutdy'; 'soura'; 'soude'; 'coorx'; 'coory'; 'coorz'; 'sat_pos1'; 'sat_pos2'; 'sat_pos3'}; 
+    possibleParameters={'pwclk'; 'rqclk'; 'zwd'; 'ngr'; 'egr'; 'xpol'; 'ypol'; 'dut1'; 'nutdx'; 'nutdy'; 'soura'; 'soude'; 'coorx'; 'coory'; 'coorz'; 'sat_pos1'; 'sat_pos2'; 'sat_pos3'; 'scale'}; 
        
     % get fields of current session (only those which were estimated)
     fieldsOfCurSes=cell(length(possibleParameters),1);
