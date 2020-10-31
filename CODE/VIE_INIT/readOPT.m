@@ -56,6 +56,8 @@ ini_opt.no_cab='';
 ini_opt.num_clk_breaks = 0;
 ini_opt.clk_break.stat_name = [];
 ini_opt.clk_break.mjd = [];
+ini_opt.bdco_est.sta1='';
+ini_opt.bdco_est.sta2='';
 
 bas_excl='';
 
@@ -323,6 +325,55 @@ while ~feof(fid)
             end
             [flag_ok, station_name_str] = checkStatNameLength(station_name_str);
             ini_opt.no_cab(nex,:) = station_name_str;
+        end
+        
+        
+    % ### BASELINE DEPENDENT CLOCK OFFSET ###    
+    elseif contains(str,'+BASELINE-DEPENDENT CLOCK OFFSET')
+        str = fgetl(fid);
+        nex=0;
+        while ~contains(str,'-BASELINE-DEPENDENT CLOCK OFFSET')
+            temp_str = textscan(str, '%s', 'CommentStyle', '#') ;
+            if ~isempty(temp_str{1})
+                nex=nex+1;
+                switch size(temp_str{1}, 1)
+                    case 2 % Two station names
+                        station_name_1_str = temp_str{1}{1};
+                        station_name_2_str = temp_str{1}{2};
+
+                    case 3 % Two station names (one with a blank)
+                        [flag_ok_1, station_name_1_str] = checkStatNameArrayFields(temp_str, 1, 2, str, blank_replace_char, false);
+                        [flag_ok_2, station_name_2_str] = checkStatNameArrayFields(temp_str, 2, 3, str, blank_replace_char, false);
+                        if flag_ok_1 && ~flag_ok_2
+                            [flag_ok, station_name_1_str] = checkStatNameArrayFields(temp_str, 1, 2, str, blank_replace_char);
+                            station_name_2_str = temp_str{1}{3};
+                        elseif ~flag_ok_1 && flag_ok_2
+                            [flag_ok, station_name_2_str] = checkStatNameArrayFields(temp_str, 2, 3, str, blank_replace_char);
+                            station_name_1_str = temp_str{1}{1};
+                        elseif flag_ok_1 && flag_ok_2
+                            error('BASELINE-DEPENDENT CLOCK OFFSET: Invalid arguments in OPT file.');
+                        elseif ~flag_ok_1 && ~flag_ok_2
+                            error('BASELINE-DEPENDENT CLOCK OFFSET: Invalid arguments in OPT file.');
+                        else
+                            error('BASELINE-DEPENDENT CLOCK OFFSET: Invalid arguments in OPT file.');
+                        end
+
+                    case 4 % Two station names (both with blanks)
+                        [flag_ok, station_name_1_str] = checkStatNameArrayFields(temp_str, 1, 2, str, blank_replace_char);
+                        [flag_ok, station_name_2_str] = checkStatNameArrayFields(temp_str, 3, 4, str, blank_replace_char);
+
+                    otherwise  % Error case
+                        error('BASELINE-DEPENDENT CLOCK OFFSET: Invalid arguments in OPT file.');
+                end
+
+                % Check length of station names:
+                [flag_ok, station_name_1_str] = checkStatNameLength(station_name_1_str);
+                [flag_ok, station_name_2_str] = checkStatNameLength(station_name_2_str);
+                % Save data:
+                ini_opt.bdco_est(nex).sta1 = station_name_1_str;
+                ini_opt.bdco_est(nex).sta2 = station_name_2_str;
+             end
+              str = fgetl(fid);
         end
     end
 end

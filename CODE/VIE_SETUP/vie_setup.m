@@ -2563,6 +2563,37 @@ end
 auto_save_parameterfile(hObject, handles)
 
 
+% --- Executes on button press in checkbox_estimation_leastSquares_clocksBasDepOffset.
+function checkbox_estimation_leastSquares_clocksBasDepOffset_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_estimation_leastSquares_clocksBasDepOffset (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_clocksBasDepOffset
+
+% set enabling
+if get(hObject, 'Value')
+    if get(handles.checkbox_setInput_useOptFiles, 'Value')
+        set(handles.radiobutton_estimation_leastSquares_basdepClockoff_OPT, 'Enable', 'on');
+    end
+    set(handles.radiobutton_estimation_leastSquares_basdepClockoff_automatic, 'Enable', 'on');
+    set(handles.edit_estimation_leastSquares_clockBasDepO_minNobs, 'Enable', 'on');
+    set(handles.text403, 'Enable', 'on');
+    set(handles.text404, 'Enable', 'on');
+else
+    set(handles.radiobutton_estimation_leastSquares_basdepClockoff_OPT, 'Enable', 'off');
+    set(handles.radiobutton_estimation_leastSquares_basdepClockoff_automatic, 'Enable', 'off');
+    set(handles.edit_estimation_leastSquares_clockBasDepO_minNobs, 'Enable', 'off');
+    set(handles.text403, 'Enable', 'off');
+    set(handles.text404, 'Enable', 'off');
+
+end
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+
 % --- Executes on button press in checkbox_estimation_leastSquares_clocksRelConstr.
 function checkbox_estimation_leastSquares_clocksRelConstr_Callback(hObject, eventdata, handles)
 % hObject    handle to checkbox_estimation_leastSquares_clocksRelConstr (see GCBO)
@@ -5276,7 +5307,7 @@ unitPerParam={'pwclk', 'cm'; 'rclk', 'cm/day'; 'qclk', 'cm/(day^2)'; ...
     'rqclk', 'cm/(day^2) warning: rate+quadr'; 'zwd', 'cm'; 'ngr', 'cm'; 'egr', 'cm';...
     'xpol', 'mas'; 'ypol', 'mas'; 'dut1', 'ms'; 'nutdx', 'mas'; 'nutdy',...
     'mas'; 'coorx', 'cm'; 'coory', 'cm'; 'coorz', 'cm'; 'soude', 'mas'; 'soura', 'mas';...
-    'sat_pos1', 'cm'; 'sat_pos2', 'cm'; 'sat_pos3', 'cm'; 'scale', 'ppb'};
+    'sat_pos1', 'cm'; 'sat_pos2', 'cm'; 'sat_pos3', 'cm'; 'scale', 'ppb'; 'bdclko','cm'};
 % get selected parameter
 allParamInPopupmenu=get(eval(['handles.popupmenu_plot_folder', num2str(chosenPanel), '_param']), 'String');
 curSelParam=allParamInPopupmenu{get(eval(['handles.popupmenu_plot_folder', num2str(chosenPanel), '_param']), 'Value')};
@@ -8006,7 +8037,7 @@ if get(handles.checkbox_global_param_tidERPvar, 'Value')
     parGS(curStructInd+1).id = 1; 
 end
 
-% save paramter and paths for global solution and 
+% save parameter and paths for global solution and 
 save('../DATA/GLOB/parGS.mat', 'parGS')
 save('../DATA/GLOB/pathGS.mat', 'pathGS')
 
@@ -10472,8 +10503,12 @@ function checkbox_setInput_useOptFiles_Callback(hObject, eventdata, handles)
 % Enable/Disable popupmenu to select the OPT file
 if get(handles.checkbox_setInput_useOptFiles, 'Value') == 0
     set(handles.popupmenu_setInput_optDir, 'Enable', 'off')
+    set(handles.radiobutton_estimation_leastSquares_basdepClockoff_OPT, 'Enable', 'off')
 else
     set(handles.popupmenu_setInput_optDir, 'Enable', 'on')
+    if get(handles.checkbox_estimation_leastSquares_clocksBasDepOffset, 'Value')
+        set(handles.radiobutton_estimation_leastSquares_basdepClockoff_OPT, 'Enable', 'on')
+    end
 end
 
 auto_save_parameterfile(hObject, handles)

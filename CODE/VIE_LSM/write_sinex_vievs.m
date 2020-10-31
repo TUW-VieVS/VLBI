@@ -428,7 +428,11 @@ for pl=1:size(process_list,1)
     if parameter.lsmopt.pw_clk~=0
         clk_int=[' with ' num2str(parameter.lsmopt.int_clk) ' min interval and constraints ' num2str(parameter.lsmopt.coef_clk) ' cm after ' num2str(parameter.lsmopt.int_clk) ' min' ];
     end
-    
+    if isfield(parameter.lsmopt, 'bdco_nrlist')
+        bdco=num2str(size(parameter.lsmopt.bdco_nrlist,1));
+    else
+        bdco = '0';
+    end
     if parameter.lsmopt.pw_zwd==1
         zwd=[' zenith wet delay: ' num2str(parameter.lsmopt.int_zwd) ' min offsets with rel. constr. ' num2str(parameter.lsmopt.coef_zwd) ' cm after '  num2str(parameter.lsmopt.int_zwd) ' min' ];
     else
@@ -511,6 +515,7 @@ for pl=1:size(process_list,1)
         '9.1 Clocks';
         clk;
         clk_int;
+        [' baseline dependent clock offsets: ' bdco ' baselines'];
         '9.2 Atmospheres';
         ' b) other: piece-wise linear function:';
         zwd;

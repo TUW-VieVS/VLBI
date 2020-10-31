@@ -129,6 +129,7 @@ parGS(IDglob).name = 'svra'; parGS(IDglob).id=0; IDglob=IDglob+1;
 parGS(IDglob).name = 'svde'; parGS(IDglob).id=parGS(IDglob-1).id; IDglob=IDglob+1;
 parGS(IDglob).name = 'gamma'; parGS(IDglob).id=0; IDglob=IDglob+1;
 
+parGS(IDglob).name = 'bdco'; parGS(IDglob).id=2; IDglob=IDglob+1; % reduce (2) or delete (0) bas-dep clock offset
 
 [g] = globind(parGS);
 

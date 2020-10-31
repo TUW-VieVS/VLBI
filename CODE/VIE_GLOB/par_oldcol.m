@@ -112,3 +112,8 @@ if parGS(g.g_tidpm).id==1 || parGS(g.g_tidut).id==1
                                x_.col_tiduts(parGS(g.g_tidut).spectid)];
 end
 
+if isfield(x_,'bdclko')
+    parGS(g.g_bdco).oldcol = [x_.bdclko.col];
+else
+    parGS(g.g_bdco).oldcol = [];
+end
