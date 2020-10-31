@@ -41,6 +41,9 @@
 %   19 Jun 2014 by Hana Krasna: sources can be estimated in vie_lsm with NNR condition
 %   05 May 2017 by A. Hellerschmied: - general revision
 %                                    - Satellite coordinate estimates considered
+%   28 Oct 2020 by Johannes Boehm: the values of the first clock solution
+%   were wrong in x_, if clock breaks were in the session; this was
+%   corrected
 % ************************************************************************
 function [x_] = splitx(x, first_solution, mi, na, sum_dj, n_, mjd0, mjd1, t, T, opt, antenna, ns_q, nso, tso, ess, ns_s, number_pwlo_per_sat)
 
@@ -66,6 +69,7 @@ x_.units.qclk_first_mjd     = 'epochs of the first scan, break if any, last scan
 
 if opt.first == 1 
     counti = 0; countj = na-1; countk = 2*(na-1);
+    
     for istat = 1 : na
         if istat ~= first_solution.ref_st
             if opt.firstclock == 0 || opt.firstclock == 1 || opt.firstclock == 2
@@ -75,15 +79,28 @@ if opt.first == 1
                     x_.pwclk(istat).first_val(k,:) = first_solution.clk_val(counti,:); % First clock functions offsets [cm]
                     x_.pwclk(istat).first_mx(k,:) = first_solution.clk_mx(counti,:); % formal errors of clock offsets [cm]
                 end
+                countj = countj + length(first_solution.breaks(istat).clk) - 2;
+                countk = countk + length(first_solution.breaks(istat).clk) - 2;
             end
-            if opt.firstclock == 1 || opt.firstclock == 2
+        end
+    end
+            
+    for istat = 1 : na
+        if istat ~= first_solution.ref_st
+             if opt.firstclock == 1 || opt.firstclock == 2
                 x_.rclk(istat).first_mjd = first_solution.breaks(istat).clk; % First clock functions offsets' epochs [mjd]
                 for k = 1 : length(first_solution.breaks(istat).clk) - 1
                     countj = countj + 1;
                     x_.rclk(istat).first_val(k,:) = first_solution.clk_val(countj,:); % First clock functions rates [cm/day]
                     x_.rclk(istat).first_mx(k,:) = first_solution.clk_mx(countj,:); % formal errors of clock rates
                 end
+                countk = countk + length(first_solution.breaks(istat).clk) - 2;
             end
+        end
+    end
+            
+    for istat = 1 : na
+        if istat ~= first_solution.ref_st
             if opt.firstclock == 2
                 x_.qclk(istat).first_mjd = first_solution.breaks(istat).clk; % First clock functions offsets' epochs [mjd]
                 for k = 1 : length(first_solution.breaks(istat).clk) - 1
@@ -94,7 +111,8 @@ if opt.first == 1
             end
         end
     end
-end
+    
+end 
 
 % Units of the estimated CPWLO clock parameters from main LS solution
 x_.units.pwclk_val = 'from main LS: CPWLO of clocks in cm';
