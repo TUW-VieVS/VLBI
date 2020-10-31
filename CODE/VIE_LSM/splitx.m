@@ -45,7 +45,7 @@
 %   were wrong in x_, if clock breaks were in the session; this was
 %   corrected
 % ************************************************************************
-function [x_] = splitx(x, first_solution, mi, na, sum_dj, n_, mjd0, mjd1, t, T, opt, antenna, ns_q, nso, tso, ess, ns_s, number_pwlo_per_sat)
+function [x_] = splitx(x, first_solution, mi, na, sum_dj, n_, mjd0, mjd1, t, T, opt, antenna, ns_q, nso, tso, ess, ns_s, number_pwlo_per_sat, ebsl)
 
 global c
 
@@ -551,6 +551,15 @@ x_.scale.val = []; %[-]
 x_.scale.mx = []; %[-]
 x_.scale.mjd = []; %[-]
 
+x_.units.bdclko = 'baseline-dependent clock offset [cm]';
+x_.bdclko.val = []; % cm
+x_.bdclko.mx = [];
+x_.bdclko.mjd = [];
+x_.bdclko.col = [];
+x_.bdclko.st1 = [];
+x_.bdclko.st2 = [];
+x_.bdclko.namest1 = [''];
+x_.bdclko.namest2 = [''];
 
 % Correction to the scale factor
 if ess==1
@@ -560,6 +569,21 @@ if ess==1
         x_.scale.col = sum_dj(20);
         x_.scale.mjd = ceil(mjd1); % mjd1 : midnight
     end
+    
+    if opt.est_bdco==1
+        nbas = sum_dj(21) - sum_dj(20);
+        for i=1:nbas
+            x_.bdclko(i).val = x(sum_dj(20)+i); % cm
+            x_.bdclko(i).mx = mi(sum_dj(20)+i);
+            x_.bdclko(i).col = sum_dj(20)+i;
+            x_.bdclko(i).st1 = ebsl(i,1);
+            x_.bdclko(i).st2 = ebsl(i,2);
+            x_.bdclko(i).namest1 = antenna(ebsl(i,1)).name;
+            x_.bdclko(i).namest2 = antenna(ebsl(i,2)).name;
+            x_.bdclko(i).mjd = ceil(mjd1); 
+        end
+    end
+
 end
 
 

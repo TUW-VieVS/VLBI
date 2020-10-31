@@ -498,6 +498,17 @@ end
 parameter.lsmopt.ref=0; % set 1st clock as reference (could be chagned in OPT file)
 parameter.lsmopt.ref_first_clk=1; %...
 
+% baseline dependent clock offset
+parameter.lsmopt.est_bdco = get(handles.checkbox_estimation_leastSquares_clocksBasDepOffset, 'Value');
+bdco_mino=str2double(get(handles.edit_estimation_leastSquares_clockBasDepO_minNobs, 'String'));
+if isnan(bdco_mino)
+    parameter.lsmopt.bdco_minobs = 5; % min obs at the baseline
+else
+    parameter.lsmopt.bdco_minobs = bdco_mino;
+end
+parameter.lsmopt.bdco_fromOPT = get(handles.radiobutton_estimation_leastSquares_basdepClockoff_OPT, 'Value'); % 1 - read from OPT file, 0 - create the list in vie_lsm
+parameter.lsmopt.bdco_nrlist = [];    
+
 % estimation of zwd
 parameter.lsmopt.pw_zwd=get(handles.checkbox_estimation_leastSquares_tropo_zwd, 'Value');
 
@@ -721,6 +732,8 @@ else
     parameter.lsmopt.outsnx.eop=get(handles.radiobutton_run_sinex_eop_incl, 'Value');
 end
 
+parameter.lsmopt.outsnx.bdco = 0; % 0 = reduce bas-dep clk offset in sinex
+
 parameter.lsmopt.addSnxSource=get(handles.checkbox_run_sinex_sources, 'Value');
 
 if get(handles.checkbox_run_sinex_changeAnalystsName, 'Value')
@@ -858,6 +871,7 @@ parameter.vie_mod.aoaltcorr = 0;
 
 % estimation of single session parameters in VIE_LSM
 parameter.lsmopt.est_scale = 0;
+
 
 % for which parameters which are not in GUI yet should the NEQ be prepared for the estimation in VIE_GLOB? (1) / (0)?
 parameter.lsmopt.est_love = 0;

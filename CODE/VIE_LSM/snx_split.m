@@ -21,12 +21,12 @@
 % ************************************************************************ 
 
 
-function [col_red col_est] = snx_split(x_,outsnx)
+function [col_red, col_est] = snx_split(x_,outsnx)
 
 
 % clock parameters will be always reduced, in this version they cannot
 % be written into SINEX file
-col_red = [[x_.pwclk.col] [x_.rqclk.col]];
+col_red = [[x_.pwclk.col] [x_.rqclk.col] [x_.bdclko.col]];
 
 % station coordinates cannot be reduced in SINEX file in this version
 col_est = [ [x_.coorx.col] [x_.coory.col] [x_.coorz.col]];
