@@ -344,7 +344,7 @@ if parameter.outlier.flag_remove_outlier
         [parameter.outlier.obs2remove] = readOUT(outlier_filename_path);
         fprintf('%d outliers will be removed:\n',size(parameter.outlier.obs2remove,2));        %%%=> A. Girdiuk 2015-07-21
         for k=1:size(parameter.outlier.obs2remove,2)
-            fprintf(' - %8s %8s %5.2f\n', parameter.outlier.obs2remove(k).sta1, parameter.outlier.obs2remove(k).sta2, parameter.outlier.obs2remove(k).mjd);
+            fprintf(' - %8s %8s %5.2f %8s\n', parameter.outlier.obs2remove(k).sta1, parameter.outlier.obs2remove(k).sta2, parameter.outlier.obs2remove(k).mjd, parameter.outlier.obs2remove(k).sou);
         end
     else
         fprintf('Outlier list not available: %s\n', outlier_filename_path);
@@ -1250,7 +1250,7 @@ if ess == 1 % +hana 10Nov10
 
     % ##### Write outliers to ASCII file: #####
     if ~isempty(out_v)
-        out = write_outlier_file(out_v, antenna, scan, parameter);
+        out = write_outlier_file(out_v, antenna, scan, parameter, sources);
     end
 
     % ##### write residuals/outlier info to new variable #####

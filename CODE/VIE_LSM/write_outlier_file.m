@@ -31,7 +31,7 @@
 % CHANGES
 %
 
-function out = write_outlier_file(out_v, antenna, scan, parameter)
+function out = write_outlier_file(out_v, antenna, scan, parameter, sources)
 
 if ~isempty(out_v)
     % ##### Init.: #####
@@ -51,6 +51,7 @@ if ~isempty(out_v)
                     mjd_out(ico) = scan(isc).mjd;
                     out(ico,1) = isc; 
                     out(ico,2) = iobs;
+                    sou(ico).name = sources.q(scan(isc).iso).name;
                 end
             end
         end
@@ -99,7 +100,7 @@ if ~isempty(out_v)
         error('Outlier file (%s) could not be openend!', out_name_path_str);
     end
     for isc_out = 1 : size(out, 1)
-        fprintf(fid_out, '%s %s %4.12f\n' ,stat1_out(isc_out).name, stat2_out(isc_out).name, mjd_out(isc_out));
+        fprintf(fid_out, '%s %s %4.12f %s\n' ,stat1_out(isc_out).name, stat2_out(isc_out).name, mjd_out(isc_out), sou(isc_out).name);
     end
     fclose(fid_out);
     

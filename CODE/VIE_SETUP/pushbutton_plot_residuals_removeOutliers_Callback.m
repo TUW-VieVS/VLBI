@@ -28,7 +28,12 @@ function pushbutton_plot_residuals_removeOutliers_Callback(hObject, eventdata, h
 % msgbox(sprintf('Not working yet!, But this button should remove %1.0f outliers', ...
 %     size(get(handles.data.plot.outlierMarksHandle, 'Ydata'), 2)), ':-)', 'warn');
 
-nSelOutliers=size(get(handles.data.plot.outlierMarksHandle, 'Ydata'), 2);
+% nSelOutliers=size(get(handles.data.plot.outlierMarksHandle, 'Ydata'), 1);
+if size(handles.data.plot.outlierMarksHandle,1)==1
+    nSelOutliers=1;
+else
+    nSelOutliers=size(handles.data.plot.outlierMarksHandle(1).XData,2);
+end
 % if no outlier was selected -> write messge box
 if nSelOutliers==0
     msgbox('No value was selected!', 'No value selected', 'warn');
@@ -98,12 +103,24 @@ else
             
             % Selected Data (Outliers) in residuals plot window:
             outlierEpochsHours = get(handles.data.plot.outlierMarksHandle, 'XData');
-            if(length(outlierEpochsHours)>1)
+%             if(length(outlierEpochsHours)>1)
+%                 outlierEpochsHours = outlierEpochsHours{1};
+%             end
+            if size(outlierEpochsHours,1)>1
                 outlierEpochsHours = outlierEpochsHours{1};
+            else
+                outlierEpochsHours = outlierEpochsHours(1);
             end
+                
+            
             OutlierValues = get(handles.data.plot.outlierMarksHandle, 'YData');
-            if(length(OutlierValues)>1)
+%             if(length(OutlierValues)>1)
+%                 OutlierValues = OutlierValues{1};
+%             end
+            if(size(OutlierValues,1)>1)
                 OutlierValues = OutlierValues{1};
+            else
+                OutlierValues = OutlierValues(1);
             end
 
             % Conversion of x-values: "hours from session start" => "MJD": 
@@ -173,14 +190,20 @@ else
             % Get Station names:
             allStatNames=handles.data.plot.res(chosenSessionInd).allStatNames;
             
+            % Get Source names:
+            sourceIndices = handles.data.plot.res(chosenSessionInd).source(curValuesIndices,:);
+            sourceForXIndices = sourceIndices(xIndices, :);
+            outlierSourceInd = sourceForXIndices(yIndices, :);
+            allSourceNames=handles.data.plot.res(chosenSessionInd).allSourceNames; 
+            
 %             outlierBaselineInd=handles.data.plot.res(chosenSessionInd).baselineOfObs(curValuesIndices(...
 %                 get(handles.data.plot.outlierMarksHandle, 'XData'),:),:);
             
             % Assigne Station names to Station indices:
-            outlierBaselines=cell(size(outlierBaselineInd,1),2);
+            outlierBaselines=cell(size(outlierBaselineInd,1),3); 
             outlierBaselines(:,1)=allStatNames(outlierBaselineInd(:,1));
             outlierBaselines(:,2)=allStatNames(outlierBaselineInd(:,2));
-            
+            outlierBaselines(:,3)=allSourceNames(outlierSourceInd); 
            
             
 %% ##### WRITE DATA TO OUTLIER FILE #####
@@ -189,12 +212,12 @@ else
             fid=fopen([OUTfolder, OUTfilename], 'a');    % 'a' is OK for both append or create new for writing
             
             for iOutlier=1:size(outlierEpochs,1)
-                fprintf(fid, '%8s %8s %18.12f\n', outlierBaselines{iOutlier,1},...
-                    outlierBaselines{iOutlier,2}, outlierEpochs(iOutlier));
+                fprintf(fid, '%8s %8s %18.12f %8s\n', outlierBaselines{iOutlier,1},...
+                    outlierBaselines{iOutlier,2}, outlierEpochs(iOutlier), outlierBaselines{iOutlier,3});
                 
                 % TEST
-                fprintf(1, '%8s %8s %18.12f\n', outlierBaselines{iOutlier,1},...
-                    outlierBaselines{iOutlier,2}, outlierEpochs(iOutlier));
+                fprintf(1, '%8s %8s %18.12f %8s\n', outlierBaselines{iOutlier,1},...
+                    outlierBaselines{iOutlier,2}, outlierEpochs(iOutlier), outlierBaselines{iOutlier,3});
             end
             fclose(fid);
             

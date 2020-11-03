@@ -86,8 +86,9 @@ hold(handles.axes_plot_residuals, 'off');
 if get(handles.togglebutton_plot_residuals_selectOutliers,'Value')
 	
     % write number of outliers to button where they can be removed
-    set(handles.pushbutton_plot_residuals_removeOutliers, 'String', ...
-        sprintf('Remove %1.0f Outliers', 1))
+%     set(handles.pushbutton_plot_residuals_removeOutliers, 'String', ...
+%         sprintf('Remove %1.0f Outliers', 1))
+
 else
          %
         curSession=get(handles.popupmenu_plot_residuals_session, 'Value');
