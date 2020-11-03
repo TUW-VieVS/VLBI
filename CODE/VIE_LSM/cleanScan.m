@@ -307,19 +307,29 @@ if parameter.outlier.flag_remove_outlier
             if sum(curScanLog) > 1 % More than one scan found?
                 curScanLog_ids = find(curScanLog);
                 flag_found_scan = false;
-                % Check stations in scan:
-                for i_scan = 1 : sum(curScanLog)
-                    scan_id = curScanLog_ids(i_scan);
-                    stat_ids_in_scan = unique([scan(scan_id).obs.i1, scan(scan_id).obs.i2]);
-                    if ( ismember(curStatInd(1), stat_ids_in_scan) && ismember(curStatInd(2), stat_ids_in_scan) )
-                       flag_found_scan = true; 
-                       break
+                if isempty(curSouLog) % for old outlier files (without source names)
+                    % Check stations in scan:
+                    for i_scan = 1 : sum(curScanLog)
+                        scan_id = curScanLog_ids(i_scan);
+                        stat_ids_in_scan = unique([scan(scan_id).obs.i1, scan(scan_id).obs.i2]);
+                        if ( ismember(curStatInd(1), stat_ids_in_scan) && ismember(curStatInd(2), stat_ids_in_scan) )
+                           flag_found_scan = true; 
+                           break
+                        end
                     end
-                end
-                if ~flag_found_scan % No observation with the current baseline found in the considered scans
-                    fprintf('WARNING (outlier removal in cleanScan.m): No observation on the baseline %s - %s found at epoch %s!\n', parameter.outlier.obs2remove(iOutlier).sta1, parameter.outlier.obs2remove(iOutlier).sta2, mjd2datestr(parameter.outlier.obs2remove(iOutlier).mjd) )
-                else
-                    cur_scan_id = scan_id;
+                    if ~flag_found_scan % No observation with the current baseline found in the considered scans
+                        fprintf('WARNING (outlier removal in cleanScan.m): No observation on the baseline %s - %s found at epoch %s!\n', parameter.outlier.obs2remove(iOutlier).sta1, parameter.outlier.obs2remove(iOutlier).sta2, mjd2datestr(parameter.outlier.obs2remove(iOutlier).mjd) )
+                    else
+                        cur_scan_id = scan_id;
+                    end
+                else % new outlier files with source names
+                    for i_scan = 1:size(curScanLog_ids,2)
+                       scan_id = curScanLog_ids(i_scan);
+                       if strcmp (allSourceNames_q(scan(scan_id).iso),curSouLog)
+                            cur_scan_id = scan_id;
+                            flag_found_scan = true; 
+                       end
+                    end
                 end
             else
                 cur_scan_id = find(curScanLog);
