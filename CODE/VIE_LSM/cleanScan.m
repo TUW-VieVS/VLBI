@@ -102,18 +102,19 @@ if ~isempty(parameter.opt.options.no_cab)
                     obsI2NoCab = find([scan(iS).obs.i2]==curI);
                     
                     % Remove cable calibration which was already applied in VIe_INIT when loading the observation file:
-                    for ionc = 1 : length(obsI1NoCab)
-                        scan(iS).obs(obsI1NoCab(ionc)).obs = scan(iS).obs(obsI1NoCab(ionc)).obs + curCab;
-                    end
-                    for ionc = 1 : length(obsI2NoCab)
-                        scan(iS).obs(obsI2NoCab(ionc)).obs = scan(iS).obs(obsI2NoCab(ionc)).obs - curCab;
+                    if ~isempty(curCab)
+                        for ionc = 1 : length(obsI1NoCab)
+                            scan(iS).obs(obsI1NoCab(ionc)).obs = scan(iS).obs(obsI1NoCab(ionc)).obs + curCab;
+                        end
+                        for ionc = 1 : length(obsI2NoCab)
+                            scan(iS).obs(obsI2NoCab(ionc)).obs = scan(iS).obs(obsI2NoCab(ionc)).obs - curCab;
+                        end
                     end
 
                     % set cable cal to zero!
                     scan(iS).stat(curI).cab = 0;
                 end
             end
-            
         end
     end
 end
@@ -291,6 +292,9 @@ sum_del_outliers = 0;
 if parameter.outlier.flag_remove_outlier
     if ~isempty(parameter.outlier.obs2remove)
         n_outlier = length(parameter.outlier.obs2remove); % Number of outliers 
+        if ~isfield(parameter.outlier.obs2remove,'sou')
+            parameter.outlier.obs2remove(1).sou = '';
+        end
         
         for iOutlier = 1 : n_outlier
             
@@ -300,7 +304,8 @@ if parameter.outlier.flag_remove_outlier
 
             % get scan of cur outlier (the one which is close by 1/10 second!)
             curScanLog = abs([scan.mjd] - parameter.outlier.obs2remove(iOutlier).mjd) < (oneSecInDays/10);
-
+            curSouLog = parameter.outlier.obs2remove(iOutlier).sou;
+            
             % Check, if only one scan was found!
             % - If more than one scan was found by matching the scan reference times, the stations have to be considered in addition
             flag_found_scan = true; 
