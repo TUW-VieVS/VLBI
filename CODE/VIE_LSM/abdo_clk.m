@@ -6,12 +6,10 @@
   function [A_bdco,H_bdco,Ph_bdco,ebsl] = abdo_clk(scan,antenna,opt,n_observ,parameter)
       
     % all baselines from the scan
-    u = struct2cell(scan);
-    u6 = u(6,:,:);
     bslst1=[]; bslst2=[];
     for i=1:length(scan)
-        bslst1 = [bslst1 [u6{i}.i1]];
-        bslst2 = [bslst2 [u6{i}.i2]];
+        bslst1 = [bslst1 scan(i).obs.i1];
+        bslst2 = [bslst2 scan(i).obs.i2];
     end
 
     na = length(antenna); r=[];
