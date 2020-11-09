@@ -85,12 +85,12 @@
     
     fprintf('Baseline-dependent clock offset: %1.0f\n', size(ebsl,1))
     for k=1:size(ebsl,1)
-        fprintf('%8s - %8s \n', antenna(ebsl(k,1)).name, antenna(ebsl(k,2)).name)
+        fprintf('%8s   %8s \n', antenna(ebsl(k,1)).name, antenna(ebsl(k,2)).name)
     end
     if ~isempty(r)
     fprintf('Following baselines (given in OPT file) not found:\n')
         for k=1:length(r)
-            fprintf('%8s - %8s \n', parameter.opt.options.bdco_est(r(k)).sta1, parameter.opt.options.bdco_est(r(k)).sta2)
+            fprintf('%8s   %8s \n', parameter.opt.options.bdco_est(r(k)).sta1, parameter.opt.options.bdco_est(r(k)).sta2)
         end
     end
 
