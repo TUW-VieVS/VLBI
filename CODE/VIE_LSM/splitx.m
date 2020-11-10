@@ -562,16 +562,22 @@ x_.bdclko.namest1 = [''];
 x_.bdclko.namest2 = [''];
 
 % Correction to the scale factor
-if ess==1
-    if opt.est_scale==1
+if opt.est_scale==1
+    if ess==1
         x_.scale.val = x(sum_dj(20)) /c/100 *1e9; %[ppb]
         x_.scale.mx = mi(sum_dj(20)) /c/100 *1e9; %[ppb]
         x_.scale.col = sum_dj(20);
         x_.scale.mjd = ceil(mjd1); % mjd1 : midnight
+    else
+        x_.scale.col = sum_dj(20);
+        x_.scale.mjd = ceil(mjd1); % mjd1 : midnight
     end
-    
-    if opt.est_bdco==1
-        nbas = sum_dj(21) - sum_dj(20);
+end
+
+% Baseline-dependent clock offset
+if opt.est_bdco==1
+    nbas = sum_dj(21) - sum_dj(20);
+    if ess==1
         for i=1:nbas
             x_.bdclko(i).val = x(sum_dj(20)+i); % cm
             x_.bdclko(i).mx = mi(sum_dj(20)+i);
@@ -582,8 +588,16 @@ if ess==1
             x_.bdclko(i).namest2 = antenna(ebsl(i,2)).name;
             x_.bdclko(i).mjd = ceil(mjd1); 
         end
+    else
+        for i=1:nbas
+            x_.bdclko(i).col = sum_dj(20)+i;
+        end
     end
+end
 
+    
+    
+    
 end
 
 
