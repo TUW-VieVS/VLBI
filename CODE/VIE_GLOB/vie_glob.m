@@ -1243,6 +1243,7 @@ end
 
 if (parGS(g.g_srade(1)).id==1)
     newcrf(globsol,pathGS,crf);
+%    newcrf_binary(globsol,pathGS); % binary format of the crf catalogue
 end
 
 %% Save TRF and CRF in the sinex format
