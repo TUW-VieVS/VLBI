@@ -44,6 +44,18 @@ end
 
 fid=fopen([paths.path_out '_ESTIMATES/' paths.out '/glob_results_' paths.L2 '.txt'],'wt');
 
+fprintf(fid,' %% Parameterisation \n');
+fprintf(fid,'DIRIN:  %s \n',paths.L2);
+fprintf(fid,'DIROUT: %s \n',paths.out);
+fprintf(fid,'TRF datum: %s \n',paths.datumsta);
+fprintf(fid,'TRF reduced ant: %s \n',paths.antred);
+fprintf(fid,'TRF constant vel: %s \n',paths.velconst);
+fprintf(fid,'TRF velocity ties: %s \n',paths.velties);
+fprintf(fid,'TRF discontinuity: %s \n',paths.discont);
+fprintf(fid,'CRF datum: %s \n',paths.datumsou);
+fprintf(fid,'CRF fixed sou: %s \n',paths.fixedsou);
+fprintf(fid,'CRF reduced sou: %s \n',paths.soured);
+
 fprintf(fid,' %% Sessions in the solution \n');
 for i=1:size(ses_time,2)
     fprintf(fid,'%s   \n',ses_time{i});
@@ -108,7 +120,7 @@ fprintf(fid,'\n\n\n %% Corrections to source coordinates and formal errors: RA i
 fprintf(fid,'\n %% source            RA          De            mRA         mDe \n');
 
 if globsol.source.id==1
-    [refname_s,ind]=sortrows(globsol.source.refname.IERS);
+    [refname_s,ind]=sortrows(globsol.source.refname.IVS);
     a = char(refname_s);
     drade = globsol.source.drade(ind,:);
     sigma_rade = globsol.source.sigma_rade(ind,:);

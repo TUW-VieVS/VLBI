@@ -81,6 +81,7 @@ nsou=2*lns;
 if parGS(g.g_coord(1)).id==1
     % put station coordinates into the right columns
     clear arx ary arz
+    arx =[]; ary =[]; arz =[];
     l=1;
     for k = 1:length(antenna.x)
         aname=antenna.name(k,:);
@@ -110,9 +111,9 @@ if parGS(g.g_coord(1)).id==1
             l=l+1;
         end
     end
-    if ~exist('arx','var')
-        error('Non of the antennas in session are estimated (probably reduced)');
-    end
+%     if ~exist('arx','var')
+%         error('Non of the antennas in session are estimated (probably reduced)');
+%     end
     ar=vertcat(arx,ary,arz); % actual X reference indices
     actp=size(ar); actp=actp(1); % actp: actual number of est. parameters in this session
 end
@@ -121,6 +122,7 @@ end
 % Antenna velocities
 if parGS(g.g_vel(1)).id==1
     clear arvx arvy arvz ref_id ref_idm
+    arvx =[]; arvy=[]; arvz=[];
     % put station coordinates into the correct columns
     l=1;
     for k = 1:length(antenna.x)

@@ -100,6 +100,7 @@ end
 fid=fopen(IVSnamesFile);
 IVSnames_raw=textscan(fid, '%8s %*2s %16s %*2s %10s %*2s %8s %16s %2f %*1s %2f %*1s %9.7f %*2s %1s %2f %*1s %2f %*1s %9.7f %*[^\n]', 'whitespace','', 'commentstyle', '#');
 IVSnames.IVSname = IVSnames_raw{1,1};
+IVSnames.designation = IVSnames_raw{1,2};
 IVSnames.IERSname = IVSnames_raw{1,4};
 for i=1:length(IVSnames.IERSname)
     if strcmp(IVSnames.IERSname(i),'-       ')
@@ -125,6 +126,7 @@ for iSource=1:nSources
     indCurSoInTransl=find(curIVSnameInIERStable);
     if ~isempty(indCurSoInTransl)
         source(iSource).IERSname=char(IVSnames.IERSname(indCurSoInTransl));  
+        source(iSource).designation=['ICRF ' char(IVSnames.designation(indCurSoInTransl))];
     end
     
     % if IVS name differs from IERS name or is missing in the Goddard
@@ -258,7 +260,7 @@ for k=1:size(data{1},1)
         % one of the found sources
         curIndInSourceStruct=indexInSourceStruct(iFoundIndices);
         % names
-        source(curIndInSourceStruct).designation=data{1}(k,:);
+%         source(curIndInSourceStruct).designation=data{1}(k,:);
         % defining source or not
         if strcmp(data{2}(k,11), 'D')
             source(curIndInSourceStruct).icrf2.defining=1;
@@ -352,7 +354,7 @@ for k=1:size(data{1},1)
         curIndInSourceStruct=indexInSourceStruct(iFoundIndices);
         
         % names
-        source(curIndInSourceStruct).designation=data{1}(k,:);
+%         source(curIndInSourceStruct).designation=data{1}(k,:);
 
         % VCS source is never defining
         source(curIndInSourceStruct).icrf2.defining=0;
