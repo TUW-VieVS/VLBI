@@ -1216,7 +1216,13 @@ if ess == 1 % +hana 10Nov10
     opt.wrms = wrms;
 
     mi = repmat(mo,length(Qxx),1).*repmat(sqrt(diag(Qxx)),1,numberOfLSMs); % std. dev. of estimated parameters [cm,mas]
-
+    
+    % Covariance matrix a posteriori, Cvv = sigma_0^2 * Qvv, Qvv=Qll-Q~ll, Qll= inv(P), Q~ll=A*Qxx*A'
+    Qll = inv(Pobserv(1:n_observ,1:n_observ));
+    Qlldach = A(1:n_observ,:)*Qxx*A(1:n_observ,:)';
+    Qvv = Qll-Qlldach;
+    Cvv=mo^2*Qvv; 
+    sigma_residuals_aposteriori = sqrt(diag(Cvv));
 
     % Outlier test begins here
     % DETECTING OUTLIER
@@ -1315,6 +1321,8 @@ if ess == 1 % +hana 10Nov10
         % main solution residuals and outliers should be saved in any case
         res.mainVal = v_real;
         res.outlier = out_v;
+        res.sigma_from_fringe_fitting = mi_observ;
+        res.sigma_residuals_aposteriori = sigma_residuals_aposteriori;
 
 
         if ~isempty(dirpth) && ~exist(['../DATA/LEVEL3/',dirpth])

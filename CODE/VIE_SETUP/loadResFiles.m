@@ -111,7 +111,10 @@ if ~isempty(allResFiles)
         'firstVal', [],...
         'mo',[],...
         'mo_first',[],...
-        'wrms',[]);
+        'wrms',[],...
+        'sigma_from_fringe_fitting',[],...
+        'sigma_residuals_aposteriori',[]);
+    
     for iFile=1:nResFiles
 
 
@@ -133,6 +136,12 @@ if ~isempty(allResFiles)
         end
         if ~isfield(res, 'obs_type')
             res.obs_type = repmat('q', length(res.mjd), 1);
+        end
+        if ~isfield(res, 'sigma_from_fringe_fitting')
+            res.sigma_from_fringe_fitting=[];
+        end
+        if ~isfield(res, 'sigma_residuals_aposteriori')
+            res.sigma_residuals_aposteriori=[];
         end
         fields=fieldnames(handles.data.plot.res);
         for iF=1:length(fields)
