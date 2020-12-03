@@ -31,10 +31,10 @@
 %     - on (ambiguities are resolved in observables)
 %     - off (ambiguities are not resolved in observables)
 %
-institute: 						IVS TUW GSFC GSF USNO BKG GSI noInst
+institute: IVS TUW GSFC GSF USNO BKG GSI noInst
 % consider_no_institution:     	1
-frequency_band: 				GroupDelayFull_bX
-wrapper_k: 						all
-% wrapper_version:
-% ionosphere_correction: on
-% ambiguity_correction: on
+frequency_band: GroupDelayFull_bX
+%wrapper_k: all
+%wrapper_version:
+%ionosphere_correction: off
+%ambiguity_correction: off

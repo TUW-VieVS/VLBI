@@ -7,7 +7,7 @@
 % (stationwise, baseline wise, all) to the axes in the panel of the
 % residuals.
 %
-% AUTHOR 
+% AUTHOR
 %   Matthias Madzak
 %
 % INPUT
@@ -51,7 +51,7 @@ set(handles.pushbutton_selectedData_writeOPT,'Enable','Off');
 
 % set(handles.edit_plot_residuals_interval_input_1_unit, 'String', 'hh')
 % set(handles.edit_plot_residuals_interval_input_2_unit, 'String', 'hh')
-    
+
 % remove all black object (box and crosses)
 allLineHandles=findobj(handles.axes_plot_residuals,'Type','line', 'color', 'k');
 delete(allLineHandles);
@@ -67,40 +67,52 @@ SessionStartTimeMJD =  handles.data.plot.res(curSession).mjd(1);
 SessionEndTimeMJD   =  (handles.data.plot.res(curSession).mjd(end)-SessionStartTimeMJD)*24;
 
 mfc = [31,120,180
-      51,160,44
-      227,26,28
-      255,127,0
-      202,178,214
-      106,61,154
-      177,89,40
-      166,206,227
-      178,223,138
-      251,154,153
-      253,191,111
-      202,178,214
-      255,255,153
-      ]/255;
-  
+    51,160,44
+    227,26,28
+    255,127,0
+    202,178,214
+    106,61,154
+    177,89,40
+    166,206,227
+    178,223,138
+    251,154,153
+    253,191,111
+    202,178,214
+    255,255,153
+    ]/255;
+
 mfc = repmat(mfc,8,1);
 
 mec = [repmat([0 0 0],13,1)
-       repmat([1 1 0],13,1)
-       repmat([1 0 1],13,1)
-       repmat([0 1 1],13,1)
-       repmat([1 1 1],13,1)
-       repmat([1 0 0],13,1)
-       repmat([0 1 0],13,1)
-       repmat([0 0 1],13,1)
-       ];
+    repmat([1 1 0],13,1)
+    repmat([1 0 1],13,1)
+    repmat([0 1 1],13,1)
+    repmat([1 1 1],13,1)
+    repmat([1 0 0],13,1)
+    repmat([0 1 0],13,1)
+    repmat([0 0 1],13,1)
+    ];
 
 % ##### Choose between First / Main Solution #####
 
 % if first solution is chosen
 if get(handles.radiobutton_plot_residuals_firstSolution, 'Value')
     val=handles.data.plot.res(curSession).firstVal;
-% if main solution is chosen
+    if ~isempty(handles.data.plot.res(curSession).sigma_residuals_aposteriori)
+        val_sigma_cm = handles.data.plot.res(curSession).sigma_from_fringe_fitting'*physconst('LightSpeed')*1e2;
+    else
+        fprintf('sigma of observation does not exist for this session, re-run the current session to store sigmas for plotting\n')
+        val_sigma_cm = zeros(length(val),1);
+    end
+    % if main solution is chosen
 else
     val=handles.data.plot.res(curSession).mainVal;
+    if ~isempty(handles.data.plot.res(curSession).sigma_residuals_aposteriori)
+        val_sigma_cm = handles.data.plot.res(curSession).sigma_residuals_aposteriori;
+    else
+        fprintf('sigma of observation does not exist for this session, re-run the current session to store sigmas for plotting\n')
+        val_sigma_cm = zeros(length(val),1);        
+    end
 end
 
 % Residuals limits for plot
@@ -124,7 +136,7 @@ end
 sources = sources';
 
 mjd             = handles.data.plot.res(curSession).mjd;
-DurationHours   = (mjd - SessionStartTimeMJD) * 24; 
+DurationHours   = (mjd - SessionStartTimeMJD) * 24;
 
 
 % ##### make axes empty #####
@@ -153,7 +165,7 @@ background = [val; -val];
 backgroundTime = [DurationHours; DurationHours];
 
 % ##### Selection of Residual Values for Plotting #####
-    
+
 plotName = '';
 % #### 1.) ALL RESIDUALS ####
 % if all residuals should be plotted
@@ -161,6 +173,7 @@ if get(handles.radiobutton_plot_residuals_perAll, 'Value')
     plotName = 'all';
     % all residuals should be plotted when "per All" is chosen!
     valsOfCurSelection=[val; -val];
+    sigsOfCurSelection=[val_sigma_cm; -val_sigma_cm];
     horAxis = [DurationHours; DurationHours];
     
     % see if there are outliers
@@ -182,10 +195,10 @@ if get(handles.radiobutton_plot_residuals_perAll, 'Value')
         end
     end
     set(handles.togglebutton_plot_residuals_selectData, 'Enable', 'Off');
-
     
-% #### 2.) STATION-WISE ####
-% if station-wise residuals should be plotted    
+    
+    % #### 2.) STATION-WISE ####
+    % if station-wise residuals should be plotted
 elseif get(handles.radiobutton_plot_residuals_perStat, 'Value')
     % get chosen station
     allStationsInMenu=get(handles.popupmenu_plot_residuals_station, 'String');
@@ -194,27 +207,30 @@ elseif get(handles.radiobutton_plot_residuals_perStat, 'Value')
     % get values where chosen station takes part
     obsWithCurStation=sum(~cellfun(@isempty, strfind(baselines, curStation)),2);
     valsOfCurSelection=val(logical(obsWithCurStation));
+    sigsOfCurSelection=val_sigma_cm(logical(obsWithCurStation));
     horAxis = DurationHours(logical(obsWithCurStation));
-
+    
     % for values where station is second: *(-1)
     stationIsSecond=~cellfun(@isempty, strfind(baselines(logical(obsWithCurStation),2), curStation));
     valsOfCurSelection(stationIsSecond)=valsOfCurSelection(stationIsSecond)*-1;
-
+    sigsOfCurSelection(stationIsSecond)=sigsOfCurSelection(stationIsSecond)*-1;
+    
+    
     % see if this station has outliers
     allOutliersLog=zeros(length(val),1);
     allOutliersLog(outlier)=1;
-
+    
     % if there are outliers at chosen station
     if sum(allOutliersLog & obsWithCurStation) > 0
         plotOutliers=1;
-
+        
         % preallocate
         indOutliersOfCurSelection=zeros(sum(allOutliersLog & obsWithCurStation),1); % those indices show values in chosenStation-values
         baselinesForOutlier=cell(sum(allOutliersLog & obsWithCurStation), 1);
-
+        
         % get index (in outlier) of outlier I want to find (ie all which include curStat)
         outlierIndIWantToFind=find(ismember(outlier, find(allOutliersLog & obsWithCurStation)));
-
+        
         % find them
         for k=1:sum(allOutliersLog & obsWithCurStation)
             indOutliersOfCurSelection(k)=sum(obsWithCurStation(1:outlier(outlierIndIWantToFind(k))));
@@ -222,27 +238,28 @@ elseif get(handles.radiobutton_plot_residuals_perStat, 'Value')
             baselinesForOutlier(k,2)=baselines(outlier(outlierIndIWantToFind(k)),2);
         end
     end
-        
+    
     set(handles.togglebutton_plot_residuals_selectData, 'Enable', 'On');
-
-% #### 3.) BASELINE-WISE ####
-% baseline wise plot
-elseif get(handles.radiobutton_plot_residuals_perBasel, 'Value') 
+    
+    % #### 3.) BASELINE-WISE ####
+    % baseline wise plot
+elseif get(handles.radiobutton_plot_residuals_perBasel, 'Value')
     % get chosen baseline
     allBaselinesInMenu=get(handles.popupmenu_plot_residuals_baseline, 'String');
     curBaseline=allBaselinesInMenu{get(handles.popupmenu_plot_residuals_baseline, 'Value')};
     plotName = curBaseline;
-
+    
     % get values of chosen baseline
     obsWithCurSelection=sum(~cellfun(@isempty, strfind(baselines, curBaseline(1:8))),2) & ...
         sum(~cellfun(@isempty, strfind(baselines, curBaseline(10:17))),2);
     valsOfCurSelection=val(logical(obsWithCurSelection));
+    sigsOfCurSelection=val_sigma_cm(logical(obsWithCurSelection));
     horAxis = DurationHours(logical(obsWithCurSelection));
-
+    
     % see if this station has outliers
     allOutliersLog=zeros(length(val),1);
     allOutliersLog(outlier)=1;
-
+    
     if sum(allOutliersLog & obsWithCurSelection) > 0
         plotOutliers=1;
         
@@ -253,10 +270,10 @@ elseif get(handles.radiobutton_plot_residuals_perBasel, 'Value')
         
         % preallocate
         indOutliersOfCurSelection=zeros(sum(allOutliersLog & obsWithCurSelection),1);
-
+        
         % get index (in outlier) of outlier I want to find (ie all which include curStat)
         outlierIndIWantToFind=find(ismember(outlier, find(allOutliersLog & obsWithCurSelection)));
-
+        
         % find them
         for k=1:sum(allOutliersLog & obsWithCurSelection)
             indOutliersOfCurSelection(k)=sum(obsWithCurSelection(1:outlier(outlierIndIWantToFind(k))));
@@ -265,33 +282,34 @@ elseif get(handles.radiobutton_plot_residuals_perBasel, 'Value')
     
     set(handles.togglebutton_plot_residuals_selectData, 'Enable', 'Off');
     
-% #### 4.) SOURCE-WISE ####    
-% source wise residuals
-else 
+    % #### 4.) SOURCE-WISE ####
+    % source wise residuals
+else
     % get chosen source
     allSourcesInMenu=get(handles.popupmenu_plot_residuals_source, 'String');
     curSource=allSourcesInMenu{get(handles.popupmenu_plot_residuals_source, 'Value')};
     plotName = curSource;
-
+    
     % get values of chosen source
     obsWithCurSelection=strcmp(sources, curSource);
     valsOfCurSelection=val(logical(obsWithCurSelection));
+    sigsOfCurSelection=val_sigma_cm(logical(obsWithCurSelection));
     horAxis = DurationHours(logical(obsWithCurSelection));
-
+    
     % see if this station has outliers
     allOutliersLog=zeros(length(val),1);
     allOutliersLog(outlier)=1;
-
+    
     if sum(allOutliersLog & obsWithCurSelection) > 0
         plotOutliers=1;
-
+        
         % preallocate
         indOutliersOfCurSelection=zeros(sum(allOutliersLog & obsWithCurSelection),1);
         baselinesForOutlier=cell(sum(allOutliersLog & obsWithCurSelection), 1);
-
+        
         % get index (in outlier) of outlier I want to find (ie all which include curSource)
         outlierIndIWantToFind=find(ismember(outlier, find(allOutliersLog & obsWithCurSelection)));
-
+        
         % find them
         for k=1:sum(allOutliersLog & obsWithCurSelection)
             indOutliersOfCurSelection(k)=sum(obsWithCurSelection(1:outlier(outlierIndIWantToFind(k))));
@@ -301,9 +319,9 @@ else
     end
     
     set(handles.togglebutton_plot_residuals_selectData, 'Enable', 'On');
-
-end % end - all/sourcewise/stationwise/baselinewise
     
+end % end - all/sourcewise/stationwise/baselinewise
+
 
 % ##### PLOTTING #####
 
@@ -336,8 +354,9 @@ switch plotstyle
     case 2 % lines and markers
         hold on
         plot(handles.axes_plot_residuals, backgroundTime, background, 'Marker','.', 'LineStyle','none','MarkerSize',5,'Color',[.7 .7 .7],'HitTest','off');
-        handles.data.plot.plottedResiduals = plot(handles.axes_plot_residuals, horAxis, valsOfCurSelection, 'LineStyle','none','Marker','o','MarkerEdgeColor','k','MarkerFaceColor',[55,126,184]/255,'MarkerSize',8,'HitTest','off');
-
+        %         handles.data.plot.plottedResiduals = plot(handles.axes_plot_residuals, horAxis, valsOfCurSelection, 'LineStyle','none','Marker','o','MarkerEdgeColor','k','MarkerFaceColor',[55,126,184]/255,'MarkerSize',8,'HitTest','off');
+        handles.data.plot.plottedResiduals = errorbar(handles.axes_plot_residuals, horAxis, valsOfCurSelection,sigsOfCurSelection, 'LineStyle','none','Marker','o','MarkerEdgeColor','k','MarkerFaceColor',[55,126,184]/255,'Color',[55,126,184]/255,'MarkerSize',8,'HitTest','off','CapSize',0);
+        
         % ### plot all ###
         if get(handles.radiobutton_plot_residuals_perAll, 'Value')
             h = [];
@@ -348,28 +367,31 @@ switch plotstyle
                 pos = tmp(:,1);
                 neg = tmp(:,2);
                 obsWithCurStation = [val(pos); val(neg)*-1];
+                sigWithCurStation = [val_sigma_cm(pos); val_sigma_cm(neg)*-1];
                 timWithCurStation = [DurationHours(pos); DurationHours(neg)];
-                h(i) = plot(handles.axes_plot_residuals, timWithCurStation, obsWithCurStation,'LineStyle','none','Marker','o','MarkerEdgeColor',mec(i,:),'MarkerFaceColor',mfc(i,:),'MarkerSize',8,'HitTest','off');
+                %                 h(i) = plot(handles.axes_plot_residuals, timWithCurStation, obsWithCurStation,'LineStyle','none','Marker','o','MarkerEdgeColor',mec(i,:),'MarkerFaceColor',mfc(i,:),'MarkerSize',8,'HitTest','off');
+                h(i) = errorbar(handles.axes_plot_residuals, timWithCurStation, obsWithCurStation,sigWithCurStation,'LineStyle','none','Marker','o','MarkerEdgeColor',mec(i,:),'MarkerFaceColor',mfc(i,:),'Color',mfc(i,:),'MarkerSize',8,'HitTest','off','CapSize',0);
+                
             end
             legend(h,allStationsInMenu);
             % get values where chosen station takes part
             
-        % ### plot station ###
+            % ### plot station ###
         elseif get(handles.radiobutton_plot_residuals_perStat, 'Value')
-
+            
             idx=get(handles.popupmenu_plot_residuals_station, 'Value');
             name = allStationsInMenu{idx};
             handles.data.plot.plottedResiduals.MarkerFaceColor = mfc(idx,:);
             handles.data.plot.plottedResiduals.MarkerEdgeColor = mec(idx,:);
-
+            
             if isempty(valsOfCurSelection)
                 legend({'all'});
             else
                 legend({'all',name});
             end
             
-        % ### plot baseline ###
-        elseif get(handles.radiobutton_plot_residuals_perBasel, 'Value') 
+            % ### plot baseline ###
+        elseif get(handles.radiobutton_plot_residuals_perBasel, 'Value')
             name=allBaselinesInMenu{get(handles.popupmenu_plot_residuals_baseline, 'Value')};
             
             if isempty(valsOfCurSelection)
@@ -378,7 +400,7 @@ switch plotstyle
                 legend({'all',name});
             end
             
-        % ### plot source ###
+            % ### plot source ###
         else
             obsWithCurSelection=strcmp(sources, curSource);
             names = {};
@@ -390,14 +412,16 @@ switch plotstyle
                 pos = tmp(:,1);
                 neg = tmp(:,2);
                 obsWithCurStation = [val(pos & obsWithCurSelection); val(neg & obsWithCurSelection)*-1];
+                sigWithCurStation = [val_sigma_cm(pos & obsWithCurSelection); val_sigma_cm(neg & obsWithCurSelection)*-1];
                 timWithCurStation = [DurationHours(pos & obsWithCurSelection); DurationHours(neg & obsWithCurSelection)];
                 if ~isempty(obsWithCurStation)
-                    h(end+1) = plot(handles.axes_plot_residuals, timWithCurStation, obsWithCurStation,'LineStyle','none','Marker','o','MarkerEdgeColor',mec(i,:),'MarkerFaceColor',mfc(i,:),'MarkerSize',8,'HitTest','off');
+                    %                     h(end+1) = plot(handles.axes_plot_residuals, timWithCurStation, obsWithCurStation,'LineStyle','none','Marker','o','MarkerEdgeColor',mec(i,:),'MarkerFaceColor',mfc(i,:),'MarkerSize',8,'HitTest','off');
+                    h(end+1) = errorbar(handles.axes_plot_residuals, timWithCurStation, obsWithCurStation,sigWithCurStation,'LineStyle','none','Marker','o','MarkerEdgeColor',mec(i,:),'MarkerFaceColor',mfc(i,:),'Color',mfc(i,:),'MarkerSize',8,'HitTest','off','CapSize',0);
                     names{end+1} = curStation;
                 end
             end
             legend(h,names);
-
+            
         end
         
     case 3 % scatterplot
@@ -413,7 +437,7 @@ ylabel('Residuals [cm]');
 % #### plot outliers ####
 if plotOutliers==1 && ...
         get(handles.radiobutton_plot_residuals_mainSolution, 'Value')
-
+    
     if get(handles.radiobutton_plot_residuals_perStat, 'Value') || get(handles.radiobutton_plot_residuals_perBasel, 'Value')
         handles.data.plot.plottedOutlierBoxes=...
             plot(horAxis(indOutliersOfCurSelection), valsOfCurSelection(indOutliersOfCurSelection), 'x', 'color', 'k', 'markersize', 10, 'DisplayName', 'outliers','LineWidth',3);
@@ -428,12 +452,12 @@ if plotOutliers==1 && ...
     for k=1:length(indOutliersOfCurSelection)
         curStr='';
         % if station numbers should be printed
-%         if get(handles.checkbox_plot_residuals_showStatNumbers, 'Value')
-%             ant1=find(~cellfun(@isempty, strfind(antennas, baselinesForOutlier{k,1})));
-%             ant2=find(~cellfun(@isempty, strfind(antennas, baselinesForOutlier{k,2})));
-%             curStr=[curStr, num2str(ant1),'-',num2str(ant2)];
-%         end
-
+        %         if get(handles.checkbox_plot_residuals_showStatNumbers, 'Value')
+        %             ant1=find(~cellfun(@isempty, strfind(antennas, baselinesForOutlier{k,1})));
+        %             ant2=find(~cellfun(@isempty, strfind(antennas, baselinesForOutlier{k,2})));
+        %             curStr=[curStr, num2str(ant1),'-',num2str(ant2)];
+        %         end
+        
         % if source names should be printed
         if get(handles.checkbox_plot_residuals_showSourceNames, 'Value')
             if ~isempty(curStr)
@@ -455,25 +479,25 @@ txt = '';
 if get(handles.radiobutton_plot_residuals_firstSolution, 'Value')
     if get(handles.radiobutton_plot_residuals_perAll, 'Value')
         nObs = length(valsOfCurSelection)/2;
-    else 
+    else
         nObs = length(valsOfCurSelection);
     end
     txt = [txt sprintf('#obs: %d of %d\n',nObs,length(val))];
-
+    
     if ~isempty(handles.data.plot.res(curSession).mo_first)
         txt = [txt sprintf('chi^2: %.3f',handles.data.plot.res(curSession).mo_first^2)];
     end
 else
     if get(handles.radiobutton_plot_residuals_perAll, 'Value')
         nObs = length(valsOfCurSelection)/2;
-    else 
+    else
         nObs = length(valsOfCurSelection);
     end
     txt = [txt sprintf('#obs: %d of %d\n',nObs,length(val))];
     if ~isempty(handles.data.plot.res(curSession).wrms)
         txt = [txt sprintf('wrms: %.3f cm (%.3f ps)\n', handles.data.plot.res(curSession).wrms, handles.data.plot.res(curSession).wrms*100/2.99792458)];
     end
-
+    
     if ~isempty(handles.data.plot.res(curSession).mo)
         txt = [txt sprintf('chi^2: %.3f',handles.data.plot.res(curSession).mo^2)];
     end
@@ -486,4 +510,4 @@ text(xlim(1)+(xlim(2)-xlim(1))*0.025,ylim(2)-(ylim(2)-ylim(1))*0.025,txt,'Vertic
 
 hold off
 
-hold(handles.axes_plot_residuals, 'off')   
+hold(handles.axes_plot_residuals, 'off')
