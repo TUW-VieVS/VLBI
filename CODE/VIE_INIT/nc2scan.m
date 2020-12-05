@@ -181,16 +181,27 @@ groupDelayWAmbigCell = num2cell(out_struct.(tau_folder).(tau_file).(tau_field).v
 groupDelaySigCell = num2cell(out_struct.(sigma_tau_folder).(sigma_tau_file).(sigma_tau_field).val);
 
 %% IONOSPHERIC DELAY, SIGMA IONOSPHERIC DELAY and DELAY FLAG IONOSPHERIC DELAY::
+ionoDelayInternalFlag = 1;
 if strcmp(parameter.vie_init.iono, 'observation_database')
     if isempty(tau_ion_folder)
-        ionoDelCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
-        ionoDelSigCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
-        ionoDelFlagcell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
+        ionoDelayInternalFlag = 0;
         fprintf('With this setting ionospheric delay will not be used\n')
     else
         if isfield(out_struct.(tau_ion_folder),tau_ion_file)            
             ionoDelCell = num2cell(1e9*out_struct.(tau_ion_folder).(tau_ion_file).(tau_ion_field).val(1,:)); % cell: 1 x nObs            
             ionoDelSigCell = num2cell(1e9*out_struct.(sigma_tau_ion_folder).(sigma_tau_ion_file).(sigma_tau_ion_field).val(1,:)); % cell: 1 x nObs
+            if length(ionoDelCell) == 1
+                if ionoDelCell{:}==0
+                    ionoDelayInternalFlag = 0;
+                    fprintf('Cal-SlantPathIonoGroup_bX.nc exists but no valid values, ionospheric delay will not be applied\n')
+                end
+            end
+            if length(ionoDelSigCell) == 1
+                if ionoDelSigCell{:}==0
+                    ionoDelayInternalFlag = 0;
+                    fprintf('Cal-SlantPathIonoGroup_bX.nc exists but no valid values for sigma, ionospheric delay will not be applied\n')
+                end 
+            end
             if isfield(out_struct.(tau_ion_folder).(tau_ion_file), 'Cal_SlantPathIonoGroupDataFlag') % if iono flag is given
                 ionoDelFlagcell = num2cell(double(out_struct.(tau_ion_folder).(tau_ion_file).Cal_SlantPathIonoGroupDataFlag.val));
                 if length(ionoDelFlagcell) == 1
@@ -206,10 +217,16 @@ if strcmp(parameter.vie_init.iono, 'observation_database')
         end
     end
 else % Take ionosphere corrections from external (ion) file:
+    ionoDelayInternalFlag = 0;
+    fprintf('Ionospheric delay corrections will be taken from external source.\n')
+end
+
+% in case of a zero ionoshperic delay (all ionospheric parameters will be
+% set to zero, but with a correcto vector size to allow for vector addtion)
+if ionoDelayInternalFlag == 0
     ionoDelCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
     ionoDelSigCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
     ionoDelFlagcell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
-    fprintf('Ionospheric delay corrections will be taken from external source.\n')
 end
 
 %% AMBIGUITY CORRECTION
