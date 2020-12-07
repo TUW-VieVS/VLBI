@@ -27,6 +27,7 @@
 %   2017-02-22, A. Hellerschmied: antenna.psd initialized
 %   2018-07-06, D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
 %   2019-01-15, M. Mikschi: added gravitational deformation
+%   2020-12-06, J. Boehm: datum information from manualTRF was enabled
 %
 % ************************************************************************
 
@@ -126,16 +127,19 @@ for iStat=1:nStat
     
     % set in_trf
     % if user has chosen vievsTrf
-    if strcmp(chosenTrf, 'vievsTrf')
-        antenna(iStat).in_trf=trf(indCurStatInTrf).(chosenTrf).break(bnr).indatum;
-    else
-        if strcmp(trfToTake, 'vievsTrf')
-            antenna(iStat).in_trf=0;
+    if strcmp(chosenTrf, 'manualTrf')  % Johannes 6 Dec 2020
+        antenna(iStat).in_trf=trf(indCurStatInTrf).(chosenTrf).break(bnr).indatum; % Johannes 6 Dec 2020
+    else % Johannes 6 Dec 2020
+        if strcmp(chosenTrf, 'vievsTrf')
+            antenna(iStat).in_trf=trf(indCurStatInTrf).(chosenTrf).break(bnr).indatum;
         else
-            antenna(iStat).in_trf=1;
+            if strcmp(trfToTake, 'vievsTrf')
+                antenna(iStat).in_trf=0;
+            else
+                antenna(iStat).in_trf=1;
+            end
         end
-    end
-        
+    end    % Johannes 6 Dec 2020
     
     antenna(iStat).x=curBreak.x;
     antenna(iStat).y=curBreak.y;

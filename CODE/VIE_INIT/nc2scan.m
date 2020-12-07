@@ -71,220 +71,108 @@ scan2Station=double(out_struct.CrossReference.(nc_filename).Scan2Station.val)'; 
 nc_filename = get_nc_filename('SourceCrossRef', wrapper_data.Session.CrossReference.files, 1);
 scan2Source=double(out_struct.CrossReference.(nc_filename).Scan2Source.val); % vector (nRows=nScans), giving integer source index, nCols=1
 
-switch fband
+% split fband (e.g. fband = 'GroupDelayFull_bX' to observa='GroupDelayFull' and frqband='bX')
+newStr = split(fband,'_');
+observation = newStr{1};
+freqband = newStr{2};
+
+switch observation
     
-    case 'GroupDelayFull_bX'
-        % GroupDelayFull_bX:
-        % delay, groupDelayWAmbigCell: /ObsEdit/GroupDelayFull_bX
-        % sigma delay, groupDelaySigCell: /Observables/GroupDelay_bX
-        % ionospheric delay, ionoDelCell: /ObsDerived/Cal_SlantPathIonoGroup_bX
-        % sigma ionospheric delay, ionoDelSigCell: /ObsDerived/Cal_SlantPathIonoGroup_bX
-        nc_filename = get_nc_filename({'GroupDelayFull', '_bX'}, wrapper_data.Observation.ObsEdit.files, 1);
-        tau_folder = 'ObsEdit';
-        tau_file = nc_filename;
-        tau_field = 'GroupDelayFull';
-        nc_filename = get_nc_filename({'GroupDelay', '_bX'}, wrapper_data.Observation.Observables.files, 1);
-        sigma_tau_folder = 'Observables';
-        sigma_tau_file = nc_filename;
-        sigma_tau_field = 'GroupDelaySig';
-        % Check, if Ionosphere corrections are defined in wrapper file:
-        flag_ion_corr_available = false;
-        if isfield(wrapper_data.Observation, 'ObsDerived') 
-            nc_filename = get_nc_filename({'Cal-SlantPathIonoGroup', '_bX'}, wrapper_data.Observation.ObsDerived.files);
-            if ~isempty(nc_filename)
-                flag_ion_corr_available = true;
-            end
-        end
-        if flag_ion_corr_available
-            tau_ion_folder = 'ObsDerived';
-            tau_ion_file = strrep(nc_filename,'-','_');
-            tau_ion_field = 'Cal_SlantPathIonoGroup';
-            sigma_tau_ion_folder = 'ObsDerived';
-            sigma_tau_ion_file = strrep(nc_filename,'-','_');
-            sigma_tau_ion_field = 'Cal_SlantPathIonoGroupSigma';
-        else % Ionosphere corrections not available!
-            tau_ion_folder = {}; % ionospheric correction won't be used
-            tau_ion_file = {}; % ionospheric correction won't be used
-            tau_ion_field = {};
-            sigma_tau_ion_folder = {};
-            sigma_tau_ion_file = {};
-            sigma_tau_ion_field = {};
-            fprintf(' - No nc file with ionosphere corrections defined in the selected wrapper file!\n')
-        end
+    case 'GroupDelayFull'
         
-        % ambiguity
-        ambN_folder = 'ObsEdit';
+        % Observation (tau) and sigma tau
+        tau_folder = 'ObsEdit';
+        tau_file = get_nc_filename({ observation , '_', freqband }, wrapper_data.Observation.ObsEdit.files, 1);
+        tau_field = 'GroupDelayFull';
+        sigma_tau_folder = 'Observables';
+        sigma_tau_file = get_nc_filename({'GroupDelay', '_', freqband}, wrapper_data.Observation.Observables.files, 1);
+        sigma_tau_field = 'GroupDelaySig';
+        
+        if strcmp(ambcorr,'on')
+            amb_k = 0;
+        elseif strcmp(ambcorr,'off')
+            amb_k = -1;
+        end
+
+        
+    case 'GroupDelay'
+
+        % Observation (tau) and sigma tau
+        tau_folder = 'Observables';
+        tau_file = get_nc_filename({observation, '_', freqband}, wrapper_data.Observation.Observables.files, 1);
+        tau_field = 'GroupDelay';
+        sigma_tau_folder = 'Observables';
+        sigma_tau_file = get_nc_filename({'GroupDelay', '_', freqband}, wrapper_data.Observation.Observables.files, 1);
+        sigma_tau_field = 'GroupDelaySig';        
+
+        
+        if strcmp(ambcorr,'on')
+            amb_k = 1;
+        elseif strcmp(ambcorr,'off')
+            amb_k = 0;
+        end
+end
+
+fprintf('vgosdb data source:\n')
+fprintf('\t observation:\t %s/%s, nc field: %s\n', tau_folder, tau_file,tau_field )
+fprintf('\t sigma:\t\t %s/%s, nc field: %s\n', sigma_tau_folder, sigma_tau_file,sigma_tau_field )
+
+% ionosphere delay correction
+
+flag_ion_corr_available = false;
+if isfield(wrapper_data.Observation, 'ObsDerived')
+    nc_filename = get_nc_filename({'Cal-SlantPathIonoGroup', '_', freqband}, wrapper_data.Observation.ObsDerived.files);
+    if ~isempty(nc_filename)
+        flag_ion_corr_available = true;
+    else
+        fprintf('Cannot find ionosphere correction data: ObsDerived/%s', nc_filename)
+    end
+end
+if flag_ion_corr_available
+    tau_ion_folder = 'ObsDerived';
+    tau_ion_file = strrep(nc_filename,'-','_');
+    tau_ion_field = 'Cal_SlantPathIonoGroup';
+    sigma_tau_ion_folder = 'ObsDerived';
+    sigma_tau_ion_file = strrep(nc_filename,'-','_');
+    sigma_tau_ion_field = 'Cal_SlantPathIonoGroupSigma';
+    
+    fprintf('\t ionosphere delay:\t %s/%s, nc field: %s\n', tau_ion_folder,tau_ion_file,tau_ion_field)
+    fprintf('\t ionosphere delay sigma: %s/%s, nc field: %s\n', sigma_tau_ion_folder,sigma_tau_ion_file,sigma_tau_ion_field)
+    
+else % Ionosphere corrections not available!
+    tau_ion_folder = {}; % ionospheric correction won't be used
+    tau_ion_file = {}; % ionospheric correction won't be used
+    tau_ion_field = {};
+    sigma_tau_ion_folder = {};
+    sigma_tau_ion_file = {};
+    sigma_tau_ion_field = {};
+    fprintf(' - No nc file with ionosphere corrections defined in the selected wrapper file!\n')
+end
+
+% ambiguity
+if amb_k ~= 0
+       
+    ambN_folder = 'ObsEdit';
+    
+    % check if ObsEdit folder exists (mandatory for ambig values)
+    if isfield(wrapper_data.Observation, 'ObsEdit')
         nc_filename = get_nc_filename({'NumGroupAmbig', '_bX'}, wrapper_data.Observation.ObsEdit.files, 1);
         ambN_file = nc_filename;
-        ambN_field = 'NumGroupAmbig';        
-        
-        ambS_folder = 'Observables';
-        ambS_file = 'AmbigSize_bX';
-        ambS_field = 'AmbigSize';
-        
-        if strcmp(ambcorr,'on')
-            amb_k = 0;
-        elseif strcmp(ambcorr,'off')
-            amb_k = -1;
-        end
-            
-        
-    case 'GroupDelayFull_bS'
-        % GroupDelayFull_bS:
-        % delay, groupDelayWAmbigCell: /ObsEdit/GroupDelayFull_bS
-        % sigma delay, groupDelaySigCell: /Observables/GroupDelay_bS
-        % ionospheric delay, ionoDelCell:
-        % /ObsDerived/Cal_SlantPathIonoGroup_bX or /ObsDerived/Cal_SlantPathIonoGroup_bS
-        % sigma ionospheric delay, ionoDelSigCell: /ObsDerived/Cal_SlantPathIonoGroup_bX or /ObsDerived/Cal_SlantPathIonoGroup_bS
-        nc_filename = get_nc_filename({'GroupDelayFull', '_bS'}, wrapper_data.Observation.ObsEdit.files, 1);
-        tau_folder = 'ObsEdit';
-        tau_file = nc_filename;
-        tau_field = 'GroupDelayFull';
-        nc_filename = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files, 1);
-        sigma_tau_folder = 'Observables';
-        sigma_tau_file = 'GroupDelay_bS';
-        sigma_tau_field = 'GroupDelaySig';
-        
-        % Check, if Ionosphere corrections are defined in wrapper file:
-        if isfield(wrapper_data.Observation, 'ObsDerived') 
-            nc_filename = get_nc_filename({'Cal-SlantPathIonoGroup', '_bS'}, wrapper_data.Observation.ObsDerived.files);
-            tau_ion_folder = 'ObsDerived';
-            tau_ion_file = strrep(nc_filename,'-','_');
-            tau_ion_field = 'Cal_SlantPathIonoGroup';
-            sigma_tau_ion_folder = 'ObsDerived';
-            sigma_tau_ion_file = strrep(nc_filename,'-','_');
-            sigma_tau_ion_field = 'Cal_SlantPathIonoGroupSigma';
-        else
-            tau_ion_folder = {}; % ionospheric correction won't be used
-            tau_ion_file = {}; % ionospheric correction won't be used
-            tau_ion_field = {};
-            sigma_tau_ion_folder = {};
-            sigma_tau_ion_file = {};
-            sigma_tau_ion_field = {};
-            fprintf(' - No nc file with ionosphere corrections defined in the selected wrapper file!\n')
-        end
-        
-        % ambiguity
-        ambN_folder = 'ObsEdit';
-        nc_filename = get_nc_filename({'NumGroupAmbig', '_bS'}, wrapper_data.Observation.ObsEdit.files, 1);
-        ambN_file = nc_filename;
-        ambN_field = 'NumGroupAmbig';        
-        
-        ambS_folder = 'Observables';
-        ambS_file = 'AmbigSize_bS';
-        ambS_field = 'AmbigSize';
-        
-        if strcmp(ambcorr,'on')
-            amb_k = 0;
-        elseif strcmp(ambcorr,'off')
-            amb_k = -1;
-        end
-        
-    case 'GroupDelay_bX'
-        % GroupDelay_bX:
-        % delay, groupDelayWAmbigCell: /Observables/GroupDelay_bX
-        % sigma delay, groupDelaySigCell: /Observables/GroupDelay_bX
-        % ionospheric delay, ionoDelCell: 
-        % sigma ionospheric delay, ionoDelSigCell: 
-        nc_filename = get_nc_filename({'GroupDelay', '_bX'}, wrapper_data.Observation.Observables.files, 1);
-        tau_folder = 'Observables';
-        tau_file = nc_filename;
-        tau_field = 'GroupDelay';
-        sigma_tau_folder = 'Observables';
-        sigma_tau_file = nc_filename;
-        sigma_tau_field = 'GroupDelaySig';
-        tau_ion_folder = {}; % ionospheric correction won't be used
-        tau_ion_file = {}; % ionospheric correction won't be used
-        tau_ion_field = {};
-        
-        % ionosphere
-        if strcmp(ioncorr,'on')
-            if isfield(wrapper_data.Observation,'ObsDerived')
-                nc_filename = get_nc_filename({'Cal-SlantPathIonoGroup', '_bX'}, wrapper_data.Observation.ObsDerived.files, 1);
-                tau_ion_folder = 'ObsDerived';
-                tau_ion_file = strrep(nc_filename,'-','_');
-                tau_ion_field = 'Cal_SlantPathIonoGroup';
-                sigma_tau_ion_folder = 'ObsDerived';
-                sigma_tau_ion_file = strrep(nc_filename,'-','_');
-                sigma_tau_ion_field = 'Cal_SlantPathIonoGroupSigma';
-            else
-                fprintf('ObsDerived folder missing')
-            end
-        end
-        
-        % ambiguity       
-        if strcmp(ambcorr,'on')
-            amb_k = 1;
-            ambN_folder = 'ObsEdit';
-            
-            % check if ObsEdit folder exists (mandatory for ambig values)
-            if isfield(wrapper_data.Observation, 'ObsEdit')
-                nc_filename = get_nc_filename({'NumGroupAmbig', '_bX'}, wrapper_data.Observation.ObsEdit.files, 1);
-                ambN_file = nc_filename;
-            end
-            
-            ambN_field = 'NumGroupAmbig';      
+    else
+         fprintf(' - No nc file with ambiguity correction defined in the selected wrapper file!\n')
+    end
+    
+    ambN_field = 'NumGroupAmbig';
+    
+    % ambiguity size
+    ambS_folder = 'Observables';
+    ambS_file = ['AmbigSize_',freqband];
+    ambS_field = 'AmbigSize';
+    
+    fprintf('\t ambiguity (integer number): \t %s/%s, nc field: %s\n',ambN_folder, ambN_file, ambN_field)
+    fprintf('\t ambiguity (length): \t\t %s/%s, nc field: %s\n', ambS_folder, ambS_file, ambS_field)
 
-            ambS_folder = 'Observables';
-            ambS_file = 'AmbigSize_bX';
-            ambS_field = 'AmbigSize';
-        elseif strcmp(ambcorr,'off')
-            amb_k = 0;
-        end
-        
-    case 'GroupDelay_bS'
-        % GroupDelay_bS:
-        % delay, groupDelayWAmbigCell: /Observables/GroupDelay_bS
-        % sigma delay, groupDelaySigCell: /Observables/GroupDelay_bS
-        % ionospheric delay, ionoDelCell: 
-        % sigma ionospheric delay, ionoDelSigCell: 
-        nc_filename = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files, 1);
-        tau_folder = 'Observables';
-        tau_file = nc_filename;
-        tau_field = 'GroupDelay';
-        sigma_tau_folder = 'Observables';
-        sigma_tau_file = nc_filename;
-        sigma_tau_field = 'GroupDelaySig';
-        tau_ion_folder = {}; % ionospheric correction won't be used
-        tau_ion_file = {}; % ionospheric correction won't be used
-        tau_ion_field = {};
-        
-        % ionosphere
-        if strcmp(ioncorr,'on')
-            if isfield(wrapper_data.Observation,'ObsDerived')
-                nc_filename = get_nc_filename({'Cal-SlantPathIonoGroup', '_bS'}, wrapper_data.Observation.ObsDerived.files, 1);
-                tau_ion_folder = 'ObsDerived';
-                tau_ion_file = strrep(nc_filename,'-','_');
-                tau_ion_field = 'Cal_SlantPathIonoGroup';
-                sigma_tau_ion_folder = 'ObsDerived';
-                sigma_tau_ion_file = strrep(nc_filename,'-','_');
-                sigma_tau_ion_field = 'Cal_SlantPathIonoGroupSigma';
-            else
-                fprintf('ObsDerived folder missing')
-            end
-        end
-        
-        % ambiguity       
-        if strcmp(ambcorr,'on')
-            amb_k = 1;
-            ambN_folder = 'ObsEdit';
-            
-            % check if ObsEdit folder exists (mandatory for ambig values)
-            if isfield(wrapper_data.Observation, 'ObsEdit')
-                nc_filename = get_nc_filename({'NumGroupAmbig', '_bS'}, wrapper_data.Observation.ObsEdit.files, 1);
-                ambN_file = nc_filename;
-            end
-            
-            ambN_field = 'NumGroupAmbig';      
-
-            ambS_folder = 'Observables';
-            ambS_file = 'AmbigSize_bS';
-            ambS_field = 'AmbigSize';
-        elseif strcmp(ambcorr,'off')
-            amb_k = 0;
-        end
-        
-end  
+end
 
 %% DELAY:
 groupDelayWAmbigCell = num2cell(out_struct.(tau_folder).(tau_file).(tau_field).val);
@@ -293,16 +181,27 @@ groupDelayWAmbigCell = num2cell(out_struct.(tau_folder).(tau_file).(tau_field).v
 groupDelaySigCell = num2cell(out_struct.(sigma_tau_folder).(sigma_tau_file).(sigma_tau_field).val);
 
 %% IONOSPHERIC DELAY, SIGMA IONOSPHERIC DELAY and DELAY FLAG IONOSPHERIC DELAY::
+ionoDelayInternalFlag = 1;
 if strcmp(parameter.vie_init.iono, 'observation_database')
     if isempty(tau_ion_folder)
-        ionoDelCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
-        ionoDelSigCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
-        ionoDelFlagcell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
+        ionoDelayInternalFlag = 0;
         fprintf('With this setting ionospheric delay will not be used\n')
     else
         if isfield(out_struct.(tau_ion_folder),tau_ion_file)            
             ionoDelCell = num2cell(1e9*out_struct.(tau_ion_folder).(tau_ion_file).(tau_ion_field).val(1,:)); % cell: 1 x nObs            
             ionoDelSigCell = num2cell(1e9*out_struct.(sigma_tau_ion_folder).(sigma_tau_ion_file).(sigma_tau_ion_field).val(1,:)); % cell: 1 x nObs
+            if length(ionoDelCell) == 1
+                if ionoDelCell{:}==0
+                    ionoDelayInternalFlag = 0;
+                    fprintf('Cal-SlantPathIonoGroup_bX.nc exists but no valid values, ionospheric delay will not be applied\n')
+                end
+            end
+            if length(ionoDelSigCell) == 1
+                if ionoDelSigCell{:}==0
+                    ionoDelayInternalFlag = 0;
+                    fprintf('Cal-SlantPathIonoGroup_bX.nc exists but no valid values for sigma, ionospheric delay will not be applied\n')
+                end 
+            end
             if isfield(out_struct.(tau_ion_folder).(tau_ion_file), 'Cal_SlantPathIonoGroupDataFlag') % if iono flag is given
                 ionoDelFlagcell = num2cell(double(out_struct.(tau_ion_folder).(tau_ion_file).Cal_SlantPathIonoGroupDataFlag.val));
                 if length(ionoDelFlagcell) == 1
@@ -318,10 +217,16 @@ if strcmp(parameter.vie_init.iono, 'observation_database')
         end
     end
 else % Take ionosphere corrections from external (ion) file:
+    ionoDelayInternalFlag = 0;
+    fprintf('Ionospheric delay corrections will be taken from external source.\n')
+end
+
+% in case of a zero ionoshperic delay (all ionospheric parameters will be
+% set to zero, but with a correcto vector size to allow for vector addtion)
+if ionoDelayInternalFlag == 0
     ionoDelCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
     ionoDelSigCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
     ionoDelFlagcell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
-    fprintf('Ionospheric delay corrections will be taken from external source.\n')
 end
 
 %% AMBIGUITY CORRECTION
@@ -359,10 +264,12 @@ if isfield(wrapper_data.Observation,'ObsEdit')
         delayQualityFlag = {0};
     end
 else
+    fprintf('No delay flags from ObsEdit/Edit*.nc file loaded: delay flag is set to "0" for all observations\n')
     delayQualityFlag = {0};
 end
 
-%% QUALITY CODES FOR X-BAND and S-BAND:
+%% QUALITY CODES FOR X-BAND and S-BAND: 
+% only used for sessions prior to 2001 in cleanScan.m 
 nc_filename = get_nc_filename({'QualityCode_bX'}, wrapper_data.Observation.Observables.files, 0);
 if ~isempty(nc_filename) % not mathc found in wrapper data
     qualityCode_X = num2cell(out_struct.Observables.(nc_filename).QualityCode.val);
@@ -558,26 +465,24 @@ for iScan=1:nScans
     [scan(iScan).obs.amb]=   deal(tau_ambCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
     
     if length(delayQualityFlag)==1 % check length of delay flag vector, if it is only 1 value for the whole session, this value will be assigned to all observations
-        %[scan(iScan).obs.q_flag] = deal(double(delayQualityFlag{1}).*ones(scan(iScan).nobs,1));  
         [scan(iScan).obs.q_flag] = deal(double(delayQualityFlag{1}));
     else
         [scan(iScan).obs.q_flag] = deal(delayQualityFlag{obsI1Index:obsI1Index+scan(iScan).nobs-1});   
     end
     
     if length(ionoDelFlagcell)==1 % check length of delay flag vector, if it is only 1 value for the whole session, this value will be assigned to all observations
-        %[scan(iScan).obs.q_flag_ion] = deal(ionoDelFlagcell{1}.*ones(scan(iScan).nobs,1)); 
         [scan(iScan).obs.q_flag_ion] = deal(ionoDelFlagcell{1}); 
     else
         [scan(iScan).obs.q_flag_ion] = deal(ionoDelFlagcell{obsI1Index:obsI1Index+scan(iScan).nobs-1});  
     end
     
     if length(qualityCode_X)==1 % check length of quality code X vector, if it is only 1 value for the whole session, this value will be assigned to all observations
-        [scan(iScan).obs.q_code_X] = deal(double(qualityCode_X{1}).*ones(scan(iScan).nobs,1));          
+        [scan(iScan).obs.q_code_X] = deal(double(qualityCode_X{1}));          
     else
         [scan(iScan).obs.q_code_X] = deal(qualityCode_X{obsI1Index:obsI1Index+scan(iScan).nobs-1});   
     end
     if length(qualityCode_S)==1 % check length of quality code S vector, if it is only 1 value for the whole session, this value will be assigned to all observations
-        [scan(iScan).obs.q_code_S] = deal(double(qualityCode_S{1}).*ones(scan(iScan).nobs,1));          
+        [scan(iScan).obs.q_code_S] = deal(double(qualityCode_S{1}));          
     else
         [scan(iScan).obs.q_code_S] = deal(qualityCode_S{obsI1Index:obsI1Index+scan(iScan).nobs-1});   
     end

@@ -197,7 +197,7 @@ for i_inst = 1 : num_institutions
    
 end
 if max_version < 4
-    warning('vgosDB wrapper version: %d\nAmbiguity resolution and ionosphere correction might be missing!',max_version)
+    warning('vgosDB wrapper version: %d\nAmbiguity resolution and ionosphere correction might be missing!\nGo to WORK/vgosdb_input_settings.txt and change frequency_band: GroupDelay_b*, ionosphere_correction: off, ambiguity_correction: off/',max_version)
 end
 
 % Check, if wrapper is available!
