@@ -67,14 +67,14 @@ if ~isempty(out_v)
             outdir = ['../DATA/OUTLIER/', parameter.year, '/'];
         end
     else
-        % Is "parameter.year" is not availabe, th outlier file is written to /DATA/OUTLIER/
+        % If "parameter.year" is not availabe, the outlier file is written to /DATA/OUTLIER/
         outdir = '../DATA/OUTLIER/';
     end
     
     % Check output dir.:
     if ~exist(outdir, 'dir')
         mkdir(outdir);
-        fprintf('Creating new directiry for outliers files: %s\n',outdir);
+        fprintf('Creating new directory for outlier files: %s\n',outdir);
     end
     
     % Get filename:

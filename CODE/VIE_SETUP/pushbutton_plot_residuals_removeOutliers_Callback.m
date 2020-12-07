@@ -46,7 +46,7 @@ else
         OUTLIERsubFolder=allPopupmenuEntriesOUTLIERfolder{get(handles.popupmenu_setInput_outDir, 'Value')};
     end
     % is user sure to remove outliers?
-    choice = questdlg(sprintf('Definately remove the %1.0f selected outliers?\nSelected (in File->Set Input Files) outlier subfolder: ''%s''', ...
+    choice = questdlg(sprintf('Definitely remove the %1.0f selected outliers?\nSelected (in File->Set Input Files) outlier subfolder: ''%s''', ...
         nSelOutliers, OUTLIERsubFolder), 'Sure?', ...
         'Yes','No','Yes');
     % Handle response
@@ -54,16 +54,70 @@ else
         case 'Yes'
             % get the OUTLIER filename
             % (2) year
-            firstPlottedMjd=handles.data.plot.res(get(handles.popupmenu_plot_residuals_session, 'Value')).mjd(1);
+            % firstPlottedMjd=handles.data.plot.res(get(handles.popupmenu_plot_residuals_session, 'Value')).mjd(1);
+            % get the year from session name - changed 7.12. S. Boehm
             
             % (3) session name
             chosenSessionInd=get(handles.popupmenu_plot_residuals_session, 'Value');
             allPopupmenuEntriesSessions=get(handles.popupmenu_plot_residuals_session, 'String');
+            session = allPopupmenuEntriesSessions{chosenSessionInd};
             
-            OUTfolder = ['../DATA/OUTLIER/', OUTLIERsubFolder, '/', num2str(mjd2date(firstPlottedMjd)), '/'];
+            % ##### Check, if the input dataset file followed the standard naming convention #####
+            % => YYMMMDDcc_Nnnn (c...alphabetic character, n...number)
+            flag_std_naming_convention = true;
+
+            % Total length = 14 char
+            if length(session) ~= 14
+                flag_std_naming_convention = false; 
+            end
+
+            if flag_std_naming_convention
+                % "_" at car. 10
+                if ~strcmp(session(10), '_')
+                    flag_std_naming_convention = false;
+                end
+                % first two characters are numbers:
+                [~, status_1] = str2num(session(1:2));
+                % char. 6+7 are numbers:
+                [~, status_2] = str2num(session(6:7));
+                % char. 12-14 are numbers:
+                [~, status_3] = str2num(session(12:14));
+                if ~(status_1 && status_2 && status_3)
+                    flag_std_naming_convention = false;
+                end
+            end
+
+            if flag_std_naming_convention
+                % ##### Standard naming convention is used for this session: #####
+
+                % Get the year from the session name:
+                if str2double(session(1:2)) > 75
+                    yearStr = ['19', session(1:2)];
+                else
+                    yearStr = ['20', session(1:2)];
+                end
+
+                
+            else
+                % ##### Non-Standard naming convention is used for this session: #####
+                % e.g. when using .vso input files
+                % => Get yearStr from the opt_ file!
+
+                % #### Load opt_ file from LEVEL 3 (sub-)directory: ####
+                % Get sub-dir.:
+                allSubfolders   = get(handles.popupmenu_plot_residuals_folder, 'string');
+                curSubfolder    = allSubfolders{get(handles.popupmenu_plot_residuals_folder, 'Value')};
+
+                % load opt_ file and get the year:
+                load(['../DATA/LEVEL3/', curSubfolder, '/opt_', session, '.mat']);
+                yearStr = opt_.year;
+
+            end
+            
+            OUTfolder = ['../DATA/OUTLIER/', OUTLIERsubFolder, '/', yearStr, '/'];
             OUTfilename = [allPopupmenuEntriesSessions{chosenSessionInd}, '.OUT'];
 
-            % Check is outlier folder exists => if not => create it!
+            % Check if outlier folder exists => if not => create it!
             if ~exist(OUTfolder, 'dir')
                 mkdir(OUTfolder);
             end
