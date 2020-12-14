@@ -387,6 +387,8 @@
  Wh -------- --------- ---- Weilheim, Germany
  Wn WETTZ13N 14201S043 7387 Wettzell 13-m antenna north (north tower of TTW), Germany
  Ws WETTZ13S 14201S044 7388 Wettzell 13-m antenna south (south tower of TTW), Germany
+ W1 WETZ13SH 999999991 9991 Wettzell 13-m antenna south (south tower of TTW), Germany
+ W2 WETZ13SV 999999992 9992 Wettzell 13-m antenna south (south tower of TTW), Germany
  Wt WHTHORSE 40118M001 7284 mobile Whitehorse, Yukon Ter., Canada
  Ww WARK12M  50243S001 7377 12-m antenna at Warkworth, New Zealand
  Wz WETTZELL 14201S004 7224 Wettzell, Germany
