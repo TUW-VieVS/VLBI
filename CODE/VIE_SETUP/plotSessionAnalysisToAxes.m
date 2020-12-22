@@ -66,12 +66,18 @@ if get(handles.radiobutton_plot_sessionAnalysis_network, 'Value')
     lam=lam*180/pi;
     phi=phi*180/pi;
     
-    load coast
     handles.axes_plot_sessionAnalysis=...
-        axesm('MapProjection','giso','MeridianLabel','on','ParallelLabel','on');
+    axesm('MapProjection','giso','MeridianLabel','on','ParallelLabel','on');
     gridm on
     framem on
-    plotm(lat,long, 'Color',[0.6,0.6,0.6]);
+    % check if coast.mat is there, if not use coastlines.mat (from R2020b)
+    if exist('coast.mat','file')            
+      load coast
+      plotm(lat,long, 'Color',[0.6,0.6,0.6]);
+    else 
+      load coastlines
+      plotm(coastlat,coastlon, 'Color',[0.6,0.6,0.6]);
+    end
     hold on
     scatterm(phi,lam,70,'k','filled')
     textm(phi+2,lam+2,{antenna.name},'FontSize',10)
