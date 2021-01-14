@@ -130,6 +130,21 @@ end
 % remove outlier option
 parameter.vie_init.rm_outlier=get(handles.checkbox_setInput_eliminOutliers, 'Value');
 
+% ambiguity correction (on or off)
+parameter.vie_init.ambiguity_correction=get(handles.checkbox_ambiguity_correction,'Value');
+
+% ionospheric correction (on or off)
+parameter.vie_init.iono_correction=get(handles.checkbox_ionosphere_corrected,'Value');
+
+% observation parameter
+parameter.vie_init.vgosDb_observation_parameter=get(handles.edit_vgosdb_observation ,'String');
+
+% institutes
+parameter.vie_init.vgosDb_institute=get(handles.edit_vgosdb_wrapper_institute ,'String');
+
+% wrapper version
+parameter.vie_init.vgosDb_wrapper_version=get(handles.edit_wrapper_version_number ,'String');
+
 % trf
 % if superstations file is ticked
 if get(handles.radiobutton_parameters_refFrames_superstationTRF, 'Value')

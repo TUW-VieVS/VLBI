@@ -209,9 +209,9 @@ switch(parameter.data_type)
         % read netCDF data
         [out_struct, nc_info]=read_nc(curNcFolder);
                   
-        % read vievs input settings from vgosdb_input_settings.txt file 
-        [ in, fb, wrapper_k, wrapper_v, ioncorr, ambcorr  ] = read_vgosdb_input_settings( 'vgosdb_input_settings.txt' );
-        
+        % convert gui values to vie_init values
+        [fb,in,ambcorr,ioncorr,wrapper_v,wrapper_k] = vgosdbinGUI2vieinit(parameter.vie_init.vgosDb_observation_parameter,parameter.vie_init.vgosDb_institute,parameter.vie_init.ambiguity_correction,parameter.vie_init.iono_correction,parameter.vie_init.vgosDb_wrapper_version);
+                        
         % Standard settings, which are used if not defined differently in settings file:
         if isempty(in{1}) % institute
             in = {'IVS'};

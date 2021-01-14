@@ -149,6 +149,12 @@ else % Ionosphere corrections not available!
     fprintf(' - No nc file with ionosphere corrections defined in the selected wrapper file!\n')
 end
 
+%  ionosphere correction
+if strcmp(ioncorr,'on')
+    fprintf('\t Iono corr: on\n')
+else
+    fprintf('\t Iono corr: off\n')
+end
 % ambiguity
 if amb_k ~= 0
        
@@ -171,7 +177,7 @@ if amb_k ~= 0
     
     fprintf('\t ambiguity (integer number): \t %s/%s, nc field: %s\n',ambN_folder, ambN_file, ambN_field)
     fprintf('\t ambiguity (length): \t\t %s/%s, nc field: %s\n', ambS_folder, ambS_file, ambS_field)
-
+    
 end
 
 %% DELAY:
