@@ -1,0 +1,185 @@
+VERSION 1.004   2018May18   
+! This file contains the following: 
+! Information contained in NGS cards. 
+! Information required for normal solve processing. 
+! Other information in the super files.
+! Almost all information from the database 
+! 
+Begin History
+!
+Begin Process Calc/Solve Processing
+Version   Mixed
+CreatedBy John M. Gipson
+Default_dir History
+RunTimeTag 2018/05/22 08:54:31 UTC
+History    14MAY06XA_kMK3DB_V001.hist
+End Process Calc/Solve Processing
+!
+Begin Process db2vgosDB
+Version   2018May18
+CreatedBy John M. Gipson
+Default_dir History
+RunTimeTag 2018/05/22 08:54:31 UTC
+History    14MAY06XA_kdb2vgosDB_V20180522085431.hist
+End Process db2vgosDB
+End History
+!
+Begin Session
+Session C1401
+AltSessionId 14MAY06XA
+!
+Head.nc
+!
+Default_Dir Session
+MiscFourFit.nc
+!
+Default_Dir CrossReference
+StationCrossRef.nc
+SourceCrossRef.nc
+End Session
+!
+Begin Station BADARY
+Default_Dir BADARY
+TimeUTC.nc  
+End Station BADARY
+!
+Begin Station FORTLEZA
+Default_Dir FORTLEZA
+TimeUTC.nc  
+End Station FORTLEZA
+!
+Begin Station HART15M
+Default_Dir HART15M
+TimeUTC.nc  
+End Station HART15M
+!
+Begin Station HOBART12
+Default_Dir HOBART12
+TimeUTC.nc  
+End Station HOBART12
+!
+Begin Station HOBART26
+Default_Dir HOBART26
+TimeUTC.nc  
+End Station HOBART26
+!
+Begin Station KATH12M
+Default_Dir KATH12M
+TimeUTC.nc  
+End Station KATH12M
+!
+Begin Station KOKEE
+Default_Dir KOKEE
+TimeUTC.nc  
+End Station KOKEE
+!
+Begin Station MATERA
+Default_Dir MATERA
+TimeUTC.nc  
+End Station MATERA
+!
+Begin Station NYALES20
+Default_Dir NYALES20
+TimeUTC.nc  
+End Station NYALES20
+!
+Begin Station ONSALA60
+Default_Dir ONSALA60
+TimeUTC.nc  
+End Station ONSALA60
+!
+Begin Station TSUKUB32
+Default_Dir TSUKUB32
+TimeUTC.nc  
+End Station TSUKUB32
+!
+Begin Station WARK12M
+Default_Dir WARK12M
+TimeUTC.nc  
+End Station WARK12M
+!
+Begin Station WESTFORD
+Default_Dir WESTFORD
+TimeUTC.nc  
+End Station WESTFORD
+!
+Begin Station WETTZELL
+Default_Dir WETTZELL
+TimeUTC.nc  
+End Station WETTZELL
+!
+Begin Station YARRA12M
+Default_Dir YARRA12M
+TimeUTC.nc  
+End Station YARRA12M
+!
+Begin Station YEBES40M
+Default_Dir YEBES40M
+TimeUTC.nc  
+End Station YEBES40M
+!
+Begin Station ZELENCHK
+Default_Dir ZELENCHK
+TimeUTC.nc  
+End Station ZELENCHK
+!
+Begin Scan
+!
+Default_Dir Scan
+TimeUTC.nc
+ScanName.nc
+CorrRootFile-MK4.nc
+End Scan
+!
+Begin Observation
+!
+Default_Dir Observables
+TimeUTC.nc
+CorrInfo-difx_bX.nc
+CorrInfo-difx_bS.nc
+ChannelInfo_bS.nc
+ChannelInfo_bX.nc
+RefFreq_bX.nc
+RefFreq_bS.nc
+AmbigSize_bX.nc
+QualityCode_bX.nc
+QualityCode_bS.nc
+Phase_bX.nc
+DataFlag_bX.nc
+Phase_bS.nc
+DataFlag_bS.nc
+SNR_bX.nc
+SNR_bS.nc
+Correlation_bX.nc
+GroupDelay_bX.nc
+GroupRate_bX.nc
+SBDelay_bX.nc
+SBDelay_bS.nc
+GroupRate_bS.nc
+Correlation_bS.nc
+Source.nc
+GroupDelay_bS.nc
+AmbigSize_bS.nc
+PhaseCalInfo_bS.nc
+PhaseCalInfo_bX.nc
+Baseline.nc
+!
+Default_Dir CrossReference
+ObsCrossRef.nc
+End Observation
+!
+Begin Program Solve
+Default_dir Solve
+!
+Begin Session
+CalcInfo.nc
+End Session
+!
+Begin Scan
+ScanTimeMJD.nc
+End Scan
+!
+Begin Observation
+UserSup.nc
+End Observation
+End Program Solve

@@ -1,0 +1,101 @@
+TIMETAG 2018/05/22 08:54:31 UTC
+db2vgosDB                2018May18                John M. Gipson
+ Began conversion of 14MAY06XA  version    1
+From file /home/jmg/ivs/ivsdata/db/2014/14MAY06XA_V001.gz
+remove_duplicate_lcodes  2011Oct06      John M. Gipson
+check_required_lcodes    2011Oct06      John M. Gipson
+    check_required_lcodes:   Warning! No S-band data in database
+read_db_type1            2016Jan30      John M. Gipson
+type1_stat               2016Jan30      John M. Gipson
+type1_source             2015May04      John M. Gipson
+fix_ivsinfo              2016Nov05      John M. Gipson
+fix_corrinfo             2016Nov16      John M. Gipson
+rename_corr_info         2013Jan04      John M. Gipson
+read_db_type23           2012Nov27      John M. Gipson
+Observations sorted by source and baseline
+read_special_lcode       2012Nov26      John M. Gipson
+read_statdata_lcode      2012Nov26      John M. Gipson
+read_scandata_lcode      2012Nov26      John M. Gipson
+do_rescale               2014Oct15      John M. Gipson
+   Converted DEL OBSV from MICROSECOND to second
+   Converted SB DELAY from MICROSECOND to second
+   Converted SB SIGMA from MICROSECOND to second
+   Converted TOTPHASE from DEGREE to radian
+do_eccmap                2012Nov14      John M. Gipson
+do_delayfix              2012Jan07      John M. Gipson
+do_dataflags             2015May04      John M. Gipson
+ Some X-band Delay sigmas < 0.1E-13  Adding Dataflag lcode
+do_qualcode              2012Jan07      John M. Gipson
+do_frngerr               2016Feb26      John M. Gipson
+do_suppress              2012Jan07      John M. Gipson
+    do_suppress:             Warning! PHSUFLAG missing. Mimicing SDBH
+    do_suppress:             Warning! UACSUP missing. Mimicing sdbh.
+do_iono                  2018May18      John M. Gipson
+    do_iono:                 Warning!  No ion correction found
+do_snr                   2012Jan07      John M. Gipson
+do_phasecal              2016March01    John M. Gipson
+do_freq                  2016Apr01      John M. Gipson
+do_FeedRotNet            2016Mar31      John M. Gipson
+do_phasedelaysig         2016Mar31      John M. Gipson
+ Some X-band Phase SNRS are > 0.1E+04  Adding Dataflag lcode
+do_phasedelayfull        2016Apr02      John M. Gipson
+zero_missing_obs         2013Jun24      John M. Gipson
+squeeze_obs_lcodes       2016Dec31      John M. Gipson
+Constant OBS variable DELTAEPO             =  0.000000000000000E+000
+Constant OBS variable AmbigSize            =  5.000000074505806E-008
+Constant OBS variable RefFreq              =   8212.99000000000
+Constant OBS variable SampleRate           =   16000000.0000000
+Constant OBS variable SRCHPAR              =  -1.00000000000000
+Constant OBS variable BITSAMPL             =      2
+Constant OBS variable DISCARD              =  0.000000000000000E+000
+Constant OBS variable IDELAY               =  0.000000000000000E+000
+Constant OBS variable QBFACTOR             =   50.0000000000000
+Constant OBS variable CORELVER             =     -1
+Constant OBS variable DBEDITVE             =   2013
+Constant OBS variable ERRORATE             =      0
+Constant OBS variable FOURFVER             =      3
+Constant OBS variable StartOffset          =      0
+Constant OBS variable FRNGERR              =
+Constant OBS variable FRQGROUP             = X
+Constant OBS variable PhaseFlag            =      4
+Constant SCAN variable MJD                  =       56783
+squeeze_channel_lcodes   2015Apr22      John M. Gipson
+make_db_xref_vgosDB      2016Sep21      John M. Gipson
+Merging in 14MAY06SA version    1
+From file /home/jmg/ivs/ivsdata/db/2014/14MAY06SA_V001.gz
+remove_duplicate_lcodes  2011Oct06      John M. Gipson
+read_db_type23_          2013Jun20      John M. Gipson
+do_rescale               2014Oct15      John M. Gipson
+   Converted DEL OBSV from MICROSECOND to second
+   Converted SB DELAY from MICROSECOND to second
+   Converted SB SIGMA from MICROSECOND to second
+   Converted TOTPHASE from DEGREE to radian
+do_dataflags             2015May04      John M. Gipson
+ Some X-band Delay sigmas < 0.1E-13  Adding Dataflag lcode
+do_freq                  2016Apr01      John M. Gipson
+    do_freq:                 Warning! Fixing lcode #CHANELS because min value is        0 which is <=0.
+do_phasecal              2016March01    John M. Gipson
+do_phasedelaysig         2016Mar31      John M. Gipson
+ Some X-band Phase SNRS are < 0.1E-01  Adding Dataflag lcode
+ Some X-band Phase SNRS are > 0.1E+04  Adding Dataflag lcode
+do_phasedelayfull        2016Apr02      John M. Gipson
+do_frngerr               2016Feb26      John M. Gipson
+zero_missing_obs         2013Jun24      John M. Gipson
+rename_corr_info         2013Jan04      John M. Gipson
+squeeze_obs_lcodes       2016Dec31      John M. Gipson
+Constant OBS variable DELTAEPO             =  0.000000000000000E+000
+Constant OBS variable RefFreq              =   2225.99000000000
+Constant OBS variable SampleRate           =   16000000.0000000
+Constant OBS variable BITSAMPL             =      2
+Constant OBS variable DISCARD              =  0.000000000000000E+000
+Constant OBS variable IDELAY               =  0.000000000000000E+000
+Constant OBS variable QBFACTOR             =   100.000000000000
+Constant OBS variable CORELVER             =     -1
+Constant OBS variable DBEDITVE             =   2013
+Constant OBS variable ERRORATE             =      0
+Constant OBS variable FOURFVER             =      3
+Constant OBS variable StartOffset          =      0
+Constant OBS variable FRNGERR              =
+Constant OBS variable FRQGROUP             = S
+squeeze_channel_lcodes   2015Apr22      John M. Gipson
+ Finished conversion of 14MAY06XA  at: 2018/05/22 08:54:52

@@ -1,0 +1,488 @@
+VERSION 1.004   2018May18   
+! This file contains the following: 
+! Information contained in NGS cards. 
+! Information required for normal solve processing. 
+! Other information in the super files.
+! Almost all information from the database 
+! 
+Begin History
+!
+Begin Process Calc/Solve Processing
+Version   Mixed
+CreatedBy John M. Gipson
+Default_dir History
+RunTimeTag 2018/05/22 08:54:52 UTC
+History    14MAY06XA_kMK3DB_V004.hist
+End Process Calc/Solve Processing
+!
+Begin Process db2vgosDB
+Version   2018May18
+CreatedBy John M. Gipson
+Default_dir History
+RunTimeTag 2018/05/22 08:54:52 UTC
+History    14MAY06XA_kdb2vgosDB_V20180522085452.hist
+End Process db2vgosDB
+End History
+!
+Begin Session
+Session C1401
+AltSessionId 14MAY06XA
+!
+Head.nc
+!
+Default_Dir Session
+MiscFourFit.nc
+LeapSecond.nc
+MiscCable.nc
+GroupBLWeights.nc
+PhaseBLWeights.nc
+!
+Default_Dir Apriori
+Antenna.nc
+Eccentricity.nc
+Station.nc
+Source.nc
+!
+Default_Dir CrossReference
+StationCrossRef.nc
+SourceCrossRef.nc
+End Session
+!
+Begin Station BADARY
+Default_Dir BADARY
+TimeUTC.nc  
+Cal-Cable.nc  
+Met.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station BADARY
+!
+Begin Station FORTLEZA
+Default_Dir FORTLEZA
+TimeUTC.nc  
+Cal-Cable.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station FORTLEZA
+!
+Begin Station HART15M
+Default_Dir HART15M
+TimeUTC.nc  
+Cal-Cable.nc  
+Met.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station HART15M
+!
+Begin Station HOBART12
+Default_Dir HOBART12
+TimeUTC.nc  
+Cal-Cable.nc  
+Met.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station HOBART12
+!
+Begin Station HOBART26
+Default_Dir HOBART26
+TimeUTC.nc  
+Cal-Cable.nc  
+Met.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station HOBART26
+!
+Begin Station KATH12M
+Default_Dir KATH12M
+TimeUTC.nc  
+Cal-Cable.nc  
+Met.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station KATH12M
+!
+Begin Station KOKEE
+Default_Dir KOKEE
+TimeUTC.nc  
+Cal-Cable.nc  
+Met.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station KOKEE
+!
+Begin Station MATERA
+Default_Dir MATERA
+TimeUTC.nc  
+Cal-Cable.nc  
+Met.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station MATERA
+!
+Begin Station NYALES20
+Default_Dir NYALES20
+TimeUTC.nc  
+Cal-Cable.nc  
+Met.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station NYALES20
+!
+Begin Station ONSALA60
+Default_Dir ONSALA60
+TimeUTC.nc  
+Cal-Cable.nc  
+Met.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station ONSALA60
+!
+Begin Station TSUKUB32
+Default_Dir TSUKUB32
+TimeUTC.nc  
+Cal-Cable.nc  
+Met.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station TSUKUB32
+!
+Begin Station WARK12M
+Default_Dir WARK12M
+TimeUTC.nc  
+Cal-Cable.nc  
+Met.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station WARK12M
+!
+Begin Station WESTFORD
+Default_Dir WESTFORD
+TimeUTC.nc  
+Cal-Cable.nc  
+Met.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station WESTFORD
+!
+Begin Station WETTZELL
+Default_Dir WETTZELL
+TimeUTC.nc  
+Cal-Cable.nc  
+Met.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station WETTZELL
+!
+Begin Station YARRA12M
+Default_Dir YARRA12M
+TimeUTC.nc  
+Cal-Cable.nc  
+Met.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station YARRA12M
+!
+Begin Station YEBES40M
+Default_Dir YEBES40M
+TimeUTC.nc  
+Cal-Cable.nc  
+Met.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station YEBES40M
+!
+Begin Station ZELENCHK
+Default_Dir ZELENCHK
+TimeUTC.nc  
+Cal-Cable.nc  
+Met.nc  
+FeedRotation.nc  
+Part-ZenithPathTropDry_kNMF.nc  
+Cal-SlantPathTropDry_kNMF.nc  
+Cal-SlantPathTropWet_kNMF.nc  
+Cal-StationOceanLoad.nc  
+AzEl.nc  
+Cal-AxisOffset.nc  
+Part-AxisOffset.nc  
+Part-ZenithPathTropWet_kNMF.nc  
+Part-HorizonGrad_kNMF.nc  
+Dis-OceanLoad.nc  
+End Station ZELENCHK
+!
+Begin Scan
+!
+Default_Dir Scan
+TimeUTC.nc
+ERPApriori.nc
+ScanName.nc
+CorrRootFile-MK4.nc
+NutationEQX_kWahr.nc
+NutationEQX_kIAU2006.nc
+Ephemeris_kDE405JPL.nc
+NutationNRO_kIAU2006.nc
+Rot-CF2J2K.nc
+End Scan
+!
+Begin Observation
+!
+Default_Dir Observables
+TimeUTC.nc
+CorrInfo-difx_bS.nc
+CorrInfo-difx_bX.nc
+ChannelInfo_bS.nc
+ChannelInfo_bX.nc
+RefFreq_bS.nc
+RefFreq_bX.nc
+AmbigSize_bX.nc
+QualityCode_bX.nc
+QualityCode_bS.nc
+DataFlag_bS.nc
+Phase_bX.nc
+DataFlag_bX.nc
+Phase_bS.nc
+SBDelay_bX.nc
+GroupRate_bX.nc
+SNR_bX.nc
+GroupDelay_bS.nc
+AmbigSize_bS.nc
+SBDelay_bS.nc
+Correlation_bX.nc
+GroupDelay_bX.nc
+GroupRate_bS.nc
+Correlation_bS.nc
+SNR_bS.nc
+Source.nc
+PhaseCalInfo_bX.nc
+PhaseCalInfo_bS.nc
+Baseline.nc
+!
+Default_Dir ObsDerived
+Cal-SlantPathIonoPhase_bX.nc
+Cal-SlantPathIonoGroup_bX.nc
+!  Following contains frequencies calculated using equal weighting of channels
+! EffFreq_kEqWt_bX.nc
+EffFreq_bX.nc
+!  Following contains frequencies from original database
+! EffFreq_kDB_bS.nc
+FeedRotNet.nc
+EffFreq_bS.nc
+!  Following contains frequencies calculated using equal weighting of channels
+! EffFreq_kEqWt_bS.nc
+UVFperAsec_bS.nc
+UVFperAsec_bX.nc
+!
+Default_Dir ObsEdit
+Edit_iIVS.nc
+NumGroupAmbig_iIVS_bS.nc
+NumGroupAmbig_iIVS_bX.nc
+NumPhaseAmbig_bX.nc
+GroupDelayFull_iIVS_bX.nc
+GroupDelayFull_iIVS_bS.nc
+!
+Default_Dir CrossReference
+ObsCrossRef.nc
+!
+Default_Dir ObsTheoretical
+RateTheoretical.nc
+DelayTheoretical.nc
+!
+Default_Dir ObsCalTheo
+Cal-FeedCorrection_bS.nc
+Cal-Parallax.nc
+Cal-PoleTide_kIERS2003.nc
+Cal-EarthTide_kIERS2003.nc
+Cal-OceanLoad.nc
+Cal-OceanLoadOld.nc
+Cal-BendSun.nc
+Cal-FeedCorrection_bX.nc
+Cal-PoleTideOldRestore.nc
+Cal-OceanPoleTideLoad.nc
+Cal-Bend.nc
+Cal-TiltRemover.nc
+Cal-BendSunHigher.nc
+Cal-HiFreqLibration_kIERS2010.nc
+Cal-HiFreqERP_kIERS2003.nc
+Cal-Wobble.nc
+Cal-Unphase.nc
+!
+Default_Dir ObsPart
+Part-Gamma.nc
+Part-Parallax.nc
+Part-Bend.nc
+Part-ERP.nc
+Part-Poletide_kIERS2006.nc
+Part-NutationNRO_kIAU2006.nc
+Part-RaDec.nc
+Part-XYZ.nc
+End Observation
+!
+Begin Program Solve
+Default_dir Solve
+!
+Begin Session
+CalibrationSetup.nc
+CalcInfo_V004.nc
+ClockSetup.nc
+ERPSetup.nc
+AtmSetup.nc
+CalcERP.nc
+IonoSetup.nc
+SelectionStatus.nc
+BaselineClockSetup.nc
+End Session
+!
+Begin Scan
+ScanTimeMJD.nc
+End Scan
+!
+Begin Observation
+IonoBits.nc
+UserSup_V004.nc
+FractC.nc
+UnPhaseCalFlag.nc
+End Observation
+End Program Solve
