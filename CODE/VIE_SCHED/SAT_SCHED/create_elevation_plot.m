@@ -21,6 +21,7 @@
 %   - 2016-12-02: A. Hellerschmied: - Adaptive x-tick labels
 %                                   - optionial input arguments to set x-tick units and according interval
 %   - 2017-01-23: A. Hellerschmied: Fixed small bug in defining x-tick separation
+%   - 2018-12-20: A. Corbin       : unnecessary entries in legend removed
 %           
 %
 %   inputs        :
@@ -265,7 +266,7 @@ function [sched_handles, error_code, error_msg] = create_elevation_plot(stat_dat
 
             % Add Title to Plot
             title(['Station: ', stat_data.stat(i_stat).name]);
-            ylabel('El [°]');
+            ylabel('El [deg]');
             % xlabel('Duration [hours]');
 
 
@@ -283,25 +284,25 @@ function [sched_handles, error_code, error_msg] = create_elevation_plot(stat_dat
             for i_sat = 1 : stat_data.number_of_sat
                 % El. Rate
                 if (PARA.PLOT_EL_RATE)
-                    sched_handles.el_plot.stat(i_stat).sat(i_sat).h_exceed_max_axis2_rate = plot(t, exceed_max_axis2_rate(i_sat, :), 'Color', current_color(i_sat,:));
+                    sched_handles.el_plot.stat(i_stat).sat(i_sat).h_exceed_max_axis2_rate = plot(t, exceed_max_axis2_rate(i_sat, :), 'Color', current_color(i_sat,:), 'HandleVisibility','off');
                     set(sched_handles.el_plot.stat(i_stat).sat(i_sat).h_exceed_max_axis2_rate, 'Marker', 'd');
                 end
 
                 % Az. Rate
                 if (PARA.PLOT_AZ_RATE)
-                    sched_handles.el_plot.stat(i_stat).sat(i_sat).h_exceed_max_axis1_rate = plot(t, exceed_max_axis1_rate(i_sat, :), 'Color', current_color(i_sat,:));
+                    sched_handles.el_plot.stat(i_stat).sat(i_sat).h_exceed_max_axis1_rate = plot(t, exceed_max_axis1_rate(i_sat, :), 'Color', current_color(i_sat,:), 'HandleVisibility','off');
                     set(sched_handles.el_plot.stat(i_stat).sat(i_sat).h_exceed_max_axis1_rate, 'Marker', 's');
                 end
 
                 % Sun dist.
                 if (PARA.PLOT_SUN_DIST)
-                    sched_handles.el_plot.stat(i_stat).sat(i_sat).h_exceed_min_sun_dist = plot(t, exceed_min_sun_dist(i_sat, :), 'Color', current_color(i_sat,:));
+                    sched_handles.el_plot.stat(i_stat).sat(i_sat).h_exceed_min_sun_dist = plot(t, exceed_min_sun_dist(i_sat, :), 'Color', current_color(i_sat,:), 'HandleVisibility','off');
                     set(sched_handles.el_plot.stat(i_stat).sat(i_sat).h_exceed_min_sun_dist, 'Marker', '*');
                 end
                 
                 % Axis limits
                 if (PARA.PLOT_AXIS_LIMITS)
-                    sched_handles.el_plot.stat(i_stat).sat(i_sat).h_exceed_axis_limits = plot(t, exceed_axis_limits(i_sat, :), 'Color', current_color(i_sat,:));
+                    sched_handles.el_plot.stat(i_stat).sat(i_sat).h_exceed_axis_limits = plot(t, exceed_axis_limits(i_sat, :), 'Color', current_color(i_sat,:), 'HandleVisibility','off');
                     set(sched_handles.el_plot.stat(i_stat).sat(i_sat).h_exceed_axis_limits, 'Marker', 'o');
                 end
                 
@@ -335,17 +336,17 @@ function [sched_handles, error_code, error_msg] = create_elevation_plot(stat_dat
 
                     % Rise
                     if ~(isempty(stat_data.stat(i_stat).sat(i_sat).overpass(i_overp).rise.year))
-                        sched_handles.el_plot.stat(i_stat).sat(i_sat).overpass(i_overp).h_rise = scatter(stat_data.stat(i_stat).sat(i_sat).overpass(i_overp).rise.jd, stat_data.stat(i_stat).sat(i_sat).overpass(i_overp).rise.el, 'CData', current_color(i_sat,:));
+                        sched_handles.el_plot.stat(i_stat).sat(i_sat).overpass(i_overp).h_rise = scatter(stat_data.stat(i_stat).sat(i_sat).overpass(i_overp).rise.jd, stat_data.stat(i_stat).sat(i_sat).overpass(i_overp).rise.el, 'CData', current_color(i_sat,:), 'HandleVisibility','off');
                     end
 
                     % Peak
                     for i_peak = 1 : stat_data.stat(i_stat).sat(i_sat).overpass(i_overp).number_of_peaks
-                        sched_handles.el_plot.stat(i_stat).sat(i_sat).overpass(i_overp).h_peak = scatter(stat_data.stat(i_stat).sat(i_sat).overpass(i_overp).peak(i_peak).jd, stat_data.stat(i_stat).sat(i_sat).overpass(i_overp).peak(i_peak).el, 'CData', current_color(i_sat,:));
+                        sched_handles.el_plot.stat(i_stat).sat(i_sat).overpass(i_overp).h_peak = scatter(stat_data.stat(i_stat).sat(i_sat).overpass(i_overp).peak(i_peak).jd, stat_data.stat(i_stat).sat(i_sat).overpass(i_overp).peak(i_peak).el, 'CData', current_color(i_sat,:), 'HandleVisibility','off');
                     end
 
                     % Set
                     if ~(isempty(stat_data.stat(i_stat).sat(i_sat).overpass(i_overp).set.year))
-                        sched_handles.el_plot.stat(i_stat).sat(i_sat).overpass(i_overp).h_set = scatter(stat_data.stat(i_stat).sat(i_sat).overpass(i_overp).set.jd, stat_data.stat(i_stat).sat(i_sat).overpass(i_overp).set.el, 'CData', current_color(i_sat,:));
+                        sched_handles.el_plot.stat(i_stat).sat(i_sat).overpass(i_overp).h_set = scatter(stat_data.stat(i_stat).sat(i_sat).overpass(i_overp).set.jd, stat_data.stat(i_stat).sat(i_sat).overpass(i_overp).set.el, 'CData', current_color(i_sat,:), 'HandleVisibility','off');
                     end
 
                 end
@@ -411,7 +412,7 @@ function [sched_handles, error_code, error_msg] = create_elevation_plot(stat_dat
     
     % Add Title an Axes Labels to Plot
     title('Potential observation periods from station network');
-    ylabel('El [°]');
+    ylabel('El [deg]');
     
     % Plot vertical lines and print time tags:
     

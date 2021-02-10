@@ -36,6 +36,7 @@
 %   - error_msg           : Error Message (empty, if no errors occured)
 %
 % CHANGES:
+%   - 2018-12-20: A. Corbin       : unnecessary entries in legend removed
 %
 
 function [sched_handles, error_code, error_msg] = update_sky_plots(sched_handles, stat_data, station_id_list, source, PARA, obs_data, flag_plot_sources, jd_current_epoch_marker, flag_observable_quasars_list)
@@ -131,7 +132,7 @@ function [sched_handles, error_code, error_msg] = update_sky_plots(sched_handles
                         xx = elSpherical .* sin(az * pi/180); 
 
                         % ### Plot marker ###
-                        sched_handles.sky_plots(station_id).sat(i_sat).h_current_epoch_marker = plot(xx', yy', '*', 'color', temp_color, 'MarkerSize', 20); 
+                        sched_handles.sky_plots(station_id).sat(i_sat).h_current_epoch_marker = plot(xx', yy', '*', 'color', temp_color, 'MarkerSize', 20, 'HandleVisibility','off'); 
                     
                     else % Satellite is below the cut-off elevation
                         

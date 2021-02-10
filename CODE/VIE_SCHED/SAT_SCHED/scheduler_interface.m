@@ -44,6 +44,10 @@
 %   - 2016-11-30: A. Hellerschmied: - New option to save sched data to LEVEL5 dir. using version number
 %   - 2017-01-23: A. Hellerschmied: - New function added to write VSO files (write_vso_file.m)
 %   - 2017-02-07: A. Hellerschmied: - Option added to write VSO files with geocentric baselines 
+%   - 2018-12-20: A. Corbin       : - highlight selected satellite
+%									- empty string in input of scan start time does no longer lead to crash
+%                                   - new option for start time of new satellite scan (peak)
+%									- default values for some user inputs
 %                                                                
 %            
 %
@@ -310,8 +314,9 @@ while(~flag_exit_user_input)
         % ##### Main menu: Choose an action #####
         % #######################################
         case 1 % Main Menu 
-            fprintf(1, '#### Main menu: Choose an action ####\n');
-            fprintf(1,'\n');
+            fprintf(1, '#### Main menu ####\n');
+            fprintf(1, 'use "back" and "exit" to escape from submenus \n');
+            fprintf(1, 'Choose an action\n\n');
             fprintf(1, ' 1   - Add a scan to the the current schedule (append)\n');
             fprintf(1, ' 2   - Create output\n');
             fprintf(1, ' 3   - Load/save data\n');
@@ -456,6 +461,10 @@ while(~flag_exit_user_input)
                                     sat_name_str = obs_data.sat(satellite_id).name(1 : end-2);
                                     fprintf(1, ' Choosen satellite: %s\n\n', sat_name_str);
                                     add_scan_state = 1.3; % Got satellite name!
+                                    
+                                    % Highligh selected stellite
+                                    highlight_satellite( sched_handles, station_id_list, satellite_id, true );
+                                    
                             else
                                 fprintf(1, ' ERROR: Entered satellite number is not available. Try another one!\n');
                             end
@@ -473,7 +482,8 @@ while(~flag_exit_user_input)
                     case 1.3 % Scan start time: how to enter it?
                         fprintf(1, ' \n++++ Scan start time: ++++ \n');
                         fprintf(1, ' 1   - Enter it manually\n');
-                        fprintf(1, ' 2   - Calculate it\n');
+                        fprintf(1, ' 2   - Next possible start\n');
+                        fprintf(1, ' 3   - Next peak\n');
                         add_scan_state = 1.31;
                         % Init.:
                         t_start_jd_temp = 0;
@@ -487,10 +497,14 @@ while(~flag_exit_user_input)
                             case '1'
                                 add_scan_state = 1.4; % Enter it manually
                             case '2'
-                                add_scan_state = 1.5; % Calculate it
+                                add_scan_state = 1.5; % Next possible start
+                            case '3'
+                                add_scan_state = 1.55; % Next peak
                             case 'exit'
+                               highlight_satellite( sched_handles, station_id_list, satellite_id, false );
                                 add_scan_state = 9;
                             case 'back'
+                               highlight_satellite( sched_handles, station_id_list, satellite_id, false );
                                 add_scan_state = 1;
                             otherwise
                                 fprintf(1, ' ERROR: Invalid input, please try again!\n');
@@ -505,9 +519,11 @@ while(~flag_exit_user_input)
                         commandwindow
                         input_str = input(' t_start = ', 's');
                         len_input_str = length(input_str);
-                        
+                                    
+                        if isempty(len_input_str) || len_input_str == 0
+                             fprintf(1, ' ERROR: Ivalid input. Please try again!\n');
                         % <Time Tag label>
-                        if ((input_str(1) == 't') && (len_input_str >= 2) && ...  % Check input Format!
+                        elseif ((input_str(1) == 't') && (len_input_str >= 2) && ...  % Check input Format!
                             (sum((input_str(2:len_input_str) <= '9') & (input_str(2:len_input_str) >= '0')) == (len_input_str - 1)) )
                             
                             % Search <Time Tag label> in obs_data.sat.obs_times get the according time [JD]
@@ -550,6 +566,7 @@ while(~flag_exit_user_input)
                         else
                             switch(input_str)
                                 case 'exit'
+                                   highlight_satellite( sched_handles, station_id_list, satellite_id, false );
                                     add_scan_state = 9;
                                 case 'back'
                                     add_scan_state = 1.3;
@@ -593,6 +610,7 @@ while(~flag_exit_user_input)
                         if error_code == 0
                             if flag_t_start_ok % NEXT STATE! t_start found!
                                 % Update graphics:
+                               highlight_satellite( sched_handles, station_id_list, satellite_id, false );
                                 [sched_handles, error_code, error_msg] = update_sky_plots_pointer(sched_handles, sat_network_id_list, obs_data, 2, PARA);
                                 if error_code > 0
                                     error_msg = ['update_sky_plots_pointer: ', error_msg];
@@ -629,7 +647,7 @@ while(~flag_exit_user_input)
 
                         
                         
-                    % #### Scan start time: Calculate it ####
+                    % #### Scan start time: Next possible start ####
                     case  1.5 
                         fprintf(1, ' \n++++ Calculating the earliest possible scan start time ++++\n');
                         source_quasar = [];
@@ -668,11 +686,14 @@ while(~flag_exit_user_input)
                         
                     case  1.51 % Scan start time: Calculate it; input
                         commandwindow
-                        input_str = input(' Take it? (y=yes, n=no) : ', 's');
+                        input_str = input(' Take it? (y=yes, n=no, 9=back to main) <y>: ', 's');
                         switch(input_str)
                             case {'n' 'no'}
                                 add_scan_state = 1.3; % Scan start time: how to enter it?
-                            case {'y' 'yes'}
+                            case {'9'}
+                                highlight_satellite( sched_handles, station_id_list, satellite_id, false );
+                                add_scan_state = 9;
+                            case {'y' 'yes', ''}
                                 [sched_handles, error_code, error_msg] = update_sky_plots_pointer(sched_handles, sat_network_id_list, obs_data, 2, PARA);
                                 if error_code > 0
                                     error_msg = ['update_sky_plots_pointer: ', error_msg];
@@ -698,14 +719,81 @@ while(~flag_exit_user_input)
                                     end
                                 end
                             case 'exit'
+                                highlight_satellite( sched_handles, station_id_list, satellite_id, false );
                                 add_scan_state = 9;
                             case 'back'
                                 add_scan_state = 1.3;
                             otherwise
                                 fprintf(1, ' ERROR: Invalid input, please try again!\n');
                         end
+                    % #### Scan start time: Next peak ####
+                    case 1.55
+                        commandwindow
+                        offset = str2num( input(' offset to peak in sec <0>: ', 's') );
+                        if( isempty(offset) || ~isnumeric(offset) )
+                            offset = 0;
+                        end
+                        offset = offset/86400;
                         
+                        peaksta = str2num( input(' station <1>: ', 's') );
+                        if( isempty(peaksta) || ~isnumeric(peaksta) )
+                            peaksta = 1;
+                        end
+                        
+                        if peaksta < 1 || peaksta > stat_data.number_of_stations
+                            fprintf(1, ' ERROR: invalid station id \n');
+                             add_scan_state = 1.55;
+                        else
+                            fprintf(1, '   %1.0f - %s \n', i_stat, stat_data.stat(peaksta).name);
+                            source_quasar = [];
+                            [t_earliest, obs_data, error_code, error_msg] = calc_start_of_scan(stat_data, station_id_list, obs_data, PARA, source_quasar, satellite_id);
+                            t_start_jd_temp = nan;
+                            fprintf(1, ' \n++++ Calculating peak ++++\n');
+                            for i_overp = 1 : stat_data.stat(1).sat(satellite_id).number_of_overpasses
 
+                                for i_peak = 1 : stat_data.stat(peaksta).sat(satellite_id).overpass(i_overp).number_of_peaks
+                                    t_peak = stat_data.stat(peaksta).sat(satellite_id).overpass(i_overp).peak(i_peak).jd;
+                                    if t_peak - offset > t_earliest 
+                                        t_start_jd_temp = t_peak - offset;
+                                        break;
+                                    end
+                                end
+                                if ~isnan(t_start_jd_temp)
+                                    break
+                                end
+                            end
+
+                            if (~isnan(t_start_jd_temp) )
+
+                                 [obs_data, error_code, error_msg] = calc_un_az_begin_of_scan(stat_data, station_id_list, obs_data, PARA, source_quasar, satellite_id, t_start_jd_temp);
+                                 [year, mon, day, hr, min, sec] = invjday (t_start_jd_temp); % Conversion
+                                 fprintf(1, ' Calculated t_start_min: %4.0f-%02.0f-%02.0f %02.0f:%02.0f:%02.0f\n', year, mon, day, hr, min, sec);
+                                 % Update graphics:
+                                    flag_plot_sources = 0;
+                                    [sched_handles, error_code, error_msg] = update_sky_plots(sched_handles, stat_data, sat_network_id_list, source, PARA, obs_data, flag_plot_sources, t_start_jd_temp);
+                                    if error_code > 0
+                                        error_msg = ['update_sky_plots: ', error_msg];
+                                        fprintf(1, [' ERROR: ', error_msg, '\n']);
+                                        add_scan_state = 0;
+                                    else
+                                        [sched_handles, error_code, error_msg] = update_elevation_plot_pointer(sched_handles, obs_data, 9, t_start_jd_temp, PARA, sat_network_id_list);
+                                        if error_code > 0
+                                            error_msg = ['update_elevation_plot: ', error_msg];
+                                            fprintf(1, [' ERROR: ', error_msg, '\n']);
+                                            add_scan_state = 0;
+                                        else
+                                            add_scan_state = 1.51; % #### Scan stop time ####
+                                        end
+                                    end
+                            else
+                                fprintf(1, ' ERROR: No peak found\n');
+                                add_scan_state = 1.3;
+                            end
+                           
+                        end
+                        
+                   
+                        
                     % ##### Scan end time/duration: how to enter it? #####
                     case  1.6 
                         fprintf(1, ' \n++++ Scan duration & scan end time: ++++ \n');
@@ -934,11 +1022,15 @@ while(~flag_exit_user_input)
                         
                     case 1.731 % Finally, confirm the entered/calculated scan end time (<duration> input, or calculated)
                         commandwindow
-                        input_str = input(' Take it? (y=yes, n=no) : ', 's');
+                        input_str = input(' Take it? (y=yes, n=no, 9=back) <y> : ', 's');
+                        remove_highlight = true;
                         switch(input_str)
                             case {'n' 'no'}
                                 add_scan_state = 1.6; % Scan end time: how to enter it?
-                            case {'y' 'yes'}
+                            case {'9'}
+                                add_scan_state = 9;
+                            case {'y' 'yes' ''}
+                                remove_highlight = false;
                                 [sched_handles, error_code, error_msg] = update_sky_plots_pointer(sched_handles, sat_network_id_list, obs_data, 3, PARA);
                                 if error_code > 0
                                     error_msg = ['update_sky_plots_pointer: ', error_msg];
@@ -960,9 +1052,14 @@ while(~flag_exit_user_input)
                             case 'back'
                                 add_scan_state = 1.6;
                             otherwise
+                                remove_highlight = false;
                                 fprintf(1, ' ERROR: Invalid input, please try again!\n');
+                            
                         end
-                    
+                        
+                        if remove_highlight
+                            highlight_satellite( sched_handles, station_id_list, satellite_id, false );
+                        end
                         
                     % #### Confirm scan and save it ####
                     case  1.9 
@@ -981,11 +1078,12 @@ while(~flag_exit_user_input)
                         
                     case 1.91 % Confirm scan and save it
                         commandwindow
-                        input_str = input(' Please select: ', 's');
+                        input_str = input(' Please select <1>: ', 's');
                         quasar_id = [];
+                        remove_highlight = true;
                         switch(input_str)
                             
-                            case '1'
+                            case {'1', ''}
                                 % Save scan:
                                 [sched_data, obs_data, error_code, error_msg] = save_scan(stat_data, sat_network_id_list, sched_data, obs_data, t_start_jd, t_end_jd, source, quasar_id, satellite_id, PARA);
                                 if error_code > 0
@@ -1017,9 +1115,12 @@ while(~flag_exit_user_input)
                                 add_scan_state = 1.6; % Enter the end date/time of the scan or the scan duration
                             otherwise
                                 fprintf(1, ' ERROR: Invalid input, please try again!\n');
+                                remove_highlight = false;
                         end
                         
-                        
+                        if remove_highlight
+                            highlight_satellite( sched_handles, station_id_list, satellite_id, false );
+                        end
 
                         
                     % ##########################
@@ -2364,7 +2465,7 @@ while(~flag_exit_user_input)
                         commandwindow
                         input_str = input(' t_start = ', 's');
                         if (length(input_str) == 19)
-                            [flag_t_epoch_jd_ok, t_epoch_jd_ok] = check_t_input_19char(input_str, sched_data, PARA);
+                            [flag_t_epoch_jd_ok, t_epoch_jd_ok] = check_t_input_19char(input_str, sched_data, PARA, false);
                             if flag_t_epoch_jd_ok
                                 t_min_jd = t_epoch_jd_ok;
                                 sched_stats_state = 4.62;
@@ -2389,7 +2490,7 @@ while(~flag_exit_user_input)
                         commandwindow
                         input_str = input(' t_end = ', 's');
                         if (length(input_str) == 19)
-                            [flag_t_epoch_jd_ok, t_epoch_jd_ok] = check_t_input_19char(input_str, sched_data, PARA);
+                            [flag_t_epoch_jd_ok, t_epoch_jd_ok] = check_t_input_19char(input_str, sched_data, PARA, false);
                             if flag_t_epoch_jd_ok
                                 t_max_jd = t_epoch_jd_ok;
                                 sched_stats_state = 4.7;
@@ -2855,12 +2956,16 @@ end
     
 %% ##### Sub routines #####
 
-function [flag_t_epoch_jd_ok, t_epoch_jd_ok] = check_t_input_19char(input_str, sched_data, PARA)
+function [flag_t_epoch_jd_ok, t_epoch_jd_ok] = check_t_input_19char(input_str, sched_data, PARA, checkWithinExisting)
 % This function checks the time input with the format: <yyyy-mm-dd HH:MM:SS>
 % Checks:
 %  1.) Format (<yyyy-mm-dd HH:MM:SS>)
 %  2.) Epoch intersect with existing schedule?
 %  3.) Epoch within the defined session time?
+
+	if nargin < 4
+        checkWithinExisting=true;
+    end
 
     % ### Init.: ###
     mjd2jd = 2.400000500000000e+006;
@@ -2890,12 +2995,14 @@ function [flag_t_epoch_jd_ok, t_epoch_jd_ok] = check_t_input_19char(input_str, s
         t_epoch_jd_temp = jday(yr, mon, day, hr, min, sec);
         
         % ##### 2.) Check if t_epoch_jd_temp do not intersect with the existing schedule #####
-        if ~isempty(sched_data.t_nominal_start_jd) && ~isempty(sched_data.t_nominal_end_jd) % If at least one scan has been scheduled already
-            if (t_epoch_jd_temp >= sched_data.t_nominal_start_jd) && (t_epoch_jd_temp <= sched_data.t_nominal_end_jd)
-                flag_within_existing_schedule = true;
-                fprintf(1, ' Input epoch intersect with the existing schedule. Please try again!\n');
-            end
-        end
+		if(checkWithinExisting)
+		    if ~isempty(sched_data.t_nominal_start_jd) && ~isempty(sched_data.t_nominal_end_jd) % If at least one scan has been scheduled already
+		        if (t_epoch_jd_temp >= sched_data.t_nominal_start_jd) && (t_epoch_jd_temp <= sched_data.t_nominal_end_jd)
+		            flag_within_existing_schedule = true;
+		            fprintf(1, ' Input epoch intersect with the existing schedule. Please try again!\n');
+		        end
+		    end
+		end
         
         % ##### 3.) Check, if t_epoch_jd_temp is within the defined session time #####
         if ~flag_within_existing_schedule
@@ -2912,7 +3019,19 @@ function [flag_t_epoch_jd_ok, t_epoch_jd_ok] = check_t_input_19char(input_str, s
     
 end
 
-
+function highlight_satellite( sched_handles, station_id_list, satellite_id, highlight )
+     if highlight
+         lw = 3.0;
+     else
+         lw = 0.5;
+     end
+     for sta_id = station_id_list
+         sched_handles.el_plot.stat(sta_id).sat(satellite_id).h_sat_el.LineWidth = lw;
+         sched_handles.el_plot.stat(sta_id).sat(satellite_id).h_sat_el_obs_times.LineWidth = lw;
+         sched_handles.sky_plots(sta_id).sat(satellite_id).h_plot.LineWidth = lw;
+         
+     end
+end
 
 
 
