@@ -68,6 +68,10 @@ load('runp','runp')
 load('guiparameter.mat');
 cleanVgosDB();
 
+pthDALE = '../'; % path to DAta LEvel (only LEVEL0 and LEVEL1 at the moment)
+% pthDALE = '/data/VIEVS/' 
+
+% parameter.pthDALE = pthDALE; % can be put in GUI
 
 
 startTime = tic;
@@ -370,15 +374,15 @@ if ~isempty(process_list)
                 try
                     %% VIE_INIT
                     if runp.init
-                        fil=['../DATA/LEVEL0/' runp.init_path '/' session];
+                        fil=[pthDALE 'DATA/LEVEL0/' runp.init_path '/' session];
                         fprintf('Current file: %s\n', fil);
                         if isfield(runp,'ngsdir')
                             [antenna,sources,scan,parameter]=vie_init(session_name,parameter,runp.init_path,runp.ngsdir,trf,crf);
                         else
                             [antenna,sources,scan,parameter]=vie_init(session_name,parameter,runp.init_path,[],trf,crf);                            
                         end
-                        if ~exist(['../DATA/LEVEL0/' runp.init_path], 'dir')
-                            mkdir(['../DATA/LEVEL0/' runp.init_path])
+                        if ~exist([pthDALE 'DATA/LEVEL0/' runp.init_path], 'dir')
+                            mkdir([pthDALE 'DATA/LEVEL0/' runp.init_path])
                         end
                         savestruct(fil,parameter,antenna,scan,sources);
                     end
@@ -386,7 +390,7 @@ if ~isempty(process_list)
                     %% VIE_MOD
 
                     if runp.mod
-                        fil=['../DATA/LEVEL0/' runp.init_path '/' session];
+                        fil=[pthDALE 'DATA/LEVEL0/' runp.init_path '/' session];
                         if (exist([fil '_parameter.mat'], 'file')&&...
                                 exist([fil '_scan.mat'], 'file')&&...
                                 exist([fil '_antenna.mat'], 'file')&&...
@@ -400,9 +404,9 @@ if ~isempty(process_list)
                                 tmp=load([fil '_sources.mat']);sources=tmp.sources;
                             end
                             [antenna,sources,scan,parameter]=vie_mod(antenna, sources,scan,parameter);
-                            fil=['../DATA/LEVEL1/' runp.mod_path '/' session];
-                            if ~exist(['../DATA/LEVEL1/' runp.mod_path], 'dir')
-                                mkdir(['../DATA/LEVEL1/' runp.mod_path])
+                            fil=[pthDALE 'DATA/LEVEL1/' runp.mod_path '/' session];
+                            if ~exist([pthDALE 'DATA/LEVEL1/' runp.mod_path], 'dir')
+                                mkdir([pthDALE 'DATA/LEVEL1/' runp.mod_path])
                             end
                             savestruct(fil,parameter,antenna,scan,sources);
                         else
@@ -413,7 +417,7 @@ if ~isempty(process_list)
                     %% VIE_SIM
 
                     if runp.sim
-                        fil=['../DATA/LEVEL1/' runp.mod_path '/' session];
+                        fil=[pthDALE 'DATA/LEVEL1/' runp.mod_path '/' session];
                         if (exist([fil '_scan.mat'], 'file')&&...
                                 exist([fil '_antenna.mat'], 'file'))
 
@@ -434,7 +438,7 @@ if ~isempty(process_list)
 
                     %         if you want to take the current structure arrays from the WORK directory use vie_lsm without input parameter
                     if runp.lsm
-                        fil=['../DATA/LEVEL1/' runp.mod_path '/' session];
+                        fil=[pthDALE 'DATA/LEVEL1/' runp.mod_path '/' session];
                         if (exist([fil '_parameter.mat'], 'file')&&...
                                 exist([fil '_scan.mat'], 'file')&&...
                                 exist([fil '_antenna.mat'], 'file')&&...
@@ -457,7 +461,7 @@ if ~isempty(process_list)
 
                     elseif runp.lsm_scanwise %Claudia 22/10/2012
 
-                        fil=['../DATA/LEVEL1/' runp.mod_path '/' session];
+                        fil=[pthDALE 'DATA/LEVEL1/' runp.mod_path '/' session];
                         if (exist([fil '_parameter.mat'], 'file')&&...
                                 exist([fil '_scan.mat'], 'file')&&...
                                 exist([fil '_antenna.mat'], 'file')&&...
@@ -632,15 +636,15 @@ if ~isempty(process_list)
                     %parameter.vie_init.ngsfile = sess;
                     %save('currentf_pa.mat','parameter');
                     if runp.init
-                        fil=['../DATA/LEVEL0/' runp.init_path '/' session];
+                        fil=[pthDALE 'DATA/LEVEL0/' runp.init_path '/' session];
                         fprintf('Current file: %s\n', fil);
                         if isfield(runp,'ngsdir')
                             [antenna,sources,scan,parameter]=vie_init(session_name,parameter,runp.init_path,runp.ngsdir,trf,crf);
                         else
                             [antenna,sources,scan,parameter]=vie_init(session_name,parameter,runp.init_path,[],trf,crf);
                         end
-                        if ~exist(['../DATA/LEVEL0/' runp.init_path], 'dir')
-                            mkdir(['../DATA/LEVEL0/' runp.init_path])
+                        if ~exist([pthDALE 'DATA/LEVEL0/' runp.init_path], 'dir')
+                            mkdir([pthDALE 'DATA/LEVEL0/' runp.init_path])
                         end
                         savestruct(fil,parameter,antenna,scan,sources);
                     end
@@ -648,7 +652,7 @@ if ~isempty(process_list)
                     %% VIE_MOD
                     if runp.mod
 
-                        fil=['../DATA/LEVEL0/' runp.init_path '/' session];
+                        fil=[pthDALE 'DATA/LEVEL0/' runp.init_path '/' session];
                         if (exist([fil '_parameter.mat'], 'file')&&...
                                 exist([fil '_scan.mat'], 'file')&&...
                                 exist([fil '_antenna.mat'], 'file')&&...
@@ -662,9 +666,9 @@ if ~isempty(process_list)
                             end
                             [antenna,sources,scan,parameter]=vie_mod(antenna, ...
                                 sources,scan,parameter);
-                            fil=['../DATA/LEVEL1/' runp.mod_path '/' session];
-                            if ~exist(['../DATA/LEVEL1/' runp.mod_path], 'dir')
-                                mkdir(['../DATA/LEVEL1/' runp.mod_path])
+                            fil=[pthDALE 'DATA/LEVEL1/' runp.mod_path '/' session];
+                            if ~exist([pthDALE 'DATA/LEVEL1/' runp.mod_path], 'dir')
+                                mkdir([pthDALE 'DATA/LEVEL1/' runp.mod_path])
                             end
                             savestruct(fil,parameter,antenna,scan,sources);
                         else
@@ -675,7 +679,7 @@ if ~isempty(process_list)
                     %% VIE_SIM
 
                     if runp.sim
-                        fil=['../DATA/LEVEL1/' runp.mod_path '/' session];
+                        fil=[pthDALE 'DATA/LEVEL1/' runp.mod_path '/' session];
                         if (exist([fil '_scan.mat'], 'file')&&...
                                 exist([fil '_antenna.mat'], 'file'))
 
@@ -695,7 +699,7 @@ if ~isempty(process_list)
                     %% VIE_LSM
                     % if you want to take the current structure arrays from the WORK directory use vie_lsm without input parameter
                     if runp.lsm
-                        fil=['../DATA/LEVEL1/' runp.mod_path '/' session];
+                        fil=[pthDALE 'DATA/LEVEL1/' runp.mod_path '/' session];
                         if (exist([fil '_parameter.mat'], 'file')&&...
                                 exist([fil '_scan.mat'], 'file')&&...
                                 exist([fil '_antenna.mat'], 'file')&&...
@@ -717,7 +721,7 @@ if ~isempty(process_list)
 
                     elseif runp.lsm_scanwise %Claudia 22/10/2012
 
-                        fil=['../DATA/LEVEL1/' runp.mod_path '/' session];
+                        fil=[pthDALE 'DATA/LEVEL1/' runp.mod_path '/' session];
                         if (exist([fil '_parameter.mat'], 'file')&&...
                                 exist([fil '_scan.mat'], 'file')&&...
                                 exist([fil '_antenna.mat'], 'file')&&...
