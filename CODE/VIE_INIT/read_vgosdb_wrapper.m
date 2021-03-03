@@ -53,20 +53,9 @@ num_institutions    = length(institute);
 % ##### Get wrapper filename #####
 tmp = dir(path_nc);
 tmp = {tmp.name};
-wrapper_filenames = {};
-i_wrapper = 0;
-version = 0;
-for i = 1 : length(tmp)
-    name = tmp{i};
-    if length(name) > 5
-        if strcmp(name(end-3:end), '.wrp')
-            i_wrapper = i_wrapper + 1;
-            wrapper_filenames{i_wrapper} = name;
-           
-        end
-    end
-end
 
+iswrapper = endsWith(tmp,'.wrp');
+wrapper_filenames = tmp(iswrapper);
 num_of_wrappers = length(wrapper_filenames);
 
 % Get i, k, V flags of wrapper names
@@ -127,7 +116,7 @@ nc_filename = '';
 
 % ##### Select a wrapper file by the following conditions: #####
 % - Version number:
-%   - if there is no specfic version number defined, the highes number is taken of the defined institution (first in the list)
+%   - if there is no specfic version number defined, the highest number is taken of the defined institution (first in the list)
 %     - the min wrapper version is defined in the variable "min_wrapper_version"
 %   - if a version number is defined, the wrapper with this version and the institution with highest priority is taken
 
@@ -139,7 +128,11 @@ else
     if strcmp(wrapper_version, 'highest_version')
         flag_array(V_list >= min_wrapper_version, 1) = V_list(V_list >= min_wrapper_version);
     else % only take specified version:
-       flag_array(:, 1) = V_list == wrapper_version;
+       if all(V_list ~= wrapper_version)
+         error('No valid wrapper file found with version number: %d',wrapper_version); 
+       else
+         flag_array(V_list == wrapper_version, 1) = V_list(V_list == wrapper_version);
+       end
     end
 end
 
@@ -152,12 +145,8 @@ else
 end
 
 %_i
-if sum(strcmp(institute, 'noInst')) == 1 % If wrappers without institution flag should be considered
-    for i = 1 : num_of_wrappers
-        if isempty(i_list{i})
-            i_list{i} = 'noInst';
-        end
-    end
+if (sum(strcmp(institute, 'noInst')) == 1) && (sum(cellfun(@isempty,i_list)) > 0) % If wrappers without institution flag should be considered
+    i_list{cellfun(@isempty,i_list)}='noInst';
 end
 
 for i_int = 1 : num_institutions
@@ -190,6 +179,7 @@ for i_inst = 1 : num_institutions
        [max_version, max_version_id]=max(flag_array_tmp(:, 1));
        
        nc_filename = wrapper_filenames_tmp{max_version_id};
+       break
    else
        fprintf(' - No valid wrapper file for institution: %s\n', institute{i_inst})
        
@@ -197,7 +187,7 @@ for i_inst = 1 : num_institutions
    
 end
 if max_version < 4
-    warning('vgosDB wrapper version: %d\nAmbiguity resolution and ionosphere correction might be missing!\nGo to WORK/vgosdb_input_settings.txt and change frequency_band: GroupDelay_b*, ionosphere_correction: off, ambiguity_correction: off/',max_version)
+    warning('vgosDB wrapper version: %d\nAmbiguity resolution and ionosphere correction might be missing!\nGo to Set input files/Observation selection and change frequency_band: GroupDelay_b*, ionosphere_correction: off, ambiguity_correction: off/',max_version)
 end
 
 % Check, if wrapper is available!
