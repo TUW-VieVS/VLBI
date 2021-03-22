@@ -242,7 +242,8 @@ if ~isempty(eccdatFile)
 			
 			% if it is empty, try to find stationname with '_' instead of ' '
 			if isempty(iStat)
-				iStat=find(strcmpi({ns_codes.name}, strrep(line(3:10), ' ', '_')));
+% 				iStat=find(strcmpi({ns_codes.name}, strrep(line(3:10), ' ', '_'))); % does not work for 'JPL MV1 '
+                iStat=find(strcmpi({ns_codes.name}, [strrep(line(3:9), ' ', '_') line(10)]));
 			end
 			
 			
