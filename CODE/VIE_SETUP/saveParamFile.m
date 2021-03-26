@@ -253,6 +253,11 @@ end
 
 % interpolation - linear?
 parameter.vie_mod.linear=get(handles.radiobutton_parameters_eop_interp_lin, 'Value');
+if get(handles.radiobutton_parameters_eop_interp_lin, 'Value')==1
+ parameter.vie_mod.linear48h=get(handles.checkbox_parameters_eop_interp_lin48h, 'Value');
+else
+ parameter.vie_mod.linear48h=0;
+end
 
 % tidal UT
 parameter.vie_mod.tidalUT=get(handles.checkbox_parameters_eop_tidalUtVariations, 'Value');

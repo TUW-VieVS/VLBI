@@ -383,6 +383,11 @@ set(handles.checkbox_parameters_eop_models_inclAPrioriNutOffs, 'Value', paramete
 
 % interpolation
 set(handles.radiobutton_parameters_eop_interp_lin, 'Value', parameter.vie_mod.linear)
+if isfield(parameter.vie_mod,'linear48h')
+    set(handles.checkbox_parameters_eop_interp_lin48h, 'Value', parameter.vie_mod.linear48h)
+else
+    set(handles.checkbox_parameters_eop_interp_lin48h, 'Value', 0)
+end
 set(handles.radiobutton_parameters_eop_interp_lag, 'Value', ~parameter.vie_mod.linear)
 
 % tidal UT

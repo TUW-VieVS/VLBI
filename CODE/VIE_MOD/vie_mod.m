@@ -379,6 +379,23 @@ end
 if parameter.vie_mod.linear == 1
     disp('linear interpolation of EOP')
     parameter.eop.interp = 'linear';
+    if parameter.vie_mod.linear48h
+        disp('special linear interpolation for IVS SINEX submission with 48h EOP interval')
+        % find index of MJDeop that lies within the 48 hour estimation interval
+        midof48h = find(MJDeop==floor(min(MJD))+1);
+        % remove this midnight point from a priori time series
+        MJDeop(midof48h) = []; UT1eop(midof48h) = [];
+        XPeop(midof48h) = []; YPeop(midof48h) = []; 
+        dXeop(midof48h) = []; dYeop(midof48h) = [];
+
+        % store a priori values at EOP timesteps without the 24h midnight
+        parameter.eop.mjd(midof48h) =  [];
+        parameter.eop.xp(midof48h) =  [];
+        parameter.eop.yp(midof48h) =  [];
+        parameter.eop.ut1(midof48h) =  [];
+        parameter.eop.dX(midof48h) =  [];
+        parameter.eop.dY(midof48h) =  [];
+    end
     % A priori EOP values are determined with linear interpolation between
     % the value of midnight before and after observation time.
     % for a session from 18:00 to 18:00 this means, that there are 2 a
@@ -389,7 +406,8 @@ if parameter.vie_mod.linear == 1
     YP    = interp1(MJDeop, YPeop,MJD,'linear','extrap');
     DX    = interp1(MJDeop, dXeop,MJD,'linear','extrap');
     DY    = interp1(MJDeop, dYeop,MJD,'linear','extrap');
-    % Lagragne
+
+% Lagragne
 else % linear = 0
     disp('Lagrange interpolation of EOP')
     parameter.eop.interp = 'lagrange';

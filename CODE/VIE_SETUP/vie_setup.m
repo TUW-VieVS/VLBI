@@ -9695,7 +9695,16 @@ set(handles.radiobutton_parameters_troposphere_gradients_w_no, 'Enable', 'Off')
 set(handles.radiobutton_parameters_troposphere_gradients_w_GRAD, 'Enable', 'Off')
 set(handles.radiobutton_parameters_troposphere_gradients_w_GPT3, 'Enable', 'Off')
 
+% --- Executes on button press in radiobutton_parameters_eop_interp_lin.
+function radiobutton_parameters_eop_interp_lin_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton_parameters_eop_interp_lin 
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_parameters_eop_interp_lin
+
+% set en/disable
+set(handles.checkbox_parameters_eop_interp_lin48h, 'Enable', 'On')
 
 
 % --- Executes on selection change in popupmenu_plot_sessionAnalysis_subfolder2.
