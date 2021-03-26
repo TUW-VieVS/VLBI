@@ -361,7 +361,7 @@ disp('Interpolate EOP values for observation epochs:')
 
 % subtraction of tidal variations (Defraigne and Smits) in dUT1 before interpolation:
 if parameter.vie_mod.tidalUT == 1
-    disp('remove tidal UT')
+%     disp('remove tidal UT')
     taiut    = tai_utc(MJDeop);
     MJDTTeop = MJDeop + (32.184 + taiut)/86400;
     %         UT1corr  = tver2000(MJDTTeop);  % [sec]
@@ -404,7 +404,7 @@ end
 
 % re-add tidal variation in dUT1 after interpolation:
 if parameter.vie_mod.tidalUT == 1
-    disp('re-add tidal UT')
+%     disp('re-add tidal UT')
     corrUT1 = rg_zont2(TT,par35);  % [sec]
     DUT1    = DUT1 + corrUT1;   % [sec]
 end

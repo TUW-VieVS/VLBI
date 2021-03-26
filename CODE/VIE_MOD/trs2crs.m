@@ -37,7 +37,9 @@
 %   Revision: 
 %   26 May 2010 by Lucia Plank: tt instead of mjd for s'
 %   22 Jun 2012 by Lucia Plank: fatal sign error in dQdX corrected
-% *************************************************************************
+%   26 Mar 2021 by Sigrid Boehm: in dMciodY the last element  
+%   -Y(i)-X(i)^2*Y(i)/4 was changed to .../2 due to a comment by Axel Nothnagel
+% *****************************************************************************
 function [t2c,dQdx,dQdy,dQdut,dQdX,dQdY,X,Y,era] = ...
                                       trs2crs(mjd,xp,yp,dut1,dX,dY,nutmod)
 % global globluc globnee
@@ -128,7 +130,8 @@ for i=1:n
 %                -1                     , 0                      , -X(i)-X(i)^3/2];
 %     dMciodY = [-X(i)^2*Y(i)/4   , -X(i)/2-X(i)^3/8   , 0;...
 %                -X(i)/2-X(i)^3/8 , -Y(i)-X(i)^2*Y(i)/4, 1;...
-%                0                , -1                 , -Y(i)-X(i)^2*Y(i)/4];
+%                0                , -1                 , -Y(i)-X(i)^2*Y(i)/2];
+
   
 %     dPNdXneu= dMciodX * rotm(S(i),3) + Mcio*drotm(S(i),3)*dSdX
 %     dPNdX
