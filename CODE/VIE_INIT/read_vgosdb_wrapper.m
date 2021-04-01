@@ -146,7 +146,7 @@ end
 
 %_i
 if (sum(strcmp(institute, 'noInst')) == 1) && (sum(cellfun(@isempty,i_list)) > 0) % If wrappers without institution flag should be considered
-    i_list{cellfun(@isempty,i_list)}='noInst';
+    i_list(cellfun(@isempty,i_list))={'noInst'};
 end
 
 for i_int = 1 : num_institutions
