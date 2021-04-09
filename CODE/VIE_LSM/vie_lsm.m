@@ -1855,21 +1855,20 @@ if opt.ascii_snx == 1
     [N_sinex, b_sinex]=snx_changeunits(N_sinex,b_sinex,col_sinex,outsnx);
 
 
-    %%
-
-    if exist(['../DATA/LEVEL3/',dirpth,'/SINEX/'])~=7
-        mkdir(['../DATA/LEVEL3/',dirpth,'/SINEX/'])
-    end
-
-    fprintf('\nReduced N and b for SINEX output are saved in ../VieVS/DATA/LEVEL3/%s/SINEX/ \n',dirpth);
-    save(['../DATA/LEVEL3/',dirpth,'/SINEX/N_sinex_',parameter.session_name,'.mat'],'N_sinex');
-    save(['../DATA/LEVEL3/',dirpth,'/SINEX/b_sinex_',parameter.session_name,'.mat'],'b_sinex');
-    save(['../DATA/LEVEL3/',dirpth,'/SINEX/col_sinex_',parameter.session_name,'.mat'],'col_sinex');
+%%% Saving of variables commented by S. Boehm (slows the processing and uses a lot of disk space)
+%     if exist(['../DATA/LEVEL3/',dirpth,'/SINEX/'])~=7
+%         mkdir(['../DATA/LEVEL3/',dirpth,'/SINEX/'])
+%     end
+% 
+%     fprintf('\nReduced N and b for SINEX output are saved in ../VieVS/DATA/LEVEL3/%s/SINEX/ \n',dirpth);
+%     save(['../DATA/LEVEL3/',dirpth,'/SINEX/N_sinex_',parameter.session_name,'.mat'],'N_sinex');
+%     save(['../DATA/LEVEL3/',dirpth,'/SINEX/b_sinex_',parameter.session_name,'.mat'],'b_sinex');
+%     save(['../DATA/LEVEL3/',dirpth,'/SINEX/col_sinex_',parameter.session_name,'.mat'],'col_sinex');
 
     % create an ascii sinex file in DATA/SNX
     fprintf('\nWriting SINEX file ... \n');
-    write_sinex_vievs(parameter.session_name, [dirpth '/'], outsnx.firstname, outsnx.lastname, outsnx.email, outsnx.suffix);
-
+    write_sinex_vievs(parameter.session_name, [dirpth '/'], outsnx.firstname, outsnx.lastname, outsnx.email, outsnx.suffix,...
+                      N_sinex,b_sinex,col_sinex); % vars are loaded to the function directly -> saving uses disk space needlessly
 end
 
 

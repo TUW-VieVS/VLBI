@@ -334,7 +334,7 @@ for ise = 1:lse
 end
 
 % Delete sessions with big a posteriori sigma
-rms_check = 0;
+rms_check = 1;
 maxRMS=pathGS.maxRMS;
 badses='';
 badses_mo=[];
@@ -365,8 +365,6 @@ end
 %%
 
 fprintf(' Computing ... \n\n')
-
-estant=[];
 
 for i=1:length(parGS)
     parGS(i).oldcol=[];

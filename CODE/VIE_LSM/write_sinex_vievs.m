@@ -137,15 +137,21 @@ for pl=1:size(process_list,1)
     files.scan=['../DATA/LEVEL3/', subfolder, '/', process_list(pl,6:end), '_scan.mat'];
     % x_ --> later, is only loaded when parameters were estimated!
     % opt_ --> later, is only loaded when parameters were estimated!
-    files.N_sinex=['../DATA/LEVEL3/', subfolder, '/SINEX/N_sinex_', process_list(pl,6:end), '.mat'];
-    files.b_sinex=['../DATA/LEVEL3/', subfolder, '/SINEX/b_sinex_', process_list(pl,6:end), '.mat'];
-    files.col_sinex=['../DATA/LEVEL3/', subfolder, '/SINEX/col_sinex_', process_list(pl,6:end), '.mat'];
+    if nargin>=7
+        N_sinex = varargin{6};
+        b_sinex = varargin{7};
+        col_sinex = varargin{8};
+    else
+        files.N_sinex=['../DATA/LEVEL3/', subfolder, '/SINEX/N_sinex_', process_list(pl,6:end), '.mat'];
+        files.b_sinex=['../DATA/LEVEL3/', subfolder, '/SINEX/b_sinex_', process_list(pl,6:end), '.mat'];
+        files.col_sinex=['../DATA/LEVEL3/', subfolder, '/SINEX/col_sinex_', process_list(pl,6:end), '.mat'];
+    end
     files.parameter=['../DATA/LEVEL3/', subfolder, '/', process_list(pl,6:end), '_parameter.mat'];
     files.antenna=['../DATA/LEVEL3/', subfolder, '/', process_list(pl,6:end), '_antenna.mat'];
     files.sources=['../DATA/LEVEL3/', subfolder, '/', process_list(pl,6:end), '_sources.mat'];
     
     snxFile=['../DATA/SNX/', subfolder, process_list(pl,6:end), suffix, '.snx'];
-    files.superstation=['../TRF/superstation.mat'];
+    files.superstation=('../TRF/superstation.mat');
     
     
     % check if SNX Folder exist
