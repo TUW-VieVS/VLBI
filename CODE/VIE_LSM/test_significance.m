@@ -104,6 +104,27 @@ try
             end
         end
     end
+    BCOsl = 3;
+    BCOcount = 0;
+    if isfield(x_, 'bdclko')
+        for i=1:length(x_.bdclko)
+           if abs(x_.bdclko(i).val)>BCOsl*x_.bdclko(i).mx
+               BCOcount = BCOcount + 1;
+               fprintf(1,'BCO estimate (%6.3f +- %6.3f cm) between %s and %s is significant on %2.0f sigma level\n', x_.bdclko(i).val, x_.bdclko(i).mx, x_.bdclko(i).namest1, x_.bdclko(i).namest2, BCOsl);                
+           end
+        end
+        if BCOcount>0
+            fprintf(1,'----------\n', opt_.fixed_clock);   
+            fprintf(1,'BCOs block for OPT file with CLOCK REFERENCE %s:\n', opt_.fixed_clock);   
+            fprintf(1,'+BASELINE-DEPENDENT CLOCK OFFSET\n'); 
+            for i=1:length(x_.bdclko)
+                if abs(x_.bdclko(i).val)>BCOsl*x_.bdclko(i).mx         
+                    fprintf(1,'%s  %s \n',  x_.bdclko(i).namest1, x_.bdclko(i).namest2);                
+                end
+            end
+            fprintf(1,'-BASELINE-DEPENDENT CLOCK OFFSET\n'); 
+        end
+    end
 catch
 	fprintf(1,'Significance test failed.');
 end
