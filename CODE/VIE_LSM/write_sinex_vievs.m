@@ -680,7 +680,8 @@ for pl=1:size(process_list,1)
         timeYrStr=num2str(time(:,1));
         
         % write data
-        fprintf(fid, writeFormat, antenna(k).siteCode, antenna(k).pointCode, soln, obsCode, timeYrStr(7:3:end), time(1,2), time(1,3), timeYrStr(8:3:end), time(2,2), time(2,3), antenna(k).ecctype, antenna(k).c_ecc(1), antenna(k).c_ecc(2), antenna(k).c_ecc(3));
+        ecctype = 'XYZ'; % in VIE_MOD/corr_ant.m eccentricities are transformed to XYZ for all stations
+        fprintf(fid, writeFormat, antenna(k).siteCode, antenna(k).pointCode, soln, obsCode, timeYrStr(7:3:end), time(1,2), time(1,3), timeYrStr(8:3:end), time(2,2), time(2,3), ecctype, antenna(k).c_ecc(1), antenna(k).c_ecc(2), antenna(k).c_ecc(3));
     end
 
     % write blockend line to file
