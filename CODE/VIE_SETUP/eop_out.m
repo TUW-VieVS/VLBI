@@ -20,7 +20,7 @@
 %   frequency variations.
 %   tot = a priori + estimated
 %
-%	Note! The set of parameters for triaxiality models to zero 
+%	Note! Set the parameters for triaxiality models to zero 
 % 			to get the ocean tidal influence only
 %
 % UPDATES:
@@ -31,18 +31,14 @@
 %
 % REFERENCES
 %
-%
-% COUPLING
-% - azel2xyew	???
-%
 %   External calls:
-%		/VIE_MOD/tai_utc.m
+%   VieVS/COMMON/time/tai_utc.m
+%   VieVS/COMMON/util/rad2mas.m
+%   VieVS/COMMON/eop/rg_zont2.m
 %		/VIE_MOD/eophf.m
-%		/VIE_MOD/rad2mas.m
-%		/VIE_MOD/rg_zont2.m
-%		    /OUT/get_out_val.m
-%			/OUT/eop_get_approx.m
-%		    /OUT/weightedMeanFunction.m (in get_out_val.m)
+%	    /VIE_SETUP/get_out_val.m
+%		/VIE_SETUP/eop_get_approx.m
+%		/VIE_SETUP/weightedMeanFunction.m (in get_out_val.m)
 %
 % INPUT
 % - process_list            : Process list containing all sessions which results should be written to the output file(s) 

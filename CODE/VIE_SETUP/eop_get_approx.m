@@ -35,10 +35,8 @@ dYeop  = (parameter.eop.dY)*1e3;  % [mas]
 % subtraction of tidal variations (Defraigne and Smits) in dUT1 before
 % interpolation
 if parameter.vie_mod.tidalUT == 1
-%    disp('remove tidal UT')
     taiut    = tai_utc(MJDeop); 
     MJDTTeop = MJDeop + (32.184 + taiut)/86400;
-    %         UT1corr  = tver2000(MJDTTeop);  % [sec]
     if parameter.vie_mod.tidalUT35 ==1
         par35=1;
     else
@@ -55,7 +53,6 @@ if strcmp(parameter.eop.interp,'linear')
     DXap  = interp1(MJDeop, dXeop,mjd,'linear','extrap');
     DYap  = interp1(MJDeop, dYeop,mjd,'linear','extrap');
 else % lagrange interpolation
-    % Subtraction of tidal variations (Defraigne and Smits) in dut1
     DUT1  = (lagint4v(MJDeop,UT1eop,mjd))';  
     XP    = (lagint4v(MJDeop, XPeop,mjd))';  
     YP    = (lagint4v(MJDeop, YPeop,mjd))';  
@@ -65,22 +62,8 @@ end
 
 % re-add tidal variation in dUT1
 if parameter.vie_mod.tidalUT == 1
-%    disp('re-add tidal UT')
-    %corrUT1 = tver2000(TT);     % [sec]
     corrUT1 = rg_zont2(TT,par35);  % [sec]
     DUT1    = DUT1 + corrUT1'*1e3;   % [ms]
 end
-
-%	if parameter.vie_mod.eophf ==1;
-%		inclhf = 'yes';
-%	else
-%		inclhf = 'no';
-%	end
-
-%	if parameter.vie_mod.dXdY == 1
-%	   inclanut = 'yes';
-%	else
-%	   inclanut = 'no';
-%	end
 
 

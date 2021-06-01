@@ -11222,6 +11222,46 @@ function checkbox_plot_eopOut_write_vievs_eop_data_Callback(hObject, eventdata, 
 
 % Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_vievs_eop_data
 
+% --- Executes on button press in checkbox_plot_eopOut_write_vievs_eop_data.
+function checkbox_plot_eopOut_write_ivs_eop_format_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_eopOut_write_vievs_eop_data (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if get(hObject, 'Value')
+    newState='On';
+else
+    newState='Off';
+end
+    set(handles.rb_plot_eopOut_write_ivs_eop_format_default, 'Enable', newState)
+    set(handles.rb_plot_eopOut_write_ivs_eop_format_pwlo, 'Enable', newState)
+
+% --- Executes on button press in rb_plot_eopOut_write_ivs_eop_format_default.
+function rb_plot_eopOut_write_ivs_eop_format_default_Callback(hObject, eventdata, handles)
+% hObject    handle to rb_plot_eopOut_write_ivs_eop_format_default
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_parameters_eop_interp_lin
+if get(hObject, 'Value')
+    set(handles.rb_plot_eopOut_write_ivs_eop_format_pwlo, 'Value', 0)
+else
+    set(handles.rb_plot_eopOut_write_ivs_eop_format_pwlo, 'Value', 1)
+end
+
+% --- Executes on button press in rb_plot_eopOut_write_ivs_eop_format_default.
+function rb_plot_eopOut_write_ivs_eop_format_pwlo_Callback(hObject, eventdata, handles)
+% hObject    handle to rb_plot_eopOut_write_ivs_eop_format_default
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_parameters_eop_interp_lin
+if get(hObject, 'Value')
+    set(handles.rb_plot_eopOut_write_ivs_eop_format_default, 'Value', 0)
+else
+    set(handles.rb_plot_eopOut_write_ivs_eop_format_default, 'Value', 1)
+end
+
+
 
 % --- Executes on button press in checkbox_run_globalPram_tidERPvar.
 function checkbox_run_globalPram_tidERPvar_Callback(hObject, eventdata, handles)

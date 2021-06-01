@@ -3,7 +3,7 @@
 % #########################################################################
 %
 % DESCRITPION
-% This function handldes writing of EOP files and baseline files.
+% This function handles writing of EOP files and baseline files.
 %
 % AUTHOR 
 %   Andreas Hellerschmied (2015.01.22)
@@ -82,6 +82,7 @@ end
 % Write EOP file
 if outBut==1
     output_mode(1:3)=0;
+    flag_ivsformat = false;
 	if get(handles.checkbox_plot_eopOut_write_detailed_eop_data,'Value') 
 		output_mode(1) = 1;
 	end
@@ -91,16 +92,43 @@ if outBut==1
 	if get(handles.checkbox_plot_eopOut_write_vievs_eop_data,'Value')
 		output_mode(3) = 1;
     end
+    if get(handles.checkbox_plot_eopOut_write_ivs_eop_format,'Value')
+		flag_ivsformat = true;
+        if get(handles.rb_plot_eopOut_write_ivs_eop_format_default,'Value')
+            flag_offsrate = true;
+        else
+            flag_offsrate = false;
+        end
+    end
     
-	if sum(output_mode) == 0 % No output option is selected (output_mode = [0, 0, 0]) => Error-msg.!
+	if sum(output_mode) == 0 && ~flag_ivsformat% No output option is selected (output_mode = [0, 0, 0]) => Error-msg.!
 		msgbox('ERROR: Please select at least one of the output options for the EOP file!');
+    elseif flag_ivsformat
+        if get(handles.radiobutton_plot_eopOut_outFile_default, 'Value')
+        eopOutFile=['../OUT/', curSubfolder, '.txt'];
+        end
+        flag_intensive = false;
+        write_eopivs(pl4eopOut, curSubfolder, eopOutFile,flag_intensive,flag_offsrate);
     else
         eop_out(pl4eopOut, curSubfolder, eopOutFile, output_mode);
 	end
 	
 % Write EOP file for intensives
 elseif outBut==2
-    eop_out(pl4eopOut,curSubfolder,eopOutFile,[],1);    % 1 (the last argument) is flag for intensive
+    flag_ivsformat = false;
+    if get(handles.checkbox_plot_eopOut_write_ivs_eop_format,'Value')
+		flag_ivsformat = true;
+        flag_intensive = true;
+        flag_offsrate = true;
+    end
+    if flag_ivsformat
+        if get(handles.radiobutton_plot_eopOut_outFile_default, 'Value')
+        eopOutFile=['../OUT/', curSubfolder, '.txt'];
+        end
+        write_eopivs(pl4eopOut,curSubfolder,eopOutFile,flag_intensive,flag_offsrate);
+    else
+        eop_out(pl4eopOut,curSubfolder,eopOutFile,[],1);    % 1 (the last argument) is flag for intensive
+    end
 % Write baseline file
 elseif outBut==3
 %     bas_outtxt(pl4eopOut,curSubfolder,eopOutFile);
