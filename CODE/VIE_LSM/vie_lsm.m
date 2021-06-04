@@ -667,6 +667,7 @@ oc_observ = ([temp.obs]-repmat([temp.com],numberOfLSMs,1))'.*c*100; % [cm]
 
 if opt.first ~= 1
     first_solution.ref_st = [];
+    first_solution.mo = [];
 elseif opt.first == 1
     [oc_observ,first_solution,opt] = reduce_oc(n_observ,na,n_scan,scan,Pobserv,oc_observ,opt,per_stat,parameter.session_name,dirpth);
 end
