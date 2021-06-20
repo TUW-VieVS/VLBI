@@ -287,22 +287,22 @@ for j = 1:pl(1)
     indn = ismember(mjd , mjdn);
     
 	if pol_est
-       xp   = x_.xpol.val(ismember(x_.xpol.mjd,mjdp));  
-	   xp_e = x_.xpol.mx(ismember(x_.xpol.mjd,mjdp));  
-	   yp   = x_.ypol.val(ismember(x_.ypol.mjd,mjdp));  
-	   yp_e = x_.ypol.mx(ismember(x_.ypol.mjd,mjdp));  
+           xp   = x_.xpol.val(ismember(x_.xpol.mjd,mjdp))';  
+	   xp_e = x_.xpol.mx(ismember(x_.xpol.mjd,mjdp))';  
+	   yp   = x_.ypol.val(ismember(x_.ypol.mjd,mjdp))';  
+	   yp_e = x_.ypol.mx(ismember(x_.ypol.mjd,mjdp))';  
     end
     
 	if ut1_est
-	   ut   = x_.dut1.val(ismember(x_.dut1.mjd,mjdu));   
-	   ut_e = x_.dut1.mx(ismember(x_.dut1.mjd,mjdu));  
+	   ut   = x_.dut1.val(ismember(x_.dut1.mjd,mjdu))';   
+	   ut_e = x_.dut1.mx(ismember(x_.dut1.mjd,mjdu))';  
     end
     
     if nut_est
- 	   dX   = x_.nutdx.val(ismember(x_.nutdx.mjd,mjdn)); 
-	   dX_e = x_.nutdx.mx(ismember(x_.nutdx.mjd,mjdn)); 
-	   dY   = x_.nutdy.val(ismember(x_.nutdy.mjd,mjdn)); 
-	   dY_e = x_.nutdy.mx(ismember(x_.nutdy.mjd,mjdn)); 
+ 	   dX   = x_.nutdx.val(ismember(x_.nutdx.mjd,mjdn))'; 
+	   dX_e = x_.nutdx.mx(ismember(x_.nutdx.mjd,mjdn))'; 
+	   dY   = x_.nutdy.val(ismember(x_.nutdy.mjd,mjdn))'; 
+	   dY_e = x_.nutdy.mx(ismember(x_.nutdy.mjd,mjdn))'; 
     end 
     
 	% get a priori values for estimation epochs
@@ -328,7 +328,7 @@ for j = 1:pl(1)
         %
     if nut_est
     dXtot = dX + DXap(indn); % [mas]
-	dYtot = dY + DYap(indn); % [mas]
+    dYtot = dY + DYap(indn); % [mas]
     end
     
     % for estimation intervals daily or longer and choice offset+rate the value is interpolated
@@ -387,7 +387,7 @@ for j = 1:pl(1)
         [leapsec,~]  = tai_utc([mjdu(1) mjdu(2) mjdsesmid],1);       % get difference TAI-UTC [s]
 	    TT = [mjdu(1) mjdu(2) mjdsesmid] + (32.184 + leapsec')./86400;     % [MJD TT]
         UT1corr  = rg_zont2(TT,2);  % [s]
-        uttoti   = uttot - UT1corr(1:2,:)*1e3;  % [ms]
+        uttoti   = uttot - UT1corr(1:2,:)'*1e3;  % [ms]
         utfini = uttoti(1)*mjdu2_mid/dmjdu + uttoti(2)*mid_mjdu1/dmjdu;
         utfin = utfini + UT1corr(3,1)*1e3; % [ms]
         utfin_e = sqrt((mjdu2_mid/dmjdu*ut_e(1))^2 + (mid_mjdu1/dmjdu*ut_e(2))^2); 
