@@ -160,7 +160,7 @@ switch(parameter.data_type)
     case 'vgosdb'
     
         % folder of e.g. Head.nc file
-        curNcFolder = ['../DATA/vgosDB/',parameter.year, '/',parameter.session_name,'/'];
+        curNcFolder = [parameter.filepath,parameter.session_name,'/'];
 
         % uncompress vgosDB *.tar.gz or *.tgz file
         wasCompressed = false;
@@ -189,7 +189,7 @@ switch(parameter.data_type)
         if ~isfolder(curNcFolder)
             fprintf('No folder with the name %s was found after uncompressing the .tgz file.\nChecking for name extensions.\n', parameter.session_name)
             
-            potentialFolders = dir(['../DATA/vgosDB/',parameter.year, '/',parameter.session_name,'*']);
+            potentialFolders = dir([parameter.filepath,parameter.session_name,'*']);
             dirFlags = [potentialFolders.isdir];
             potentialFolders = potentialFolders(dirFlags);
 
@@ -201,7 +201,7 @@ switch(parameter.data_type)
                 fprintf('Aborting.\n')
             else
                 fprintf('Found one matching folder: %s. Using this folder.\n', potentialFolders.name)
-                curNcFolder = ['../DATA/vgosDB/',parameter.year, '/', potentialFolders.name,'/'];
+                curNcFolder = [parameter.filepath, potentialFolders.name,'/'];
             end
         end
         

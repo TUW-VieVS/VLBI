@@ -120,7 +120,8 @@ for j = 1:pl(1)
         else
         
         % find right masterfile for selected session
-        filepath_masterfile = strcat(filepath_masterfiles,'master', num2str(yy),'.txt');
+        stryy = sprintf('%02d',yy);
+        filepath_masterfile = strcat(filepath_masterfiles,'master', stryy,'.txt');
 
         % read masterfile 
         fid = fopen(filepath_masterfile);
@@ -138,7 +139,7 @@ for j = 1:pl(1)
         fclose(fid);
 
         % read VGOS masterfile (for some years seperate VGOS masterfiles exist)
-        filepath_masterfile_vgos = strcat(filepath_masterfiles,'master', num2str(yy),'-vgos.txt');
+        filepath_masterfile_vgos = strcat(filepath_masterfiles,'master', stryy,'-vgos.txt');
         vgosmaster = false;
         if exist(filepath_masterfile_vgos,'file') 
             vgosmaster = true;

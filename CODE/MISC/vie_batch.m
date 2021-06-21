@@ -35,7 +35,7 @@
 % - 2016-01-05, A. Hellerschmied: Minor changes (code for pre 2.0 VieVS versions removed) 
 % - 2016-07-12, A. Hellerschmied: Revised this function
 %                   - Support of different types of input data (vgosDB, NGS, VSO)
-%                   - New field in the parameter strucutre: parameter.year, parameter.data_type, parameter.session_name
+%                   - New field in the parameter structure: parameter.year, parameter.data_type, parameter.session_name
 % - 2016-08-30, A. Hellerschmied: filepath of input file is now saved in parameter.filepath
 % - 2016-09-29, H. Krasna: save('PROCESSLIST/failed_sessions.mat','process_list'); \ change to / to be compatible with Linux
 % - 2016-10-13, A. Hellerschmied: Field "parameter.fielpath" was not written for vgosDB files
@@ -264,7 +264,7 @@ if ~isempty(process_list)
                     parameter.data_type = 'vso'; 
                 end
 
-                %% Get the session name, the fielpath and the year (string)
+                %% Get the session name, the filepath and the year (string)
                 switch(parameter.data_type)
                     case 'ngs'
                         flag_absolut_path = false;
@@ -320,7 +320,7 @@ if ~isempty(process_list)
                             parameter.filepath      =  '../DATA/VSO/';
                             parameter.year          = [];       % year is not included in the session name
                             % NOTE: The name of the folder containing the vso file has to be the session year!
-                            % => parameter.year is required to look get the paths to OPT and OUITLIER files in vie_init!
+                            % => parameter.year is required to get the paths to OPT and OUTLIER files in vie_init!
                             error('Invalid filepath of input vso file(%s)! NOTE: The name of the folder containing the vso file has to be the session year!', parameter.filepath)
                         else
                             parameter.session_name  = session_name(max(ind_tmp) + 1 : (strfind(session_name, ' [VSO]')-1));
@@ -343,7 +343,7 @@ if ~isempty(process_list)
 
                         % Format: <absolut path>/<year>/<session_name>
                         % NOTE: The name of the folder containing the vso file has to be the session year!
-                        % => parameter.year is required to look get the paths to OPT and OUITLIER files in vie_init!
+                        % => parameter.year is required to get the paths to OPT and OUTLIER files in vie_init!
                         if flag_absolut_path
                             parameter.filepath  = session_name(1 : max(ind_tmp));
                             % Get year:
@@ -365,8 +365,20 @@ if ~isempty(process_list)
 
                     case 'vgosdb'
                         parameter.session_name  = session_name(6 : (strfind(session_name, ' [vgosDB]')-1));
-                        parameter.year          = session_name(1:4);
-                        parameter.filepath      = ['../DATA/vgosDB/', parameter.year, '/'];
+                        year_tmp = str2double(parameter.session_name(1:2));
+                        % Check if conversion was sucessfull:
+                        if isnan(year_tmp)
+                            error('Invalid vgosDB file name: The first two letters have to represent the year of the session! Please keep the standard naming convention, e.g. "16AUG26XU"!');
+                        else
+                            % Convert two digit year to four digits!
+                            if year_tmp < 79
+                                year_tmp = year_tmp + 2000;
+                            elseif year_tmp >= 79
+                                year_tmp = year_tmp + 1900;
+                            end
+                        end
+                        parameter.year = num2str(year_tmp); % year has to be saved as string!
+                        parameter.filepath      = ['../DATA/vgosDB/', session_name(1:4), '/'];
                         fprintf(' Input file format: vgosDB\n');
                 end % switch(parameter.data_type)
                 session = parameter.session_name;
@@ -556,9 +568,9 @@ if ~isempty(process_list)
                         end
 
                         year_tmp = str2double(parameter.session_name(1:2));
-                        % Check if converversion was sucessfull:
+                        % Check if conversion was sucessfull:
                         if isnan(year_tmp)
-                            error('Invalid NGS file name: The first two letters have to represent the year of the session! Please keept the standard naming convention, e.g. "16AUG26XU_N004"!');
+                            error('Invalid NGS file name: The first two letters have to represent the year of the session! Please keep the standard naming convention, e.g. "16AUG26XU_N004"!');
                         else
                             % Convert two digit year to four digits!
                             if year_tmp < 79
@@ -579,7 +591,7 @@ if ~isempty(process_list)
                             parameter.filepath      =  '../DATA/VSO/';
                             parameter.year          = [];       % year is not included in the session name
                             % NOTE: The name of the folder containing the vso file has to be the session year!
-                            % => parameter.year is required to look get the paths to OPT and OUITLIER files in vie_init!
+                            % => parameter.year is required to get the paths to OPT and OUTLIER files in vie_init!
                             error('Invalid filepath of input vso file(%s)! NOTE: The name of the folder containing the vso file has to be the session year!', parameter.filepath)
                         else
                             parameter.session_name  = session_name(max(ind_tmp) + 1 : (strfind(session_name, ' [VSO]')-1));
@@ -602,7 +614,7 @@ if ~isempty(process_list)
 
                         % Format: <absolut path>/<year>/<session_name>
                         % NOTE: The name of the folder containing the vso file has to be the session year!
-                        % => parameter.year is required to look get the paths to OPT and OUITLIER files in vie_init!
+                        % => parameter.year is required to get the paths to OPT and OUTLIER files in vie_init!
                         if flag_absolut_path
                             parameter.filepath  = session_name(1 : max(ind_tmp));
                             % Get year:
@@ -624,8 +636,20 @@ if ~isempty(process_list)
 
                     case 'vgosdb'
                         parameter.session_name  = session_name(6 : (strfind(session_name, ' [vgosDB]')-1));
-                        parameter.year          = session_name(1:4);
-                        parameter.filepath      = ['../DATA/vgosDB/', parameter.year, '/'];
+                        year_tmp = str2double(parameter.session_name(1:2));
+                        % Check if conversion was sucessfull:
+                        if isnan(year_tmp)
+                            error('Invalid vgosDB file name: The first two letters have to represent the year of the session! Please keep the standard naming convention, e.g. "16AUG26XU"!');
+                        else
+                            % Convert two digit year to four digits!
+                            if year_tmp < 79
+                                year_tmp = year_tmp + 2000;
+                            elseif year_tmp >= 79
+                                year_tmp = year_tmp + 1900;
+                            end
+                        end
+                        parameter.year = num2str(year_tmp); % year has to be saved as string!
+                        parameter.filepath      = ['../DATA/vgosDB/', session_name(1:4), '/'];
                         fprintf(' Input file format: vgosDB\n');
                 end % switch(parameter.data_type)
                 session = parameter.session_name;

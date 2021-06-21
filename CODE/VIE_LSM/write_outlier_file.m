@@ -11,7 +11,7 @@
 % NOTE:
 % The following fields are requird in the parameter structure (general session info):
 %  - parameter.session_name
-%  - parameter.year
+%  - parameter.filepath
 % => This might cause problems with LEVEL 1 data from older VieVS versions (before V3.0)!
 %
 %
@@ -60,14 +60,14 @@ if ~isempty(out_v)
     % ##### File directory and path #####
     
     % Get output dir.:
-    if isfield(parameter, 'year')
+    if isfield(parameter, 'filepath')
         if ~isempty([parameter.lsmopt.dirout])
-            outdir = ['../DATA/OUTLIER/', parameter.lsmopt.dirout, '/', parameter.year, '/'];
+            outdir = ['../DATA/OUTLIER/', parameter.lsmopt.dirout, '/', parameter.filepath(end-4:end)];
         else
-            outdir = ['../DATA/OUTLIER/', parameter.year, '/'];
+            outdir = ['../DATA/OUTLIER/', parameter.filepath(end-4:end)];
         end
     else
-        % If "parameter.year" is not availabe, the outlier file is written to /DATA/OUTLIER/
+        % If "parameter.filepath" is not availabe, the outlier file is written to /DATA/OUTLIER/
         outdir = '../DATA/OUTLIER/';
     end
     

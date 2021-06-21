@@ -64,41 +64,41 @@ else
             
             % ##### Check, if the input dataset file followed the standard naming convention #####
             % => YYMMMDDcc_Nnnn (c...alphabetic character, n...number)
-            flag_std_naming_convention = true;
-
-            % Total length = 14 char
-            if length(session) ~= 14
-                flag_std_naming_convention = false; 
-            end
-
-            if flag_std_naming_convention
-                % "_" at car. 10
-                if ~strcmp(session(10), '_')
-                    flag_std_naming_convention = false;
-                end
-                % first two characters are numbers:
-                [~, status_1] = str2num(session(1:2));
-                % char. 6+7 are numbers:
-                [~, status_2] = str2num(session(6:7));
-                % char. 12-14 are numbers:
-                [~, status_3] = str2num(session(12:14));
-                if ~(status_1 && status_2 && status_3)
-                    flag_std_naming_convention = false;
-                end
-            end
-
-            if flag_std_naming_convention
-                % ##### Standard naming convention is used for this session: #####
-
-                % Get the year from the session name:
-                if str2double(session(1:2)) > 75
-                    yearStr = ['19', session(1:2)];
-                else
-                    yearStr = ['20', session(1:2)];
-                end
-
-                
-            else
+%             flag_std_naming_convention = true;
+% 
+%             % Total length = 14 char
+%             if length(session) ~= 14
+%                 flag_std_naming_convention = false; 
+%             end
+% 
+%             if flag_std_naming_convention
+%                 % "_" at car. 10
+%                 if ~strcmp(session(10), '_')
+%                     flag_std_naming_convention = false;
+%                 end
+%                 % first two characters are numbers:
+%                 [~, status_1] = str2num(session(1:2));
+%                 % char. 6+7 are numbers:
+%                 [~, status_2] = str2num(session(6:7));
+%                 % char. 12-14 are numbers:
+%                 [~, status_3] = str2num(session(12:14));
+%                 if ~(status_1 && status_2 && status_3)
+%                     flag_std_naming_convention = false;
+%                 end
+%             end
+% 
+%             if flag_std_naming_convention
+%                 % ##### Standard naming convention is used for this session: #####
+% 
+%                 % Get the year from the session name:
+%                 if str2double(session(1:2)) > 75
+%                     yearStr = ['19', session(1:2)];
+%                 else
+%                     yearStr = ['20', session(1:2)];
+%                 end
+% 
+%                 
+%             else
                 % ##### Non-Standard naming convention is used for this session: #####
                 % e.g. when using .vso input files
                 % => Get yearStr from the opt_ file!
@@ -110,9 +110,9 @@ else
 
                 % load opt_ file and get the year:
                 load(['../DATA/LEVEL3/', curSubfolder, '/opt_', session, '.mat']);
-                yearStr = opt_.year;
+                yearStr = opt_.data_filepath(end-4:end-1);
 
-            end
+%             end
             
             OUTfolder = ['../DATA/OUTLIER/', OUTLIERsubFolder, '/', yearStr, '/'];
             OUTfilename = [allPopupmenuEntriesSessions{chosenSessionInd}, '.OUT'];

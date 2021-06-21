@@ -56,34 +56,24 @@ if flag_std_naming_convention
     end
 end
 
-if flag_std_naming_convention
-    % ##### Standard naming convention is used for this session: #####
-    
-    % Get the year from the session name:
-    if str2double(session(1:2)) > 75
-        yearStr = ['19', session(1:2)];
-    else
-        yearStr = ['20', session(1:2)];
-    end
-    
-    OPTFileName = [session(1:9), '.OPT'];
-    
-    
-    
-else
-    % ##### Non-Standard naming convention is used for this session: #####
-    % e.g. when using .vso input files
-    % => Get yearStr from the opt_ file!
-    
-    % #### Load opt_ file from LEVEL 3 (sub-)directory: ####
+% #### Load opt_ file from LEVEL 3 (sub-)directory: ####
     % Get sub-dir.:
     allSubfolders   = get(handles.popupmenu_plot_residuals_folder, 'string');
     curSubfolder    = allSubfolders{get(handles.popupmenu_plot_residuals_folder, 'Value')};
-    
-    % load opt_ file and get the year:
+    % get the "year folder":
     load(['../DATA/LEVEL3/', curSubfolder, '/opt_', session, '.mat']);
-    yearStr = opt_.year;
-    
+    yearStr = opt_.data_filepath(end-4:end-1);
+
+if flag_std_naming_convention
+    % ##### Standard naming convention is used for this session: #####
+         
+    OPTFileName = [session(1:9), '.OPT'];
+   
+ 
+else
+    % ##### Non-Standard naming convention is used for this session: #####
+    % e.g. when using .vso input files
+            
     OPTFileName = [session, '.OPT'];
 end
 

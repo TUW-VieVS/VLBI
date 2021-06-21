@@ -249,9 +249,9 @@ parameter.vie_init.stat_dw = [];
 
 % read OPT-file
 if length(parameter.session_name) == 14
-    opt_file_path_name = ['../../VLBI_OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name(1:end-5), '.OPT'];
+    opt_file_path_name = ['../../VLBI_OPT/', parameter.vie_init.diropt, '/', parameter.filepath(end-4:end-1), '/', parameter.session_name(1:end-5), '.OPT'];
 elseif length(parameter.session_name) == 9
-    opt_file_path_name = ['../../VLBI_OPT/', parameter.vie_init.diropt, '/', parameter.year, '/', parameter.session_name, '.OPT'];
+    opt_file_path_name = ['../../VLBI_OPT/', parameter.vie_init.diropt, '/', parameter.filepath(end-4:end-1), '/', parameter.session_name, '.OPT'];
 elseif length(parameter.session_name) ~= 19
     warning('Session name does not follow convention');
 end
@@ -338,7 +338,7 @@ end
 % ##### Outlier files #####
 parameter.outlier.obs2remove = []; % init empty field for outliers
 
-outlier_filename_path = ['../DATA/OUTLIER/', parameter.outlier.out_file_dir, '/', parameter.year, '/', parameter.session_name, '.OUT'];
+outlier_filename_path = ['../DATA/OUTLIER/', parameter.outlier.out_file_dir, '/', parameter.filepath(end-4:end-1), '/', parameter.session_name, '.OUT'];
 if parameter.outlier.flag_remove_outlier
     if exist(outlier_filename_path, 'file')
         [parameter.outlier.obs2remove] = readOUT(outlier_filename_path);
