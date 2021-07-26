@@ -5,13 +5,13 @@
 *                                                                 *
 *******************************************************************
 *
-* This file is ns-codes.txt in ftp://ivscc.gsfc.nasa.gov/pub/control.
+* This file is ns-codes.txt in https://cddis.nasa.gov/archive/vlbi/ivscontrol.
 * Copies are in directory vlbi/ivscontrol on the IVS data centers. 
 *
 * Maintenance:
 * This file is maintained by the IVS Coordinating Center. Send
 * corrections and request additions to the lists from 
-* ivscc@ivscc.gsfc.nasa.gov. The Coordinating Center will
+* ivscc@lists.nasa.gov. The Coordinating Center will
 * provide assistance by assigning codes and requesting CDP 
 * and DOMES numbers for new stations.
 *
@@ -147,6 +147,8 @@
 * 200226 dbb Add DOMES and CDP numbers for McDonald Geodetic Observatory (MGO).
 *            Change IVS Station name from MCDON12M to MACGO12M.
 * 200228 dbb Add 13.2-m at Metsahovi as Mf METSA13M with DOMES and CDP numbers.
+* 201021 dbb Add DSS26.
+* 210309 dbb Add DSS56.
 *
 * Fields:
 * 1. IVS 2-letter code. Not case sensitive, although the initial 
@@ -166,10 +168,12 @@
  13 DSS13    40405S039 1516 34-m at Goldstone, CA, USA
  14 GOLDMARS 40405S001 1514 70-m DSS14 at Goldstone, CA, USA
  15 DSS15    40405S019 1515 34-m HEF at Goldstone, CA, USA
+ 26 DSS26    --------- ---- 34-m BWG at Goldstone, CA, USA
  34 DSS34    --------- ---- 34-m DSS34 at Tidbinbilla, Australia
  36 DSS36    --------- ---- 34-m DSS36 at Tidbinbilla, Australia
  43 DSS43    --------- ---- 34-m Australia
  45 DSS45    50103S010 1545 34-m HEF at Tidbinbilla, Australia
+ 56 DSS56    --------- ---- 34-m BWG at Madrid, Spain
  61 ROBLED32 13407S003 1561 DSS61 Robledo, Spain
  65 DSS65    13407S010 1565 34-m HEF at Madrid, Spain
  6a DSS65A   13407S014 1567 34-m HEF at Madrid, Spain (new location)
@@ -387,8 +391,6 @@
  Wh -------- --------- ---- Weilheim, Germany
  Wn WETTZ13N 14201S043 7387 Wettzell 13-m antenna north (north tower of TTW), Germany
  Ws WETTZ13S 14201S044 7388 Wettzell 13-m antenna south (south tower of TTW), Germany
- W1 WETZ13SH --------- ---- Wettzell 13-m antenna south (south tower of TTW), Germany
- W2 WETZ13SV --------- ---- Wettzell 13-m antenna south (south tower of TTW), Germany
  Wt WHTHORSE 40118M001 7284 mobile Whitehorse, Yukon Ter., Canada
  Ww WARK12M  50243S001 7377 12-m antenna at Warkworth, New Zealand
  Wz WETTZELL 14201S004 7224 Wettzell, Germany
