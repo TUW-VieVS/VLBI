@@ -174,99 +174,111 @@ for ip = 1:nSes
         fprintf('You need to estimate the station coordinates first for session %s!\n',sname);
     else
         index = find(~cellfun(@isempty,{x_.coorx.col}));
-        if length(index) == length(x_.antenna)
-            index_first = index(1);
-            mjd = x_.coorx(index_first).mjd;
 
-            % number of stations
-            nstat = length(x_.antenna);
+            
+        index_first = index(1);
+        mjd = x_.coorx(index_first).mjd;
 
-            for k =  1:nstat
-                stnam = x_.antenna(k).name;
-                % calculate catalogue coordinates at time of interest
-                [xa,ya,za] = corap(antenna,stnam,mjd);
-                stat.apr(k,:)=[xa,ya,za];
-                stat.est(k,:)=[x_.coorx(k).val/100,x_.coory(k).val/100,...
-                                                x_.coorz(k).val/100]; %[m]
-                stat.name(k,:) = stnam;
-                stat.mx(k,:)=sqrt(((x_.coorx(k).mx/100)^2+(x_.coory(k).mx/100)^2+(x_.coorz(k).mx/100)^2)/3);
-                % non-rigourous(!) standard deviation. (in meters)
+        % number of stations
+        nstat = length(x_.antenna);
+
+        for k =  1:nstat
+            stnam = x_.antenna(k).name;
+            % calculate catalogue coordinates at time of interest
+            [xa,ya,za] = corap(antenna,stnam,mjd);
+            stat.apr(k,:)=[xa,ya,za];
+
+            staest = [x_.coorx(k).val/100,x_.coory(k).val/100,x_.coorz(k).val/100]; %[m]
+            if isempty(staest)
+                rigFormErr=0; % fixed stations are missing in the N-matrix
+                stat.est(k,:) = [0 0 0]; 
+            else
+                stat.est(k,:) = staest; 
             end
 
-            % calculate corrected values as apriori + estimated corrections 
-            stat.corr = stat.apr + stat.est;
+            stat.name(k,:) = stnam;
 
-            % calculate baselines
-            % number of baselines
-            nbas = nstat*(nstat-1)/2;
-
-            if rigFormErr==1
-                % Co-variance matrix
-                N = [atpa_.mat];
-                Qx = inv(N);
+            stamx=sqrt(((x_.coorx(k).mx/100)^2+(x_.coory(k).mx/100)^2+(x_.coorz(k).mx/100)^2)/3);
+            % non-rigourous(!) standard deviation. (in meters)
+            if isempty(stamx)
+                stat.mx(k,:)=[0 0 0];
+            else
+                stat.mx(k,:)=stamx;
             end
+        end
 
-            % calculate baselines and write them to the output file 
-            for ib = 1 : nstat-1
-              for j = ib+1 : nstat
-                    stat1 = stat.name(ib,:);
-                    stat2 = stat.name(j,:);
-                    % length of apriori baseline [m]
-                    ap = norm(stat.apr(j,:)-stat.apr(ib,:));
-                    % length of corrected baseline [m]
-                    corr = norm(stat.corr(j,:)-stat.corr(ib,:));
-                    if rigFormErr==1
-                        a1 = -(stat.corr(j,1)-stat.corr(ib,1))/corr; 
-                        a2 = -(stat.corr(j,2)-stat.corr(ib,2))/corr;
-                        a3 = -(stat.corr(j,3)-stat.corr(ib,3))/corr;
-                        a4 = -a1;
-                        a5 = -a2;
-                        a6 = -a3;
-                        A = [a1 a2 a3 a4 a5 a6];
-                        qx1 = x_.coorx(ib).col;  qy1 = x_.coory(ib).col; qz1 = x_.coorz(ib).col;
-                        qx2 = x_.coorx(j).col;   qy2 = x_.coory(j).col;  qz2 = x_.coorz(j).col;
-                        Qd = [];
-                        Qd = [Qx(qx1,qx1) Qx(qx1,qy1) Qx(qx1,qz1) Qx(qx1,qx2) Qx(qx1,qy2) Qx(qx1,qz2)
-                              Qx(qy1,qx1) Qx(qy1,qy1) Qx(qy1,qz1) Qx(qy1,qx2) Qx(qy1,qy2) Qx(qy1,qz2)
-                              Qx(qz1,qx1) Qx(qz1,qy1) Qx(qz1,qz1) Qx(qz1,qx2) Qx(qz1,qy2) Qx(qz1,qz2)
-                              Qx(qx2,qx1) Qx(qx2,qy1) Qx(qx2,qz1) Qx(qx2,qx2) Qx(qx2,qy2) Qx(qx2,qz2)
-                              Qx(qy2,qx1) Qx(qy2,qy1) Qx(qy2,qz1) Qx(qy2,qx2) Qx(qy2,qy2) Qx(qy2,qz2)
-                              Qx(qz2,qx1) Qx(qz2,qy1) Qx(qz2,qz1) Qx(qz2,qx2) Qx(qz2,qy2) Qx(qz2,qz2)];  
-                        md = sqrt(A*Qd*A')*opt_.mo*0.01; % [m] 
+        % calculate corrected values as apriori + estimated corrections 
+        stat.corr = stat.apr + stat.est;
+
+        % calculate baselines
+        % number of baselines
+        nbas = nstat*(nstat-1)/2;
+
+        if rigFormErr==1
+            % Co-variance matrix
+            N = [atpa_.mat];
+            Qx = inv(N);
+        end
+
+        % calculate baselines and write them to the output file 
+        for ib = 1 : nstat-1
+           for j = ib+1 : nstat
+                stat1 = stat.name(ib,:);
+                stat2 = stat.name(j,:);
+                % length of apriori baseline [m]
+                ap = norm(stat.apr(j,:)-stat.apr(ib,:));
+                % length of corrected baseline [m]
+                corr = norm(stat.corr(j,:)-stat.corr(ib,:));
+                if rigFormErr==1
+                    a1 = -(stat.corr(j,1)-stat.corr(ib,1))/corr; 
+                    a2 = -(stat.corr(j,2)-stat.corr(ib,2))/corr;
+                    a3 = -(stat.corr(j,3)-stat.corr(ib,3))/corr;
+                    a4 = -a1;
+                    a5 = -a2;
+                    a6 = -a3;
+                    A = [a1 a2 a3 a4 a5 a6];
+                    qx1 = x_.coorx(ib).col;  qy1 = x_.coory(ib).col; qz1 = x_.coorz(ib).col;
+                    qx2 = x_.coorx(j).col;   qy2 = x_.coory(j).col;  qz2 = x_.coorz(j).col;
+                    Qd = [];
+                    Qd = [Qx(qx1,qx1) Qx(qx1,qy1) Qx(qx1,qz1) Qx(qx1,qx2) Qx(qx1,qy2) Qx(qx1,qz2)
+                          Qx(qy1,qx1) Qx(qy1,qy1) Qx(qy1,qz1) Qx(qy1,qx2) Qx(qy1,qy2) Qx(qy1,qz2)
+                          Qx(qz1,qx1) Qx(qz1,qy1) Qx(qz1,qz1) Qx(qz1,qx2) Qx(qz1,qy2) Qx(qz1,qz2)
+                          Qx(qx2,qx1) Qx(qx2,qy1) Qx(qx2,qz1) Qx(qx2,qx2) Qx(qx2,qy2) Qx(qx2,qz2)
+                          Qx(qy2,qx1) Qx(qy2,qy1) Qx(qy2,qz1) Qx(qy2,qx2) Qx(qy2,qy2) Qx(qy2,qz2)
+                          Qx(qz2,qx1) Qx(qz2,qy1) Qx(qz2,qz1) Qx(qz2,qx2) Qx(qz2,qy2) Qx(qz2,qz2)];  
+                    md = sqrt(A*Qd*A')*opt_.mo*0.01; % [m] 
+                else
+                    md=sqrt( (stat.mx(ib))^2+(stat.mx(j))^2 ); % meters
+                end
+                if out2file==1
+                    fprintf(fid,'%s %s %s - %s %15.4f %15.4f %7.4f\n',num2str(sname),num2str(mjd),stat1(1:8),stat2(1:8),ap,corr,md);
+                end
+
+                % output to variable
+                if out2var==1
+                    curBasN=[stat1,'-',stat2];
+                    curBasN2=[stat2,'-',stat1];
+
+                    % see if we already have that baseline
+                    foundBasLog=strcmpi({bas.name},curBasN) | ...
+                        strcmpi({bas.name},curBasN2);
+                    if sum(foundBasLog)==0 % we have a new baseline
+                        kbas=kbas+1;
+                        toBasInd=kbas;
+                        toBasFieldsInd=1;
+                        bas(toBasInd).name=curBasN;
                     else
-                        md=sqrt( (stat.mx(ib))^2+(stat.mx(j))^2 ); % meters
+                        toBasInd=find(foundBasLog);
+                        toBasFieldsInd=length(bas(toBasInd).mjd)+1;
                     end
-                    if out2file==1
-                        fprintf(fid,'%s %s %s - %s %15.4f %15.4f %7.4f\n',num2str(sname),num2str(mjd),stat1(1:8),stat2(1:8),ap,corr,md);
-                    end
-
-                    % output to variable
-                    if out2var==1
-                        curBasN=[stat1,'-',stat2];
-                        curBasN2=[stat2,'-',stat1];
-
-                        % see if we already have that baseline
-                        foundBasLog=strcmpi({bas.name},curBasN) | ...
-                            strcmpi({bas.name},curBasN2);
-                        if sum(foundBasLog)==0 % we have a new baseline
-                            kbas=kbas+1;
-                            toBasInd=kbas;
-                            toBasFieldsInd=1;
-                            bas(toBasInd).name=curBasN;
-                        else
-                            toBasInd=find(foundBasLog);
-                            toBasFieldsInd=length(bas(toBasInd).mjd)+1;
-                        end
-                        bas(toBasInd).ap(toBasFieldsInd)=ap;
-                        bas(toBasInd).corr(toBasFieldsInd)=corr;
-                        bas(toBasInd).mjd(toBasFieldsInd)=mjd;
-                        bas(toBasInd).mbas(toBasFieldsInd)=md;
-                    end
+                    bas(toBasInd).ap(toBasFieldsInd)=ap;
+                    bas(toBasInd).corr(toBasFieldsInd)=corr;
+                    bas(toBasInd).mjd(toBasFieldsInd)=mjd;
+                    bas(toBasInd).mbas(toBasFieldsInd)=md;
                 end
             end
-        else
-            fprintf('You need to estimate the station coordinates for all stations for session %s!\n',sname);
         end
+       
     end
 end
 
