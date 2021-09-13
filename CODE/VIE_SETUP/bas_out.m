@@ -201,7 +201,7 @@ for ip = 1:nSes
             stamx=sqrt(((x_.coorx(k).mx/100)^2+(x_.coory(k).mx/100)^2+(x_.coorz(k).mx/100)^2)/3);
             % non-rigourous(!) standard deviation. (in meters)
             if isempty(stamx)
-                stat.mx(k,:)=[0 0 0];
+                stat.mx(k,:)=0;
             else
                 stat.mx(k,:)=stamx;
             end
