@@ -514,6 +514,7 @@ opt.est_singleses = opt.est_singleses;  % case 0: parameters will be not estimat
                                         
 % GUI for vie_lsm
 opt.control_gui_vie_lsm = opt.control_gui_vie_lsm;
+
 if opt.control_gui_vie_lsm == 1
     uiwait(vie_lsm_gui_first(opt));
     % Load opt_tmp.mat from the /WORK/ dir. and delete it afterwards:
