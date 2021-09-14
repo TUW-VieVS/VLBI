@@ -91,7 +91,7 @@ for j = 1:pl(1)
         filepath_masterfiles = '../DATA/MASTER/';
         
         if flag_intensive
-            filepath_masterfile = strcat(filepath_masterfiles, 'master', num2str(yy), '-int.txt');
+            filepath_masterfile = strcat(filepath_masterfiles, 'master', num2str(yy,'%02d'), '-int.txt');
 
             % read masterfile
             fid = fopen(filepath_masterfile);   
@@ -192,10 +192,16 @@ for j = 1:pl(1)
     
     %% collect session specific information
     wrms_pfr = x_.wrms*100/2.99792458; %[ps]
+    if wrms_pfr > 999
+        continue
+    end
     num_obs = x_.nobs;
     netID = '';
     for ista = 1:length(x_.antenna)
      indcod = strcmp(code_name(:,2),x_.antenna(ista).name);
+     if isempty(cell2mat(code_name(indcod,1)))
+         continue
+     end
      netID = strcat(netID,strtrim(code_name(indcod)));
     end
     
@@ -241,6 +247,8 @@ for j = 1:pl(1)
        % if offset+rate is selected or parameter was estimated with tight constraints
        if (dmjdu >=1 && length(mjdu)==3 && (flag_offsrate || flag_ut1tight))
            mjdu(abs(mjdu-mjdsesmid)>1)=[];
+       elseif (flag_intensive && length(mjdu)==3) % sometimes also intensives have three values
+           mjdu(abs(mjdu-mjdsesmid)>dmjdu)=[];
        elseif (dmjdu<1 && flag_ut1tight && ~flag_intensive)
            mjdu(2:end-1)=[];
            dmjdu = mjdu(2)-mjdu(1);
