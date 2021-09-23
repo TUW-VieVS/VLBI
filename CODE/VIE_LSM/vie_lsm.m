@@ -229,6 +229,9 @@ clean_opt.no_cab        = ''; % Cable cal
 clean_opt.bdco_est.sta1 = '';
 clean_opt.bdco_est.sta2 = '';
 
+clean_opt.cablecal.sta = '';
+clean_opt.cablecal.cable_cal_data_source = '';
+
 clean_opt.scan_excl     = []; % Outliers
 
 parameter.opt.options = clean_opt; % Init

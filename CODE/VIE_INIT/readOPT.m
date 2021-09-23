@@ -30,9 +30,9 @@
 %   21 Dec 2015 by A. Hellerschmied: Remove clock breaks of excluded stations from ini_opt.clk_break struct (...also clk. breaks during excluded time periods)
 %   07 Jan 2016 by A. Hellerschmied: - Matlab backward compatibility problem solved (textscan, multiple delimiters)
 %                                    - Do not remove clock breaks at stations, if only a subset of the observation data is excluded.
-%   28 Jan 2016 by C. Sch�nberger: '-' are allowed in station name. sources can be excluded for a certain time span.
+%   28 Jan 2016 by C. Sch???nberger: '-' are allowed in station name. sources can be excluded for a certain time span.
 %   02 Feb 2016 by A. Girdiuk: bug-fix in log-messages
-%   09 Feb 2016 by C. Sch�nberger: Bug-fix: Date/time input (YYDDMMhhmm) now works for 19xx and 20xx 
+%   09 Feb 2016 by C. Sch???nberger: Bug-fix: Date/time input (YYDDMMhhmm) now works for 19xx and 20xx 
 %   11 Feb 2016 by D. Mayer: It is now possible to append comments (beginning with #) to OPT statements
 %   31 Mar 2017 by D. Mayer: added the possibility to remove list of station from every session in the code
 %   28 Aug 2018 by D. Landskron: bug correct corrected with excluding only a time frame of a station
@@ -58,6 +58,8 @@ ini_opt.clk_break.stat_name = [];
 ini_opt.clk_break.mjd = [];
 ini_opt.bdco_est.sta1='';
 ini_opt.bdco_est.sta2='';
+ini_opt.cablecal.sta = '';
+ini_opt.cablecal.cable_cal_data_source = '';
 
 bas_excl='';
 
@@ -326,7 +328,36 @@ while ~feof(fid)
             [flag_ok, station_name_str] = checkStatNameLength(station_name_str);
             ini_opt.no_cab(nex,:) = station_name_str;
         end
-        
+  
+    % ### CABLE CAL ###
+    % if line contains '+CABLE CAL'
+    elseif contains(str,'+CABLE CAL')
+        % get string of next file
+        str = fgetl(fid);
+        % initialize line id in +/-CABLE CAL block
+        nex=0;
+        % go trough lines until -CABLE CAL
+        while ~contains(str,'-CABLE CAL')
+            % split str line by " "(space, default) and store the splitted strings
+            % in a cell array. if line begins with #, skip
+            temp_str = textscan(str, '%s', 'CommentStyle', '#') ;
+            if ~isempty(temp_str{1})
+                nex=nex+1;
+                switch size(temp_str{1}, 1)
+                    case 2 % Two station names
+                        station_name = temp_str{1}{1};
+                        cable_cal_data_source = temp_str{1}{2};
+
+                    otherwise  % Error case
+                        error('BASELINE-DEPENDENT CLOCK OFFSET: Invalid arguments in OPT file.');
+                end
+
+                % Save data:
+                ini_opt.cablecal(nex).sta = station_name;
+                ini_opt.cablecal(nex).cable_cal_data_source = cable_cal_data_source;
+             end
+              str = fgetl(fid);
+        end
         
     % ### BASELINE DEPENDENT CLOCK OFFSET ###    
     elseif contains(str,'+BASELINE-DEPENDENT CLOCK OFFSET')
