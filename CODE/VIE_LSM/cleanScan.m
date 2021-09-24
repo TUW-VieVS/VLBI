@@ -83,7 +83,7 @@ end
 
 %% Clean scan struct
 
-% (1) No cable calibration
+% (1a) No cable calibration
 if ~isempty(parameter.opt.options.no_cab)
     
     % get antenna numbers
@@ -113,6 +113,54 @@ if ~isempty(parameter.opt.options.no_cab)
 
                     % set cable cal to zero!
                     scan(iS).stat(curI).cab = 0;
+                end
+            end
+        end
+    end
+end
+    
+% (1b) Other cable cal source
+if ~isempty(parameter.opt.options.cablecal)
+    
+    % get antenna numbers
+    antIndCabcal = find(ismember(strtrim({antenna.name}), {parameter.opt.options.cablecal.sta}));
+    
+    if ~isempty(antIndCabcal)
+        % for all scans
+        for iS = 1 : nScans
+            for kAntCabcal = 1 : length(antIndCabcal)
+                curI = antIndCabcal(kAntCabcal); % current index of antenna with no cable-cal
+                % if that station acutally "exists" (if the index can be accessed
+                if length(scan(iS).stat) >= curI
+                    curCab = scan(iS).stat(curI).cab * (1e-9);
+                    
+                    % observation index
+                    obsI1CabCal = find([scan(iS).obs.i1]==curI);
+                    obsI2CabCal = find([scan(iS).obs.i2]==curI);
+                    
+                    % Remove cable calibration which was already applied in VIe_INIT when loading the observation file:
+                    if ~isempty(curCab)
+                        for ionc = 1 : length(obsI1CabCal)
+                            scan(iS).obs(obsI1CabCal(ionc)).obs = scan(iS).obs(obsI1CabCal(ionc)).obs + curCab;
+                        end
+                        for ionc = 1 : length(obsI2CabCal)
+                            scan(iS).obs(obsI2CabCal(ionc)).obs = scan(iS).obs(obsI2CabCal(ionc)).obs - curCab;
+                        end
+                    end
+                    
+                    % add new cable delay
+                    newCab=scan(iS).stat(curI).(['cab_',parameter.opt.options.cablecal(kAntCabcal).cable_cal_data_source])*(1e-9);
+                    if ~isempty(newCab)
+                        for ionc = 1 : length(obsI1CabCal)
+                            scan(iS).obs(obsI1CabCal(ionc)).obs = scan(iS).obs(obsI1CabCal(ionc)).obs - newCab;
+                        end
+                        for ionc = 1 : length(obsI2CabCal)
+                            scan(iS).obs(obsI2CabCal(ionc)).obs = scan(iS).obs(obsI2CabCal(ionc)).obs + newCab;
+                        end
+                    end
+                    
+                    scan(iS).stat(curI).cab = newCab*10^9;
+                    
                 end
             end
         end

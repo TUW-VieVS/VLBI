@@ -439,9 +439,12 @@ for iScan=1:nScans
 
             
         
-        % #### Cable Cal. ####
+        % #### Cable Cal. ####        
+ 
+        % cable cal from wrapper
         nc_filename = get_nc_filename({'Cal-Cable'}, wrapper_stat_file_list);
         nc_filename = strrep(nc_filename,'-','_');
+               
         % scan.stat.cab
         if isfield(out_struct.stat(stationIndices(iStat)), nc_filename)
             if length(out_struct.stat(stationIndices(iStat)).(nc_filename).Cal_Cable.val)>1
@@ -452,6 +455,44 @@ for iScan=1:nScans
         else
             scan(iScan).stat(stationIndices(iStat)).cab = 0; % [nano-sec]            
         end
+        
+        % store other cable cal data sources also in scan.stat struct
+        % find all cable cal data sources
+        fn=fieldnames(out_struct.stat);
+        % everything in the vgosDb file in a station struct which contains
+        % a 'Cable' string is considered as a cable cal data source
+        idcab=contains(fn,'Cable'); % id of file names with 'Cable'
+        if ~isempty(find(idcab==1))
+            % file names with 'Cable'
+            fncab=fn(idcab);
+            % loop over possible cable cal data sources
+            for iCabls=1:length(fncab)
+                % get current cable cal data
+                cc=out_struct.stat(stationIndices(iStat)).(fncab{iCabls});
+                % generate internal struct name
+                if strcmp(fncab{iCabls},'Cal_Cable')
+                    ccn='cablecal';
+                end
+                if contains(fncab{iCabls},'Pcmt')
+                    ccn='Pcmt';
+                end
+                if contains(fncab{iCabls},'CDMS')
+                    ccn='CDMS';
+                end
+                
+                if ~isempty(cc)
+                    % if cable cal data exists store it into scan struct
+                    % based on name 'ccn' besides .cab data from wrapper
+                    % file data
+                    scan(iScan).stat(stationIndices(iStat)).(['cab_',ccn])=1e9*out_struct.stat(stationIndices(iStat)).(fncab{iCabls}).Cal_Cable.val(scan2Station(iScan,stationIndices(iStat))); % [nano-sec]
+                else
+                    % zero cable delay if no other cable cal data source
+                    % exists
+                    scan(iScan).stat(stationIndices(iStat)).(['cab_',ccn])=0;
+                end
+            end
+        end
+        
     end
     %% --- scan.stat ---
     
@@ -497,7 +538,7 @@ for iScan=1:nScans
     obsI1Index=obsI1Index+scan(iScan).nobs;
 
     % add cable delay
-    cableCalibration        = 1;
+    cableCalibration = 1;
     if cableCalibration == 1
         for iObs = 1 : length(scan(iScan).obs)
             corcab = scan(iScan).stat(scan(iScan).obs(iObs).i2).cab - scan(iScan).stat(scan(iScan).obs(iObs).i1).cab; % [ns]
