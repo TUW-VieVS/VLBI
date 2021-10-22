@@ -637,11 +637,11 @@ fprintf(' 2 ... Allocation of the parameters in the new N matrix \n\n')
 %------------------------------special EOP-------------------
 special_EOP = 0;
 if special_EOP
-    special_EOP_file = 'fix_EOP_for_single_baseline_sessions.txt';
+    special_EOP_file = 'fix_EOP_3AUM.txt';
     fid_special_EOP = fopen(['../DATA/GLOB/EOP/' special_EOP_file]);
     special_EOP_sessions = textscan(fid_special_EOP,'%s');
-    special_EOP_sessions = char(special_EOP_sessions{1});
-    special_EOP_sessions = cellstr(special_EOP_sessions(:,1:end-5));
+%     special_EOP_sessions = char(special_EOP_sessions{1});
+%     special_EOP_sessions = cellstr(special_EOP_sessions(:,1:end-5));
     fclose(fid_special_EOP);
     reduced_flag = 0;
 end
@@ -671,7 +671,9 @@ for ise=1:lse
             
         
 %         if (parGS(index_xpol).id == 2) && (sum(strcmp(ses(ise,1:end-5),special_EOP_sessions))>0)
-        if (parGS(index_xpol).id == 2) && (sum(strcmp(ases,special_EOP_sessions))>0)
+%        if (parGS(index_xpol).id == 2) && (sum(strcmp(ases,special_EOP_sessions))>0)
+%         if (parGS(index_xpol).id == 2) && (sum(strcmp({ases},special_EOP_sessions{1}))>0)
+        if (sum(strcmp({ases},special_EOP_sessions{1}))>0)
             parGS(index_xpol).id = 0; %xpol
             parGS(index_xpol+1).id = 0; %ypol
             parGS(index_xpol+2).id = 0; %dut1
@@ -744,6 +746,7 @@ for ise=1:lse
     parsplit(ise).redpos=redpos_all; % all columns in the old N matrix with parameters, which will be reduced
     parsplit(ise).redcoor=redcoor; %columns in the old N matrix for stations - needed for backwards solution
     parsplit(ise).redsou=redsou;  %columns in the old N matrix for sources - needed for backwards solution
+    parsplit(ise).first_last_scan = [glob2.opt.first_scan glob2.opt.last_scan]; % needed for EOP from backward solution
     
     if pathGS.bckwrdsol==1
         save([path_level 'OUT/GLOB/BACKWARD_DATA/' pathGS.out '/parGS_' pathGS.L2 '_' num2str(ise)],'parGS')
