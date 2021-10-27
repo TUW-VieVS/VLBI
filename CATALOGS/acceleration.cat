@@ -1,8 +1,0 @@
-* If nothing is specified the values from PARA.RATE1A and PARA.RATE2A are used
-* Name    	acc_az 		acc_el
-*			[°/s^2] 	[°/s^2]
-*
-WETTZELL	1.5     		1.5
-HOBART12	1.3			1.3
-YARRA12M	1.3			1.3
-KATH12M		1.3			1.3

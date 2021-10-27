@@ -124,6 +124,7 @@ function varargout = vie_setup(varargin)
 % 18 Dec 2018 by D. Landskron: VieVS now starts with File - Set input files
 % 06 Mar 2019 by D. Landskron: suffix checkbox added to the sinex files
 % 15 Jan 2020 by M. Mikschi: added gravitational deformation checkbox
+% 27 Oct 2021 by H. Wolf: removed VIE_SCHED module
 %
 %*************************************************************************
 
@@ -147,8 +148,6 @@ else
    gui_mainfcn(gui_State, varargin{:});
 end
 % End initialization code - DO NOT EDIT
-
-
 
 % --- Executes just before vie_setup is made visible.
 function vie_setup_OpeningFcn(hObject, eventdata, handles, varargin)
@@ -194,16 +193,12 @@ allMainUiPanels=[handles.uipanel_file_setInputFiles, ...
     handles.uipanel_vie_glob_special_param,...
     handles.uipanel_plot_parameters,...
     handles.uipanel_plot_residuals,...
-    handles.uipanel_vie_sched,...
-	handles.uipanel_vie_sched_minor_parameters,...
     handles.uipanel_vie_sim,...
     handles.uipanel_estimation_globalSolution,...
     handles.uipanel_plot_sessionAnalysis,...
-    handles.uipanel_plot_scheduling,...
 	handles.uipanel_plot_eopOut,...
     handles.uipanel_models_space_crafts,...
     handles.uipanel_welcome];
-
 
 % save all ui panels to handles struct
 handles.allMainUiPanels=allMainUiPanels;
@@ -430,11 +425,11 @@ else
     set(handles.listbox_vie_sim_ss, 'String', {dirsInSoucatFolder.name});
     set(handles.popupmenu_parameters_ss_catalog, 'String', {dirsInSoucatFolder.name});
 end
-if isempty(dirsInStatlistFolder)
-    set(handles.listbox_vie_sched_prenet, 'String', ' ')
-else
-    set(handles.listbox_vie_sched_prenet, 'String', {dirsInStatlistFolder.name})
-end
+%if isempty(dirsInStatlistFolder)
+%    set(handles.listbox_vie_sched_prenet, 'String', ' ')
+%else
+%    set(handles.listbox_vie_sched_prenet, 'String', {dirsInStatlistFolder.name})
+%end
 
 
 % set default files for otide atide, a-non-tide:
@@ -477,33 +472,6 @@ else % if it exists - delete it and create a new one
     delete(defaultParamFilename)
     saveParamFile(hObject, handles, defaultParamFilename)
 end
-
-% get vie_sched GUI startup options ++++++++++++++++++++++++
-filename = '../CATALOGS/antenna.cat';
-if exist(filename, 'file')
-    fid = fopen(filename, 'r');
-    stanum = 0;
-    staname = '';
-    while ~feof(fid)
-        line = fgetl(fid);
-        linelength = length(line);
-        if ((linelength < 11) || (~strcmp(line(1), ' ')))   %%%
-            continue;
-        end
-        stanum = stanum + 1;
-        staname(stanum,1:8) = line(4:11);
-    end
-    fclose(fid);
-    %
-    selectstastr='';
-    for i = 1 : stanum-1
-        selectstastr = strcat(selectstastr,staname(i,1:8),'|');
-    end
-    selectstastr = strcat(selectstastr,staname(stanum,1:8));
-    set(handles.listbox_vie_sched_selectsta,'String',selectstastr);
-	set(handles.listbox_vie_sched_sat_obs_network_available,'String',selectstastr);
-end
-% get vie_sched GUI startup options ------------------------------
 
 setAllPanelsToInvisible(hObject, handles)
 
@@ -582,6 +550,13 @@ function menu_file_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
+% --- Executes during object creation, after setting all properties.
+function uipanel_setInputFiles_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to uipanel_setInputFiles (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
 % --------------------------------------------------------------------
 function menu_file_parameterFiles_loadCurrent_Callback(hObject, eventdata, handles)
 % hObject    handle to menu_file_parameterFiles_loadCurrent (see GCBO)
@@ -607,418 +582,11 @@ else
     msgbox('Current parameters have been loaded', 'Load current', 'help');
 end
 
-
-
-
 % --------------------------------------------------------------------
 function menu_file_parameterFiles_Callback(hObject, eventdata, handles)
 % hObject    handle to menu_file_parameterFiles (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-% --------------------------------------------------------------------
-function Untitled_3_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_vie_glob_special_param, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --------------------------------------------------------------------
-function menu_file_reloadFolders_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_file_reloadFolders (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-updateSeveralPopupmenus(hObject, handles)
-
-% --------------------------------------------------------------------
-function menu_help_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_help (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in checkbox_outlier_simple.
-function checkbox_outlier_simple_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_outlier_simple (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_outlier_simple
-
-
-% --------------------------------------------------------------------
-function Untitled_8_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_8 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-
-% --- Executes on button press in checkbox_run_sinex_write.
-function checkbox_run_sinex_write_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_sinex_write (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_sinex_write
-
-if get(hObject, 'Value')
-    newState='On';
-else
-    newState='Off';
-end
-set(handles.text_run_sinex_header, 'Enable', newState)
-set(handles.text_run_sinex_clockParam, 'Enable', newState)
-set(handles.text_run_sinex_zwd, 'Enable', newState)
-set(handles.text_run_sinex_tropoGradients, 'Enable', newState)
-set(handles.text_run_sinex_sources, 'Enable', newState)
-set(handles.text_run_sinex_stationCoords, 'Enable', newState)
-set(handles.text_run_sinex_eop, 'Enable', newState)
-set(handles.checkbox_run_sinex_sources, 'Enable', newState)
-set(handles.text300, 'Enable', newState)
-
-set(handles.radiobutton_run_sinex_clockParam_incl, 'Enable', 'off')
-set(handles.radiobutton_run_sinex_zwd_incl, 'Enable', newState)
-set(handles.radiobutton_run_sinex_tropoParam_incl, 'Enable', newState)
-set(handles.radiobutton_run_sinex_sources_incl, 'Enable', newState)
-set(handles.radiobutton_run_sinex_stationCoords_incl, 'Enable', newState)
-set(handles.radiobutton_run_sinex_eop_incl, 'Enable', newState)
-
-set(handles.radiobutton_run_sinex_clockParam_excl, 'Enable', newState)
-set(handles.radiobutton_run_sinex_zwd_excl, 'Enable', newState)
-set(handles.radiobutton_run_sinex_tropoParam_excl, 'Enable', newState)
-set(handles.radiobutton_run_sinex_eop_excl, 'Enable', newState)
-
-% if neither eop is estimtated -> disable EOP-options in sinex output
-if (get(handles.checkbox_estimation_leastSquares_eop_xpEst, 'Value')+...
-        get(handles.checkbox_estimation_leastSquares_eop_ypEst, 'Value')+...
-        get(handles.checkbox_estimation_leastSquares_eop_dut1Est, 'Value')+...
-        get(handles.checkbox_estimation_leastSquares_eop_nutdxEst, 'Value')+...
-        get(handles.checkbox_estimation_leastSquares_eop_nutdyEst, 'Value'))==0
-    set(handles.radiobutton_run_sinex_eop_incl, 'Enable', 'off');
-    set(handles.radiobutton_run_sinex_eop_excl, 'Enable', 'off');
-    set(handles.text_run_sinex_eop, 'Enable', 'off')
-end
-
-% if stations are not estimated -> disable option
-if get(handles.checkbox_estimation_leastSquares_coordinates_estimate, 'Value')==0
-    set(handles.text_run_sinex_stationCoords, 'Enable', 'off')
-    set(handles.radiobutton_run_sinex_stationCoords_incl, 'Enable', 'off')
-end
-
-% if gradients are not estimated -> disable sinex option
-if get(handles.checkbox_estimation_leastSquares_tropo_ngr, 'Value')+...
-        get(handles.checkbox_estimation_leastSquares_tropo_egr, 'Value')==0
-    set(handles.text_run_sinex_tropoGradients, 'Enable', 'off')
-    set(handles.radiobutton_run_sinex_tropoParam_incl, 'Enable', 'off')
-    set(handles.radiobutton_run_sinex_tropoParam_excl, 'Enable', 'off')
-end
-
-% if zwd is not esimtated -> disable sinex option
-if get(handles.checkbox_estimation_leastSquares_tropo_zwd, 'value')==0
-    set(handles.text_run_sinex_zwd, 'Enable', 'off')
-    set(handles.radiobutton_run_sinex_zwd_incl, 'Enable', 'off')
-    set(handles.radiobutton_run_sinex_zwd_excl, 'Enable', 'off')
-end
-
-% if source checkbox is unticked
-if get(handles.checkbox_run_sinex_sources, 'Value')==0
-    set(handles.text_run_sinex_sources, 'Enable', 'off')
-    set(handles.radiobutton_run_sinex_sources_incl, 'Enable', 'off')
-end
-
-set(handles.checkbox_run_sinex_changeAnalystsName, 'Enable', newState)
-set(handles.edit_run_sinex_firstname, 'Enable', newState)
-set(handles.edit_run_sinex_lastname, 'Enable', newState)
-set(handles.edit_run_sinex_email, 'Enable', newState)
-if get(handles.checkbox_run_sinex_changeAnalystsName, 'Value')==0
-    set(handles.edit_run_sinex_firstname, 'Enable', 'Off')
-    set(handles.edit_run_sinex_lastname, 'Enable', 'Off')
-    set(handles.edit_run_sinex_email, 'Enable', 'Off')
-end
-
-set(handles.checkbox_run_sinex_addSuffix, 'Enable', newState)
-set(handles.edit_run_sinex_suffix, 'Enable', newState)
-if get(handles.checkbox_run_sinex_addSuffix, 'Value')==0
-    set(handles.edit_run_sinex_suffix, 'Enable', 'Off')
-end
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --------------------------------------------------------------------
-function menu_parameters_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_parameters (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function menu_parameters_referenceFrames_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_parameters_referenceFrames (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_parameters_referenceFrames, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-% --------------------------------------------------------------------
-function menu_parameters_troposphere_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_parameters_troposphere (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_parameters_troposphere, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --------------------------------------------------------------------
-function menu_parameters_ionosphere_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_parameters_ionosphere (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_parameters_ionosphere, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --------------------------------------------------------------------
-function menu_help_vievsWebsite_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_help_vievsWebsite (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-web 'http://vievs.geo.tuwien.ac.at/'
-
-
-% --------------------------------------------------------------------
-function menu_estimation_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_estimation (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function Untitled_15_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_15 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function menu_globalSolution_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_globalSolution (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function Untitled_19_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_19 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function Untitled_20_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_20 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function Untitled_22_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_22 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-
-% --------------------------------------------------------------------
-function menu_plotting_parameters_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_plotting_parameters (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% shift the whole window a little bit down because the menu bar appears
-curPos=get(handles.figure_vievs2, 'Position');
-curPos(2)=curPos(2)-27;
-set(handles.figure_vievs2, 'Position', curPos);
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_plot_parameters, 'Visible', 'On');
-
-% set bar for plotting options to visible
-set(handles.uitoolbar_plotOptions, 'Visible', 'On');
-
-% update the folders (since there could have been created another subfolder)
-dirsInDataFolder=dir('../DATA/LEVEL3/');
-dirsInDataFolder(strcmp({dirsInDataFolder.name}, '.')|strcmp({dirsInDataFolder.name}, '..')|~[dirsInDataFolder.isdir])=[];
-set(handles.popupmenu_plot_folder1_subfolder, 'String', ['/', {dirsInDataFolder.name}])
-set(handles.popupmenu_plot_folder2_subfolder, 'String', ['/', {dirsInDataFolder.name}])
-set(handles.popupmenu_plot_folder3_subfolder, 'String', ['/', {dirsInDataFolder.name}])
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --------------------------------------------------------------------
-function menu_run_sinexOutput_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_run_sinexOutput (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_run_sinexOutput, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --------------------------------------------------------------------
-function menu_run_outputDirectories_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_run_outputDirectories (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_run_runOptions, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --------------------------------------------------------------------
-function menu_run_runOptions_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_run_runOptions (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_run_vievsProcSettings, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --------------------------------------------------------------------
-function menu_estimation_leastSquares_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_estimation_leastSquares (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function menu_estimation_kalmanFilter_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_estimation_kalmanFilter (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function menu_parameters_stationModels_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_parameters_stationModels (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_parameters_stationCorrections, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-% --------------------------------------------------------------------
-function menu_parameters_eop_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_parameters_eop (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_parameters_eop, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --------------------------------------------------------------------
-function Untitled_33_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_33 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function Untitled_34_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_34 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function Untitled_35_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_35 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function Untitled_36_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_36 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
 
 % --------------------------------------------------------------------
 function menu_file_setInputFiles_Callback(hObject, eventdata, handles)
@@ -1105,737 +673,147 @@ if ~isempty(filename)
     end
 end
 
-
-
 % --------------------------------------------------------------------
-function menu_estimation_leastSquares_troposphere_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_estimation_leastSquares_troposphere (see GCBO)
+function menu_file_parameterFiles_saveProcessList_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_file_parameterFiles_saveProcessList (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_estimation_leastSquares_tropo, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --------------------------------------------------------------------
-function menu_estimation_leastSquares_clock_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_estimation_leastSquares_clock (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_estimation_leastSquares_clock, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --------------------------------------------------------------------
-function menu_estimation_leastSquares_eop_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_estimation_leastSquares_eop (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_estimation_leastSquares_eop, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --------------------------------------------------------------------
-function menu_estimation_leastSquares_stationCoordinates_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_estimation_leastSquares_stationCoordinates (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_estimation_leastSquares_stationCoordinates, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --------------------------------------------------------------------
-function menu_estimation_leastSquares_sourceCoordinates_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_estimation_leastSquares_sourceCoordinates (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_estimation_leastSquares, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --------------------------------------------------------------------
-function Untitled_50_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_50 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function menu_parameters_observationRestrictions_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_parameters_observationRestrictions (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_parameters_observationRestrictions, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --------------------------------------------------------------------
-function menu_parameters_ephemerides_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_parameters_ephemerides (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_parameters_ephemerides, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --- Executes on selection change in listbox_sessions.
-function listbox_sessions_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox_sessions (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox_sessions contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox_sessions
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox_sessions_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox_sessions (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton9.
-function pushbutton9_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton9 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on selection change in listbox6.
-function listbox6_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox6 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox6 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox6
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox6_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox6 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on selection change in listbox7.
-function listbox7_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox7 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox7 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox7
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox7_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox7 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on selection change in popupmenu2.
-function popupmenu2_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu2 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu2
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in checkbox49.
-function checkbox49_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox49 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox49
-
-
-% --- Executes on selection change in popupmenu1.
-function popupmenu1_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu1
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on selection change in listbox11.
-function listbox11_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox11 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox11 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox11
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox11_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox11 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on selection change in listbox12.
-function listbox12_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox12 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox12 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox12
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox12_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox12 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on selection change in listbox13.
-function listbox13_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox13 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox13 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox13
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox13_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox13 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on selection change in popupmenu6.
-function popupmenu6_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu6 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu6 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu6
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu6_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu6 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on selection change in popupmenu5.
-function popupmenu5_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu5 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu5 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu5
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu5_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu5 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton12.
-function pushbutton12_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton12 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-keyboard;
-
-
-% --- Executes on selection change in popupmenu9.
-function popupmenu9_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu9 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu9 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu9
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu9_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu9 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on selection change in popupmenu12.
-function popupmenu12_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu12 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu12 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu12
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu12_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu12 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on selection change in popupmenu13.
-function popupmenu13_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu13 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu13 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu13
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu13_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu13 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on selection change in popupmenu14.
-function popupmenu14_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu14 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu14 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu14
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu14_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu14 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in checkbox51.
-function checkbox51_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox51 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox51
-
-
-% --- Executes on button press in checkbox52.
-function checkbox52_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox52 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox52
-
-
-% --- Executes on button press in checkbox53.
-function checkbox53_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox53 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox53
-
-
-% --- Executes on button press in checkbox54.
-function checkbox54_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox54 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox54
-
-
-% --- Executes on button press in checkbox55.
-function checkbox55_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox55 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox55
-
-
-% --- Executes on button press in checkbox56.
-function checkbox56_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox56 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox56
-
-
-% --- Executes during object creation, after setting all properties.
-function uipanel_setInputFiles_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to uipanel_setInputFiles (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-
-% --- Executes on button press in checkbox58.
-function checkbox58_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox58 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox58
-
-
-% --- Executes on button press in checkbox59.
-function checkbox59_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox59 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox59
-
-
-% --- Executes on button press in checkbox60.
-function checkbox60_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox60 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox60
-
-
-% --- Executes on button press in checkbox61.
-function checkbox61_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox61 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox61
-
-
-% --- Executes on button press in checkbox62.
-function checkbox62_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox62 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox62
-
-
-% --- Executes on button press in checkbox63.
-function checkbox63_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox63 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox63
-
-
-% --- Executes on button press in radiobutton_parameters_statCorr_poleModel_lin.
-function radiobutton_parameters_statCorr_poleModel_lin_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton_parameters_statCorr_poleModel_lin (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of radiobutton_parameters_statCorr_poleModel_lin
-
-
-% --- Executes on button press in radiobutton_parameters_statCorr_poleModel_cub.
-function radiobutton_parameters_statCorr_poleModel_cub_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton_parameters_statCorr_poleModel_cub (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of radiobutton_parameters_statCorr_poleModel_cub
-
-
-% --- Executes on button press in checkbox_parameters_statCorr_solidEarthTides.
-function checkbox_parameters_statCorr_solidEarthTides_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_parameters_statCorr_solidEarthTides (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_solidEarthTides
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-% --- Executes on button press in checkbox_parameters_statCorr_gravitationalDef_Callback.
-function checkbox_parameters_statCorr_gravitationalDef_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_parameters_statCorr_solidEarthTides (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_gravitationalDef_Callback
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-% --- Executes on button press in checkbox_parameters_statCorr_tidalOceanLoad.
-function checkbox_parameters_statCorr_tidalOceanLoad_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_parameters_statCorr_tidalOceanLoad (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_tidalOceanLoad
-
-if get(hObject, 'Value')
-    newState='on';
-else
-    newState='off';
-end
-
-set(handles.popupmenu_parameters_statCorr_tidalOceanLoad, 'Enable', newState)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes on button press in checkbox_parameters_statCorr_tidalAtmoLoad.
-function checkbox_parameters_statCorr_tidalAtmoLoad_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_parameters_statCorr_tidalAtmoLoad (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_tidalAtmoLoad
-
-if get(hObject, 'Value')
-    newState='on';
-else
-    newState='off';
-end
-
-set(handles.popupmenu_parameters_statCorr_tidalAtmoOceanLoad, 'Enable', newState)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes on button press in checkbox_parameters_statCorr_nonTidalAtmoLoad.
-function checkbox_parameters_statCorr_nonTidalAtmoLoad_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_parameters_statCorr_nonTidalAtmoLoad (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_nonTidalAtmoLoad
-
-if get(hObject, 'Value')
-    newState='on';
-else
-    newState='off';
-end
-
-set(handles.popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad, 'Enable', newState)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes on button press in checkbox_parameters_statCorr_poleTides.
-function checkbox_parameters_statCorr_poleTides_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_parameters_statCorr_poleTides (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_poleTides
-
-if get(hObject, 'Value')
-    set(handles.radiobutton_parameters_statCorr_poleModel_lin, 'Enable', 'on')
-    set(handles.radiobutton_parameters_statCorr_poleModel_cub, 'Enable', 'on')
-    set(handles.radiobutton_parameters_statCorr_poleModel_iers2015, 'Enable', 'on')
-else
-    % only set to disable when also other checkbox is 0
-    if get(handles.checkbox_parameters_statCorr_oceanPoleTides, 'Value')==0
-        set(handles.radiobutton_parameters_statCorr_poleModel_lin, 'Enable', 'off')
-        set(handles.radiobutton_parameters_statCorr_poleModel_cub, 'Enable', 'off')
-        set(handles.radiobutton_parameters_statCorr_poleModel_iers2015, 'Enable', 'off')
+% get a file
+[filename, pathname, filterindex] = uiputfile( ...
+{'process_list.mat', 'Matlab Binary Format (*.mat)'},...
+ 'Save as',...
+ '../WORK/PROCESSLIST/');
+
+% see if something was chosen
+if ~isempty(filename)
+    if ~strcmp('0', num2str(filename))
+        % call function for saving a parameter file
+        saveProcessList(hObject, handles, [pathname, filename])
+        
+        % write message box
+        msgbox('Process list successfully saved!', 'Save process list', 'help');
     end
 end
 
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes on button press in checkbox_parameters_statCorr_thermalDef.
-function checkbox_parameters_statCorr_thermalDef_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_parameters_statCorr_thermalDef (see GCBO)
+% --------------------------------------------------------------------
+function menu_file_reloadFolders_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_file_reloadFolders (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_thermalDef
+updateSeveralPopupmenus(hObject, handles)
 
-if get(hObject, 'Value')
-    set(handles.checkbox_parameters_statCorr_temp_fromInSitu, 'Enable', 'on')
-    set(handles.checkbox_parameters_statCorr_temp_GPT3, 'Enable', 'on')
-else
-    % only set to disable when also other checkbox is 0
-    if get(handles.checkbox_parameters_statCorr_thermalDef, 'Value')==0
-        set(handles.checkbox_parameters_statCorr_temp_fromInSitu, 'Enable', 'off')
-        set(handles.checkbox_parameters_statCorr_temp_GPT3, 'Enable', 'off')
+% --- Executes on button press in pushbutton_setInput_browseForProcLists.
+function pushbutton_setInput_browseForProcLists_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_setInput_browseForProcLists (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+[FileName, PathName] = uigetfile('*.mat','Select process lists', './PROCESSLIST/', 'multiselect', 'on');
+
+fileWasChosen=1;
+
+if isempty(FileName)
+    fileWasChosen=0;
+elseif ~iscell(FileName)
+    if FileName == 0
+        fileWasChosen=0;
     end
 end
+       
+if fileWasChosen
+    % get number of files
+    if iscell(FileName)
+        nFiles=size(FileName,2);
+    else
+        nFiles=1;
+    end
+    
+    % for all files
+    for iFile=1:nFiles
+        % load process list
+        
+        % if we have a cell == if we have more than 1 process_list selected
+        if iscell(FileName)
+            load([PathName, FileName{iFile}])
+        else
+            load([PathName, FileName])
+        end
+        
+        % if we have now the process_list variable
+        if exist('process_list', 'var')
+            % get current listbox entries
+            curContent=get(handles.listbox_setInput_processList, 'String');
+            
+            % delete last entry of process_list when it is ''
+            if strcmp(process_list(size(process_list,1)), ' ')
+                process_list(size(process_list,1),:)=[];
+            end
+            
+            % make cellstr out of process_list
+            process_list_cellstr=cellstr(process_list);
+            
+            % if listbox is empty: just take chosen process_list
+            if isempty(curContent)
+                newContent=process_list_cellstr;
+            else % else: make unique
+                newContent=unique([curContent; process_list_cellstr]);
+            end
 
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
+            % update listbox
+            set(handles.listbox_setInput_processList, 'String', newContent);
+        end
+        
+    end
+
+    % save all selected sessions to handles struct
+    handles.allSelectedFiles=newContent;
+    
+    % save changes to handles struct
+    guidata(hObject, handles);
+    
+    % save parameter file automatically 
+    auto_save_parameterfile(hObject, handles)
+end
+    
+
+% --- Executes on button press in pushbutton_setInput_clearProcList.
+function pushbutton_setInput_clearProcList_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_setInput_clearProcList (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% get current content of listbox
+curContent=get(handles.listbox_setInput_processList, 'String');
+
+if ~isempty(curContent)
+    % delete all selected entries entry
+    
+    curContent(get(handles.listbox_setInput_processList, 'Value'))=[];
+    
+    % get current value
+    curValue=get(handles.listbox_setInput_processList, 'Value');
+    
+    % set the current value either to the current value or to the latest
+    % (if the former latest was deleted). If no session is there anymore,
+    % take 1.
+    set(handles.listbox_setInput_processList, 'Value', ...
+        min([max(curValue), max(length(curContent),1)]));
+
+    % update listbox
+    set(handles.listbox_setInput_processList, 'String', curContent);
+
+    % and also save it to handles struct
+    handles.allSelectedFiles=curContent;
+
+    % save changes to handles struct
+    guidata(hObject, handles);
+
+    % save parameter file automatically 
+    auto_save_parameterfile(hObject, handles)
+end
 
 
 % --- Executes on selection change in listbox_setInput_processList.
@@ -1971,77 +949,6 @@ if ~isempty(newFiles) && sum(strcmpi(newFiles,''))==0 % second: if cell, returne
     guidata(hObject, handles);
 end
     
-
-
-% --- Executes on selection change in listbox19.
-function listbox19_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox19 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox19 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox19
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox19_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox19 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on selection change in listbox20.
-function listbox20_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox20 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox20 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox20
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox20_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox20 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on selection change in listbox21.
-function listbox21_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox21 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox21 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox21
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox21_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox21 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
 % --- Executes on selection change in popupmenu_setInput_optDir.
 function popupmenu_setInput_optDir_Callback(hObject, eventdata, handles)
 % hObject    handle to popupmenu_setInput_optDir (see GCBO)
@@ -2106,57 +1013,312 @@ function checkbox_setInput_eliminOutliers_Callback(hObject, eventdata, handles)
 auto_save_parameterfile(hObject, handles)
 
 
-
-function edit_parameter_obsRestr_qualityCode_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_parameter_obsRestr_qualityCode (see GCBO)
+% --- Executes on button press in checkbox_outlier_simple.
+function checkbox_outlier_simple_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_outlier_simple (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit_parameter_obsRestr_qualityCode as text
-%        str2double(get(hObject,'String')) returns contents of edit_parameter_obsRestr_qualityCode as a double
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
+% Hint: get(hObject,'Value') returns toggle state of checkbox_outlier_simple
 
 
-% --- Executes during object creation, after setting all properties.
-function edit_parameter_obsRestr_qualityCode_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_parameter_obsRestr_qualityCode (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function edit_parameter_obsRestr_cutOff_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_parameter_obsRestr_cutOff (see GCBO)
+% --------------------------------------------------------------------
+function Untitled_8_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_8 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit_parameter_obsRestr_cutOff as text
-%        str2double(get(hObject,'String')) returns contents of edit_parameter_obsRestr_cutOff as a double
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over listbox_setInput_processList.
+function listbox_setInput_processList_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to listbox_setInput_processList (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 
-% save parameter file automatically 
+% if there is an entry in the listbox at all
+if ~isempty(get(handles.listbox_setInput_processList, 'String'))
+
+    % create the menu at proper position
+    curMousePosition=get(handles.figure_vievs2, 'CurrentPoint');
+    cmenu = uicontextmenu('Parent',handles.figure_vievs2,'Position',curMousePosition);
+    
+    % create function handles
+    %fHandles_openOPTfile=@{openOPTfile, handles};
+    allSessionsInList=get(handles.listbox_setInput_processList, 'String');
+    session=allSessionsInList{get(handles.listbox_setInput_processList, 'Value')};
+    
+   
+    % create entries with the pointer to the callbacks
+    item1 = uimenu(cmenu, 'Label', 'Open/Create OPT file', 'Callback', {@openOPTfile,hObject,handles});
+    item2 = uimenu(cmenu, 'Label', 'Open outlier file', 'Callback', {@openOutlierFile,hObject,handles});
+    % is the selected dataset a netCDF file?
+%     if isempty(strfind(session,'/')) && isempty(strfind(session,'\'))
+    if strfind(session, ' [vgosDB]')
+        item3 = uimenu(cmenu, 'Label', 'Analyse netCDF file', 'Callback', {@analyseNetcdfFile,hObject,handles});
+    end    
+        
+    % set visible
+    set(cmenu, 'Visible', 'on');
+end
+
+function analyseNetcdfFile(src,eventdata,hObject,handles)
+% This function opens the GUI to visualise the content of netCDF datasets
+
+% get selected file
+allSessionsInList=get(handles.listbox_setInput_processList, 'String');
+session=allSessionsInList{get(handles.listbox_setInput_processList, 'Value')};
+vgosdb_path_str = ['../DATA/vgosDB/', session(1 : (strfind(session, ' [vgosDB]')-1)), '/'];
+% Open GUI
+analyseNetcdf(vgosdb_path_str)
+
+
+   
+function openOPTfile(src,eventdata,hObject,handles)
+% This function opens the OPT file (empty=create or open existing)
+% of the currently selected session
+
+% get selected file
+allSessionsInList=get(handles.listbox_setInput_processList, 'String');
+session=allSessionsInList{get(handles.listbox_setInput_processList, 'Value')};
+
+% get currently selected OPT directory
+OPTdirs=get(handles.popupmenu_setInput_optDir, 'String');
+selectedOPTdir=OPTdirs{get(handles.popupmenu_setInput_optDir, 'value')};
+
+% Get file format of input data file:
+datatype_str = 'ngs';
+if strfind(session, ' [vgosDB]')
+    datatype_str = 'vgosdb'; 
+elseif strfind(session, ' [VSO]')
+    datatype_str = 'vso'; 
+end
+
+% Get the OPT file name and path:
+switch(datatype_str)
+    case 'ngs'
+        optFileName = [session(1 : end-5), '.OPT'];
+    case 'vso'
+        optFileName = [session(1 : (strfind(session, ' [VSO]')-1)), '.OPT'];
+    case 'vgosdb'
+        optFileName = [session(1 : (strfind(session, ' [vgosDB]')-1)), '.OPT'];
+end % switch(datatype_str)
+
+wantedOPTfile = ['../../VLBI_OPT/', selectedOPTdir, '/', optFileName];
+yrFolder = ['../../VLBI_OPT/', selectedOPTdir, '/', session(1:4)];
+
+% if the year folder does not exist - create it
+if ~exist(yrFolder, 'dir')
+    mkdir(yrFolder);
+end
+
+% if the OPT file does not exist - create it
+if ~exist(wantedOPTfile, 'file')
+    writeNewOptFile(wantedOPTfile);
+end
+    
+% open OPT file
+if ispc
+    matlabVersion = ver('MATLAB');
+    if str2double(matlabVersion.Version)<=8
+        dos(['start wordpad ',wantedOPTfile]);
+    else
+        % does not work for 7.11 (R2010b):
+        winopen(wantedOPTfile) % Open with default editor which is set for *.opt files
+    end
+elseif isunix
+    % system(['xterm -e ''vi ',wantedOPTfile '''']);
+    system(['gedit ',wantedOPTfile]); % Open gedit
+else % 
+    warning('Operating system unknown: not able to open OPT file in text editor.');
+end
+       
+
+function openOutlierFile(src,eventdata,hObject,handles)
+% This function opens the outlier file of the currently selected session
+    
+% get selected file
+allSessionsInList=get(handles.listbox_setInput_processList, 'String');
+session=allSessionsInList{get(handles.listbox_setInput_processList, 'Value')};
+
+% get currently selected Outlier directory
+allOutDirInList = get(handles.popupmenu_setInput_outDir, 'String');
+selOutDir = allOutDirInList{get(handles.popupmenu_setInput_outDir, 'Value')};
+
+% Get file format of input data file:
+datatype_str = 'ngs';
+if strfind(session, ' [vgosDB]')
+    datatype_str = 'vgosdb'; 
+elseif strfind(session, ' [VSO]')
+    datatype_str = 'vso'; 
+end
+
+% Get the Outlier file name and path:
+switch(datatype_str)
+    case 'ngs'
+        sess_name_str = session(1 : end);
+    case 'vso'
+        sess_name_str = session(1 : (strfind(session, ' [VSO]')-1));
+    case 'vgosdb'
+        sess_name_str = session(1 : (strfind(session, ' [vgosDB]')-1));
+end % switch(datatype_str)
+
+
+if isempty(selOutDir)
+    wantedOutlierFile=['../DATA/OUTLIER/', sess_name_str, '.OUT'];
+else
+    wantedOutlierFile=['../DATA/OUTLIER/', selOutDir,'/', sess_name_str, '.OUT'];
+end
+
+if exist(wantedOutlierFile, 'file')
+    % open 
+    % open(wantedOutlierFile) % Open with MATLAB Editor
+    winopen(wantedOutlierFile) % Open with default editor which is set for *.OUT files
+else
+    msgbox('No outlier file exists yet', 'No outlier file found', 'help')
+end
+
+if exist(wantedOutlierFile, 'file')
+    % open Outlier file
+    if ispc
+        matlabVersion = ver('MATLAB');
+        if str2double(matlabVersion.Version)<=8
+            dos(['start wordpad ',wantedOPTfile]);
+        else
+            % does not work for 7.11 (R2010b):
+            winopen(wantedOutlierFile) % Open with default editor which is set for *.OUT files
+        end
+    elseif isunix
+        % system(['xterm -e ''vi ',wantedOutlierFile '''']);
+        system(['gedit ',wantedOutlierFile]); % Open gedit
+    else % 
+        warning('Operating system unknown: not able to open Outlier file in text editor.');
+    end
+else
+    msgbox('Outlier file does not exists yet', 'No outlier file found', 'help')
+end
+
+% --- Executes on button press in checkbox_setInput_useOptFiles.
+function checkbox_setInput_useOptFiles_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_setInput_useOptFiles (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_setInput_useOptFiles
+
+% Enable/Disable popupmenu to select the OPT file
+if get(handles.checkbox_setInput_useOptFiles, 'Value') == 0
+    set(handles.popupmenu_setInput_optDir, 'Enable', 'off')
+    set(handles.radiobutton_estimation_leastSquares_basdepClockoff_OPT, 'Enable', 'off')
+else
+    set(handles.popupmenu_setInput_optDir, 'Enable', 'on')
+    if get(handles.checkbox_estimation_leastSquares_clocksBasDepOffset, 'Value')
+        set(handles.radiobutton_estimation_leastSquares_basdepClockoff_OPT, 'Enable', 'on')
+    end
+end
+
 auto_save_parameterfile(hObject, handles)
 
 
-% --- Executes during object creation, after setting all properties.
-function edit_parameter_obsRestr_cutOff_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_parameter_obsRestr_cutOff (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
+% --- Executes on key press with focus on listbox_setInput_processList and none of its controls.
+function listbox_setInput_processList_KeyPressFcn(hObject, eventdata, handles)
+% hObject    handle to listbox_setInput_processList (see GCBO)
+% eventdata  structure with the following fields (see UICONTROL)
+%	Key: name of the key that was pressed, in lower case
+%	Character: character interpretation of the key(s) that was pressed
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
+% handles    structure with handles and user data (see GUIDATA)
 
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
+
+% --- Executes on button press in pushbutton_setInput_browseVgos.
+function pushbutton_setInput_browseVgos_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_setInput_browseVgos (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+vgosDir='../DATA/vgosDB/';
+if ~exist(vgosDir,'dir')
+    mkdir(vgosDir);
 end
 
+out = uipickfiles('FilterSpec', vgosDir);
+
+
+if iscell(out)
+    out=out';
+    
+    % Format: yyyy/<session_name> [vgosDB]
+    
+    for iF = 1 : length(out)
+        curSlash = sort([strfind(out{iF},'/'), strfind(out{iF},'\')]);
+        tgzDot = sort(strfind(out{iF},'.'));
+        if length(tgzDot) > 2
+            out{iF} = [out{iF}(curSlash(end-1)+1 : tgzDot(3)-1), ' [vgosDB]'];
+        else
+            out{iF} = [out{iF}(curSlash(end-1)+1 : end), ' [vgosDB]'];
+        end
+    end
+
+    updateInputFilesBox(hObject, eventdata,handles,out)   
+end
+
+% -----------------------------------------------------------------%
+% -------------------------PARAMETERS------------------------------%
+% -----------------------------------------------------------------%
+
+% --------------------------------------------------------------------
+function menu_parameters_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_parameters (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function menu_parameters_referenceFrames_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_parameters_referenceFrames (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_parameters_referenceFrames, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+% --------------------------------------------------------------------
+function menu_parameters_troposphere_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_parameters_troposphere (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_parameters_troposphere, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+% --------------------------------------------------------------------
+function menu_parameters_ionosphere_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_parameters_ionosphere (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_parameters_ionosphere, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
 
 % --- Executes on button press in checkbox_parameters_eop_models_inclAPrioriNutOffs.
 function checkbox_parameters_eop_models_inclAPrioriNutOffs_Callback(hObject, eventdata, handles)
@@ -2179,66 +1341,6 @@ function checkbox_parameters_eop_inclHf_LibrationXpYp_Callback(hObject, eventdat
 
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes on button press in checkbox76.
-function checkbox76_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox76 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox76
-
-
-% --- Executes on button press in checkbox77.
-function checkbox77_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox77 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox77
-
-
-% --- Executes on button press in checkbox78.
-function checkbox78_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox78 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox78
-
-
-% --- Executes on button press in checkbox79.
-function checkbox79_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox79 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox79
-
-
-% --- Executes on selection change in popupmenu19.
-function popupmenu19_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu19 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu19 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu19
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu19_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu19 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
 
 % --- Executes on button press in checkbox_parameters_eop_tidalUtVariations.
 function checkbox_parameters_eop_tidalUtVariations_Callback(hObject, eventdata, handles)
@@ -2296,146 +1398,44 @@ function checkbox_parameters_eop_inclHf_LibrationUt1_Callback(hObject, eventdata
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
 
-
-% --- Executes on button press in checkbox86.
-function checkbox86_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox86 (see GCBO)
+function popupmenu_parameters_refFrames_otherCRF_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_refFrames_otherCRF (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of checkbox86
+% Hints: get(hObject,'String') returns contents of popupmenu_parameters_refFrames_otherCRF as text
+%        str2double(get(hObject,'String')) returns contents of popupmenu_parameters_refFrames_otherCRF as a double
 
-
-% --- Executes on button press in checkbox87.
-function checkbox87_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox87 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox87
-
-
-% --- Executes on selection change in popupmenu22.
-function popupmenu22_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu22 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu22 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu22
-
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu22_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu22 (see GCBO)
+function popupmenu_parameters_refFrames_otherCRF_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_refFrames_otherCRF (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
-% Hint: popupmenu controls usually have a white background on Windows.
+% Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
 
-
-% --- Executes on button press in checkbox91.
-function checkbox91_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox91 (see GCBO)
+function popupmenu_parameters_refFrames_otherTRF_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_refFrames_otherTRF (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of checkbox91
-
-
-% --- Executes on button press in checkbox_run_runMainSolution.
-function checkbox_run_runMainSolution_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_runMainSolution (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_runMainSolution
-
-if get(hObject, 'Value')
-    set(handles.checkbox_run_simpleOutlierTest, 'Enable', 'on')
-    set(handles.checkbox_run_normalOutlierTest, 'Enable', 'on')
-    if get(handles.checkbox_run_simpleOutlierTest, 'Value') || get(handles.checkbox_run_normalOutlierTest, 'Value') 
-        set(handles.text_run_runOptions_c, 'Enable', 'on')
-        set(handles.edit_run_outlierTestC, 'Enable', 'on')
-    end
-else
-    set(handles.checkbox_run_simpleOutlierTest, 'Enable', 'off')
-    set(handles.checkbox_run_normalOutlierTest, 'Enable', 'off')
-    set(handles.text_run_runOptions_c, 'Enable', 'off')
-    set(handles.edit_run_outlierTestC, 'Enable', 'off')
-end
-    
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes on button press in checkbox_run_simpleOutlierTest.
-function checkbox_run_simpleOutlierTest_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_simpleOutlierTest (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_simpleOutlierTest
-if get(hObject, 'Value')
-    set(handles.text_run_runOptions_c, 'Enable', 'on')
-    set(handles.edit_run_outlierTestC, 'Enable', 'on')
-    set(handles.checkbox_run_normalOutlierTest, 'Value', 0)
-else
-    % only if also other checkbox is off
-    if get(handles.checkbox_run_normalOutlierTest, 'Value')==0
-        set(handles.text_run_runOptions_c, 'Enable', 'off')
-        set(handles.edit_run_outlierTestC, 'Enable', 'off')
-    end
-end
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes on button press in checkbox_run_normalOutlierTest.
-function checkbox_run_normalOutlierTest_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_normalOutlierTest (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_normalOutlierTest
-
-if get(hObject, 'Value')
-    set(handles.text_run_runOptions_c, 'Enable', 'on')
-    set(handles.edit_run_outlierTestC, 'Enable', 'on')
-    set(handles.checkbox_run_simpleOutlierTest, 'Value', 0)
-else
-    % only if also other checkbox is off
-    if get(handles.checkbox_run_simpleOutlierTest, 'Value') == 0
-        set(handles.text_run_runOptions_c, 'Enable', 'off')
-        set(handles.edit_run_outlierTestC, 'Enable', 'off')
-    end
-end
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-
-function edit_run_outlierTestC_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_run_outlierTestC (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_run_outlierTestC as text
-%        str2double(get(hObject,'String')) returns contents of edit_run_outlierTestC as a double
+% Hints: get(hObject,'String') returns contents of popupmenu_parameters_refFrames_otherTRF as text
+%        str2double(get(hObject,'String')) returns contents of popupmenu_parameters_refFrames_otherTRF as a double
 
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
 
 
 % --- Executes during object creation, after setting all properties.
-function edit_run_outlierTestC_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_run_outlierTestC (see GCBO)
+function popupmenu_parameters_refFrames_otherTRF_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_refFrames_otherTRF (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -2446,59 +1446,428 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in checkbox_run_runFirstSolution.
-function checkbox_run_runFirstSolution_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_runFirstSolution (see GCBO)
+function popupmenu_parameters_iono_ext_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_iono_ext (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_runFirstSolution
-
-if get(hObject, 'Value')
-    newState='On';
-else
-    newState='off';
-end
-
-set(handles.radiobutton_run_oneOffsPerClock, 'Enable', newState)
-set(handles.radiobutton_run_oneOffsAndRatePerClock, 'Enable', newState)
-set(handles.radiobutton_run_oneOffsAndRateAndQuPerClock, 'Enable', newState)
+% Hints: get(hObject,'String') returns contents of popupmenu_parameters_iono_ext as text
+%        str2double(get(hObject,'String')) returns contents of popupmenu_parameters_iono_ext as a double
 
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
 
 
-% --- Executes on button press in checkbox88.
-function checkbox88_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox88 (see GCBO)
+% --- Executes during object creation, after setting all properties.
+function popupmenu_parameters_iono_ext_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_iono_ext (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function popupmenu_parameters_eop_aPriori_other_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_eop_aPriori_other (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of checkbox88
+% Hints: get(hObject,'String') returns contents of popupmenu_parameters_eop_aPriori_other as text
+%        str2double(get(hObject,'String')) returns contents of popupmenu_parameters_eop_aPriori_other as a double
 
-
-% --- Executes on button press in checkbox89.
-function checkbox89_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox89 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox89
-
-
-% --- Executes on selection change in popupmenu23.
-function popupmenu23_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu23 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu23 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu23
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
 
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu23_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu23 (see GCBO)
+function popupmenu_parameters_eop_aPriori_other_CreateFcn(hObject, eventdata, ~)
+% hObject    handle to popupmenu_parameters_eop_aPriori_other (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --------------------------------------------------------------------
+function menu_parameters_stationModels_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_parameters_stationModels (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_parameters_stationCorrections, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+% --------------------------------------------------------------------
+function menu_parameters_eop_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_parameters_eop (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_parameters_eop, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+% --------------------------------------------------------------------
+function menu_parameters_observationRestrictions_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_parameters_observationRestrictions (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_parameters_observationRestrictions, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+% --------------------------------------------------------------------
+function menu_parameters_ephemerides_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_parameters_ephemerides (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_parameters_ephemerides, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+% --- Executes on button press in checkbox_parameters_statCorr_tidalAtmoLoad.
+function checkbox_parameters_statCorr_tidalAtmoLoad_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_statCorr_tidalAtmoLoad (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_tidalAtmoLoad
+
+if get(hObject, 'Value')
+    newState='on';
+else
+    newState='off';
+end
+
+set(handles.popupmenu_parameters_statCorr_tidalAtmoOceanLoad, 'Enable', newState)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes on button press in checkbox_parameters_statCorr_nonTidalAtmoLoad.
+function checkbox_parameters_statCorr_nonTidalAtmoLoad_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_statCorr_nonTidalAtmoLoad (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_nonTidalAtmoLoad
+
+if get(hObject, 'Value')
+    newState='on';
+else
+    newState='off';
+end
+
+set(handles.popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad, 'Enable', newState)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes on button press in checkbox_parameters_statCorr_poleTides.
+function checkbox_parameters_statCorr_poleTides_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_statCorr_poleTides (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_poleTides
+
+if get(hObject, 'Value')
+    set(handles.radiobutton_parameters_statCorr_poleModel_lin, 'Enable', 'on')
+    set(handles.radiobutton_parameters_statCorr_poleModel_cub, 'Enable', 'on')
+    set(handles.radiobutton_parameters_statCorr_poleModel_iers2015, 'Enable', 'on')
+else
+    % only set to disable when also other checkbox is 0
+    if get(handles.checkbox_parameters_statCorr_oceanPoleTides, 'Value')==0
+        set(handles.radiobutton_parameters_statCorr_poleModel_lin, 'Enable', 'off')
+        set(handles.radiobutton_parameters_statCorr_poleModel_cub, 'Enable', 'off')
+        set(handles.radiobutton_parameters_statCorr_poleModel_iers2015, 'Enable', 'off')
+    end
+end
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes on button press in checkbox_parameters_statCorr_thermalDef.
+function checkbox_parameters_statCorr_thermalDef_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_statCorr_thermalDef (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_thermalDef
+
+if get(hObject, 'Value')
+    set(handles.checkbox_parameters_statCorr_temp_fromInSitu, 'Enable', 'on')
+    set(handles.checkbox_parameters_statCorr_temp_GPT3, 'Enable', 'on')
+else
+    % only set to disable when also other checkbox is 0
+    if get(handles.checkbox_parameters_statCorr_thermalDef, 'Value')==0
+        set(handles.checkbox_parameters_statCorr_temp_fromInSitu, 'Enable', 'off')
+        set(handles.checkbox_parameters_statCorr_temp_GPT3, 'Enable', 'off')
+    end
+end
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in radiobutton_parameters_statCorr_poleModel_lin.
+function radiobutton_parameters_statCorr_poleModel_lin_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton_parameters_statCorr_poleModel_lin (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_parameters_statCorr_poleModel_lin
+
+
+% --- Executes on button press in radiobutton_parameters_statCorr_poleModel_cub.
+function radiobutton_parameters_statCorr_poleModel_cub_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton_parameters_statCorr_poleModel_cub (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_parameters_statCorr_poleModel_cub
+
+
+% --- Executes on button press in checkbox_parameters_statCorr_solidEarthTides.
+function checkbox_parameters_statCorr_solidEarthTides_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_statCorr_solidEarthTides (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_solidEarthTides
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in checkbox_parameters_statCorr_gravitationalDef_Callback.
+function checkbox_parameters_statCorr_gravitationalDef_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_statCorr_solidEarthTides (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_gravitationalDef_Callback
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in checkbox_parameters_statCorr_tidalOceanLoad.
+function checkbox_parameters_statCorr_tidalOceanLoad_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_statCorr_tidalOceanLoad (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_tidalOceanLoad
+
+if get(hObject, 'Value')
+    newState='on';
+else
+    newState='off';
+end
+
+set(handles.popupmenu_parameters_statCorr_tidalOceanLoad, 'Enable', newState)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on selection change in popupmenu_parameters_refFrames_superstationTRF.
+function popupmenu_parameters_refFrames_superstationTRF_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_refFrames_superstationTRF (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_parameters_refFrames_superstationTRF contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_parameters_refFrames_superstationTRF
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_parameters_refFrames_superstationTRF_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_refFrames_superstationTRF (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+   
+
+% --- Executes on button press in pushbutton_parameters_refFrames_superstationTRF_chose.
+function pushbutton_parameters_refFrames_superstationTRF_chose_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_parameters_refFrames_superstationTRF_chose (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% get file from explorer
+[FileName, PathName] = uigetfile({'*.mat', 'Matlab Binary Format (*.mat)'}, 'Select a superstation file', '../TRF/');
+
+if ~isempty(FileName)
+    if ~strcmp('0', num2str(FileName))
+        handles=loadSuperstationFile(hObject, handles, [PathName, FileName]);
+        handles.data.superstationFile=[PathName, FileName];
+        set(handles.text_parameters_refFrames_selected_superstation_file, 'String', handles.data.superstationFile);
+        % write message box for information for user
+        msgbox('Superstations file has been successfully loaded.', 'Load superstations file', 'help')
+    end
+end
+
+% save automatically 
+auto_save_parameterfile(hObject, handles)
+
+handles.output = hObject;
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+function edit_parameter_obsRestr_qualityCode_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_parameter_obsRestr_qualityCode (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_parameter_obsRestr_qualityCode as text
+%        str2double(get(hObject,'String')) returns contents of edit_parameter_obsRestr_qualityCode as a double
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_parameter_obsRestr_qualityCode_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_parameter_obsRestr_qualityCode (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit_parameter_obsRestr_cutOff_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_parameter_obsRestr_cutOff (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_parameter_obsRestr_cutOff as text
+%        str2double(get(hObject,'String')) returns contents of edit_parameter_obsRestr_cutOff as a double
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_parameter_obsRestr_cutOff_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_parameter_obsRestr_cutOff (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes on button press in checkbox_parameters_statCorr_temp_fromInSitu.
+function checkbox_parameters_statCorr_temp_fromInSitu_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_statCorr_temp_fromInSitu (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_temp_fromInSitu
+
+
+% --- Executes on button press in checkbox_parameters_statCorr_temp_GPT3.
+function checkbox_parameters_statCorr_temp_GPT3_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_statCorr_temp_GPT3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_temp_GPT3
+
+
+% --- Executes on button press in checkbox_parameters_statCorr_APLrg.
+function checkbox_parameters_statCorr_APLrg_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_statCorr_APLrg (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_APLrg
+if get(hObject, 'Value')
+    newState1='on';
+    newState2='off';
+else
+    newState1='off';
+    newState2='on';
+end
+
+set(handles.popupmenu_parameters_statCorr_APLrg, 'Enable', newState1)
+
+set(handles.checkbox_parameters_statCorr_tidalAtmoLoad, 'Enable', newState2)
+set(handles.popupmenu_parameters_statCorr_tidalAtmoOceanLoad, 'Enable', newState2)
+set(handles.checkbox_parameters_statCorr_nonTidalAtmoLoad, 'Enable', newState2)
+set(handles.popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad, 'Enable', newState2)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes on selection change in popupmenu_parameters_statCorr_APLrg.
+function popupmenu_parameters_statCorr_APLrg_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_statCorr_APLrg (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_parameters_statCorr_APLrg contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_parameters_statCorr_APLrg
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_parameters_statCorr_APLrg_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_statCorr_APLrg (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -2509,22 +1878,499 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in checkbox90.
-function checkbox90_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox90 (see GCBO)
+% --- Executes on button press in checkbox_parameters_statCorr_GIA.
+function checkbox_parameters_statCorr_GIA_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_statCorr_GIA (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of checkbox90
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_GIA
+if get(hObject, 'Value')
+    newState='on';
+else
+    newState='off';
+end
+
+set(handles.popupmenu_parameters_statCorr_GIA, 'Enable', newState)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
 
 
-% --- Executes on button press in checkbox99.
-function checkbox99_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox99 (see GCBO)
+
+
+% --- Executes on selection change in popupmenu_parameters_statCorr_GIA.
+function popupmenu_parameters_statCorr_GIA_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_statCorr_GIA (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% Hint: get(hObject,'Value') returns toggle state of checkbox99
 
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_parameters_statCorr_GIA contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_parameters_statCorr_GIA
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_parameters_statCorr_GIA_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_statCorr_GIA (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --------------------------------------------------------------------
+function menu_models_space_crafts_Callback(hObject, eventdata, handles)
+% hObject    handle to uipanel_models_space_crafts (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_models_space_crafts, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+% --- Executes on button press in pushbutton_models_sc_browse_for_sp3.
+function pushbutton_models_sc_browse_for_sp3_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_models_sc_browse_for_sp3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Select Sp3 file:
+[FileName, PathName] = uigetfile('*.*','Select SP3 file', '../ORBIT', 'multiselect', 'off');
+
+if ischar(FileName) && ischar(PathName)
+    set(handles.edit_models_sc_sp3_file, 'String', [PathName, FileName])
+    
+    % save parameter file automatically 
+    auto_save_parameterfile(hObject, handles)
+end
+    
+    
+
+function edit_models_sc_sp3_file_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_models_sc_sp3_file (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_models_sc_sp3_file as text
+%        str2double(get(hObject,'String')) returns contents of edit_models_sc_sp3_file as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_models_sc_sp3_file_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_models_sc_sp3_file (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes on button press in checkbox_parameters_statCorr_oceanPoleTides.
+function checkbox_parameters_statCorr_oceanPoleTides_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_statCorr_oceanPoleTides (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_oceanPoleTides
+
+if get(hObject, 'Value')
+    set(handles.radiobutton_parameters_statCorr_poleModel_lin, 'Enable', 'on')
+    set(handles.radiobutton_parameters_statCorr_poleModel_cub, 'Enable', 'on')
+    set(handles.radiobutton_parameters_statCorr_poleModel_iers2015, 'Enable', 'on')
+else
+    % only set to disable when also other checkbox is 0
+    if get(handles.checkbox_parameters_statCorr_poleTides, 'Value')==0
+        set(handles.radiobutton_parameters_statCorr_poleModel_lin, 'Enable', 'off')
+        set(handles.radiobutton_parameters_statCorr_poleModel_cub, 'Enable', 'off')
+        set(handles.radiobutton_parameters_statCorr_poleModel_iers2015, 'Enable', 'off')
+    end
+end
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+function popupmenu_parameters_statCorr_tidalOceanLoad_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_statCorr_tidalOceanLoad (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of popupmenu_parameters_statCorr_tidalOceanLoad as text
+%        str2double(get(hObject,'String')) returns contents of popupmenu_parameters_statCorr_tidalOceanLoad as a double
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_parameters_statCorr_tidalOceanLoad_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_statCorr_tidalOceanLoad (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function popupmenu_parameters_statCorr_tidalAtmoOceanLoad_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_statCorr_tidalAtmoOceanLoad (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of popupmenu_parameters_statCorr_tidalAtmoOceanLoad as text
+%        str2double(get(hObject,'String')) returns contents of popupmenu_parameters_statCorr_tidalAtmoOceanLoad as a double
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_parameters_statCorr_tidalAtmoOceanLoad_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_statCorr_tidalAtmoOceanLoad (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad as text
+%        str2double(get(hObject,'String')) returns contents of popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad as a double
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes when selected object is changed in panel_models_troposphere_zhd.
+function panel_models_troposphere_zhd_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in panel_models_troposphere_zhd 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+% % defines if the popupmenu (containing all folders of TRP) should be  
+% % updated -> is needed when external tropospheric files are created in the
+% % meantime
+% updatePopupmenu=0;
+% 
+% switch get(hObject, 'Tag')
+%     case 'radiobutton_parameters_troposphere_externalFile'
+%         set(handles.popupmenu_parameters_tropo_externalFile, 'Enable', 'on')
+%         set(handles.pushbutton_parameters_troposphere_externalsCreate, 'Enable', 'on')
+%         % enable also (again?) mapping functions and gradients
+%         set(handles.radiobutton_parameters_troposphere_mfh_VMF3, 'Enable', 'Off')
+%         set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Enable', 'Off')
+%         set(handles.radiobutton_parameters_troposphere_mfh_GPT3, 'Enable', 'Off')
+%         set(handles.radiobutton_parameters_troposphere_mfw_VMF3, 'Enable', 'Off')
+%         set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Enable', 'Off')
+%         set(handles.radiobutton_parameters_troposphere_mfw_GPT3, 'Enable', 'Off')
+%         set(handles.radiobutton_parameters_troposphere_gradients_h_no, 'Enable', 'Off')
+%         set(handles.radiobutton_parameters_troposphere_gradients_h_GRAD, 'Enable', 'Off')
+%         set(handles.radiobutton_parameters_troposphere_gradients_h_GPT3, 'Enable', 'Off')
+%         set(handles.radiobutton_parameters_troposphere_gradients_h_DAO, 'Enable', 'Off')
+%         set(handles.radiobutton_parameters_troposphere_gradients_w_no, 'Enable', 'Off')
+%         set(handles.radiobutton_parameters_troposphere_gradients_w_GRAD, 'Enable', 'Off')
+%         set(handles.radiobutton_parameters_troposphere_gradients_w_GPT3, 'Enable', 'Off')
+%         updatePopupmenu=1;
+%     otherwise
+%         set(handles.popupmenu_parameters_tropo_externalFile, 'Enable', 'off')
+%         set(handles.pushbutton_parameters_troposphere_externalsCreate, 'Enable', 'off')
+%         % enable also (again?) mapping functions and gradients
+%         set(handles.radiobutton_parameters_troposphere_mfh_VMF3, 'Enable', 'On')
+%         set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Enable', 'On')
+%         set(handles.radiobutton_parameters_troposphere_mfh_GPT3, 'Enable', 'On')
+%         set(handles.radiobutton_parameters_troposphere_mfw_VMF3, 'Enable', 'On')
+%         set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Enable', 'On')
+%         set(handles.radiobutton_parameters_troposphere_mfw_GPT3, 'Enable', 'On')
+%         set(handles.radiobutton_parameters_troposphere_gradients_h_no, 'Enable', 'On')
+%         set(handles.radiobutton_parameters_troposphere_gradients_h_GRAD, 'Enable', 'On')
+%         set(handles.radiobutton_parameters_troposphere_gradients_h_GPT3, 'Enable', 'On')
+%         set(handles.radiobutton_parameters_troposphere_gradients_h_DAO, 'Enable', 'On')
+%         set(handles.radiobutton_parameters_troposphere_gradients_w_no, 'Enable', 'On')
+%         set(handles.radiobutton_parameters_troposphere_gradients_w_GRAD, 'Enable', 'On')
+%         set(handles.radiobutton_parameters_troposphere_gradients_w_GPT3, 'Enable', 'On')
+% end
+% 
+% % update popupmenu ?
+% if updatePopupmenu==1
+%     curContent=get(handles.popupmenu_parameters_tropo_externalFile, 'String');
+%     curSelected=curContent{get(handles.popupmenu_parameters_tropo_externalFile, 'Value')};
+%     
+%     % get directory content
+%     dirsInTrpFolder=dir('../TRP/OUTPUT_DATA/');
+%     % delete '.', '..', and all files
+%     dirsInTrpFolder(strcmp({dirsInTrpFolder.name}, '.')|strcmp({dirsInTrpFolder.name}, '..')|~[dirsInTrpFolder.isdir])=[];
+%     
+%     % write folders to popupmenu
+%     set(handles.popupmenu_parameters_tropo_externalFile, 'String', {dirsInTrpFolder.name})
+%     
+%     % try to find previous selected to select this again
+%     valueOfPrevSelectedFolder=find(strcmp({dirsInTrpFolder.name}, curSelected));
+%     if isempty(valueOfPrevSelectedFolder)
+%         set(handles.popupmenu_parameters_tropo_externalFile, 'Value', 1)
+%     else
+%         set(handles.popupmenu_parameters_tropo_externalFile, 'Value', valueOfPrevSelectedFolder)
+%     end
+%     
+% end % update popupmenu
+    
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes when selected object is changed in panel_models_troposphere_zwd.
+function panel_models_troposphere_zwd_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in panel_models_troposphere_zwd 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in checkbox_parameters_eop_inclHf_oceanTidesOther.
+function checkbox_parameters_eop_inclHf_oceanTidesOther_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_eop_inclHf_oceanTidesOther (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_eop_inclHf_oceanTidesOther
+if get(hObject, 'Value')
+    set(handles.popupmenu_parameters_eop_oceanTideModel, 'enable', 'on')
+else
+    set(handles.popupmenu_parameters_eop_oceanTideModel, 'enable', 'off')
+end
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in btnGrp_parameters_statCorr_meanPoleModel.
+function btnGrp_parameters_statCorr_meanPoleModel_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in btnGrp_parameters_statCorr_meanPoleModel 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in btnGrp_parameters_statCorr_thermalDef_temp.
+function btnGrp_parameters_statCorr_thermalDef_temp_SelectionChangedFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in btnGrp_parameters_statCorr_thermalDef_temp 
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in panel_models_troposphere_mfh.
+function panel_models_troposphere_mfh_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in panel_models_troposphere_mfh 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes when selected object is changed in panel_models_troposphere_mfw.
+function panel_models_troposphere_mfw_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in panel_models_troposphere_mfw 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in panel_models_troposphere_gradients_h.
+function panel_models_troposphere_gradients_h_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in panel_models_troposphere_gradients_h 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% set en/disable
+set(handles.radiobutton_parameters_troposphere_gradients_w_no, 'Enable', 'On')
+set(handles.radiobutton_parameters_troposphere_gradients_w_GRAD, 'Enable', 'On')
+set(handles.radiobutton_parameters_troposphere_gradients_w_GPT3, 'Enable', 'On')
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes when selected object is changed in panel_models_troposphere_gradients_w.
+function panel_models_troposphere_gradients_w_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in panel_models_troposphere_gradients_w 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+
+% ---------------------------------------------------------------------%
+% ----------------------------ESTIMATION-------------------------------%
+% ---------------------------------------------------------------------%
+
+% --------------------------------------------------------------------
+function menu_estimation_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_estimation (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function menu_estimation_leastSquares_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_estimation_leastSquares (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function menu_estimation_kalmanFilter_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_estimation_kalmanFilter (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function menu_estimation_leastSquares_troposphere_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_estimation_leastSquares_troposphere (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_estimation_leastSquares_tropo, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+% --------------------------------------------------------------------
+function menu_estimation_leastSquares_clock_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_estimation_leastSquares_clock (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_estimation_leastSquares_clock, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+% --------------------------------------------------------------------
+function menu_estimation_leastSquares_eop_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_estimation_leastSquares_eop (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_estimation_leastSquares_eop, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+% --------------------------------------------------------------------
+function menu_estimation_leastSquares_stationCoordinates_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_estimation_leastSquares_stationCoordinates (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_estimation_leastSquares_stationCoordinates, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+% --------------------------------------------------------------------
+function menu_estimation_leastSquares_sourceCoordinates_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_estimation_leastSquares_sourceCoordinates (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_estimation_leastSquares, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
 
 % --- Executes on button press in checkbox_estimation_leastSquares_clocks.
 function checkbox_estimation_leastSquares_clocks_Callback(hObject, eventdata, handles)
@@ -2562,7 +2408,6 @@ end
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
 
-
 % --- Executes on button press in checkbox_estimation_leastSquares_clocksBasDepOffset.
 function checkbox_estimation_leastSquares_clocksBasDepOffset_Callback(hObject, eventdata, handles)
 % hObject    handle to checkbox_estimation_leastSquares_clocksBasDepOffset (see GCBO)
@@ -2591,8 +2436,6 @@ end
 
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
-
-
 
 % --- Executes on button press in checkbox_estimation_leastSquares_clocksRelConstr.
 function checkbox_estimation_leastSquares_clocksRelConstr_Callback(hObject, eventdata, handles)
@@ -2642,7 +2485,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-
 function edit_estimation_leastSquares_clockInterval_Callback(hObject, eventdata, handles)
 % hObject    handle to edit_estimation_leastSquares_clockInterval (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -2669,7 +2511,6 @@ function edit_estimation_leastSquares_clockInterval_CreateFcn(hObject, eventdata
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
 
 % --- Executes on button press in checkbox_estimation_leastSquares_tropo_ngr.
 function checkbox_estimation_leastSquares_tropo_ngr_Callback(hObject, eventdata, handles)
@@ -2714,9 +2555,7 @@ else
         set(handles.radiobutton_run_sinex_tropoParam_incl, 'Enable', 'off')
         set(handles.radiobutton_run_sinex_tropoParam_excl, 'Enable', 'off')
     end
-
 end
-
 % save parameter file automatically
 auto_save_parameterfile(hObject, handles)   
 
@@ -2765,7 +2604,6 @@ function edit_estimation_leastSquares_tropo_ngrRelConstr_CreateFcn(hObject, even
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
 
 
 function edit_estimation_leastSquares_tropo_ngrInterval_Callback(hObject, eventdata, handles)
@@ -2924,8 +2762,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-
 function edit_estimation_leastSquares_tropo_zwdInterval_Callback(hObject, eventdata, handles)
 % hObject    handle to edit_estimation_leastSquares_tropo_zwdInterval (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -3047,7 +2883,6 @@ function edit_estimation_leastSquares_tropo_egrRelConstr_CreateFcn(hObject, even
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
 
 
 function edit_estimation_leastSquares_tropo_egrInterval_Callback(hObject, eventdata, handles)
@@ -3344,7 +3179,6 @@ set(handles.text_run_sinex_eop, 'Enable', newState)
 auto_save_parameterfile(hObject, handles)
 
 
-
 function edit_estimation_leastSquares_eop_interval_yp_Callback(hObject, eventdata, handles)
 % hObject    handle to edit_estimation_leastSquares_eop_interval_yp (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -3454,7 +3288,6 @@ set(handles.text_run_sinex_eop, 'Enable', newState)
 
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
-
 
 
 function edit_estimation_leastSquares_eop_interval_dut1_Callback(hObject, eventdata, handles)
@@ -3866,9 +3699,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-
-
-
 % --- Executes on button press in checkbox_estimation_leastSquares_sources_NNR.
 function checkbox_estimation_leastSquares_sources_NNR_Callback(hObject, eventdata, handles)
 % hObject    handle to checkbox_estimation_leastSquares_sources_NNR (see GCBO)
@@ -3949,14 +3779,680 @@ else % == 1; Checkbox enabled
 
 end
 % save parameter file automatically 
+auto_save_parameterfile(hObject, handles) 
+
+% --- Executes on button press in checkbox_estimation_leastSquares_sources_ICRF2_def.
+function checkbox_estimation_leastSquares_sources_ICRF2_def_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_estimation_leastSquares_sources_ICRF2_def (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_sources_ICRF2_def
 auto_save_parameterfile(hObject, handles)
 
+
+function edit_estimation_leastSquares_sources_abs_constr_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_estimation_leastSquares_sources_abs_constr (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_estimation_leastSquares_sources_abs_constr as text
+%        str2double(get(hObject,'String')) returns contents of edit_estimation_leastSquares_sources_abs_constr as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_estimation_leastSquares_sources_abs_constr_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_estimation_leastSquares_sources_abs_constr (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes on button press in checkbox_estimation_leastSquares_clocks_useClockBreaks.
+function checkbox_estimation_leastSquares_clocks_useClockBreaks_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_estimation_leastSquares_clocks_useClockBreaks (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_clocks_useClockBreaks
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in uipanel_estimation_leastSquares_clock.
+function uipanel_estimation_leastSquares_clock_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel_estimation_leastSquares_clock 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% -------------------------------------------------------------------------%
+% ------------------------------RUN----------------------------------------%
+% -------------------------------------------------------------------------%
+
+% --- Executes on button press in checkbox_run_sinex_write.
+function checkbox_run_sinex_write_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_sinex_write (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_sinex_write
+
+if get(hObject, 'Value')
+    newState='On';
+else
+    newState='Off';
+end
+set(handles.text_run_sinex_header, 'Enable', newState)
+set(handles.text_run_sinex_clockParam, 'Enable', newState)
+set(handles.text_run_sinex_zwd, 'Enable', newState)
+set(handles.text_run_sinex_tropoGradients, 'Enable', newState)
+set(handles.text_run_sinex_sources, 'Enable', newState)
+set(handles.text_run_sinex_stationCoords, 'Enable', newState)
+set(handles.text_run_sinex_eop, 'Enable', newState)
+set(handles.checkbox_run_sinex_sources, 'Enable', newState)
+set(handles.text300, 'Enable', newState)
+
+set(handles.radiobutton_run_sinex_clockParam_incl, 'Enable', 'off')
+set(handles.radiobutton_run_sinex_zwd_incl, 'Enable', newState)
+set(handles.radiobutton_run_sinex_tropoParam_incl, 'Enable', newState)
+set(handles.radiobutton_run_sinex_sources_incl, 'Enable', newState)
+set(handles.radiobutton_run_sinex_stationCoords_incl, 'Enable', newState)
+set(handles.radiobutton_run_sinex_eop_incl, 'Enable', newState)
+
+set(handles.radiobutton_run_sinex_clockParam_excl, 'Enable', newState)
+set(handles.radiobutton_run_sinex_zwd_excl, 'Enable', newState)
+set(handles.radiobutton_run_sinex_tropoParam_excl, 'Enable', newState)
+set(handles.radiobutton_run_sinex_eop_excl, 'Enable', newState)
+
+% if neither eop is estimtated -> disable EOP-options in sinex output
+if (get(handles.checkbox_estimation_leastSquares_eop_xpEst, 'Value')+...
+        get(handles.checkbox_estimation_leastSquares_eop_ypEst, 'Value')+...
+        get(handles.checkbox_estimation_leastSquares_eop_dut1Est, 'Value')+...
+        get(handles.checkbox_estimation_leastSquares_eop_nutdxEst, 'Value')+...
+        get(handles.checkbox_estimation_leastSquares_eop_nutdyEst, 'Value'))==0
+    set(handles.radiobutton_run_sinex_eop_incl, 'Enable', 'off');
+    set(handles.radiobutton_run_sinex_eop_excl, 'Enable', 'off');
+    set(handles.text_run_sinex_eop, 'Enable', 'off')
+end
+
+% if stations are not estimated -> disable option
+if get(handles.checkbox_estimation_leastSquares_coordinates_estimate, 'Value')==0
+    set(handles.text_run_sinex_stationCoords, 'Enable', 'off')
+    set(handles.radiobutton_run_sinex_stationCoords_incl, 'Enable', 'off')
+end
+
+% if gradients are not estimated -> disable sinex option
+if get(handles.checkbox_estimation_leastSquares_tropo_ngr, 'Value')+...
+        get(handles.checkbox_estimation_leastSquares_tropo_egr, 'Value')==0
+    set(handles.text_run_sinex_tropoGradients, 'Enable', 'off')
+    set(handles.radiobutton_run_sinex_tropoParam_incl, 'Enable', 'off')
+    set(handles.radiobutton_run_sinex_tropoParam_excl, 'Enable', 'off')
+end
+
+% if zwd is not esimtated -> disable sinex option
+if get(handles.checkbox_estimation_leastSquares_tropo_zwd, 'value')==0
+    set(handles.text_run_sinex_zwd, 'Enable', 'off')
+    set(handles.radiobutton_run_sinex_zwd_incl, 'Enable', 'off')
+    set(handles.radiobutton_run_sinex_zwd_excl, 'Enable', 'off')
+end
+
+% if source checkbox is unticked
+if get(handles.checkbox_run_sinex_sources, 'Value')==0
+    set(handles.text_run_sinex_sources, 'Enable', 'off')
+    set(handles.radiobutton_run_sinex_sources_incl, 'Enable', 'off')
+end
+
+set(handles.checkbox_run_sinex_changeAnalystsName, 'Enable', newState)
+set(handles.edit_run_sinex_firstname, 'Enable', newState)
+set(handles.edit_run_sinex_lastname, 'Enable', newState)
+set(handles.edit_run_sinex_email, 'Enable', newState)
+if get(handles.checkbox_run_sinex_changeAnalystsName, 'Value')==0
+    set(handles.edit_run_sinex_firstname, 'Enable', 'Off')
+    set(handles.edit_run_sinex_lastname, 'Enable', 'Off')
+    set(handles.edit_run_sinex_email, 'Enable', 'Off')
+end
+
+set(handles.checkbox_run_sinex_addSuffix, 'Enable', newState)
+set(handles.edit_run_sinex_suffix, 'Enable', newState)
+if get(handles.checkbox_run_sinex_addSuffix, 'Value')==0
+    set(handles.edit_run_sinex_suffix, 'Enable', 'Off')
+end
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes on button press in checkbox_run_outputDirectories_runVieGlob.
+function checkbox_run_outputDirectories_runVieGlob_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_outputDirectories_runVieGlob (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_outputDirectories_runVieGlob
+
+% If Vie_GLOB and Vie_LSM (scanwise update) are run both:
+if get(handles.checkbox_run_outputDirectories_runVieGlob,'Value') && ...
+(get(handles.checkbox_run_outputDirectories_runVieLsmScanwiseUpdate,'Value') || get(handles.checkbox_run_outputDirectories_runVieLsm,'Value'))
     
+		% Use different output Sub-directories
+		if get(handles.checkbox_run_outDirs_diffSubs, 'Value')
+			str_lsm_subDir=get(handles.edit_run_outDirs_level2, 'String');
+		% Use one output Sub-directory	
+		else
+			str_lsm_subDir=get(handles.edit_run_outDirs_oneSub, 'String');
+		end
+		
+		set(handles.edit_run_outDirs_glob_pathToLevel2, 'Enable', 'off');
+		set(handles.edit_run_outDirs_glob_pathToLevel2, 'String', '../DATA/LEVEL2/');
+		set(handles.edit_run_outDirs_glob_level2Sub, 'Enable', 'off');
+		set(handles.edit_run_outDirs_glob_level2Sub, 'String', str_lsm_subDir);
+		
+		msgbox('If Vie_LSM and Vie_GLOB are both run, the Vie_LSM output directory for N-matrices have to be equal to the Vie_GLOB input directory!', 'Warning (subdirectories not equal)');
+else
+	set(handles.edit_run_outDirs_glob_pathToLevel2, 'Enable', 'on');
+	set(handles.edit_run_outDirs_glob_level2Sub, 'Enable', 'on');
+end
+
+
+% --- Executes on button press in checkbox_run_outputDirectories_runVieSim.
+function checkbox_run_outputDirectories_runVieSim_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_outputDirectories_runVieSim (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_outputDirectories_runVieSim
+
+
+% --- Executes on button press in checkbox_run_outputDirectories_runVieInit.
+function checkbox_run_outputDirectories_runVieInit_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_outputDirectories_runVieInit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_outputDirectories_runVieInit
+
+
+% --- Executes on button press in pushbutton_run_runOptions_saveAllParamsToAscii.
+function pushbutton_run_runOptions_saveAllParamsToAscii_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_run_runOptions_saveAllParamsToAscii (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% get a file
+[filename, pathname, filterindex] = uiputfile( ...
+{'*.txt', 'Textfile (*.txt)'},...
+ 'Save as',...
+ '../WORK/PARAMETERS/');
+
+% see if something was chosen
+if ~isempty(filename)
+    if ~strcmp('0', num2str(filename))
+        % first auto save parameters (again)
+        auto_save_parameterfile(hObject, handles);
+        
+        % get newest auto saved parameter file
+        newestAutoSavedParameterFile=getNewestAutoSavedParameterFile(hObject, handles);
+        
+        % load newest parameter file
+        load(['PARAMETERS/', newestAutoSavedParameterFile.name]);
+        
+        % write parameter file to text output
+        create_input_protocol(parameter, [pathname, filename]);
+        
+        msgbox(sprintf('GUI options have been saved to\n%s', [pathname, filename]), 'Saving completed', 'help');
+    end
+end
+
+% --- Executes on button press in checkbox_run_outputDirectories_runVieMod.
+function checkbox_run_outputDirectories_runVieMod_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_outputDirectories_runVieMod (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_outputDirectories_runVieMod
+
+
+% --- Executes on button press in checkbox_run_outputDirectories_runVieLsm.
+function checkbox_run_outputDirectories_runVieLsm_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_outputDirectories_runVieLsm (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_outputDirectories_runVieLsm
+
+if get(hObject, 'Value')
+	% if checkbox is ticked -> untick scanwise update
+    set(handles.checkbox_run_outputDirectories_runVieLsmScanwiseUpdate, 'Value', 0);
+	
+    % if also Vie_GLOB is ticked
+	if get(handles.checkbox_run_outputDirectories_runVieGlob, 'value')
+    
+		% Use different output Sub-directories
+		if get(handles.checkbox_run_outDirs_diffSubs, 'Value')
+			str_lsm_subDir=get(handles.edit_run_outDirs_level2, 'String');
+		% Use one output Sub-directory	
+		else
+			str_lsm_subDir=get(handles.edit_run_outDirs_oneSub, 'String');
+		end
+		
+		%str_glob_subDir=get(handles.edit_run_outDirs_glob_level2Sub, 'String');
+		
+		set(handles.edit_run_outDirs_glob_pathToLevel2, 'Enable', 'off');
+		set(handles.edit_run_outDirs_glob_pathToLevel2, 'String', '../DATA/LEVEL2/');
+		set(handles.edit_run_outDirs_glob_level2Sub, 'Enable', 'off');
+		set(handles.edit_run_outDirs_glob_level2Sub, 'String', str_lsm_subDir);
+		
+		msgbox('If Vie_LSM and Vie_GLOB are both run, the Vie_LSM output directory for N-matrices have to be equal to the Vie_GLOB input directory!', 'Warning (subdirectories not equal)');
+		
+	end
+	
+else
+	set(handles.edit_run_outDirs_glob_pathToLevel2, 'Enable', 'on');
+	set(handles.edit_run_outDirs_glob_level2Sub, 'Enable', 'on');
+end
+
+% --- Executes on button press in checkbox_run_sinex_changeAnalystsName.
+function checkbox_run_sinex_changeAnalystsName_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_sinex_changeAnalystsName (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_sinex_changeAnalystsName
+if get(hObject, 'Value')
+    newState='On';
+else
+    newState='Off';
+end
+
+set(handles.edit_run_sinex_firstname, 'Enable', newState);
+set(handles.edit_run_sinex_lastname, 'Enable', newState);
+set(handles.edit_run_sinex_email, 'Enable', newState);
+
+
+function edit_run_sinex_firstname_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_run_sinex_firstname (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_run_sinex_firstname as text
+%        str2double(get(hObject,'String')) returns contents of edit_run_sinex_firstname as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_run_sinex_firstname_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_run_sinex_firstname (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
 
 
 
+function edit_run_sinex_lastname_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_run_sinex_lastname (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_run_sinex_lastname as text
+%        str2double(get(hObject,'String')) returns contents of edit_run_sinex_lastname as a double
 
 
+% --- Executes during object creation, after setting all properties.
+function edit_run_sinex_lastname_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_run_sinex_lastname (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit_run_sinex_email_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_run_sinex_email (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_run_sinex_email as text
+%        str2double(get(hObject,'String')) returns contents of edit_run_sinex_email as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_run_sinex_email_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_run_sinex_email (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_run_sinex_addSuffix.
+function checkbox_run_sinex_addSuffix_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_sinex_addSuffix (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_sinex_addSuffix
+if get(hObject, 'Value')
+    newState='On';
+else
+    newState='Off';
+end
+
+set(handles.edit_run_sinex_suffix, 'Enable', newState);
+
+
+function edit_run_sinex_suffix_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_run_sinex_suffix (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_run_sinex_suffix as text
+%        str2double(get(hObject,'String')) returns contents of edit_run_sinex_suffix as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_run_sinex_suffix_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_run_sinex_suffix (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes when selected object is changed in uipanel_run_modules.
+function uipanel_run_modules_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel_run_modules 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in checkbox_run_outDirs_diffSubs.
+function checkbox_run_outDirs_diffSubs_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_outDirs_diffSubs (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+if get(handles.checkbox_run_outDirs_diffSubs, 'Value')
+% Different output sub-directories
+	set(handles.edit_run_outDirs_oneSub, 'Enable', 'off')
+	set(handles.text_run_outDirs_diff_level0, 'Enable', 'on')
+	set(handles.edit_run_outDirs_level0, 'Enable', 'on')
+	set(handles.text_run_outDirs_diff_level1, 'Enable', 'on')
+	set(handles.edit_run_outDirs_level1, 'Enable', 'on')
+	set(handles.text_run_outDirs_diff_level3, 'Enable', 'on')
+	set(handles.edit_run_outDirs_level3, 'Enable', 'on')
+	set(handles.text_run_outDirs_diff_level2, 'Enable', 'on')
+	set(handles.edit_run_outDirs_level2, 'Enable', 'on')
+	set(handles.text_run_one_subDir, 'Enable', 'off')
+else
+% One output sub-directory
+	set(handles.edit_run_outDirs_oneSub, 'Enable', 'on')
+	set(handles.text_run_outDirs_diff_level0, 'Enable', 'off')
+	set(handles.edit_run_outDirs_level0, 'Enable', 'off')
+	set(handles.text_run_outDirs_diff_level1, 'Enable', 'off')
+	set(handles.edit_run_outDirs_level1, 'Enable', 'off')
+	set(handles.text_run_outDirs_diff_level3, 'Enable', 'off')
+	set(handles.edit_run_outDirs_level3, 'Enable', 'off')
+	set(handles.text_run_outDirs_diff_level2, 'Enable', 'off')
+	set(handles.edit_run_outDirs_level2, 'Enable', 'off')
+	set(handles.text_run_one_subDir, 'Enable', 'on')
+end
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles) 
+
+% --- Executes on button press in checkbox_run_error_routine.
+function checkbox_run_error_routine_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_error_routine (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_error_routine
+
+
+% --- Executes on button press in checkbox_run_globalPram_tidERPvar.
+function checkbox_run_globalPram_tidERPvar_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_globalPram_tidERPvar (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_globalPram_tidERPvar
+
+% --------------------------------------------------------------------
+function menu_run_sinexOutput_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_run_sinexOutput (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_run_sinexOutput, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+% --------------------------------------------------------------------
+function menu_run_outputDirectories_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_run_outputDirectories (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_run_runOptions, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+% --------------------------------------------------------------------
+function menu_run_runOptions_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_run_runOptions (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_run_vievsProcSettings, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+% --- Executes on button press in checkbox_run_runMainSolution.
+function checkbox_run_runMainSolution_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_runMainSolution (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_runMainSolution
+
+if get(hObject, 'Value')
+    set(handles.checkbox_run_simpleOutlierTest, 'Enable', 'on')
+    set(handles.checkbox_run_normalOutlierTest, 'Enable', 'on')
+    if get(handles.checkbox_run_simpleOutlierTest, 'Value') || get(handles.checkbox_run_normalOutlierTest, 'Value') 
+        set(handles.text_run_runOptions_c, 'Enable', 'on')
+        set(handles.edit_run_outlierTestC, 'Enable', 'on')
+    end
+else
+    set(handles.checkbox_run_simpleOutlierTest, 'Enable', 'off')
+    set(handles.checkbox_run_normalOutlierTest, 'Enable', 'off')
+    set(handles.text_run_runOptions_c, 'Enable', 'off')
+    set(handles.edit_run_outlierTestC, 'Enable', 'off')
+end
+    
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes on button press in checkbox_run_simpleOutlierTest.
+function checkbox_run_simpleOutlierTest_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_simpleOutlierTest (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_simpleOutlierTest
+if get(hObject, 'Value')
+    set(handles.text_run_runOptions_c, 'Enable', 'on')
+    set(handles.edit_run_outlierTestC, 'Enable', 'on')
+    set(handles.checkbox_run_normalOutlierTest, 'Value', 0)
+else
+    % only if also other checkbox is off
+    if get(handles.checkbox_run_normalOutlierTest, 'Value')==0
+        set(handles.text_run_runOptions_c, 'Enable', 'off')
+        set(handles.edit_run_outlierTestC, 'Enable', 'off')
+    end
+end
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes on button press in checkbox_run_normalOutlierTest.
+function checkbox_run_normalOutlierTest_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_normalOutlierTest (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_normalOutlierTest
+
+if get(hObject, 'Value')
+    set(handles.text_run_runOptions_c, 'Enable', 'on')
+    set(handles.edit_run_outlierTestC, 'Enable', 'on')
+    set(handles.checkbox_run_simpleOutlierTest, 'Value', 0)
+else
+    % only if also other checkbox is off
+    if get(handles.checkbox_run_simpleOutlierTest, 'Value') == 0
+        set(handles.text_run_runOptions_c, 'Enable', 'off')
+        set(handles.edit_run_outlierTestC, 'Enable', 'off')
+    end
+end
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+
+function edit_run_outlierTestC_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_run_outlierTestC (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_run_outlierTestC as text
+%        str2double(get(hObject,'String')) returns contents of edit_run_outlierTestC as a double
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_run_outlierTestC_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_run_outlierTestC (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_run_runFirstSolution.
+function checkbox_run_runFirstSolution_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_runFirstSolution (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_runFirstSolution
+
+if get(hObject, 'Value')
+    newState='On';
+else
+    newState='off';
+end
+
+set(handles.radiobutton_run_oneOffsPerClock, 'Enable', newState)
+set(handles.radiobutton_run_oneOffsAndRatePerClock, 'Enable', newState)
+set(handles.radiobutton_run_oneOffsAndRateAndQuPerClock, 'Enable', newState)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+function edit_run_add_noise_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_run_add_noise (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_run_add_noise as text
+%        str2double(get(hObject,'String')) returns contents of edit_run_add_noise as a double
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_run_add_noise_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_run_add_noise (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes on button press in checkbox_run_ElevDepNoise.
+function checkbox_run_ElevDepNoise_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_ElevDepNoise (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_ElevDepNoise
+if get(handles.checkbox_run_ElevDepNoise, 'Value')
+    set(handles.edit_run_add_noise, 'Enable', 'off'); 
+    set(handles.text_run_add_noise, 'Enable', 'off');
+else
+    set(handles.edit_run_add_noise, 'Enable', 'on');
+    set(handles.text_run_add_noise, 'Enable', 'on');
+end
+auto_save_parameterfile(hObject, handles)
 
 % --- Executes on button press in checkbox_run_allowStationwise.
 function checkbox_run_allowStationwise_Callback(hObject, eventdata, handles)
@@ -4058,37 +4554,6 @@ function edit_run_globalPram_statVelEpoch_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-
-% --- Executes on button press in checkbox_estimation_leastSquares_clocks_useClockBreaks.
-function checkbox_estimation_leastSquares_clocks_useClockBreaks_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_estimation_leastSquares_clocks_useClockBreaks (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_clocks_useClockBreaks
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes on button press in checkbox173.
-function checkbox173_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox173 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox173
-
-
-% --- Executes on button press in checkbox174.
-function checkbox174_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox174 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox174
-
 
 
 function edit_run_outDirs_oneSub_Callback(hObject, eventdata, handles)
@@ -4283,833 +4748,1170 @@ save_runp(hObject, handles)
 vie_batch
 
 
-
-
-function edit106_Callback(hObject, eventdata, handles)
-% hObject    handle to edit106 (see GCBO)
+% -------------------------------------------------------------------------%
+% ------------------------------VIE_GLOB-----------------------------------%
+% -------------------------------------------------------------------------%
+% --- Executes on button press in checkbox_run_globalPram_stseaspos.
+function checkbox_run_globalPram_stseaspos_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_globalPram_stseaspos (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit106 as text
-%        str2double(get(hObject,'String')) returns contents of edit106 as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit106_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit106 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton17.
-function pushbutton17_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton17 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-function popupmenu_parameters_refFrames_otherCRF_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_refFrames_otherCRF (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of popupmenu_parameters_refFrames_otherCRF as text
-%        str2double(get(hObject,'String')) returns contents of popupmenu_parameters_refFrames_otherCRF as a double
-
-% save parameter file automatically 
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_globalPram_stseaspos
 auto_save_parameterfile(hObject, handles)
 
 
-% --- Executes during object creation, after setting all properties.
-function popupmenu_parameters_refFrames_otherCRF_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_refFrames_otherCRF (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-function popupmenu_parameters_refFrames_otherTRF_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_refFrames_otherTRF (see GCBO)
+% --- Executes on button press in checkbox_run_globalPram_hlpole.
+function checkbox_run_globalPram_hlpole_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_globalPram_hlpole (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of popupmenu_parameters_refFrames_otherTRF as text
-%        str2double(get(hObject,'String')) returns contents of popupmenu_parameters_refFrames_otherTRF as a double
-
-% save parameter file automatically 
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_globalPram_hlpole
 auto_save_parameterfile(hObject, handles)
 
 
+% --- Executes on selection change in listbox_vie_glob_stseaspos.
+function listbox_vie_glob_stseaspos_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox_vie_glob_stseaspos (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns listbox_vie_glob_stseaspos contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox_vie_glob_stseaspos
+
+
 % --- Executes during object creation, after setting all properties.
-function popupmenu_parameters_refFrames_otherTRF_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_refFrames_otherTRF (see GCBO)
+function listbox_vie_glob_stseaspos_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listbox_vie_glob_stseaspos (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
-% Hint: edit controls usually have a white background on Windows.
+% Hint: listbox controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
 
 
-function popupmenu_parameters_iono_ext_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_iono_ext (see GCBO)
+% --- Executes on button press in checkbox_global_param_stseaspos_N.
+function checkbox_global_param_stseaspos_N_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_global_param_stseaspos_N (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of popupmenu_parameters_iono_ext as text
-%        str2double(get(hObject,'String')) returns contents of popupmenu_parameters_iono_ext as a double
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
+% Hint: get(hObject,'Value') returns toggle state of checkbox_global_param_stseaspos_N
 
 
-% --- Executes during object creation, after setting all properties.
-function popupmenu_parameters_iono_ext_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_iono_ext (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function popupmenu_parameters_eop_aPriori_other_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_eop_aPriori_other (see GCBO)
+% --- Executes on button press in checkbox_global_param_stseaspos_E.
+function checkbox_global_param_stseaspos_E_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_global_param_stseaspos_E (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of popupmenu_parameters_eop_aPriori_other as text
-%        str2double(get(hObject,'String')) returns contents of popupmenu_parameters_eop_aPriori_other as a double
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
+% Hint: get(hObject,'Value') returns toggle state of checkbox_global_param_stseaspos_E
 
 
-% --- Executes during object creation, after setting all properties.
-function popupmenu_parameters_eop_aPriori_other_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_eop_aPriori_other (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_setInput_browseForProcLists.
-function pushbutton_setInput_browseForProcLists_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_setInput_browseForProcLists (see GCBO)
+% --- Executes on button press in checkbox_global_param_stseaspos_R.
+function checkbox_global_param_stseaspos_R_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_global_param_stseaspos_R (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-[FileName, PathName] = uigetfile('*.mat','Select process lists', './PROCESSLIST/', 'multiselect', 'on');
-
-fileWasChosen=1;
-
-if isempty(FileName)
-    fileWasChosen=0;
-elseif ~iscell(FileName)
-    if FileName == 0
-        fileWasChosen=0;
-    end
-end
-       
-if fileWasChosen
-    % get number of files
-    if iscell(FileName)
-        nFiles=size(FileName,2);
-    else
-        nFiles=1;
-    end
-    
-    % for all files
-    for iFile=1:nFiles
-        % load process list
-        
-        % if we have a cell == if we have more than 1 process_list selected
-        if iscell(FileName)
-            load([PathName, FileName{iFile}])
-        else
-            load([PathName, FileName])
-        end
-        
-        % if we have now the process_list variable
-        if exist('process_list', 'var')
-            % get current listbox entries
-            curContent=get(handles.listbox_setInput_processList, 'String');
-            
-            % delete last entry of process_list when it is ''
-            if strcmp(process_list(size(process_list,1)), ' ')
-                process_list(size(process_list,1),:)=[];
-            end
-            
-            % make cellstr out of process_list
-            process_list_cellstr=cellstr(process_list);
-            
-            % if listbox is empty: just take chosen process_list
-            if isempty(curContent)
-                newContent=process_list_cellstr;
-            else % else: make unique
-                newContent=unique([curContent; process_list_cellstr]);
-            end
-
-            % update listbox
-            set(handles.listbox_setInput_processList, 'String', newContent);
-        end
-        
-    end
-
-    % save all selected sessions to handles struct
-    handles.allSelectedFiles=newContent;
-    
-    % save changes to handles struct
-    guidata(hObject, handles);
-    
-    % save parameter file automatically 
-    auto_save_parameterfile(hObject, handles)
-end
-    
+% Hint: get(hObject,'Value') returns toggle state of checkbox_global_param_stseaspos_R
 
 
-% --- Executes on button press in pushbutton_setInput_clearProcList.
-function pushbutton_setInput_clearProcList_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_setInput_clearProcList (see GCBO)
+% --- Executes when selected object is changed in uibuttongroup10.
+function uibuttongroup31_SelectionChangedFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uibuttongroup10 
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-
-% get current content of listbox
-curContent=get(handles.listbox_setInput_processList, 'String');
-
-if ~isempty(curContent)
-    % delete all selected entries entry
-    
-    curContent(get(handles.listbox_setInput_processList, 'Value'))=[];
-    
-    % get current value
-    curValue=get(handles.listbox_setInput_processList, 'Value');
-    
-    % set the current value either to the current value or to the latest
-    % (if the former latest was deleted). If no session is there anymore,
-    % take 1.
-    set(handles.listbox_setInput_processList, 'Value', ...
-        min([max(curValue), max(length(curContent),1)]));
-
-    % update listbox
-    set(handles.listbox_setInput_processList, 'String', curContent);
-
-    % and also save it to handles struct
-    handles.allSelectedFiles=curContent;
-
-    % save changes to handles struct
-    guidata(hObject, handles);
-
-    % save parameter file automatically 
-    auto_save_parameterfile(hObject, handles)
-end
-
-
-
-% --- Executes on button press in checkbox_parameters_statCorr_oceanPoleTides.
-function checkbox_parameters_statCorr_oceanPoleTides_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_parameters_statCorr_oceanPoleTides (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_oceanPoleTides
-
-if get(hObject, 'Value')
-    set(handles.radiobutton_parameters_statCorr_poleModel_lin, 'Enable', 'on')
-    set(handles.radiobutton_parameters_statCorr_poleModel_cub, 'Enable', 'on')
-    set(handles.radiobutton_parameters_statCorr_poleModel_iers2015, 'Enable', 'on')
+if get(handles.radiobuttonedit_glob_param_estStSeasPos, 'Value')
+    % estimate was selected
+    state='On';
 else
-    % only set to disable when also other checkbox is 0
-    if get(handles.checkbox_parameters_statCorr_poleTides, 'Value')==0
-        set(handles.radiobutton_parameters_statCorr_poleModel_lin, 'Enable', 'off')
-        set(handles.radiobutton_parameters_statCorr_poleModel_cub, 'Enable', 'off')
-        set(handles.radiobutton_parameters_statCorr_poleModel_iers2015, 'Enable', 'off')
-    end
+    state='Off';
 end
 
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
+set(handles.listbox_vie_glob_stseaspos, 'Enable', state);
+set(handles.checkbox_global_param_stseaspos_R, 'Enable', state);
+set(handles.checkbox_global_param_stseaspos_E, 'Enable', state);
+set(handles.checkbox_global_param_stseaspos_N, 'Enable', state);
 
 
-function popupmenu_parameters_statCorr_tidalOceanLoad_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_statCorr_tidalOceanLoad (see GCBO)
+% --- Executes on selection change in listbox_vie_glob_APLrg.
+function listbox_vie_glob_APLrg_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox_vie_glob_APLrg (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of popupmenu_parameters_statCorr_tidalOceanLoad as text
-%        str2double(get(hObject,'String')) returns contents of popupmenu_parameters_statCorr_tidalOceanLoad as a double
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
+% Hints: contents = cellstr(get(hObject,'String')) returns listbox_vie_glob_APLrg contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox_vie_glob_APLrg
 
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu_parameters_statCorr_tidalOceanLoad_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_statCorr_tidalOceanLoad (see GCBO)
+function listbox_vie_glob_APLrg_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listbox_vie_glob_APLrg (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
-% Hint: edit controls usually have a white background on Windows.
+% Hint: listbox controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
 
 
-
-function popupmenu_parameters_statCorr_tidalAtmoOceanLoad_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_statCorr_tidalAtmoOceanLoad (see GCBO)
+% --- Executes when selected object is changed in uibuttongroup32.
+function uibuttongroup32_SelectionChangedFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uibuttongroup32 
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of popupmenu_parameters_statCorr_tidalAtmoOceanLoad as text
-%        str2double(get(hObject,'String')) returns contents of popupmenu_parameters_statCorr_tidalAtmoOceanLoad as a double
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_parameters_statCorr_tidalAtmoOceanLoad_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_statCorr_tidalAtmoOceanLoad (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad as text
-%        str2double(get(hObject,'String')) returns contents of popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad as a double
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-% --- Executes when selected object is changed in uipanel88.
-function uipanel88_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel88 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-switch get(hObject, 'Tag')
-    case 'radiobutton_parameters_refFrames_otherTRF'
-        if get(hObject, 'Value')
-            set(handles.popupmenu_parameters_refFrames_otherTRF, 'Enable', 'on')
-            set(handles.pushbutton_parameters_refFrames_superstationTRF_chose, 'Enable', 'off')
-            set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Enable', 'off')
-        end
-    case 'radiobutton_parameters_refFrames_superstationTRF'
-        if get(hObject, 'Value')
-            set(handles.popupmenu_parameters_refFrames_otherTRF, 'Enable', 'off')
-            set(handles.pushbutton_parameters_refFrames_superstationTRF_chose, 'Enable', 'on')
-            set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Enable', 'on')
-        end
-    otherwise
-        set(handles.popupmenu_parameters_refFrames_otherTRF, 'Enable', 'off')
-        set(handles.pushbutton_parameters_refFrames_superstationTRF_chose, 'Enable', 'off')
-        set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Enable', 'off')
-end
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-% --- Executes when selected object is changed in uipanel89.
-function uipanel89_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel89 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-switch get(hObject, 'Tag')
-    case 'radiobutton_parameters_refFrames_otherCRF'
-        if get(hObject, 'Value')
-            set(handles.popupmenu_parameters_refFrames_otherCRF, 'Enable', 'on')
-            set(handles.popupmenu_parameters_refFrames_supersourceCRF, 'Enable', 'Off')
-            set(handles.pushbutton_parameters_refFrames_superstationCRF_chose, 'Enable', 'Off')
-        end
-    otherwise
-        set(handles.popupmenu_parameters_refFrames_otherCRF, 'Enable', 'off')
-        set(handles.pushbutton_parameters_refFrames_superstationCRF_chose, 'Enable', 'On')
-        set(handles.popupmenu_parameters_refFrames_supersourceCRF, 'Enable', 'On')
-end
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when selected object is changed in uipanel99.
-function uipanel99_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel99 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% defines if the popupmenu (containing all folders of TRP) should be
-% updated -> is needed when external tropospheric files are created in the
-% meantime
-updatePopupmenu=0;
-
-switch get(hObject, 'Tag')
-    case 'radiobutton_parameters_iono_ext'
-        set(handles.popupmenu_parameters_iono_ext, 'Enable', 'on')
-        set(handles.pushbutton_parameters_iono_create, 'Enable', 'on')
-        updatePopupmenu=1;
-    otherwise
-        set(handles.popupmenu_parameters_iono_ext, 'Enable', 'off')
-        set(handles.pushbutton_parameters_iono_create, 'Enable', 'off')
-end
-
-% update popupmenu
-if updatePopupmenu==1
-    curContent=get(handles.popupmenu_parameters_iono_ext, 'String');
-    if ~iscell(curContent)
-        curContent = {curContent};
-    end
-    curSelected=curContent{get(handles.popupmenu_parameters_iono_ext, 'Value')};
-    
-    % get directory content
-    dirsInIonFolder=dir('../ION/FILES/');
-    % delete '.', '..', and all files
-    dirsInIonFolder(strcmp({dirsInIonFolder.name}, '.')|strcmp({dirsInIonFolder.name}, '..')|~[dirsInIonFolder.isdir])=[];
-    
-    % write folders to popupmenu
-    if isempty(dirsInIonFolder)
-        set(handles.popupmenu_parameters_iono_ext, 'String', ' ')
-    else
-        set(handles.popupmenu_parameters_iono_ext, 'String', {dirsInIonFolder.name})
-    end
-    
-    % try to find previous selected to select this again
-    valueOfPrevSelectedFolder=find(strcmp({dirsInIonFolder.name}, curSelected));
-    if isempty(valueOfPrevSelectedFolder)
-        set(handles.popupmenu_parameters_iono_ext, 'Value', 1)
-    else
-        set(handles.popupmenu_parameters_iono_ext, 'Value', valueOfPrevSelectedFolder)
-    end
-    
-end %update popupmenu
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when selected object is changed in panel_models_troposphere_zhd.
-function panel_models_troposphere_zhd_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in panel_models_troposphere_zhd 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-% % defines if the popupmenu (containing all folders of TRP) should be  
-% % updated -> is needed when external tropospheric files are created in the
-% % meantime
-% updatePopupmenu=0;
-% 
-% switch get(hObject, 'Tag')
-%     case 'radiobutton_parameters_troposphere_externalFile'
-%         set(handles.popupmenu_parameters_tropo_externalFile, 'Enable', 'on')
-%         set(handles.pushbutton_parameters_troposphere_externalsCreate, 'Enable', 'on')
-%         % enable also (again?) mapping functions and gradients
-%         set(handles.radiobutton_parameters_troposphere_mfh_VMF3, 'Enable', 'Off')
-%         set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Enable', 'Off')
-%         set(handles.radiobutton_parameters_troposphere_mfh_GPT3, 'Enable', 'Off')
-%         set(handles.radiobutton_parameters_troposphere_mfw_VMF3, 'Enable', 'Off')
-%         set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Enable', 'Off')
-%         set(handles.radiobutton_parameters_troposphere_mfw_GPT3, 'Enable', 'Off')
-%         set(handles.radiobutton_parameters_troposphere_gradients_h_no, 'Enable', 'Off')
-%         set(handles.radiobutton_parameters_troposphere_gradients_h_GRAD, 'Enable', 'Off')
-%         set(handles.radiobutton_parameters_troposphere_gradients_h_GPT3, 'Enable', 'Off')
-%         set(handles.radiobutton_parameters_troposphere_gradients_h_DAO, 'Enable', 'Off')
-%         set(handles.radiobutton_parameters_troposphere_gradients_w_no, 'Enable', 'Off')
-%         set(handles.radiobutton_parameters_troposphere_gradients_w_GRAD, 'Enable', 'Off')
-%         set(handles.radiobutton_parameters_troposphere_gradients_w_GPT3, 'Enable', 'Off')
-%         updatePopupmenu=1;
-%     otherwise
-%         set(handles.popupmenu_parameters_tropo_externalFile, 'Enable', 'off')
-%         set(handles.pushbutton_parameters_troposphere_externalsCreate, 'Enable', 'off')
-%         % enable also (again?) mapping functions and gradients
-%         set(handles.radiobutton_parameters_troposphere_mfh_VMF3, 'Enable', 'On')
-%         set(handles.radiobutton_parameters_troposphere_mfh_VMF1, 'Enable', 'On')
-%         set(handles.radiobutton_parameters_troposphere_mfh_GPT3, 'Enable', 'On')
-%         set(handles.radiobutton_parameters_troposphere_mfw_VMF3, 'Enable', 'On')
-%         set(handles.radiobutton_parameters_troposphere_mfw_VMF1, 'Enable', 'On')
-%         set(handles.radiobutton_parameters_troposphere_mfw_GPT3, 'Enable', 'On')
-%         set(handles.radiobutton_parameters_troposphere_gradients_h_no, 'Enable', 'On')
-%         set(handles.radiobutton_parameters_troposphere_gradients_h_GRAD, 'Enable', 'On')
-%         set(handles.radiobutton_parameters_troposphere_gradients_h_GPT3, 'Enable', 'On')
-%         set(handles.radiobutton_parameters_troposphere_gradients_h_DAO, 'Enable', 'On')
-%         set(handles.radiobutton_parameters_troposphere_gradients_w_no, 'Enable', 'On')
-%         set(handles.radiobutton_parameters_troposphere_gradients_w_GRAD, 'Enable', 'On')
-%         set(handles.radiobutton_parameters_troposphere_gradients_w_GPT3, 'Enable', 'On')
-% end
-% 
-% % update popupmenu ?
-% if updatePopupmenu==1
-%     curContent=get(handles.popupmenu_parameters_tropo_externalFile, 'String');
-%     curSelected=curContent{get(handles.popupmenu_parameters_tropo_externalFile, 'Value')};
-%     
-%     % get directory content
-%     dirsInTrpFolder=dir('../TRP/OUTPUT_DATA/');
-%     % delete '.', '..', and all files
-%     dirsInTrpFolder(strcmp({dirsInTrpFolder.name}, '.')|strcmp({dirsInTrpFolder.name}, '..')|~[dirsInTrpFolder.isdir])=[];
-%     
-%     % write folders to popupmenu
-%     set(handles.popupmenu_parameters_tropo_externalFile, 'String', {dirsInTrpFolder.name})
-%     
-%     % try to find previous selected to select this again
-%     valueOfPrevSelectedFolder=find(strcmp({dirsInTrpFolder.name}, curSelected));
-%     if isempty(valueOfPrevSelectedFolder)
-%         set(handles.popupmenu_parameters_tropo_externalFile, 'Value', 1)
-%     else
-%         set(handles.popupmenu_parameters_tropo_externalFile, 'Value', valueOfPrevSelectedFolder)
-%     end
-%     
-% end % update popupmenu
-    
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-% --- Executes when selected object is changed in panel_models_troposphere_zwd.
-function panel_models_troposphere_zwd_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in panel_models_troposphere_zwd 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when selected object is changed in uipanel116.
-function uipanel116_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel116 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-switch get(hObject, 'Tag')
-    case 'radiobutton_parameters_eop_aPriori_other'
-        set(handles.popupmenu_parameters_eop_aPriori_other, 'Enable', 'on')
-    otherwise
-        set(handles.popupmenu_parameters_eop_aPriori_other, 'Enable', 'off')
-end
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes on button press in checkbox_parameters_eop_inclHf_oceanTidesOther.
-function checkbox_parameters_eop_inclHf_oceanTidesOther_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_parameters_eop_inclHf_oceanTidesOther (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_eop_inclHf_oceanTidesOther
-if get(hObject, 'Value')
-    set(handles.popupmenu_parameters_eop_oceanTideModel, 'enable', 'on')
+if get(handles.radiobuttonedit_glob_param_estAPLrg, 'Value')
+    % estimate was selected
+    state='On';
 else
-    set(handles.popupmenu_parameters_eop_oceanTideModel, 'enable', 'off')
+    state='Off';
 end
 
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
+set(handles.listbox_vie_glob_APLrg, 'Enable', state);
 
 
-% --- Executes when selected object is changed in btnGrp_parameters_statCorr_meanPoleModel.
-function btnGrp_parameters_statCorr_meanPoleModel_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in btnGrp_parameters_statCorr_meanPoleModel 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
 
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when selected object is changed in btnGrp_parameters_statCorr_thermalDef_temp.
-function btnGrp_parameters_statCorr_thermalDef_temp_SelectionChangedFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in btnGrp_parameters_statCorr_thermalDef_temp 
+% --- Executes on button press in checkbox_run_globalPram_APLrg.
+function checkbox_run_globalPram_APLrg_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_globalPram_APLrg (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% save parameter file automatically 
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_globalPram_APLrg
 auto_save_parameterfile(hObject, handles)
 
 
-
-% --- Executes when selected object is changed in uipanel91.
-function uipanel91_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel91 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when selected object is changed in uipanel119.
-function uipanel119_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel119 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when selected object is changed in uipanel123.
-function uipanel123_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel123 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when selected object is changed in panel_models_troposphere_mfh.
-function panel_models_troposphere_mfh_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in panel_models_troposphere_mfh 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-% --- Executes when selected object is changed in panel_models_troposphere_mfw.
-function panel_models_troposphere_mfw_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in panel_models_troposphere_mfw 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when selected object is changed in panel_models_troposphere_gradients_h.
-function panel_models_troposphere_gradients_h_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in panel_models_troposphere_gradients_h 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% set en/disable
-set(handles.radiobutton_parameters_troposphere_gradients_w_no, 'Enable', 'On')
-set(handles.radiobutton_parameters_troposphere_gradients_w_GRAD, 'Enable', 'On')
-set(handles.radiobutton_parameters_troposphere_gradients_w_GPT3, 'Enable', 'On')
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-% --- Executes when selected object is changed in panel_models_troposphere_gradients_w.
-function panel_models_troposphere_gradients_w_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in panel_models_troposphere_gradients_w 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when selected object is changed in uipanel_estimation_leastSquares_clock.
-function uipanel_estimation_leastSquares_clock_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_estimation_leastSquares_clock 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when selected object is changed in uipanel43.
-function uipanel43_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel43 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when selected object is changed in uipanel46.
-function uipanel46_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel46 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when selected object is changed in uipanel45.
-function uipanel45_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel45 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when selected object is changed in uipanel44.
-function uipanel44_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel44 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when selected object is changed in uipanel47.
-function uipanel47_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel47 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when selected object is changed in uipanel48.
-function uipanel48_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel48 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when selected object is changed in uipanel131.
-function uipanel131_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel131 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes when user attempts to close figure_vievs2.
-function figure_vievs2_CloseRequestFcn(hObject, eventdata, handles)
-% hObject    handle to figure_vievs2 (see GCBO)
+% --------------------------------------------------------------------
+function vie_glob_special_parameters_Callback(hObject, eventdata, handles)
+% hObject    handle to ie_glob_special_parameters (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-auto_save_parameterfile(hObject, handles)
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
 
-% Hint: delete(hObject) closes the figure
-delete(hObject);
+% set the one panel to visible
+set(handles.uipanel_vie_glob_special_param, 'Visible', 'On');
 
+% Update handles structure
+guidata(hObject, handles);
+
+% --- Executes on button press in checkbox_run_globalPram_axisOffset.
+function checkbox_run_globalPram_axisOffset_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_globalPram_axisOffset (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_globalPram_axisOffset
+
+
+% --- Executes on selection change in listbox_vie_glob_axisOffsets.
+function listbox_vie_glob_axisOffsets_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox_vie_glob_axisOffsets (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns listbox_vie_glob_axisOffsets contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox_vie_glob_axisOffsets
+
+
+% --- Executes during object creation, after setting all properties.
+function listbox_vie_glob_axisOffsets_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listbox_vie_glob_axisOffsets (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% -------------------------------------------------------------------------%
+% -------------------------------PLOT--------------------------------------%
+% -------------------------------------------------------------------------%
+
+% --- Executes on button press in checkbox_plot_show_errorbars.
+function checkbox_plot_show_errorbars_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_show_errorbars (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_show_errorbars
+handles=plotToAxes(hObject, handles);
+% Update handles structure
+guidata(hObject, handles)
+
+
+% --- Executes on selection change in popupmenu_plot_select_time_ref_format.
+function popupmenu_plot_select_time_ref_format_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_select_time_ref_format (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_select_time_ref_format contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_select_time_ref_format
+handles=plotToAxes(hObject, handles);
+% Update handles structure
+guidata(hObject, handles)
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_select_time_ref_format_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_select_time_ref_format (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes on button press in checkbox_plot_eopOut_write_detailed_eop_data.
+function checkbox_plot_eopOut_write_detailed_eop_data_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_eopOut_write_detailed_eop_data (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_detailed_eop_data
+
+
+% --- Executes on button press in checkbox_plot_eopOut_write_sorted_eop_data.
+function checkbox_plot_eopOut_write_sorted_eop_data_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_eopOut_write_sorted_eop_data (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_sorted_eop_data
+
+
+% --- Executes on button press in checkbox_plot_eopOut_write_vievs_eop_data.
+function checkbox_plot_eopOut_write_vievs_eop_data_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_eopOut_write_vievs_eop_data (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_vievs_eop_data
+
+% --- Executes on button press in checkbox_plot_eopOut_write_vievs_eop_data.
+function checkbox_plot_eopOut_write_ivs_eop_format_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_eopOut_write_vievs_eop_data (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if get(hObject, 'Value')
+    newState='On';
+else
+    newState='Off';
+end
+    set(handles.rb_plot_eopOut_write_ivs_eop_format_default, 'Enable', newState)
+    set(handles.rb_plot_eopOut_write_ivs_eop_format_pwlo, 'Enable', newState)
+
+% --- Executes on button press in rb_plot_eopOut_write_ivs_eop_format_default.
+function rb_plot_eopOut_write_ivs_eop_format_default_Callback(hObject, eventdata, handles)
+% hObject    handle to rb_plot_eopOut_write_ivs_eop_format_default
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_parameters_eop_interp_lin
+if get(hObject, 'Value')
+    set(handles.rb_plot_eopOut_write_ivs_eop_format_pwlo, 'Value', 0)
+else
+    set(handles.rb_plot_eopOut_write_ivs_eop_format_pwlo, 'Value', 1)
+end
+
+% --- Executes on button press in rb_plot_eopOut_write_ivs_eop_format_default.
+function rb_plot_eopOut_write_ivs_eop_format_pwlo_Callback(hObject, eventdata, handles)
+% hObject    handle to rb_plot_eopOut_write_ivs_eop_format_default
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_parameters_eop_interp_lin
+if get(hObject, 'Value')
+    set(handles.rb_plot_eopOut_write_ivs_eop_format_default, 'Value', 0)
+else
+    set(handles.rb_plot_eopOut_write_ivs_eop_format_default, 'Value', 1)
+end
+
+
+% --- Executes on button press in checkbox_global_param_tidERPvar.
+function checkbox_global_param_tidERPvar_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_global_param_tidERPvar (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_global_param_tidERPvar
+
+
+% --- Executes on button press in checkbox_plot_eopOut_basRepOptions_writeBasOut.
+function checkbox_plot_eopOut_basRepOptions_writeBasOut_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_eopOut_basRepOptions_writeBasOut (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_basRepOptions_writeBasOut
+if get(hObject,'Value')
+    newState='on';
+else
+    newState='off';
+end
+set(handles.edit_plot_eopOut_basRepOptions_writeBasOutFname, 'Enable', newState)
+
+
+function edit_plot_eopOut_basRepOptions_minBasObs_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_plot_eopOut_basRepOptions_minBasObs (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_plot_eopOut_basRepOptions_minBasObs as text
+%        str2double(get(hObject,'String')) returns contents of edit_plot_eopOut_basRepOptions_minBasObs as a double
+defaultVal=10;
+
+if isnan(str2double(get(hObject,'String')))
+    set(hObject, 'String', num2str(defaultVal));
+end
+
+% --- Executes during object creation, after setting all properties.
+function edit_plot_eopOut_basRepOptions_minBasObs_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_plot_eopOut_basRepOptions_minBasObs (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_plot_eopOut_basRepOptions_simplePlot.
+function checkbox_plot_eopOut_basRepOptions_simplePlot_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_eopOut_basRepOptions_simplePlot (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_basRepOptions_simplePlot
+
+
+% --- Executes on button press in checkbox_plot_eopOut_basRepOptions_commandWindowOutput.
+function checkbox_plot_eopOut_basRepOptions_commandWindowOutput_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_eopOut_basRepOptions_commandWindowOutput (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_basRepOptions_commandWindowOutput
+
+
+
+function edit_plot_eopOut_basRepOptions_writeBasOutFname_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_plot_eopOut_basRepOptions_writeBasOutFname (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_plot_eopOut_basRepOptions_writeBasOutFname as text
+%        str2double(get(hObject,'String')) returns contents of edit_plot_eopOut_basRepOptions_writeBasOutFname as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_plot_eopOut_basRepOptions_writeBasOutFname_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_plot_eopOut_basRepOptions_writeBasOutFname (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes on button press in uipanel_plot_eopOut_write.
+function uipanel_plot_eopOut_write_Callback(hObject, eventdata, handles)
+% hObject    handle to uipanel_plot_eopOut_write (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+out_basEop(hObject, handles);
+
+function edit_plot_eopOut_outFile_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_plot_eopOut_outFile (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_plot_eopOut_outFile as text
+%        str2double(get(hObject,'String')) returns contents of edit_plot_eopOut_outFile as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_plot_eopOut_outFile_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_plot_eopOut_outFile (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton_plot_eopOut_outFile_getFile.
+function pushbutton_plot_eopOut_outFile_getFile_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_plot_eopOut_outFile_getFile (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% get a file
+[filename, pathname, filterindex] = uiputfile( ...
+{'*.txt', 'Text file (*.txt)'},...
+ 'Save as',...
+ '../OUT/');
+
+% see if something was chosen
+if ~isempty(filename)
+    if ~strcmp('0', num2str(filename))
+        % write new filename to edit textbox
+        set(handles.edit_plot_eopOut_outFile, 'String', [pathname, filename]);
+    end
+end
+
+% --- Executes on selection change in popupmenu_plot_eopOut_subfolder.
+function popupmenu_plot_eopOut_subfolder_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_eopOut_subfolder (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_eopOut_subfolder contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_eopOut_subfolder
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_eopOut_subfolder_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_eopOut_subfolder (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in popupmenu_plot_eopOut_pl.
+function popupmenu_plot_eopOut_pl_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_eopOut_pl (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_eopOut_pl contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_eopOut_pl
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_eopOut_pl_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_eopOut_pl (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes when selected object is changed in uipanel_plot_eopOut_pl.
+function uipanel_plot_eopOut_pl_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel_plot_eopOut_pl 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+if strcmpi(get(hObject, 'Tag'), 'radiobutton_plot_eopOut_pl_current') || ...
+        strcmpi(get(hObject, 'Tag'), 'radiobutton_use_subfolder_data')
+	newState='Off';
+else
+	newState='On';
+end
+set(handles.popupmenu_plot_eopOut_pl, 'Enable', newState);
+
+
+% --------------------------------------------------------------------
+function menu_plotting_eopOut_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_plotting_eopOut (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_plot_eopOut, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+% --- Executes when selected object is changed in uipanel_plot_eopOut_subfolder.
+function uipanel_plot_eopOut_subfolder_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel_plot_eopOut_subfolder 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+if strcmpi(get(hObject, 'Tag'), 'radiobutton_plot_eopOut_subfolder_current')
+	newState='Off';
+else
+	newState='On';
+end
+set(handles.popupmenu_plot_eopOut_subfolder, 'Enable', newState);
+
+
+% --- Executes when selected object is changed in uipanel_plot_eopOut_outFile.
+function uipanel_plot_eopOut_outFile_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel_plot_eopOut_outFile 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+if strcmpi(get(hObject, 'Tag'), 'radiobutton_plot_eopOut_outFile_default')
+	newState='Off';
+else
+	newState='On';
+end
+set(handles.edit_plot_eopOut_outFile, 'Enable', newState);
+set(handles.pushbutton_plot_eopOut_outFile_getFile, 'Enable', newState);
+
+
+% --------------------------------------------------------------------
+function menu_plotting_basOut_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_plotting_basOut (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in uipanel_plot_eopOut_writeInt.
+function uipanel_plot_eopOut_writeInt_Callback(hObject, eventdata, handles)
+% hObject    handle to uipanel_plot_eopOut_writeInt (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+out_basEop(hObject, handles);
+
+
+% --- Executes on button press in uipanel_plot_basOut_write.
+function uipanel_plot_basOut_write_Callback(hObject, eventdata, handles)
+% hObject    handle to uipanel_plot_basOut_write (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+out_basEop(hObject, handles);
+
+
+% --- Executes on button press in pushbutton_plot_residuals_clockRef_get.
+function pushbutton_plot_residuals_clockRef_get_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_plot_residuals_clockRef_get (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+OptFileExist=0;
+
+% read OPT file if exist
+% get selected file
+allSessionsInList=get(handles.popupmenu_plot_residuals_session, 'String');
+session=allSessionsInList{get(handles.popupmenu_plot_residuals_session, 'Value')};
+if str2double(session(1:2))>75
+    yearStr=['19', session(1:2)];
+else
+    yearStr=['20', session(1:2)];
+end
+
+% get currently selected OPT directory
+OPTdirs=get(handles.popupmenu_setInput_optDir, 'String');
+selectedOPTdir=OPTdirs{get(handles.popupmenu_setInput_optDir, 'value')};
+
+% check if file exist
+wantedOPTfile=['../../VLBI_OPT/', selectedOPTdir, '/', yearStr, '/', session(1:9), '.OPT'];
+% if the year folder does not exist - create it
+if exist(wantedOPTfile, 'file')
+    OptFileExist=1;
+end
+
+if OptFileExist
+    [ini_opt, bas_excl]=readOPT(wantedOPTfile);
+    if isempty(ini_opt.refclock)
+        newValPopup=1;
+    else
+        allAntennas=get(handles.popupmenu_plot_residuals_refClock, 'String');
+        newValPopup=find(strcmpi(allAntennas,ini_opt.refclock));
+    end
+else
+    newValPopup=1;
+end
+
+
+set(handles.popupmenu_plot_residuals_refClock, 'Value', newValPopup);
+
+
+% --- Executes on button press in pushbutton_plot_residuals_clockRef_set.
+function pushbutton_plot_residuals_clockRef_set_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_plot_residuals_clockRef_set (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+allAntennas=get(handles.popupmenu_plot_residuals_refClock, 'String');
+newRefclockAntenna=allAntennas{get(handles.popupmenu_plot_residuals_refClock, 'Value')};
+
+writeClockReferenceToOptfile(handles,newRefclockAntenna);
+
+
+% --- Executes on selection change in popupmenu_plot_sessionAnalysis_subfolder2.
+function popupmenu_plot_sessionAnalysis_subfolder2_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_subfolder2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_subfolder2 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_subfolder2
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_sessionAnalysis_subfolder2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_subfolder2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton_plot_sessionAnalysis_load2.
+function pushbutton_plot_sessionAnalysis_load2_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_plot_sessionAnalysis_load2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% load
+handles=loadSessionAnalysisData(hObject, handles);
+
+% plot right away
+handles=plotSessionAnalysisToAxes(handles);
+    
+guidata(hObject, handles);
+
+
+% --- Executes on selection change in popupmenu_plot_sessionAnalysis_session2.
+function popupmenu_plot_sessionAnalysis_session2_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_session2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_session2 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_session2
+
+% plot right away
+handles=plotSessionAnalysisToAxes(handles);
+    
+guidata(hObject, handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_sessionAnalysis_session2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_session2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_plot_sessionAnalysis_add2.
+function checkbox_plot_sessionAnalysis_add2_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_sessionAnalysis_add2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_sessionAnalysis_add2
+
+% plot right away
+handles=plotSessionAnalysisToAxes(handles);
+    
+guidata(hObject, handles);
+
+
+% --- Executes on selection change in popupmenu_plot_sessionAnalysis_subfolder4.
+function popupmenu_plot_sessionAnalysis_subfolder4_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_subfolder4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_subfolder4 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_subfolder4
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_sessionAnalysis_subfolder4_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_subfolder4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton_plot_sessionAnalysis_load4.
+function pushbutton_plot_sessionAnalysis_load4_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_plot_sessionAnalysis_load4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% load
+handles=loadSessionAnalysisData(hObject, handles);
+
+% plot right away
+handles=plotSessionAnalysisToAxes(handles);
+    
+guidata(hObject, handles);
+
+
+% --- Executes on selection change in popupmenu_plot_sessionAnalysis_session4.
+function popupmenu_plot_sessionAnalysis_session4_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_session4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_session4 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_session4
+
+% plot right away
+handles=plotSessionAnalysisToAxes(handles);
+    
+guidata(hObject, handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_sessionAnalysis_session4_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_session4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_plot_sessionAnalysis_add4.
+function checkbox_plot_sessionAnalysis_add4_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_sessionAnalysis_add4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_sessionAnalysis_add4
+
+% plot right away
+handles=plotSessionAnalysisToAxes(handles);
+    
+guidata(hObject, handles);
+
+
+% --- Executes on selection change in popupmenu_plot_sessionAnalysis_subfolder3.
+function popupmenu_plot_sessionAnalysis_subfolder3_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_subfolder3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_subfolder3 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_subfolder3
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_sessionAnalysis_subfolder3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_subfolder3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton_plot_sessionAnalysis_load3.
+function pushbutton_plot_sessionAnalysis_load3_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_plot_sessionAnalysis_load3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% load
+handles=loadSessionAnalysisData(hObject, handles);
+
+% plot right away
+handles=plotSessionAnalysisToAxes(handles);
+    
+guidata(hObject, handles);
+
+
+% --- Executes on selection change in popupmenu_plot_sessionAnalysis_session3.
+function popupmenu_plot_sessionAnalysis_session3_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_session3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_session3 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_session3
+
+% plot right away
+handles=plotSessionAnalysisToAxes(handles);
+    
+guidata(hObject, handles);
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_sessionAnalysis_session3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_session3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_plot_sessionAnalysis_add3.
+function checkbox_plot_sessionAnalysis_add3_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_sessionAnalysis_add3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_sessionAnalysis_add3
+
+% plot right away
+handles=plotSessionAnalysisToAxes(handles);
+    
+guidata(hObject, handles);
+
+% --- Executes on button press in checkbox_plot_residuals_showStatNumbers.
+function checkbox_plot_residuals_showStatNumbers_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_residuals_showStatNumbers (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_residuals_showStatNumbers
+
+handles=plotResidualsToAxes(handles);
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+% --- Executes on button press in checkbox_plot_residuals_showSourceNames.
+function checkbox_plot_residuals_showSourceNames_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_residuals_showSourceNames (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_residuals_showSourceNames
+
+handles=plotResidualsToAxes(handles);
+
+% Update handles structure
+guidata(hObject, handles);
+
+% --- Executes on button press in checkbox_plot_sessionAnalysis_baselineNames.
+function checkbox_plot_sessionAnalysis_baselineNames_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_sessionAnalysis_baselineNames (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_sessionAnalysis_baselineNames
+
+
+handles=plotSessionAnalysisToAxes(handles);
+
+guidata(hObject, handles);
+
+
+
+% --- Executes on selection change in popupmenu_plot_sessionAnalysis_subfolder.
+function popupmenu_plot_sessionAnalysis_subfolder_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_subfolder (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_subfolder contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_subfolder
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_sessionAnalysis_subfolder_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_subfolder (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in popupmenu_plot_sessionAnalysis_session.
+function popupmenu_plot_sessionAnalysis_session_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_session (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_session contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_session
+
+% update popupmenus in panel
+handles=updatePopupmenusInSessionAnalysisPlot(hObject, handles);
+
+% plot right away
+handles=plotSessionAnalysisToAxes(handles);
+    
+guidata(hObject, handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_sessionAnalysis_session_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_session (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton_plot_sessionAnalysis_load.
+function pushbutton_plot_sessionAnalysis_load_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_plot_sessionAnalysis_load (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% load
+handles=loadSessionAnalysisData(hObject, handles);
+
+% update popupmenus in panel
+handles=updatePopupmenusInSessionAnalysisPlot(hObject, handles);
+
+% plot right away
+handles=plotSessionAnalysisToAxes(handles);
+    
+guidata(hObject, handles);
+    
+% i need following files: 
+% x_ (level3)      ... baseline lnegth rep
+% antenna (level3) ... map network
+% atpa (level3)    ... corrmat
+
+
+% --- Executes on selection change in popupmenu_plot_sessionAnalysis_corrMat_firstPar.
+function popupmenu_plot_sessionAnalysis_corrMat_firstPar_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_corrMat_firstPar (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_corrMat_firstPar contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_corrMat_firstPar
+
+
+handles=plotSessionAnalysisToAxes(handles);
+
+guidata(hObject, handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_sessionAnalysis_corrMat_firstPar_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_corrMat_firstPar (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in popupmenu_plot_sessionAnalysis_corrMat_secondPar.
+function popupmenu_plot_sessionAnalysis_corrMat_secondPar_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_corrMat_secondPar (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_corrMat_secondPar contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_corrMat_secondPar
+
+
+handles=plotSessionAnalysisToAxes(handles);
+
+guidata(hObject, handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_sessionAnalysis_corrMat_secondPar_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_sessionAnalysis_corrMat_secondPar (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --------------------------------------------------------------------
+function menu_plotting_sessionAnalysis_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_plotting_sessionAnalysis (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% shift the whole window a little bit down because the menu bar appears
+curPos=get(handles.figure_vievs2, 'Position');
+curPos(2)=curPos(2)-27;
+set(handles.figure_vievs2, 'Position', curPos);
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_plot_sessionAnalysis, 'Visible', 'On');
+
+% set bar for plotting options to visible
+set(handles.uitoolbar_plotOptions, 'Visible', 'On');
+
+% update the folders (since there could have been created antoher subfolder)
+dirsInDataFolder=dir('../DATA/LEVEL3/');
+dirsInDataFolder(strcmp({dirsInDataFolder.name}, '.')|strcmp({dirsInDataFolder.name}, '..')|~[dirsInDataFolder.isdir])=[];
+set(handles.popupmenu_plot_sessionAnalysis_subfolder, 'String', ['/', {dirsInDataFolder.name}])
+
+% Update handles structure
+guidata(hObject, handles);
+    
+            
+% --- Executes when selected object is changed in uipanel_plot_sessionAnalysis_options.
+function uipanel_plot_sessionAnalysis_options_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel_plot_sessionAnalysis_options 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% session network
+if get(handles.radiobutton_plot_sessionAnalysis_network, 'Value')
+    set(handles.popupmenu_plot_sessionAnalysis_corrMat_firstPar, 'Enable', 'Off')
+    set(handles.popupmenu_plot_sessionAnalysis_corrMat_secondPar, 'Enable', 'Off') 
+    set(handles.checkbox_plot_sessionAnalysis_baselineNames, 'Enable', 'Off')
+
+% baseline length repeatability  
+elseif get(handles.radiobutton_plot_sessionAnalysis_corMatrix, 'Value')
+    set(handles.popupmenu_plot_sessionAnalysis_corrMat_firstPar, 'Enable', 'On')
+    set(handles.popupmenu_plot_sessionAnalysis_corrMat_secondPar, 'Enable', 'On')
+    
+    set(handles.checkbox_plot_sessionAnalysis_baselineNames, 'Enable', 'Off')
+
+% correlation matrix
+elseif get(handles.radiobutton_plot_sessionAnalysis_baselLeRep, 'Value')
+    set(handles.checkbox_plot_sessionAnalysis_baselineNames, 'Enable', 'On')
+    
+    set(handles.popupmenu_plot_sessionAnalysis_corrMat_firstPar, 'Enable', 'Off')
+    set(handles.popupmenu_plot_sessionAnalysis_corrMat_secondPar, 'Enable', 'Off')
+    
+
+end
+
+
+handles=plotSessionAnalysisToAxes(handles);
+
+guidata(hObject, handles);
+
+
+% --- Executes on selection change in popupmenu_plot_residuals_source.
+function popupmenu_plot_residuals_source_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_residuals_source (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_residuals_source contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_residuals_source
+
+% plot residuals to axes
+handles=plotResidualsToAxes(handles);
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_residuals_source_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_residuals_source (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+ 
+
+% --------------------------------------------------------------------
+function menu_plotting_parameters_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_plotting_parameters (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% shift the whole window a little bit down because the menu bar appears
+curPos=get(handles.figure_vievs2, 'Position');
+curPos(2)=curPos(2)-27;
+set(handles.figure_vievs2, 'Position', curPos);
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_plot_parameters, 'Visible', 'On');
+
+% set bar for plotting options to visible
+set(handles.uitoolbar_plotOptions, 'Visible', 'On');
+
+% update the folders (since there could have been created another subfolder)
+dirsInDataFolder=dir('../DATA/LEVEL3/');
+dirsInDataFolder(strcmp({dirsInDataFolder.name}, '.')|strcmp({dirsInDataFolder.name}, '..')|~[dirsInDataFolder.isdir])=[];
+set(handles.popupmenu_plot_folder1_subfolder, 'String', ['/', {dirsInDataFolder.name}])
+set(handles.popupmenu_plot_folder2_subfolder, 'String', ['/', {dirsInDataFolder.name}])
+set(handles.popupmenu_plot_folder3_subfolder, 'String', ['/', {dirsInDataFolder.name}])
+
+% Update handles structure
+guidata(hObject, handles);
 
 
 function popupmenu_plot_folder2_subfolder_Callback(hObject, eventdata, handles)
@@ -5577,180 +6379,6 @@ if length(handles.plotting_parameter_data) == 3
 end
 
 
-% --- If Enable == 'on', executes on mouse press in 5 pixel border.
-% --- Otherwise, executes on mouse press in 5 pixel border or over listbox_setInput_processList.
-function listbox_setInput_processList_ButtonDownFcn(hObject, eventdata, handles)
-% hObject    handle to listbox_setInput_processList (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% if there is an entry in the listbox at all
-if ~isempty(get(handles.listbox_setInput_processList, 'String'))
-
-    % create the menu at proper position
-    curMousePosition=get(handles.figure_vievs2, 'CurrentPoint');
-    cmenu = uicontextmenu('Parent',handles.figure_vievs2,'Position',curMousePosition);
-    
-    % create function handles
-    %fHandles_openOPTfile=@{openOPTfile, handles};
-    allSessionsInList=get(handles.listbox_setInput_processList, 'String');
-    session=allSessionsInList{get(handles.listbox_setInput_processList, 'Value')};
-    
-   
-    % create entries with the pointer to the callbacks
-    item1 = uimenu(cmenu, 'Label', 'Open/Create OPT file', 'Callback', {@openOPTfile,hObject,handles});
-    item2 = uimenu(cmenu, 'Label', 'Open outlier file', 'Callback', {@openOutlierFile,hObject,handles});
-    % is the selected dataset a netCDF file?
-%     if isempty(strfind(session,'/')) && isempty(strfind(session,'\'))
-    if strfind(session, ' [vgosDB]')
-        item3 = uimenu(cmenu, 'Label', 'Analyse netCDF file', 'Callback', {@analyseNetcdfFile,hObject,handles});
-    end    
-        
-    % set visible
-    set(cmenu, 'Visible', 'on');
-end
-
-function analyseNetcdfFile(src,eventdata,hObject,handles)
-% This function opens the GUI to visualise the content of netCDF datasets
-
-% get selected file
-allSessionsInList=get(handles.listbox_setInput_processList, 'String');
-session=allSessionsInList{get(handles.listbox_setInput_processList, 'Value')};
-vgosdb_path_str = ['../DATA/vgosDB/', session(1 : (strfind(session, ' [vgosDB]')-1)), '/'];
-% Open GUI
-analyseNetcdf(vgosdb_path_str)
-
-
-
-    
-function openOPTfile(src,eventdata,hObject,handles)
-% This function opens the OPT file (empty=create or open existing)
-% of the currently selected session
-
-% get selected file
-allSessionsInList=get(handles.listbox_setInput_processList, 'String');
-session=allSessionsInList{get(handles.listbox_setInput_processList, 'Value')};
-
-% get currently selected OPT directory
-OPTdirs=get(handles.popupmenu_setInput_optDir, 'String');
-selectedOPTdir=OPTdirs{get(handles.popupmenu_setInput_optDir, 'value')};
-
-% Get file format of input data file:
-datatype_str = 'ngs';
-if strfind(session, ' [vgosDB]')
-    datatype_str = 'vgosdb'; 
-elseif strfind(session, ' [VSO]')
-    datatype_str = 'vso'; 
-end
-
-% Get the OPT file name and path:
-switch(datatype_str)
-    case 'ngs'
-        optFileName = [session(1 : end-5), '.OPT'];
-    case 'vso'
-        optFileName = [session(1 : (strfind(session, ' [VSO]')-1)), '.OPT'];
-    case 'vgosdb'
-        optFileName = [session(1 : (strfind(session, ' [vgosDB]')-1)), '.OPT'];
-end % switch(datatype_str)
-
-wantedOPTfile = ['../../VLBI_OPT/', selectedOPTdir, '/', optFileName];
-yrFolder = ['../../VLBI_OPT/', selectedOPTdir, '/', session(1:4)];
-
-% if the year folder does not exist - create it
-if ~exist(yrFolder, 'dir')
-    mkdir(yrFolder);
-end
-
-% if the OPT file does not exist - create it
-if ~exist(wantedOPTfile, 'file')
-    writeNewOptFile(wantedOPTfile);
-end
-    
-% open OPT file
-if ispc
-    matlabVersion = ver('MATLAB');
-    if str2double(matlabVersion.Version)<=8
-        dos(['start wordpad ',wantedOPTfile]);
-    else
-        % does not work for 7.11 (R2010b):
-        winopen(wantedOPTfile) % Open with default editor which is set for *.opt files
-    end
-elseif isunix
-    % system(['xterm -e ''vi ',wantedOPTfile '''']);
-    system(['gedit ',wantedOPTfile]); % Open gedit
-else % 
-    warning('Operating system unknown: not able to open OPT file in text editor.');
-end
-    
-    
-    
-
-function openOutlierFile(src,eventdata,hObject,handles)
-% This function opens the outlier file of the currently selected session
-    
-% get selected file
-allSessionsInList=get(handles.listbox_setInput_processList, 'String');
-session=allSessionsInList{get(handles.listbox_setInput_processList, 'Value')};
-
-% get currently selected Outlier directory
-allOutDirInList = get(handles.popupmenu_setInput_outDir, 'String');
-selOutDir = allOutDirInList{get(handles.popupmenu_setInput_outDir, 'Value')};
-
-% Get file format of input data file:
-datatype_str = 'ngs';
-if strfind(session, ' [vgosDB]')
-    datatype_str = 'vgosdb'; 
-elseif strfind(session, ' [VSO]')
-    datatype_str = 'vso'; 
-end
-
-% Get the Outlier file name and path:
-switch(datatype_str)
-    case 'ngs'
-        sess_name_str = session(1 : end);
-    case 'vso'
-        sess_name_str = session(1 : (strfind(session, ' [VSO]')-1));
-    case 'vgosdb'
-        sess_name_str = session(1 : (strfind(session, ' [vgosDB]')-1));
-end % switch(datatype_str)
-
-
-if isempty(selOutDir)
-    wantedOutlierFile=['../DATA/OUTLIER/', sess_name_str, '.OUT'];
-else
-    wantedOutlierFile=['../DATA/OUTLIER/', selOutDir,'/', sess_name_str, '.OUT'];
-end
-
-if exist(wantedOutlierFile, 'file')
-    % open 
-    % open(wantedOutlierFile) % Open with MATLAB Editor
-    winopen(wantedOutlierFile) % Open with default editor which is set for *.OUT files
-else
-    msgbox('No outlier file exists yet', 'No outlier file found', 'help')
-end
-
-if exist(wantedOutlierFile, 'file')
-    % open Outlier file
-    if ispc
-        matlabVersion = ver('MATLAB');
-        if str2double(matlabVersion.Version)<=8
-            dos(['start wordpad ',wantedOPTfile]);
-        else
-            % does not work for 7.11 (R2010b):
-            winopen(wantedOutlierFile) % Open with default editor which is set for *.OUT files
-        end
-    elseif isunix
-        % system(['xterm -e ''vi ',wantedOutlierFile '''']);
-        system(['gedit ',wantedOutlierFile]); % Open gedit
-    else % 
-        warning('Operating system unknown: not able to open Outlier file in text editor.');
-    end
-else
-    msgbox('Outlier file does not exists yet', 'No outlier file found', 'help')
-end
-
-
-
 % --- Executes on button press in pushbutton_plot_folder3_load.
 function pushbutton_plot_folder3_load_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_plot_folder3_load (see GCBO)
@@ -5953,31 +6581,1221 @@ else
     end
     
      
-end
+end 
 
 
-% --------------------------------------------------------------------
-function menu_file_parameterFiles_saveProcessList_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_file_parameterFiles_saveProcessList (see GCBO)
+
+% -------------------------------------------------------------------------%
+% -------------------------------SIMULATIONS-------------------------------%
+% -------------------------------------------------------------------------%
+
+% --- Executes on button press in checkbox_vie_sim_rng_use_seed.
+function checkbox_vie_sim_rng_use_seed_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_vie_sim_rng_use_seed (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% get a file
-[filename, pathname, filterindex] = uiputfile( ...
-{'process_list.mat', 'Matlab Binary Format (*.mat)'},...
- 'Save as',...
- '../WORK/PROCESSLIST/');
+% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sim_rng_use_seed
+% Enable/disable edit field to enter the seed number for the random number generator:
 
-% see if something was chosen
-if ~isempty(filename)
-    if ~strcmp('0', num2str(filename))
-        % call function for saving a parameter file
-        saveProcessList(hObject, handles, [pathname, filename])
-        
-        % write message box
-        msgbox('Process list successfully saved!', 'Save process list', 'help');
-    end
+if(get(handles.checkbox_vie_sim_rng_use_seed,'Value'))
+    set(handles.text_vie_sim_seed, 'Enable', 'on') 
+    set(handles.edit_vie_sim_rng_seed, 'Enable', 'on')
+else
+     set(handles.text_vie_sim_seed, 'Enable', 'off')
+     set(handles.edit_vie_sim_rng_seed, 'Enable', 'off')
 end
+
+
+function edit_vie_sim_rng_seed_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_vie_sim_rng_seed (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_vie_sim_rng_seed as text
+%        str2double(get(hObject,'String')) returns contents of edit_vie_sim_rng_seed as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_vie_sim_rng_seed_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_vie_sim_rng_seed (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function edit_vie_sim_noise_sat_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_vie_sim_noise_sat (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hints: get(hObject,'String') returns contents of edit_vie_sim_noise_sat as text
+%        str2double(get(hObject,'String')) returns contents of edit_vie_sim_noise_sat as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_vie_sim_noise_sat_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_vie_sim_noise_sat (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes on button press in checkbox_vie_sim_write_vso_file.
+function checkbox_vie_sim_write_vso_file_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_vie_sim_write_vso_file (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sim_write_vso_file
+
+
+% --- Executes on button press in checkbox_parameters_ss_writejet.
+function checkbox_parameters_ss_writejet_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_ss_writejet (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_ss_writejet
+
+
+% --- Executes on selection change in listbox_vie_sim_ss.
+function listbox_vie_sim_ss_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox_vie_sim_ss (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns listbox_vie_sim_ss contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox_vie_sim_ss
+
+
+% --- Executes during object creation, after setting all properties.
+function listbox_vie_sim_ss_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listbox_vie_sim_ss (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_vie_sim_simSS.
+function checkbox_vie_sim_simSS_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_vie_sim_simSS (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sim_simSS
+if get(handles.checkbox_vie_sim_simSS,'Value')==1
+    status='on';
+else
+    status='off';
+end 
+    set(handles.text332,'Enable',status);
+    set(handles.listbox_vie_sim_ss,'Visible',status);
+
+
+
+% --------------------------------------------------------------------
+function Untitled_15_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_15 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function menu_globalSolution_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_globalSolution (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function Untitled_19_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_19 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function Untitled_20_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_20 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function Untitled_22_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_22 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function Untitled_33_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_33 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function Untitled_34_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_34 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function Untitled_35_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_35 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function Untitled_36_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_36 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function Untitled_50_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_50 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on selection change in listbox_sessions.
+function listbox_sessions_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox_sessions (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns listbox_sessions contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox_sessions
+
+
+% --- Executes during object creation, after setting all properties.
+function listbox_sessions_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listbox_sessions (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton9.
+function pushbutton9_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on selection change in listbox6.
+function listbox6_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns listbox6 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox6
+
+
+% --- Executes during object creation, after setting all properties.
+function listbox6_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listbox6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in listbox7.
+function listbox7_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns listbox7 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox7
+
+
+% --- Executes during object creation, after setting all properties.
+function listbox7_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listbox7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in popupmenu2.
+function popupmenu2_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu2 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu2
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox49.
+function checkbox49_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox49 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox49
+
+
+% --- Executes on selection change in popupmenu1.
+function popupmenu1_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu1
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in listbox11.
+function listbox11_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox11 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns listbox11 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox11
+
+
+% --- Executes during object creation, after setting all properties.
+function listbox11_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listbox11 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in listbox12.
+function listbox12_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns listbox12 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox12
+
+
+% --- Executes during object creation, after setting all properties.
+function listbox12_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listbox12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in listbox13.
+function listbox13_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox13 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns listbox13 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox13
+
+
+% --- Executes during object creation, after setting all properties.
+function listbox13_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listbox13 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in popupmenu6.
+function popupmenu6_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu6 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu6
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu6_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in popupmenu5.
+function popupmenu5_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu5 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu5
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton12.
+function pushbutton12_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+keyboard;
+
+
+% --- Executes on selection change in popupmenu9.
+function popupmenu9_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu9 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu9
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu9_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in popupmenu12.
+function popupmenu12_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu12 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu12
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu12_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in popupmenu13.
+function popupmenu13_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu13 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu13 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu13
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu13_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu13 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in popupmenu14.
+function popupmenu14_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu14 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu14 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu14
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu14_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu14 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox51.
+function checkbox51_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox51 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox51
+
+
+% --- Executes on button press in checkbox52.
+function checkbox52_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox52 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox52
+
+
+% --- Executes on button press in checkbox53.
+function checkbox53_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox53 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox53
+
+
+% --- Executes on button press in checkbox54.
+function checkbox54_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox54 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox54
+
+
+% --- Executes on button press in checkbox55.
+function checkbox55_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox55 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox55
+
+
+% --- Executes on button press in checkbox56.
+function checkbox56_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox56 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox56
+
+
+
+% --- Executes on button press in checkbox58.
+function checkbox58_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox58 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox58
+
+
+% --- Executes on button press in checkbox59.
+function checkbox59_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox59 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox59
+
+
+% --- Executes on button press in checkbox60.
+function checkbox60_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox60 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox60
+
+
+% --- Executes on button press in checkbox61.
+function checkbox61_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox61 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox61
+
+
+% --- Executes on button press in checkbox62.
+function checkbox62_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox62 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox62
+
+
+% --- Executes on button press in checkbox63.
+function checkbox63_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox63 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox63
+
+
+% --- Executes on selection change in listbox19.
+function listbox19_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox19 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns listbox19 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox19
+
+
+% --- Executes during object creation, after setting all properties.
+function listbox19_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listbox19 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in listbox20.
+function listbox20_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox20 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns listbox20 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox20
+
+
+% --- Executes during object creation, after setting all properties.
+function listbox20_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listbox20 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in listbox21.
+function listbox21_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox21 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns listbox21 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox21
+
+
+% --- Executes during object creation, after setting all properties.
+function listbox21_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listbox21 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes on button press in checkbox76.
+function checkbox76_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox76 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox76
+
+
+% --- Executes on button press in checkbox77.
+function checkbox77_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox77 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox77
+
+
+% --- Executes on button press in checkbox78.
+function checkbox78_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox78 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox78
+
+
+% --- Executes on button press in checkbox79.
+function checkbox79_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox79 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox79
+
+
+% --- Executes on selection change in popupmenu19.
+function popupmenu19_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu19 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu19 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu19
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu19_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu19 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+% --- Executes on button press in checkbox86.
+function checkbox86_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox86 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox86
+
+
+% --- Executes on button press in checkbox87.
+function checkbox87_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox87 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox87
+
+
+% --- Executes on selection change in popupmenu22.
+function popupmenu22_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu22 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu22 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu22
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu22_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu22 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox91.
+function checkbox91_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox91 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox91
+
+
+
+
+
+% --- Executes on button press in checkbox88.
+function checkbox88_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox88 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox88
+
+
+% --- Executes on button press in checkbox89.
+function checkbox89_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox89 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox89
+
+
+% --- Executes on selection change in popupmenu23.
+function popupmenu23_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu23 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu23 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu23
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu23_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu23 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox90.
+function checkbox90_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox90 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox90
+
+
+% --- Executes on button press in checkbox99.
+function checkbox99_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox99 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hint: get(hObject,'Value') returns toggle state of checkbox99
+
+
+% --- Executes on button press in checkbox173.
+function checkbox173_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox173 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox173
+
+
+% --- Executes on button press in checkbox174.
+function checkbox174_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox174 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox174
+
+
+
+
+function edit106_Callback(hObject, eventdata, handles)
+% hObject    handle to edit106 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit106 as text
+%        str2double(get(hObject,'String')) returns contents of edit106 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit106_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit106 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton17.
+function pushbutton17_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton17 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+
+% --- Executes when selected object is changed in uipanel88.
+function uipanel88_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel88 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+switch get(hObject, 'Tag')
+    case 'radiobutton_parameters_refFrames_otherTRF'
+        if get(hObject, 'Value')
+            set(handles.popupmenu_parameters_refFrames_otherTRF, 'Enable', 'on')
+            set(handles.pushbutton_parameters_refFrames_superstationTRF_chose, 'Enable', 'off')
+            set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Enable', 'off')
+        end
+    case 'radiobutton_parameters_refFrames_superstationTRF'
+        if get(hObject, 'Value')
+            set(handles.popupmenu_parameters_refFrames_otherTRF, 'Enable', 'off')
+            set(handles.pushbutton_parameters_refFrames_superstationTRF_chose, 'Enable', 'on')
+            set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Enable', 'on')
+        end
+    otherwise
+        set(handles.popupmenu_parameters_refFrames_otherTRF, 'Enable', 'off')
+        set(handles.pushbutton_parameters_refFrames_superstationTRF_chose, 'Enable', 'off')
+        set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Enable', 'off')
+end
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes when selected object is changed in uipanel89.
+function uipanel89_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel89 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+switch get(hObject, 'Tag')
+    case 'radiobutton_parameters_refFrames_otherCRF'
+        if get(hObject, 'Value')
+            set(handles.popupmenu_parameters_refFrames_otherCRF, 'Enable', 'on')
+            set(handles.popupmenu_parameters_refFrames_supersourceCRF, 'Enable', 'Off')
+            set(handles.pushbutton_parameters_refFrames_superstationCRF_chose, 'Enable', 'Off')
+        end
+    otherwise
+        set(handles.popupmenu_parameters_refFrames_otherCRF, 'Enable', 'off')
+        set(handles.pushbutton_parameters_refFrames_superstationCRF_chose, 'Enable', 'On')
+        set(handles.popupmenu_parameters_refFrames_supersourceCRF, 'Enable', 'On')
+end
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in uipanel99.
+function uipanel99_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel99 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% defines if the popupmenu (containing all folders of TRP) should be
+% updated -> is needed when external tropospheric files are created in the
+% meantime
+updatePopupmenu=0;
+
+switch get(hObject, 'Tag')
+    case 'radiobutton_parameters_iono_ext'
+        set(handles.popupmenu_parameters_iono_ext, 'Enable', 'on')
+        set(handles.pushbutton_parameters_iono_create, 'Enable', 'on')
+        updatePopupmenu=1;
+    otherwise
+        set(handles.popupmenu_parameters_iono_ext, 'Enable', 'off')
+        set(handles.pushbutton_parameters_iono_create, 'Enable', 'off')
+end
+
+% update popupmenu
+if updatePopupmenu==1
+    curContent=get(handles.popupmenu_parameters_iono_ext, 'String');
+    if ~iscell(curContent)
+        curContent = {curContent};
+    end
+    curSelected=curContent{get(handles.popupmenu_parameters_iono_ext, 'Value')};
+    
+    % get directory content
+    dirsInIonFolder=dir('../ION/FILES/');
+    % delete '.', '..', and all files
+    dirsInIonFolder(strcmp({dirsInIonFolder.name}, '.')|strcmp({dirsInIonFolder.name}, '..')|~[dirsInIonFolder.isdir])=[];
+    
+    % write folders to popupmenu
+    if isempty(dirsInIonFolder)
+        set(handles.popupmenu_parameters_iono_ext, 'String', ' ')
+    else
+        set(handles.popupmenu_parameters_iono_ext, 'String', {dirsInIonFolder.name})
+    end
+    
+    % try to find previous selected to select this again
+    valueOfPrevSelectedFolder=find(strcmp({dirsInIonFolder.name}, curSelected));
+    if isempty(valueOfPrevSelectedFolder)
+        set(handles.popupmenu_parameters_iono_ext, 'Value', 1)
+    else
+        set(handles.popupmenu_parameters_iono_ext, 'Value', valueOfPrevSelectedFolder)
+    end
+    
+end %update popupmenu
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in uipanel116.
+function uipanel116_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel116 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+switch get(hObject, 'Tag')
+    case 'radiobutton_parameters_eop_aPriori_other'
+        set(handles.popupmenu_parameters_eop_aPriori_other, 'Enable', 'on')
+    otherwise
+        set(handles.popupmenu_parameters_eop_aPriori_other, 'Enable', 'off')
+end
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in uipanel91.
+function uipanel91_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel91 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in uipanel119.
+function uipanel119_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel119 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in uipanel123.
+function uipanel123_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel123 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in uipanel43.
+function uipanel43_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel43 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in uipanel46.
+function uipanel46_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel46 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in uipanel45.
+function uipanel45_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel45 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in uipanel44.
+function uipanel44_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel44 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in uipanel47.
+function uipanel47_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel47 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in uipanel48.
+function uipanel48_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel48 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when selected object is changed in uipanel131.
+function uipanel131_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel131 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes when user attempts to close figure_vievs2.
+function figure_vievs2_CloseRequestFcn(hObject, eventdata, handles)
+% hObject    handle to figure_vievs2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+auto_save_parameterfile(hObject, handles)
+
+% Hint: delete(hObject) closes the figure
+delete(hObject);
+
 
 
 % VIE_SIM start -----------------------------------------------------------
@@ -6280,459 +8098,6 @@ function checkbox_vie_sim_writeNgsFile_Callback(hObject, eventdata, handles)
 
 % VIE_SIM end -------------------------------------------------------------
 
-
-
-
-function edit_vie_sched_sundistmin_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_sundistmin (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_sundistmin as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_sundistmin as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_sundistmin_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_sundistmin (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-function edit_vie_sched_cutel_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_cutel (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_cutel as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_cutel as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_cutel_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_cutel (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-function edit_vie_sched_flux_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_flux (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_flux as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_flux as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_flux_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_flux (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-function edit_vie_sched_edsnrxband_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_edsnrxband (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_edsnrxband as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_edsnrxband as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_edsnrxband_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_edsnrxband (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-function edit_vie_sched_edsnrsband_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_edsnrsband (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_edsnrsband as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_edsnrsband as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_edsnrsband_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_edsnrsband (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function edit_vie_sched_days_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_days (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_days as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_days as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_days_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_days (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-function edit_vie_sched_mons_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_mons (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_mons as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_mons as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_mons_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_mons (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-function edit_vie_sched_years_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_years (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_years as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_years as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_years_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_years (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-function edit_vie_sched_hours_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_hours (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_hours as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_hours as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_hours_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_hours (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-function edit_vie_sched_mins_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_mins (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_mins as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_mins as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_mins_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_mins (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-function edit_vie_sched_secs_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_secs (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_secs as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_secs as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_secs_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_secs (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-function edit_vie_sched_duration_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_duration (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_duration as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_duration as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_duration_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_duration (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-% --- Executes on selection change in listbox_vie_sched_selectsta.
-function listbox_vie_sched_selectsta_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_sched_selectsta (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox_vie_sched_selectsta contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox_vie_sched_selectsta
-
-% common part
-%global staname stanetstr;
-allStatsInList=cellstr(get(handles.listbox_vie_sched_selectsta, 'String'));
-selectedStat=allStatsInList(get(handles.listbox_vie_sched_selectsta, 'Value'));
-
-% make the selected stations 8 digits long
-if length(selectedStat{1})~=8
-    selectedStat{1}(length(selectedStat{1})+1:8)=' ';
-end
-
-% set value to one if needed (otherwise: matlab error!)
-if isempty(get(handles.listbox_vie_sched_stanet, 'Value'))
-    set(handles.listbox_vie_sched_stanet, 'value', 1)
-end
-% update listbox
-set(handles.listbox_vie_sched_stanet, 'String', ...
-    unique([get(handles.listbox_vie_sched_stanet, 'String'); selectedStat]))
-
-% Choose default command line output for vie_setup
-handles.output = hObject;
-
-% Update handles structure
-guidata(hObject, handles);
-
-% staid = get(handles.listbox_vie_sched_selectsta,'Value');
-% station(1:8) = staname(staid,1:8);
-% stanetstr = strcat(stanetstr,station,'|');
-% set(handles.listbox_vie_sched_stanet,'String',stanetstr);
-
-% --- Executes during object creation, after setting all properties.
-function listbox_vie_sched_selectsta_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_sched_selectsta (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-% -listbox_vie_sched_selectsta-- Executes on selection change in listbox_vie_sched_stanet.
-function listbox_vie_sched_stanet_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_sched_stanet (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox_vie_sched_stanet contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox_vie_sched_stanet
-
-% common part
-% global stanetstr;
-% get stations in listbox
-% stanetstr=get(handles.listbox_vie_sched_stanet, 'String');
-% 
-% if ~isempty(stanetstr)
-% 
-%     % get chosen index
-%     delstaid = get(handles.listbox_vie_sched_stanet,'Value');
-%     
-%     % delete entry
-%     stanetstr(delstaid)=[];
-%     
-%     % set value to one
-%     set(handles.listbox_vie_sched_stanet,'Value',1);
-%     
-%     % update listbox
-%     set(handles.listbox_vie_sched_stanet,'String',stanetstr);
-%     
-%     % Choose default command line output for vie_setup
-%     handles.output = hObject;
-% 
-%     % Update handles structure
-%     guidata(hObject, handles);
-% endv
-
-% --- Executes during object creation, after setting all properties.
-function listbox_vie_sched_stanet_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_sched_stanet (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-% --- Executes on selection change in listbox_vie_sched_prenet.
-function listbox_vie_sched_prenet_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_sched_prenet (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox_vie_sched_prenet contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox_vie_sched_prenet
-
-allLists=cellstr(get(handles.listbox_vie_sched_prenet, 'String'));
-curList=allLists{get(handles.listbox_vie_sched_prenet, 'Value')};
-
-curListContent=load(['../WORK/STATIONLIST/', curList]);
-fieldn=fieldnames(curListContent);
-curListContent=curListContent.(fieldn{1});
-
-set(handles.listbox_vie_sched_stanet, 'String', curListContent);
-
-% % common part
-% %global stanetstr;
-% % define stations of default lists
-% netvlbi2010={'HART2010';'KOKE2010';'NYAL2010';'GOLD2010';'URUM2010';'WARK2010';'TSUK2010';'AREC2010';'FORT2010';'GGAO2010';'KATH2010';'MTPL2010';'YARR2010';'KORE2010';'AZOR2010';'CNAR2010';'WETZ2010';'YEBE2010'};
-% netivsr1   ={'WESTFORD';'TIGOCONC';'TSUKUB32';'SESHAN25';'SVETLOE ';'ZELENCHK';'HARTRAO ';'WETTZELL';'NYALES20'};
-% netivsr4   ={'TIGOCONC';'KOKEE   ';'ZELENCHK';'MEDICINA';'WETTZELL';'BADARY  ';'SVETLOE ';'NYALES20'};
-% netint1    ={'KOKEE   ';'WETTZELL'};
-%     
-% % get value of selected entry
-% netid = get(handles.listbox_vie_sched_prenet,'Value');
-% allStatListsInListbox=get(handles.listbox_vie_sched_prenet, 'String');
-% 
-% set(handles.listbox_vie_sched_stanet, 'Value', 1)
-% 
-% % if VLBI2010 was selected
-% if strcmp(allStatListsInListbox{netid}, 'VLBI2010')
-%     set(handles.listbox_vie_sched_stanet,'String',...
-%         unique([get(handles.listbox_vie_sched_stanet, 'String'); netvlbi2010]));
-% end
-% % if IVSR1 was selected
-% if strcmp(allStatListsInListbox{netid}, 'IVSR1')
-%     set(handles.listbox_vie_sched_stanet,'String',...
-%         unique([get(handles.listbox_vie_sched_stanet, 'String'); netivsr1]));
-% end
-% % if IVSR4 was selected
-% if strcmp(allStatListsInListbox{netid}, 'IVSR4')
-%     set(handles.listbox_vie_sched_stanet,'String',...
-%         unique([get(handles.listbox_vie_sched_stanet, 'String'); netivsr4]));
-% end
-% % if INT1 was selected
-% if strcmp(allStatListsInListbox{netid}, 'INT1')
-%     set(handles.listbox_vie_sched_stanet,'String',...
-%         unique([get(handles.listbox_vie_sched_stanet, 'String'); netint1]));
-% end
-
-% --- Executes during object creation, after setting all properties.
-function listbox_vie_sched_prenet_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_sched_prenet (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-function edit_vie_sched_srcnum_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_srcnum (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_srcnum as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_srcnum as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_srcnum_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_srcnum (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-% --- Executes on button press in pushbutton_vie_sched_saveParams.
-function pushbutton_vie_sched_saveParams_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_vie_sched_saveParams (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% run the function to save the GUI sched parameters
-[vie_sched_error_code] = saveSchedParameters(hObject, handles);
-if vie_sched_error_code ~= 0
-    fprintf(1, 'VIE_SCHED input parameter error! Error code: %g\n', vie_sched_error_code);
-end
-
 % --- Executes when selected object is changed in uipanel208.
 function uipanel208_SelectionChangeFcn(hObject, eventdata, handles)
 % hObject    handle to the selected object in uipanel208 
@@ -6775,64 +8140,6 @@ set(handles.edit_vie_sim_noise, 'Enable', newState);
 set(handles.text_vie_sim_wn_sat, 'Enable', newState);
 set(handles.edit_vie_sim_noise_sat, 'Enable', newState);
 
-
-% --- Executes when selected object is changed in uipanel_vie_sched_rbgstrategy.
-function uipanel_vie_sched_rbgstrategy_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_vie_sched_rbgstrategy 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% if "source based strategy" is ticked
-if strcmp(get(hObject, 'Tag'), get(handles.radiobutton_vie_sched_rbsource, 'Tag'))
-    newState='On';
-    set(handles.checkbox_vie_sched_distribute, 'Enable', 'Off');
-    % enable sched analyser
-    set(handles.checkbox_vie_sched_openSchedAnalyser,'Enable','on');
-	
-% if "station based strategy" is ticked
-elseif strcmp(get(hObject, 'Tag'), get(handles.radiobutton_vie_sched_rbstation, 'Tag'))
-    newState='Off';
-    set(handles.checkbox_vie_sched_distribute, 'Enable', 'On');
-    % enable sched analyser
-    set(handles.checkbox_vie_sched_openSchedAnalyser,'Enable','on');
-else 
-    set(handles.checkbox_vie_sched_distribute, 'Enable', 'Off');
-	newState='Off';
-end
-
-% set enabling
-set(handles.text146, 'Enable', newState)
-set(handles.edit_vie_sched_srcnum, 'Enable', newState)
-set(handles.text147, 'Enable', newState)
-
-% if "Satellite obbservation" is ticked
-if strcmp(get(hObject, 'Tag'), get(handles.radiobutton_vie_sched_satellites, 'Tag'))
-    % Set satellite scheduling panel visible
-	set(handles.uipanel_vie_sched_sat_sched,'Visible','On')
-	
-	% --- get available TLE file names ---
-    path_tle_dir = '../ORBIT/TLE/';    % TLE data folder
-	[tle_str] = getTLEFileNames(path_tle_dir);
-	
-	% Write TLE file names to popup menu:
-	set(handles.popupmenu_vie_sched_select_tle,'String',tle_str);
-    
-    % disable sched analyser
-    set(handles.checkbox_vie_sched_openSchedAnalyser,'Value',0)
-    set(handles.checkbox_vie_sched_openSchedAnalyser,'Enable','off')
-else
-	% Set satellite scheduling panel invisible
-    set(handles.uipanel_vie_sched_sat_sched,'Visible','Off')
-end
-
-% if "manually" is ticked
-if strcmp(get(hObject, 'Tag'), get(handles.radiobutton_vie_sched_manually, 'Tag'))
-    % enable sched analyser
-    set(handles.checkbox_vie_sched_openSchedAnalyser,'Enable','on')
-end
 % --------------------------------------------------------------------
 function menu_estimation_globalSolution_Callback(hObject, eventdata, handles)
 % hObject    handle to menu_estimation_globalSolution (see GCBO)
@@ -6847,7 +8154,6 @@ set(handles.uipanel_estimation_globalSolution, 'Visible', 'On');
 
 % Update handles structure
 guidata(hObject, handles);
-
 
 % --- Executes on button press in checkbox_run_estParameters.
 function checkbox_run_estParameters_Callback(hObject, eventdata, handles)
@@ -7140,145 +8446,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-% --- Executes on button press in checkbox_run_outputDirectories_runVieGlob.
-function checkbox_run_outputDirectories_runVieGlob_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_outputDirectories_runVieGlob (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_outputDirectories_runVieGlob
-
-% If Vie_GLOB and Vie_LSM (scanwise update) are run both:
-if get(handles.checkbox_run_outputDirectories_runVieGlob,'Value') && ...
-(get(handles.checkbox_run_outputDirectories_runVieLsmScanwiseUpdate,'Value') || get(handles.checkbox_run_outputDirectories_runVieLsm,'Value'))
-    
-		% Use different output Sub-directories
-		if get(handles.checkbox_run_outDirs_diffSubs, 'Value')
-			str_lsm_subDir=get(handles.edit_run_outDirs_level2, 'String');
-		% Use one output Sub-directory	
-		else
-			str_lsm_subDir=get(handles.edit_run_outDirs_oneSub, 'String');
-		end
-		
-		set(handles.edit_run_outDirs_glob_pathToLevel2, 'Enable', 'off');
-		set(handles.edit_run_outDirs_glob_pathToLevel2, 'String', '../DATA/LEVEL2/');
-		set(handles.edit_run_outDirs_glob_level2Sub, 'Enable', 'off');
-		set(handles.edit_run_outDirs_glob_level2Sub, 'String', str_lsm_subDir);
-		
-		msgbox('If Vie_LSM and Vie_GLOB are both run, the Vie_LSM output directory for N-matrices have to be equal to the Vie_GLOB input directory!', 'Warning (subdirectories not equal)');
-else
-	set(handles.edit_run_outDirs_glob_pathToLevel2, 'Enable', 'on');
-	set(handles.edit_run_outDirs_glob_level2Sub, 'Enable', 'on');
-end
-
-
-
-% --- Executes on button press in checkbox_run_outputDirectories_runVieSched.
-function checkbox_run_outputDirectories_runVieSched_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_outputDirectories_runVieSched (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_outputDirectories_runVieSched
-
-
-% --- Executes on button press in checkbox_run_outputDirectories_runVieSim.
-function checkbox_run_outputDirectories_runVieSim_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_outputDirectories_runVieSim (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_outputDirectories_runVieSim
-
-
-% --- Executes on button press in checkbox_run_outputDirectories_runVieInit.
-function checkbox_run_outputDirectories_runVieInit_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_outputDirectories_runVieInit (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_outputDirectories_runVieInit
-
-
-% --- Executes on button press in pushbutton_run_runOptions_saveAllParamsToAscii.
-function pushbutton_run_runOptions_saveAllParamsToAscii_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_run_runOptions_saveAllParamsToAscii (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% get a file
-[filename, pathname, filterindex] = uiputfile( ...
-{'*.txt', 'Textfile (*.txt)'},...
- 'Save as',...
- '../WORK/PARAMETERS/');
-
-% see if something was chosen
-if ~isempty(filename)
-    if ~strcmp('0', num2str(filename))
-        % first auto save parameters (again)
-        auto_save_parameterfile(hObject, handles);
-        
-        % get newest auto saved parameter file
-        newestAutoSavedParameterFile=getNewestAutoSavedParameterFile(hObject, handles);
-        
-        % load newest parameter file
-        load(['PARAMETERS/', newestAutoSavedParameterFile.name]);
-        
-        % write parameter file to text output
-        create_input_protocol(parameter, [pathname, filename]);
-        
-        msgbox(sprintf('GUI options have been saved to\n%s', [pathname, filename]), 'Saving completed', 'help');
-    end
-end
-
-% --- Executes on button press in checkbox_run_outputDirectories_runVieMod.
-function checkbox_run_outputDirectories_runVieMod_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_outputDirectories_runVieMod (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_outputDirectories_runVieMod
-
-
-% --- Executes on button press in checkbox_run_outputDirectories_runVieLsm.
-function checkbox_run_outputDirectories_runVieLsm_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_outputDirectories_runVieLsm (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_outputDirectories_runVieLsm
-
-if get(hObject, 'Value')
-	% if checkbox is ticked -> untick scanwise update
-    set(handles.checkbox_run_outputDirectories_runVieLsmScanwiseUpdate, 'Value', 0);
-	
-    % if also Vie_GLOB is ticked
-	if get(handles.checkbox_run_outputDirectories_runVieGlob, 'value')
-    
-		% Use different output Sub-directories
-		if get(handles.checkbox_run_outDirs_diffSubs, 'Value')
-			str_lsm_subDir=get(handles.edit_run_outDirs_level2, 'String');
-		% Use one output Sub-directory	
-		else
-			str_lsm_subDir=get(handles.edit_run_outDirs_oneSub, 'String');
-		end
-		
-		%str_glob_subDir=get(handles.edit_run_outDirs_glob_level2Sub, 'String');
-		
-		set(handles.edit_run_outDirs_glob_pathToLevel2, 'Enable', 'off');
-		set(handles.edit_run_outDirs_glob_pathToLevel2, 'String', '../DATA/LEVEL2/');
-		set(handles.edit_run_outDirs_glob_level2Sub, 'Enable', 'off');
-		set(handles.edit_run_outDirs_glob_level2Sub, 'String', str_lsm_subDir);
-		
-		msgbox('If Vie_LSM and Vie_GLOB are both run, the Vie_LSM output directory for N-matrices have to be equal to the Vie_GLOB input directory!', 'Warning (subdirectories not equal)');
-		
-	end
-	
-else
-	set(handles.edit_run_outDirs_glob_pathToLevel2, 'Enable', 'on');
-	set(handles.edit_run_outDirs_glob_level2Sub, 'Enable', 'on');
-end
 
 % --- Executes on selection change in popupmenu_vie_glob_trfCrf_trf_stations4Nnt.
 function popupmenu_vie_glob_trfCrf_trf_stations4Nnt_Callback(hObject, eventdata, handles)
@@ -7685,58 +8852,7 @@ addpath('../ION/PROGRAM/GUI/');
 start_createExtIonoFilesGUI
 
 
-% --- Executes on selection change in popupmenu_parameters_refFrames_superstationTRF.
-function popupmenu_parameters_refFrames_superstationTRF_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_refFrames_superstationTRF (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_parameters_refFrames_superstationTRF contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_parameters_refFrames_superstationTRF
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_parameters_refFrames_superstationTRF_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_refFrames_superstationTRF (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-   
-
-% --- Executes on button press in pushbutton_parameters_refFrames_superstationTRF_chose.
-function pushbutton_parameters_refFrames_superstationTRF_chose_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_parameters_refFrames_superstationTRF_chose (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% get file from explorer
-[FileName, PathName] = uigetfile({'*.mat', 'Matlab Binary Format (*.mat)'}, 'Select a superstation file', '../TRF/');
-
-if ~isempty(FileName)
-    if ~strcmp('0', num2str(FileName))
-        handles=loadSuperstationFile(hObject, handles, [PathName, FileName]);
-        handles.data.superstationFile=[PathName, FileName];
-        set(handles.text_parameters_refFrames_selected_superstation_file, 'String', handles.data.superstationFile);
-        % write message box for information for user
-        msgbox('Superstations file has been successfully loaded.', 'Load superstations file', 'help')
-    end
-end
-
-% save automatically 
-auto_save_parameterfile(hObject, handles)
-
-handles.output = hObject;
-
-% Update handles structure
-guidata(hObject, handles);
 
 
 % --- Executes on button press in pushbutton_save.
@@ -7781,18 +8897,6 @@ else
     runp.glob_path=runp.init_path;
 end
 
-% VIE_SCHED - saving parameters
-% ==================================
-runp.sched=get(handles.checkbox_run_outputDirectories_runVieSched, 'Value');
-if runp.sched
-    [vie_sched_error_code] = saveSchedParameters(hObject, handles);
-    %If an error occurs => do not start vie_sched!
-    if vie_sched_error_code ~= 0
-        fprintf(1, 'VIE_SCHED input parameter error! Error code: %g\n', vie_sched_error_code);
-        runp.sched=0;
-    end
-end
-
 
 % VIEVS
 % ================================
@@ -7803,14 +8907,10 @@ if isempty(curProcessList)
     % if at least one of init,mod,lsm was selected
     if get(handles.checkbox_run_outputDirectories_runVieInit, 'Value') + ...
             get(handles.checkbox_run_outputDirectories_runVieMod, 'Value')+ ...
-            get(handles.checkbox_run_outputDirectories_runVieLsm, 'Value')>0 ...
-            && get(handles.checkbox_run_outputDirectories_runVieSched, 'Value') == 0
+            get(handles.checkbox_run_outputDirectories_runVieLsm, 'Value')>0
         msgbox('Select session(s) first! Cannot run vie_init, vie_mod or vie_lsm!', 'No session selected', 'warn');
     end  
 else
-    if get(handles.checkbox_run_outputDirectories_runVieSched, 'Value') == 1
-        msgbox('vie_sched will override your process list!', 'No session selected', 'warn')
-    end
     % save parameter file for each session
     % save first parameter file
     findSlashInPl = strfind(curProcessList{1}, '/');
@@ -7849,7 +8949,6 @@ end
 % does not work better yet
 
 
-   
 
 % VIE_GLOB - saving parameters (if SIM should be run)
 % =================================================
@@ -8069,9 +9168,7 @@ if exist(proc_list_file, 'file')
     % save to handles struct
     handles.allSelectedFiles=newSessions;
 else
-    msgbox('Process list does not exist in WORK directory. Probably VieVS was never run before.', 'process_list not found', 'warn');
-    
-    
+    msgbox('Process list does not exist in WORK directory. Probably VieVS was never run before.', 'process_list not found', 'warn');    
 end
 
 % Choose default command line output for vie_setup
@@ -8548,7 +9645,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-
 % --- Executes on selection change in popupmenu_plot_residuals_folder.
 function popupmenu_plot_residuals_folder_Callback(hObject, eventdata, handles)
 % hObject    handle to popupmenu_plot_residuals_folder (see GCBO)
@@ -8818,7 +9914,6 @@ else % disable the options in the second interface
 end
     
 
-
 % --- Executes on button press in pushbutton_plot_residuals_load.
 function pushbutton_plot_residuals_load_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_plot_residuals_load (see GCBO)
@@ -8974,92 +10069,12 @@ else
 end
 
 
-% --- Executes on button press in checkbox_vie_sched_ngs.
-function checkbox_vie_sched_ngs_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_vie_sched_ngs (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sched_ngs
-
-
-% --- Executes on button press in checkbox_vie_sched_skd.
-function checkbox_vie_sched_skd_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_vie_sched_skd (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sched_skd
-
-
 % --- Executes when uipanel171 is resized.
 function uipanel171_ResizeFcn(hObject, eventdata, handles)
 % hObject    handle to uipanel171 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-
-% --- Executes on button press in pushbutton_vie_sched_clearStations.
-function pushbutton_vie_sched_clearStations_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_vie_sched_clearStations (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% get current content of listbox
-curContent=get(handles.listbox_vie_sched_stanet, 'String');
-
-if ~isempty(curContent)
-    % delete all selected entries entry
-    
-    curContent(get(handles.listbox_vie_sched_stanet, 'Value'))=[];
-    
-    % get current value
-    curValue=get(handles.listbox_vie_sched_stanet, 'Value');
-    
-    set(handles.listbox_vie_sched_stanet, 'Value', ...
-        min([max(curValue), max(length(curContent),1)]));
-
-    % update listbox
-    set(handles.listbox_vie_sched_stanet, 'String', curContent);
-
-    % and also save it to handles struct
-    % handles.allSelectedFiles=curContent;
-
-    % save changes to handles struct
-    guidata(hObject, handles);
-
-    % save parameter file automatically 
-    auto_save_parameterfile(hObject, handles)
-end
-
-
-% --- Executes on selection change in popupmenu_plot_residuals_source.
-function popupmenu_plot_residuals_source_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_residuals_source (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_residuals_source contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_residuals_source
-
-% plot residuals to axes
-handles=plotResidualsToAxes(handles);
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_plot_residuals_source_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_residuals_source (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
 
 
 % --- Executes on button press in togglebutton5.
@@ -9070,31 +10085,6 @@ function togglebutton5_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of togglebutton5
 
-
-
-% --------------------------------------------------------------------
-function menu_scheduling_parameters_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_scheduling_parameters (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_vie_sched, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-
-% --------------------------------------------------------------------
-function menu_scheduling_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_scheduling (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
 
 % --------------------------------------------------------------------
@@ -9121,221 +10111,6 @@ set(handles.uipanel_vie_sim, 'Visible', 'On');
 guidata(hObject, handles);
 
 
-
-
-% --- Executes on selection change in popupmenu_plot_sessionAnalysis_subfolder.
-function popupmenu_plot_sessionAnalysis_subfolder_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_subfolder (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_subfolder contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_subfolder
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_plot_sessionAnalysis_subfolder_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_subfolder (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on selection change in popupmenu_plot_sessionAnalysis_session.
-function popupmenu_plot_sessionAnalysis_session_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_session (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_session contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_session
-
-% update popupmenus in panel
-handles=updatePopupmenusInSessionAnalysisPlot(hObject, handles);
-
-% plot right away
-handles=plotSessionAnalysisToAxes(handles);
-    
-guidata(hObject, handles);
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_plot_sessionAnalysis_session_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_session (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_plot_sessionAnalysis_load.
-function pushbutton_plot_sessionAnalysis_load_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_plot_sessionAnalysis_load (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% load
-handles=loadSessionAnalysisData(hObject, handles);
-
-% update popupmenus in panel
-handles=updatePopupmenusInSessionAnalysisPlot(hObject, handles);
-
-% plot right away
-handles=plotSessionAnalysisToAxes(handles);
-    
-guidata(hObject, handles);
-    
-% i need following files: 
-% x_ (level3)      ... baseline lnegth rep
-% antenna (level3) ... map network
-% atpa (level3)    ... corrmat
-
-
-% --- Executes on selection change in popupmenu_plot_sessionAnalysis_corrMat_firstPar.
-function popupmenu_plot_sessionAnalysis_corrMat_firstPar_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_corrMat_firstPar (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_corrMat_firstPar contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_corrMat_firstPar
-
-
-handles=plotSessionAnalysisToAxes(handles);
-
-guidata(hObject, handles);
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_plot_sessionAnalysis_corrMat_firstPar_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_corrMat_firstPar (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on selection change in popupmenu_plot_sessionAnalysis_corrMat_secondPar.
-function popupmenu_plot_sessionAnalysis_corrMat_secondPar_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_corrMat_secondPar (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_corrMat_secondPar contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_corrMat_secondPar
-
-
-handles=plotSessionAnalysisToAxes(handles);
-
-guidata(hObject, handles);
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_plot_sessionAnalysis_corrMat_secondPar_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_corrMat_secondPar (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --------------------------------------------------------------------
-function menu_plotting_sessionAnalysis_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_plotting_sessionAnalysis (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% shift the whole window a little bit down because the menu bar appears
-curPos=get(handles.figure_vievs2, 'Position');
-curPos(2)=curPos(2)-27;
-set(handles.figure_vievs2, 'Position', curPos);
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_plot_sessionAnalysis, 'Visible', 'On');
-
-% set bar for plotting options to visible
-set(handles.uitoolbar_plotOptions, 'Visible', 'On');
-
-% update the folders (since there could have been created antoher subfolder)
-dirsInDataFolder=dir('../DATA/LEVEL3/');
-dirsInDataFolder(strcmp({dirsInDataFolder.name}, '.')|strcmp({dirsInDataFolder.name}, '..')|~[dirsInDataFolder.isdir])=[];
-set(handles.popupmenu_plot_sessionAnalysis_subfolder, 'String', ['/', {dirsInDataFolder.name}])
-
-% Update handles structure
-guidata(hObject, handles);
-    
-            
-% --- Executes when selected object is changed in uipanel_plot_sessionAnalysis_options.
-function uipanel_plot_sessionAnalysis_options_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_plot_sessionAnalysis_options 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-% session network
-if get(handles.radiobutton_plot_sessionAnalysis_network, 'Value')
-    set(handles.popupmenu_plot_sessionAnalysis_corrMat_firstPar, 'Enable', 'Off')
-    set(handles.popupmenu_plot_sessionAnalysis_corrMat_secondPar, 'Enable', 'Off') 
-    set(handles.checkbox_plot_sessionAnalysis_baselineNames, 'Enable', 'Off')
-
-% baseline length repeatability  
-elseif get(handles.radiobutton_plot_sessionAnalysis_corMatrix, 'Value')
-    set(handles.popupmenu_plot_sessionAnalysis_corrMat_firstPar, 'Enable', 'On')
-    set(handles.popupmenu_plot_sessionAnalysis_corrMat_secondPar, 'Enable', 'On')
-    
-    set(handles.checkbox_plot_sessionAnalysis_baselineNames, 'Enable', 'Off')
-
-% correlation matrix
-elseif get(handles.radiobutton_plot_sessionAnalysis_baselLeRep, 'Value')
-    set(handles.checkbox_plot_sessionAnalysis_baselineNames, 'Enable', 'On')
-    
-    set(handles.popupmenu_plot_sessionAnalysis_corrMat_firstPar, 'Enable', 'Off')
-    set(handles.popupmenu_plot_sessionAnalysis_corrMat_secondPar, 'Enable', 'Off')
-    
-
-end
-
-
-handles=plotSessionAnalysisToAxes(handles);
-
-guidata(hObject, handles);
-
-
-
-% --- Executes on button press in checkbox_plot_sessionAnalysis_baselineNames.
-function checkbox_plot_sessionAnalysis_baselineNames_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_sessionAnalysis_baselineNames (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_sessionAnalysis_baselineNames
-
-
-handles=plotSessionAnalysisToAxes(handles);
-
-guidata(hObject, handles);
 
 
 % --- Executes on selection change in popupmenu73.
@@ -9445,16 +10220,6 @@ function pushbutton73_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-
-% --------------------------------------------------------------------
-function menu_plotting_scheduling_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_plotting_scheduling (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-sched_analyser();
-
-
-
 % --- Executes on button press in pushbutton_parameters_refFrames_createSupersourceFile.
 function pushbutton_parameters_refFrames_createSupersourceFile_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_parameters_refFrames_createSupersourceFile (see GCBO)
@@ -9527,36 +10292,6 @@ guidata(hObject, handles);
 
 
 
-
-% --- Executes on button press in checkbox_plot_residuals_showStatNumbers.
-function checkbox_plot_residuals_showStatNumbers_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_residuals_showStatNumbers (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_residuals_showStatNumbers
-
-handles=plotResidualsToAxes(handles);
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --- Executes on button press in checkbox_plot_residuals_showSourceNames.
-function checkbox_plot_residuals_showSourceNames_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_residuals_showSourceNames (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_residuals_showSourceNames
-
-handles=plotResidualsToAxes(handles);
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-
 % --- Executes on button press in checkbox_run_outputDirectories_runVieLsmScanwiseUpdate.
 function checkbox_run_outputDirectories_runVieLsmScanwiseUpdate_Callback(hObject, eventdata, handles)
 % hObject    handle to checkbox_run_outputDirectories_runVieLsmScanwiseUpdate (see GCBO)
@@ -9595,19 +10330,6 @@ else
 	set(handles.edit_run_outDirs_glob_pathToLevel2, 'Enable', 'on');
 	set(handles.edit_run_outDirs_glob_level2Sub, 'Enable', 'on');
 end
-
-
-
-
-
-% --- Executes on button press in checkbox_vie_sched_sum.
-function checkbox_vie_sched_sum_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_vie_sched_sum (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sched_sum
-
 
 
 % --- Executes on button press in radiobutton_parameters_troposphere_indModeling.
@@ -9707,244 +10429,6 @@ function radiobutton_parameters_eop_interp_lin_Callback(hObject, eventdata, hand
 set(handles.checkbox_parameters_eop_interp_lin48h, 'Enable', 'On')
 
 
-% --- Executes on selection change in popupmenu_plot_sessionAnalysis_subfolder2.
-function popupmenu_plot_sessionAnalysis_subfolder2_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_subfolder2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_subfolder2 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_subfolder2
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_plot_sessionAnalysis_subfolder2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_subfolder2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_plot_sessionAnalysis_load2.
-function pushbutton_plot_sessionAnalysis_load2_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_plot_sessionAnalysis_load2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% load
-handles=loadSessionAnalysisData(hObject, handles);
-
-% plot right away
-handles=plotSessionAnalysisToAxes(handles);
-    
-guidata(hObject, handles);
-
-
-% --- Executes on selection change in popupmenu_plot_sessionAnalysis_session2.
-function popupmenu_plot_sessionAnalysis_session2_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_session2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_session2 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_session2
-
-% plot right away
-handles=plotSessionAnalysisToAxes(handles);
-    
-guidata(hObject, handles);
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_plot_sessionAnalysis_session2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_session2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in checkbox_plot_sessionAnalysis_add2.
-function checkbox_plot_sessionAnalysis_add2_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_sessionAnalysis_add2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_sessionAnalysis_add2
-
-% plot right away
-handles=plotSessionAnalysisToAxes(handles);
-    
-guidata(hObject, handles);
-
-
-% --- Executes on selection change in popupmenu_plot_sessionAnalysis_subfolder4.
-function popupmenu_plot_sessionAnalysis_subfolder4_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_subfolder4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_subfolder4 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_subfolder4
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_plot_sessionAnalysis_subfolder4_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_subfolder4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_plot_sessionAnalysis_load4.
-function pushbutton_plot_sessionAnalysis_load4_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_plot_sessionAnalysis_load4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% load
-handles=loadSessionAnalysisData(hObject, handles);
-
-% plot right away
-handles=plotSessionAnalysisToAxes(handles);
-    
-guidata(hObject, handles);
-
-
-% --- Executes on selection change in popupmenu_plot_sessionAnalysis_session4.
-function popupmenu_plot_sessionAnalysis_session4_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_session4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_session4 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_session4
-
-% plot right away
-handles=plotSessionAnalysisToAxes(handles);
-    
-guidata(hObject, handles);
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_plot_sessionAnalysis_session4_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_session4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in checkbox_plot_sessionAnalysis_add4.
-function checkbox_plot_sessionAnalysis_add4_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_sessionAnalysis_add4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_sessionAnalysis_add4
-
-% plot right away
-handles=plotSessionAnalysisToAxes(handles);
-    
-guidata(hObject, handles);
-
-
-% --- Executes on selection change in popupmenu_plot_sessionAnalysis_subfolder3.
-function popupmenu_plot_sessionAnalysis_subfolder3_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_subfolder3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_subfolder3 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_subfolder3
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_plot_sessionAnalysis_subfolder3_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_subfolder3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_plot_sessionAnalysis_load3.
-function pushbutton_plot_sessionAnalysis_load3_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_plot_sessionAnalysis_load3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% load
-handles=loadSessionAnalysisData(hObject, handles);
-
-% plot right away
-handles=plotSessionAnalysisToAxes(handles);
-    
-guidata(hObject, handles);
-
-
-% --- Executes on selection change in popupmenu_plot_sessionAnalysis_session3.
-function popupmenu_plot_sessionAnalysis_session3_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_session3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_sessionAnalysis_session3 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_sessionAnalysis_session3
-
-% plot right away
-handles=plotSessionAnalysisToAxes(handles);
-    
-guidata(hObject, handles);
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_plot_sessionAnalysis_session3_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_sessionAnalysis_session3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in checkbox_plot_sessionAnalysis_add3.
-function checkbox_plot_sessionAnalysis_add3_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_sessionAnalysis_add3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_sessionAnalysis_add3
-
-% plot right away
-handles=plotSessionAnalysisToAxes(handles);
-    
-guidata(hObject, handles);
-
 
 % --- Executes on button press in checkbox_run_runOptions_parallel.
 function checkbox_run_runOptions_parallel_Callback(hObject, eventdata, handles)
@@ -10029,36 +10513,7 @@ guidata(hObject, handles);
 fprintf('DONE!\n');
 
 
-% --- Executes on button press in checkbox_run_globalPram_axisOffset.
-function checkbox_run_globalPram_axisOffset_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_globalPram_axisOffset (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_globalPram_axisOffset
-
-
-% --- Executes on selection change in listbox_vie_glob_axisOffsets.
-function listbox_vie_glob_axisOffsets_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_glob_axisOffsets (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox_vie_glob_axisOffsets contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox_vie_glob_axisOffsets
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox_vie_glob_axisOffsets_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_glob_axisOffsets (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
 
 
 % --- Executes when selected object is changed in uipanel260.
@@ -10137,53 +10592,6 @@ function checkbox_parameters_ss_applyss_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_ss_applyss
 
 
-% --- Executes on button press in checkbox_parameters_ss_writejet.
-function checkbox_parameters_ss_writejet_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_parameters_ss_writejet (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_ss_writejet
-
-
-% --- Executes on selection change in listbox_vie_sim_ss.
-function listbox_vie_sim_ss_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_sim_ss (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox_vie_sim_ss contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox_vie_sim_ss
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox_vie_sim_ss_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_sim_ss (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in checkbox_vie_sim_simSS.
-function checkbox_vie_sim_simSS_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_vie_sim_simSS (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sim_simSS
-if get(handles.checkbox_vie_sim_simSS,'Value')==1
-    status='on';
-else
-    status='off';
-end 
-    set(handles.text332,'Enable',status);
-    set(handles.listbox_vie_sim_ss,'Visible',status);
-
 
 % --------------------------------------------------------------------
 function menu_parameters_sourcestructure_Callback(hObject, eventdata, handles)
@@ -10198,288 +10606,6 @@ guidata(hObject, handles);
 
 
 
-% --- Executes on button press in uipanel_plot_eopOut_write.
-function uipanel_plot_eopOut_write_Callback(hObject, eventdata, handles)
-% hObject    handle to uipanel_plot_eopOut_write (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-out_basEop(hObject, handles);
-
-function edit_plot_eopOut_outFile_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_plot_eopOut_outFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_plot_eopOut_outFile as text
-%        str2double(get(hObject,'String')) returns contents of edit_plot_eopOut_outFile as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_plot_eopOut_outFile_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_plot_eopOut_outFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_plot_eopOut_outFile_getFile.
-function pushbutton_plot_eopOut_outFile_getFile_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_plot_eopOut_outFile_getFile (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% get a file
-[filename, pathname, filterindex] = uiputfile( ...
-{'*.txt', 'Text file (*.txt)'},...
- 'Save as',...
- '../OUT/');
-
-% see if something was chosen
-if ~isempty(filename)
-    if ~strcmp('0', num2str(filename))
-        % write new filename to edit textbox
-        set(handles.edit_plot_eopOut_outFile, 'String', [pathname, filename]);
-    end
-end
-
-% --- Executes on selection change in popupmenu_plot_eopOut_subfolder.
-function popupmenu_plot_eopOut_subfolder_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_eopOut_subfolder (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_eopOut_subfolder contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_eopOut_subfolder
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_plot_eopOut_subfolder_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_eopOut_subfolder (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on selection change in popupmenu_plot_eopOut_pl.
-function popupmenu_plot_eopOut_pl_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_eopOut_pl (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_eopOut_pl contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_eopOut_pl
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_plot_eopOut_pl_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_eopOut_pl (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes when selected object is changed in uipanel_plot_eopOut_pl.
-function uipanel_plot_eopOut_pl_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_plot_eopOut_pl 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-if strcmpi(get(hObject, 'Tag'), 'radiobutton_plot_eopOut_pl_current') || ...
-        strcmpi(get(hObject, 'Tag'), 'radiobutton_use_subfolder_data')
-	newState='Off';
-else
-	newState='On';
-end
-set(handles.popupmenu_plot_eopOut_pl, 'Enable', newState);
-
-
-% --------------------------------------------------------------------
-function menu_plotting_eopOut_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_plotting_eopOut (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_plot_eopOut, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --- Executes when selected object is changed in uipanel_plot_eopOut_subfolder.
-function uipanel_plot_eopOut_subfolder_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_plot_eopOut_subfolder 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-if strcmpi(get(hObject, 'Tag'), 'radiobutton_plot_eopOut_subfolder_current')
-	newState='Off';
-else
-	newState='On';
-end
-set(handles.popupmenu_plot_eopOut_subfolder, 'Enable', newState);
-
-
-% --- Executes when selected object is changed in uipanel_plot_eopOut_outFile.
-function uipanel_plot_eopOut_outFile_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_plot_eopOut_outFile 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-if strcmpi(get(hObject, 'Tag'), 'radiobutton_plot_eopOut_outFile_default')
-	newState='Off';
-else
-	newState='On';
-end
-set(handles.edit_plot_eopOut_outFile, 'Enable', newState);
-set(handles.pushbutton_plot_eopOut_outFile_getFile, 'Enable', newState);
-
-
-% --------------------------------------------------------------------
-function menu_plotting_basOut_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_plotting_basOut (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in uipanel_plot_eopOut_writeInt.
-function uipanel_plot_eopOut_writeInt_Callback(hObject, eventdata, handles)
-% hObject    handle to uipanel_plot_eopOut_writeInt (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-out_basEop(hObject, handles);
-
-
-% --- Executes on button press in uipanel_plot_basOut_write.
-function uipanel_plot_basOut_write_Callback(hObject, eventdata, handles)
-% hObject    handle to uipanel_plot_basOut_write (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-out_basEop(hObject, handles);
-
-
-% --- Executes on button press in pushbutton_plot_residuals_clockRef_get.
-function pushbutton_plot_residuals_clockRef_get_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_plot_residuals_clockRef_get (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-OptFileExist=0;
-
-% read OPT file if exist
-% get selected file
-allSessionsInList=get(handles.popupmenu_plot_residuals_session, 'String');
-session=allSessionsInList{get(handles.popupmenu_plot_residuals_session, 'Value')};
-if str2double(session(1:2))>75
-    yearStr=['19', session(1:2)];
-else
-    yearStr=['20', session(1:2)];
-end
-
-% get currently selected OPT directory
-OPTdirs=get(handles.popupmenu_setInput_optDir, 'String');
-selectedOPTdir=OPTdirs{get(handles.popupmenu_setInput_optDir, 'value')};
-
-% check if file exist
-wantedOPTfile=['../../VLBI_OPT/', selectedOPTdir, '/', yearStr, '/', session(1:9), '.OPT'];
-% if the year folder does not exist - create it
-if exist(wantedOPTfile, 'file')
-    OptFileExist=1;
-end
-
-if OptFileExist
-    [ini_opt, bas_excl]=readOPT(wantedOPTfile);
-    if isempty(ini_opt.refclock)
-        newValPopup=1;
-    else
-        allAntennas=get(handles.popupmenu_plot_residuals_refClock, 'String');
-        newValPopup=find(strcmpi(allAntennas,ini_opt.refclock));
-    end
-else
-    newValPopup=1;
-end
-
-
-set(handles.popupmenu_plot_residuals_refClock, 'Value', newValPopup);
-
-
-% --- Executes on button press in pushbutton_plot_residuals_clockRef_set.
-function pushbutton_plot_residuals_clockRef_set_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_plot_residuals_clockRef_set (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-allAntennas=get(handles.popupmenu_plot_residuals_refClock, 'String');
-newRefclockAntenna=allAntennas{get(handles.popupmenu_plot_residuals_refClock, 'Value')};
-
-writeClockReferenceToOptfile(handles,newRefclockAntenna);
-
-
-% --- Executes on button press in pushbutton_vie_sched_loadStations.
-function pushbutton_vie_sched_loadStations_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_vie_sched_loadStations (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in pushbutton_vie_sched_saveStations.
-function pushbutton_vie_sched_saveStations_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_vie_sched_saveStations (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-saveSchedStatList(hObject,eventdata,handles);
-
-
-% --- Executes on button press in pushbutton_vie_sched_load_sched_param.
-function pushbutton_vie_sched_load_sched_param_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_vie_sched_load_sched_param (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-loadSchedParameters(hObject,eventdata,handles);
-
-
-% --- Executes on button press in pushbutton_vie_sched_load_catalog.
-function pushbutton_vie_sched_load_catalog_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_vie_sched_load_catalog (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-upd_catalogs();
-
-% --- If Enable == 'on', executes on mouse press in 5 pixel border.
-% --- Otherwise, executes on mouse press in 5 pixel border or over pushbutton_vie_sched_load_catalog.
-function pushbutton_vie_sched_load_catalog_ButtonDownFcn(hObject, eventdata, handles)
-% hObject    handle to pushbutton_vie_sched_load_catalog (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
 % --- Executes on button press in checkbox_run_bslDepWeights.
 function checkbox_run_bslDepWeights_Callback(hObject, eventdata, handles)
 % hObject    handle to checkbox_run_bslDepWeights (see GCBO)
@@ -10490,1585 +10616,6 @@ function checkbox_run_bslDepWeights_Callback(hObject, eventdata, handles)
 auto_save_parameterfile(hObject, handles)
 
 
-
-
-% --- Executes on button press in checkbox_vie_sched_distribute.
-function checkbox_vie_sched_distribute_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_vie_sched_distribute (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sched_distribute
-
-
-% --- Executes on button press in checkbox_setInput_useOptFiles.
-function checkbox_setInput_useOptFiles_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_setInput_useOptFiles (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_setInput_useOptFiles
-
-% Enable/Disable popupmenu to select the OPT file
-if get(handles.checkbox_setInput_useOptFiles, 'Value') == 0
-    set(handles.popupmenu_setInput_optDir, 'Enable', 'off')
-    set(handles.radiobutton_estimation_leastSquares_basdepClockoff_OPT, 'Enable', 'off')
-else
-    set(handles.popupmenu_setInput_optDir, 'Enable', 'on')
-    if get(handles.checkbox_estimation_leastSquares_clocksBasDepOffset, 'Value')
-        set(handles.radiobutton_estimation_leastSquares_basdepClockoff_OPT, 'Enable', 'on')
-    end
-end
-
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes on key press with focus on listbox_setInput_processList and none of its controls.
-function listbox_setInput_processList_KeyPressFcn(hObject, eventdata, handles)
-% hObject    handle to listbox_setInput_processList (see GCBO)
-% eventdata  structure with the following fields (see UICONTROL)
-%	Key: name of the key that was pressed, in lower case
-%	Character: character interpretation of the key(s) that was pressed
-%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in checkbox_run_sinex_changeAnalystsName.
-function checkbox_run_sinex_changeAnalystsName_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_sinex_changeAnalystsName (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_sinex_changeAnalystsName
-if get(hObject, 'Value')
-    newState='On';
-else
-    newState='Off';
-end
-
-set(handles.edit_run_sinex_firstname, 'Enable', newState);
-set(handles.edit_run_sinex_lastname, 'Enable', newState);
-set(handles.edit_run_sinex_email, 'Enable', newState);
-
-
-function edit_run_sinex_firstname_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_run_sinex_firstname (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_run_sinex_firstname as text
-%        str2double(get(hObject,'String')) returns contents of edit_run_sinex_firstname as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_run_sinex_firstname_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_run_sinex_firstname (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function edit_run_sinex_lastname_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_run_sinex_lastname (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_run_sinex_lastname as text
-%        str2double(get(hObject,'String')) returns contents of edit_run_sinex_lastname as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_run_sinex_lastname_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_run_sinex_lastname (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function edit_run_sinex_email_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_run_sinex_email (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_run_sinex_email as text
-%        str2double(get(hObject,'String')) returns contents of edit_run_sinex_email as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_run_sinex_email_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_run_sinex_email (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in checkbox_run_sinex_addSuffix.
-function checkbox_run_sinex_addSuffix_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_sinex_addSuffix (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_sinex_addSuffix
-if get(hObject, 'Value')
-    newState='On';
-else
-    newState='Off';
-end
-
-set(handles.edit_run_sinex_suffix, 'Enable', newState);
-
-
-function edit_run_sinex_suffix_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_run_sinex_suffix (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_run_sinex_suffix as text
-%        str2double(get(hObject,'String')) returns contents of edit_run_sinex_suffix as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_run_sinex_suffix_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_run_sinex_suffix (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-% --------------------------------------------------------------------
-function menu_minor_parameters_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_minor_parameters (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_vie_sched_minor_parameters, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-
-
-function edit_vie_sched_experiment_code_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_experiment_code (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_experiment_code as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_experiment_code as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_experiment_code_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_experiment_code (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function edit_vie_sched_experiment_description_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_experiment_description (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_experiment_description as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_experiment_description as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_experiment_description_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_experiment_description (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in checkbox_vie_sched_print_orbit_data_to_CW.
-function checkbox_vie_sched_print_orbit_data_to_CW_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_vie_sched_print_orbit_data_to_CW (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sched_print_orbit_data_to_CW
-
-
-% --- Executes on button press in checkbox_vie_sched_create_sky_plot.
-function checkbox_vie_sched_create_sky_plot_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_vie_sched_create_sky_plot (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-if get(handles.checkbox_vie_sched_create_sky_plot, 'Value');
-	set(handles.edit_vie_sched_sky_plot_int, 'Enable', 'on');
-else 
-	set(handles.edit_vie_sched_sky_plot_int, 'Enable', 'off');
-end
-% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sched_create_sky_plot
-
-
-
-
-% --- Executes on button press in checkbox_vie_sched_create_elevation_plot.
-function checkbox_vie_sched_create_elevation_plot_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_vie_sched_create_elevation_plot (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sched_create_elevation_plot
-
-
-
-function edit_vie_sched_sky_plot_int_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_sky_plot_int (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_sky_plot_int as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_sky_plot_int as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_sky_plot_int_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_sky_plot_int (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function edit_vie_sched_init_prop_interval_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_init_prop_interval (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_init_prop_interval as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_init_prop_interval as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_init_prop_interval_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_init_prop_interval (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_vie_sched_clear_sat_selection.
-function pushbutton_vie_sched_clear_sat_selection_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_vie_sched_clear_sat_selection (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% get current content of listbox
-curContent=get(handles.listbox_vie_sched_selected_satellites, 'String');
-
-
-if ~isempty(curContent)
-    % delete all selected entries
-    curContent(get(handles.listbox_vie_sched_selected_satellites, 'Value'))=[];
-    
-    % get current value
-    curValue=get(handles.listbox_vie_sched_selected_satellites, 'Value');
-    
-    set(handles.listbox_vie_sched_selected_satellites, 'Value', ...
-        min([max(curValue), max(length(curContent),1)]));
-
-    % update listbox
-    set(handles.listbox_vie_sched_selected_satellites, 'String', curContent);
-
-    % save changes to handles struct
-    guidata(hObject, handles);
-end
-
-
-% --- Executes on selection change in listbox_vie_sched_available_satellites.
-function listbox_vie_sched_available_satellites_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_sched_available_satellites (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-all_tle_datasets_in_list = cellstr(get(handles.listbox_vie_sched_available_satellites, 'String'));
-selected_tle_dataset = all_tle_datasets_in_list(get(handles.listbox_vie_sched_available_satellites, 'Value'));
-
-% make the selected tle datasets 24 digits long
-if length(selected_tle_dataset{1})~=24
-    selected_tle_dataset{1}(length(selected_tle_dataset{1})+1:24)=' ';
-end
-
-% set value to one if needed (otherwise: matlab error!)
-if isempty(get(handles.listbox_vie_sched_selected_satellites, 'Value'))
-    set(handles.listbox_vie_sched_selected_satellites, 'value', 1)
-end
-% update listbox
-set(handles.listbox_vie_sched_selected_satellites, 'String', ...
-    unique([get(handles.listbox_vie_sched_selected_satellites, 'String'); selected_tle_dataset]))
-
-% Choose default command line output for vie_setup
-handles.output = hObject;
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox_vie_sched_available_satellites_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_sched_available_satellites (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on selection change in listbox_vie_sched_selected_satellites.
-function listbox_vie_sched_selected_satellites_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_sched_selected_satellites (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox_vie_sched_selected_satellites contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox_vie_sched_selected_satellites
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox_vie_sched_selected_satellites_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_sched_selected_satellites (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in checkbox_vie_sched_open_scheduler_interface
-function checkbox_vie_sched_open_scheduler_interface_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_vie_sched_open_scheduler_interface (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sched_open_scheduler_interface
-
-
-% --- Executes on selection change in popupmenu_vie_sched_select_tle.
-function popupmenu_vie_sched_select_tle_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_vie_sched_select_tle (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_vie_sched_select_tle contents as cell arra
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_vie_sched_select_tle
-
-path_tle_folder = '../ORBIT/TLE/';    % TLE data folder
-
-num_selected_element = get(handles.popupmenu_vie_sched_select_tle, 'Value');    % Number of selected element in list.
-temp_str = get(handles.popupmenu_vie_sched_select_tle, 'String');
-
-tle_filename = temp_str(num_selected_element,:);
-
-[tle, error_code, error_msg] = loadTLEData([path_tle_folder, tle_filename], 1);
-
-if (error_code == 0)    % No errors occured during tle data loading
-    num_tle_datasets = length(tle);
-    temp_str = '';
-
-    for i = 1 : (num_tle_datasets - 1)
-        temp_str = [temp_str, tle(i).sat_name, '|'];
-    end
-    temp_str = [temp_str, tle(num_tle_datasets).sat_name];
-
-    set(handles.listbox_vie_sched_available_satellites, 'Value', 1);
-	
-    set(handles.listbox_vie_sched_available_satellites, 'String', temp_str);
-    fprintf(1, '\n');
-    fprintf(1, 'Loaded TLE data from file:     %s\n', tle_filename);
-    fprintf(1, 'Total number of TLE datasets:  %d\n', num_tle_datasets);
-    fprintf(1, '\n');
-    
-else    % in case of error
-    set(handles.listbox_vie_sched_available_satellites, 'String', ' ');
-    set(handles.listbox_vie_sched_selected_satellites, 'String', ' ');
-    fprintf(1, 'ERROR (load_tle.m): %s', error_msg);
-end
-
-% Clear Selection Listbox
-set(handles.listbox_vie_sched_selected_satellites, 'String', '');
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_vie_sched_select_tle_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_vie_sched_select_tle (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_vie_sched_update_tle.
-function pushbutton_vie_sched_update_tle_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_vie_sched_update_tle (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-downloadAndUpdateTLEData();
-
-% --- Executes on selection change in listbox_vie_sched_sat_obs_network_available.
-function listbox_vie_sched_sat_obs_network_available_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_sched_sat_obs_network_available (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-allStatsInList=cellstr(get(handles.listbox_vie_sched_sat_obs_network_available, 'String'));
-selectedStat=allStatsInList(get(handles.listbox_vie_sched_sat_obs_network_available, 'Value'));
-
-% make the selected stations 8 digits long
-if length(selectedStat{1})~=8
-    selectedStat{1}(length(selectedStat{1})+1:8)=' ';
-end
-
-% set value to one if needed (otherwise: matlab error!)
-if isempty(get(handles.listbox_vie_sched_sat_obs_network_selected, 'Value'))
-    set(handles.listbox_vie_sched_sat_obs_network_selected, 'value', 1)
-end
-% update listbox
-set(handles.listbox_vie_sched_sat_obs_network_selected, 'String', ...
-    unique([get(handles.listbox_vie_sched_sat_obs_network_selected, 'String'); selectedStat]))
-
-% Choose default command line output for vie_setup
-handles.output = hObject;
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox_vie_sched_sat_obs_network_available_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_sched_sat_obs_network_available (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-% --- Executes on selection change in listbox_vie_sched_sat_obs_network_selected.
-function listbox_vie_sched_sat_obs_network_selected_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_sched_sat_obs_network_selected (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox_vie_sched_sat_obs_network_selected contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox_vie_sched_sat_obs_network_selected
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox_vie_sched_sat_obs_network_selected_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_sched_sat_obs_network_selected (see GCBO
-% eventdata  reserved - to be defined in a future version of MATLA
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_sched_sat_obs_network_clear.
-function pushbutton_sched_sat_obs_network_clear_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_sched_sat_obs_network_clear (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% get current content of listbox
-curContent=get(handles.listbox_vie_sched_sat_obs_network_selected, 'String');
-
-if ~isempty(curContent)
-    % delete all selected entry
-    curContent(get(handles.listbox_vie_sched_sat_obs_network_selected, 'Value'))=[];
-    
-    % get current value
-    curValue=get(handles.listbox_vie_sched_sat_obs_network_selected, 'Value');
-    
-    set(handles.listbox_vie_sched_sat_obs_network_selected, 'Value', ...
-        min([max(curValue), max(length(curContent),1)]));
-
-    % update listbox
-    set(handles.listbox_vie_sched_sat_obs_network_selected, 'String', curContent);
-
-    % save changes to handles struct
-    guidata(hObject, handles);
-end
-
-
-
-% --- Executes on button press in checkbox_vie_sched_separate_stations_for_satellites.
-function checkbox_vie_sched_separate_stations_for_satellites_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_vie_sched_separate_stations_for_satellites (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLA
-% handles    structure with handles and user data (see GUIDATA)
-
-if get(handles.checkbox_vie_sched_separate_stations_for_satellites, 'Value');
-	set(handles.text353, 'Enable', 'on');
-	set(handles.text354, 'Enable', 'on');
-	set(handles.listbox_vie_sched_sat_obs_network_available, 'Enable', 'on');
-	set(handles.listbox_vie_sched_sat_obs_network_selected, 'Enable', 'on');
-	set(handles.pushbutton_sched_sat_obs_network_clear, 'Enable', 'on');
-else 
-	set(handles.text353, 'Enable', 'off');
-	set(handles.text354, 'Enable', 'off');
-	set(handles.listbox_vie_sched_sat_obs_network_available, 'Enable', 'off');
-	set(handles.listbox_vie_sched_sat_obs_network_selected, 'Enable', 'off');
-	set(handles.pushbutton_sched_sat_obs_network_clear, 'Enable', 'off');
-end
-% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sched_separate_stations_for_satellites
-
-
-% --- Executes on button press in checkbox_vie_sched_use_new_source_file.
-function checkbox_vie_sched_use_new_source_file_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_vie_sched_use_new_source_file (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sched_use_new_source_file
-
-
-% --- Executes when selected object is changed in uipanel_run_modules.
-function uipanel_run_modules_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel_run_modules 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in checkbox_run_outDirs_diffSubs.
-function checkbox_run_outDirs_diffSubs_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_outDirs_diffSubs (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-if get(handles.checkbox_run_outDirs_diffSubs, 'Value')
-% Different output sub-directories
-	set(handles.edit_run_outDirs_oneSub, 'Enable', 'off')
-	set(handles.text_run_outDirs_diff_level0, 'Enable', 'on')
-	set(handles.edit_run_outDirs_level0, 'Enable', 'on')
-	set(handles.text_run_outDirs_diff_level1, 'Enable', 'on')
-	set(handles.edit_run_outDirs_level1, 'Enable', 'on')
-	set(handles.text_run_outDirs_diff_level3, 'Enable', 'on')
-	set(handles.edit_run_outDirs_level3, 'Enable', 'on')
-	set(handles.text_run_outDirs_diff_level2, 'Enable', 'on')
-	set(handles.edit_run_outDirs_level2, 'Enable', 'on')
-	set(handles.text_run_one_subDir, 'Enable', 'off')
-else
-% One output sub-directory
-	set(handles.edit_run_outDirs_oneSub, 'Enable', 'on')
-	set(handles.text_run_outDirs_diff_level0, 'Enable', 'off')
-	set(handles.edit_run_outDirs_level0, 'Enable', 'off')
-	set(handles.text_run_outDirs_diff_level1, 'Enable', 'off')
-	set(handles.edit_run_outDirs_level1, 'Enable', 'off')
-	set(handles.text_run_outDirs_diff_level3, 'Enable', 'off')
-	set(handles.edit_run_outDirs_level3, 'Enable', 'off')
-	set(handles.text_run_outDirs_diff_level2, 'Enable', 'off')
-	set(handles.edit_run_outDirs_level2, 'Enable', 'off')
-	set(handles.text_run_one_subDir, 'Enable', 'on')
-end
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles) 
-
-
-
-function edit_vie_sched_out_sub_dir_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_out_sub_dir (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_out_sub_dir as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_out_sub_dir as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_out_sub_dir_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_out_sub_dir (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_vie_sched_open_paramtxt.
-function pushbutton_vie_sched_open_paramtxt_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_vie_sched_open_paramtxt (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-parameter_file = '../CATALOGS/param.txt';
-if exist(parameter_file, 'file')
-    % open 
-    if ispc
-        current_work_dir = pwd;
-		% Open file with appropriate Windows applications:
-		winopen([current_work_dir(1:(end-4)), 'CATALOGS\param.txt'])
-    else
-        system(['xterm -e ''vi ', parameter_file, '''']);
-    end
-else
-    msgbox(['Could not find ../CATALOGS/param.txt!'], 'File not found!', 'help')
-end
-
-
-% --- Executes on button press in checkbox_run_error_routine.
-function checkbox_run_error_routine_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_error_routine (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_error_routine
-
-
-% --- Executes on button press in checkbox_plot_eopOut_write_detailed_eop_data.
-function checkbox_plot_eopOut_write_detailed_eop_data_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_eopOut_write_detailed_eop_data (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_detailed_eop_data
-
-
-% --- Executes on button press in checkbox_plot_eopOut_write_sorted_eop_data.
-function checkbox_plot_eopOut_write_sorted_eop_data_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_eopOut_write_sorted_eop_data (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_sorted_eop_data
-
-
-% --- Executes on button press in checkbox_plot_eopOut_write_vievs_eop_data.
-function checkbox_plot_eopOut_write_vievs_eop_data_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_eopOut_write_vievs_eop_data (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_vievs_eop_data
-
-% --- Executes on button press in checkbox_plot_eopOut_write_vievs_eop_data.
-function checkbox_plot_eopOut_write_ivs_eop_format_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_eopOut_write_vievs_eop_data (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-if get(hObject, 'Value')
-    newState='On';
-else
-    newState='Off';
-end
-    set(handles.rb_plot_eopOut_write_ivs_eop_format_default, 'Enable', newState)
-    set(handles.rb_plot_eopOut_write_ivs_eop_format_pwlo, 'Enable', newState)
-
-% --- Executes on button press in rb_plot_eopOut_write_ivs_eop_format_default.
-function rb_plot_eopOut_write_ivs_eop_format_default_Callback(hObject, eventdata, handles)
-% hObject    handle to rb_plot_eopOut_write_ivs_eop_format_default
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of radiobutton_parameters_eop_interp_lin
-if get(hObject, 'Value')
-    set(handles.rb_plot_eopOut_write_ivs_eop_format_pwlo, 'Value', 0)
-else
-    set(handles.rb_plot_eopOut_write_ivs_eop_format_pwlo, 'Value', 1)
-end
-
-% --- Executes on button press in rb_plot_eopOut_write_ivs_eop_format_default.
-function rb_plot_eopOut_write_ivs_eop_format_pwlo_Callback(hObject, eventdata, handles)
-% hObject    handle to rb_plot_eopOut_write_ivs_eop_format_default
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of radiobutton_parameters_eop_interp_lin
-if get(hObject, 'Value')
-    set(handles.rb_plot_eopOut_write_ivs_eop_format_default, 'Value', 0)
-else
-    set(handles.rb_plot_eopOut_write_ivs_eop_format_default, 'Value', 1)
-end
-
-
-
-% --- Executes on button press in checkbox_run_globalPram_tidERPvar.
-function checkbox_run_globalPram_tidERPvar_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_globalPram_tidERPvar (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_globalPram_tidERPvar
-
-
-
-% --- Executes on button press in checkbox_global_param_tidERPvar.
-function checkbox_global_param_tidERPvar_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_global_param_tidERPvar (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_global_param_tidERPvar
-
-
-% --- Executes on button press in checkbox_plot_eopOut_basRepOptions_writeBasOut.
-function checkbox_plot_eopOut_basRepOptions_writeBasOut_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_eopOut_basRepOptions_writeBasOut (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_basRepOptions_writeBasOut
-if get(hObject,'Value')
-    newState='on';
-else
-    newState='off';
-end
-set(handles.edit_plot_eopOut_basRepOptions_writeBasOutFname, 'Enable', newState)
-
-
-function edit_plot_eopOut_basRepOptions_minBasObs_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_plot_eopOut_basRepOptions_minBasObs (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_plot_eopOut_basRepOptions_minBasObs as text
-%        str2double(get(hObject,'String')) returns contents of edit_plot_eopOut_basRepOptions_minBasObs as a double
-defaultVal=10;
-
-if isnan(str2double(get(hObject,'String')))
-    set(hObject, 'String', num2str(defaultVal));
-end
-
-% --- Executes during object creation, after setting all properties.
-function edit_plot_eopOut_basRepOptions_minBasObs_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_plot_eopOut_basRepOptions_minBasObs (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in checkbox_plot_eopOut_basRepOptions_simplePlot.
-function checkbox_plot_eopOut_basRepOptions_simplePlot_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_eopOut_basRepOptions_simplePlot (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_basRepOptions_simplePlot
-
-
-% --- Executes on button press in checkbox_plot_eopOut_basRepOptions_commandWindowOutput.
-function checkbox_plot_eopOut_basRepOptions_commandWindowOutput_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_eopOut_basRepOptions_commandWindowOutput (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_basRepOptions_commandWindowOutput
-
-
-
-function edit_plot_eopOut_basRepOptions_writeBasOutFname_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_plot_eopOut_basRepOptions_writeBasOutFname (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_plot_eopOut_basRepOptions_writeBasOutFname as text
-%        str2double(get(hObject,'String')) returns contents of edit_plot_eopOut_basRepOptions_writeBasOutFname as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_plot_eopOut_basRepOptions_writeBasOutFname_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_plot_eopOut_basRepOptions_writeBasOutFname (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_setInput_browseVgos.
-function pushbutton_setInput_browseVgos_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_setInput_browseVgos (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-vgosDir='../DATA/vgosDB/';
-if ~exist(vgosDir,'dir')
-    mkdir(vgosDir);
-end
-
-out = uipickfiles('FilterSpec', vgosDir);
-
-
-if iscell(out)
-    out=out';
-    
-    % Format: yyyy/<session_name> [vgosDB]
-    
-    for iF = 1 : length(out)
-        curSlash = sort([strfind(out{iF},'/'), strfind(out{iF},'\')]);
-        tgzDot = sort(strfind(out{iF},'.'));
-        if length(tgzDot) > 2
-            out{iF} = [out{iF}(curSlash(end-1)+1 : tgzDot(3)-1), ' [vgosDB]'];
-        else
-            out{iF} = [out{iF}(curSlash(end-1)+1 : end), ' [vgosDB]'];
-        end
-    end
-
-    updateInputFilesBox(hObject, eventdata,handles,out)   
-end
-
-
-
-
-
-% --- Executes on button press in checkbox_estimation_leastSquares_sources_ICRF2_def.
-function checkbox_estimation_leastSquares_sources_ICRF2_def_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_estimation_leastSquares_sources_ICRF2_def (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_sources_ICRF2_def
-auto_save_parameterfile(hObject, handles)
-
-
-
-function edit_estimation_leastSquares_sources_abs_constr_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_estimation_leastSquares_sources_abs_constr (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_estimation_leastSquares_sources_abs_constr as text
-%        str2double(get(hObject,'String')) returns contents of edit_estimation_leastSquares_sources_abs_constr as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_estimation_leastSquares_sources_abs_constr_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_estimation_leastSquares_sources_abs_constr (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --------------------------------------------------------------------
-function menu_models_space_crafts_Callback(hObject, eventdata, handles)
-% hObject    handle to uipanel_models_space_crafts (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_models_space_crafts, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --- Executes on button press in pushbutton_models_sc_browse_for_sp3.
-function pushbutton_models_sc_browse_for_sp3_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_models_sc_browse_for_sp3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Select Sp3 file:
-[FileName, PathName] = uigetfile('*.*','Select SP3 file', '../ORBIT', 'multiselect', 'off');
-
-if ischar(FileName) && ischar(PathName)
-    set(handles.edit_models_sc_sp3_file, 'String', [PathName, FileName])
-    
-    % save parameter file automatically 
-    auto_save_parameterfile(hObject, handles)
-end
-    
-    
-
-function edit_models_sc_sp3_file_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_models_sc_sp3_file (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_models_sc_sp3_file as text
-%        str2double(get(hObject,'String')) returns contents of edit_models_sc_sp3_file as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_models_sc_sp3_file_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_models_sc_sp3_file (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in checkbox_vie_sim_rng_use_seed.
-function checkbox_vie_sim_rng_use_seed_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_vie_sim_rng_use_seed (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sim_rng_use_seed
-% Enable/disable edit field to enter the seed number for the random number generator:
-
-if(get(handles.checkbox_vie_sim_rng_use_seed,'Value'))
-    set(handles.text_vie_sim_seed, 'Enable', 'on') 
-    set(handles.edit_vie_sim_rng_seed, 'Enable', 'on')
-else
-     set(handles.text_vie_sim_seed, 'Enable', 'off')
-     set(handles.edit_vie_sim_rng_seed, 'Enable', 'off')
-end
-
-
-function edit_vie_sched_pathCatalogs_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_pathCatalogs (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sched_pathCatalogs as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sched_pathCatalogs as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_pathCatalogs_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_pathCatalogs (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-function edit_vie_sim_rng_seed_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sim_rng_seed (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_vie_sim_rng_seed as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sim_rng_seed as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sim_rng_seed_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sim_rng_seed (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_vie_sched_browsCatalogs.
-function pushbutton_vie_sched_browsCatalogs_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_vie_sched_browsCatalogs (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-folder_name = uigetdir('../');
-if folder_name ~= 0
-    handles.edit_vie_sched_pathCatalogs.String = [folder_name '\'];
-end
-
-
-function edit_vie_sim_noise_sat_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sim_noise_sat (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: get(hObject,'String') returns contents of edit_vie_sim_noise_sat as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sim_noise_sat as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sched_bandnum_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_bandnum (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_vie_sim_noise_sat_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sim_noise_sat (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes during object creation, after setting all properties.
-function uitable_vie_sched_bandInfo_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to uitable_vie_sched_bandInfo (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-d = cell(2,5);
-d{1,1} = true;
-d{1,2} = 'X';
-d{1,3} = 0.034896;
-d{1,4} = 10;
-d{1,5} = 20;
-d{2,1} = true;
-d{2,2} = 'S';
-d{2,3} = 3.800;
-d{2,4} = 6;
-d{2,5} = 15;
-hObject.Data = d;
-
-
-% --- Executes on button press in checkbox_vie_sched_disp_sky_coverage.
-function checkbox_vie_sched_disp_sky_coverage_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_vie_sched_disp_sky_coverage (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sched_disp_sky_coverage
-
-
-% --- Executes on button press in checkbox_vie_sim_write_vso_file.
-function checkbox_vie_sim_write_vso_file_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_vie_sim_write_vso_file (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sim_write_vso_file
-
-
-% --- Executes on button press in checkbox_vie_sched_multiSched.
-function checkbox_vie_sched_multiSched_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_vie_sched_multiSched (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-if get(hObject,'Value')
-    handles.checkbox_vie_sched_saveOutput.Value = 1;
-    handles.checkbox_vie_sched_saveOutput.Enable = 'off';
-    handles.checkbox_vie_sched_dispSkyCoverage = 0;
-    handles.checkbox_vie_sched_saveOutput.Enable = 'off';
-else
-    handles.checkbox_vie_sched_saveOutput.Value = 0;
-    handles.checkbox_vie_sched_saveOutput.Enable = 'on';
-    handles.checkbox_vie_sched_dispSkyCoverage = 1;
-    handles.checkbox_vie_sched_saveOutput.Enable = 'on';
-end
-% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sched_multiSched
-
-
-
-% --- Executes on button press in pushbutton_multiSched.
-function pushbutton_multiSched_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_multiSched (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-parameter_file = '../CATALOGS/multiSched.txt';
-if exist(parameter_file, 'file')
-    % open 
-    if ispc
-        current_work_dir = pwd;
-		% Open file with appropriate Windows applications:
-		winopen([current_work_dir(1:(end-4)), 'CATALOGS\multiSched.txt'])
-    else
-        system(['xterm -e ''vi ', parameter_file, '''']);
-    end
-else
-    msgbox(['Could not find ../CATALOGS/multiSched.txt!'], 'File not found!', 'help')
-end
-
-
-% --- Executes on key press with focus on edit_vie_sched_init_prop_interval and none of its controls.
-function edit_vie_sched_init_prop_interval_KeyPressFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sched_init_prop_interval (see GCBO)
-% eventdata  structure with the following fields (see MATLAB.UI.CONTROL.UICONTROL)
-%	Key: name of the key that was pressed, in lower case
-%	Character: character interpretation of the key(s) that was pressed
-%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in checkbox_run_ElevDepNoise.
-function checkbox_run_ElevDepNoise_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_ElevDepNoise (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_ElevDepNoise
-if get(handles.checkbox_run_ElevDepNoise, 'Value')
-    set(handles.edit_run_add_noise, 'Enable', 'off'); 
-    set(handles.text_run_add_noise, 'Enable', 'off');
-else
-    set(handles.edit_run_add_noise, 'Enable', 'on');
-    set(handles.text_run_add_noise, 'Enable', 'on');
-end
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes on button press in checkbox_run_globalPram_stseaspos.
-function checkbox_run_globalPram_stseaspos_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_globalPram_stseaspos (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_globalPram_stseaspos
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes on button press in checkbox_run_globalPram_hlpole.
-function checkbox_run_globalPram_hlpole_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_globalPram_hlpole (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_globalPram_hlpole
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes on selection change in listbox_vie_glob_stseaspos.
-function listbox_vie_glob_stseaspos_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_glob_stseaspos (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox_vie_glob_stseaspos contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox_vie_glob_stseaspos
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox_vie_glob_stseaspos_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_glob_stseaspos (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in checkbox_global_param_stseaspos_N.
-function checkbox_global_param_stseaspos_N_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_global_param_stseaspos_N (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_global_param_stseaspos_N
-
-
-% --- Executes on button press in checkbox_global_param_stseaspos_E.
-function checkbox_global_param_stseaspos_E_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_global_param_stseaspos_E (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_global_param_stseaspos_E
-
-
-% --- Executes on button press in checkbox_global_param_stseaspos_R.
-function checkbox_global_param_stseaspos_R_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_global_param_stseaspos_R (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_global_param_stseaspos_R
-
-
-
-
-% --- Executes when selected object is changed in uibuttongroup10.
-function uibuttongroup31_SelectionChangedFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uibuttongroup10 
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-if get(handles.radiobuttonedit_glob_param_estStSeasPos, 'Value')
-    % estimate was selected
-    state='On';
-else
-    state='Off';
-end
-
-set(handles.listbox_vie_glob_stseaspos, 'Enable', state);
-set(handles.checkbox_global_param_stseaspos_R, 'Enable', state);
-set(handles.checkbox_global_param_stseaspos_E, 'Enable', state);
-set(handles.checkbox_global_param_stseaspos_N, 'Enable', state);
-
-
-
-
-
-
-
-% --- Executes on button press in checkbox_parameters_statCorr_temp_fromInSitu.
-function checkbox_parameters_statCorr_temp_fromInSitu_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_parameters_statCorr_temp_fromInSitu (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_temp_fromInSitu
-
-
-% --- Executes on button press in checkbox_parameters_statCorr_temp_GPT3.
-function checkbox_parameters_statCorr_temp_GPT3_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_parameters_statCorr_temp_GPT3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_temp_GPT3
-
-
-% --- Executes on button press in checkbox_parameters_statCorr_APLrg.
-function checkbox_parameters_statCorr_APLrg_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_parameters_statCorr_APLrg (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_APLrg
-if get(hObject, 'Value')
-    newState1='on';
-    newState2='off';
-else
-    newState1='off';
-    newState2='on';
-end
-
-set(handles.popupmenu_parameters_statCorr_APLrg, 'Enable', newState1)
-
-set(handles.checkbox_parameters_statCorr_tidalAtmoLoad, 'Enable', newState2)
-set(handles.popupmenu_parameters_statCorr_tidalAtmoOceanLoad, 'Enable', newState2)
-set(handles.checkbox_parameters_statCorr_nonTidalAtmoLoad, 'Enable', newState2)
-set(handles.popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad, 'Enable', newState2)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes on selection change in popupmenu_parameters_statCorr_APLrg.
-function popupmenu_parameters_statCorr_APLrg_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_statCorr_APLrg (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_parameters_statCorr_APLrg contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_parameters_statCorr_APLrg
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_parameters_statCorr_APLrg_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_statCorr_APLrg (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in checkbox_parameters_statCorr_GIA.
-function checkbox_parameters_statCorr_GIA_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_parameters_statCorr_GIA (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_GIA
-if get(hObject, 'Value')
-    newState='on';
-else
-    newState='off';
-end
-
-set(handles.popupmenu_parameters_statCorr_GIA, 'Enable', newState)
-
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-
-
-% --- Executes on selection change in popupmenu_parameters_statCorr_GIA.
-function popupmenu_parameters_statCorr_GIA_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_statCorr_GIA (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_parameters_statCorr_GIA contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_parameters_statCorr_GIA
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_parameters_statCorr_GIA_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_parameters_statCorr_GIA (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-
-% --- Executes on selection change in listbox_vie_glob_APLrg.
-function listbox_vie_glob_APLrg_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_glob_APLrg (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox_vie_glob_APLrg contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox_vie_glob_APLrg
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox_vie_glob_APLrg_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox_vie_glob_APLrg (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes when selected object is changed in uibuttongroup32.
-function uibuttongroup32_SelectionChangedFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uibuttongroup32 
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-if get(handles.radiobuttonedit_glob_param_estAPLrg, 'Value')
-    % estimate was selected
-    state='On';
-else
-    state='Off';
-end
-
-set(handles.listbox_vie_glob_APLrg, 'Enable', state);
-
-
-
-% --- Executes on button press in checkbox_run_globalPram_APLrg.
-function checkbox_run_globalPram_APLrg_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_run_globalPram_APLrg (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_run_globalPram_APLrg
-auto_save_parameterfile(hObject, handles)
-
-
-
-function edit_run_add_noise_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_run_add_noise (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_run_add_noise as text
-%        str2double(get(hObject,'String')) returns contents of edit_run_add_noise as a double
-auto_save_parameterfile(hObject, handles)
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_run_add_noise_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_run_add_noise (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in checkbox_vie_sched_conditions.
-function checkbox_vie_sched_conditions_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_vie_sched_conditions (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-if hObject.Value
-    handles.popupmenu_vie_sched_conditions.Enable = 'on';
-    handles.pushbutton_vie_sched_conditions.Enable = 'on';
-    handles.text_vie_sched_conditions.Enable = 'on';
-else
-    handles.popupmenu_vie_sched_conditions.Enable = 'off';
-    handles.pushbutton_vie_sched_conditions.Enable = 'off';
-    handles.text_vie_sched_conditions.Enable = 'off';
-    handles.text_vie_sched_conditions.String = '';
-end
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_vie_sched_conditions
-
-
-% --- Executes on selection change in popupmenu_vie_sched_conditions.
-function popupmenu_vie_sched_conditions_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_vie_sched_conditions (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_vie_sched_conditions contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_vie_sched_conditions
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_vie_sched_conditions_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_vie_sched_conditions (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in pushbutton_vie_sched_conditions.
-function pushbutton_vie_sched_conditions_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_vie_sched_conditions (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-con = sched_optimization;
-handles.text_vie_sched_conditions.String = con;
-
-
-
-% --- Executes on button press in checkbox_plot_show_errorbars.
-function checkbox_plot_show_errorbars_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_show_errorbars (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_show_errorbars
-handles=plotToAxes(hObject, handles);
-% Update handles structure
-guidata(hObject, handles)
-
-
-% --- Executes on selection change in popupmenu_plot_select_time_ref_format.
-function popupmenu_plot_select_time_ref_format_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_select_time_ref_format (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_plot_select_time_ref_format contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu_plot_select_time_ref_format
-handles=plotToAxes(hObject, handles);
-% Update handles structure
-guidata(hObject, handles)
-
-
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu_plot_select_time_ref_format_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_select_time_ref_format (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
 
 function rerun_vie_lsm(hObject, eventdata, handles)
 try
@@ -12137,16 +10684,16 @@ end
 
 function reference(hObject, eventdata, handles)
 try
-    web('http://vievswiki.geo.tuwien.ac.at/doku.php?id=public:vievs_publications:publications','-browser')
+    web('https://vievswiki.geo.tuwien.ac.at/en/VLBI-Analysis','-browser')
 catch
-    warning('An error occured when opening: http://vievswiki.geo.tuwien.ac.at/doku.php?id=public:vievs_publications:publications')
+    warning('An error occured when opening: https://vievswiki.geo.tuwien.ac.at/en/VLBI-Analysis')
 end
 
 function wiki(hObject, eventdata, handles)
 try
-    web('http://vievswiki.geo.tuwien.ac.at/doku.php','-browser')
+    web('https://vievswiki.geo.tuwien.ac.at/','-browser')
 catch
-    warning('An error occured when opening: http://vievswiki.geo.tuwien.ac.at/doku.php')
+    warning('An error occured when opening: https://vievswiki.geo.tuwien.ac.at/')
 end
 
 function github(hObject, eventdata, handles)
@@ -12155,6 +10702,21 @@ try
 catch
     warning('An error occured when opening: https://github.com/TUW-VieVS')
 end
+
+% --------------------------------------------------------------------
+function menu_help_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_help (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function menu_help_vievsWebsite_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_help_vievsWebsite (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+web 'https://vievswiki.geo.tuwien.ac.at/'
+
 
 function pushbutton_vie_sim_browseStatistics_Callback(hObject,eventdata,handles)
     [file,path] = uigetfile('*.csv','Browse for VieSched++ statistics.csv file');
