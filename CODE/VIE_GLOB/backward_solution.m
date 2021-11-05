@@ -15,14 +15,21 @@
 %%
  
 function backward_solution(DIRIN, DIROUT)
+% % 
+% % % Which parameters do you want to estimate?
+ solbck.eop=1;
+ solbck.zwd=1;
+ solbck.tgr=1;
+ solbck.ant=1;
+ solbck.sou=1;
+% 
+% DIROUT = 'sol211018_woVGOS';
+% DIRIN = 'vieRF2020_OPTbco_allsou';
 
-% Which parameters do you want to estimate?
-solbck.eop=1;
-solbck.zwd=1;
-solbck.tgr=1;
-solbck.ant=1;
-solbck.sou=1;
 
+
+% DIRIN = 'test_cont17A';
+% DIROUT = 'TEST_cont17A';
 
 
 %%
@@ -116,7 +123,7 @@ for ise= lse:-1: 1
     bckdsol(ise).x(:,1)=x2; %values
     bckdsol(ise).x(:,2)=varpar; %standard deviations
     bckdsol(ise).x(:,3)=parsplit(ise).redpos'; %columns in the old orig. N matrix
-    bckdsol(ise).Q = Q22;
+    bckdsol(ise).Q = Q22; % for correlation between RA&De
     
     clear x2 varpar Q22 b2 N22 N21 invN22
 end
@@ -127,9 +134,12 @@ if exist([path_outglob 'BACKWARD_SOLUTION/' DIROUT])~=7
 end
 
 
-%  save([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/bckdsol'],'bckdsol');
+save([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/bckdsol'],'bckdsol','-v7.3');
 %%
-% load([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/bckdsol'])
+
+
+
+%load([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/bckdsol'])
 
 if solbck.eop==1
     fidEOP = fopen([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/eop_' DIRIN '.txt'],'wt');
@@ -156,6 +166,16 @@ if solbck.ant==1
     fprintf(fidANT,'\n %% parameter   station    mjd    value    standard deviation\n');
     fprintf(fidANT,' %% Units are [cm] \n\n');
     formatANT = '%c%c%c%c%c   %c%c%c%c%c%c%c%c      %10.5f    %8.3f    %8.4f  %s \n';
+    
+    
+    curDate=clock;          % current date and time
+    fidANTcat = fopen([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/ant_catalogue_' DIRIN '.txt'],'wt');
+    fprintf(fidANTcat, 'Created on %02.0f.%02.0f.%04.0f at %02.0f:%02.0f:%02.0f local time\n', curDate(3), curDate(2), curDate(1), curDate(4), curDate(5), curDate(6));
+    fprintf(fidANTcat,'Units: [m], [m/y]\n');
+    fprintf(fidANTcat,'Station      Xnew              Ynew              Znew               mX           mY          mZ         epoch   session          Xapr           Ypr              Zapr           vXapr        vYapr       vZapr    epoch_apr    start&end of apriori interval\n');
+    formatANTcat = '%c%c%c%c%c%c%c%c    %15.4f  %15.4f  %15.4f    %10.4f  %10.4f  %10.4f  %10.0f  %s  %15.4f  %15.4f  %15.4f %10.4f  %10.4f  %10.4f  %10.0f %10.0f %10.0f \n';
+    
+    
 end
 
 if solbck.sou==1
@@ -188,6 +208,7 @@ for ise= lse:-1:  1
     
 
     load([pathGS.path_in pathGS.L2 '/' globsol.sessions{ise} '_par_glob.mat']); % compatible with version 2.1
+    load([pathGS.path_in pathGS.L2 '/' globsol.sessions{ise} '_an_glob.mat']);
         
     for i=1:size(bckdsol(ise).x,1)
         for j=1:length(oldcol)
@@ -199,16 +220,31 @@ for ise= lse:-1:  1
                 
                 % Output for EOP
                 if solbck.eop==1
+%                     if strcmp(pname,'xpol') || strcmp(pname,'ypol') || strcmp(pname,'dut1') || strcmp(pname,'dX') || strcmp(pname,'dY')
+%                         formatEOP = '%c%c%c%c    %10.5f    %8.5f   %8.6f  %s \n';
+%                         if strcmp(pname,'dX') || strcmp(pname,'dY'); formatEOP = '%c%c      %10.5f    %8.5f   %8.6f  %s \n';end
+%                         mjd=parGS(j).mjd(k);
+%                         value=bckdsol(ise).x(i,1);
+%                         stdev=bckdsol(ise).x(i,2);
+%                         if strcmp(pname,'dut1'); value = value/15; stdev = stdev/15;  end % mas --> ms for UT
+%                         fprintf(fidEOP, formatEOP, pname, mjd, value , stdev , globsol.sessions{ise});
+%                         clear mjd value stdev
+%                     end
+%                     
+                    
                     if strcmp(pname,'xpol') || strcmp(pname,'ypol') || strcmp(pname,'dut1') || strcmp(pname,'dX') || strcmp(pname,'dY')
-                        formatEOP = '%c%c%c%c    %10.5f    %8.5f   %8.6f  %s \n';
-                        if strcmp(pname,'dX') || strcmp(pname,'dY'); formatEOP = '%c%c      %10.5f    %8.5f   %8.6f  %s \n';end
+                        formatEOP = '%c%c%c%c    %10.5f    %10.5f   %8.6f  %s %15.5f %15.5f \n';
+                        if strcmp(pname,'dX') || strcmp(pname,'dY'); formatEOP = '%c%c      %10.5f    %10.5f   %8.6f  %s %15.5f %15.5f \n';end
                         mjd=parGS(j).mjd(k);
                         value=bckdsol(ise).x(i,1);
                         stdev=bckdsol(ise).x(i,2);
                         if strcmp(pname,'dut1'); value = value/15; stdev = stdev/15;  end % mas --> ms for UT
-                        fprintf(fidEOP, formatEOP, pname, mjd, value , stdev , globsol.sessions{ise});
+                        fprintf(fidEOP, formatEOP, pname, mjd, value , stdev , globsol.sessions{ise} , parsplit(ise).first_last_scan);
                         clear mjd value stdev
                     end
+                    
+                    
+                    
                 end
                 
                 % Output for zwd
@@ -278,6 +314,64 @@ for ise= lse:-1:  1
                         fprintf(fidANT, formatANT, pname, antenna, mjd, value, stdev, globsol.sessions{ise});
                         clear mjd value stdev antenna oldcolANT
                     end
+                    
+                    
+                    
+                    if strcmp(pname,'ant_x')% || strcmp(pname,'ant_y') || strcmp(pname,'ant_z')
+                        
+                            oldcolANTx={glob2.x.coorx.col};
+                            oldcolANTy={glob2.x.coory.col};
+                            oldcolANTz={glob2.x.coorz.col};
+                           
+                            
+                            for jj=1:length(oldcolANTx)
+                                kk=(find((oldcolANTx{jj})==bckdsol(ise).x(i,3)));
+                                if ~isempty(kk)
+                                    kkX = oldcolANTx(jj);
+                                    kkY = oldcolANTy(jj);
+                                    kkZ = oldcolANTz(jj);
+                                    
+                                    antenna = glob2.x.antenna(jj).name;
+
+                                    % a priori coordinates
+                                    Xapr = glob1.an.x(jj);
+                                    Yapr = glob1.an.y(jj);
+                                    Zapr = glob1.an.z(jj);
+                                    vXapr = glob1.an.vx(jj);
+                                    vYapr = glob1.an.vy(jj);
+                                    vZapr = glob1.an.vz(jj);
+                                    ep = glob1.an.epoch(jj);
+                                    istart = glob1.an.start(jj);
+                                    iend = glob1.an.end(jj);
+                                end
+                            end
+                        
+                            mjd=glob2.opt.midnight; % same for all stations, one estimate per session
+                            
+                            
+                            ilineX = find(kkX{:} == bckdsol(ise).x(:,3)); %(= i)
+                            ilineY = find(kkY{:} == bckdsol(ise).x(:,3));
+                            ilineZ = find(kkZ{:} == bckdsol(ise).x(:,3));
+                           
+                            
+                            
+                            dX=bckdsol(ise).x(ilineX,1); %cm
+                            mX=bckdsol(ise).x(ilineX,2);
+                            dY=bckdsol(ise).x(ilineY,1); %cm
+                            mY=bckdsol(ise).x(ilineY,2);
+                            dZ=bckdsol(ise).x(ilineZ,1); %cm
+                            mZ=bckdsol(ise).x(ilineZ,2);
+                     
+                            Xnew = Xapr + dX/100;
+                            Ynew = Yapr + dY/100;
+                            Znew = Zapr + dZ/100;
+
+                            fprintf(fidANTcat, formatANTcat, antenna,Xnew, Ynew, Znew, mX/100, mY/100, mZ/100, mjd, globsol.sessions{ise},...
+                            Xapr, Yapr, Zapr, vXapr, vYapr, vZapr, ep, istart, iend);
+
+                            clear mjd value stdev antenna oldcolANT Xapr Yapr Zapr                  
+                    end
+                
                 end
                 
                 % Output for sources
@@ -368,7 +462,14 @@ for ise= lse:-1:  1
                             Q = bckdsol(ise).Q;
                             corrRADe= Q(ilineRA,ilineDe) / sqrt(Q(ilineRA,ilineRA) * Q(ilineDe,ilineDe) );
                             
-                            fprintf(fidSOUCAT, formatSOUCAT, source_ivs, source_iers,  num2str(res(1)), num2str(res(2)), res(3), sign,   num2str(abs(res(4))), num2str(res(5)), res(6) , errRA, errDe, corrRADe, mjd, mjd, mjd, '1', numobs, '0', globsol.sessions{ise});
+                            
+%                             if source_iers=='0355-699' | source_iers=='0809-493' | source_iers=='0700-465' | source_iers=='0855-716' | source_iers=='0044-846'
+                            
+                                
+                                fprintf(fidSOUCAT, formatSOUCAT, source_ivs, source_iers,  num2str(res(1)), num2str(res(2)), res(3), sign,   num2str(abs(res(4))), num2str(res(5)), res(6) , errRA, errDe, corrRADe, mjd, mjd, mjd, '1', numobs, '0', globsol.sessions{ise});
+                            
+%                            end
+                            
                             clear mjd dRA dDe stdevRA stdevDe source_ivs source_iers numobs oldcolSOU kkRA kkDe RAapr Deapr sign res corrRADe ilineRA ilineDe
                         end
                     end
