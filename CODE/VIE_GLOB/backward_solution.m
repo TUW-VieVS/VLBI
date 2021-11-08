@@ -169,7 +169,7 @@ if solbck.ant==1
     
     
     curDate=clock;          % current date and time
-    fidANTcat = fopen([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/ant_catalogue_' DIRIN '.txt'],'wt');
+    fidANTcat = fopen([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/ant_bcksol_sessionwise_' DIRIN '.txt'],'wt');
     fprintf(fidANTcat, 'Created on %02.0f.%02.0f.%04.0f at %02.0f:%02.0f:%02.0f local time\n', curDate(3), curDate(2), curDate(1), curDate(4), curDate(5), curDate(6));
     fprintf(fidANTcat,'Units: [m], [m/y]\n');
     fprintf(fidANTcat,'Station      Xnew              Ynew              Znew               mX           mY          mZ         epoch   session          Xapr           Ypr              Zapr           vXapr        vYapr       vZapr    epoch_apr    start&end of apriori interval\n');
@@ -487,6 +487,14 @@ if solbck.tgr==1; fclose(fidTGR); end
 if solbck.ant==1; fclose(fidANT); end
 if solbck.sou==1; fclose(fidSOU); end
 if solbck.sou==1; fclose(fidSOUCAT); end
+
+
+if solbck.ant==1
+    % load fidANTcat (session-wise absolute position) back, and create a
+    % catalogue with the mean absolute position for all reduced stations
+    backsol_antcatalog_mean(path_outglob,DIROUT,DIRIN)
+end
+
 
 %  save -v7.3 ([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/bckdsol'],'bckdsol');
 
