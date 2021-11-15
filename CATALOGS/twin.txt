@@ -1,9 +1,0 @@
-*
-* twin.txt 
-*
-* NOTE: Use this file to specify the twin/multiple stations
-*
-* StaName1 StaName1       
-* 
- ONS13OT1 ONS13OT2
- WETTZTT1 WETTZTT2 

@@ -1,9 +1,0 @@
-*
-* twin.txt 
-*
-* NOTE: Use this file to specify a weight for sources (default is 1)
-*
-* e.g.:
-* name     weight
-* 0001-440 2.5
-

@@ -57,6 +57,7 @@
 %                                 - Renamed: vie_batch3_0.m => vie_batch3_1.m
 % - 2017-12-14, A. Hellerschmied: Path to /COMPILE/MISC/ added
 % - 2018-01-18, A. Hellerschmied    - Revised for handling of VieVS with GIT
+% - 2021-10-27, H. Wolf: removed VIE_SCHED module
 
 %*************************************************************************
 
@@ -181,16 +182,6 @@ if runp.parallel
                 poolobj = parpool(nCores);
             end
         end
-    end
-end
-
-
-
-%% VIE_SCHED
-
-if isfield(runp, 'sched')
-    if runp.sched
-        process_list = vie_sched();
     end
 end
 
@@ -787,8 +778,6 @@ if ~isempty(process_list)
                 end
             end % parfor isess = 1:num
             
-
-
             % ##### Close parallel computing #####
             if flag_release_r2013b_or_later == 0
                 matlabpool close
@@ -801,7 +790,6 @@ if ~isempty(process_list)
                 end
             end
         end % if parallel
-        
     end
     
     %% VIE_GLOB
@@ -846,7 +834,7 @@ if runp.lsm && runp.init && runp.sim && runp.mod
     end
 end
 
-if isfield(runp, 'sched') && runp.sched && exist('process_list_orig', 'var') && size(process_list_orig,1)>1 && runp.lsm && runp.init && runp.sim && runp.mod
+if exist('process_list_orig', 'var') && size(process_list_orig,1)>1 && runp.lsm && runp.init && runp.sim && runp.mod
     try
         writeLEVEL3toXLSX( runp );
     catch exception
@@ -890,7 +878,6 @@ function dispSessionNumber(number, total)
         tot = [mod(t,10) tot];
         t = floor(t/10);
     end
-
 
     string0 = '';
     string1 = '';

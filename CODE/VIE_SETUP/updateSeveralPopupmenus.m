@@ -29,7 +29,8 @@
 % 2017-06-08 by A. Hellerschmied: Fixed a bug which caused problems, if no own TRF or won CRF was available in tghe TRF or CRF folder.
 % 2017-08-31 by A. Hellerschmied: Fixed a problem when the dir /ION/FILES/ was empty.
 % 2018-02-11 by D. Landskron: external troposphere files section removed
-% 
+% 2021-10-27 by H. Wolf: removed VIE_SCHED module
+%
 
 function updateSeveralPopupmenus(hObject, handles)
 % This function updates some of the popupmenus where e.g. models can be
@@ -273,18 +274,6 @@ if sum(oldFoundInNew)>0
 else
     msgbox('Previously selected simulation turbulance file was not found!\n', 'Warning', 'warn')
 end
-
-
-% #########################################################################
-% # Scheduling
-% #########################################################################
-
-% ### Local TLE files ###
-path_tle_dir = '../ORBIT/TLE/';    % TLE data folder
-[tle_str] = getTLEFileNames(path_tle_dir);
-set(handles.popupmenu_vie_sched_select_tle,'String',tle_str);
-
-
 
 % #########################################################################
 % # Plotting
