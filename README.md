@@ -43,9 +43,10 @@ If your main directory is called 'VieVS' for example, your folder structure shou
 Please be aware that this repository contains more or less only the program code. The data files necessary for processing have to be downloaded from external sources.
 
 ### Observation data
-* NGS can be downloaded for example from ftp://cddis.nasa.gov/vlbi/ivsdata/ngs/ and have to be stored in year folders (NGS-files have to be uncompressed): `/VLBI/DATA/NGS/yyyy/`
-* vgosDB can be downloaded from ftp://cddis.gsfc.nasa.gov/vlbi/ivsdata/vgosdb/ and have to be stored in year folders as you download them (compressed tar files, *.tgz or *.tar.gz): `/VLBI/DATA/vgosDB/yyyy/`
-* Master files are needed for the automatic generation of a process list, they can be downloaded from ftp://cddis.gsfc.nasa.gov/pub/vlbi/ivscontrol/ as yearly *.txt files and have to be stored in : `/VLBI/DATA/MASTER`
+* Please note: in order to access the data achive of CDDIS you need an Earthdata Login as described here https://cddis.nasa.gov/Data_and_Derived_Products/CDDIS_Archive_Access.html.
+* NGS can be downloaded for example from https://cddis.nasa.gov/archive/vlbi/ivsdata/ngs/ and have to be stored in year folders (NGS-files have to be uncompressed): `/VLBI/DATA/NGS/yyyy/`
+* vgosDB can be downloaded from https://cddis.nasa.gov/archive/vlbi/ivsdata/vgosdb/ and have to be stored in year folders as you download them (compressed tar files, *.tgz or *.tar.gz): `/VLBI/DATA/vgosDB/yyyy/`
+* Master files are needed for the automatic generation of a process list, they can be downloaded from https://cddis.nasa.gov/archive/vlbi/ivscontrol/ as yearly *.txt files and have to be stored in : `/VLBI/DATA/MASTER`
 
 ### Earth Orientation parameters
 * EOP C04 can be downloaded from ftp://ftp.iers.org/products/eop/long-term/ . Take for example "eopc04_14_IAU2000.62-now" and store it as `C04_14_1962_now.txt` in `/VLBI/EOP/`.
