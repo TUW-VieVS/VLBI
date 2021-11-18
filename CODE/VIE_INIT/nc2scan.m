@@ -484,7 +484,13 @@ for iScan=1:nScans
                     % if cable cal data exists store it into scan struct
                     % based on name 'ccn' besides .cab data from wrapper
                     % file data
-                    scan(iScan).stat(stationIndices(iStat)).(['cab_',ccn])=1e9*out_struct.stat(stationIndices(iStat)).(fncab{iCabls}).Cal_Cable.val(scan2Station(iScan,stationIndices(iStat))); % [nano-sec]
+
+                    ccvali=out_struct.stat(stationIndices(iStat)).(fncab{iCabls}).Cal_Cable.val;
+                    if length(ccvali)>1
+                        scan(iScan).stat(stationIndices(iStat)).(['cab_',ccn])=1e9*ccvali(scan2Station(iScan,stationIndices(iStat))); % [nano-sec]
+                    else
+                        scan(iScan).stat(stationIndices(iStat)).(['cab_',ccn])=0;
+                    end
                 else
                     % zero cable delay if no other cable cal data source
                     % exists
