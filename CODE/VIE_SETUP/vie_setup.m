@@ -5317,51 +5317,6 @@ function uipanel_plot_basOut_write_Callback(hObject, eventdata, handles)
 out_basEop(hObject, handles);
 
 
-% --- Executes on button press in pushbutton_plot_residuals_clockRef_get.
-function pushbutton_plot_residuals_clockRef_get_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_plot_residuals_clockRef_get (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-OptFileExist=0;
-
-% read OPT file if exist
-% get selected file
-allSessionsInList=get(handles.popupmenu_plot_residuals_session, 'String');
-session=allSessionsInList{get(handles.popupmenu_plot_residuals_session, 'Value')};
-if str2double(session(1:2))>75
-    yearStr=['19', session(1:2)];
-else
-    yearStr=['20', session(1:2)];
-end
-
-% get currently selected OPT directory
-OPTdirs=get(handles.popupmenu_setInput_optDir, 'String');
-selectedOPTdir=OPTdirs{get(handles.popupmenu_setInput_optDir, 'value')};
-
-% check if file exist
-wantedOPTfile=['../../VLBI_OPT/', selectedOPTdir, '/', yearStr, '/', session(1:9), '.OPT'];
-% if the year folder does not exist - create it
-if exist(wantedOPTfile, 'file')
-    OptFileExist=1;
-end
-
-if OptFileExist
-    [ini_opt, bas_excl]=readOPT(wantedOPTfile);
-    if isempty(ini_opt.refclock)
-        newValPopup=1;
-    else
-        allAntennas=get(handles.popupmenu_plot_residuals_refClock, 'String');
-        newValPopup=find(strcmpi(allAntennas,ini_opt.refclock));
-    end
-else
-    newValPopup=1;
-end
-
-
-set(handles.popupmenu_plot_residuals_refClock, 'Value', newValPopup);
-
-
 % --- Executes on button press in pushbutton_plot_residuals_clockRef_set.
 function pushbutton_plot_residuals_clockRef_set_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_plot_residuals_clockRef_set (see GCBO)
