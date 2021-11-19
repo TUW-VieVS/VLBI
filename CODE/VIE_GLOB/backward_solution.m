@@ -172,8 +172,11 @@ if solbck.ant==1
     fidANTcat = fopen([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/ant_bcksol_sessionwise_' DIRIN '.txt'],'wt');
     fprintf(fidANTcat, 'Created on %02.0f.%02.0f.%04.0f at %02.0f:%02.0f:%02.0f local time\n', curDate(3), curDate(2), curDate(1), curDate(4), curDate(5), curDate(6));
     fprintf(fidANTcat,'Units: [m], [m/y]\n');
-    fprintf(fidANTcat,'Station      Xnew              Ynew              Znew               mX           mY          mZ         epoch   session          Xapr           Ypr              Zapr           vXapr        vYapr       vZapr    epoch_apr    start&end of apriori interval\n');
-    formatANTcat = '%c%c%c%c%c%c%c%c    %15.4f  %15.4f  %15.4f    %10.4f  %10.4f  %10.4f  %10.0f  %s  %15.4f  %15.4f  %15.4f %10.4f  %10.4f  %10.4f  %10.0f %10.0f %10.0f \n';
+    fprintf(fidANTcat,'epoch of estimated position = identical to the a priori catalog if velocity was applied apriori\n');
+    fprintf(fidANTcat,'epoch of estimated position = epoch of the session if no velocity was applied apriori (the a priori velocity was not available)\n\n');
+    
+    fprintf(fidANTcat,'Station        Xapr+dX          Yapr+dY          Zapr+dZ               mX           mY          mZ        epoch        mjd_session   session          Xapr           Yapr              Zapr           vXapr        vYapr       vZapr    epoch_apr    start&end of apriori interval\n');
+    formatANTcat = '%c%c%c%c%c%c%c%c    %15.4f  %15.4f  %15.4f    %10.4f  %10.4f  %10.4f  %10.0f         %10.0f  %s  %15.4f  %15.4f  %15.4f %10.4f  %10.4f  %10.4f  %10.0f %10.0f %10.0f \n';
     
     
 end
@@ -365,8 +368,13 @@ for ise= lse:-1:  1
                             Xnew = Xapr + dX/100;
                             Ynew = Yapr + dY/100;
                             Znew = Zapr + dZ/100;
-
-                            fprintf(fidANTcat, formatANTcat, antenna,Xnew, Ynew, Znew, mX/100, mY/100, mZ/100, mjd, globsol.sessions{ise},...
+                            
+                            if vXapr == 0 && vYapr == 0 && vZapr == 0
+                                epest = mjd; % zero a priori velocity, epoch of dXYZ is that of the session
+                            else
+                                epest = ep; % if a priori velocity was applied, that the epoch is that of the a priori catalog
+                            end
+                            fprintf(fidANTcat, formatANTcat, antenna,Xnew, Ynew, Znew, mX/100, mY/100, mZ/100, epest, mjd, globsol.sessions{ise},...
                             Xapr, Yapr, Zapr, vXapr, vYapr, vZapr, ep, istart, iend);
 
                             clear mjd value stdev antenna oldcolANT Xapr Yapr Zapr                  
