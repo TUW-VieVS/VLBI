@@ -11,7 +11,7 @@ function backsol_antcatalog_mean(path_outglob,DIROUT,DIRIN)
 %clear all
 
 fileID = fopen([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/ant_bcksol_sessionwise_' DIRIN '.txt']);
-C = textscan(fileID,'%s %f %f %f %f %f %f %f     %s   %f %f %f %f %f %f %f %f %f ','Headerlines',3);
+C = textscan(fileID,'%s %f %f %f %f %f %f %f %f    %s   %f %f %f %f %f %f %f %f %f ','Headerlines',6);
 fclose(fileID);
 
 
@@ -37,13 +37,13 @@ for i = 1:length(statlist)
     X_ = C{2}(ids);
     Y_ = C{3}(ids);
     Z_ = C{4}(ids);
-    vX_ = C{13}(ids);
-    vY_ = C{14}(ids);
-    vZ_ = C{15}(ids);
+    vX_ = C{14}(ids);
+    vY_ = C{15}(ids);
+    vZ_ = C{16}(ids);
     
     ep_ = C{8}(ids);
-    estart_ = C{17}(ids);
-    eend_ = C{18}(ids);
+    estart_ = C{18}(ids);
+    eend_ = C{19}(ids);
     
     
     int1 = unique(estart_); 
