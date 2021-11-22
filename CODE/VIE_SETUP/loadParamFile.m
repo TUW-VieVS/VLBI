@@ -309,10 +309,10 @@ else
     set(handles.radiobutton_parameters_iono_fromNGS, 'Value', 1)
 end
 
-% Sp3 filename and path
-if isfield(parameter.vie_init, 'sc_orbit_file_path_name')
-    set(handles.edit_models_sc_sp3_file, 'String', parameter.vie_init.sc_orbit_file_path_name)
-end
+% % Sp3 filename and path % Currently not in use 22.11.2021
+% if isfield(parameter.vie_init, 'sc_orbit_file_path_name')
+%     set(handles.edit_models_sc_sp3_file, 'String', parameter.vie_init.sc_orbit_file_path_name)
+% end
 
 
 
