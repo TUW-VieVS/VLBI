@@ -272,12 +272,8 @@ switch(parameter.data_type)
     % #############################
     % #####        NGS        #####
     % #############################
-    case 'ngs'
-        
-         
-        % +++++++++++++++++++ read jet ang file ++++++++++++++++++++++++++++++++++
-        %  => Only works for NGS files!
-        % parameter.vie_init.jetfilnam=['../DATA/JETANG/',session(1:min([length(session),14])),'.JETUV'];
+    case 'ngs' 
+        % read jet ang file -> Only works for NGS files!
         parameter.vie_init.jetfilnam    = ['../DATA/JETANG/',session(1:min([length(session),14])),'.JET'];
         parameter.vie_init.jetfilnamuv  = ['../DATA/JETANG/',session(1:min([length(session),14])),'.JETUV'];
         parameter.vie_init.jetfilnamjb  = ['../DATA/JETANG/',session(1:min([length(session),14])),'.JETJB'];
@@ -289,12 +285,21 @@ switch(parameter.data_type)
         else
             ini_opt.scan_jet = [];  
         end
-        % ------------------- read jet ang file -------------------------------------
-        
+          
+        % Get satellite ephem. file path and name
+        str_ind = max([strfind(parameter.vie_init.sc_orbit_file_path_name, '\'), strfind(parameter.vie_init.sc_orbit_file_path_name, '/')]);
+        if ~isempty(str_ind)
+            sat_orbit_file_path = parameter.vie_init.sc_orbit_file_path_name(1 : str_ind); 
+            sat_orbit_file_name = parameter.vie_init.sc_orbit_file_path_name(str_ind+1 : end);
+            sat_orbit_file_type = parameter.vie_init.sc_orbit_file_type;
+        else
+            sat_orbit_file_path = '';
+            sat_orbit_file_name = '';
+            sat_orbit_file_type = '';
+        end
         
         % this is necessary in read_NGS, for whatever reason
         ini_opt.iono = parameter.vie_init.iono; % Use Iono. corrections from NGS file or from .ion files?
-        
         
         fprintf(' => Start reading %s\n',obs_file_name);
         if isnan(str2double(obs_file_name(1))) % if first element in ngsfile is character - absolute path of NGS file is given
@@ -311,7 +316,6 @@ switch(parameter.data_type)
         sources.s 	= [];
         
 
-
     % #############################
     % #####     VSO           #####
     % #############################
@@ -325,22 +329,12 @@ switch(parameter.data_type)
         if ~isempty(str_ind)
             sat_orbit_file_path = parameter.vie_init.sc_orbit_file_path_name(1 : str_ind); 
             sat_orbit_file_name = parameter.vie_init.sc_orbit_file_path_name(str_ind+1 : end);
-% +++ Workaround solution! Has to be implemented properly in the GUI!
-%   => Currently the file type is derived from the file extension 
-            % Get file type:
-            if strcmp(parameter.vie_init.sc_orbit_file_path_name(end-3 : end), '.sp3')
-                parameter.vie_init.sc_orbit_file_type = 'sp3';
-            else
-                parameter.vie_init.sc_orbit_file_type = 'sat_ephem_trf';
-            end
-% --- Workaround solution!
             sat_orbit_file_type = parameter.vie_init.sc_orbit_file_type;
         else
-            sat_orbit_file_name = '';
             sat_orbit_file_path = '';
+            sat_orbit_file_name = '';
             sat_orbit_file_type = '';
-        end
-        
+        end    
         [antenna, sources, scan, parameter] = read_vso(vso_file_path, vso_file_name, trf, trffile{2}, crf, crffile{2}, sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type, parameter);
         fprintf('...reading the VSO file finished!\n');
         
@@ -349,7 +343,7 @@ end % switch(parameter.data_type)
 
 % ##### Write info to CW #####
 fprintf('\n');
-fprintf('A total of %d stations, %d sources (quasars), %d scans and %d observations were found.\n', length(antenna), length(sources.q), length(scan), length([scan.obs]));
+fprintf('A total of %d stations, %d quasars, %d satellites, %d scans and %d observations were found.\n', length(antenna), length(sources.q), length(sources.s), length(scan), length([scan.obs]));
 disp('The following stations were found:')
 for i_ant = 1:length(antenna)
   fprintf('%2.0f%s%s\n',i_ant,'. ',antenna(i_ant).name)

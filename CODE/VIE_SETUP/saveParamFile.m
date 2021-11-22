@@ -207,7 +207,32 @@ else % external file was chosen
 end
 
 % load orbit data file
+
+if get(handles.radiobtn_sp3,'Value') == 1
+    orbit_file_name_path_str = get(handles.input_models_sc_sp3_file,'String');
+    orbit_file_type       = 'sp3';
+else
+    orbit_file_name_path_str = get(handles.input_models_sc_ephem_file,'String');
+    orbit_file_type       = 'sat_ephem_trf';
+end
+
+if ~isempty(orbit_file_name_path_str)
+    if ~strcmp(orbit_file_name_path_str, ' ')
+        parameter.vie_init.sc_orbit_file_path_name  = orbit_file_name_path_str;
+        parameter.vie_init.sc_orbit_file_type       = orbit_file_type;
+    else
+        parameter.vie_init.sc_orbit_file_path_name  = '';
+        parameter.vie_init.sc_orbit_file_type       = '';
+    end
+else
+    parameter.vie_init.sc_orbit_file_path_name  = '';
+    parameter.vie_init.sc_orbit_file_type       = '';
+end
+
+
+%{
 sp3_file_name_path_str = get(handles.edit_models_sc_sp3_file,'String');
+
 if ~isempty(sp3_file_name_path_str)
     if ~strcmp(sp3_file_name_path_str, ' ')
         parameter.vie_init.sc_orbit_file_path_name  = sp3_file_name_path_str;
@@ -220,7 +245,7 @@ else
     parameter.vie_init.sc_orbit_file_path_name  = '';
     parameter.vie_init.sc_orbit_file_type       = '';
 end
-
+%}
 
 % VIE_MOD
 % =========================

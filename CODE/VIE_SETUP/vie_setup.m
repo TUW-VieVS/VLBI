@@ -1952,8 +1952,102 @@ if ischar(FileName) && ischar(PathName)
     % save parameter file automatically 
     auto_save_parameterfile(hObject, handles)
 end
+
+
+
+% --- Executes on button press in pushbutton_browse_sp3_file.
+function pushbutton_browse_sp3_file_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_browse_sp3_file (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Select Sp3 file:
+[FileName, PathName] = uigetfile('*.*','Select SP3 file', '../ORBIT/SP3', 'multiselect', 'off');
+
+if ischar(FileName) && ischar(PathName)
+    set(handles.input_models_sc_sp3_file, 'String', [PathName, FileName])
+    % save parameter file automatically 
+    auto_save_parameterfile(hObject, handles)
+end
+
+
+% --- Executes on button press in pushbutton_browse_ephem_file.
+function pushbutton_browse_ephem_file_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_browse_ephem_file (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Select Sp3 file:
+[FileName, PathName] = uigetfile('*.*','Select SP3 file', '../ORBIT/SAT_EPHEM_TRF', 'multiselect', 'off');
+
+if ischar(FileName) && ischar(PathName)
+    set(handles.input_models_sc_ephem_file, 'String', [PathName, FileName])
+    % save parameter file automatically 
+    auto_save_parameterfile(hObject, handles)
+end
+
+% --- Executes when selected object is changed in uibuttongroup_sp3_ephem_file.
+function uibuttongroup_sp3_ephem_file_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uibuttongroup_sp3_ephem_file 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+switch get(hObject, 'Tag')
+    case 'radiobtn_sp3'
+        set(handles.input_models_sc_ephem_file, 'Enable', 'off')
+        set(handles.input_models_sc_ephem_file, 'String', '')
+        set(handles.pushbutton_browse_ephem_file, 'Enable', 'off')
+        set(handles.input_models_sc_sp3_file, 'Enable', 'on')
+        set(handles.pushbutton_browse_sp3_file, 'Enable', 'on')
+    otherwise
+        set(handles.input_models_sc_sp3_file, 'Enable', 'off')
+        set(handles.input_models_sc_sp3_file, 'String', '')
+        set(handles.pushbutton_browse_sp3_file, 'Enable', 'off')
+        set(handles.input_models_sc_ephem_file, 'Enable', 'on')
+        set(handles.pushbutton_browse_ephem_file, 'Enable', 'on')
+end
+
+   
     
-    
+% --- Executes on button press in radiobtn_sp3_Callback.
+function radiobtn_sp3_Callback(hObject, eventdata, handles)
+%set(handles.input_sc_ephem_file,'Enable','off')
+%set(handles.pushbutton_browse_sc_ephem_file,'Enable','off')
+
+% --- Executes on button press in radiobtn_ephem_Callback.
+function radiobtn_ephem_Callback(hObject, eventdata, handles)
+%set(handles.input_sc_ephem_file,'Enable','off')
+%set(handles.pushbutton_browse_sc_ephem_file,'Enable','off')
+
+
+
+
+function input_models_sc_sp3_file_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_models_sc_sp3_file (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+function input_models_sc_sp3_file_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_models_sc_sp3_file (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+function input_models_sc_ephem_file_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_models_sc_sp3_file (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+function input_models_sc_ephem_file_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_models_sc_sp3_file (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
 
 function edit_models_sc_sp3_file_Callback(hObject, eventdata, handles)
 % hObject    handle to edit_models_sc_sp3_file (see GCBO)
@@ -3779,7 +3873,7 @@ else % == 1; Checkbox enabled
 
 end
 % save parameter file automatically 
-auto_save_parameterfile(hObject, handles) 
+auto_save_parameterfile(hObject, handles)
 
 % --- Executes on button press in checkbox_estimation_leastSquares_sources_ICRF2_def.
 function checkbox_estimation_leastSquares_sources_ICRF2_def_Callback(hObject, eventdata, handles)
@@ -5836,7 +5930,7 @@ function popupmenu_plot_residuals_source_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
- 
+
 
 % --------------------------------------------------------------------
 function menu_plotting_parameters_Callback(hObject, eventdata, handles)
@@ -6536,7 +6630,7 @@ else
     end
     
      
-end 
+end
 
 
 
