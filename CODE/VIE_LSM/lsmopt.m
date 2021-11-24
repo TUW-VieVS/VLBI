@@ -110,8 +110,8 @@ opt.firstclock = opt.firstclock;     % 0 only one offset per station
 % the clock values found here are used to correct the observations
 % clock breaks can be found if residuals per station are plotted
 
-opt.treat_breaks = opt.treat_breaks; % 0 not take clock breaks in to account in the first solution 
-                                     % 1 take clock breaks in to account in the firstsolution 
+opt.treat_breaks = opt.treat_breaks; % 0 not take clock breaks into account in the first solution 
+                                     % 1 take clock breaks into account in the firstsolution 
 
 % ------------------------------
 % --- second (main) solution ---
@@ -130,7 +130,7 @@ opt.pw_clk = opt.pw_clk;     % 0 no clocks estimated
                              % 2 one rate per session in addition to pwl clock offsets 
                              % 3 one squared rate per station in addition to (2) 
                         
-    % case 1,2,3 constraints between clock offsets
+% case 1,2,3 constraints between clock offsets
     opt.constr_clk = opt.constr_clk ;     % 1 with constraints 
                                           % 0 no constraints 
                              
@@ -201,7 +201,7 @@ opt.pw_sou = opt.pw_sou;      % 0 not estimate coordinates of source's (piecewis
 % ---                           
 % source coordinates (satellites)
 % how to estimate satellite coordinates 
-opt.pw_sat = 0; % This will be set in the GUI in future
+opt.pw_sat = 1; % This will be set in the GUI in future
 opt.pw_sat = opt.pw_sat;      % 1 Estimate satellite coordinates as PWL offsets, flag
                               % 0 Do not estimate satellite coordinates as PWL offsets, flag
                               
@@ -216,8 +216,7 @@ opt.pw_sat = opt.pw_sat;      % 1 Estimate satellite coordinates as PWL offsets,
                                         % => Used to select suitable partial derivatives (calculated in vie_mod.m) in satellitewisepar.m
                                         % Options: 'gcrf, 'trf', 'rsw'
                                          
-                                         
-                                         
+                                                                             
 % ---                            
 % in future there will be the possibility to read the following
 % station-dependent information from a station master file
@@ -263,7 +262,7 @@ end
 if opt.stc == 0
     opt.nnt_stc = 0;
 elseif opt.stc == 1 && opt.nnt_stc == 0
-        opt.nnt_stc = 1;
+    opt.nnt_stc = 1;
 end
            
 % Boehm 19 August 2009 (Excluding station from NNT/NNR)

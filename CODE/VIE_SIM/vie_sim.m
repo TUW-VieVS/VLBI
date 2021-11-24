@@ -73,17 +73,13 @@ if ~exist('../DATA/LEVEL4','dir')
     mkdir('../DATA/LEVEL4');
 end
 
-% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-%  SET PATHS/NAMES OF .MAT-FILES and load files
-% disp ' loading files...'
-% pfile=[dirpt '/' session] %#ok<NOPRT>
+
+disp ' loading sim files...'
 pfile1='../DATA/LEVEL4/';
 load ([pfile1 'simparam.mat'],'simparam');
-% disp ' data successfully loaded'
-% disp '    '
-% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-fprintf('##### Simulating session %s for %d days #####\n', session, simparam.idays)
+disp '... done.'
 
+fprintf('##### Simulating session %s for %d days #####\n', session, simparam.idays)
 
 % Initialize random number generator:
 if simparam.rng_use_seed % Use the seed defined in the GUI to initialize the random number generator
@@ -99,7 +95,6 @@ end
 % ##### Output options #####
 flag_write_ngs_file = simparam.ngs;
 flag_write_vso_file = simparam.write_vso;
-
 
 % number of scans
 nscan = length(scan);
@@ -180,10 +175,7 @@ end
 sim = struct;
 cov = struct;
 for i = 1:nant
-    % + 21 Jun 2011, A.Pany
     sim(i).name = antenna(i).name;
-    % - A. Pany
-    
     
     % ##### Simulate station clock #####
     if (tfil_used_falg == 1) && (sclk == 1)
@@ -195,7 +187,6 @@ for i = 1:nant
     else
         sim(i).clk = zeros(length(azel(i).mjd),sim_idays);
     end
-    
     
     % ##### Simulate troposphere slant wet delay #####
     if (tfil_used_falg == 1) && (sswd == 1)
@@ -216,16 +207,14 @@ for i = 1:nant
     cov(i).cov = cv;
 end
 
-
 % ##### Simulate White Noise #####
 % simulate white noise to be added to the baseline observations
 obs = [scan.obs];               % Extract obs. sub-structures
 nbslobs = length([obs.obs]);    % Number of baseline observations
 
 % shall white noise be simulated?
-if swn == 1
-    
-    % Check, wich observations types should be simulated:
+if swn == 1 
+    % Check, which observations types should be simulated:
     if isempty(sources.q)
         flag_sim_quasar_obs = false;
     else
@@ -238,13 +227,13 @@ if swn == 1
     end
     
     % Get obs inidices for obs types:
-    if flag_sim_quasar_obs && ~flag_sim_satellite_obs % Only quasar obs
+    if flag_sim_quasar_obs && ~flag_sim_satellite_obs     % Only quasar obs
         ind_q_obs = true(nbslobs, 1);
         ind_s_obs = false(nbslobs, 1);
     elseif ~flag_sim_quasar_obs && flag_sim_satellite_obs % Only sat obs
         ind_s_obs = true(nbslobs, 1);
         ind_q_obs = false(nbslobs, 1);
-    else % quasar ans sat obs
+    else % quasar and sat obs
         ind_s_obs = false(nbslobs, 1);
         ind_q_obs = false(nbslobs, 1);
         % Loop over scans
@@ -261,7 +250,6 @@ if swn == 1
         end
     end
 
-    
     % yes
     wnoise = simparam1(1).wn;
     if isfield(simparam1(1), 'wn_sat')
@@ -279,7 +267,7 @@ else
     wnoise = 0;
 end
 
-% set reference clock to zero if specified in the gui
+% set reference clock to zero if specified in the GUI
 if ref0 == 1
     [rr,cc] = size(sim(1).clk);
     rclk = zeros(rr,cc);
@@ -298,10 +286,9 @@ if flag_sim_quasar_obs
         case 0
             disp '    '
             disp '    not simulating white noise per baseline observation (set to zero for all observations)(quasars)'
-            % wn(ind_q_obs, :) = zeros(wnoise, sum(ind_q_obs),sim_idays);
         case 999
             disp '    '
-            disp '    take the uncertaintiers from the input file (NGS, etc) as basis for the simulation of white noise (quasars)'
+            disp '    take the uncertainties from the input file (NGS, etc) as basis for the simulation of white noise (quasars)'
             sig(:,1) = [obs(ind_q_obs).sig]';
             for i_d = 1 : sim_idays
                 wn(ind_q_obs, i_d) = randn(sum(ind_q_obs), 1) .* sig;
@@ -319,7 +306,6 @@ if flag_sim_satellite_obs
         case 0
             disp '    '
             disp '    not simulating white noise per baseline observation (set to zero for all observations)(satellites)'
-            % wn(ind_s_obs, :) = zeros(sum(ind_s_obs), sim_idays);
         case 999
             disp '    '
             disp '    take the uncertaintiers from the input file (NGS, etc) as basis for the simulation of white noise (satellites)'
@@ -337,17 +323,14 @@ end
 % Save wn values:
 sim(1).wn = wn;
 
-
 % ##### Simulate source structure #####
 if ssou == 1
-    disp 'sim sou'
+    disp 'sim source structure'
     % read in catalogue
     filename_sou_cat=strcat(['../CRF/SOURCE_STRUCTURE_CAT/',sou_cat]);
     [cat_comp.name,cat_comp.flux,cat_comp.maj,cat_comp.min,cat_comp.angle,cat_comp.dRA,cat_comp.dDec]=textread(filename_sou_cat,'%s%f%f%f%f%f%f','delimiter',',');
     sim(1).soustruccat= filename_sou_cat;
 end
-
-
 
 % ##### Compute simulated baseline delay observables #####
 
@@ -422,7 +405,6 @@ else
                         scan(i).obs(j).sig = wnoise_sat * 1e-12; % [s]
                 end 
             end
-            
         end
     end
 end
@@ -510,11 +492,10 @@ disp 'saving simulated data...'
 %     end
 % end
 
-% ##### Write output #####
+% ##### OUTPUT #####
 
 % ### write NGS files ###
 if (flag_write_ngs_file == 1)     
-    % Write warning to CW, if a NGS file is written with simulated satellite observations 
     if flag_sim_satellite_obs
        fprintf('WARNING: Session %s contains observations to satellites. The NGS format is not suitable for this observation type!\n', session) 
     end
@@ -566,7 +547,6 @@ if isempty(dirpt0)
 else
     sdir = ['../SIM/', dirpt0, '/',num2str(parameter.year)];
 end
-
 
 antenna(1).ngsfile = [];
 antenna(1).session = [];

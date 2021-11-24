@@ -42,7 +42,7 @@ n_obs_in_int_list  = zeros(n_unk.sat, 1);
 
 % Loop over all estimation intervals:
 for i_inter = 1 : n_unk.sat
-    n_obs_in_int = 0; % number of observations to the curretn target within the estimation interval with index "i_inter"
+    n_obs_in_int = 0; % number of observations to the current target within the estimation interval with index "i_inter"
     
     % Loop over all observations to this satellite:
     for i_obs = 1 : per_satellite.total
@@ -62,7 +62,6 @@ k = 0;
 
 % Loop over all estimation intervals:
 for i_inter = 1 : n_unk.sat
-    
     % Loop over all observations to the target within the estimation interval with index "i_inter"
     for i_obs = 1 : n_obs_in_int_list(i_inter) % number of obs. of the source in an estimation interval
         k = k + 1;

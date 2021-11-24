@@ -719,7 +719,6 @@ if ~isempty(process_list)
                                 exist([fil '_scan.mat'], 'file')&&...
                                 exist([fil '_antenna.mat'], 'file')&&...
                                 exist([fil '_sources.mat'], 'file'))
-
                             if ~runp.mod
                                 tmp=load([fil '_parameter.mat']);
                                 parameter.vie_init=tmp.parameter.vie_init;

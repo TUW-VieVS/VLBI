@@ -303,18 +303,13 @@ switch(parameter.data_type)
         
         fprintf(' => Start reading %s\n',obs_file_name);
         if isnan(str2double(obs_file_name(1))) % if first element in ngsfile is character - absolute path of NGS file is given
-            [antenna,sources,scan] = read_ngs(obs_file_name, trffile, crffile, ini_opt, trf, crf);
+            %[antenna,sources,scan] = read_ngs(obs_file_name, trffile, crffile, ini_opt, trf, crf);
+            [antenna,sources,scan] = read_ngs(obs_file_name, trffile, crffile, ini_opt, trf, crf,sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type);
         else
-            [antenna,sources,scan] = read_ngs(['../DATA/' obs_file_dir '/' obs_file_name], trffile, crffile, ini_opt, trf, crf);
+            %[antenna,sources,scan] = read_ngs(['../DATA/' obs_file_dir '/' obs_file_name], trffile, crffile, ini_opt, trf, crf);
+            [antenna,sources,scan] = read_ngs(['../DATA/' obs_file_dir '/' obs_file_name], trffile, crffile, ini_opt, trf, crf,sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type);
         end
-        fprintf('...reading the NGS file finished!\n');
-        
-        % Create a sub-structure in "sources" for quasars sources:
-        q = sources;
-        clear sources
-        sources.q   = q;
-        sources.s 	= [];
-        
+        fprintf('...reading the NGS file finished!\n');      
 
     % #############################
     % #####     VSO           #####

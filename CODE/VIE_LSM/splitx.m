@@ -489,7 +489,6 @@ x_.sat_pos3(ns_s_tmp).mjd   = [];
 x_.sat_pos3(ns_s_tmp).mx    = [];
 x_.sat_pos3(ns_s_tmp).col   = [];
 
-
 if opt.pw_sat == 1
     sum_sat = 0;  % Sum of satelite pos estimates
     i_sat_2 = 0;  % sat index
