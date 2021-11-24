@@ -15,7 +15,7 @@ function [RQ,DRQDRA,DRQDDE] = sourcevec(decl,ra)
 
       RQ(:,1) = COD.* COR;           % cos(de) cos(ra)
       RQ(:,2) = COD.* SIR;           % cos(de) sin(ra)
-      RQ(:,3) = SID;                 %     sin(de) 
+      RQ(:,3) = SID;                 % sin(de) 
      
       DRQDRA(:,1) = -COD.* SIR;
       DRQDRA(:,2) =  COD.* COR;

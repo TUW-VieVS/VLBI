@@ -221,12 +221,7 @@ if vso_format == 0
     end
     
     frewind(fid_vso);
-
-    % vso_data = textscan(fid_vso, '%d %d %d %d %d %f %s %s %s %s %f', 'CommentStyle', '#');
-    % vso_data = textscan(fid_vso, '%f %f %f %f %f %f %s %s %s %s %f', 'CommentStyle', '#');
-    % vso_data = textscan(fid_vso, '%f %f %f %f %f %f %s %s %s %s %f %f %f %f', 'CommentStyle', '#');
     vso_data = textscan(fid_vso, '%f %f %f %f %f %f %s %s %s %s %f %f %f %f %f %f %f %f %f %f %f %f', 'CommentStyle', '#');
-    
     
 elseif vso_format == 4
     fprintf(1, '\n');
@@ -306,7 +301,6 @@ number_of_all_obs   = length(year);
 if sum(strcmp(obs_type_str, 'q') | strcmp(obs_type_str, 's')) ~= number_of_all_obs
     error('Invalid entries for "obs_type_str" in input VSO file!');
 end
-
 
 % Convert epochs to MJD:
 % mjd = juliandate([year, mon, day, hour, minu, sec]) -  2400000.5;
@@ -614,8 +608,7 @@ for i_src = 1 : number_of_remaining_sources
     % Distinguish between quasar and satellite scan:
     switch(source_type_str{i_src})
 
-        case 'q' % quasar
-            
+        case 'q' % quasar      
             i_quasar = i_quasar + 1;
             quasar_name_list{i_quasar} = source_name;
             
@@ -739,7 +732,7 @@ if ~isempty(sources.s)
                 [sources.s.orbit_file_type] = deal('sp3');
                 
             case 'sat_ephem_trf'
-                % Read sate emphemeris file with ITRF positions (and velocities) and writ data to orbiot_data strucutre
+                % Read sate emphemeris file with ITRF positions (and velocities) and writ data to orbit_data strucutre
                 [orbit_data] = read_sat_ephem_trf(sat_orbit_file_path, sat_orbit_file_name);
                 [sources.s.orbit_file_type] = deal('sat_ephem_trf');
 

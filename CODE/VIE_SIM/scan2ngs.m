@@ -57,8 +57,7 @@
 
 function scan2ngs(session,antenna,scan,sources,yr,zinp,sind,nday,dirpt0)
 tic
-% check if SIM directory in DATA directory exists and create it if it
-% doesn't
+% check if SIM directory in DATA directory exists and create if not
 if isempty(dirpt0)
     if ~isdir(['../DATA/SIM/', num2str(yr)])
         mkdir(['../DATA/SIM/' , num2str(yr)]);
@@ -115,7 +114,6 @@ for iday = 1:nday
         end
         line = ([antenna(i).name,'  ',xx,yy,zz,' ',axtyp,oo]);
         fprintf(fid2,'%s\n',line);
-        
     end
     fprintf(fid2,'%s\n','$END');
     
