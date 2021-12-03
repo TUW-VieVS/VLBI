@@ -125,6 +125,7 @@ function varargout = vie_setup(varargin)
 % 06 Mar 2019 by D. Landskron: suffix checkbox added to the sinex files
 % 15 Jan 2020 by M. Mikschi: added gravitational deformation checkbox
 % 27 Oct 2021 by H. Wolf: removed VIE_SCHED module
+% 12 Dec 2021 by H. Wolf: added satellite position estimation panel + all needed functions 
 %
 %*************************************************************************
 
@@ -184,6 +185,7 @@ allMainUiPanels=[handles.uipanel_file_setInputFiles, ...
     handles.uipanel_estimation_leastSquares_clock,...
     handles.uipanel_estimation_leastSquares_eop,...
     handles.uipanel_estimation_leastSquares_stationCoordinates,...
+    handles.uipanel_estimation_leastSquares_satellitePosition,... 
     handles.uipanel_estimation_leastSquares,...
     handles.uipanel_run_sinexOutput,...
     handles.uipanel_run_runOptions,...
@@ -356,6 +358,8 @@ set(handles.popupmenu_plot_sessionAnalysis_subfolder3, 'String', ['/', {dirsInDa
 set(handles.popupmenu_plot_sessionAnalysis_subfolder4, 'String', ['/', {dirsInDataFolder.name}])
 set(handles.popupmenu_plot_eopOut_subfolder, 'String', ['/', {dirsInDataFolder.name}])
 
+set(handles.popupMenu_refFrameSatellitePosition, 'String', {'rsw', 'trf', 'gcrf'})
+
 if isempty(dirsInWorkPlFolder)
     set(handles.popupmenu_plot_eopOut_pl, 'String', ' ')
 else
@@ -425,6 +429,7 @@ else
     set(handles.listbox_vie_sim_ss, 'String', {dirsInSoucatFolder.name});
     set(handles.popupmenu_parameters_ss_catalog, 'String', {dirsInSoucatFolder.name});
 end
+
 %if isempty(dirsInStatlistFolder)
 %    set(handles.listbox_vie_sched_prenet, 'String', ' ')
 %else
@@ -2466,6 +2471,108 @@ set(handles.uipanel_estimation_leastSquares, 'Visible', 'On');
 % Update handles structure
 guidata(hObject, handles);
 
+
+% --------------------------------------------------------------------
+function menu_estimation_leastSquares_SatellitePosition_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_estimation_leastSquares_SatellitePosition (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_estimation_leastSquares_satellitePosition, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+% --------------------------------------------------------------------
+function relativeConstraintsSatellitePositionValue_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to relativeConstraintsSatellitePositionValue (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function relativeConstraintsSatellitePositionValue_Callback(hObject, eventdata, handles)
+% hObject    handle to relativeConstraintsSatellitePositionValue (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+auto_save_parameterfile(hObject, handles)
+
+% --------------------------------------------------------------------
+function estimationIntervalSatellitePositionValue_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to estimationIntervalSatellitePositionValue (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function estimationIntervalSatellitePositionValue_Callback(hObject, eventdata, handles)
+% hObject    handle to estimationIntervalSatellitePositionValue (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+auto_save_parameterfile(hObject, handles)
+
+
+
+% --------------------------------------------------------------------
+function checkBox_estimateSatellitePosition_Callback(hObject, eventdata, handles)
+% hObject    handle to checkBox_estimateSatellitePosition (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_clocks
+if get(hObject, 'Value') == 1
+    set(handles.estimationIntervalSatellitePositionString, 'Enable', 'on');
+    set(handles.estimationIntervalSatellitePositionValue, 'Enable', 'on');
+    set(handles.refFrameSatellitePositionString, 'Enable', 'on');
+    set(handles.popupMenu_refFrameSatellitePosition, 'Enable', 'on');
+    set(handles.checkBox_relativeConstraintsSatellitePosition, 'Enable', 'on');
+    
+    if get(handles.checkBox_relativeConstraintsSatellitePosition, 'Value') == 1
+        set(handles.relativeConstraintsSatellitePositionString, 'Enable', 'on');
+        set(handles.relativeConstraintsSatellitePositionValue, 'Enable', 'on');
+    else
+        set(handles.relativeConstraintsSatellitePositionString, 'Enable', 'off');
+        set(handles.relativeConstraintsSatellitePositionValue, 'Enable', 'off');
+    end   
+else
+    set(handles.estimationIntervalSatellitePositionString, 'Enable', 'off');
+    set(handles.estimationIntervalSatellitePositionValue, 'Enable', 'off');
+    set(handles.refFrameSatellitePositionString, 'Enable', 'off');
+    set(handles.popupMenu_refFrameSatellitePosition, 'Enable', 'off');
+    set(handles.checkBox_relativeConstraintsSatellitePosition, 'Enable', 'off');
+    set(handles.relativeConstraintsSatellitePositionString, 'Enable', 'off');
+    set(handles.relativeConstraintsSatellitePositionValue, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+% --------------------------------------------------------------------
+function checkBox_relativeConstraintsSatellitePosition_Callback(hObject, eventdata, handles)
+% hObject    handle to checkBox_relativeConstraintsSatellitePosition (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_clocks
+if get(hObject, 'Value') == 1
+    set(handles.relativeConstraintsSatellitePositionString, 'Enable', 'on');
+    set(handles.relativeConstraintsSatellitePositionValue, 'Enable', 'on');
+else
+    set(handles.relativeConstraintsSatellitePositionString, 'Enable', 'off');
+    set(handles.relativeConstraintsSatellitePositionValue, 'Enable', 'off'); 
+end
+auto_save_parameterfile(hObject, handles)
+
+% --------------------------------------------------------------------
+function popupMenu_refFrameSatellitePosition_Callback(hObject, eventdata, handles)
+% hObject    handle to popupMenu_refFrameSatellitePosition (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+auto_save_parameterfile(hObject, handles)
+
+    
 % --- Executes on button press in checkbox_estimation_leastSquares_clocks.
 function checkbox_estimation_leastSquares_clocks_Callback(hObject, eventdata, handles)
 % hObject    handle to checkbox_estimation_leastSquares_clocks (see GCBO)

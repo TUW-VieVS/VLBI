@@ -76,6 +76,7 @@
 %   28 Feb 2017 by A. Hellerschmied: station/source-wise parameterization revised
 %   01 Mar 2017 by A. Hellerschmied: Now it is checked if OPT file information is available in the parameter structure
 %   03 May 2017 by A. Hellerschmied: Adoptions for estimation of satellite positions (pwl offsets)
+%   02 Dec 2021 by H. Wolf: estimation of satellite position settings will be taken from GUI
 % ************************************************************************
 function [opt] = lsmopt(antenna, sources, na, ns_q, ns_s, obs_per_source, obs_per_satellite, parameter, opt)
 
@@ -130,7 +131,7 @@ opt.pw_clk = opt.pw_clk;     % 0 no clocks estimated
                              % 2 one rate per session in addition to pwl clock offsets 
                              % 3 one squared rate per station in addition to (2) 
                         
-% case 1,2,3 constraints between clock offsets
+    % case 1,2,3 constraints between clock offsets
     opt.constr_clk = opt.constr_clk ;     % 1 with constraints 
                                           % 0 no constraints 
                              
@@ -140,29 +141,29 @@ opt.pw_zwd = opt.pw_zwd;         % 0 no zwd estimated
                                  % 1 zenith wet delays estimated as pwl offsets
     % case 1 constraints between zenith delays
     opt.constr_zwd = opt.constr_zwd;     % 1 with constraints between zenith delays 
-                                         % 0 no constraints between zd 
+                                     % 0 no constraints between zd 
                             
 % ---                            
 % north gradients
 opt.pw_ngr = opt.pw_ngr;         % 0 no ngr estimated 
                                  % 1 ngr estimated as pwl offsets 
     % case 1 constraints between north gradients
-opt.constr_rel_ngr = opt.constr_rel_ngr;   % 1 with relative constraints between north gradients 
-                                           % 0 no relative constraints between north gradients 
+    opt.constr_rel_ngr = opt.constr_rel_ngr;   % 1 with relative constraints between north gradients 
+                                               % 0 no relative constraints between north gradients 
                                          
     
-opt.constr_abs_ngr = opt.constr_abs_ngr;  % absolute constraints between north gradients 
+    opt.constr_abs_ngr = opt.constr_abs_ngr;  % absolute constraints between north gradients 
                             
 % ---                            
 % east gradients
 opt.pw_egr = opt.pw_egr;         % 0 no egr estimated 
                                  % 1 egr estimated as pwl offsets
     % case 1 constraints between east gradients
-opt.constr_rel_egr = opt.constr_rel_egr;    % 1 with relative constraints between east gradients 
+    opt.constr_rel_egr = opt.constr_rel_egr;    % 1 with relative constraints between east gradients 
                                             % 0 no relative constraints between east gradients 
                                          
     
-opt.constr_abs_egr = opt.constr_abs_egr;  % absolute constraints between east gradients 
+    opt.constr_abs_egr = opt.constr_abs_egr;  % absolute constraints between east gradients 
                             
 % ---        
 % station coordinates                    
@@ -201,22 +202,24 @@ opt.pw_sou = opt.pw_sou;      % 0 not estimate coordinates of source's (piecewis
 % ---                           
 % source coordinates (satellites)
 % how to estimate satellite coordinates 
-opt.pw_sat = 1; % This will be set in the GUI in future
+
 opt.pw_sat = opt.pw_sat;      % 1 Estimate satellite coordinates as PWL offsets, flag
                               % 0 Do not estimate satellite coordinates as PWL offsets, flag
-                              
-    opt.constr_sat = 1; % This will be set in the GUI in future
+
+% Estimation interval for PWL offsets [minutes]                                    
+opt.sat_pos_int     = opt.sat_pos_int; 
+    
     opt.constr_sat = opt.constr_sat;    % 1 constraints between pwl source coordinates offsets, flag 
                                         % 0 no constraints between pwl, flag
-                                         
-    opt.sat_pos_int     = 30;         % Estimation interval for PWL offsets [minutes] (Will be set in the GUI in future!)
-    opt.sat_pos_coef    = 1;         % Relative constraint between PWL offsets [cm] (Will be set in the GUI in future!)
-    
-    opt.sat_pos_est_ref_frame = 'rsw'; % Definition of the reference frame in which the satellite positions will be estimated (Will be set in the GUI in future!)
-                                        % => Used to select suitable partial derivatives (calculated in vie_mod.m) in satellitewisepar.m
-                                        % Options: 'gcrf, 'trf', 'rsw'
-                                         
-                                                                             
+
+    % Relative constraint between PWL offsets [cm]
+    opt.sat_pos_coef    = opt.sat_pos_coef;  
+
+% Definition of the reference frame in which the satellite positions will be estimated
+% => Used to select suitable partial derivatives (calculated in vie_mod.m) in satellitewisepar.m
+% Options: 'gcrf, 'trf', 'rsw'
+opt.sat_pos_est_ref_frame = opt.sat_pos_est_ref_frame;  
+                                                                                                                     
 % ---                            
 % in future there will be the possibility to read the following
 % station-dependent information from a station master file

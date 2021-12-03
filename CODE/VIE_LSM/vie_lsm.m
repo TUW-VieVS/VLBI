@@ -166,6 +166,8 @@
 %                                    - Some minor general revisions were done
 %   21 Sep 2017 by H. Krasna: bugs corrected which appeared after the implemenation of satellite positions update w.r.t. global solution
 %   06 Mar 2019 by D. Landskron: suffix checkbox added to the sinex files
+%   02 Dec 2021 by H.Wolf: small bugfix of calculation of parameter sigma_residuals_aposteriori - it now works also for simulations for a
+%                          higher number of days 
 % ************************************************************************
 
 function vie_lsm(antenna, sources, scan, parameter, dirpth, dirpthL2)
@@ -894,7 +896,7 @@ clear Apw_ra Apw_de Ara Ade a
 % FORMING DESIGN MATRICES FOR SATELLITE COORDINATES
 
 number_pwlo_per_sat = 0;
-opt.pw_sat = 1;
+
 % If estimation of PWL offsets for satellite positions was selected
 if opt.pw_sat
     % loop over all satellites
@@ -916,7 +918,7 @@ if opt.pw_sat
         A(16).sm = horzcat(A(16).sm, a(i_sat).pos1);   % design matrix for satellote coord. 1
     	A(17).sm = horzcat(A(17).sm, a(i_sat).pos2);   % design matrix for satellote coord. 2
         A(18).sm = horzcat(A(18).sm, a(i_sat).pos3);   % design matrix for satellote coord. 2
-
+        
     end % for i_sat = 1 : ns_s
 end % if opt.pw_sat
 
@@ -1209,8 +1211,8 @@ if ess == 1 % +hana 10Nov10
     Qll = inv(Pobserv(1:n_observ,1:n_observ));
     Qlldach = A(1:n_observ,:)*Qxx*A(1:n_observ,:)';
     Qvv = Qll-Qlldach;
-    Cvv=mo^2*Qvv; 
-    sigma_residuals_aposteriori = sqrt(diag(Cvv));
+    Cvv = mo.^2 .* diag(Qvv);
+    sigma_residuals_aposteriori = sqrt(Cvv);
 
     % Outlier test begins here
     % DETECTING OUTLIER
@@ -1356,7 +1358,7 @@ if ess == 1 % +hana 10Nov10
     fprintf('total number of estimated parameters:         %4d\n',sum_dj(end));
     fprintf('---------------------------------------------------------\n');
 
-    
+      
     [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, number_pwlo_per_sat, ebsl_bdco);
     x_.mo = mo;
     x_.mo_first = first_solution.mo;
@@ -1366,7 +1368,7 @@ if ess == 1 % +hana 10Nov10
     x_.units.m02 = 'WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights) [cm]';
     x_.nobs = n_observ;
     x_.nscans = n_scan;
-
+    
     res.mo = mo;
     res.mo_first = first_solution.mo;
     res.units.mo = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';

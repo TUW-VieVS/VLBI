@@ -48,6 +48,7 @@
 %   2018-07-06, D. Landskron: VMF3 added to the troposphere models 
 %   2018-11-29, D. Landskron: structure of observation restrictions standardized
 %   2018-03-06, D. Landskron: suffix checkbox added to the sinex files
+%   2021-12-02, H. Wolf: lsm options for satellite position estimation are now taken from GUI settings
 
 function saveParamFile(hObject, handles, fullOutName)
 
@@ -692,9 +693,21 @@ else
 end
 
 
+% Satellite Position
 
-
-
+parameter.lsmopt.pw_sat = get(handles.checkBox_estimateSatellitePosition, 'Value'); % 1 Estimate satellite coordinates as PWL offsets, flag
+                                                                                    % 0 Do not estimate satellite coordinates as PWL offsets, flag
+parameter.lsmopt.sat_pos_int     = str2double(get(handles.estimationIntervalSatellitePositionValue, 'String'));       % Estimation interval for PWL offsets [minutes] (Will be set in the GUI in future!)
+    
+allRefFrames = get(handles.popupMenu_refFrameSatellitePosition, 'String');
+parameter.lsmopt.sat_pos_est_ref_frame = allRefFrames{get(handles.popupMenu_refFrameSatellitePosition, 'Value')}; % Definition of the reference frame in which the satellite positions will be estimated (Will be set in the GUI in future!)
+                                                                                                                      % => Used to select suitable partial derivatives (calculated in vie_mod.m) in satellitewisepar.m
+                                                                                                                      % Options: 'gcrf, 'trf', 'rsw'    
+parameter.lsmopt.constr_sat = get(handles.checkBox_relativeConstraintsSatellitePosition, 'Value');  % 1 constraints between pwl source coordinates offsets, flag 
+                                                                                                    % 0 no constraints between pwl, flag
+parameter.lsmopt.sat_pos_coef    = str2double(get(handles.relativeConstraintsSatellitePositionValue, 'String'));         % Relative constraint between PWL offsets [cm] (Will be set in the GUI in future!)       
+    
+                                        
 % prepare N and b for global solution
 parameter.lsmopt.global_solve=get(handles.checkbox_run_prepareGlobParam, 'Value');
 parameter.lsmopt.est_vel=get(handles.checkbox_run_globalPram_statVel, 'Value');

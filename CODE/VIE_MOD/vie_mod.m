@@ -158,6 +158,7 @@
 %   05 Jul 2018 by D. Landskron: vm1 renamed to vmf1 and VMF3 added to the troposphere models 
 %   27 Jul 2019 by D. Landskron: zwet parameter added to scan structure
 %   15 Jan 2020 by M. Mikschi: gravitational deformation correction added
+%   25 Nov 2021 by H. Wolf: created some external functions 
 %
 % ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %  NOTATION:
