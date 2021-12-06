@@ -308,7 +308,7 @@ if flag_sim_satellite_obs
             disp '    not simulating white noise per baseline observation (set to zero for all observations)(satellites)'
         case 999
             disp '    '
-            disp '    take the uncertaintiers from the input file (NGS, etc) as basis for the simulation of white noise (satellites)'
+            disp '    take the uncertainties from the input file (NGS, etc) as basis for the simulation of white noise (satellites)'
             sig(:,1) = [obs(ind_s_obs).sig]';
             for i_d = 1 : sim_idays
                 wn(ind_s_obs, i_d) = randn(sum(ind_s_obs), 1) .* sig;
