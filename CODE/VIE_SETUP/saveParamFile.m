@@ -213,8 +213,8 @@ if get(handles.radiobtn_sp3,'Value') == 1
     orbit_file_name_path_str = get(handles.input_models_sc_sp3_file,'String');
     orbit_file_type       = 'sp3';
 else
-    orbit_file_name_path_str = get(handles.input_models_sc_ephem_file,'String');
-    orbit_file_type       = 'sat_ephem_trf';
+    orbit_file_name_path_str = get(handles.input_models_sc_tle_file,'String');
+    orbit_file_type       = 'tle';
 end
 
 if ~isempty(orbit_file_name_path_str)

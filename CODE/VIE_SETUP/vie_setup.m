@@ -1976,17 +1976,17 @@ if ischar(FileName) && ischar(PathName)
 end
 
 
-% --- Executes on button press in pushbutton_browse_ephem_file.
-function pushbutton_browse_ephem_file_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_browse_ephem_file (see GCBO)
+% --- Executes on button press in pushbutton_browse_tle_file.
+function pushbutton_browse_tle_file_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_browse_tle_file (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 % Select Sp3 file:
-[FileName, PathName] = uigetfile('*.*','Select SP3 file', '../ORBIT/SAT_EPHEM_TRF', 'multiselect', 'off');
+[FileName, PathName] = uigetfile('*.*','Select TLE file', '../ORBIT/TLE', 'multiselect', 'off');
 
 if ischar(FileName) && ischar(PathName)
-    set(handles.input_models_sc_ephem_file, 'String', [PathName, FileName])
+    set(handles.input_models_sc_tle_file, 'String', [PathName, FileName])
     % save parameter file automatically 
     auto_save_parameterfile(hObject, handles)
 end
@@ -2002,17 +2002,17 @@ function uibuttongroup_sp3_ephem_file_SelectionChangeFcn(hObject, eventdata, han
 
 switch get(hObject, 'Tag')
     case 'radiobtn_sp3'
-        set(handles.input_models_sc_ephem_file, 'Enable', 'off')
-        set(handles.input_models_sc_ephem_file, 'String', '')
-        set(handles.pushbutton_browse_ephem_file, 'Enable', 'off')
+        set(handles.input_models_sc_tle_file, 'Enable', 'off')
+        set(handles.input_models_sc_tle_file, 'String', '')
+        set(handles.pushbutton_browse_tle_file, 'Enable', 'off')
         set(handles.input_models_sc_sp3_file, 'Enable', 'on')
         set(handles.pushbutton_browse_sp3_file, 'Enable', 'on')
     otherwise
         set(handles.input_models_sc_sp3_file, 'Enable', 'off')
         set(handles.input_models_sc_sp3_file, 'String', '')
         set(handles.pushbutton_browse_sp3_file, 'Enable', 'off')
-        set(handles.input_models_sc_ephem_file, 'Enable', 'on')
-        set(handles.pushbutton_browse_ephem_file, 'Enable', 'on')
+        set(handles.input_models_sc_tle_file, 'Enable', 'on')
+        set(handles.pushbutton_browse_tle_file, 'Enable', 'on')
 end
 
    
@@ -2022,8 +2022,8 @@ function radiobtn_sp3_Callback(hObject, eventdata, handles)
 %set(handles.input_sc_ephem_file,'Enable','off')
 %set(handles.pushbutton_browse_sc_ephem_file,'Enable','off')
 
-% --- Executes on button press in radiobtn_ephem_Callback.
-function radiobtn_ephem_Callback(hObject, eventdata, handles)
+% --- Executes on button press in radiobtn_tle_Callback.
+function radiobtn_tle_Callback(hObject, eventdata, handles)
 %set(handles.input_sc_ephem_file,'Enable','off')
 %set(handles.pushbutton_browse_sc_ephem_file,'Enable','off')
 
@@ -2042,13 +2042,13 @@ function input_models_sc_sp3_file_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
-function input_models_sc_ephem_file_CreateFcn(hObject, eventdata, handles)
+function input_models_sc_tle_file_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit_models_sc_sp3_file (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 
-function input_models_sc_ephem_file_Callback(hObject, eventdata, handles)
+function input_models_sc_tle_file_Callback(hObject, eventdata, handles)
 % hObject    handle to edit_models_sc_sp3_file (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
