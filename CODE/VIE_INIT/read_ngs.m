@@ -971,7 +971,10 @@ if num_s ~= 0
                 % Read sate emphemeris file with ITRF positions (and velocities) and writ data to orbiot_data strucutre
                 [orbit_data] = read_sat_ephem_trf(satOrbitFilePath, satOrbitFileName);
                 [sources.s.orbit_file_type] = deal('sat_ephem_trf');
-
+            
+            case 'tle'
+                error('TLE orbit file type is still not implemented');
+                
             otherwise
                 error('Unknown orbit file type!');
         end
