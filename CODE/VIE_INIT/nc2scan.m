@@ -27,6 +27,7 @@
 %   2018-08-01, D. Landskron: bug corrected with storing the "Second" in vgosDB files
 %   2018-12-05, D. Landskron: reading also the quality codes; clarification quality code / quality flag
 %   2019-07-25, D. Landskron: zwet parameter added to scan structure
+%   2022-02-02, L. Kern: check if ObsEdit folder is empty or does not exist; GroupDelay_*.nc is used; Ambiguity correction is disabled
 
 % ************************************************************************
 function scan=nc2scan(out_struct, nc_info, fband, ioncorr, ambcorr, wrapper_data, parameter)
@@ -76,6 +77,31 @@ newStr = split(fband,'_');
 observation = newStr{1};
 freqband = newStr{2};
 
+% check if ObsEdit folder exists
+if isfield(wrapper_data.Observation, 'ObsEdit')
+    % if session is a VGOS Intensive session check if ... 
+    if strcmp(out_struct.head.ExpDescription.val', 'VGOS INTEN')
+        ioncorr = 'off'; % disable ionospheric correction
+        if strcmp(observation, 'GroupDelayFull')
+            tau_folder = 'ObsEdit';
+            check4gd = strcmp(wrapper_data.Observation.ObsEdit.files, 'GroupDelayFull_bX.nc'); % ... GroupDelayFull_bX.nc file exists, if not select GroupDelay_bX.nc file
+            if ~check4gd
+                fprintf('WARNING: Cannot find GroupDelayFull_bX.nc in %s. Using GroupDelay_bX.nc instead.\n', tau_folder)
+                observation = 'GroupDelay';
+            end
+            check4amb = strcmp(wrapper_data.Observation.ObsEdit.files, 'NumGroupAmbig_bX.nc'); % ... NumGroupAmbig_bX.nc file exists, if not disable ambiguity correction
+            if ~check4amb
+                fprintf('WARNING: Cannot find NumGroupAmbig.nc in %s. Ambiguity correction is disabled.\n', tau_folder)
+                ambcorr = 'off';
+            end
+        end
+    end
+else % ObsEdit folder is missing: use GroupDelay instead of GroupDelayFull, ambiguity correction is disabled
+    observation = 'GroupDelay';       
+    ambcorr = 'off';
+    fprintf('!!! WARNING: Cannot find ObsEdit folder. GroupDelay_bX.nc is used and ambiguity correction is disabled !!!\n')              
+end
+        
 switch observation
     
     case 'GroupDelayFull'
