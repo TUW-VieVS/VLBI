@@ -64,7 +64,7 @@ if size(obs2Baseline,1)==1
 end
 obs2BaselineCell=num2cell(obs2Baseline);
 % obs2Scan:
-obs2Scan=double(out_struct.CrossReference.(nc_filename).Obs2Scan.val); % vector (lenght = nScans), giving scan number (as integer) nObs x 1
+obs2Scan=double(out_struct.CrossReference.(nc_filename).Obs2Scan.val); % vector (length = nScans), giving scan number (as integer) nObs x 1
 % scan2Station:
 nc_filename = get_nc_filename('StationCrossRef', wrapper_data.Session.CrossReference.files, 1);
 scan2Station=double(out_struct.CrossReference.(nc_filename).Scan2Station.val)'; % matrix (nRows=nScans), giving stations (also the number of observations per station is counted!), nCols = nStations
@@ -79,20 +79,22 @@ freqband = newStr{2};
 
 % check if ObsEdit folder exists
 if isfield(wrapper_data.Observation, 'ObsEdit')
-    % if session is a VGOS Intensive session check if ... 
-    if strcmp(out_struct.head.ExpDescription.val', 'VGOS INTEN')
-        ioncorr = 'off'; % disable ionospheric correction
-        if strcmp(observation, 'GroupDelayFull')
-            tau_folder = 'ObsEdit';
-            check4gd = strcmp(wrapper_data.Observation.ObsEdit.files, 'GroupDelayFull_bX.nc'); % ... GroupDelayFull_bX.nc file exists, if not select GroupDelay_bX.nc file
-            if ~check4gd
-                fprintf('WARNING: Cannot find GroupDelayFull_bX.nc in %s. Using GroupDelay_bX.nc instead.\n', tau_folder)
-                observation = 'GroupDelay';
-            end
-            check4amb = strcmp(wrapper_data.Observation.ObsEdit.files, 'NumGroupAmbig_bX.nc'); % ... NumGroupAmbig_bX.nc file exists, if not disable ambiguity correction
-            if ~check4amb
-                fprintf('WARNING: Cannot find NumGroupAmbig.nc in %s. Ambiguity correction is disabled.\n', tau_folder)
-                ambcorr = 'off';
+    % if session is a VGOS Intensive session check if ...
+    if isfield(out_struct.head, 'ExpDescription')
+        if strcmp(out_struct.head.ExpDescription.val', 'VGOS INTEN')
+            ioncorr = 'off'; % disable ionospheric correction
+            if strcmp(observation, 'GroupDelayFull')
+                tau_folder = 'ObsEdit';
+                check4gd = strcmp(wrapper_data.Observation.ObsEdit.files, 'GroupDelayFull_bX.nc'); % ... GroupDelayFull_bX.nc file exists, if not select GroupDelay_bX.nc file
+                if ~check4gd
+                    fprintf('WARNING: Cannot find GroupDelayFull_bX.nc in %s. Using GroupDelay_bX.nc instead.\n', tau_folder)
+                    observation = 'GroupDelay';
+                end
+                check4amb = strcmp(wrapper_data.Observation.ObsEdit.files, 'NumGroupAmbig_bX.nc'); % ... NumGroupAmbig_bX.nc file exists, if not disable ambiguity correction
+                if ~check4amb
+                    fprintf('WARNING: Cannot find NumGroupAmbig.nc in %s. Ambiguity correction is disabled.\n', tau_folder)
+                    ambcorr = 'off';
+                end
             end
         end
     end
