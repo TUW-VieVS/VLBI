@@ -82,6 +82,7 @@ for j = 1:pl(1)
     
     smondd = sname(3:7);
     sdbc = sname(8:9);
+    sdbc = replace(sdbc,'_',' ');
     
 	load(strcat('../DATA/LEVEL3/',subdir,'/x_',sname),'x_');
 	load(strcat('../DATA/LEVEL3/',subdir,'/opt_',sname),'opt_');
@@ -90,7 +91,7 @@ for j = 1:pl(1)
         %% get IVS session code from masterfile or vgosDB file
         filepath_masterfiles = '../DATA/MASTER/';
         
-        if flag_intensive
+        if flag_intensive && str2double(syear)>1991
             filepath_masterfile = strcat(filepath_masterfiles, 'master', num2str(yy,'%02d'), '-int.txt');
 
             % read masterfile
@@ -128,14 +129,14 @@ for j = 1:pl(1)
         master = struct(); 
         
         if syear > 2017 % masterfiles since 2018 have less headerlines
-            header = textscan(fid,'|%s %s %s %s %f:%f %f %s %s %s %s %f %s %s %f %s','Delimiter', '|','Headerlines', 8, 'CommentStyle', '---');
+            header = textscan(fid,'|%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s','Delimiter', '|','Headerlines', 8, 'CommentStyle', '---');
         else
-            header = textscan(fid,'|%s %s %s %s %f:%f %f %s %s %s %s %f %s %s %f %s','Delimiter', '|','Headerlines', 9, 'CommentStyle', '---');
+            header = textscan(fid,'|%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s','Delimiter', '|','Headerlines', 9, 'CommentStyle', '---');
         end
 
         master.sessioncode = header{2};
         master.mondd = header{3};
-        master.dbc = header{13};
+        master.dbc = strip(header{12},'both');
         fclose(fid);
 
         % read VGOS masterfile (for some years seperate VGOS masterfiles exist)
@@ -144,17 +145,21 @@ for j = 1:pl(1)
         if exist(filepath_masterfile_vgos,'file') 
             vgosmaster = true;
             fid = fopen(filepath_masterfile_vgos);
-            header = textscan(fid,'|%s %s %s %s %f:%f %f %s %s %s %s %f %s %s %f %s','Delimiter', '|','Headerlines', 8, 'CommentStyle', '---');
+            header = textscan(fid,'|%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s','Delimiter', '|','Headerlines', 8, 'CommentStyle', '---');
             masterVGOS = struct();  
             masterVGOS.sessioncode = header{2};
             masterVGOS.mondd = header{3};
-            masterVGOS.dbc = header{13};
+            masterVGOS.dbc = strip(header{12},'both');
             fclose(fid);
         end
 
         % search for selected session in masterfile using dbc and mondd
         flag_mondd = contains(master.mondd,smondd);
-        flag_dbc = contains(master.dbc,sdbc);
+        if any(isspace(sdbc))
+            flag_dbc = strcmp(master.dbc,sdbc(1));
+        else
+            flag_dbc = contains(master.dbc,sdbc);
+        end
         current_sess = flag_mondd & flag_dbc;
         if sum(current_sess) == 1 % session was found in the masterfile
             IVSsesnam = cell2mat(master.sessioncode(current_sess));
@@ -170,6 +175,10 @@ for j = 1:pl(1)
         
         % if session was not found in master file try to get IVS session code from vgosDB file
         if sum(current_sess) ~= 1
+            if contains(sname,'_')
+                ind_ul = strfind(sname,'_');
+                sname(ind_ul:end)=[];
+            end
             vgosdbfile = strcat('../DATA/vgosDB/',syear,'/',sname,'.tgz');
             if exist(vgosdbfile,'file')
                 untar(vgosdbfile);
@@ -192,7 +201,7 @@ for j = 1:pl(1)
     
     %% collect session specific information
     wrms_pfr = x_.wrms*100/2.99792458; %[ps]
-    if wrms_pfr > 999
+    if ((wrms_pfr > 999) || isnan(wrms_pfr))
         continue
     end
     num_obs = x_.nobs;
@@ -220,9 +229,12 @@ for j = 1:pl(1)
        mjdp = x_.xpol.mjd;
        dmjdp = mjdp(2)-mjdp(1);
        % for 24h interval keep only the two values near session midpoint
-       % if offset+rate is selected or parameter was estimated with tight constraints
-       if (dmjdp>=1 && length(mjdp)==3 && (flag_offsrate || flag_poltight))
-           mjdp(abs(mjdp-mjdsesmid)>1)=[];
+       if (dmjdp>=1 && length(mjdp)>=3)
+           if mjdp(2)==mjdsesmid
+               mjdp(2)=[];
+           else
+               mjdp(abs(mjdp-mjdsesmid)>1)=[];
+           end
        elseif (dmjdp<1 && flag_poltight)
            mjdp(2:end-1)=[];
            dmjdp = mjdp(2)-mjdp(1);
@@ -234,7 +246,7 @@ for j = 1:pl(1)
        flag_poltight = false;
     end
 
-	if parameter.lsmopt.dut1.model==1
+    if parameter.lsmopt.dut1.model==1
        ut1_est = true;
        if opt_.dut1.coef > 1.0e-4
            flag_ut1tight = false;
@@ -244,9 +256,12 @@ for j = 1:pl(1)
        mjdu = x_.dut1.mjd;
        dmjdu = mjdu(2)-mjdu(1);
        % for 24h interval keep only the two values near session midpoint
-       % if offset+rate is selected or parameter was estimated with tight constraints
-       if (dmjdu >=1 && length(mjdu)==3 && (flag_offsrate || flag_ut1tight))
-           mjdu(abs(mjdu-mjdsesmid)>1)=[];
+       if (dmjdu >=1 && length(mjdu)>=3)
+           if mjdu(2)==mjdsesmid
+               mjdu(2)=[];
+           else
+               mjdu(abs(mjdu-mjdsesmid)>1)=[];
+           end
        elseif (flag_intensive && length(mjdu)==3) % sometimes also intensives have three values
            mjdu(abs(mjdu-mjdsesmid)>dmjdu)=[];
        elseif (dmjdu<1 && flag_ut1tight && ~flag_intensive)
@@ -258,9 +273,9 @@ for j = 1:pl(1)
        dmjdu = 0;
        ut1_est = false;
        flag_ut1tight = false;
-	end
+    end
 
-	% nutation if estimated
+    % nutation if estimated
     if parameter.lsmopt.nutdx.model==1
        nut_est = true;
        if opt_.nutdx.coef > 1.0e-4
@@ -271,9 +286,12 @@ for j = 1:pl(1)
        mjdn   = x_.nutdx.mjd;
        dmjdn = mjdn(2)-mjdn(1);
        % for 24h interval keep only the two values near session midpoint
-       % if offset+rate is selected or parameter was estimated with tight constraints
-       if (dmjdn>=1 && length(mjdn)==3 && (flag_offsrate || flag_nuttight))
-           mjdn(abs(mjdn-mjdsesmid)>1)=[];
+       if (dmjdn>=1 && length(mjdn)>=3)
+           if mjdn(2)==mjdsesmid
+               mjdn(2)=[];
+           else
+               mjdn(abs(mjdn-mjdsesmid)>1)=[];
+           end
        elseif (dmjdn<1 && flag_nuttight)
            mjdn(2:end-1)=[];
            dmjdn = mjdn(2)-mjdn(1);
@@ -296,7 +314,7 @@ for j = 1:pl(1)
     indn = ismember(mjd , mjdn);
     
 	if pol_est
-           xp   = x_.xpol.val(ismember(x_.xpol.mjd,mjdp))';  
+       xp   = x_.xpol.val(ismember(x_.xpol.mjd,mjdp))';  
 	   xp_e = x_.xpol.mx(ismember(x_.xpol.mjd,mjdp))';  
 	   yp   = x_.ypol.val(ismember(x_.ypol.mjd,mjdp))';  
 	   yp_e = x_.ypol.mx(ismember(x_.ypol.mjd,mjdp))';  
@@ -347,6 +365,9 @@ for j = 1:pl(1)
         mid_mjdp1 = mjdsesmid-mjdp(1);
         xpfin = xptot(1)*mjdp2_mid/dmjdp + xptot(2)*mid_mjdp1/dmjdp;
         ypfin = yptot(1)*mjdp2_mid/dmjdp + yptot(2)*mid_mjdp1/dmjdp; 
+        if (any(abs(xpfin)>=0.65e3) || any(abs(ypfin)>=0.65e3))  % skip session if value is >0.65 as/s
+            continue
+        end
         xpfin_e = sqrt((mjdp2_mid/dmjdp*xp_e(1))^2 + (mid_mjdp1/dmjdp*xp_e(2))^2); 
         ypfin_e = sqrt((mjdp2_mid/dmjdp*yp_e(1))^2 + (mid_mjdp1/dmjdp*yp_e(2))^2); 
         xprat = (xptot(2)-xptot(1))/dmjdp;
@@ -364,6 +385,9 @@ for j = 1:pl(1)
     elseif dmjdp>0 || ~flag_offsrate
         xpfin = xptot; ypfin = yptot; xpfin_e = xp_e; ypfin_e = yp_e;
         xprat = NaN; yprat = NaN; xprat_e = NaN; yprat_e = NaN;
+        if (any(abs(xpfin)>=0.65e3) || any(abs(ypfin)>=0.65e3))  % skip session if value is >0.65 as/s
+            continue
+        end
     end
     
     if (dmjdn>=1 && flag_offsrate) || flag_nuttight
@@ -371,6 +395,9 @@ for j = 1:pl(1)
         mid_mjdn1 = mjdsesmid-mjdn(1);
         dXfin = dXtot(1)*mjdn2_mid/dmjdn + dXtot(2)*mid_mjdn1/dmjdn;
         dYfin = dYtot(1)*mjdn2_mid/dmjdn + dYtot(2)*mid_mjdn1/dmjdn; 
+        if (any(abs(dXfin)>=5) || any(abs(dYfin)>=5))  % skip session if value is >5 mas
+            continue
+        end
         dXfin_e = sqrt((mjdn2_mid/dmjdn*dX_e(1))^2 + (mid_mjdn1/dmjdn*dX_e(2))^2); 
         dYfin_e = sqrt((mjdn2_mid/dmjdn*dY_e(1))^2 + (mid_mjdn1/dmjdn*dY_e(2))^2); 
         dXrat = (dXtot(2)-dXtot(1))/dmjdn;
@@ -388,6 +415,9 @@ for j = 1:pl(1)
     elseif dmjdn>0 || ~flag_offsrate
         dXfin = dXtot; dYfin = dYtot; dXfin_e = dX_e; dYfin_e = dY_e;
         dXrat = NaN; dYrat = NaN; dXrat_e = NaN; dYrat_e = NaN; 
+        if (any(abs(dXfin)>=5) || any(abs(dYfin)>=5))  % skip session if value is >5 mas
+            continue
+        end
     end
     
     if (dmjdu>=1 && flag_offsrate) || flag_intensive || flag_ut1tight
@@ -399,6 +429,9 @@ for j = 1:pl(1)
         uttoti   = uttot - UT1corr(1:2,:)'*1e3;  % [ms]
         utfini = uttoti(1)*mjdu2_mid/dmjdu + uttoti(2)*mid_mjdu1/dmjdu;
         utfin = utfini + UT1corr(3,1)*1e3; % [ms]
+        if any(abs(utfin)>=1e3) % skip session if value is >1 as/s
+            continue
+        end
         utfin_e = sqrt((mjdu2_mid/dmjdu*ut_e(1))^2 + (mid_mjdu1/dmjdu*ut_e(2))^2); 
         utrat = (uttot(2)-uttot(1))/dmjdu;  
         lod = -utrat;
@@ -412,6 +445,9 @@ for j = 1:pl(1)
         utfin = NaN; utfin_e = NaN; lod = NaN; utrat = NaN; utrat_e = NaN; 
     elseif dmjdu>0 || ~flag_offsrate
         utfin = uttot; utfin_e = ut_e; lod = NaN; utrat = NaN; utrat_e = NaN; 
+        if any(abs(utfin)>=1e3) % skip session if value is >1 as/s
+            continue
+        end
     end
         
     clear mjd indp indu indn

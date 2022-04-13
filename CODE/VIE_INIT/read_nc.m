@@ -73,7 +73,9 @@ for i_toplev_head = 1:length(Head_files)
     curr_headFile = Head_files{i_toplev_head};
     Head_version(i_toplev_head) = getVerNr( curr_headFile,id_ver );  
 end
-Head_version(Head_version==-1) = 99;   % because the file "Head.nc" is the one with the highest Version number: Attention: perhaps GSFC changes this one day, because it actually contradicts the naming convention of other files (e.g. in station folders)
+if length(i_head_files)==1
+ Head_version(Head_version==-1) = 99;   % because the file "Head.nc" is the one with the highest Version number: Attention: perhaps GSFC changes this one day, because it actually contradicts the naming convention of other files (e.g. in station folders)
+end
 [~,i_max_ver]=max(Head_version);
 headNcFile=dir([directory,top_level(i_head_files(i_max_ver)).name]);
 headNcFile=[directory,'/',headNcFile(1).name];

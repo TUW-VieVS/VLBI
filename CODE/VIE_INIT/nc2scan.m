@@ -498,7 +498,7 @@ for iScan=1:nScans
                 % get current cable cal data
                 cc=out_struct.stat(stationIndices(iStat)).(fncab{iCabls});
                 % generate internal struct name
-                if strcmp(fncab{iCabls},'Cal_Cable')
+                if (strcmp(fncab{iCabls},'Cal_Cable') || strcmp(fncab{iCabls},'Cal_Cable_iBKG'))
                     ccn='cablecal';
                 end
                 if contains(fncab{iCabls},'Pcmt')
