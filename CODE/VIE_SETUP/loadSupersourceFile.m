@@ -30,7 +30,7 @@ load(filename);
 supersourceFields=fieldnames(source);
 
 % define all crf frames which should be written to the popupmenu
-allCrfFrames={'icrf2','icrf2nonVCS', 'icrf3sx', 'VieCRF13','GSFC2015b', 'vievsCrf', 'userCrf'};
+allCrfFrames={'icrf2','icrf2nonVCS', 'icrf3sx', 'icrf3k', 'VieCRF13','GSFC2015b', 'vievsCrf', 'userCrf'};
 
 newPopupmenuEntries=supersourceFields(ismember(supersourceFields, allCrfFrames));
 set(handles.popupmenu_parameters_refFrames_supersourceCRF, 'Value', 1)

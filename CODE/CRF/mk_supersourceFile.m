@@ -33,6 +33,8 @@ GSFC2015bFile =inFiles(6).name;
 userCrfFile=inFiles(7).name;
 IVSnamesFile =inFiles(8).name;
 
+ICRF3kFile = '../CRF/data/icrf3k.txt';
+
 % =============
 % 2. read files
 % =============
@@ -440,6 +442,63 @@ for i = 1: length(data{1})
     source(index_bool).icrf3sx.numberObs = data{16}(i); 
     
 end
+
+
+
+fprintf('Loading ICRF3k\n\n')
+fid=fopen(ICRF3kFile);
+data=textscan(fid, '%21c  %12c %f %f %f %03s %f %f %f %f %f %f %f %f %f %f %f %s', ...
+    'headerlines', 73, 'delimiter', '\n');
+
+fclose(fid);
+
+for i = 1: length(data{1})
+    index_bool = strcmp(data{2}(i,1:8), {source.IERSname}');
+    if ~sum(index_bool)
+        index_bool = strcmp(data{2}(i,1:8), {source.IVSname}');
+        if ~sum(index_bool) 
+            fprintf(1,'Source %s is in ICRF3 but was not found in supersource file. It is not written into the supersource file.\n', data{2}(i,1:8));
+            continue
+        end
+    end
+    
+    RA = deg2rad((data{3}(i) + data{4}(i)/60 + data{5}(i)/3600)*15); %[rad]
+    if strncmp('-', data{6}(i),1)
+        DE = deg2rad((str2double(data{6}(i)) - data{7}(i)/60 - data{8}(i)/3600)); %[rad]
+    else
+        DE = deg2rad((str2double(data{6}(i)) + data{7}(i)/60 + data{8}(i)/3600)); %[rad]
+    end
+    
+    ang_sep = sqrt(((RA-source(index_bool).vievsCrf.ra)*cos(DE))^2 + (DE-source(index_bool).vievsCrf.de)^2);
+    if ang_sep > deg2rad(10/3600) % check if sources is less than 10 as from vievsCrf --> if yes than it is a wrong match
+        fprintf(1,'Possible wrong match (angular separation of %4.0f as) for source %s it will still be written into the supersource file. Please check by hand\n', rad2deg(ang_sep)*3600, data{2}(i,1:8));
+    end
+    
+    if strcmp('D', data{2}(i,10))
+        source(index_bool).icrf3k.defining = 1;
+    else
+        source(index_bool).icrf3k.defining = 0;
+    end
+
+    if strcmp('V', data{2}(i,12))
+        source(index_bool).icrf3k.fVLBA = 1;
+    else
+        source(index_bool).icrf3k.fVLBA = 0;
+    end
+
+    source(index_bool).icrf3k.ra = RA; %[rad]
+    source(index_bool).icrf3k.de = DE; %[rad]
+    source(index_bool).icrf3k.ra_sigma = deg2rad(data{9}(i)*15/3600); %[rad]
+    source(index_bool).icrf3k.de_sigma = deg2rad(data{10}(i)/3600); %[rad]
+    source(index_bool).icrf3k.corr = data{11}(i); 
+    source(index_bool).icrf3k.meanMjd = data{12}(i); 
+    source(index_bool).icrf3k.firstMjd = data{13}(i); 
+    source(index_bool).icrf3k.lastMjd = data{14}(i); 
+    source(index_bool).icrf3k.numberSess = data{15}(i); 
+    source(index_bool).icrf3k.numberObs = data{16}(i); 
+    
+end
+
 
 
 
