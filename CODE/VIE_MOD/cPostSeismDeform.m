@@ -123,6 +123,9 @@ end
             case 4
                 corr=corrVals(2).*(1-exp(-dtq./corrVals(3))) + ...
                     corrVals(4).*(1-exp(-dtq./corrVals(5)));
+            case 5
+                corr=corrVals(2).*log(1+dtq./corrVals(3)) + ...
+                    corrVals(4).*log(1+dtq./corrVals(5));
         end
 
         corr=corr./1000; 
