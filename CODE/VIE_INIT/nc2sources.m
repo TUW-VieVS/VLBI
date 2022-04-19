@@ -76,17 +76,35 @@ for iSource=1:nSources
         end
         crfToTake=chosenCrf;
     end
-    %David - always add information about defining sources
-    %from the ICRF2
-    if isfield(crf(indSourceInCrf),'icrf3sx')
-        if ~isempty(crf(indSourceInCrf).icrf3sx)
-            sources(iSource).flag_defining=crf(indSourceInCrf).icrf3sx.defining;
+%     %David - always add information about defining sources
+%     %from the ICRF2
+%     if isfield(crf(indSourceInCrf),'icrf3sx')
+%         if ~isempty(crf(indSourceInCrf).icrf3sx)
+%             sources(iSource).flag_defining=crf(indSourceInCrf).icrf3sx.defining;
+%         else
+%             sources(iSource).flag_defining=0;
+%         end
+%     else
+%         sources(iSource).flag_defining=0;
+%     end
+
+    % Add information about defining sources from the chosen catalog
+    if isfield(crf(indSourceInCrf),chosenCrf)
+        if ~isempty(crf(indSourceInCrf).(chosenCrf))
+            if ~strcmp(chosenCrf,'vievsCrf')
+                sources(iSource).flag_defining=crf(indSourceInCrf).(chosenCrf).defining;
+            else
+                sources(iSource).flag_defining=sources(iSource).in_crf; % last column in vievscrf.txt
+            end
         else
             sources(iSource).flag_defining=0;
         end
     else
         sources(iSource).flag_defining=0;
     end
+    
+    
+    
     
     % RA/DE
     sources(iSource).ra2000=      crf(indSourceInCrf).(crfToTake).ra;
