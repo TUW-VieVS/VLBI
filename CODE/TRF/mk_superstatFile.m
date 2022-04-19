@@ -52,7 +52,12 @@ opoleloadUserOwnFieldname=inFiles(idiF).fieldName; idiF=idiF+1;
 vievsTrfFile=inFiles(idiF).name; idiF=idiF+1;
 userOwnTrfFile=inFiles(idiF).name;
 
+%itrf2020File=inFiles(idiF).name; idiF=idiF+1;
+itrf2020File='../TRF/data/ITRF2020-IVS-TRF.SNX'; 
+
+
 % Flags, for the availability of TRF files
+flag_trf_itrf2020 = true;
 flag_trf_itrf2014 = true;
 flag_trf_dtrf2014 = true;
 flag_trf_vtrf2014 = true;
@@ -84,6 +89,7 @@ atm0=struct('vienna', [], 'gsfc', [], 'vandam', []);
 ns_codes=struct('code', [], 'name', [],'domes', [], 'CDP', [], 'comments', [], ...
     'antenna_info', [], 'ecc', [], ...
     'ocean_loading', [],  ...
+    'itrf2020', [],  ...  
     'itrf2014', [], 'dtrf2014', [], ...
     'vtrf2014', [], 'ivsTrf2014b', [], 'VieTRF13', [], 'vievsTrf', [], ...
     'atmosphere_tidal_loading', [], 'oceanPoleTideLoading', [], 'aplrg', [], ...
@@ -410,6 +416,93 @@ end
 % 2.3 Terrestrial reference frames
 % --------------------------------
 fprintf('\n2.3 Terrestrial reference frames\n')
+
+
+% --------------------------
+% 2.3.0 ITRF2020-IVS-TRF.snx
+% --------------------------
+fprintf('\n2.3.0 ITRF2020-IVS-TRF.snx\n\n');
+if exist(itrf2020File, 'file')
+	itrf2020File_name = 'itrf2020';
+	[ns_codes] = trf_by_snx_reader(ns_codes,itrf2020File,itrf2020File_name,break0);
+
+    setStartEndEpoch('itrf2020');
+
+    % add post-seismic deformation
+    itrf2020psdfile='../TRF/data/ITRF2020-psd-vlbi.dat';
+    if exist(itrf2020psdfile, 'file')
+    % load file
+        fid=fopen(itrf2020psdfile);
+        if (fid < 0)
+           varargout{1} = ['ERROR: Cannot open the file: ', itrf2020psdfile];
+           return;
+        end
+    
+        curLinePart=0;
+        while ~feof(fid)
+            curl=fgetl(fid); curLinePart=curLinePart+1;
+        
+            if curLinePart==4
+                curLinePart=1;
+            end
+        
+            if curLinePart==1
+                code=str2double(curl(2:5));
+                pt=curl(7:8);
+                domes=curl(10:18);
+                ep=date2mjd([str2double(curl(20:21)) 1 1])+...
+                 str2double(curl(23:25))-1+str2double(curl(27:31))/60/60/24;
+                e=sscanf(curl(35:min([72,length(curl)])), '%f')';
+            elseif curLinePart==2
+                n=sscanf(curl(35:min([72,length(curl)])), '%f')';
+            else % last (UP) line
+                u=sscanf(curl(35:min([72,length(curl)])), '%f')';
+            
+            % find proper station
+                foundStationLog=strcmpi(domes,{ns_codes.domes});
+                if sum(foundStationLog)==0
+                % try to find code
+                    if ~isnan(code) % just to be sure that not '----' or so is compared (and eventually found!!)
+                        foundStationLog=strcmpi(num2str(code),{ns_codes.CDP});
+                    end
+                end
+            
+                % if (at least now) found
+                if sum(foundStationLog)>0
+                    foundStationInd=find(foundStationLog);
+                    for iFoundStat=1:length(foundStationInd)
+                        curFoundStat=foundStationInd(iFoundStat);
+                        psdBreak=1;
+                        if isfield(ns_codes(curFoundStat).itrf2020, 'psd')
+                            psdBreak=length(ns_codes(curFoundStat).itrf2020.psd)+1;
+                        end
+                        ns_codes(curFoundStat).itrf2020.psd(psdBreak).epoch=ep;
+                        ns_codes(curFoundStat).itrf2020.psd(psdBreak).e=e;
+                        ns_codes(curFoundStat).itrf2020.psd(psdBreak).n=n;
+                        ns_codes(curFoundStat).itrf2020.psd(psdBreak).u=u;
+                    
+                    end
+                else
+                    fprintf('Station %s (in ITRF2020 psd file) not found in ns_codes!\n',...
+                        domes);
+                end
+            end
+        end
+        
+
+        fclose(fid);    
+    else
+        fprintf('Warning: psd file of ITRF2020 not found\n(%s)\npause 2sek\n',...
+            itrf2020psdfile);
+        pause(2);
+    end
+else
+    fprintf('ITRF2020-IVS-TRF.snx is not available\n\n');
+    flag_trf_itrf2020 = false;
+end
+
+
+
 
 
 % --------------------------

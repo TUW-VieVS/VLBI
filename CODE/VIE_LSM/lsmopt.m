@@ -517,6 +517,39 @@ opt.est_singleses = opt.est_singleses;  % case 0: parameters will be not estimat
 % GUI for vie_lsm
 opt.control_gui_vie_lsm = opt.control_gui_vie_lsm;
 
+
+
+% % For sessions with at least 4 stations, exclude from NNT/NNR
+% ids=[];
+% ids = strcmp({opt.stat.name},{'KOKEE12M'}) % exclude from NNT/NNR
+% 
+% if sum(ids)>0    
+%     opt.stat(ids).nnt_inc = 0;
+%     opt.stat(ids).nnr_inc = 0;
+% end
+
+
+% 'lsmopt.m'
+% ids=[];
+% ids = strcmp({opt.source.name},{'3C48    '}) % always estimate 3C48
+% if sum(ids)>0
+%     opt.source(ids).rade_inc = 1;
+% end
+% 
+% 
+% % fix defining sources
+% 'fix defining sources'
+% ids=[];
+% ids = find([sources.q.flag_defining]==0)
+% if sum(ids)>0
+%     for i=1:length(ids)
+%         opt.source(ids(i)).rade_inc = 1; % estimate non-defining
+%     end
+% end
+
+
+
+
 if opt.control_gui_vie_lsm == 1
     uiwait(vie_lsm_gui_first(opt));
     % Load opt_tmp.mat from the /WORK/ dir. and delete it afterwards:
