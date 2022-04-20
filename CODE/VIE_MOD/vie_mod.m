@@ -622,7 +622,7 @@ for iSc = 1:number_of_all_scans
         end 
         
         % further corrections (same for both models (Sekido & Fukushima, p.141))
-        [a_ngr, a_egr, scan, antenna, tau]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tau, cell_grid_GPT3);
+        [a_ngr, a_egr, scan, antenna, tau]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tau, cell_grid_GPT3, session, iobs);
             
         % SOURCE STRUCTURE +
         if parameter.vie_mod.ssou==1 || parameter.vie_mod.write_jet==1

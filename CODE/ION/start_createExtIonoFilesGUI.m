@@ -171,6 +171,11 @@ tic
 % ##### get chosen sessions in listbox 3 #####
 chosenSessions = get(handles.listbox_3, 'String');
 
+% % ##### GUI does not work with vgosDB. Define the process list here:
+% chosenSessions = ['2022/22FEB11KL [vgosDB]'
+%                   '2022/22FEB11KR [vgosDB]']
+
+
 % Check, if session was selected:
 if isempty(chosenSessions)
     text = 'Chose session from listbox';

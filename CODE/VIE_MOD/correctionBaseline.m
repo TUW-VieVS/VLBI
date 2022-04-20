@@ -44,7 +44,7 @@
 %
 % ************************************************************************
 
-function [a_ngr, a_egr, scan, antenna, tau] = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tau, cell_grid_GPT3)
+function [a_ngr, a_egr, scan, antenna, tau] = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tau, cell_grid_GPT3, session, iobs)
 
     global c
 
@@ -331,7 +331,9 @@ function [a_ngr, a_egr, scan, antenna, tau] = correctionBaseline(scan, antenna, 
 
         % only do the first time
         if ~exist('iondata', 'var')
-            fprintf('Start loading external ionospheric file\n');
+            if iSc==1
+                fprintf('Start loading external ionospheric file\n');
+            end
             [iondata, ionFileFoundLog] = load_ionfile(parameter,session);
         end
 
