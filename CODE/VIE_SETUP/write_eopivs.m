@@ -313,16 +313,24 @@ for j = 1:pl(1)
     indu = ismember(mjd , mjdu);
     indn = ismember(mjd , mjdn);
     
-	if pol_est
+    if pol_est
        xp   = x_.xpol.val(ismember(x_.xpol.mjd,mjdp))';  
 	   xp_e = x_.xpol.mx(ismember(x_.xpol.mjd,mjdp))';  
 	   yp   = x_.ypol.val(ismember(x_.ypol.mjd,mjdp))';  
 	   yp_e = x_.ypol.mx(ismember(x_.ypol.mjd,mjdp))';  
+       % skip sessions if formal error/estimate is above threshold (10mas)
+       if any(xp_e>10) || any(yp_e>10) || any(abs(xp)>10) || any(abs(yp)>10)
+        continue
+       end
     end
     
-	if ut1_est
+    if ut1_est
 	   ut   = x_.dut1.val(ismember(x_.dut1.mjd,mjdu))';   
 	   ut_e = x_.dut1.mx(ismember(x_.dut1.mjd,mjdu))';  
+       % skip sessions if formal error/estimate is above threshold (0.67ms)
+       if any(ut_e>0.67) || any(abs(ut)>0.67) 
+        continue
+       end
     end
     
     if nut_est
@@ -330,9 +338,13 @@ for j = 1:pl(1)
 	   dX_e = x_.nutdx.mx(ismember(x_.nutdx.mjd,mjdn))'; 
 	   dY   = x_.nutdy.val(ismember(x_.nutdy.mjd,mjdn))'; 
 	   dY_e = x_.nutdy.mx(ismember(x_.nutdy.mjd,mjdn))'; 
+       % skip sessions if formal error/estimate is above threshold (1.5mas)
+       if any(dX_e>1.5) || any(dY_e>1.5) || any(abs(dX)>1.5) || any(abs(dY)>1.5)
+        continue
+       end
     end 
     
-	% get a priori values for estimation epochs
+    % get a priori values for estimation epochs
 	[leapsec,leapepo]  = tai_utc(mjd,1);       % get difference TAI-UTC [s]
 	TT = mjd + (32.184 + leapsec')./86400;     % [MJD TT]
 
