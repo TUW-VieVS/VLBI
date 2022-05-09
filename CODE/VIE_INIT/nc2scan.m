@@ -28,6 +28,7 @@
 %   2018-12-05, D. Landskron: reading also the quality codes; clarification quality code / quality flag
 %   2019-07-25, D. Landskron: zwet parameter added to scan structure
 %   2022-02-02, L. Kern: check if ObsEdit folder is empty or does not exist; GroupDelay_*.nc is used; Ambiguity correction is disabled
+%   2022-05-09, L. Kern: check for VGOS Intensive; 
 
 % ************************************************************************
 function scan=nc2scan(out_struct, nc_info, fband, ioncorr, ambcorr, wrapper_data, parameter)
@@ -81,7 +82,8 @@ freqband = newStr{2};
 if isfield(wrapper_data.Observation, 'ObsEdit')
     % if session is a VGOS Intensive session check if ...
     if isfield(out_struct.head, 'ExpDescription')
-        if strcmp(out_struct.head.ExpDescription.val', 'VGOS INTEN')
+        % check if session is a VGOS Intensive
+        if strcmp(out_struct.head.ExpDescription.val', 'VGOS INTEN') || contains(out_struct.head.ExpDescription.val','VGOS-B')
             ioncorr = 'off'; % disable ionospheric correction
             if strcmp(observation, 'GroupDelayFull')
                 tau_folder = 'ObsEdit';
