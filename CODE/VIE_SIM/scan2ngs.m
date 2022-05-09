@@ -51,6 +51,7 @@
 %   xx Oct 2015 by D. Mayer: added possibility to use subfolders
 %   xx Nov 2016 by M. Schartner: new name of ngs file if it is a *_V* file
 %   05 Dec 2018 by D. Landskron: clarification quality code / quality flag
+%   09 May 2022 by L. Kern: simulations with vgosDB - bug fix
 % ************************************************************************
 
 
@@ -76,21 +77,31 @@ for iday = 1:nday
     % for correct naming of the files (S001, S010, S100)
     % use the starting index specified by the user in the sim gui
     % if chara
-    if strcmp(session(11),'V')
-        if (iday+sind-1) < 10
-            fn2 = strcat(session, '_S00', num2str(iday+sind-1));
-        elseif (iday+sind-1) < 100
-            fn2 = strcat(session, '_S0', num2str(iday+sind-1));
+    if length(session) > 9 % input = NGS file
+        if strcmp(session(11),'V')
+            if (iday+sind-1) < 10
+                fn2 = strcat(session, '_S00', num2str(iday+sind-1));
+            elseif (iday+sind-1) < 100
+                fn2 = strcat(session, '_S0', num2str(iday+sind-1));
+            else
+                fn2 = strcat(session, '_S', num2str(iday+sind-1));
+            end
         else
-            fn2 = strcat(session, '_S', num2str(iday+sind-1));
+            if (iday+sind-1) < 10
+                fn2 = strcat(session(1:10), 'S00', num2str(iday+sind-1));
+            elseif (iday+sind-1) < 100
+                fn2 = strcat(session(1:10), 'S0', num2str(iday+sind-1));
+            else
+                fn2 = strcat(session(1:10), 'S', num2str(iday+sind-1));
+            end
         end
-    else
+    else % input = vgosDB file
         if (iday+sind-1) < 10
-            fn2 = strcat(session(1:10), 'S00', num2str(iday+sind-1));
+            fn2 = strcat(session(1:9), '_S00', num2str(iday+sind-1));
         elseif (iday+sind-1) < 100
-            fn2 = strcat(session(1:10), 'S0', num2str(iday+sind-1));
+            fn2 = strcat(session(1:9), '_S0', num2str(iday+sind-1));
         else
-            fn2 = strcat(session(1:10), 'S', num2str(iday+sind-1));
+            fn2 = strcat(session(1:9), '_S', num2str(iday+sind-1));
         end
     end
     fid2 = fopen([sdir,'/',fn2], 'w');
