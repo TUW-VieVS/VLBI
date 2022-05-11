@@ -86,7 +86,7 @@ for j = 1:pl(1)
     
 	load(strcat('../DATA/LEVEL3/',subdir,'/x_',sname),'x_');
 	load(strcat('../DATA/LEVEL3/',subdir,'/opt_',sname),'opt_');
-    load(strcat('../DATA/LEVEL3/',subdir,'/',sname,'_parameter'),'parameter');
+        load(strcat('../DATA/LEVEL3/',subdir,'/',sname,'_parameter'),'parameter');
     
         %% get IVS session code from masterfile or vgosDB file
         filepath_masterfiles = '../DATA/MASTER/';
@@ -345,7 +345,7 @@ for j = 1:pl(1)
     end 
     
     % get a priori values for estimation epochs
-	[leapsec,leapepo]  = tai_utc(mjd,1);       % get difference TAI-UTC [s]
+	[leapsec,~]  = tai_utc(mjd,1);       % get difference TAI-UTC [s]
 	TT = mjd + (32.184 + leapsec')./86400;     % [MJD TT]
 
     [XP,YP,DUT1,DXap,DYap,~] = eop_get_approx(parameter,mjd,TT);
@@ -353,9 +353,24 @@ for j = 1:pl(1)
     % calculate total EOP values (tot = estimated + a priori)
     if ut1_est
     uttot = ut + DUT1(indu); % [ms]
-    if ~isempty(intersect(leapepo,mjd)) && any(diff(leapsec)~=0)
-        [~,~,IB]=intersect(leapepo,mjd);
-    	uttot(IB:end) = ut(IB:end) + DUT1(IB:end) +1e3; % [ms]
+    % Check if there was a leap second within the dates of the a priori
+    % EOP. In load_eop the UT1-UTC values are homogenized for interpolation 
+    % if there is a step.
+    % This artificial leap seconds are corrected again before utfin is
+    % written to the EOP file.
+    MJDleapcheck =  parameter.eop.mjd;
+    [~,leapepo]  = tai_utc(MJDleapcheck,1); 
+    [~,indleap] = intersect(MJDleapcheck, leapepo);
+    if ~isempty(intersect(MJDleapcheck, leapepo))
+        isleap = true;
+        switchleap = zeros(length(MJDleapcheck),1);
+        if (indleap-1) < 6
+            switchleap(1:indleap-1)=-1;
+        else
+            switchleap(indleap:end)=1;
+        end
+    else
+        isleap = false;
     end
     end
     clear leapsec leapepo TT
@@ -453,12 +468,20 @@ for j = 1:pl(1)
         end
         clear mjdu
         mjdu = mjdsesmid;
+        if isleap
+            mjduind = find(mjdu>=MJDleapcheck);
+            utfin = utfin + switchleap(mjduind(end))*1e3;
+        end
     elseif dmjdu == 0
         utfin = NaN; utfin_e = NaN; lod = NaN; utrat = NaN; utrat_e = NaN; 
     elseif dmjdu>0 || ~flag_offsrate
         utfin = uttot; utfin_e = ut_e; lod = NaN; utrat = NaN; utrat_e = NaN; 
         if any(abs(utfin)>=1e3) % skip session if value is >1 as/s
             continue
+        end
+        if isleap
+            [~,mjduind] = intersect(MJDleapcheck,mjdu);
+            utfin = utfin + switchleap(mjduind)'*1e3;
         end
     end
         
