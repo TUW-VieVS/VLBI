@@ -59,7 +59,12 @@ function fieldname_str = get_nc_filename(field_name_pattern, wrapper_data_files,
         % Remove the ".nc" file ending:
         fieldname_str = tmp_str(1 : strfind(tmp_str, '.nc')-1);
     elseif sum(ind) >= 1 % more than 1 match
+        if matches(field_name_pattern,'Cal-Cable')
+            tmp_str = wrapper_data_files{ind};
+            fieldname_str = tmp_str(1 : strfind(tmp_str, '.nc')-1);
+        else
         error('More than 1 match was found!');
+        end
     else % sum == 0, no match
         fieldname_str = '';
         switch(flag_generate_error_msg)

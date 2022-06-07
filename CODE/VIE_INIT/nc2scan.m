@@ -491,8 +491,8 @@ for iScan=1:nScans
         fn=fieldnames(out_struct.stat);
         % everything in the vgosDb file in a station struct which contains
         % a 'Cable' string is considered as a cable cal data source
-        idcab=contains(fn,'Cable'); % id of file names with 'Cable'
-        if ~isempty(find(idcab==1))
+        idcab=(contains(fn,'Cable') &~ contains(fn,'CableCorrections')); % id of file names with 'Cable'
+        if any(idcab==1)
             % file names with 'Cable'
             fncab=fn(idcab);
             % loop over possible cable cal data sources
