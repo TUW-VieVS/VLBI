@@ -79,7 +79,7 @@ observation = newStr{1};
 freqband = newStr{2};
 
 % check if ObsEdit folder exists
-if isfield(wrapper_data.Observation, 'ObsEdit')
+if isfield(wrapper_data.Observation, 'ObsEdit') && iscell(wrapper_data.Observation.ObsEdit.files)
     % if session is a VGOS Intensive session check if ...
     if isfield(out_struct.head, 'ExpDescription')
         % check if session is a VGOS Intensive
@@ -100,6 +100,11 @@ if isfield(wrapper_data.Observation, 'ObsEdit')
             end
         end
     end
+% ObsEdit folder is there, but there is only Edit.nc in it: use GroupDelay instead of GroupDelayFull, ambiguity correction is disabled    
+elseif isfield(wrapper_data.Observation, 'ObsEdit') &&~ iscell(wrapper_data.Observation.ObsEdit.files)
+    observation = 'GroupDelay';       
+    ambcorr = 'off';
+    fprintf('!!! WARNING: Cannot find ObsEdit folder. GroupDelay_bX.nc is used and ambiguity correction is disabled !!!\n')              
 else % ObsEdit folder is missing: use GroupDelay instead of GroupDelayFull, ambiguity correction is disabled
     observation = 'GroupDelay';       
     ambcorr = 'off';
