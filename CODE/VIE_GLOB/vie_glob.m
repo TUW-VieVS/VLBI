@@ -620,10 +620,22 @@ end
 clear nrq
 
 
+%------------------------------special EOP-------------------
+special_EOP = 0;
+if special_EOP
+    special_EOP_file = 'fix_EOP_smallnet.txt';
+    % format NGS: 18AUG08XA_N005, format vgosDB: 19AUG12XA
+    fid_special_EOP = fopen(['../DATA/GLOB/EOP/' special_EOP_file]);
+    special_EOP_sessions = textscan(fid_special_EOP,'%s');
+    fclose(fid_special_EOP);
+    reduced_flag = 0;
+end
+%------------------------------------------------------------
+
 
 % Next parameters: EOP
 [lmjd_eop,llove,lshida,lFCNset,laccSSB,lstseaspos1,lhpole,llpole,lgamma,...
-    ltidpm,ltidut,parGS] = numpar_next(parGS,parGS_hl,lse,ses,path);
+    ltidpm,ltidut,parGS] = numpar_next(parGS,parGS_hl,lse,ses,path, special_EOP_sessions);
 lstseaspos=lstseaspos1*lnstseasvar; % for each station is a set of amplitudes
 
 
@@ -634,18 +646,7 @@ if save_intermediate_results_flag
 end
 fprintf(' 2 ... Allocation of the parameters in the new N matrix \n\n')
 
-%------------------------------special EOP-------------------
-special_EOP = 0;
-if special_EOP
-    special_EOP_file = 'fix_EOP_3AUM.txt';
-    fid_special_EOP = fopen(['../DATA/GLOB/EOP/' special_EOP_file]);
-    special_EOP_sessions = textscan(fid_special_EOP,'%s');
-%     special_EOP_sessions = char(special_EOP_sessions{1});
-%     special_EOP_sessions = cellstr(special_EOP_sessions(:,1:end-5));
-    fclose(fid_special_EOP);
-    reduced_flag = 0;
-end
-%------------------------------------------------------------
+
 for ise=1:lse
 	fprintf(1, ['load session ' ses{ise} '\n'])
     load ([path ses{ise} '_par_glob.mat']);
@@ -654,32 +655,24 @@ for ise=1:lse
     %------------------------------special EOP-------------------
     if special_EOP
         index_xpol = find(strcmp({parGS.name},'xpol'));
-        if reduced_flag
-            parGS(index_xpol).id = 2; %xpol
-            parGS(index_xpol+1).id = 2; %ypol
-            parGS(index_xpol+2).id = 2; %dut1
-            parGS(index_xpol+3).id = 2; %nutdx
-            parGS(index_xpol+4).id = 2; %nutdy
-            reduced_flag = 0;
-        end
-        
-        if length(ses{ise})==9
-            ases = ses{ise};
-        else
-            ases = ses{ise}(1:end-5);
-        end
+        orig_parGS = load([path_level 'DATA/GLOB/parGS'],'parGS');
+      
+        parGS(index_xpol).id = orig_parGS.parGS(index_xpol).id; %xpol
+        parGS(index_xpol+1).id = orig_parGS.parGS(index_xpol+1).id; %ypol
+        parGS(index_xpol+2).id = orig_parGS.parGS(index_xpol+2).id; %dut1
+        parGS(index_xpol+3).id = orig_parGS.parGS(index_xpol+3).id; %nutdx
+        parGS(index_xpol+4).id = orig_parGS.parGS(index_xpol+4).id; %nutdy
+
+        ases = [];
+        ases = ses{ise};
             
         
-%         if (parGS(index_xpol).id == 2) && (sum(strcmp(ses(ise,1:end-5),special_EOP_sessions))>0)
-%        if (parGS(index_xpol).id == 2) && (sum(strcmp(ases,special_EOP_sessions))>0)
-%         if (parGS(index_xpol).id == 2) && (sum(strcmp({ases},special_EOP_sessions{1}))>0)
         if (sum(strcmp({ases},special_EOP_sessions{1}))>0)
             parGS(index_xpol).id = 0; %xpol
             parGS(index_xpol+1).id = 0; %ypol
             parGS(index_xpol+2).id = 0; %dut1
             parGS(index_xpol+3).id = 0; %nutdx
             parGS(index_xpol+4).id = 0; %nutdy
-            reduced_flag = 1;
         end
         
     end
@@ -1222,7 +1215,7 @@ if parGS(g.g_srade(1)).id==1
 end
 
 if save_intermediate_results_flag
-	save('workspace5.mat');
+	save('workspace5.mat','-v7.3');
 	%load('workspace5.mat');
 end
 
@@ -1265,14 +1258,14 @@ if exist([pathGS.path_out '_PLOTS/' pathGS.out])~=7
     mkdir([pathGS.path_out '_PLOTS/' pathGS.out])
 end
 %orient landscape
-print('-f1', '-depsc' ,'-r500',[pathGS.path_out '_PLOTS/' pathGS.out '/ant_activity_' dir_in]);
+print('-f1', '-dpng' ,'-r500',[pathGS.path_out '_PLOTS/' pathGS.out '/ant_activity_' dir_in]);
 if parGS(g.g_coord(1)).id==1
-    print('-f2', '-depsc' ,'-r500',[pathGS.path_out '_PLOTS/' pathGS.out '/ant_map_' dir_in]);
+    print('-f2', '-dpng' ,'-r500',[pathGS.path_out '_PLOTS/' pathGS.out '/ant_map_' dir_in]);
 end
 if parGS(g.g_srade(1)).id==1
-    print('-f3', '-depsc' ,'-r500',[pathGS.path_out '_PLOTS/' pathGS.out '/sou_activity_' dir_in]);
+    print('-f3', '-dpng' ,'-r500',[pathGS.path_out '_PLOTS/' pathGS.out '/sou_activity_' dir_in]);
     if ~isempty(sou_dz) % plot only if NNR (+dz) condition on source coordinates was applied
-        print('-f4', '-depsc' ,'-r500',[pathGS.path_out '_PLOTS/' pathGS.out '/sou_map_' dir_in]);
+        print('-f4', '-dpng' ,'-r500',[pathGS.path_out '_PLOTS/' pathGS.out '/sou_map_' dir_in]);
     end
 end
 

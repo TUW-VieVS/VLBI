@@ -33,7 +33,7 @@
 
 
 function [lmjd_eop,llove,lshida,lFCNset,laccSSB,lstseaspos,lhpole,llpole,lgamma,...
-          ltidpm,ltidut,parGS] = numpar_next(parGS,parGS_hl,lse,ses,path)
+          ltidpm,ltidut,parGS] = numpar_next(parGS,parGS_hl,lse,ses,path,special_EOP_sessions)
 
 [g] = globind(parGS);
 
@@ -53,8 +53,12 @@ for ise=1:lse
     iseeop(5).mjd = x_.nutdy.mjd;
     
     for ieop=g.g_eop
-        if parGS(ieop).id==1; 
-            parGS(ieop).mjdi(length(parGS(ieop).mjdi)+1 : length(parGS(ieop).mjdi)+length(iseeop(ieop-(g.g_eop(1)-1)).mjd))=iseeop(ieop-(g.g_eop(1)-1)).mjd;
+        if parGS(ieop).id==1             
+        	ases = [];
+            ases = ses{ise};
+            if (sum(strcmp({ases},special_EOP_sessions{1}))==0)
+                parGS(ieop).mjdi(length(parGS(ieop).mjdi)+1 : length(parGS(ieop).mjdi)+length(iseeop(ieop-(g.g_eop(1)-1)).mjd))=iseeop(ieop-(g.g_eop(1)-1)).mjd;            
+            end
         end
     end
     clear glob2
