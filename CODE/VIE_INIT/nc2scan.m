@@ -521,7 +521,7 @@ for iScan=1:nScans
                     % file data
 
                     ccvali=out_struct.stat(stationIndices(iStat)).(fncab{iCabls}).Cal_Cable.val;
-                    if length(ccvali)>1
+                    if length(ccvali)> scan2Station(iScan,stationIndices(iStat))
                         scan(iScan).stat(stationIndices(iStat)).(['cab_',ccn])=1e9*ccvali(scan2Station(iScan,stationIndices(iStat))); % [nano-sec]
                     else
                         scan(iScan).stat(stationIndices(iStat)).(['cab_',ccn])=0;

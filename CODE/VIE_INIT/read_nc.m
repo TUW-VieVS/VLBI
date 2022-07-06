@@ -73,9 +73,47 @@ for i_toplev_head = 1:length(Head_files)
     curr_headFile = Head_files{i_toplev_head};
     Head_version(i_toplev_head) = getVerNr( curr_headFile,id_ver );  
 end
-if length(i_head_files)==1
- Head_version(Head_version==-1) = 99;   % because the file "Head.nc" is the one with the highest Version number: Attention: perhaps GSFC changes this one day, because it actually contradicts the naming convention of other files (e.g. in station folders)
+
+
+% some vgosdb files work only with head_V00X.nc and some only with head.nc
+problematic_vgosDB=   string([ '02DEC30XA'
+    '03AUG11XA'
+    '03JAN13XA'
+    '03NOV17XA'
+    '03SEP22XA'
+    '04FEB02XA'
+    '04MAR01XA'
+    '04SEP15XA'
+    '05AUG17XA'
+    '06FEB01XA'
+    '06FEB16XE'
+    '07JUL26XE'
+    '08AUG16XA'
+    '08AUG17XA'
+    '08MAY05XA'
+    '09NOV18XA'
+    '10JAN25XA'
+    '11MAY16XA'
+    '12APR16XA'
+    '15FEB06XA'
+    '16NOV24XB'
+    '17APR28XC'
+    '17AUG05XC'
+    '17AUG12XC'
+    '17MAY15XA'
+    '17SEP14XE'
+    '18APR08XC'
+    '18MAY03XE']);
+
+sses = directory(end-9:end-1);
+
+if sum(contains(problematic_vgosDB, sses))==0
+    Head_version(Head_version==-1) = 99;   % because the file "Head.nc" is the one with the highest Version number: Attention: perhaps GSFC changes this one day, because it actually contradicts the naming convention of other files (e.g. in station folders)
+else
+    'read_nc.m line 110 problems with HEAD VERSION'
 end
+
+
 [~,i_max_ver]=max(Head_version);
 headNcFile=dir([directory,top_level(i_head_files(i_max_ver)).name]);
 headNcFile=[directory,'/',headNcFile(1).name];
