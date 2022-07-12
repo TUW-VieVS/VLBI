@@ -33,6 +33,13 @@ obs2scan = out_struct.CrossReference.(nc_filename).Obs2Scan.val;
 for iSource=1:nSources
     curName=out_struct.head.SourceList.val(:,iSource)';
     
+    % alternative names, in future should be changed in supersource file
+    if curName == '1636+826'
+        curName ='NGC6251 ';
+    elseif curName == '1845+79A'
+        curName ='3C390.3 ';
+    end
+    
     % find index in crf
     indSourceInCrf=strcmp(deblank({crf.IVSname}),deblank(curName));
     if sum(indSourceInCrf) == 0

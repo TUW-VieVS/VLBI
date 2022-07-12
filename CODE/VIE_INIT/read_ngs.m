@@ -751,7 +751,7 @@ while (idx_line <= nlines)
 
                     % Check if source.name from NGS file is equal to source.IVSname from translation table
                     if ~strcmp(sources.q(qindOfNewSourceInSources).name,sources.q(qindOfNewSourceInSources).IVSname)
-                        fprintf('WARNING: Source name from NGS file %s does not correspond to the IVS name %s from translation table!\n', sources(qindOfNewSourceInSources).name,sources(qindOfNewSourceInSources).IVSname);
+                        fprintf('WARNING: Source name from NGS file %s does not correspond to the IVS name %s from translation table!\n', sources.q(qindOfNewSourceInSources).name,sources.q(qindOfNewSourceInSources).IVSname);
                     end
 
                     if ~isempty(crf(curSourceInCrf).designation)
