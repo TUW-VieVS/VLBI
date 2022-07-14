@@ -56,7 +56,13 @@ fprintf(fid,'CRF datum: %s \n',paths.datumsou);
 fprintf(fid,'CRF fixed sou: %s \n',paths.fixedsou);
 fprintf(fid,'CRF reduced sou: %s \n',paths.soured);
 
-fprintf(fid,' %% Sessions in the solution \n');
+fprintf(fid,'\n %% Aposteriori variance of unit weight (sigma0)\n');
+fprintf(fid,'%10.4f\n',globsol.sigma0);
+
+fprintf(fid,' %% Variance factor (sigma0^2)\n');
+fprintf(fid,'%10.4f\n',globsol.varfac);
+
+fprintf(fid,'\n %% Sessions in the solution \n');
 for i=1:size(ses_time,2)
     fprintf(fid,'%s   \n',ses_time{i});
 end
