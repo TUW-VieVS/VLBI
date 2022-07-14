@@ -622,6 +622,7 @@ clear nrq
 
 %------------------------------special EOP-------------------
 special_EOP = 0;
+special_EOP_sessions='';
 if special_EOP
     special_EOP_file = 'fix_EOP_smallnet.txt';
     % format NGS: 18AUG08XA_N005, format vgosDB: 19AUG12XA
@@ -1183,6 +1184,7 @@ globsol.Q = Q;
 globsol.varpar = varpar;
 globsol.nr_of_conditions = size(B,1);
 globsol.sessions = ses;
+globsol.ses_time = ses_time;
 globsol.maxRMS = maxRMS;
 globsol.numObs = nobserv_all + nconstr_all; % SINEX
 globsol.numEst = uparam; % SINEX
