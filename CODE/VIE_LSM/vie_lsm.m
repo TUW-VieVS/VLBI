@@ -1733,6 +1733,7 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
         glob1.an = an_glob;
         glob2.x = x_;
         glob2.opt = opt_;
+        glob2.eopapr = parameter.eop;
         glob3.N = N_global;
         glob3.b = b_global;
 
