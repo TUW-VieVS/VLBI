@@ -22,11 +22,6 @@ function backward_solution(DIRIN, DIROUT)
  solbck.tgr=1;
  solbck.ant=1;
  solbck.sou=1;
-% 
-% DIROUT = 'sol211018_woVGOS';
-% DIRIN = 'vieRF2020_OPTbco_allsou';
-
-
 
 % DIRIN = 'test_cont17A';
 % DIROUT = 'TEST_cont17A';
@@ -46,6 +41,9 @@ ncond=globsol.nr_of_conditions;
 Q11 = globsol.Q(1:end-ncond,1:end-ncond);
 x1 = globsol.x;
 
+if exist([path_outglob 'BACKWARD_SOLUTION/' DIROUT])~=7
+   mkdir([path_outglob 'BACKWARD_SOLUTION/' DIROUT]);
+end
 
 for ise= lse:-1: 1
     % counter
@@ -124,17 +122,18 @@ for ise= lse:-1: 1
     bckdsol(ise).x(:,2)=varpar; %standard deviations
     bckdsol(ise).x(:,3)=parsplit(ise).redpos'; %columns in the old orig. N matrix
     bckdsol(ise).Q = Q22; % for correlation between RA&De
-    
-    clear x2 varpar Q22 b2 N22 N21 invN22
+        
+    x2=[]; varpar=[]; Q22=[]; b2=[]; N22=[]; N21=[]; invN22=[];
+    if mod(ise,100)==0
+        save([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/bckdsol_' num2str(ise)],'bckdsol','-v7.3');
+        bckdsol=[];
+    elseif ise == 1
+        save([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/bckdsol_0'],'bckdsol','-v7.3');
+        bckdsol=[];        
+    end
 end
 
 
-if exist([path_outglob 'BACKWARD_SOLUTION/' DIROUT])~=7
-   mkdir([path_outglob 'BACKWARD_SOLUTION/' DIROUT]);
-end
-
-
-save([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/bckdsol'],'bckdsol','-v7.3');
 %%
 
 
@@ -205,6 +204,11 @@ for ise= lse:-1:  1
     if mod(ise,100)==0
         fprintf(' processing session %4.0f \n',ise) 
     end 
+
+    % load correct bcksol
+    cise = floor(ise/100) * 100;
+    load([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/bckdsol_' num2str(cise)])
+    
 
     load([path_Nb 'parGS_' DIRIN '_' num2str(ise)]) %parGS
     oldcol={parGS.oldcol};
@@ -502,6 +506,14 @@ if solbck.ant==1
     % catalogue with the mean absolute position for all reduced stations
     backsol_antcatalog_mean(path_outglob,DIROUT,DIRIN)
 end
+
+if solbck.eop==1
+    % creates eop output in eoxy format
+    backsol_eoxy(pathGS,path_outglob,DIROUT,DIRIN)
+end
+
+
+
 
 
 %  save -v7.3 ([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/bckdsol'],'bckdsol');
