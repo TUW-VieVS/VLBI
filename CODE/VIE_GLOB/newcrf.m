@@ -191,7 +191,7 @@ for i=1:numSou
     end
     
     if sou(idsort(i)).refnameIERS(1,1:3) == 'VIE'
-        sou(idsort(i)).refnameIERSnoVIE = '        ';
+        sou(idsort(i)).refnameIERSnoVIE = sou(idsort(i)).refnameIVS;
     else
         sou(idsort(i)).refnameIERSnoVIE = sou(idsort(i)).refnameIERS;
     end
