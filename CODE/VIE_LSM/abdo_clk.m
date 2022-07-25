@@ -110,10 +110,24 @@
         
 
         % delete baselines from the "ebsl" list with the chosen stations
+        
+        ebslDEL = ebsl(idref,:);
+        nobs_bslDEL = nobs_bsl(idref,:);
+        fprintf('Baselines with fixed BCO, no.obs\n')
+        for k=1:size(ebslDEL,1)
+            fprintf('%8s   %8s     %5.0f\n', antenna(ebslDEL(k,1)).name, antenna(ebslDEL(k,2)).name, nobs_bslDEL(k))
+        end
         ebsl(idref,:) = [];
         nobs_bsl(idref,:) = [];
 
         % delete baselines from the "ebsl" list with less than parameter.lsmopt.bdco_minobs + koef observations
+        fl = find(nobs_bsl < (opt.bdco_minobs + koef));
+        ebslDELLOW =ebsl(fl,:);
+        nobs_bslDELLOW = nobs_bsl(fl);
+        fprintf('Baselines with fixed BCO (low no.obs), no.obs\n')
+        for k=1:size(ebslDELLOW,1)
+            fprintf('%8s   %8s     %5.0f\n', antenna(ebslDELLOW(k,1)).name, antenna(ebslDELLOW(k,2)).name, nobs_bslDELLOW(k))
+        end
         ebsl(find(nobs_bsl < (opt.bdco_minobs + koef)),:) = []; % 
     
     else
