@@ -158,8 +158,8 @@ fprintf(fidOffic_IVSformat, 'Created on %02.0f.%02.0f.%04.0f at %02.0f:%02.0f:%0
 
 fprintf(fidOffic,'\n\n\n\n');
 fprintf(fidOffic,'---------------------------------------------------------------------------------------------------------------------------------------------------\n');
-fprintf(fidOffic,'ICRF  Designation     IERS Des. Inf. Right Ascension   Declination         Uncertainty            Corr.   Mean     First    Last      Nb     Nb  \n');
-fprintf(fidOffic,'                                         J2000.0         J2000.0           R.A.      Dec.         RA-Dc   MJD      MJD      MJD       sess.  obs.\n');
+fprintf(fidOffic,'ICRF  Designation     IERS Des. Inf. Right Ascension   Declination         Uncertainty            Corr.   Mean     First    Last      Nb     Nb     IVS name\n');
+fprintf(fidOffic,'                                         J2000.0         J2000.0           R.A.      Dec.         RA-Dc   MJD      MJD      MJD       sess.  obs.       \n');
 fprintf(fidOffic,'                                      h  m  s           o  m  as           s         as                   of observation span               \n');
 fprintf(fidOffic,'---------------------------------------------------------------------------------------------------------------------------------------------------\n');
 
@@ -179,7 +179,7 @@ fprintf(fidOffic_IVSformat,'  16     --      Number of delays                   
 fprintf(fidOffic_IVSformat,'  17     --      Number of delay rates                                              \n');
 fprintf(fidOffic_IVSformat,'  18     --      Estimation flag: GLO for global or ARC for session-wise            \n\n');
 
-writeFormat='%21s  %8s  %1s  %02s %02s %011.8f  %s%02s %02s %010.7f  %10.8f %9.7f  %6.3f  %7.1f %7.1f %7.1f  %5.0f %6.0f  \n';
+writeFormat='%21s  %8s  %1s  %02s %02s %011.8f  %s%02s %02s %010.7f  %10.8f %9.7f  %6.3f  %7.1f %7.1f %7.1f  %5.0f %6.0f      %8s\n';
 writeFormat_IVS='%8s %8s    %02s %02s %011.8f    %s%02s %02s %010.7f%15.8f%14.7f%8.4f%8.1f%8.1f%8.1f%6.0f%7.0f%7.0f %3s\n';
 
 for i=1:numSou
@@ -190,12 +190,19 @@ for i=1:numSou
         sign = ' ';
     end
     
-    fprintf(fidOffic,writeFormat, sou(idsort(i)).designation, sou(idsort(i)).refnameIERS, sou(idsort(i)).dat,...
+    if sou(idsort(i)).refnameIERS(1,1:3) == 'VIE'
+        sou(idsort(i)).refnameIERSnoVIE = '        ';
+    else
+        sou(idsort(i)).refnameIERSnoVIE = sou(idsort(i)).refnameIERS;
+    end
+
+    
+    fprintf(fidOffic,writeFormat, sou(idsort(i)).designation, sou(idsort(i)).refnameIERSnoVIE, sou(idsort(i)).dat,...
        num2str(res(idsort(i),1)), num2str(res(idsort(i),2)), res(idsort(i),3),...
        sign, num2str(abs(res(idsort(i),4))), ...
        num2str(res(idsort(i),5)), res(idsort(i),6), mRADe(idsort(i),:),...
        sou(idsort(i)).correl, sou(idsort(i)).first_last_mean_O(:,3),...
-       sou(idsort(i)).first_last_mean_O(:,1:2), sou(idsort(i)).Nexp , sou(idsort(i)).Nobs  );
+       sou(idsort(i)).first_last_mean_O(:,1:2), sou(idsort(i)).Nexp , sou(idsort(i)).Nobs , sou(idsort(i)).refnameIVS );
 
     fprintf(fidOffic_IVSformat,writeFormat_IVS, sou(idsort(i)).refnameIVS, sou(idsort(i)).refnameIERS, ...
        num2str(res(idsort(i),1)), num2str(res(idsort(i),2)), res(idsort(i),3),...
