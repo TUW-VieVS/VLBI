@@ -153,12 +153,11 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
                         if sum(flag_sess) == 1
                             IVSsesnam = master.sessioncode{flag_sess};
                         elseif sum(flag_sess) ~= 1 % session was not found in VGOS masterfile
-                            fprintf('Warning: Session %s was not found in the masterfile! Continuing ...\n', sname) 
+                            IVSsesnam = checkvgosdb(sname, syear);
                         end
                     catch
-                        fprintf('Warning: Session %s was not found in the masterfile! Continuing ...\n', sname) 
+                        IVSsesnam = checkvgosdb(sname, syear);
                     end
-                    continue
                 end
             end
         else
@@ -192,58 +191,10 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
                     if sum(flag_sess) == 1
                         IVSsesnam = master.sessioncode{flag_sess};
                     elseif sum(flag_sess) ~= 1 % session was not found in VGOS masterfile
-                        fprintf('Warning: Session %s was not found in the masterfile! Searching for vgosDB file ...\n', sname)
-
-                        % if session was not found in master file try to get IVS session code from vgosDB file
-                        if contains(sname,'_')
-                            ind_ul = strfind(sname,'_');
-                            sname(ind_ul:end)=[];
-                        end
-                        vgosdbfile = strcat('../DATA/vgosDB/',syear,'/',sname,'.tgz'); %TODO path
-                        if exist(vgosdbfile,'file')
-                            untar(vgosdbfile);
-                            try
-                                IVSsesnam = (ncread(strcat(sname,'/Head.nc'),'ExpName')');
-                            catch
-                                try
-                                    IVSsesnam = (ncread(strcat(sname,'/Head.nc'),'Session')');
-                                catch
-                                    fprintf('ERROR: IVS code for session %s is not available, UNAVBL is placed instead of IVS session code!\n',sname);
-                                    IVSsesnam = 'UNAVBL';    
-                                end
-                            end
-                            rmdir(sname, 's');
-                        else
-                            fprintf('ERROR: IVS code for session %s is not available, UNAVBL is placed instead of IVS session code!\n',sname);
-                            IVSsesnam = 'UNAVBL';
-                        end
+                        IVSsesnam = checkvgosdb(sname, syear);
                     end
                 catch
-                    fprintf('Warning: Session %s was not found in the masterfile! Searching for vgosDB file ...\n', sname)
-
-                    % if session was not found in master file try to get IVS session code from vgosDB file
-                    if contains(sname,'_')
-                        ind_ul = strfind(sname,'_');
-                        sname(ind_ul:end)=[];
-                    end
-                    vgosdbfile = strcat('../DATA/vgosDB/',syear,'/',sname,'.tgz'); %TODO path
-                    if exist(vgosdbfile,'file')
-                        untar(vgosdbfile);
-                        try
-                            IVSsesnam = (ncread(strcat(sname,'/Head.nc'),'ExpName')');
-                        catch
-                            try
-                                IVSsesnam = (ncread(strcat(sname,'/Head.nc'),'Session')');
-                            catch
-                                fprintf('ERROR: IVS code for session %s is not available, UNAVBL is placed instead of IVS session code!\n',sname);
-                                IVSsesnam = 'UNAVBL';    
-                            end
-                        end
-                        rmdir(sname, 's');
-                    else
-                        fprintf('ERROR: IVS code for session %s is not available, UNAVBL is placed instead of IVS session code!\n',sname);
-                        IVSsesnam = 'UNAVBL';
-                    end
+                    IVSsesnam = checkvgosdb(sname, syear);
                 end
             end
         end
@@ -845,6 +796,32 @@ function [master] = readmasterfile(path2masterfile, year, type)
     master.mondd = data{3};
     master.dbc = data{12};
     fclose(fid);
+end
+
+function [IVSsesnam] = checkvgosdb(sname, syear)
+% if session was not found in master file try to get IVS session code from vgosDB file
+    if contains(sname,'_')
+        ind_ul = strfind(sname,'_');
+        sname(ind_ul:end)=[];
+    end
+    vgosdbfile = strcat('../DATA/vgosDB/',syear,'/',sname,'.tgz');
+    if exist(vgosdbfile,'file')
+        untar(vgosdbfile);
+        try
+            IVSsesnam = (ncread(strcat(sname,'/Head.nc'),'ExpName')');
+        catch
+            try
+                IVSsesnam = (ncread(strcat(sname,'/Head.nc'),'Session')');
+            catch
+                fprintf('ERROR: IVS code for session %s is not available, UNAVBL is placed instead of IVS session code!\n',sname);
+                IVSsesnam = 'UNAVBL';    
+            end
+        end
+        rmdir(sname, 's');
+    else
+        fprintf('ERROR: IVS code for session %s is not available, UNAVBL is placed instead of IVS session code!\n',sname);
+        IVSsesnam = 'UNAVBL';
+    end
 end
 
 function [outstr] = adjfmt(value,fmt)
