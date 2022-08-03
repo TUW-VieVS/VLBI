@@ -76,9 +76,9 @@ function [ns_codes] = gravdef_parser(ns_codes, gravdefFile)
                         current_el_delay;
                     if ~isempty(epoch_information)
                         ns_codes(iStat).gravdef.break(curBreak).start = ...
-                            mjuliandate(epoch_information{1}{1}, 'yyyymmdd');
+                            juliandate(datetime(epoch_information{1}{1},'InputFormat','yyyyMMdd'),'modifiedjuliandate');                       
                         ns_codes(iStat).gravdef.break(curBreak).end   = ...
-                            mjuliandate(epoch_information{1}{2}, 'yyyymmdd');
+                            juliandate(datetime(epoch_information{1}{2},'InputFormat','yyyyMMdd'),'modifiedjuliandate');                            
                     else
                         ns_codes(iStat).gravdef.break(curBreak).start = 0;
                         ns_codes(iStat).gravdef.break(curBreak).end   = 99999;
@@ -140,9 +140,9 @@ function [ns_codes] = gravdef_parser(ns_codes, gravdefFile)
                 current_el_delay;
             if ~isempty(epoch_information)
                 ns_codes(iStat).gravdef.break(curBreak).start = ...
-                    mjuliandate(epoch_information{1}{1}, 'yyyymmdd');
+                    juliandate(datetime(epoch_information{1}{1},'InputFormat','yyyyMMdd'),'modifiedjuliandate');
                 ns_codes(iStat).gravdef.break(curBreak).end   = ...
-                    mjuliandate(epoch_information{1}{2}, 'yyyymmdd');
+                    juliandate(datetime(epoch_information{1}{2},'InputFormat','yyyyMMdd'),'modifiedjuliandate');
             else
                 ns_codes(iStat).gravdef.break(curBreak).start = 0;
                 ns_codes(iStat).gravdef.break(curBreak).end   = 99999;
