@@ -86,6 +86,11 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
 	    load(strcat('../DATA/LEVEL3/',subdir,'/x_',sname),'x_');
 	    load(strcat('../DATA/LEVEL3/',subdir,'/opt_',sname),'opt_');
         load(strcat('../DATA/LEVEL3/',subdir,'/',sname,'_parameter'),'parameter');
+
+        % trim sname after files are loaded (remove NGS version number)
+        if length(sname) > 9
+            sname(10:end) = [];
+        end
         
         %% get IVS session code from masterfile or vgosDB file
         path2masterfiles = '../DATA/MASTER/';
@@ -131,7 +136,7 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
                 % search for current session in masterfile using dbc and mondd
                 flag_mondd = contains(master.mondd, smondd);
                 if any(isspace(sdbc))
-                    flag_dbc = strcmp(master.dbc,sdbc(1));
+                    flag_dbc = strcmp(deblank(master.dbc),sdbc(1));
                 else
                     flag_dbc = contains(master.dbc,sdbc);
                 end
@@ -169,7 +174,7 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
             % search for current session in masterfile using dbc and mondd
             flag_mondd = contains(master.mondd, smondd);
             if any(isspace(sdbc))
-                flag_dbc = strcmp(master.dbc,sdbc(1));
+                flag_dbc = strcmp(deblank(master.dbc),sdbc(1));
             else
                 flag_dbc = contains(master.dbc,sdbc);
             end
