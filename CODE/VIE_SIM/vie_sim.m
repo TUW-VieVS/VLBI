@@ -212,9 +212,7 @@ end
 obs = [scan.obs];               % Extract obs. sub-structures
 nbslobs = length([obs.obs]);    % Number of baseline observations
 
-% shall white noise be simulated?
-if swn == 1 
-    % Check, which observations types should be simulated:
+% Check, which observations types should be simulated:
     if isempty(sources.q)
         flag_sim_quasar_obs = false;
     else
@@ -250,6 +248,9 @@ if swn == 1
         end
     end
 
+
+% shall white noise be simulated?
+if swn == 1 
     % yes
     wnoise = simparam1(1).wn;
     if isfield(simparam1(1), 'wn_sat')
