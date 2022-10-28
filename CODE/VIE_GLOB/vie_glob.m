@@ -352,6 +352,27 @@ if ~isempty(aposteriori)
     ses(bad)=[];
 end
 
+
+% Delete sessions defined in an external file
+del_ses = 0;
+bad=[];
+if del_ses
+    flname='../DATA/GLOB/bad_ses_rms5_nan.txt' % solution with vgos
+%    flname='../DATA/GLOB/bad_ses_rms5_nan_allVGOS.txt' % sx solution
+    fileID = fopen(flname);
+    badzwd = textscan(fileID,'%s ','CommentStyle','%');
+    fclose(fileID);
+    
+    bad=logical(zeros(1,size(ses,2)));
+    for i=1:size(badzwd{1},1)
+        logf = strcmp(ses,badzwd{1}(i));
+        bad = bad + logf;
+    end
+    ses(find(bad==1))=[];    
+end
+
+
+
 lse=size(ses,2);
 
 for ise=1:lse
@@ -622,9 +643,9 @@ clear nrq
 
 %------------------------------special EOP-------------------
 special_EOP = 0;
-special_EOP_sessions='';
+special_EOP_sessions{1}='';
 if special_EOP
-    special_EOP_file = 'fix_EOP_smallnet.txt';
+    special_EOP_file = 'fix_EOP_for_single_baseline_sessions.txt';
     % format NGS: 18AUG08XA_N005, format vgosDB: 19AUG12XA
     fid_special_EOP = fopen(['../DATA/GLOB/EOP/' special_EOP_file]);
     special_EOP_sessions = textscan(fid_special_EOP,'%s');
