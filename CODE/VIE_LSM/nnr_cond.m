@@ -28,14 +28,22 @@ function [N] = nnr_cond(ns,ra,de,opt,sum_dj,N)
              Bra = []; Bde = []; B = [];
     
                                       
-	for isou = 1 : ns
+    for isou = 1 : ns
         
         %--------------------
         bra(3,1) = 0; bde = bra;
         %--------------------
-        bra(1,1) = tan(de(isou))*cos(ra(isou)); 
-        bra(2,1) = tan(de(isou))*sin(ra(isou)); 
-        bra(3,1) = -1; 
+%         bra(1,1) = tan(de(isou))*cos(ra(isou)); 
+%         bra(2,1) = tan(de(isou))*sin(ra(isou)); 
+%         bra(3,1) = -1; 
+
+        % C. S. Jacobs et al.: Rotational Alignment Altered by Source Position
+        % Correlations, IVS 2010 General Meeting Proceedings, p.305–309 
+        % https://ivscc.gsfc.nasa.gov/publications/gm2010/jacobs2.pdf
+        bra(1,1) = tan(de(isou))*cos(ra(isou))*cos(de(isou))*cos(de(isou)); 
+        bra(2,1) = tan(de(isou))*sin(ra(isou))*cos(de(isou))*cos(de(isou)); 
+        bra(3,1) = -1*cos(de(isou))*cos(de(isou));  
+                
         %--------------------
         bde(1,1) = -sin(ra(isou)); 
         bde(2,1) =  cos(ra(isou)); 
@@ -51,7 +59,7 @@ function [N] = nnr_cond(ns,ra,de,opt,sum_dj,N)
         Bra = horzcat(Bra,bra); Bde = horzcat(Bde,bde);
         
         clear bra bde
-    end    
+	end    
    B1 = horzcat(Bra,Bde); 
    
    B1(~any(B1,2),:) = [];

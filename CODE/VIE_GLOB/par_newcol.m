@@ -59,7 +59,7 @@
 
 function [ar,actp,parGS] = par_newcol(parGS,parGS_hl,antenna,refantbr,refnamec,qnames,qrefname,aostname,rgstname,ise,lnc,lnv,lns,lnao,...
                                                llove,lshida,lFCNset,stseasname,lse,nvsou,laccSSB,lhpole,llpole,lgamma,lrg,...
-                                               ltidpm,ltidut);
+                                               ltidpm,ltidut)
 
 
 

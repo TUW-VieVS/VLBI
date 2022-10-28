@@ -37,12 +37,16 @@
         end
 
         % take the reference station from the OPT file "REFERENCE CLOCK"
+        
         rstat = find([opt.stat.ref] == 1);
+%         rstat = find(strcmp(deblank({opt.stat.name}),'RAEGSMAR'));
+        
         idref = [find(bl1 == rstat ); find(bl2 == rstat )];         
         
         % check if there are baselines with less than opt.bdco_minobs observations to the
         % reference station (in GUI opt.bdco_minobs = 5)
         idfewrefobs = find(nobs_bsl(idref) < opt.bdco_minobs);
+%         idfewrefobs = [];
         
         % if there are baselines with less than opt.bdco_minobs
         % observations, search for another reference station. It is the
