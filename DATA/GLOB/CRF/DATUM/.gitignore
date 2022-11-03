@@ -1,3 +1,5 @@
 *
 !.gitignore
 !datum_test.txt
+!icrf3sx_defining_IERS_all303.txt
+!icrf3sx_defining_IERS_OK.txt

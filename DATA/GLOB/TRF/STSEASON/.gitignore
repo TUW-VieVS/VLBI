@@ -1,3 +1,6 @@
 *
 !.gitignore
 !stseasonal_test.txt
+!ant_seasonalNOVGOS_vie2022b_50ses.txt
+!ant_seasonalwithVGOS_vie2022b_50ses.txt
+!st_harm_vie2020_50ses.txt
