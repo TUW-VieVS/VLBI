@@ -474,8 +474,13 @@ end
 % *************************
 disp('station corrections')
 
-% do that before the loop - otherwise very likely pretty slow!
-cpsd_all = cPostSeismDeform(MJD,antenna); % [3 x nScans x nStat] matrix / meters!
+trffile = parameter.vie_init.trf;
+if strcmp(trffile{2},'dtrf2020')
+    cpsd_all = cPostSeismDeformTS(MJD,antenna); % DTRF2020 - psd as Time Series
+else
+    % do that before the loop - otherwise very likely pretty slow!
+    cpsd_all = cPostSeismDeform(MJD,antenna); % [3 x nScans x nStat] matrix / meters!
+end
 
 if strcmpi(parameter.vie_init.zhd,'gpt3')  || strcmpi(parameter.vie_init.zwd,'gpt3') || strcmpi(parameter.vie_mod.mfh,'gpt3') || strcmpi(parameter.vie_mod.mfw,'gpt3') ||  strcmpi(parameter.vie_mod.apgm_h,'gpt3') || strcmpi(parameter.vie_mod.apgm_w,'gpt3')
     cell_grid_GPT3 = gpt3_5_fast_readGrid;

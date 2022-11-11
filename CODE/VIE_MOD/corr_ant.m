@@ -409,12 +409,23 @@ for ist=1:nant
     
     %%% Post-seismic deformation
     if ~strcmp(trffile{2}, 'manualTrf')
-        if isfield(trf(IDsuper).(trffile{2}), 'psd')
-            antenna(ist).psd=trf(IDsuper).(trffile{2}).psd;
-        elseif strcmp(trffile{2}, 'vievsTrf')
-            if isfield(trf(IDsuper).itrf2014, 'psd')
-                antenna(ist).psd=trf(IDsuper).itrf2014.psd; % apply psd from ITRF2014 to vievsTRF
-                fprintf('\n ITRF2014 psd applied at station %8s !!!\n',antenna(ist).name);
+        if strcmp(trffile{2},'dtrf2020')
+            if isfield(trf(IDsuper).(trffile{2}), 'psd')
+                idpsd = find(trf(IDsuper).(trffile{2}).psd.epoch > mjd1-1 & trf(IDsuper).(trffile{2}).psd.epoch < mjd2+1);
+                if ~isempty(idpsd)
+                    antenna(ist).psdTS=[trf(IDsuper).(trffile{2}).psd.x(idpsd(1)) trf(IDsuper).(trffile{2}).psd.y(idpsd(1)) trf(IDsuper).(trffile{2}).psd.z(idpsd(1))]./1000; %xyz, m
+                else
+                    antenna(ist).psdTS=[0 0 0];
+                end
+            end
+        else
+            if isfield(trf(IDsuper).(trffile{2}), 'psd')
+                antenna(ist).psd=trf(IDsuper).(trffile{2}).psd;
+            elseif strcmp(trffile{2}, 'vievsTrf')
+                if isfield(trf(IDsuper).itrf2014, 'psd')
+                    antenna(ist).psd=trf(IDsuper).itrf2014.psd; % apply psd from ITRF2014 to vievsTRF
+                    fprintf('\n ITRF2014 psd applied at station %8s !!!\n',antenna(ist).name);
+                end
             end
         end
     end

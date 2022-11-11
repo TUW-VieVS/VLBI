@@ -26,8 +26,8 @@
 
 function [varargout] = readSnx(infile, varargin)
 
-% infile='D:\VieVS\TRF\data\VTRF2014_final.snx';
-
+% infile='../TRF/data/DTRF2020P_VLBI.snx';
+% 
 % varargin{1}='blocks2read';
 % varargin{2}={'SOLUTION/EPOCHS', 'SITE/ID'};
 
@@ -83,7 +83,7 @@ while ~feof(fid)
     
     % if new block
     if strcmpi(curl(1),'+')
-        curBlockName=curl(2:end);
+        curBlockName=deblank(curl(2:end));
         if readAllBlocks || sum(strcmpi(curBlockName,readBlocks))>0
             
             curBlockDone=0;
@@ -149,7 +149,7 @@ function solEp=readSolutionEpochsBlock(fid)
     curl=fgetl(fid); if isempty(curl); curl=' '; end
     
     solEp=struct('code', [], 'pt', [], 'break', []);
-    while ~strcmpi(curl,['-',curBlockName])
+    while ~strcmpi(deblank(curl),['-',curBlockName])
         % if not a comment line
         if ~strcmpi(curl(1),'*')
             solNr=str2double(curl(10:13)); 
@@ -258,7 +258,7 @@ function solEst=readSolutionEstimateBlock(fid)
     allFieldsOfBreak={'x','x_sigma','y','y_sigma','z','z_sigma',...
         'vx','vx_sigma','vy','vy_sigma','vz','vz_sigma'};
     
-    while ~strcmpi(curl,['-',curBlockName])
+    while ~strcmpi(deblank(curl),['-',curBlockName])
         % if not a comment line
         if ~strcmpi(curl(1),'*')
             curCodeStr=curl(15:18);
@@ -434,7 +434,7 @@ function siteId=readSiteIdBlock(fid)
 %     code=zeros(preallLength,1); pt=cell(preallLength,1); domes=pt;
 %     t=pt; station=pt; descr=pt;
     
-    while ~strcmpi(curl,['-',curBlockName])
+    while ~strcmpi(deblank(curl),['-',curBlockName])
         % if not a comment line
         if ~strcmpi(curl(1),'*')
             
@@ -444,8 +444,7 @@ function siteId=readSiteIdBlock(fid)
             else
                 curCodeInd=sum(siteCodesGlobal~=0)+1;
                 siteCodesGlobal(curCodeInd)=str2double(curl(2:5)); %  save it to "global" var -> this is the "main" vector for sitecodes
-                siteId(curCodeInd).code=siteCodesGlobal(curCodeInd);
-                
+                siteId(curCodeInd).code=siteCodesGlobal(curCodeInd);  
                 siteId(curCodeInd).pt=curl(7:8);
                 siteId(curCodeInd).domes=curl(10:18);
                 siteId(curCodeInd).t=curl(20);

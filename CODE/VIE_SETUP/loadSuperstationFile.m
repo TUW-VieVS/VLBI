@@ -38,7 +38,7 @@ superstatFields=fieldnames(superstations);
 % define all coordinate frames which exist in superstations file (those
 % should be used for the popupmenu in vievs)
 allCoordinateFrames={'vievsTrf', 'itrf2005', 'itrf2008', 'itrf2014', 'dtrf2014',...
-    'vtrf2008', 'vtrf2014', 'ivsTrf2014b', 'VieTRF13', 'itrf2020', 'userOwnTrf'};
+    'vtrf2008', 'vtrf2014', 'ivsTrf2014b', 'VieTRF13', 'itrf2020', 'dtrf2020', 'userOwnTrf'};
 
 % update popupmenu
 newPopupmenuEntries=superstatFields(ismember(superstatFields, allCoordinateFrames));

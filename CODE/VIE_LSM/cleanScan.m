@@ -352,7 +352,7 @@ if parameter.outlier.flag_remove_outlier
 
             % get scan of cur outlier (the one which is close by 1/10 second!)
             curScanLog = abs([scan.mjd] - parameter.outlier.obs2remove(iOutlier).mjd) < (oneSecInDays/10);
-            curSouLog = parameter.outlier.obs2remove(iOutlier).sou;
+            curSouLog = deblank(parameter.outlier.obs2remove(iOutlier).sou);
             
             % Check, if only one scan was found!
             % - If more than one scan was found by matching the scan reference times, the stations have to be considered in addition

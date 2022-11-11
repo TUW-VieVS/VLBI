@@ -55,14 +55,18 @@ userOwnTrfFile=inFiles(idiF).name;
 %itrf2020File=inFiles(idiF).name; idiF=idiF+1;
 itrf2020File='../TRF/data/ITRF2020-IVS-TRF.SNX'; 
 
+%dtrf2020File=inFiles(idiF).name; idiF=idiF+1;
+dtrf2020File='../TRF/data/DTRF2020P_VLBI.snx'; 
+
 
 % Flags, for the availability of TRF files
 flag_trf_itrf2020 = true;
 flag_trf_itrf2014 = true;
 flag_trf_dtrf2014 = true;
 flag_trf_vtrf2014 = true;
-flag_trf_vieTrf13 = true;
+flag_trf_vieTrf13 = false;
 flag_trf_ivstrf2014b = true;
+flag_trf_dtrf2020 = true;
 
 aplrgFilename1 = '../TRF/data/APL_RC_external1.txt'; % added by Hana 01/2014
 aplrgFieldname1 = 'p0_RCexternal';
@@ -89,7 +93,7 @@ atm0=struct('vienna', [], 'gsfc', [], 'vandam', []);
 ns_codes=struct('code', [], 'name', [],'domes', [], 'CDP', [], 'comments', [], ...
     'antenna_info', [], 'ecc', [], ...
     'ocean_loading', [],  ...
-    'itrf2020', [],  ...  
+    'itrf2020', [], 'dtrf2020', [],  ...  
     'itrf2014', [], 'dtrf2014', [], ...
     'vtrf2014', [], 'ivsTrf2014b', [], 'VieTRF13', [], 'vievsTrf', [], ...
     'atmosphere_tidal_loading', [], 'oceanPoleTideLoading', [], 'aplrg', [], ...
@@ -419,9 +423,57 @@ fprintf('\n2.3 Terrestrial reference frames\n')
 
 
 % --------------------------
+%  DTRF2020P_VLBI.snx
+% --------------------------
+fprintf('\n DTRF2020P_VLBI.snx\n\n');
+if exist(dtrf2020File, 'file')
+	dtrf2020File_name = 'dtrf2020';
+	[ns_codes] = trf_by_snx_reader(ns_codes,dtrf2020File,dtrf2020File_name,break0);
+
+    setStartEndEpoch('dtrf2020');
+
+    % add post-seismic deformation
+    dtrf2020psddir='../TRF/data/DTRF2020_PSD/';
+    listdtrf2020psd = dir(dtrf2020psddir);
+    
+    if exist(dtrf2020psddir, 'dir')
+        for i = 1:length(listdtrf2020psd)
+            if contains(listdtrf2020psd(i).name,'psd_xyz')
+                psd_xyz=[];
+                fileID = fopen([dtrf2020psddir listdtrf2020psd(i).name]);
+                psd_xyz = textscan(fileID,'%f %f %f %f','Comments','#');
+                fclose(fileID);
+                
+                id_ns = strcmp({ns_codes.CDP}, listdtrf2020psd(i).name(1:4));
+                if ~isfield(ns_codes(id_ns).dtrf2020,'psd')
+                    ns_codes(id_ns).dtrf2020.psd.epoch = psd_xyz{1};
+                    ns_codes(id_ns).dtrf2020.psd.x = psd_xyz{2}; %mm
+                    ns_codes(id_ns).dtrf2020.psd.y = psd_xyz{3}; %mm
+                    ns_codes(id_ns).dtrf2020.psd.z = psd_xyz{4}; %mm
+                else
+                    ns_codes(id_ns).dtrf2020.psd.epoch = [ns_codes(id_ns).dtrf2020.psd.epoch; psd_xyz{1}];
+                    ns_codes(id_ns).dtrf2020.psd.x = [ns_codes(id_ns).dtrf2020.psd.x; psd_xyz{2}]; %mm
+                    ns_codes(id_ns).dtrf2020.psd.y = [ns_codes(id_ns).dtrf2020.psd.y; psd_xyz{3}]; %mm
+                    ns_codes(id_ns).dtrf2020.psd.z = [ns_codes(id_ns).dtrf2020.psd.z; psd_xyz{4}]; %mm
+                end
+            end
+        end
+        
+    else
+        fprintf('Warning: psd file of DTRF2020 not found\n(%s)\npause 2sek\n',...
+            dtrf2020psddir);
+        pause(2);
+    end
+else
+    fprintf('ITRF2020-IVS-TRF.snx is not available\n\n');
+    flag_trf_itrf2020 = false;
+end
+
+
+% --------------------------
 % 2.3.0 ITRF2020-IVS-TRF.snx
 % --------------------------
-fprintf('\n2.3.0 ITRF2020-IVS-TRF.snx\n\n');
+fprintf('\n ITRF2020-IVS-TRF.snx\n\n');
 if exist(itrf2020File, 'file')
 	itrf2020File_name = 'itrf2020';
 	[ns_codes] = trf_by_snx_reader(ns_codes,itrf2020File,itrf2020File_name,break0);
@@ -508,7 +560,7 @@ end
 % --------------------------
 % 2.3.1 ITRF2014-IVS-TRF.snx
 % --------------------------
-fprintf('\n2.3.1 ITRF2014-IVS-TRF.snx\n\n');
+fprintf('\n ITRF2014-IVS-TRF.snx\n\n');
 if exist(itrf2014File, 'file')
 	itrf2014File_name = 'itrf2014';
 	[ns_codes] = trf_by_snx_reader(ns_codes,itrf2014File,itrf2014File_name,break0);
@@ -592,7 +644,7 @@ end
 % 2.3.2 DTRF2014
 % --------------------------
 
-fprintf('\n2.3.2 DTRF2014_VLBI.snx\n\n');
+fprintf('\n DTRF2014_VLBI.snx\n\n');
 if exist(dtrf2014File, 'file')
 	dtrf2014File_name = 'dtrf2014';
 	[ns_codes] = trf_by_snx_reader(ns_codes,dtrf2014File,dtrf2014File_name,break0);
@@ -607,7 +659,7 @@ end
 % ------------------------
 % 2.3.3 VTRF2014_final.snx
 % ------------------------
-fprintf('\n2.3.3 Loading VTRF2014_final.snx\n\n');
+fprintf('\n Loading VTRF2014_final.snx\n\n');
 if exist(vtrf2014File, 'file')
 
 	vtrf2014File_name = 'vtrf2014';
@@ -623,7 +675,7 @@ end
 % --------------------------
 % 2.3.4 IVS_TRF2014b.SSC.txt
 % --------------------------
-fprintf('\n2.3.4 Loading IVS_TRF2014b.SSC.txt\n\n');
+fprintf('\n Loading IVS_TRF2014b.SSC.txt\n\n');
 
 if ~isempty(ivstrf2014bFile)
 	ep=2005;
@@ -637,7 +689,7 @@ end
 % 2.3.5 vieTrf13.txt
 % --------------------
 
-fprintf('\n2.3.5 Loading VieTRF13.txt\n\n');
+fprintf('\n Loading VieTRF13.txt\n\n');
 
 if ~isempty(vieTrf13File)
 	% open file -> read date -> close file
@@ -716,7 +768,7 @@ end
 % and (if no coordinates are available there) the VTRF2008. Also in this
 % backup-TRF the estimated coordinates after an earthquake are written to!
 
-fprintf('\n2.3.6 Loading VieVS TRF file\n\n');
+fprintf('\n Loading VieVS TRF file\n\n');
 
 % read data using textscan
 fid=fopen(vievsTrfFile);
@@ -818,7 +870,7 @@ end
 % 2.3.9 User own TRF file
 % -----------------------
 if ~isempty(userOwnTrfFile)
-    fprintf('\n2.3.9 User own TRF file (%s)\n\n', userOwnTrfFile);
+    fprintf('\n User own TRF file (%s)\n\n', userOwnTrfFile);
 
     if strcmp(userOwnTrfFile(end-3:end),'.TXT') || strcmp(userOwnTrfFile(end-3:end),'.txt')
         % open file -> read date -> close file
@@ -1680,7 +1732,9 @@ end
 if ~flag_trf_ivstrf2014b
     ns_codes = rmfield(ns_codes, 'ivsTrf2014b');
 end
-
+if ~flag_trf_dtrf2020
+    ns_codes = rmfield(ns_codes, 'dtrf2020');
+end
 
 % save the main variable under name superstations
 superstations=ns_codes;

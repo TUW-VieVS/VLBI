@@ -684,7 +684,8 @@ while (idx_line <= nlines)
                 antenna(statIdVec(iStat)).numobs     = 0;   
                 antenna(statIdVec(iStat)).lastObsMjd = [];   
                 antenna(statIdVec(iStat)).psd        = [];
-            
+                antenna(statIdVec(iStat)).psdTS        = [];
+                
             else %station is already in antenna, set last ObsMjd
                 antenna(statIdVec(iStat)).lastObsMjd = mjd;   
             end
