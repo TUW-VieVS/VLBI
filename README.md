@@ -49,8 +49,8 @@ Please be aware that this repository contains more or less only the program code
 * Master files are needed for the automatic generation of a process list, they can be downloaded from https://cddis.nasa.gov/archive/vlbi/ivscontrol/ as yearly *.txt files and have to be stored in : `/VLBI/DATA/MASTER`
 
 ### Earth Orientation parameters
-* EOP C04 can be downloaded from ftp://ftp.iers.org/products/eop/long-term/ . Take for example "eopc04_14_IAU2000.62-now" and store it as `C04_14_1962_now.txt` in `/VLBI/EOP/`.
-* EOP finals can be downloaded from ftp://ftp.iers.org/products/eop/rapid/standard/ . Take for example "finals2000A.all" and store it as `finals_all_IAU2000.txt` in `/VLBI/EOP/`.
+* EOP C04 can be downloaded from https://datacenter.iers.org/data/latestVersion/EOP_14_C04_IAU2000A_one_file_1962-now.txt. Take "EOP_14_C04_IAU2000A_one_file_1962-now.txt" and store it as `C04_14_1962_now.txt` in `/VLBI/EOP/`.
+* EOP finals can be downloaded from https://datacenter.iers.org/data/latestVersion/finals.all.iau2000.txt. Take "finals.all.iau2000.txt" and store it as `finals_all_IAU2000.txt` in `/VLBI/EOP/`.
 
 ### Troposphere delay models, ray-tracing data and atmosphere non-tidal loading
 * Mapping functions: VMF1 and VMF3 can be retrieved from http://vmf.geo.tuwien.ac.at/trop_products/VLBI/ . Choose the yearly files and store them in the respective folder (VMF1 or VMF3) in `/VLBI/TRP/`.
