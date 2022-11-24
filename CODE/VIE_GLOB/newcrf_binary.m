@@ -96,8 +96,9 @@ for k=1:numSou
     
     idObsSou=find(souactiv(k,:)>0);
     soumjdall = souactiv(end,idObsSou);
-    
-    first_last_mean_O_MJD = [min(soumjdall) max(soumjdall) (min(soumjdall)+max(soumjdall))/2] ;
+    meanO = sum(souactiv(k,:).* souactiv(end,:)) / sum(souactiv(k,:)); 
+
+    first_last_mean_O_MJD = [min(soumjdall) max(soumjdall) meanO] ;
     
     [yyDoySecod]=mjd2yydoysecod(first_last_mean_O_MJD(3));
     mean_epoch=yyDoySecod(1)+yyDoySecod(2)/365.25;

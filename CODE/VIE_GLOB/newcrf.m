@@ -126,7 +126,9 @@ for k=1:numSou
     
     idObsSou=find(souactiv(k,:)>0);
     soumjdall = souactiv(end,idObsSou);
-    sou(k).first_last_mean_O = [min(soumjdall) max(soumjdall) (min(soumjdall)+max(soumjdall))/2] ;
+    meanO = sum(souactiv(k,:).* souactiv(end,:)) / sum(souactiv(k,:));
+    
+    sou(k).first_last_mean_O = [min(soumjdall) max(soumjdall) meanO] ;
     sou(k).Nexp = length(idObsSou);
     sou(k).Nobs = sum(souactiv(k,idObsSou));
    
