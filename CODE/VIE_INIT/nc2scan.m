@@ -83,17 +83,21 @@ try
     out_struct.Solve.AtmSetup;
     if isfield(wrapper_data.Observation, 'ObsEdit') % check if ObsEdit folder exits
         if ~any(strcmp(wrapper_data.Observation.ObsEdit.files, 'GroupDelayFull_bX.nc')) % check if GroupDelayFull.nc exists, else use GroupDelay.nc
-            observation = 'GroupDelay';
-            fprintf('WARNING: Cannot find GroupDelayFull file in ObsEdit. Using GroupDelay instead.\n')
+            if strcmp(observation,'GroupDelayFull')
+                observation = 'GroupDelay';
+                fprintf('WARNING: Cannot find GroupDelayFull file in ObsEdit. Using GroupDelay instead.\n')
+            end            
         end
         if ~any(strcmp(wrapper_data.Observation.ObsEdit.files, 'NumGroupAmbig_bX.nc')) % check if NumGroupAmbig_bX.nc exists, else turn off ambcorr
             ambcorr = 'off';
             fprintf('WARNING: Cannot find NumGroupAmbig file in ObsEdit. Ambiguity correction is disabled.\n')   
         end
     else
-        observation = 'GroupDelay';
-        ambcorr = 'off';
-        fprintf('WARNING: ObsEdit folder is missing! Using GroupDelay and disabling ambiguity correction.\n')
+        if strcmp(observation,'GroupDelayFull')
+            observation = 'GroupDelay';
+            ambcorr = 'off';
+            fprintf('WARNING: ObsEdit folder is missing! Using GroupDelay and disabling ambiguity correction.\n')
+        end
     end
     if ~any(strcmp(wrapper_data.Observation.ObsDerived.files, 'Cal-SlantPathIonoGroup_bX.nc')) % check if Cal_SlantPathIonoGroup_bX.nc exists, else turn off ioncorr
         ioncorr = 'off';
@@ -121,7 +125,6 @@ switch observation
         elseif strcmp(ambcorr,'off')
             amb_k = -1;
         end
-
         
     case 'GroupDelay'
 
@@ -132,13 +135,33 @@ switch observation
         sigma_tau_folder = 'Observables';
         sigma_tau_file = get_nc_filename({'GroupDelay', '_', freqband}, wrapper_data.Observation.Observables.files, 1);
         sigma_tau_field = 'GroupDelaySig';        
-
         
         if strcmp(ambcorr,'on')
             amb_k = 1;
         elseif strcmp(ambcorr,'off')
             amb_k = 0;
         end
+
+    case 'SBDelay'
+
+        % Observation (tau) and sigma tau
+        tau_folder = 'Observables';
+        tau_file = get_nc_filename({observation, '_', freqband}, wrapper_data.Observation.Observables.files, 1);
+        tau_field = 'SBDelay';
+        sigma_tau_folder = 'Observables';
+        sigma_tau_file = get_nc_filename({observation, '_', freqband}, wrapper_data.Observation.Observables.files, 1);
+        sigma_tau_field = [tau_field, 'Sig'];
+
+        if strcmp(ambcorr,'on')
+            amb_k = 1;
+        elseif strcmp(ambcorr,'off')
+            amb_k = 0;
+        end
+
+    otherwise
+
+        warning('Observable typ not supported in VieVS\nSupported types: GroupDelayFull, GroupDelay, SBDelay')
+
 end
 
 fprintf('vgosdb data source:\n')
@@ -190,7 +213,7 @@ if amb_k ~= 0
     
     % check if ObsEdit folder exists (mandatory for ambig values)
     if isfield(wrapper_data.Observation, 'ObsEdit')
-        nc_filename = get_nc_filename({'NumGroupAmbig', '_bX'}, wrapper_data.Observation.ObsEdit.files, 1);
+        nc_filename = get_nc_filename({'NumGroupAmbig', freqband}, wrapper_data.Observation.ObsEdit.files, 1);
         ambN_file = nc_filename;
     else
          fprintf(' - No nc file with ambiguity correction defined in the selected wrapper file!\n')
@@ -244,7 +267,7 @@ if strcmp(parameter.vie_init.iono, 'observation_database')
             else
                 ionoDelFlagcell = num2cell(zeros(1,length(groupDelayWAmbigCell)));
             end
-            fprintf('Ionospheric delay will be used\n')
+            % fprintf('Ionospheric delay will be used\n')
         else
             fprintf('Can find Ionospheric Delay File\n')
             warning('Ionospheric delay can not be used because was not found\n')
@@ -607,6 +630,7 @@ end
 % delete last scan entry (which was never needed)
 scan(end)=[];
 % fprintf('nc2scan finished\n')
+
 
 
 
