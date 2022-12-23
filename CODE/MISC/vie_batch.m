@@ -356,19 +356,21 @@ if ~isempty(process_list)
 
                     case 'vgosdb'
                         parameter.session_name  = session_name(6 : (strfind(session_name, ' [vgosDB]')-1));
-                        year_tmp = str2double(parameter.session_name(1:2));
-                        % Check if conversion was sucessfull:
-                        if isnan(year_tmp)
-                            error('Invalid vgosDB file name: The first two letters have to represent the year of the session! Please keep the standard naming convention, e.g. "16AUG26XU"!');
-                        else
-                            % Convert two digit year to four digits!
-                            if year_tmp < 79
-                                year_tmp = year_tmp + 2000;
-                            elseif year_tmp >= 79
-                                year_tmp = year_tmp + 1900;
-                            end
-                        end
-                        parameter.year = num2str(year_tmp); % year has to be saved as string!
+%                         year_tmp = str2double(parameter.session_name(1:2));
+%                         % Check if conversion was sucessfull:
+%                         if isnan(year_tmp)
+%                             error('Invalid vgosDB file name: The first two letters have to represent the year of the session! Please keep the standard naming convention, e.g. "16AUG26XU"!');
+%                         else
+%                             % Convert two digit year to four digits!
+%                             if year_tmp < 79
+%                                 year_tmp = year_tmp + 2000;
+%                             elseif year_tmp >= 79
+%                                 year_tmp = year_tmp + 1900;
+%                             end
+%                         end
+%                         parameter.year = num2str(year_tmp); % year has to be saved as string!
+                        parameter.year = session_name(1:4); % works if the session is stored in the directory with the name of the year
+                        
                         parameter.filepath      = ['../DATA/vgosDB/', session_name(1:4), '/'];
                         fprintf(' Input file format: vgosDB\n');
                 end % switch(parameter.data_type)

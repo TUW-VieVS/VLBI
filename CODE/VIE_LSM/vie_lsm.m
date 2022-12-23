@@ -253,10 +253,11 @@ parameter.vie_init.stat_dw = [];
 % read OPT-file
 if length(parameter.session_name) == 14
     opt_file_path_name = ['../../VLBI_OPT/', parameter.vie_init.diropt, '/', parameter.filepath(end-4:end-1), '/', parameter.session_name(1:end-5), '.OPT'];
-elseif length(parameter.session_name) == 9
+% elseif length(parameter.session_name) == 9
+else
     opt_file_path_name = ['../../VLBI_OPT/', parameter.vie_init.diropt, '/', parameter.filepath(end-4:end-1), '/', parameter.session_name, '.OPT'];
-elseif length(parameter.session_name) ~= 19
-    warning('Session name does not follow convention');
+% elseif length(parameter.session_name) ~= 19
+%     warning('Session name does not follow convention');
 end
 if parameter.opt.use_opt_files
     if exist(opt_file_path_name, 'file')

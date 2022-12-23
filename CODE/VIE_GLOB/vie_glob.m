@@ -368,7 +368,7 @@ if del_ses
         logf = strcmp(ses,badzwd{1}(i));
         bad = bad + logf;
     end
-    ses(find(bad==1))=[];    
+    ses(find(bad>0))=[];    
 end
 
 
