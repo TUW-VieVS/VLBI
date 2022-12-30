@@ -26,6 +26,12 @@
 % OUTPUT
 %	creates txt-files in IVS EOP format with respect to input option
 %   *.eopi file for intensive sessions, *.eoxy for 24h sessions
+%
+% CHANGES
+% 04-2022 LK - implemented new IVS EOP format v3.0
+% 11-2022 LK - add comment if estimated EOP are used in automated processing
+% 12-2022 LK - implement changes of vgosDB naming convention + master file
+
 function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsrate)
 
     %% Get file name from GUI input
@@ -66,36 +72,48 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
         ind = max([ind_unix, ind_dos]);
         sname = process_list(j,ind+1:end);
         sname = strtrim(sname); % Remove leading and trailing blanks from string - just to be sure...
-        syear = str2double(sname(1:2));
-        if syear>70
-            syear = num2str(1900+syear);
-        else
-            syear = num2str(2000+syear);
-        end
-        
+
         % Remove tags ([VGOSDB] or [VSO]) from string:
         char_id = strfind(sname, ' ');
         if ~isempty(char_id)
             sname = sname(1:char_id-1);
         end
-        
-        smondd = sname(3:7);
-        sdbc = sname(8:9); sdbc = replace(sdbc,'_',' ');
-        
-        % load files
-	    load(strcat('../DATA/LEVEL3/',subdir,'/x_',sname),'x_');
-	    load(strcat('../DATA/LEVEL3/',subdir,'/opt_',sname),'opt_');
-        load(strcat('../DATA/LEVEL3/',subdir,'/',sname,'_parameter'),'parameter');
 
-        % trim sname after files are loaded (remove NGS version number)
-        if length(sname) > 9
-            sname(10:end) = [];
+        try 
+            % load files
+	        load(strcat('../DATA/LEVEL3/',subdir,'/x_',sname),'x_');
+	        load(strcat('../DATA/LEVEL3/',subdir,'/opt_',sname),'opt_');
+            load(strcat('../DATA/LEVEL3/',subdir,'/',sname,'_parameter'),'parameter');
+        catch
+            fprintf('Error: Check if x_, opt_, and _parameter.mat file exists for session %s!\n', sname)
+            continue
+        end
+
+        % distinguish between old and new vgosDB naming convention
+        if length(sname) == 15 && contains(sname, '-') % new vgosDB name YYYYMMDD-SSSSS
+            syear = str2double(sname(1:4));
+            scode = extractAfter(sname, '-');
+        else % old vgosDB name YYMONDDSS
+            % trim sname after files are loaded (remove NGS version number)
+            if length(sname) > 9
+                sname(10:end) = [];
+            end
+            syear = str2double(sname(1:2));
+            if syear>70
+                syear = num2str(1900+syear);
+            else
+                syear = num2str(2000+syear);
+            end
+            smondd = sname(3:7);
+            sdbc = sname(8:9); sdbc = replace(sdbc,'_',' ');
         end
         
         %% get IVS session code from masterfile or vgosDB file
         path2masterfiles = '../DATA/MASTER/';
         
-        if flag_intensive && str2double(syear)>1991
+        if syear >= 2023
+            IVSsesnam = scode;
+        elseif flag_intensive && str2double(syear) > 1991
             path2masterfile = strcat(path2masterfiles, 'master', num2str(syear(3:4)), '-int.txt');
 
             % read intensive masterfile and save master struct
@@ -663,9 +681,9 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
     
     % EOP apriori
     if strcmp(parameter.vie_mod.eopoc,'IERS_Desai_Sibois.dat')
-        fprintf(fid,'%s\t%s\n','EOP_SUB-DAILY_MODEL', 'DESAI-SIBOIS');
+        fprintf(fid,'%s\t\t%s\n','EOP_SUBDAILY', 'DESAI-SIBOIS');
     else
-        fprintf(fid,'%s\t%s\n','EOP_SUB-DAILY_MODEL', parameter.vie_mod.eopoc);
+        fprintf(fid,'%s\t\t%s\n','EOP_SUBDAILY', parameter.vie_mod.eopoc);
     end
     if strcmp(parameter.vie_mod.EOPfile,'finals_all_IAU2000.txt')
         fprintf(fid,'%s\t\t%s\n','EOP_APRIORI', 'finals2000A.all');
@@ -693,7 +711,7 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
                 fprintf(fid,'%s\t\t%s\t%5.3f %s\n','EOP_ESTIMATED', ['XPOL' param_deg], parameter.lsmopt.xpol.coef, 'mas');
             end
         else
-            fprintf(fid,'%s\t\t%s\t\t%5.3f %s\n','EOP_ESTIMATED', 'XPOL', 'NONE', 'mas');
+            fprintf(fid,'%s\t\t%s\t\t%s %s\n','EOP_ESTIMATED', 'XPOL', 'NONE', 'mas');
         end
         if parameter.lsmopt.ypol.model == 1
             if flag_poltight == true
@@ -704,7 +722,7 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
                 fprintf(fid,'%s\t\t%s\t%5.3f %s\n','EOP_ESTIMATED', ['YPOL' param_deg], parameter.lsmopt.ypol.coef, 'mas');
             end
         else
-            fprintf(fid,'%s\t\t%s\t\t%5.3f %s\n','EOP_ESTIMATED', 'YPOL', 'NONE', 'mas');
+            fprintf(fid,'%s\t\t%s\t\t%s %s\n','EOP_ESTIMATED', 'YPOL', 'NONE', 'mas');
         end
         if parameter.lsmopt.dut1.model == 1
             if flag_ut1tight == true
@@ -715,7 +733,7 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
                 fprintf(fid,'%s\t\t%s\t%5.3f %s\n','EOP_ESTIMATED', ['DUT1' param_deg], parameter.lsmopt.dut1.coef, 'mas');
             end
         else
-            fprintf(fid,'%s\t\t%s\t\t%5.3f %s\n','EOP_ESTIMATED', 'DUT1', 'NONE', 'mas');
+            fprintf(fid,'%s\t\t%s\t\t%s %s\n','EOP_ESTIMATED', 'DUT1', 'NONE', 'mas');
         end
         if parameter.lsmopt.nutdx.model == 1
             if flag_nuttight == true
@@ -726,7 +744,7 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
                 fprintf(fid,'%s\t\t%s\t%5.3f %s\n','EOP_ESTIMATED', ['DX' param_deg], parameter.lsmopt.nutdx.coef*1000, 'uas');
             end
         else
-            fprintf(fid,'%s\t\t%s\t\t%5.3f %s\n','EOP_ESTIMATED', ['DX' param_deg], 'NONE', 'uas');
+            fprintf(fid,'%s\t\t%s\t\t%s %s\n','EOP_ESTIMATED', ['DX' param_deg], 'NONE', 'uas');
         end
         if parameter.lsmopt.nutdy.model == 1
             if flag_nuttight == true
@@ -737,7 +755,7 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
                 fprintf(fid,'%s\t\t%s\t%5.3f %s\n','EOP_ESTIMATED', ['DY' param_deg], parameter.lsmopt.nutdy.coef*1000, 'uas');
             end
         else
-            fprintf(fid,'%s\t\t%s\t\t%5.3f %s\n','EOP_ESTIMATED', ['DY' param_deg], 'NONE', 'uas');
+            fprintf(fid,'%s\t\t%s\t\t%s %s\n','EOP_ESTIMATED', ['DY' param_deg], 'NONE', 'uas');
         end
     end
     fprintf(fid,'%s\t%.0f\n','NUMBER_OF_ENTRIES', num_entries);			
