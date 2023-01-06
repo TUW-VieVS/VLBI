@@ -82,13 +82,15 @@ freqband = newStr{2};
 try 
     out_struct.Solve.AtmSetup;
     if isfield(wrapper_data.Observation, 'ObsEdit') % check if ObsEdit folder exits
-        if ~any(strcmp(wrapper_data.Observation.ObsEdit.files, 'GroupDelayFull_bX.nc')) % check if GroupDelayFull.nc exists, else use GroupDelay.nc
+        if ~any(contains(wrapper_data.Observation.ObsEdit.files, 'GroupDelayFull') & contains(wrapper_data.Observation.ObsEdit.files, '_bX.nc'))
+%         if ~any(strcmp(wrapper_data.Observation.ObsEdit.files, 'GroupDelayFull_bX.nc')) % check if GroupDelayFull.nc exists, else use GroupDelay.nc
             if strcmp(observation,'GroupDelayFull')
                 observation = 'GroupDelay';
                 fprintf('WARNING: Cannot find GroupDelayFull file in ObsEdit. Using GroupDelay instead.\n')
             end            
         end
-        if ~any(strcmp(wrapper_data.Observation.ObsEdit.files, 'NumGroupAmbig_bX.nc')) % check if NumGroupAmbig_bX.nc exists, else turn off ambcorr
+        if ~any(contains(wrapper_data.Observation.ObsEdit.files, 'NumGroupAmbig') & contains(wrapper_data.Observation.ObsEdit.files, '_bX.nc')) % check if NumGroupAmbig_bX.nc exists, else turn off ambcorr
+%         if ~any(strcmp(wrapper_data.Observation.ObsEdit.files, 'NumGroupAmbig_bX.nc')) % check if NumGroupAmbig_bX.nc exists, else turn off ambcorr
             ambcorr = 'off';
             fprintf('WARNING: Cannot find NumGroupAmbig file in ObsEdit. Ambiguity correction is disabled.\n')   
         end
