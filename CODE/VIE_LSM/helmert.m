@@ -84,23 +84,20 @@ end
 fprintf('\n')
 
 if ~any(nns==0)
-    k=6;
     B1(7,:)=[];
-else
-    k=7;
-    
+else   
     B1(7,nns)=0;
     B1(7,find(nns)+na)=0;
     B1(7,find(nns)+na*2)=0;
 end
 
-B1(:,nnt)                =zeros(1,k,sum(nnt));
-B1(:,find(nnt)+na)       =zeros(1,k,sum(nnt));
-B1(:,find(nnt)+na*2)     =zeros(1,k,sum(nnt));
+B1(1:3,nnt)                =zeros(1,3,sum(nnt));
+B1(1:3,find(nnt)+na)       =zeros(1,3,sum(nnt));
+B1(1:3,find(nnt)+na*2)     =zeros(1,3,sum(nnt));
 
-B1(:,nnr)                =zeros(1,k,sum(nnr));
-B1(:,find(nnr)+na)       =zeros(1,k,sum(nnr));
-B1(:,find(nnr)+na*2)     =zeros(1,k,sum(nnr));
+B1(4:6,nnr)                =zeros(1,3,sum(nnr));
+B1(4:6,find(nnr)+na)       =zeros(1,3,sum(nnr));
+B1(4:6,find(nnr)+na*2)     =zeros(1,3,sum(nnr));
 
 
 B1(~any(B1,2),:) = [];
