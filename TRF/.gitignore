@@ -1,5 +1,6 @@
 *
 !.gitignore
 !superstation.mat
+!superstation_gravdefv2019.mat
 !data
 !TRF_test.txt

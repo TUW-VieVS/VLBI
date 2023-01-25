@@ -151,7 +151,7 @@ parameter.vie_init.vgosDb_wrapper_version=get(handles.edit_wrapper_version_numbe
 if get(handles.radiobutton_parameters_refFrames_superstationTRF, 'Value')
     allPopupmenuEntries=get(handles.popupmenu_parameters_refFrames_superstationTRF, 'String');
     % save filename
-    parameter.vie_init.trf{1}=handles.data.superstationFile;
+    parameter.vie_init.trf{1}=get(handles.text_parameters_refFrames_selected_superstation_file, 'String');
     % and field
     parameter.vie_init.trf{2}=allPopupmenuEntries{get(handles.popupmenu_parameters_refFrames_superstationTRF, 'Value')};  % only the struct-fieldname is saved to parameter struct
 else % manual txt trf file was chosen
