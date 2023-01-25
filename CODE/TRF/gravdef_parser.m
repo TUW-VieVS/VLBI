@@ -101,9 +101,11 @@ function [ns_codes] = gravdef_parser(ns_codes, gravdefFile)
             
         else
             % try to read el dealy pair
-            el_delay = regexp(tline, '^\s*(\d+\.?\d*)\s+(\-?\d+\.?\d*)\s*$', 'tokens');
+%            el_delay = regexp(tline, '^\s*(\d+\.?\d*)\s+(\-?\d+\.?\d*)\s*$', 'tokens');
+            el_delay = sscanf(tline,'%e')';
             if ~isempty(el_delay)
-                current_el_delay(el_delay_idx,:) = str2double(el_delay{1});
+%                current_el_delay(el_delay_idx,:) = str2double(el_delay{1});
+                current_el_delay(el_delay_idx,:) = el_delay(1:2);
                 el_delay_idx = el_delay_idx + 1;
             end
             
