@@ -1,12 +1,26 @@
-Version 2019Nov16
+Version 2023-01-24
 # This file contains gravitaional deformation information for various antennas.
+# This is the EXTRA delay introduced by deformation of the antenna.  
+# Hence the delay is 
+#    ADDED to the theoretical value 
+#         --OR--
+#    SUBTRACTED from the observed value. 
 #
 # History: (Most recent first)
+# 2023-01-24 John Gipson.  Fixed names of ONSA13NE and ONSA13SW which were wrong in the table. 
+#
+# 2023-01-20 JMG. Added in following antennas:
+#                 WETTZELL, WETTZ13S, WETTZ13N   (courtesy Christian Plotz and Michael Loesler)
+#                 NYALES20                       (Ann-Silje Kirkvik)
+#                 KOKEE.                         Uses same model as NYALES20 since antennas are structurally identical
+#                 ONSA13NE, ONSA13SW             Michael Loesler et al.
+#
 # 2019Nov21 JMG. Added references for all the models. 
 #                Updated Onsala60 model using results from published paper.
 #                Signs of all models are consistent. 
 #
-# 2018Nov12 JMG. Changed sign of YEBES40M.  Did this by changing scale. This resulted from error in reading paper. 
+# 2018Nov12 JMG. Changed sign of YEBES40M.(subsequently undone)
+#                Did this by changing scale. This resulted from error in reading paper. 
 # 2018Nov11 JMGipson. All models redone by John Gipson. Now done in mm. 
 #           Added optional "EPOCH" line. If present specifies range for validity of model. 
 #
@@ -30,7 +44,7 @@ Version 2019Nov16
 # 3. SCALE is an optional scaling factor. This converts the delay into ps. 
 #    If SCALE is 3.336 than the raw values are in mm.   
 # 4. Epoch is the optional beginning and ending date for the model. 
-# 5. The pairs el1, delay1 are the delay as a function of elevation.
+# 5. The pairs el1, delay1 are the EXCESS delay as a function of elevation.
 #    The scale factor converts this to ps. 
 #
 #  The delay is calculated using a cubic spline interpoation.
@@ -140,6 +154,8 @@ EFLSBERG  90   3.336
 #   T. A. Clark and Per Thomsen
 #   NASA Technical Memorandum 100696
 #   1988
+#   See page 94 which gives values for XY mount. 
+#   Gilcreek was actually XYNS
 #
 GILCREEK  90   3.336
    1   -2.358
@@ -232,6 +248,105 @@ GILCREEK  90   3.336
   88   -0.001
   89   -0.000
   90   -0.000
+# 
+# NOTE: KOKEE AND NYALES20 have the same design.
+# The numbers below are for NYALES20, but should be a good approximation for KOKEE. 
+# This data is provided by Ann-Silje Kirkvik for NYALES20 
+# Email 2020-11-06 
+#
+KOKEE  90   3.336
+   1    1.372
+   2    1.337
+   3    1.302
+   4    1.267
+   5    1.232
+   6    1.198
+   7    1.164
+   8    1.130
+   9    1.097
+  10    1.063
+  11    1.031
+  12    0.998
+  13    0.966
+  14    0.934
+  15    0.902
+  16    0.871
+  17    0.840
+  18    0.809
+  19    0.779
+  20    0.749
+  21    0.720
+  22    0.691
+  23    0.662
+  24    0.634
+  25    0.606
+  26    0.579
+  27    0.552
+  28    0.525
+  29    0.499
+  30    0.474
+  31    0.449
+  32    0.424
+  33    0.400
+  34    0.377
+  35    0.354
+  36    0.331
+  37    0.309
+  38    0.287
+  39    0.266
+  40    0.246
+  41    0.226
+  42    0.207
+  43    0.188
+  44    0.170
+  45    0.152
+  46    0.135
+  47    0.119
+  48    0.103
+  49    0.087
+  50    0.073
+  51    0.058
+  52    0.045
+  53    0.032
+  54    0.020
+  55    0.008
+  56   -0.003
+  57   -0.014
+  58   -0.023
+  59   -0.033
+  60   -0.041
+  61   -0.049
+  62   -0.057
+  63   -0.063
+  64   -0.069
+  65   -0.075
+  66   -0.079
+  67   -0.084
+  68   -0.087
+  69   -0.090
+  70   -0.092
+  71   -0.094
+  72   -0.094
+  73   -0.095
+  74   -0.094
+  75   -0.093
+  76   -0.091
+  77   -0.089
+  78   -0.086
+  79   -0.082
+  80   -0.078
+  81   -0.073
+  82   -0.068
+  83   -0.061
+  84   -0.054
+  85   -0.047
+  86   -0.039
+  87   -0.030
+  88   -0.021
+  89   -0.011
+  90    0.000
+# 
+
 #
 # Reference
 #   Geod (2009) 83:11151126
@@ -239,7 +354,8 @@ GILCREEK  90   3.336
 #   Gravity-dependent signal path variation in a large VLBI telescope
 #   modelled with a combination of surveying methods
 #    Pierguido Sarti · C. Abbondanza · L. Vittuari
-# See also the reference for NOTO below
+# See also the reference for NOTO below. Improved geodetic ... Page 17
+# Delta_L = 0.22 * El - 0.0012 El^2  Where El is in degrees
 #  
 MEDICINA  90   3.336
    1    0.219
@@ -337,9 +453,10 @@ MEDICINA  90   3.336
 #   ANNALS OF GEOPHYSICS, 53, 5-6, 2010; doi: 10.4401/ag-4739
 #
 #   Improved geodetic European very-long-baseline interferometry
-#   solution using models of antenna gravitational deformation
+#   solution using models of antenna gravitational deformation Page 17
 #
 #   Pierguido Sarti, Monia Negusini, Claudio Abbondanza
+# Delta_L = 0.12 * El - 0.00045 El^2  Where El is in degrees
 #
 NOTO  90   3.336
    1    0.120
@@ -432,6 +549,101 @@ NOTO  90   3.336
   88    7.075
   89    7.116
   90    7.155
+#
+# This data is provided by Ann-Silje Kirkvik
+# Email 2020-11-06 
+#
+NYALES20  90   3.336
+   1    1.372
+   2    1.337
+   3    1.302
+   4    1.267
+   5    1.232
+   6    1.198
+   7    1.164
+   8    1.130
+   9    1.097
+  10    1.063
+  11    1.031
+  12    0.998
+  13    0.966
+  14    0.934
+  15    0.902
+  16    0.871
+  17    0.840
+  18    0.809
+  19    0.779
+  20    0.749
+  21    0.720
+  22    0.691
+  23    0.662
+  24    0.634
+  25    0.606
+  26    0.579
+  27    0.552
+  28    0.525
+  29    0.499
+  30    0.474
+  31    0.449
+  32    0.424
+  33    0.400
+  34    0.377
+  35    0.354
+  36    0.331
+  37    0.309
+  38    0.287
+  39    0.266
+  40    0.246
+  41    0.226
+  42    0.207
+  43    0.188
+  44    0.170
+  45    0.152
+  46    0.135
+  47    0.119
+  48    0.103
+  49    0.087
+  50    0.073
+  51    0.058
+  52    0.045
+  53    0.032
+  54    0.020
+  55    0.008
+  56   -0.003
+  57   -0.014
+  58   -0.023
+  59   -0.033
+  60   -0.041
+  61   -0.049
+  62   -0.057
+  63   -0.063
+  64   -0.069
+  65   -0.075
+  66   -0.079
+  67   -0.084
+  68   -0.087
+  69   -0.090
+  70   -0.092
+  71   -0.094
+  72   -0.094
+  73   -0.095
+  74   -0.094
+  75   -0.093
+  76   -0.091
+  77   -0.089
+  78   -0.086
+  79   -0.082
+  80   -0.078
+  81   -0.073
+  82   -0.068
+  83   -0.061
+  84   -0.054
+  85   -0.047
+  86   -0.039
+  87   -0.030
+  88   -0.021
+  89   -0.011
+  90    0.000
 # 
 # NOTE. The Onsala model is for a reference temperature of 19C.
 # The delay at other temperatures can be found by adding the elevation INDEPENDENT term
@@ -538,13 +750,534 @@ ONSALA60  90   3.336
   89    4.535
   90    4.519
 #
+# Reference Loesler Et al., Gravitational deformation of ring-focus antennas for VOGS. First invest...
+#  https://doi.org/10.1007/s00190-019-01302-5
+#  Journal of Geodesy 2019 93:2060-2087. 
+# Formula 34 
+#
+ONSA13NE 91 3.336
+ 0	-0.37
+ 1	-0.38
+ 2	-0.39
+ 3	-0.40
+ 4	-0.41
+ 5	-0.41
+ 6	-0.42
+ 7	-0.43
+ 8	-0.44
+ 9	-0.44
+ 10	-0.45
+ 11	-0.46
+ 12	-0.46
+ 13	-0.47
+ 14	-0.47
+ 15	-0.48
+ 16	-0.48
+ 17	-0.49
+ 18	-0.49
+ 19	-0.50
+ 20	-0.50
+ 21	-0.50
+ 22	-0.51
+ 23	-0.51
+ 24	-0.51
+ 25	-0.51
+ 26	-0.51
+ 27	-0.52
+ 28	-0.52
+ 29	-0.52
+ 30	-0.52
+ 31	-0.52
+ 32	-0.52
+ 33	-0.52
+ 34	-0.52
+ 35	-0.52
+ 36	-0.51
+ 37	-0.51
+ 38	-0.51
+ 39	-0.51
+ 40	-0.50
+ 41	-0.50
+ 42	-0.50
+ 43	-0.49
+ 44	-0.49
+ 45	-0.49
+ 46	-0.48
+ 47	-0.48
+ 48	-0.47
+ 49	-0.46
+ 50	-0.46
+ 51	-0.45
+ 52	-0.45
+ 53	-0.44
+ 54	-0.43
+ 55	-0.42
+ 56	-0.42
+ 57	-0.41
+ 58	-0.40
+ 59	-0.39
+ 60	-0.38
+ 61	-0.37
+ 62	-0.36
+ 63	-0.35
+ 64	-0.34
+ 65	-0.33
+ 66	-0.32
+ 67	-0.31
+ 68	-0.30
+ 69	-0.29
+ 70	-0.28
+ 71	-0.27
+ 72	-0.25
+ 73	-0.24
+ 74	-0.23
+ 75	-0.22
+ 76	-0.20
+ 77	-0.19
+ 78	-0.18
+ 79	-0.16
+ 80	-0.15
+ 81	-0.14
+ 82	-0.12
+ 83	-0.11
+ 84	-0.09
+ 85	-0.08
+ 86	-0.06
+ 87	-0.05
+ 88	-0.03
+ 89	-0.02
+ 90	0.00
+#
+# Reference Loesler Et al., Gravitational deformation of ring-focus antennas for VOGS. First invest...
+#  https://doi.org/10.1007/s00190-019-01302-5
+#  Journal of Geodesy 2019 93:2060-2087. 
+# Formula 34 
+#
+ONSA13SW 91 3.336
+ 0	-0.37
+ 1	-0.38
+ 2	-0.39
+ 3	-0.40
+ 4	-0.41
+ 5	-0.41
+ 6	-0.42
+ 7	-0.43
+ 8	-0.44
+ 9	-0.44
+ 10	-0.45
+ 11	-0.46
+ 12	-0.46
+ 13	-0.47
+ 14	-0.47
+ 15	-0.48
+ 16	-0.48
+ 17	-0.49
+ 18	-0.49
+ 19	-0.50
+ 20	-0.50
+ 21	-0.50
+ 22	-0.51
+ 23	-0.51
+ 24	-0.51
+ 25	-0.51
+ 26	-0.51
+ 27	-0.52
+ 28	-0.52
+ 29	-0.52
+ 30	-0.52
+ 31	-0.52
+ 32	-0.52
+ 33	-0.52
+ 34	-0.52
+ 35	-0.52
+ 36	-0.51
+ 37	-0.51
+ 38	-0.51
+ 39	-0.51
+ 40	-0.50
+ 41	-0.50
+ 42	-0.50
+ 43	-0.49
+ 44	-0.49
+ 45	-0.49
+ 46	-0.48
+ 47	-0.48
+ 48	-0.47
+ 49	-0.46
+ 50	-0.46
+ 51	-0.45
+ 52	-0.45
+ 53	-0.44
+ 54	-0.43
+ 55	-0.42
+ 56	-0.42
+ 57	-0.41
+ 58	-0.40
+ 59	-0.39
+ 60	-0.38
+ 61	-0.37
+ 62	-0.36
+ 63	-0.35
+ 64	-0.34
+ 65	-0.33
+ 66	-0.32
+ 67	-0.31
+ 68	-0.30
+ 69	-0.29
+ 70	-0.28
+ 71	-0.27
+ 72	-0.25
+ 73	-0.24
+ 74	-0.23
+ 75	-0.22
+ 76	-0.20
+ 77	-0.19
+ 78	-0.18
+ 79	-0.16
+ 80	-0.15
+ 81	-0.14
+ 82	-0.12
+ 83	-0.11
+ 84	-0.09
+ 85	-0.08
+ 86	-0.06
+ 87	-0.05
+ 88	-0.03
+ 89	-0.02
+ 90	0.00
+#####################################################################
+# This table was provided by Christian Plotz. 
+# Calc/solve will ignore the third column 
+#                                                                   #
+# Signal path variations of the 20 m Radio Telescope Wettzell (RTW) #
+# w.r.t. the model derived by Clark & Thomsen (1988)                #
+# 1 Column: Elevation in degree                                     #
+# 2 Column: Shift in millimetre w.r.t. 90 DEG                       #
+# 3 Column: Corresponding time delay in pico-seconds                #
+#                                                                   #
+# Please note: Values given in column 2 and 3 represent the         #
+# measured deviation (error) and *not* the correction term.         #
+#                                                                   #
+#####################################################################
+#
+#El[DEG] Shift[mm] Delay[ps]
+WETTZELL 91   3.336
+  0	 +3.697	+12.333
+  1	 +3.640	+12.141
+  2	 +3.582	+11.950
+  3	 +3.525	+11.758
+  4	 +3.468	+11.567
+  5	 +3.410	+11.375
+  6	 +3.353	+11.184
+  7	 +3.296	+10.993
+  8	 +3.239	+10.803
+  9	 +3.182	+10.613
+ 10	 +3.125	+10.423
+ 11	 +3.068	+10.234
+ 12	 +3.012	+10.045
+ 13	 +2.955	 +9.857
+ 14	 +2.899	 +9.669
+ 15	 +2.843	 +9.482
+ 16	 +2.787	 +9.296
+ 17	 +2.731	 +9.111
+ 18	 +2.676	 +8.926
+ 19	 +2.621	 +8.742
+ 20	 +2.566	 +8.558
+ 21	 +2.511	 +8.376
+ 22	 +2.457	 +8.195
+ 23	 +2.403	 +8.014
+ 24	 +2.349	 +7.835
+ 25	 +2.295	 +7.657
+ 26	 +2.242	 +7.479
+ 27	 +2.189	 +7.303
+ 28	 +2.137	 +7.128
+ 29	 +2.085	 +6.955
+ 30	 +2.033	 +6.782
+ 31	 +1.982	 +6.611
+ 32	 +1.931	 +6.441
+ 33	 +1.881	 +6.273
+ 34	 +1.830	 +6.106
+ 35	 +1.781	 +5.940
+ 36	 +1.732	 +5.776
+ 37	 +1.683	 +5.614
+ 38	 +1.635	 +5.453
+ 39	 +1.587	 +5.293
+ 40	 +1.540	 +5.136
+ 41	 +1.493	 +4.980
+ 42	 +1.447	 +4.825
+ 43	 +1.401	 +4.673
+ 44	 +1.356	 +4.522
+ 45	 +1.311	 +4.373
+ 46	 +1.267	 +4.226
+ 47	 +1.223	 +4.081
+ 48	 +1.180	 +3.937
+ 49	 +1.138	 +3.796
+ 50	 +1.096	 +3.657
+ 51	 +1.055	 +3.519
+ 52	 +1.014	 +3.384
+ 53	 +0.975	 +3.251
+ 54	 +0.935	 +3.120
+ 55	 +0.897	 +2.991
+ 56	 +0.859	 +2.864
+ 57	 +0.821	 +2.739
+ 58	 +0.784	 +2.617
+ 59	 +0.748	 +2.496
+ 60	 +0.713	 +2.379
+ 61	 +0.678	 +2.263
+ 62	 +0.644	 +2.150
+ 63	 +0.611	 +2.039
+ 64	 +0.579	 +1.930
+ 65	 +0.547	 +1.824
+ 66	 +0.516	 +1.720
+ 67	 +0.485	 +1.619
+ 68	 +0.456	 +1.520
+ 69	 +0.427	 +1.423
+ 70	 +0.399	 +1.330
+ 71	 +0.371	 +1.238
+ 72	 +0.345	 +1.149
+ 73	 +0.319	 +1.063
+ 74	 +0.294	 +0.979
+ 75	 +0.269	 +0.898
+ 76	 +0.246	 +0.819
+ 77	 +0.223	 +0.744
+ 78	 +0.201	 +0.670
+ 79	 +0.180	 +0.600
+ 80	 +0.159	 +0.532
+ 81	 +0.140	 +0.466
+ 82	 +0.121	 +0.404
+ 83	 +0.103	 +0.344
+ 84	 +0.086	 +0.286
+ 85	 +0.069	 +0.232
+ 86	 +0.054	 +0.180
+ 87	 +0.039	 +0.131
+ 88	 +0.025	 +0.084
+ 89	 +0.012	 +0.041
+ 90	 +0.000	 +0.000
+########################################################################
+#                                                                      #
+# This table was provided by Christian Plotz. 
+# Calc/solve will ignore the third column 
+# Signal path variations of the 13 m Twin Telescope Wettzell (TTW-1/2) #
+# w.r.t. the model derived by Clark & Thomsen (1988)                   #
+# 1 Column: Elevation in degree                                        #
+# 2 Column: Shift in millimetre w.r.t. 90 DEG                          #
+# 3 Column: Corresponding time delay in pico-seconds                   #
+#                                                                      #
+# Please note: Values given in column 2 and 3 represent the            #
+# measured deviation (error) and *not* the correction term.            #
+# The sub-reflector was in fixed-mode during the measurement campaign. #
+#                                                                      #
+########################################################################
+#
+#El[DEG] Shift[mm] Delay[ps]
+WETTZ13S 91   3.336
+  0	 +0.647	 +2.160
+  1	 +0.647	 +2.159
+  2	 +0.647	 +2.158
+  3	 +0.647	 +2.157
+  4	 +0.646	 +2.154
+  5	 +0.645	 +2.152
+  6	 +0.644	 +2.148
+  7	 +0.643	 +2.144
+  8	 +0.641	 +2.139
+  9	 +0.639	 +2.133
+ 10	 +0.638	 +2.127
+ 11	 +0.636	 +2.120
+ 12	 +0.633	 +2.113
+ 13	 +0.631	 +2.104
+ 14	 +0.628	 +2.096
+ 15	 +0.625	 +2.086
+ 16	 +0.622	 +2.076
+ 17	 +0.619	 +2.065
+ 18	 +0.616	 +2.054
+ 19	 +0.612	 +2.042
+ 20	 +0.608	 +2.029
+ 21	 +0.604	 +2.016
+ 22	 +0.600	 +2.002
+ 23	 +0.596	 +1.988
+ 24	 +0.591	 +1.973
+ 25	 +0.587	 +1.957
+ 26	 +0.582	 +1.941
+ 27	 +0.577	 +1.924
+ 28	 +0.572	 +1.907
+ 29	 +0.566	 +1.889
+ 30	 +0.561	 +1.870
+ 31	 +0.555	 +1.851
+ 32	 +0.549	 +1.832
+ 33	 +0.543	 +1.811
+ 34	 +0.537	 +1.790
+ 35	 +0.530	 +1.769
+ 36	 +0.524	 +1.747
+ 37	 +0.517	 +1.725
+ 38	 +0.510	 +1.702
+ 39	 +0.503	 +1.678
+ 40	 +0.496	 +1.654
+ 41	 +0.489	 +1.630
+ 42	 +0.481	 +1.605
+ 43	 +0.474	 +1.580
+ 44	 +0.466	 +1.554
+ 45	 +0.458	 +1.527
+ 46	 +0.450	 +1.500
+ 47	 +0.442	 +1.473
+ 48	 +0.433	 +1.445
+ 49	 +0.425	 +1.417
+ 50	 +0.416	 +1.388
+ 51	 +0.407	 +1.359
+ 52	 +0.399	 +1.330
+ 53	 +0.390	 +1.300
+ 54	 +0.381	 +1.269
+ 55	 +0.371	 +1.239
+ 56	 +0.362	 +1.208
+ 57	 +0.353	 +1.176
+ 58	 +0.343	 +1.144
+ 59	 +0.333	 +1.112
+ 60	 +0.324	 +1.080
+ 61	 +0.314	 +1.047
+ 62	 +0.304	 +1.014
+ 63	 +0.294	 +0.980
+ 64	 +0.284	 +0.947
+ 65	 +0.274	 +0.913
+ 66	 +0.263	 +0.878
+ 67	 +0.253	 +0.844
+ 68	 +0.243	 +0.809
+ 69	 +0.232	 +0.774
+ 70	 +0.221	 +0.739
+ 71	 +0.211	 +0.703
+ 72	 +0.200	 +0.667
+ 73	 +0.189	 +0.631
+ 74	 +0.178	 +0.595
+ 75	 +0.168	 +0.559
+ 76	 +0.157	 +0.522
+ 77	 +0.146	 +0.486
+ 78	 +0.135	 +0.449
+ 79	 +0.124	 +0.412
+ 80	 +0.112	 +0.375
+ 81	 +0.101	 +0.338
+ 82	 +0.090	 +0.301
+ 83	 +0.079	 +0.263
+ 84	 +0.068	 +0.226
+ 85	 +0.056	 +0.188
+ 86	 +0.045	 +0.151
+ 87	 +0.034	 +0.113
+ 88	 +0.023	 +0.075
+ 89	 +0.011	 +0.038
+ 90	 +0.000	 +0.000
+########################################################################
+#                                                                      #
+# This table was provided by Christian Plotz. 
+# Calc/solve will ignore the third column 
+# Signal path variations of the 13 m Twin Telescope Wettzell (TTW-1/2) #
+# w.r.t. the model derived by Clark & Thomsen (1988)                   #
+# 1 Column: Elevation in degree                                        #
+# 2 Column: Shift in millimetre w.r.t. 90 DEG                          #
+# 3 Column: Corresponding time delay in pico-seconds                   #
+#                                                                      #
+# Please note: Values given in column 2 and 3 represent the            #
+# measured deviation (error) and *not* the correction term.            #
+# The sub-reflector was in fixed-mode during the measurement campaign. #
+#                                                                      #
+########################################################################
+#
+#El[DEG] Shift[mm] Delay[ps]
+WETTZ13N 91   3.336
+  0	 +0.647	 +2.160
+  1	 +0.647	 +2.159
+  2	 +0.647	 +2.158
+  3	 +0.647	 +2.157
+  4	 +0.646	 +2.154
+  5	 +0.645	 +2.152
+  6	 +0.644	 +2.148
+  7	 +0.643	 +2.144
+  8	 +0.641	 +2.139
+  9	 +0.639	 +2.133
+ 10	 +0.638	 +2.127
+ 11	 +0.636	 +2.120
+ 12	 +0.633	 +2.113
+ 13	 +0.631	 +2.104
+ 14	 +0.628	 +2.096
+ 15	 +0.625	 +2.086
+ 16	 +0.622	 +2.076
+ 17	 +0.619	 +2.065
+ 18	 +0.616	 +2.054
+ 19	 +0.612	 +2.042
+ 20	 +0.608	 +2.029
+ 21	 +0.604	 +2.016
+ 22	 +0.600	 +2.002
+ 23	 +0.596	 +1.988
+ 24	 +0.591	 +1.973
+ 25	 +0.587	 +1.957
+ 26	 +0.582	 +1.941
+ 27	 +0.577	 +1.924
+ 28	 +0.572	 +1.907
+ 29	 +0.566	 +1.889
+ 30	 +0.561	 +1.870
+ 31	 +0.555	 +1.851
+ 32	 +0.549	 +1.832
+ 33	 +0.543	 +1.811
+ 34	 +0.537	 +1.790
+ 35	 +0.530	 +1.769
+ 36	 +0.524	 +1.747
+ 37	 +0.517	 +1.725
+ 38	 +0.510	 +1.702
+ 39	 +0.503	 +1.678
+ 40	 +0.496	 +1.654
+ 41	 +0.489	 +1.630
+ 42	 +0.481	 +1.605
+ 43	 +0.474	 +1.580
+ 44	 +0.466	 +1.554
+ 45	 +0.458	 +1.527
+ 46	 +0.450	 +1.500
+ 47	 +0.442	 +1.473
+ 48	 +0.433	 +1.445
+ 49	 +0.425	 +1.417
+ 50	 +0.416	 +1.388
+ 51	 +0.407	 +1.359
+ 52	 +0.399	 +1.330
+ 53	 +0.390	 +1.300
+ 54	 +0.381	 +1.269
+ 55	 +0.371	 +1.239
+ 56	 +0.362	 +1.208
+ 57	 +0.353	 +1.176
+ 58	 +0.343	 +1.144
+ 59	 +0.333	 +1.112
+ 60	 +0.324	 +1.080
+ 61	 +0.314	 +1.047
+ 62	 +0.304	 +1.014
+ 63	 +0.294	 +0.980
+ 64	 +0.284	 +0.947
+ 65	 +0.274	 +0.913
+ 66	 +0.263	 +0.878
+ 67	 +0.253	 +0.844
+ 68	 +0.243	 +0.809
+ 69	 +0.232	 +0.774
+ 70	 +0.221	 +0.739
+ 71	 +0.211	 +0.703
+ 72	 +0.200	 +0.667
+ 73	 +0.189	 +0.631
+ 74	 +0.178	 +0.595
+ 75	 +0.168	 +0.559
+ 76	 +0.157	 +0.522
+ 77	 +0.146	 +0.486
+ 78	 +0.135	 +0.449
+ 79	 +0.124	 +0.412
+ 80	 +0.112	 +0.375
+ 81	 +0.101	 +0.338
+ 82	 +0.090	 +0.301
+ 83	 +0.079	 +0.263
+ 84	 +0.068	 +0.226
+ 85	 +0.056	 +0.188
+ 86	 +0.045	 +0.151
+ 87	 +0.034	 +0.113
+ 88	 +0.023	 +0.075
+ 89	 +0.011	 +0.038
+ 90	 +0.000	 +0.000
+#
 # Reference
-#  Graviational Deformation Effects. The YEBES40M Case
+#  Gravitational Deformation Effects. The YEBES40M Case
 #  A. Nothnagel, A. Springer, E. Heinz, T. Artz, P. de Vicente
 #  Proceedings 2014 IVS General Meeting
 # 
 # This YEBES model is only valid after 2011Nov11. 
-# Notice the NEGATIVE value for the scale factor. 
 YEBES40M  90   3.336
 EPOCH 20111111   22000101  
    1   49.376
@@ -637,4 +1370,3 @@ EPOCH 20111111   22000101
   88    0.030
   89    0.008
   90   -0.000
-
