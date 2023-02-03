@@ -26,6 +26,7 @@
 % CHANGES
 % - 2017-08-29: A. Girdiuk: in case of "eop_txt_file_vievs" the last 5 EOP values of the input time series are taken instead of EOP values of the last 5 days!
 % - 2021-11-23: H. Wolf: added missing end of function block
+% - 2023-02-03: L. Kern: added new IERS C04 20 EOP series
 
 function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, parameter)
 
@@ -38,6 +39,10 @@ function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, paramet
 
     % ##### Distinguish between different input files #####
     switch(parameter.vie_mod.EOPfile)
+
+        case 'C04_20_1962_now.txt' % EOP C04 20 (IERS format)
+            eop_file_type_str = 'C04_20_iers';
+            eop_file_str      = [eop_dir_str, 'C04_20_1962_now.txt'];
 
         case 'C04_14_1962_now.txt' % EOP C04 14 (IERS format)
             eop_file_type_str = 'C04_14_iers';
@@ -74,6 +79,48 @@ function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, paramet
 
     % ##### Load data from EOP files #####
     switch(eop_file_type_str)
+
+        case {'C04_20_iers'}
+
+            % Open file:
+            fid = fopen(eop_file_str);
+            if fid == -1
+                error('Failed to open EOP file: %s\n', eop_file_str);
+            end
+
+            % Read data:
+            eop_data = textscan(fid, '%d %d %d %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %*[^\n]', 'CommentStyle', '#');
+
+            % Close file:
+            fclose(fid);
+
+            % Get epoch indices:
+            mjd = eop_data{5};
+            mjd_ind = (mjd >= mjd_min) & (mjd <= mjd_max);
+
+            % Check, if EOP data is available for the observation epochs:
+            if sum(mjd >= mjd_max) == 0
+                error('No EOP data available for observation epochs (+-5 days for interpolation)! EOP file: %s', eop_file_str);
+            end
+
+            % Prepare data vectors:
+            mjd       = mjd(mjd_ind);
+            xp_arcsec = eop_data{6};
+            xp_arcsec = xp_arcsec(mjd_ind);
+            yp_arcsec = eop_data{7};
+            yp_arcsec = yp_arcsec(mjd_ind);
+            dut1_sec  = eop_data{8};
+            dut1_sec  = dut1_sec(mjd_ind);
+            dX_arcsec = eop_data{9};
+            dX_arcsec = dX_arcsec(mjd_ind);
+            dY_arcsec = eop_data{10};
+            dY_arcsec = dY_arcsec(mjd_ind);
+
+            % Unit conversions:
+            xp_rad = xp_arcsec * as2rad_const;
+            yp_rad = yp_arcsec * as2rad_const;
+            dX_rad = dX_arcsec * as2rad_const;
+            dY_rad = dY_arcsec * as2rad_const;
 
         case {'C04_14_iers', 'C04_08_iers', 'C04_05_iers'}
 
