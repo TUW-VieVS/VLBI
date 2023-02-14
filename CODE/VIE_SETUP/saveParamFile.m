@@ -261,13 +261,15 @@ elseif get(handles.radiobutton_parameters_eph_jpl430, 'Value')
 end
 
 % EOP file
-if get(handles.radiobutton_parameters_eop_aPriori_05C04, 'Value')
-    parameter.vie_mod.EOPfile = 'C04_08_1962_now.txt';
-elseif get(handles.radiobutton_parameters_eop_aPriori_08C04, 'Value')
-    parameter.vie_mod.EOPfile = 'C04_14_1962_now.txt';
-elseif get(handles.radiobutton_parameters_eop_aPriori_finals, 'Value')
-    % parameter.vie_mod.EOPfile='eop_finals2000A.txt';
+if get(handles.radiobutton_parameters_eop_aPriori_finals, 'Value')
     parameter.vie_mod.EOPfile = 'finals_all_IAU2000.txt';
+elseif get(handles.radiobutton_parameters_eop_aPriori_C04, 'Value')
+    allEopFiles=get(handles.popupmenu_parameters_eop_aPriori_C04, 'String');
+    if ischar(allEopFiles)
+        parameter.vie_mod.EOPfile=allEopFiles;
+    else % we have a cell of different entries
+        parameter.vie_mod.EOPfile=allEopFiles{get(handles.popupmenu_parameters_eop_aPriori_C04, 'Value')};
+    end
 else % other trf was chosen
     allEopFiles=get(handles.popupmenu_parameters_eop_aPriori_other, 'String');
     if ischar(allEopFiles)

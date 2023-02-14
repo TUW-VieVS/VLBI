@@ -330,42 +330,46 @@ end
 
 % EOP file
 switch parameter.vie_mod.EOPfile
-    case {'C04 14', 'C04_14_1962_now.txt'}
-        set(handles.radiobutton_parameters_eop_aPriori_08C04, 'Value', 1)
-        set(handles.popupmenu_parameters_eop_aPriori_other, 'Enable', 'off')
-    case {'C04 08', 'C04_08_1962_now.txt'}
-        set(handles.radiobutton_parameters_eop_aPriori_05C04, 'Value', 1)
-        set(handles.popupmenu_parameters_eop_aPriori_other, 'Enable', 'off')
-    case {'eop_finals2000A.txt', 'finals_all_IAU2000.txt'}
+    case {'finals_all_IAU2000.txt'}
         set(handles.radiobutton_parameters_eop_aPriori_finals, 'Value', 1)
         set(handles.popupmenu_parameters_eop_aPriori_other, 'Enable', 'off')
-    case 'C04 05'
-        warning('EOP C04 05 time series not available any more. C04 14 is used instead.');
-        set(handles.radiobutton_parameters_eop_aPriori_08C04, 'Value', 1)
+        set(handles.popupmenu_parameters_eop_aPriori_C04, 'Enable', 'off')
+    case {'C04_14_1962_now.txt','C04_20_1962_now.txt'}
+        set(handles.radiobutton_parameters_eop_aPriori_C04, 'Value', 1)
+        set(handles.popupmenu_parameters_eop_aPriori_C04, 'Enable', 'on')
         set(handles.popupmenu_parameters_eop_aPriori_other, 'Enable', 'off')
+        % try to find the proper textfile in the popupmenu
+        allEntriesInPopup=get(handles.popupmenu_parameters_eop_aPriori_C04,'String');
+        foundInd=find(strcmpi(allEntriesInPopup, parameter.vie_mod.EOPfile));
+        if isempty(foundInd)
+            msgbox('Chosen C04 EOP file was not found in the EOP directory!','EOP file not found');
+        else
+            set(handles.popupmenu_parameters_eop_aPriori_C04, 'Value', foundInd);
+        end
     otherwise % external EOP file
         set(handles.radiobutton_parameters_eop_aPriori_other, 'Value', 1)
         set(handles.popupmenu_parameters_eop_aPriori_other, 'Enable', 'on')
+        set(handles.popupmenu_parameters_eop_aPriori_C04, 'Enable', 'off')
         % try to find the proper textfile in the popupmenu
         allEntriesInPopup=get(handles.popupmenu_parameters_eop_aPriori_other,'String');
         foundInd=find(strcmpi(allEntriesInPopup, parameter.vie_mod.EOPfile));
         if isempty(foundInd)
-            msgbox('Chosen special EOP file was not found in the EOP directory!','EOP file not found');
+            msgbox('Chosen VieVS EOP file was not found in the EOP directory!','EOP file not found');
         else
             set(handles.popupmenu_parameters_eop_aPriori_other, 'Value', foundInd);
         end
 end
 
-
-
 % EOP file
-if get(handles.radiobutton_parameters_eop_aPriori_05C04, 'Value')
-    parameter.vie_mod.EOPfile = 'C04_08_1962_now.txt';
-elseif get(handles.radiobutton_parameters_eop_aPriori_08C04, 'Value')
-    parameter.vie_mod.EOPfile = 'C04_14_1962_now.txt';
-elseif get(handles.radiobutton_parameters_eop_aPriori_finals, 'Value')
-    % parameter.vie_mod.EOPfile='eop_finals2000A.txt';
+if get(handles.radiobutton_parameters_eop_aPriori_finals, 'Value')
     parameter.vie_mod.EOPfile = 'finals_all_IAU2000.txt';
+elseif get(handles.radiobutton_parameters_eop_aPriori_C04, 'Value')
+    allEopFiles=get(handles.popupmenu_parameters_eop_aPriori_C04, 'String');
+    if ischar(allEopFiles)
+        parameter.vie_mod.EOPfile=allEopFiles;
+    else % we have a cell of different entries
+        parameter.vie_mod.EOPfile=allEopFiles{get(handles.popupmenu_parameters_eop_aPriori_C04, 'Value')};
+    end
 else % other trf was chosen
     allEopFiles=get(handles.popupmenu_parameters_eop_aPriori_other, 'String');
     if ischar(allEopFiles)
@@ -374,9 +378,6 @@ else % other trf was chosen
         parameter.vie_mod.EOPfile=allEopFiles{get(handles.popupmenu_parameters_eop_aPriori_other, 'Value')};
     end
 end
-
-
-
 
 % a priori nutation offsets
 set(handles.checkbox_parameters_eop_models_inclAPrioriNutOffs, 'Value', parameter.vie_mod.dXdY)

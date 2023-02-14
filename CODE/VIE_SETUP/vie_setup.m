@@ -219,6 +219,7 @@ dirsInTrfFolder=dir('../TRF/*');
 dirsInCrfFolder=dir('../CRF/*.txt');
 dirsInCrfFolderMat=dir('../CRF/*.mat');
 dirsInEopFolder=dir('../EOP/*.txt');
+C04InEopFolder=dir('../EOP/C04_*.txt');
 dirsInEophfFolder=dir('../EOP/eophf/*.dat');
 dirsInDataFolder=dir('../DATA/LEVEL3/');
 dirsInTurbFolder=dir('../DATA/TURB/*.dat');
@@ -248,11 +249,11 @@ if ~isempty(superstatfile)
     handles.data.superstationFile=['../TRF/', dirsInTrfFolder(superstatfile).name];
     set(handles.text_parameters_refFrames_selected_superstation_file, 'String', handles.data.superstationFile);
     
-%     % make vievsTrf default if available
-%     logTRFFound=~cellfun(@isempty, strfind(get(handles.popupmenu_parameters_refFrames_superstationTRF, 'String'), 'vievsTrf'));
-%     if sum(logTRFFound)>0
-%         set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Value', find(logTRFFound));
-%     end
+    % make ITRF2020 default if available
+    logTRFFound=~cellfun(@isempty, strfind(get(handles.popupmenu_parameters_refFrames_superstationTRF, 'String'), 'itrf2020'));
+    if sum(logTRFFound)>0
+        set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Value', find(logTRFFound));
+    end
 else
     msgbox('There was no superstation (.mat) file found in the TRF folder. Make sure you get one!', 'No superstation.mat file found in /TRF/', 'warn');
 end
@@ -265,7 +266,7 @@ if ~isempty(supersourcefile)
     handles.data.supersourceFile = ['../CRF/', dirsInCrfFolderMat(supersourcefile).name];
     set(handles.text_parameters_refFrames_selected_supersource_file, 'String', handles.data.supersourceFile);
     
-    % make vievsCRF default if available
+    % make ICRF3 default if available
     logCRFFound=~cellfun(@isempty, strfind(get(handles.popupmenu_parameters_refFrames_supersourceCRF, 'String'), 'icrf3sx'));
     if sum(logCRFFound)>0
         set(handles.popupmenu_parameters_refFrames_supersourceCRF, 'Value', find(logCRFFound));
@@ -347,6 +348,7 @@ else
     set(handles.popupmenu_parameters_statCorr_hydroLoading, 'String', {dirsInHydloFolder.name});
 end
 set(handles.popupmenu_parameters_eop_aPriori_other, 'String', {dirsInEopFolder.name})
+set(handles.popupmenu_parameters_eop_aPriori_C04, 'String', {C04InEopFolder.name})
 set(handles.popupmenu_parameters_eop_oceanTideModel, 'String', [{dirsInEophfFolder.name},'interpf (Conventions)','Combi_IGG_Bonn'])
 set(handles.popupmenu_plot_folder1_subfolder, 'String', ['/', {dirsInDataFolder.name}])
 set(handles.popupmenu_plot_folder2_subfolder, 'String', ['/', {dirsInDataFolder.name}])
@@ -7799,6 +7801,13 @@ function uipanel116_SelectionChangeFcn(hObject, eventdata, handles)
 %	OldValue: handle of the previously selected object or empty if none was selected
 %	NewValue: handle of the currently selected object
 % handles    structure with handles and user data (see GUIDATA)
+
+switch get(hObject, 'Tag')
+    case 'radiobutton_parameters_eop_aPriori_C04'
+        set(handles.popupmenu_parameters_eop_aPriori_C04, 'Enable', 'on')
+    otherwise
+        set(handles.popupmenu_parameters_eop_aPriori_C04, 'Enable', 'off')
+end
 
 switch get(hObject, 'Tag')
     case 'radiobutton_parameters_eop_aPriori_other'
