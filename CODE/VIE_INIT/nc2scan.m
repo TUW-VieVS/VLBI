@@ -101,7 +101,12 @@ try
             fprintf('WARNING: ObsEdit folder is missing! Using GroupDelay and disabling ambiguity correction.\n')
         end
     end
-    if ~any(strcmp(wrapper_data.Observation.ObsDerived.files, 'Cal-SlantPathIonoGroup_bX.nc')) % check if Cal_SlantPathIonoGroup_bX.nc exists, else turn off ioncorr
+    if isfield(wrapper_data.Observation,'ObsDerived') % check if ObsDerived folder is in wrapper
+        if ~any(strcmp(wrapper_data.Observation.ObsDerived.files, 'Cal-SlantPathIonoGroup_bX.nc')) % check if Cal_SlantPathIonoGroup_bX.nc exists, else turn off ioncorr
+        ioncorr = 'off';
+        fprintf('WARNING: Cannot find Cal_SlantPathIonoGroup file in ObsDerived. Ionospheric correction is disabled.\n')  
+        end
+    else    
         ioncorr = 'off';
         fprintf('WARNING: Cannot find Cal_SlantPathIonoGroup file in ObsDerived. Ionospheric correction is disabled.\n')  
     end
