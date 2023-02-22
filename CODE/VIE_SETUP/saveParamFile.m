@@ -263,6 +263,8 @@ end
 % EOP file
 if get(handles.radiobutton_parameters_eop_aPriori_finals, 'Value')
     parameter.vie_mod.EOPfile = 'finals_all_IAU2000.txt';
+elseif get(handles.radiobutton_parameters_eop_aPriori_jpl, 'Value')
+    parameter.vie_mod.EOPfile = 'JPL_EOP2_long.txt';
 elseif get(handles.radiobutton_parameters_eop_aPriori_C04, 'Value')
     allEopFiles=get(handles.popupmenu_parameters_eop_aPriori_C04, 'String');
     if ischar(allEopFiles)

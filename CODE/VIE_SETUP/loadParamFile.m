@@ -332,6 +332,10 @@ end
 switch parameter.vie_mod.EOPfile
     case {'finals_all_IAU2000.txt'}
         set(handles.radiobutton_parameters_eop_aPriori_finals, 'Value', 1)
+        set(handles.popupmenu_parameters_eop_aPriori_C04, 'Enable', 'off')
+        set(handles.popupmenu_parameters_eop_aPriori_other, 'Enable', 'off')
+    case {'JPL_EOP2_long.txt'}
+        set(handles.radiobutton_parameters_eop_aPriori_jpl, 'Value', 1)
         set(handles.popupmenu_parameters_eop_aPriori_other, 'Enable', 'off')
         set(handles.popupmenu_parameters_eop_aPriori_C04, 'Enable', 'off')
     case {'C04_14_1962_now.txt','C04_20_1962_now.txt'}
@@ -363,6 +367,8 @@ end
 % EOP file
 if get(handles.radiobutton_parameters_eop_aPriori_finals, 'Value')
     parameter.vie_mod.EOPfile = 'finals_all_IAU2000.txt';
+elseif get(handles.radiobutton_parameters_eop_aPriori_jpl, 'Value')
+    parameter.vie_mod.EOPfile = 'JPL_EOP2_long.txt';
 elseif get(handles.radiobutton_parameters_eop_aPriori_C04, 'Value')
     allEopFiles=get(handles.popupmenu_parameters_eop_aPriori_C04, 'String');
     if ischar(allEopFiles)

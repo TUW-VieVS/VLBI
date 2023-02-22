@@ -60,9 +60,9 @@ function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, paramet
             eop_file_type_str = 'finals_iers';
             eop_file_str      = [eop_dir_str, 'finals_all_IAU2000.txt'];
 
-        case 'finals_all_IAU2000_vievs.txt' % EOP finals file (VieVS format)
-            eop_file_type_str = 'finals_vievs';
-            eop_file_str      = [eop_dir_str, 'finals_all_IAU2000_vievs.txt'];
+        case 'JPL_EOP2_long.txt' % EOP series from JPL
+            eop_file_type_str = 'eop_jpl';
+            eop_file_str      = [eop_dir_str, 'JPL_EOP2_long.txt'];
 
         otherwise % EOP text file (VieVS formatted) 
             eop_file_type_str = 'eop_txt_file_vievs';
@@ -225,12 +225,22 @@ function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, paramet
             dut1_sec = dut1_msec / 1000;
 
 
-        case {'finals_vievs'}
-            % Load EOP file:
-            dat  = load(eop_file_str,'r');
+        case {'eop_jpl'}
+
+            % Open file:
+            fid = fopen(eop_file_str);
+            if fid == -1
+                error('Failed to open EOP file: %s\n', eop_file_str);
+            end
+
+            % Read data:
+            eop_data = textscan(fid, '%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f','CommentStyle','$','HeaderLines', 20,'Delimiter',',');
+
+            % Close file:
+            fclose(fid);
 
             % Get epoch indices:
-            mjd  =         dat(:,1) ;
+            mjd = eop_data{1};
             mjd_ind = (mjd >= mjd_min) & (mjd <= mjd_max);
 
             % Check, if EOP data is available for the observation epochs:
@@ -238,16 +248,25 @@ function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, paramet
                 error('No EOP data available for observation epochs (+-5 days for interpolation)! EOP file: %s', eop_file_str);
             end
 
-            % Apply mjd indices:
-            dat = dat(mjd_ind, :);
+            % Prepare data vectors:
+            mjd    = mjd(mjd_ind);
+            xp_mas = eop_data{2};
+            xp_mas = xp_mas(mjd_ind);
+            yp_mas = eop_data{3};
+            yp_mas = yp_mas(mjd_ind);
+            tai_ut1_ms  = eop_data{4};
+            tai_ut1_ms  = tai_ut1_ms(mjd_ind);
+            dut1_sec = -tai_ut1_ms*1e-3 + tai_utc(mjd);
+            dX_mas = eop_data{11};
+            dX_mas = dX_mas(mjd_ind);
+            dY_mas = eop_data{12};
+            dY_mas = dY_mas(mjd_ind);
 
-            % Prepare data vectors incl. unit conversions:
-            mjd         = dat(:,1) ;                   % [d]
-            xp_rad      = dat(:,2) * mas2rad_const;    % [rad]
-            yp_rad      = dat(:,3) * mas2rad_const;    % [rad]
-            dut1_sec    = dat(:,4)/1000 ;              % [sec]
-            dX_rad      = dat(:,5) * mas2rad_const;   % [rad]
-            dY_rad      = dat(:,6) * mas2rad_const;   % [rad]
+            % Unit conversions:
+            xp_rad = xp_mas*1e-3 * as2rad_const;
+            yp_rad = yp_mas*1e-3 * as2rad_const;
+            dX_rad = dX_mas*1e-3 * as2rad_const;
+            dY_rad = dY_mas*1e-3 * as2rad_const;
 
         case {'eop_txt_file_vievs'}
 
