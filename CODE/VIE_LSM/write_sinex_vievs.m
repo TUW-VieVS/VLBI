@@ -150,7 +150,12 @@ for pl=1:size(process_list,1)
     files.antenna=['../DATA/LEVEL3/', subfolder, '/', process_list(pl,6:end), '_antenna.mat'];
     files.sources=['../DATA/LEVEL3/', subfolder, '/', process_list(pl,6:end), '_sources.mat'];
     
-    snxFile=['../DATA/SNX/', subfolder, process_list(pl,6:end), suffix, '.snx'];
+    % check if it is an NGS file and do not use the version number _N0XX in the file name
+    if contains(process_list(pl,6:end),'_N0')
+        snxFile=['../DATA/SNX/', subfolder, process_list(pl,6:end-5), suffix, '.snx'];
+    else
+        snxFile=['../DATA/SNX/', subfolder, process_list(pl,6:end), suffix, '.snx'];
+    end
     files.superstation=('../TRF/superstation.mat');
     
     
