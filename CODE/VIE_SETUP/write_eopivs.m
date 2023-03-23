@@ -32,7 +32,7 @@
 % 11-2022 LK - add comment if estimated EOP are used in automated processing
 % 12-2022 LK - implement changes of vgosDB naming convention + master file
 
-function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsrate)
+function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsrate, flag_incloutl)
 
     %% Get file name from GUI input
     % if a mat file is given instead of already loaded process list
@@ -347,24 +347,28 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
         indp = ismember(mjd , mjdp);
         indu = ismember(mjd , mjdu);
         indn = ismember(mjd , mjdn);
-        
-	    if pol_est
+       
+        if pol_est
            xp   = x_.xpol.val(ismember(x_.xpol.mjd,mjdp))';  
 	       xp_e = x_.xpol.mx(ismember(x_.xpol.mjd,mjdp))';  
 	       yp   = x_.ypol.val(ismember(x_.ypol.mjd,mjdp))';  
 	       yp_e = x_.ypol.mx(ismember(x_.ypol.mjd,mjdp))';  
+           if ~flag_incloutl
            % skip sessions if formal error/estimate is above threshold (10mas)
            if any(xp_e>10) || any(yp_e>10) || any(abs(xp)>10) || any(abs(yp)>10)
                continue
            end
+           end
         end
         
-	    if ut1_est
+        if ut1_est
 	       ut   = x_.dut1.val(ismember(x_.dut1.mjd,mjdu))';   
 	       ut_e = x_.dut1.mx(ismember(x_.dut1.mjd,mjdu))';  
+           if ~flag_incloutl
            % skip sessions if formal error/estimate is above threshold (0.67ms)
            if any(ut_e>0.67) || any(abs(ut)>0.67) 
                continue
+           end
            end
         end
         
@@ -373,9 +377,11 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
 	       dX_e = x_.nutdx.mx(ismember(x_.nutdx.mjd,mjdn))'; 
 	       dY   = x_.nutdy.val(ismember(x_.nutdy.mjd,mjdn))'; 
 	       dY_e = x_.nutdy.mx(ismember(x_.nutdy.mjd,mjdn))'; 
+           if ~flag_incloutl
            % skip sessions if formal error/estimate is above threshold (1.5mas)
            if any(dX_e>1.5) || any(dY_e>1.5) || any(abs(dX)>1.5) || any(abs(dY)>1.5)
                continue
+           end
            end
         end 
         
@@ -427,8 +433,10 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
             mid_mjdp1 = mjdsesmid-mjdp(1);
             xpfin = xptot(1)*mjdp2_mid/dmjdp + xptot(2)*mid_mjdp1/dmjdp;
             ypfin = yptot(1)*mjdp2_mid/dmjdp + yptot(2)*mid_mjdp1/dmjdp; 
+            if ~flag_incloutl
             if (any(abs(xpfin)>=0.65e3) || any(abs(ypfin)>=0.65e3))  % skip session if value is >0.65 as/s
                 continue
+            end
             end
             xpfin_e = sqrt((mjdp2_mid/dmjdp*xp_e(1))^2 + (mid_mjdp1/dmjdp*xp_e(2))^2); 
             ypfin_e = sqrt((mjdp2_mid/dmjdp*yp_e(1))^2 + (mid_mjdp1/dmjdp*yp_e(2))^2); 
@@ -447,8 +455,10 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
         elseif dmjdp>0 || ~flag_offsrate
             xpfin = xptot; ypfin = yptot; xpfin_e = xp_e; ypfin_e = yp_e;
             xprat = NaN; yprat = NaN; xprat_e = NaN; yprat_e = NaN;
+            if ~flag_incloutl
             if (any(abs(xpfin)>=0.65e3) || any(abs(ypfin)>=0.65e3))  % skip session if value is >0.65 as/s
                 continue
+            end
             end
         end
         
@@ -457,8 +467,10 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
             mid_mjdn1 = mjdsesmid-mjdn(1);
             dXfin = dXtot(1)*mjdn2_mid/dmjdn + dXtot(2)*mid_mjdn1/dmjdn;
             dYfin = dYtot(1)*mjdn2_mid/dmjdn + dYtot(2)*mid_mjdn1/dmjdn; 
+            if ~flag_incloutl
             if (any(abs(dXfin)>=5) || any(abs(dYfin)>=5))  % skip session if value is >5 mas
                 continue
+            end
             end
             dXfin_e = sqrt((mjdn2_mid/dmjdn*dX_e(1))^2 + (mid_mjdn1/dmjdn*dX_e(2))^2); 
             dYfin_e = sqrt((mjdn2_mid/dmjdn*dY_e(1))^2 + (mid_mjdn1/dmjdn*dY_e(2))^2); 
@@ -477,8 +489,10 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
         elseif dmjdn>0 || ~flag_offsrate
             dXfin = dXtot; dYfin = dYtot; dXfin_e = dX_e; dYfin_e = dY_e;
             dXrat = NaN; dYrat = NaN; dXrat_e = NaN; dYrat_e = NaN; 
+            if ~flag_incloutl
             if (any(abs(dXfin)>=5) || any(abs(dYfin)>=5))  % skip session if value is >5 mas
                 continue
+            end
             end
         end
         
@@ -491,8 +505,10 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
             uttoti   = uttot - UT1corr(1:2,:)'*1e3;  % [ms]
             utfini = uttoti(1)*mjdu2_mid/dmjdu + uttoti(2)*mid_mjdu1/dmjdu;
             utfin = utfini + UT1corr(3,1)*1e3; % [ms]
+            if ~flag_incloutl
             if any(abs(utfin)>=1e3) % skip session if value is >1 as/s
                 continue
+            end
             end
             utfin_e = sqrt((mjdu2_mid/dmjdu*ut_e(1))^2 + (mid_mjdu1/dmjdu*ut_e(2))^2); 
             utrat = (uttot(2)-uttot(1))/dmjdu;  
@@ -507,8 +523,10 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
             utfin = NaN; utfin_e = NaN; lod = NaN; utrat = NaN; utrat_e = NaN; 
         elseif dmjdu>0 || ~flag_offsrate
             utfin = uttot; utfin_e = ut_e; lod = NaN; utrat = NaN; utrat_e = NaN; 
+            if ~flag_incloutl
             if any(abs(utfin)>=1e3) % skip session if value is >1 as/s
                 continue
+            end
             end
             if isleap
                 [~,mjduind] = intersect(MJDleapcheck,mjdu);
@@ -662,8 +680,8 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
     fprintf(fid,'%s\t\t%sT%s\n','DATA_START', data_start(1:10),data_start(12:end));
     fprintf(fid,'%s\t\t%sT%s\n','DATA_END', data_end(1:10),data_end(12:end));
     fprintf(fid,'%s\t\t%s\n','DESCRIPTION', 'Earth orientation parameters from the VLBI single session solution');
-    fprintf(fid,'%s\t\t%s\n','ANALYSIS_CENTER', 'VIE (TU Wien, Austria)');
-    fprintf(fid,'%s\t\t\t%s\n','CONTACT', 'VIE Analysis Center (vlbi_contact@tuwien.ac.at)');
+    fprintf(fid,'%s\t\t%s\n','ANALYSIS_CENTER', 'NA');
+    fprintf(fid,'%s\t\t\t%s\n','CONTACT', 'NA');
     fprintf(fid,'%s\t\t%s\n','SOFTWARE', 'VieVS v3.2');
     
     % session type - technique

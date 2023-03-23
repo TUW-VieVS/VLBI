@@ -6,7 +6,7 @@
 % This function loads EOP data from text files and returns EOP vectors.
 % 
 % Please note:
-% In case of "eop_txt_file_vievs" the last 5 EOP values of the input time sereis are taken instead of EOP values of the last 5 days!
+% In case of "eop_ivs" the last 5 EOP values of the input time series are taken instead of EOP values of the last 5 days!
 %
 % AUTHOR 
 %   A. Hellerschmied, 2017-03-20
@@ -64,8 +64,8 @@ function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, paramet
             eop_file_type_str = 'eop_jpl';
             eop_file_str      = [eop_dir_str, 'JPL_EOP2_long.txt'];
 
-        otherwise % EOP text file (VieVS formatted) 
-            eop_file_type_str = 'eop_txt_file_vievs';
+        otherwise % IVS-EOP file *.eoxy
+            eop_file_type_str = 'eop_ivs';
             eop_file_str      = [eop_dir_str, parameter.vie_mod.EOPfile];
     end
 
@@ -268,7 +268,7 @@ function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, paramet
             dX_rad = dX_mas*1e-3 * as2rad_const;
             dY_rad = dY_mas*1e-3 * as2rad_const;
 
-        case {'eop_txt_file_vievs'}
+        case {'eop_ivs'} % this part has to be revised for changing to IVS-EOP (S.Boehm 23.03.2023)
 
             % Load EOP file:
             dat  = load(eop_file_str,'r');

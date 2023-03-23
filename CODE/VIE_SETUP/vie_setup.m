@@ -218,7 +218,7 @@ dirsInHydloFolder=dir('../HYDLO/');
 dirsInTrfFolder=dir('../TRF/*');
 dirsInCrfFolder=dir('../CRF/*.txt');
 dirsInCrfFolderMat=dir('../CRF/*.mat');
-dirsInEopFolder=dir('../EOP/*.txt');
+dirsInEopFolder=dir('../EOP/*.eoxy');
 C04InEopFolder=dir('../EOP/C04_*.txt');
 dirsInEophfFolder=dir('../EOP/eophf/*.dat');
 dirsInDataFolder=dir('../DATA/LEVEL3/');
@@ -5179,45 +5179,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-% --- Executes on button press in checkbox_plot_eopOut_write_detailed_eop_data.
-function checkbox_plot_eopOut_write_detailed_eop_data_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_eopOut_write_detailed_eop_data (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_detailed_eop_data
-
-
-% --- Executes on button press in checkbox_plot_eopOut_write_sorted_eop_data.
-function checkbox_plot_eopOut_write_sorted_eop_data_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_eopOut_write_sorted_eop_data (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_sorted_eop_data
-
-
-% --- Executes on button press in checkbox_plot_eopOut_write_vievs_eop_data.
-function checkbox_plot_eopOut_write_vievs_eop_data_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_eopOut_write_vievs_eop_data (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_vievs_eop_data
-
-% --- Executes on button press in checkbox_plot_eopOut_write_vievs_eop_data.
-function checkbox_plot_eopOut_write_ivs_eop_format_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_plot_eopOut_write_vievs_eop_data (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-if get(hObject, 'Value')
-    newState='On';
-else
-    newState='Off';
-end
-    set(handles.rb_plot_eopOut_write_ivs_eop_format_default, 'Enable', newState)
-    set(handles.rb_plot_eopOut_write_ivs_eop_format_pwlo, 'Enable', newState)
-
 % --- Executes on button press in rb_plot_eopOut_write_ivs_eop_format_default.
 function rb_plot_eopOut_write_ivs_eop_format_default_Callback(hObject, eventdata, handles)
 % hObject    handle to rb_plot_eopOut_write_ivs_eop_format_default
@@ -7815,6 +7776,7 @@ switch get(hObject, 'Tag')
     otherwise
         set(handles.popupmenu_parameters_eop_aPriori_other, 'Enable', 'off')
 end
+set(handles.radiobutton_parameters_eop_aPriori_other, 'Enable', 'off') %remove when reading IVS-EOP is enabled!!
 
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)

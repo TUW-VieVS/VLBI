@@ -15,7 +15,7 @@
 % OUTPUT
 %
 % COUPLING
-% - eop_out
+% - write_eopivs
 % - saveProcessList
 % - bas_outtxt
 % - eop_out_int
@@ -25,7 +25,7 @@
 % - 2015-08-20, A. Hellerschmied: Function extraced from vievs2_3.m
 % - 2016-09-13, A. Girdiuk: eop_out is changed for intensive sessions usage
 % - 2016-09-19, A. Girdiuk: eop_out is changed to get data from chosen subfolder
-%
+% - 2023-03-23, S. Boehm: eop_out is removed, only IVS-EOP files eoxy and eopi can be written
 function out_basEop(hObject, handles)
 
 if strcmpi(get(hObject, 'Tag'), 'uipanel_plot_eopOut_write')
@@ -39,7 +39,7 @@ else
     return;
 end
 
-% This function writes eop data using eop_out.m
+% This function writes eop data using write_eopivs.m
 % 1. get process list
 if get(handles.radiobutton_plot_eopOut_pl_current, 'Value')
     pl4eopOut='../WORK/PROCESSLIST/temporaryProcessListForEopOut.mat';
@@ -81,54 +81,34 @@ end
 
 % Write EOP file
 if outBut==1
-    output_mode(1:3)=0;
-    flag_ivsformat = false;
-	if get(handles.checkbox_plot_eopOut_write_detailed_eop_data,'Value') 
-		output_mode(1) = 1;
-	end
-	if get(handles.checkbox_plot_eopOut_write_sorted_eop_data,'Value')
-		output_mode(2) = 1;
-	end
-	if get(handles.checkbox_plot_eopOut_write_vievs_eop_data,'Value')
-		output_mode(3) = 1;
-    end
-    if get(handles.checkbox_plot_eopOut_write_ivs_eop_format,'Value')
-		flag_ivsformat = true;
+		flag_incloutl = false;
         if get(handles.rb_plot_eopOut_write_ivs_eop_format_default,'Value')
             flag_offsrate = true;
         else
             flag_offsrate = false;
         end
-    end
-    
-	if sum(output_mode) == 0 && ~flag_ivsformat% No output option is selected (output_mode = [0, 0, 0]) => Error-msg.!
-		msgbox('ERROR: Please select at least one of the output options for the EOP file!');
-    elseif flag_ivsformat
+        if get(handles.checkbox_plot_eopOut_write_ivs_eop_format_incloutliers,'Value')
+            flag_incloutl = true;
+        end
         if get(handles.radiobutton_plot_eopOut_outFile_default, 'Value')
-        eopOutFile=['../OUT/', curSubfolder, '.txt'];
+            eopOutFile=['../OUT/', curSubfolder, '.txt'];
         end
         flag_intensive = false;
-        write_eopivs(pl4eopOut, curSubfolder, eopOutFile,flag_intensive,flag_offsrate);
-    else
-        eop_out(pl4eopOut, curSubfolder, eopOutFile, output_mode);
-	end
+        write_eopivs(pl4eopOut, curSubfolder, eopOutFile,flag_intensive,flag_offsrate,flag_incloutl);
 	
 % Write EOP file for intensives
 elseif outBut==2
-    flag_ivsformat = false;
-    if get(handles.checkbox_plot_eopOut_write_ivs_eop_format,'Value')
-		flag_ivsformat = true;
-        flag_intensive = true;
+    	flag_intensive = true;
         flag_offsrate = true;
-    end
-    if flag_ivsformat
+        flag_incloutl = false;
+        if get(handles.checkbox_plot_eopOut_write_ivs_eop_format_incloutliers,'Value')
+            flag_incloutl = true;
+        end
         if get(handles.radiobutton_plot_eopOut_outFile_default, 'Value')
         eopOutFile=['../OUT/', curSubfolder, '.txt'];
         end
-        write_eopivs(pl4eopOut,curSubfolder,eopOutFile,flag_intensive,flag_offsrate);
-    else
-        eop_out(pl4eopOut,curSubfolder,eopOutFile,[],1);    % 1 (the last argument) is flag for intensive
-    end
+        write_eopivs(pl4eopOut,curSubfolder,eopOutFile,flag_intensive,flag_offsrate,flag_incloutl);
+    
 % Write baseline file
 elseif outBut==3
 %     bas_outtxt(pl4eopOut,curSubfolder,eopOutFile);
