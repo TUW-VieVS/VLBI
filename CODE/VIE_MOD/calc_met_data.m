@@ -186,8 +186,10 @@ for i_scan = 1 : number_of_scans
                         scan(i_scan).stat(i_stat).e = gpt3_e(i_stat);
                         antenna(i_stat).gpt3e       = 1;
                     case {'no'}
-                        scan(i_scan).stat(i_stat).e = gpt3_e(i_stat);
-                        antenna(i_stat).gpt3e       = 1;
+                        if scan(i_scan).stat(i_stat).e == error_code_invalid_met_data
+                            scan(i_scan).stat(i_stat).e = gpt3_e(i_stat);
+                            antenna(i_stat).gpt3e       = 1;
+                        end
                 end
             end
         end
