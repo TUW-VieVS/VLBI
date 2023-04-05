@@ -1041,7 +1041,7 @@ for i = 1 : length(A)
     Pobserv     = sparse(blkdiag(Pobserv,Ph(i).sm));
     oc_observ   = vertcat(oc_observ,repmat(och(i).sv,1,numberOfLSMs));
 	sum_dj(i+1) = sum_dj(i) + dj(i);
-	num_psob(i) = length(find((any(H(i).sm,1) == 1)));      % number of pseudo-observations for each parameter (hana 17May11)
+	num_psob(i) = length(find((any(H(i).sm,2) == 1)));      % number of pseudo-observations for each parameter (hana 17May11)
 end
 
 if sibling == 1
@@ -1816,7 +1816,7 @@ if opt.ascii_snx == 1
     % Save info about statistic
     col_sinex.lTPlreduc = lTPlreduc;
     col_sinex.nr_unknowns = total_est(end);
-    col_sinex.nr_obs = real_obs; % write only the real observations into sinex
+    col_sinex.nr_obs = all_obs; % write ALL (real+pseudo) observations into sinex!!!
     col_sinex.vTPv = vTPv;
     col_sinex.varfac = mo^2; % hana 24 Apr 2013
     col_sinex.outsnx = outsnx;

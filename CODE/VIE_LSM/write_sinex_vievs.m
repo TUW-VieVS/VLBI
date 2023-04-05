@@ -473,9 +473,13 @@ for pl=1:size(process_list,1)
     
     
     if parameter.lsmopt.est_sourceNNR ==1
-        estsou = ' c) other (NNR condition on sources in the a priori catalogue and constraints of 10 mas on all sources)';
+        if parameter.lsmopt.UseSourceAbsConstrNNR == 1
+            estsou = [' c) other (SOLUTION: NNR condition on sources in the a priori catalog and constraints of ' num2str(parameter.lsmopt.sourceAbsConstrNNR) ' mas on all sources)'];
+        else
+            estsou = [' c) other (SOLUTION: NNR condition on sources in the a priori catalog)'];
+        end
     else
-        estsou = ' a) fix all positions to their a prioris';
+        estsou = ' a) SOLUTION: fix all positions to their a prioris';
     end
     cutoff = parameter.obs_restrictions.cut_off_elev/pi*180; % rad --> deg
         
