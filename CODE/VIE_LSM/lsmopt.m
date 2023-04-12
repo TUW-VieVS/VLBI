@@ -521,7 +521,41 @@ opt.control_gui_vie_lsm = opt.control_gui_vie_lsm;
 
 % % For sessions with at least 4 stations, exclude from NNT/NNR
 % ids=[];
-% ids = strcmp({opt.stat.name},{'KOKEE12M'}) % exclude from NNT/NNR
+% ids = strcmp(deblank({opt.stat.name}),{'AGGO'}) % exclude from NNT/NNR
+% 
+% if sum(ids)>0    
+%     opt.stat(ids).nnt_inc = 0;
+%     opt.stat(ids).nnr_inc = 0;
+% end
+% 
+% 
+% ids=[];
+% ids = strcmp(deblank({opt.stat.name}),{'KOKEE'}) % exclude from NNT/NNR
+% 
+% if sum(ids)>0    
+%     opt.stat(ids).nnt_inc = 0;
+%     opt.stat(ids).nnr_inc = 0;
+% end
+% 
+% ids=[];
+% ids = strcmp(deblank({opt.stat.name}),{'SEJONG'}) % exclude from NNT/NNR
+% 
+% if sum(ids)>0    
+%     opt.stat(ids).nnt_inc = 0;
+%     opt.stat(ids).nnr_inc = 0;
+% end
+
+% 
+% ids=[];
+% ids = strcmp(deblank({opt.stat.name}),{'SESHAN25'}) % exclude from NNT/NNR
+% 
+% if sum(ids)>0    
+%     opt.stat(ids).nnt_inc = 0;
+%     opt.stat(ids).nnr_inc = 0;
+% end
+% 
+% ids=[];
+% ids = strcmp(deblank({opt.stat.name}),{'YARRA12M'}) % exclude from NNT/NNR
 % 
 % if sum(ids)>0    
 %     opt.stat(ids).nnt_inc = 0;
@@ -529,9 +563,11 @@ opt.control_gui_vie_lsm = opt.control_gui_vie_lsm;
 % end
 
 
+% 
+% 
 % 'lsmopt.m'
 % ids=[];
-% ids = strcmp({opt.source.name},{'3C48    '}) % always estimate 3C48
+% ids = strcmp(deblank({opt.source.name}),{'3C48'}) % always estimate 3C48
 % if sum(ids)>0
 %     opt.source(ids).rade_inc = 1;
 % end
