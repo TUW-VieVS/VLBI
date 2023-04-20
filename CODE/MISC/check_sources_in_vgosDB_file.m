@@ -26,11 +26,15 @@ IVSname = {source.IVSname}'; % List of all sources (IVS names) in supersource fi
 % ##### Read nc files #####
 
 % Get year:
-session_year = str2num(session_name(1:2));
-if session_year < 79
-    session_year = session_year + 2000;
+if ~contains(session_name, '-') % Check for new vgosDB naming convention
+    session_year = str2double(session_name(1:2));
+    if session_year < 79
+        session_year = session_year + 2000;
+    else
+        session_year = session_year + 1900;
+    end
 else
-    session_year = session_year + 1900;
+    session_year = str2double(session_name(1:4));
 end
 
 vgosdb_path = ['../DATA/vgosDB/', num2str(session_year), '/', session_name];
