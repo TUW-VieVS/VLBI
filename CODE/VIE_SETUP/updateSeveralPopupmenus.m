@@ -130,7 +130,7 @@ update_popupmenu_folder_in_dir(path_dir, popupmenu_tag, folder_description_str, 
 % ### non-tidal atmo loading ###
 curContent=get(handles.popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad, 'String');
 curSelected=curContent{get(handles.popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad, 'Value')};
-dirsInAtmFolder=dir('../ATM/');
+dirsInAtmFolder=dir('../NTSL/NTAL/');
 dirsInAtmFolder(strcmp({dirsInAtmFolder.name}, '.')|strcmp({dirsInAtmFolder.name}, '..')|strcmp({dirsInAtmFolder.name}, 'temp')|~[dirsInAtmFolder.isdir])=[]; % exclude the "temp" folder!
 set(handles.popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad, 'String', {dirsInAtmFolder.name})
 oldFoundInNew=~cellfun(@isempty, strfind({dirsInAtmFolder.name}, curSelected));
@@ -141,9 +141,15 @@ else
 end
 
 % ### hydrology loading ###
-path_dir               = '../HYDLO/';
+path_dir               = '../NTSL/HYDL/';
 popupmenu_tag          = 'popupmenu_parameters_statCorr_hydroLoading';
 folder_description_str = 'Hydrology loading data';
+update_popupmenu_folder_in_dir(path_dir, popupmenu_tag, folder_description_str, handles)
+
+% ### non-tidal ocean loading ###
+path_dir               = '../NTSL/NTOL/';
+popupmenu_tag          = 'popupmenu_parameters_statCorr_ntol';
+folder_description_str = 'Non-tidal ocean loading data';
 update_popupmenu_folder_in_dir(path_dir, popupmenu_tag, folder_description_str, handles)
 
 
@@ -384,7 +390,11 @@ curContent = eval(['get(handles.', popupmenu_tag, ', ''String'')']);
 if ischar(curContent)
     curContent = {curContent};
 end
-curSelected = eval( ['curContent{get(handles.', popupmenu_tag, ', ''Value'')}'] );
+if ~isempty(eval(['get(handles.', popupmenu_tag, ', ''String'')']))
+    curSelected = eval( ['curContent{get(handles.', popupmenu_tag, ', ''Value'')}'] );
+else
+    curSelected ='';
+end
 filesInDir = dir(path_dir);
 filesInDir(strcmp({filesInDir.name}, '.')|strcmp({filesInDir.name}, '..'))=[]; % Remove "." and ".."
 

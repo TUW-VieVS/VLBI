@@ -106,6 +106,32 @@ else
 end
 nant=length(antenna);
 
+
+if parameter.vie_mod.cnta == 1  
+    ntsl_path = '../NTSL/NTAL/';
+    ntsl_model = parameter.vie_mod.cntam;
+    ntsl_suffix = '.ntal_r';
+
+    ntal_data = stat_nontidal_read(numyrs,iye, ntsl_path,ntsl_model,ntsl_suffix);
+end
+
+if parameter.vie_mod.cntol == 1  
+    ntsl_path = '../NTSL/NTOL/';
+    ntsl_model = parameter.vie_mod.cntolm;
+    ntsl_suffix = '.ntol_r';
+
+    ntol_data = stat_nontidal_read(numyrs,iye, ntsl_path,ntsl_model,ntsl_suffix);
+end
+
+if parameter.vie_mod.chl == 1  
+    ntsl_path = '../NTSL/HYDL/';
+    ntsl_model = parameter.vie_mod.chlm;
+    ntsl_suffix = '.hydl_r';
+
+    hydl_data = stat_nontidal_read(numyrs,iye, ntsl_path,ntsl_model,ntsl_suffix);
+end
+
+
 % Loop over antennas to read corrections from external files
 for ist=1:nant
     
@@ -167,38 +193,13 @@ for ist=1:nant
         end
     end
     
-    %%% Non tidal atmosphere loading  %%% cnta
-    if parameter.vie_mod.cnta == 1
-        
-        antenna(ist).cnta_dx=[];
-        for idyr=0:numyrs-1
-            fil=num2str(sprintf(['../ATM/' parameter.vie_mod.cntam '/y%4d.apl_r'],iye+idyr));
-            if exist(fil,'file')
-                fid = fopen(fil);
-                apl_data = textscan(fid,'%s%f%f%f%f','CommentStyle','!');
-                fclose(fid);
-                if ~isempty(find(strcmpi(apl_data{1},strtrim(aname))))
-                   
-                    % reduce VMF3 data to lines that contain the respective station
-                    wantedLines = ismember(apl_data{1,1}, strtrim(aname));
-                    for k=1:length(apl_data)
-                        apl_data{k} = apl_data{k}(wantedLines);
-                    end
-                    
-                    % make VMF3 data smaller by extracting only data on the respective day + 1 day before and after
-                    wantedLines = apl_data{2}>mjd1-1.25 & apl_data{2}<mjd2+1;
-                    for k=1:length(apl_data)
-                        apl_data{k} = apl_data{k}(wantedLines);
-                    end
-                    
-                    if ~isempty(apl_data)
-                        % Save into antenna.cnta_dx
-                        matm2 = [apl_data{2} apl_data{3} apl_data{4} apl_data{5}];
-                        [nta_dxyz] = call_ren2xyz(matm2,ant);
-                        antenna(ist).cnta_dx = [antenna(ist).cnta_dx ; nta_dxyz];  % = [station,tmjd,ah,aw,zhd,zwd]
-                    end
-                end
-            end
+    %%% Non tidal atmosphere loading  %%% 
+    if parameter.vie_mod.cnta == 1       
+        if ~isempty(find(strcmpi(ntal_data{1},strtrim(aname))))
+            stcorr_xyz =  stat_nontidal_edit(ntal_data, aname, ant, mjd1, mjd2 );
+            antenna(ist).cnta_dx = [stcorr_xyz];  % = [station,tmjd,ah,aw,zhd,zwd]
+        else
+            antenna(ist).cnta_dx=[];
         end
         
         % Reduce data, if it contains 2 years
@@ -209,12 +210,57 @@ for ist=1:nant
             if ~flag
                 flagmess.cnta(ist)=1;
                 antenna(ist).cnta_dx=[];
-                fprintf('%s : not enough non-tidal atm at session time: %f to %f\n',aname,mjd1,mjd2)
+                fprintf('%s : not enough NTAL data at session time: %f to %f\n',aname,mjd1,mjd2)
             end
         end
-
+    end
+   
+    
+    %%% Non tidal ocean loading  %%% 
+    if parameter.vie_mod.cntol == 1       
+        if ~isempty(find(strcmpi(ntol_data{1},strtrim(aname))))
+            stcorr_xyz =  stat_nontidal_edit(ntol_data, aname, ant, mjd1, mjd2 );
+            antenna(ist).cntol_dx = [stcorr_xyz];  % = [station,tmjd,ah,aw,zhd,zwd]
+        else
+            antenna(ist).cntol_dx=[];
+        end
+        
+        % Reduce data, if it contains 2 years
+        if isempty(antenna(ist).cntol_dx)
+            flagmess.cntol(ist)=1;
+        else
+            [antenna(ist).cntol_dx,flag]=datachecking(antenna(ist).cntol_dx,mjd1,mjd2);
+            if ~flag
+                flagmess.cntol(ist)=1;
+                antenna(ist).cntol_dx=[];
+                fprintf('%s : not enough NTOL data at session time: %f to %f\n',aname,mjd1,mjd2)
+            end
+        end
     end
     
+    
+     %%% Hydrology loading %%%
+     if parameter.vie_mod.chl == 1
+        if ~isempty(find(strcmpi(hydl_data{1},strtrim(aname))))
+            stcorr_xyz =  stat_nontidal_edit(hydl_data, aname, ant, mjd1, mjd2 );
+            antenna(ist).chl_dx = [stcorr_xyz];  % = [station,tmjd,ah,aw,zhd,zwd]
+        else
+            antenna(ist).chl_dx=[];
+        end
+        
+        % Reduce data, if it contains 2 years
+        if isempty(antenna(ist).chl_dx)
+            flagmess.chl(ist)=1;
+        else
+            [antenna(ist).chl_dx,flag]=datachecking(antenna(ist).chl_dx,mjd1,mjd2);
+            if ~flag
+                flagmess.chl(ist)=1;
+                antenna(ist).chl_dx=[];
+                fprintf('%s : not enough HYDL data at session time: %f to %f\n',aname,mjd1,mjd2)
+            end
+        end
+     end
+   
     
     %%% APL with regression coefficients, crg %%%
     if parameter.vie_mod.crg == 1 
@@ -251,51 +297,6 @@ for ist=1:nant
     end 
     
 
-    %%% Hydrology loading %%%
-     if parameter.vie_mod.chl == 1
-		antenna(ist).chl_dx=[];
-		if strcmp(parameter.vie_mod.chlm,'GSFC')
-			numyrs_hyd = numyrs+1;
-	        iye_hyd = iye-1;
-    	    for idyr=0:numyrs_hyd
-    	        fil=num2str(sprintf(['../HYDLO/' parameter.vie_mod.chlm '/%4d_CMTE_HYDLO.mat'],iye_hyd+idyr));
-    	        if exist(fil,'file')
-    	        	load (fil);
-    	            if ~isempty(find(strcmpi({hydlo.ivsname},aname)))
-    	            	mhyd = greploaddata(hydlo,aname,mjd1,mjd2); 
-    	                if ~isempty(mhyd)
-    	                    [hyd_dxyz] = call_ren2xyz(mhyd,ant);
-    	                    antenna(ist).chl_dx = [antenna(ist).chl_dx; hyd_dxyz];
-    	                end
-    	            end
-    	        end
-    	    end
-        
-		else
-			fil=sprintf(['../HYDLO/' parameter.vie_mod.chlm '/erahyd.mat']);
-			load (fil);
-            if ~isempty(find(strcmpi({erahyd.ivsname},aname)))
-                mload = greploaddata(erahyd,aname,mjd1,mjd2);
-                mload(:,2:4) = mload(:,2:4)/1000; % North,East,Up: [mm] => [m]
-                mload(:,2:4) = [mload(:,4) mload(:,3) mload(:,2)];
-                if ~isempty(mload)
-                    [hyd_dxyz] = call_ren2xyz(mload,ant);
-                    antenna(ist).chl_dx = [antenna(ist).chl_dx; hyd_dxyz];
-                end
-            end
-		end        
-        % Save into antenna.chl_dx
-		if isempty (antenna(ist).chl_dx)
-    		flagmess.chl(ist)=1;
-		else
-    		[antenna(ist).chl_dx,flag]=datachecking(antenna(ist).chl_dx,mjd1,mjd2);
-    	    if ~flag
-    	    	flagmess.chl(ist)=1;
-    	        antenna(ist).chl_dx=[];
-    	        fprintf('%s : not enough hydlo at session time: %f to %f\n',aname,mjd1,mjd2)
-			end
-		end
-     end
         
     %%% Ocean pole tide loading %%%
     if parameter.vie_mod.ctop == 1 

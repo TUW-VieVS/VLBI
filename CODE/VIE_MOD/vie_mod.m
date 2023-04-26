@@ -438,7 +438,7 @@ end
 % ###  2. STATION COORDINATES   ####
 % ##################################
 zz = zeros(length(antenna),1);
-flagmess = struct('cto',zz,'cta',zz,'cnta',zz,'crg',zz,'gia',zz,'axtyp',zz,'thermal',zz,'vmf3',zz,'vmf1',zz,'dao',zz,'ctop',zz,'chl',zz);
+flagmess = struct('cto',zz,'cta',zz,'cnta',zz,'crg',zz,'gia',zz,'axtyp',zz,'thermal',zz,'vmf3',zz,'vmf1',zz,'dao',zz,'ctop',zz,'chl',zz,'cntol',zz);
 
 % antenna corrections for all stations
 time_lim = [min(MJD) max(MJD)];     % scans might not be in straight order
@@ -913,6 +913,10 @@ for iStat=1:length(antenna)
     if flagmess.chl(iStat) ==1
         fprintf('\n Problems with hydrology loading at station %8s \n',antenna(iStat).name);
     end
+    if flagmess.cntol(iStat) ==1
+        fprintf('\n Problems with non-tidal ocean loading at station %8s \n',antenna(iStat).name);
+    end
+    
     if flagmess.axtyp(iStat) ==1
         fprintf('\n No info about mounting type at station %8s. Axis offset correction not applied. \n',antenna(iStat).name);
     end

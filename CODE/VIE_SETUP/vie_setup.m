@@ -210,11 +210,12 @@ dirsInOptFolder=dir('../../VLBI_OPT/');
 dirsInOutlierFolder=dir('../DATA/OUTLIER/');
 dirsInTrpFolder=dir('../TRP/OUTPUT_DATA/');
 dirsInIonFolder=dir('../ION/FILES/');
-dirsInAtmFolder=dir('../ATM/');
+dirsInAtmFolder=dir('../NTSL/NTAL/');
 dirsInWorkPlFolder=dir('../WORK/PROCESSLIST/*.mat');
 % dirsInAtideFolder=dir('../ATIDE/*.mat');
 % dirsInOtideFolder=dir('../OTIDE/*.mat');
-dirsInHydloFolder=dir('../HYDLO/');
+dirsInHydloFolder=dir('../NTSL/HYDL/');
+dirsInNtolFolder=dir('../NTSL/NTOL/');
 dirsInTrfFolder=dir('../TRF/*');
 dirsInCrfFolder=dir('../CRF/*.txt');
 dirsInCrfFolderMat=dir('../CRF/*.mat');
@@ -283,6 +284,7 @@ dirsInTrpFolder(strcmp({dirsInTrpFolder.name}, '.')|strcmp({dirsInTrpFolder.name
 dirsInIonFolder(strcmp({dirsInIonFolder.name}, '.')|strcmp({dirsInIonFolder.name}, '..')|~[dirsInIonFolder.isdir])=[];
 dirsInAtmFolder(strcmp({dirsInAtmFolder.name}, '.')|strcmp({dirsInAtmFolder.name}, '..')|strcmp({dirsInAtmFolder.name}, 'temp')|~[dirsInAtmFolder.isdir])=[];
 dirsInHydloFolder(strcmp({dirsInHydloFolder.name}, '.')|strcmp({dirsInHydloFolder.name}, '..')|~[dirsInHydloFolder.isdir])=[];
+dirsInNtolFolder(strcmp({dirsInNtolFolder.name}, '.')|strcmp({dirsInNtolFolder.name}, '..')|~[dirsInNtolFolder.isdir])=[];
 dirsInTrfFolder( strcmp({dirsInTrfFolder.name}, '.') | strcmp({dirsInTrfFolder.name}, '..') | strcmp({dirsInTrfFolder.name}, 'SavedGuiData_superstations.txt') | cellfun(@isempty, strfind({dirsInTrfFolder.name}, '.txt')) )=[]; % Exception for superstation GUI settup savings file ("SavedGuiData_superstations.txt")
 dirsInCrfFolder(strcmp({dirsInCrfFolder.name}, '.')|strcmp({dirsInCrfFolder.name}, '..'))=[];
 dirsInEopFolder(strcmp({dirsInEopFolder.name}, '.')|strcmp({dirsInEopFolder.name}, '..'))=[];
@@ -320,7 +322,10 @@ end
 if isempty(dirsInAtmFolder)
     set(handles.popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad, 'String', ' ')
 else
-    set(handles.popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad, 'String', {dirsInAtmFolder.name})
+    pum_ntal = {dirsInAtmFolder.name};
+    idvie = contains({dirsInAtmFolder.name},'VIE'); % put VIE as default option for NTAL
+    pum_ntal_sort = [pum_ntal(idvie), pum_ntal(~idvie)];    
+    set(handles.popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad, 'String', pum_ntal_sort)
 end
 if isempty(dirsInTrfFolder)
     set(handles.popupmenu_parameters_refFrames_otherTRF, 'String', ' ')
@@ -346,6 +351,11 @@ if isempty(dirsInHydloFolder)
     set(handles.popupmenu_parameters_statCorr_hydroLoading, 'String', ' ');
 else
     set(handles.popupmenu_parameters_statCorr_hydroLoading, 'String', {dirsInHydloFolder.name});
+end
+if isempty(dirsInNtolFolder)
+    set(handles.popupmenu_parameters_statCorr_ntol, 'String', ' ');
+else
+    set(handles.popupmenu_parameters_statCorr_ntol, 'String', {dirsInNtolFolder.name});
 end
 set(handles.popupmenu_parameters_eop_aPriori_other, 'String', {dirsInEopFolder.name})
 set(handles.popupmenu_parameters_eop_aPriori_C04, 'String', {C04InEopFolder.name})
@@ -9332,6 +9342,42 @@ function popupmenu_parameters_statCorr_hydroLoading_Callback(hObject, eventdata,
 % --- Executes during object creation, after setting all properties.
 function popupmenu_parameters_statCorr_hydroLoading_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to popupmenu_parameters_statCorr_hydroLoading (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes on button press in checkbox_parameters_statCorr_ntol.
+function checkbox_parameters_statCorr_ntol_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_statCorr_hydroLoading (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_statCorr_hydroLoading
+if get(hObject, 'Value')
+    set(handles.popupmenu_parameters_statCorr_ntol, 'Enable', 'on')
+else
+    set(handles.popupmenu_parameters_statCorr_ntol, 'Enable', 'off')
+end
+
+
+% --- Executes on selection change in popupmenu_parameters_statCorr_ntol.
+function popupmenu_parameters_statCorr_ntol_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_statCorr_ntol (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_parameters_statCorr_hydroLoading contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_parameters_statCorr_hydroLoading
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_parameters_statCorr_ntol_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_statCorr_ntol (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
