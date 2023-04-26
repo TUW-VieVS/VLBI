@@ -329,6 +329,7 @@ parameter.vie_mod.cnta=get(handles.checkbox_parameters_statCorr_nonTidalAtmoLoad
 parameter.vie_mod.ctp=get(handles.checkbox_parameters_statCorr_poleTides, 'Value');
 parameter.vie_mod.ctop=get(handles.checkbox_parameters_statCorr_oceanPoleTides, 'Value');
 parameter.vie_mod.chl=get(handles.checkbox_parameters_statCorr_hydroLoading, 'Value');
+parameter.vie_mod.cntol=get(handles.checkbox_parameters_statCorr_ntol, 'Value');
 parameter.vie_mod.therm=get(handles.checkbox_parameters_statCorr_thermalDef, 'Value');
 parameter.vie_mod.gravDef=get(handles.checkbox_parameters_statCorr_gravitationalDef, 'Value');
 parameter.vie_mod.crg = get(handles.checkbox_parameters_statCorr_APLrg, 'Value');
@@ -361,6 +362,7 @@ allTidOceanLoadFiles=get(handles.popupmenu_parameters_statCorr_tidalOceanLoad, '
 allTidAtmoLoadFiles=get(handles.popupmenu_parameters_statCorr_tidalAtmoOceanLoad, 'String');
 allNTidAtmoLoadFiles=get(handles.popupmenu_parameters_statCorr_nonTidalAtmoOceanLoad, 'String');
 allHydroLoadFiles=get(handles.popupmenu_parameters_statCorr_hydroLoading, 'String');
+allNTidOceanLoadFiles=get(handles.popupmenu_parameters_statCorr_ntol, 'String');
 allAPLrgLoadFiles=get(handles.popupmenu_parameters_statCorr_APLrg, 'String');
 allGIALoadFiles=get(handles.popupmenu_parameters_statCorr_GIA, 'String');
 
@@ -385,6 +387,11 @@ if strcmp(allHydroLoadFiles, ' ')
     parameter.vie_mod.chlm=' ';
 else
     parameter.vie_mod.chlm=allHydroLoadFiles{get(handles.popupmenu_parameters_statCorr_hydroLoading, 'Value')};
+end
+if strcmp(allNTidOceanLoadFiles, ' ')
+    parameter.vie_mod.cntolm=' ';
+else
+    parameter.vie_mod.cntolm=allNTidOceanLoadFiles{get(handles.popupmenu_parameters_statCorr_ntol, 'Value')};
 end
 if strcmp(allAPLrgLoadFiles, ' ')
     parameter.vie_mod.crgm=' ';

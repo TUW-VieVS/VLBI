@@ -139,6 +139,18 @@ function [scan, flgm_ctp] = antennaCorrections(iSc, iStat, scan, antenna, opt, p
                 chl(:,3) = call_spline_4(chl_data(:,1), chl_data(:,4), mjd);
             end
         end
+        
+        % Non-tidal ocean loading
+        cntol = [0 0 0];
+        if parameter.vie_mod.cntol == 1
+            if isempty(antenna(iStat).cntol_dx) == 0
+                cntol_data = antenna(iStat).cntol_dx;
+                cntol(:,1) = call_spline_4(cntol_data(:,1), cntol_data(:,2), mjd);
+                cntol(:,2) = call_spline_4(cntol_data(:,1), cntol_data(:,3), mjd);
+                cntol(:,3) = call_spline_4(cntol_data(:,1), cntol_data(:,4), mjd);
+            end
+        end
+
 
         % Pole Tide (mean: linear or cubic)
         ctp         = [0 0 0];
@@ -177,7 +189,7 @@ function [scan, flgm_ctp] = antennaCorrections(iSc, iStat, scan, antenna, opt, p
         if strcmp(antenna(iStat).name,'GEOCENTR')
             cposit = 0;
         else
-            cposit = cts + cto + cta + cnta + crg + cgia + ctp + ctop + chl + cpsd;
+            cposit = cts + cto + cta + cnta + crg + cgia + ctp + ctop + chl + cntol + cpsd;
         end
 
         % time since reference epoch [years]
