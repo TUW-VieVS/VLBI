@@ -16,8 +16,8 @@ read radiate
 
 echo "download EOPs"
 scp $user@vievs:/home/members/VieVS/VLBI/EOP/*.txt ../../EOP/
-echo "download APL"
-scp $user@vievs:/home/members/VieVS/VLBI/ATM/APL_VIENNA/y$years.apl_r ../../ATM/APL_VIENNA
+echo "download NTAL"
+scp $user@vievs:/home/members/VieVS/VLBI/NTSL/NTAL/VIE/vie_y$years.ntal_r ../../NTSL/NTAL/VIE
 if [ "$ngs" = "y" ]; then
 	echo "download NGS"
 	rsync -avzh $user@vievs:/home/members/VieVS/VLBI/DATA/NGS/$years* ../../DATA/NGS
