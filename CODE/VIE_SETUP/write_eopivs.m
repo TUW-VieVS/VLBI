@@ -90,7 +90,7 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
         end
 
         % distinguish between old and new vgosDB naming convention
-        if length(sname) == 15 && contains(sname, '-') % new vgosDB name YYYYMMDD-SSSSS
+        if contains(sname, '-') % new vgosDB name YYYYMMDD-SSSSS
             syear = str2double(sname(1:4));
             scode = extractAfter(sname, '-');
         else % old vgosDB name YYMONDDSS
