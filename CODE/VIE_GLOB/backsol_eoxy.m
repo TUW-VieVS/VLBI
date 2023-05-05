@@ -2,7 +2,6 @@
 
 function backsol_eoxy(pathGS,path_outglob,DIROUT,DIRIN)
 
-
 pthL2 = pathGS.path_in; % ../DATA/LEVEL2/
 
 curDate=clock;          % current date and time
@@ -216,10 +215,10 @@ for i = 1:size(sesuni,1)
     ancode=[''];
     for j=1:length(ant)
        idst=strcmp({superstations.name},ant(j)) ;
-       ancode(j,:) = superstations(idst).code(2:3);
+       ancode(j,:) = [superstations(idst).code(2:3) '-'];
         
     end
-     ancods =sort(ancode);
+     ancods =sortrows(ancode);
      eop.ancode(idxpolses,1) = {ancods}; % save only by x pole
      eop.numobs(idxpolses,1) = glob2.opt.total_obs;
      
@@ -287,7 +286,8 @@ for i = 1:length(idsessort) % session-wise
         idsp = isspace(an);
         anout = char(an);
         anout(idsp) = [];
-        
+        anout(end) = [];
+
         
         fprintf(fidOffic,writeFormat, mjdi(j), outeop(j,:), -0, -0, -0, -0, -0, numobs(j), sescode, sesdur(j), -0, -0, -0, -0, -0,    -0, -0, -0, -0, -0,   anout );
         
