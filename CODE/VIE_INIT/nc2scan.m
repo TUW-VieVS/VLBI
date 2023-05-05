@@ -102,13 +102,13 @@ try
         end
     end
     if isfield(wrapper_data.Observation,'ObsDerived') % check if ObsDerived folder is in wrapper
-        if ~any(strcmp(wrapper_data.Observation.ObsDerived.files, 'Cal-SlantPathIonoGroup_bX.nc')) % check if Cal_SlantPathIonoGroup_bX.nc exists, else turn off ioncorr
-        ioncorr = 'off';
-        fprintf('WARNING: Cannot find Cal_SlantPathIonoGroup file in ObsDerived. Ionospheric correction is disabled.\n')  
-        end
-    else    
-        ioncorr = 'off';
-        fprintf('WARNING: Cannot find Cal_SlantPathIonoGroup file in ObsDerived. Ionospheric correction is disabled.\n')  
+%         if ~any(strcmp(wrapper_data.Observation.ObsDerived.files, 'Cal-SlantPathIonoGroup_bX.nc')) % check if Cal_SlantPathIonoGroup_bX.nc exists, else turn off ioncorr
+%         ioncorr = 'off';
+%         fprintf('WARNING: Cannot find Cal_SlantPathIonoGroup file in ObsDerived. Ionospheric correction is disabled.\n')  
+%         end
+%     else    
+%         ioncorr = 'off';
+%         fprintf('WARNING: Cannot find Cal_SlantPathIonoGroup file in ObsDerived. Ionospheric correction is disabled.\n')  
     end
 catch
     ME = MException('nc2scan:inputError', 'vgosDB file has not been analysed by an AC!!');
