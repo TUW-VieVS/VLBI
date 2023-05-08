@@ -6,11 +6,6 @@ pthL2 = pathGS.path_in; % ../DATA/LEVEL2/
 curDate=clock;          % current date and time
 fidOffic=fopen([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/eoxy_' DIRIN '.txt'],'wt');
 
-fprintf(fidOffic,'# Created on %02.0f.%02.0f.%04.0f at %02.0f:%02.0f:%02.0f local time\n', curDate(3), curDate(2), curDate(1), curDate(4), curDate(5), curDate(6));
-fprintf(fidOffic,'# Earth orientation parameters from the VLBI global solution (session-wise reduced parameters) \n');
-fprintf(fidOffic,'# VLBI VieVS solution                                                                          \n');
-fprintf(fidOffic,'# Analysis center: VIE (TU Wien, Austria)                                                      \n');
-
 
 % writeFormat='%12.6f%10.7f%10.7f%11.8f%7.4f%7.4f%10.7f%10.7f%11.8f%9.4f%9.4f %8.2f %9.0f%10.0f%10.0f%10.0f %6.0f %8s %7.2f %10.0f%11.0f%12.0f%8.0f%8.0f%11.0f%11.0f%12.0f%8.0f%8.0f     %s\n';
 writeFormat='%12.6f%11.7f%11.7f%12.8f%8.4f%8.4f%11.7f%11.7f%12.8f%10.4f%10.4f %8.2f %9.0f%10.0f%10.0f%10.0f %6.0f %8s %7.2f %10.0f%11.0f%12.0f%8.0f%8.0f%11.0f%11.0f%12.0f%8.0f%8.0f     %s\n';
@@ -189,6 +184,7 @@ end
 
 %%
 
+fprintf(fidOffic,'%%=IVS-EOP 3.0 VIE %04.0f-%02.0f-%02.0fT%02.0f:%02.0f:%02.0f VIE %04.0f-%02.0f-%02.0fT%02.0f:%02.0f:%02.0f %04.0f-%02.0f-%02.0fT%02.0f:%02.0f:%02.0f  UTC R\n',curDate(1), curDate(2), curDate(3), curDate(4), curDate(5), curDate(6), dastart(1), dastart(2), dastart(3),0,0,0, daend(1), daend(2), daend(3),0,0,0);
 fprintf(fidOffic,'+HEADER\n');
 fprintf(fidOffic,'GENERATION_TIME		%04.0f-%02.0f-%02.0fT%02.0f:%02.0f:%02.0f\n', curDate(1), curDate(2), curDate(3), curDate(4), curDate(5), curDate(6));
 fprintf(fidOffic,'DATA_START		%04.0f-%02.0f-%02.0fT%02.0f:%02.0f:%02.0f\n',dastart(1), dastart(2), dastart(3),0,0,0);
@@ -295,7 +291,13 @@ for i = 1:length(idsessort) % session-wise
         
 
 end
+
+
+fprintf(fidOffic,'-DATA\n');
+fprintf(fidOffic,'%%IVS-EOP 3.0 END\n');
 fclose(fidOffic);
+
+
 
 
 
