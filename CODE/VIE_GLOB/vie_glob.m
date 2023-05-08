@@ -1300,6 +1300,16 @@ end
 
 %%
 
+
+globsol.Nfree=[];
+globsol.bfree=[];
+globsol.N=[];
+globsol.b=[];
+globsol.Q=[];
+
+save([pathGS.path_out '_ESTIMATES/' pathGS.out '/globsol_small_' dir_in],'globsol','-v7.3');
+
+
 fprintf('\n\n Done! \n');
 
 fprintf('\n Estimates in TXT format are stored in VieVS/OUT/GLOB/_ESTIMATES/%s/glob_results_%s.txt \n',pathGS.out ,dir_in);

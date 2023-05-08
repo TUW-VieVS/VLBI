@@ -50,7 +50,7 @@
 % ************************************************************************
 
 
-function [scan, flgm_ctp] = antennaCorrections(iSc, iStat, scan, antenna, opt, parameter, session, mjd, ANT, VEL, t2c, leap, cto_F, cto_P, cto_TAMP, cto_IDD1, PHI, LAM, tim, xp, yp, cpsd_all, ephem)
+function [scan, flgm_ctp] = antennaCorrections(iSc, iStat, scan, antenna, opt, parameter, session, mjd, ANT, VEL, t2c, leap, cto_F, cto_P, cto_TAMP, cto_IDD1, PHI, LAM, tim, xp, yp, cpsd_all, ephem, sourceNames)
     moon    = ephem.moon(iSc).xgeo;
     sun     = ephem.sun(iSc).xgeo;
     % Choose only active stations in the scan:

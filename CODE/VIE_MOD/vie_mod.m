@@ -571,7 +571,7 @@ for iSc = 1:number_of_all_scans
     %  loop over stations in current scan
     % ************************************
     for iStat = 1 : length(scan(iSc).stat)
-       [scan, flgm_ctp] = antennaCorrections(iSc, iStat, scan, antenna, opt, parameter, session, mjd, ANT, VEL, t2c, leap, cto_F, cto_P, cto_TAMP, cto_IDD1, PHI, LAM, tim, xp, yp, cpsd_all, ephem);    
+       [scan, flgm_ctp] = antennaCorrections(iSc, iStat, scan, antenna, opt, parameter, session, mjd, ANT, VEL, t2c, leap, cto_F, cto_P, cto_TAMP, cto_IDD1, PHI, LAM, tim, xp, yp, cpsd_all, ephem, sourceNames);    
     end 
     
     % ############################

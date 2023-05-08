@@ -5,7 +5,7 @@ function backsol_eoxy(pathGS,path_outglob,DIROUT,DIRIN)
 pthL2 = pathGS.path_in; % ../DATA/LEVEL2/
 
 curDate=clock;          % current date and time
-fidOffic=fopen([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/eoxy_' DIRIN '.txt'],'wt');
+fidOffic=fopen([path_outglob 'BACKWARD_SOLUTION/' DIROUT '/eoxy_midnight_' DIRIN '.txt'],'wt');
 
 fprintf(fidOffic,'# Created on %02.0f.%02.0f.%04.0f at %02.0f:%02.0f:%02.0f local time\n', curDate(3), curDate(2), curDate(1), curDate(4), curDate(5), curDate(6));
 fprintf(fidOffic,'# Earth orientation parameters from the VLBI global solution (session-wise reduced parameters) \n');

@@ -509,7 +509,7 @@ end
 
 if solbck.eop==1
     % creates eop output in eoxy format
-    % backsol_eoxy(pathGS,path_outglob,DIROUT,DIRIN)
+    backsol_eoxy(pathGS,path_outglob,DIROUT,DIRIN)
     backsol_eoxy_nutmidses(pathGS,path_outglob,DIROUT,DIRIN)
 end
 
