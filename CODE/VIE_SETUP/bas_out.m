@@ -139,7 +139,9 @@ kbas=0;
 %% for all sessions
 for ip = 1:nSes
     if ~isempty(process_list)
-        sname = process_list(ip,6:end);   % adapted so it can read vgosDB session names as well
+%        sname = process_list(ip,6:end);   % adapted so it can read vgosDB session names as well
+        ibckslsh = strfind(process_list(ip,:),'/');
+        sname = process_list(ip,ibckslsh(end)+1:end); % adapted for SIMULATED FILES       
         sname_test = strsplit(sname,' ');
         if length(sname_test)>1   % this means that it is a vgosDB session
             sname = sname_test{1};
@@ -148,6 +150,7 @@ for ip = 1:nSes
     else
         sname='XXXXXX'; % better but does not work for older data: x_files{1}(ip).session;
     end
+   
     if x_filesGiven==1
         x_=x_files{1}(ip);
     else
