@@ -251,7 +251,7 @@ stations_to_be_removed = {''; ''; ''; ''}; % Can be set here in cell array!
 parameter.vie_init.stat_dw = [];
 
 % read OPT-file
-if length(parameter.session_name) == 14
+if length(parameter.session_name) == 14 && ~contains(parameter.session_name,'-')
     opt_file_path_name = ['../../VLBI_OPT/', parameter.vie_init.diropt, '/', parameter.filepath(end-4:end-1), '/', parameter.session_name(1:end-5), '.OPT'];
 % elseif length(parameter.session_name) == 9
 else
