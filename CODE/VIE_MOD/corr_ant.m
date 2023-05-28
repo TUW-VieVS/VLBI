@@ -112,7 +112,7 @@ if parameter.vie_mod.cnta == 1
     ntsl_model = parameter.vie_mod.cntam;
     ntsl_suffix = '.ntal_r';
 
-    ntal_data = stat_nontidal_read(numyrs,iye, ntsl_path,ntsl_model,ntsl_suffix);
+    ntal_data = stat_nontidal_read(idoy,numyrs,iye, ntsl_path,ntsl_model,ntsl_suffix);
 end
 
 if parameter.vie_mod.cntol == 1  
@@ -120,7 +120,7 @@ if parameter.vie_mod.cntol == 1
     ntsl_model = parameter.vie_mod.cntolm;
     ntsl_suffix = '.ntol_r';
 
-    ntol_data = stat_nontidal_read(numyrs,iye, ntsl_path,ntsl_model,ntsl_suffix);
+    ntol_data = stat_nontidal_read(idoy,numyrs,iye, ntsl_path,ntsl_model,ntsl_suffix);
 end
 
 if parameter.vie_mod.chl == 1  
@@ -128,7 +128,7 @@ if parameter.vie_mod.chl == 1
     ntsl_model = parameter.vie_mod.chlm;
     ntsl_suffix = '.hydl_r';
 
-    hydl_data = stat_nontidal_read(numyrs,iye, ntsl_path,ntsl_model,ntsl_suffix);
+    hydl_data = stat_nontidal_read(idoy,numyrs,iye, ntsl_path,ntsl_model,ntsl_suffix);
 end
 
 
