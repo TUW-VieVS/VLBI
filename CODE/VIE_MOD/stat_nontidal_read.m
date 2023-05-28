@@ -1,11 +1,14 @@
 
-function data = stat_nontidal_read(numyrs,iye, ntsl_path,ntsl_model,ntsl_suffix)
+function data = stat_nontidal_read(idoy, numyrs,iye, ntsl_path,ntsl_model,ntsl_suffix)
 
 data = cell(1,5);
 for idyr=0:numyrs-1
     f = dir([ntsl_path ntsl_model '/*' ntsl_suffix]); 
-
-    id = contains({f.name},num2str(iye+idyr));
+    if idoy>360
+        id = contains({f.name},num2str(iye+idyr)); % session in Dec
+    else
+        id = contains({f.name},num2str(iye-idyr)); % session in Jan
+    end
     fil = [ntsl_path ntsl_model '/' f(id).name];
 
     data_y = cell(1,5);
