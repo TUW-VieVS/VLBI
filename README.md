@@ -49,14 +49,14 @@ Please be aware that this repository contains more or less only the program code
 * Master files are needed for the automatic generation of a process list, they can be downloaded from https://cddis.nasa.gov/archive/vlbi/ivscontrol/ as yearly *.txt files and have to be stored in : `/VLBI/DATA/MASTER`
 
 ### Earth Orientation parameters
-* EOP C04 can be downloaded from https://datacenter.iers.org/data/latestVersion/EOP_14_C04_IAU2000A_one_file_1962-now.txt. Take "EOP_14_C04_IAU2000A_one_file_1962-now.txt" and store it as `C04_14_1962_now.txt` in `/VLBI/EOP/`.
+* EOP C04 can be downloaded from https://datacenter.iers.org/data/latestVersion/EOP_20_C04_one_file_1962-now.txt. Take "EOP_20_C04_one_file_1962-now.txt" and store it as `C04_20_1962_now.txt` in `/VLBI/EOP/`.
 * EOP finals can be downloaded from https://datacenter.iers.org/data/latestVersion/finals.all.iau2000.txt. Take "finals.all.iau2000.txt" and store it as `finals_all_IAU2000.txt` in `/VLBI/EOP/`.
 
-### Troposphere delay models, ray-tracing data and atmosphere non-tidal loading
+### Troposphere delay models, ray-tracing data and non-tidal station loading
 * Mapping functions: VMF1 and VMF3 can be retrieved from http://vmf.geo.tuwien.ac.at/trop_products/VLBI/ . Choose the yearly files and store them in the respective folder (VMF1 or VMF3) in `/VLBI/TRP/`.
 * Gradients are available from http://vmf.geo.tuwien.ac.at/trop_products/VLBI/GRAD/ . Choose the yearly files and store them in the respective folder in `/VLBI/TRP/GRAD`. 
 * Ray-traced delays are available from http://vmf.geo.tuwien.ac.at/trop_products/VLBI/RAYTR/RADIATE/. The *.radiate files have to be stored in year folders in `/VLBI/TRP/RAYTRACING_DATA/yyyy/`.
-* Atmosphere non-tidal loading: yearly files are available from http://vmf.geo.tuwien.ac.at/APL_products/VLBI/yearly/. The *.apl_r files have to be stored in `/VLBI/ATM/APL_VIENNA/`.
+* Non-tidal station loading: files with information about non-tidal station loading have to be placed into the respective directories in `/VLBI/NTSL/`. Atmospheric pressure loading has to be stored in `/VLBI/NTSL/NTAL/`. If you would like to use NTAL from the VMF server, download the yearly files from http://vmf.geo.tuwien.ac.at/APL_products/VLBI/yearly/, rename the yYYYY.apl_r files to vie_yYYYY.ntal_r and store them in `/VLBI/NTSL/NTAL/VIE/`. Other non-tidal station loading: functions to reformat data on hydrological loading (HYDL) and non-tidal ocean loading (NTOL) from other institutions to yearly files readable by VieVS will be provided in future.
 
 ### Running the software
 Start Matlab, go to `VLBI/WORK` and type `vievs` in the command window to start the VieVS graphical user interface.
