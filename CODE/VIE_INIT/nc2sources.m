@@ -38,6 +38,8 @@ for iSource=1:nSources
         curName ='NGC6251 ';
     elseif curName == '1845+79A'
         curName ='3C390.3 ';
+    elseif curName == '2344+092'
+        curName = '2344+09A';
     end
     
     % find index in crf

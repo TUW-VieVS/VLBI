@@ -304,7 +304,9 @@ for pl=1:size(process_list,1)
     
     %% write headerline
     %if existsnx==0
-    snxFormat=2.10;         % format of sinex
+    % Die SINEX 2.10 Beschreibung, die man im Internet findet ist die draft Version (vom 15.09.2006) der endgültigen 2.02 Version (4.12.2006). 
+    % https://datacenter.iers.org/data/2/message_103.txt
+    snxFormat=2.02;         % format of sinex
     creatingAgency='VIE';   % agency creating this file
     curDate=clock;          % current date and time
     doy=datenum(curDate-[curDate(1),0,0,curDate(4:end)]);  % day of year of current time
@@ -472,14 +474,20 @@ for pl=1:size(process_list,1)
     end
     
     
-    if parameter.lsmopt.est_sourceNNR ==1
+    if parameter.lsmopt.est_sourceNNR ==1      
         if parameter.lsmopt.UseSourceAbsConstrNNR == 1
             estsou = [' c) other (SOLUTION: NNR condition on sources in the a priori catalog and constraints of ' num2str(parameter.lsmopt.sourceAbsConstrNNR) ' mas on all sources)'];
         else
             estsou = [' c) other (SOLUTION: NNR condition on sources in the a priori catalog)'];
         end
+        if strncmpi('icrf3',parameter.vie_init.crf(2),5)
+            estsouGA = ' The galactic aberration model (5.8 muas/year) is applied for consistency with ICRF3.';
+        else
+            estsouGA = ' The galactic aberration model is not applied.';
+        end
     else
         estsou = ' a) SOLUTION: fix all positions to their a prioris';
+        estsouGA = ' ';
     end
     cutoff = parameter.obs_restrictions.cut_off_elev/pi*180; % rad --> deg
         
@@ -541,6 +549,7 @@ for pl=1:size(process_list,1)
         outlr;
         '11. Handling of source positions';
         estsou;
+        estsouGA;
         '12. Generation of pre-reduced datum-free normal equations';
         ' b) Program is based on authentic classical least squares adjustment and matrix';
         ' elements of interest are squeezed out by inversion steps.';
@@ -563,8 +572,14 @@ for pl=1:size(process_list,1)
     %% write 9. NUTATION/DATA block if tickbox is ticked
     blockName='NUTATION/DATA';
 
-    nutationModel=parameter.vie_mod.nutmod;
     nutationDescription=' ';
+    if strcmp(parameter.vie_mod.nutmod,'IAU_2006/2000A')
+        nutationModel='IAU2000a';
+    elseif strcmp(parameter.vie_mod.nutmod,'IAU_2000A')
+        nutationModel='IAU2000a';        
+    else
+        nutationModel=parameter.vie_mod.nutmod;
+    end
 
     % write data to file
     fprintf(fid, '+%s\n', blockName);
@@ -577,8 +592,14 @@ for pl=1:size(process_list,1)
     %% write PRECESSION/DATA block if tickbox is ticked
     blockName='PRECESSION/DATA';
 
-    precessionModel=parameter.vie_mod.nutmod;
     precessionDescription=' ';
+    if strcmp(parameter.vie_mod.nutmod,'IAU_2006/2000A')
+        precessionModel='IAU2006';
+    elseif strcmp(parameter.vie_mod.nutmod,'IAU_2000A')
+        precessionModel='IAU2000a';
+    else
+        precessionModel=parameter.vie_mod.nutmod;
+    end   
 
     % write data to file
     fprintf(fid, '+%s\n', blockName);
