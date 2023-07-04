@@ -156,10 +156,12 @@ for ip = 1:nSes
     else
         load(strcat(path,'DATA/LEVEL3/',subdir,'/x_',num2str(sname)));
     end
-    if  atpaFilesGiven==1
-        atpa_=atpa_files{ip};
-    else
-        load(strcat(path,'DATA/LEVEL3/',subdir,'/atpa_',num2str(sname)));
+    if rigFormErr==1
+        if  atpaFilesGiven==1
+            atpa_=atpa_files{ip};
+        else
+            load(strcat(path,'DATA/LEVEL3/',subdir,'/atpa_',num2str(sname)));
+        end
     end
     if optFilesGiven==1
         opt_=opt_files{ip};

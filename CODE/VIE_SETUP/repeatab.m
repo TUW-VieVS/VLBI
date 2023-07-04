@@ -183,12 +183,14 @@ if strcmpi(superstations(end-3:end),'.mat') % if it's a filename
     superstations=superstations.(fieldsSuper{1});
 end
 
+superstations(find(strcmpi({superstations.name}, 'USUDA64 '))).vievsTrf.break.end  = 55591;
 
 %% preallocate
 bl=ones(length(bas),1)*NaN;
 mjd=bl;
 blr=bl;
 wblr=bl; %weighted RMS
+nobs= bl;
 
 bl_all=ones(length(bas),99)*NaN; % full out matrix -> row=baseline, col=one "break-timespan"
 blr_all=bl_all;
@@ -239,7 +241,7 @@ for k=1:length(bas)
     allObsEp=bas(k).mjd; % for all those epochs -> get breaks of both (participating stations)
     breakInd=zeros(2,length(allObsEp)); % contains breaks for both stations (row) for all epochs (columns) of bas-observations
  
-    for iEp=1:length(allObsEp)
+    for iEp=1:length(allObsEp)        
         
         breakInd(1,iEp)=find(i1_breakStart<=allObsEp(iEp) & ...
             i1_breakEnd>allObsEp(iEp));
@@ -253,6 +255,7 @@ for k=1:length(bas)
     wblrPerBreak=blrPerBreak;
     mjdPerBreak= blrPerBreak;
     meanPerBreak=blrPerBreak;
+    nobsPerBreak=blrPerBreak;
     for kUniqBreak=1:nUniqBreaks
         % get observations of current unique combination
         curObs=breakInd(1,:)==allBreakCombis(1,kUniqBreak) & ...
@@ -293,7 +296,7 @@ for k=1:length(bas)
             blrPerBreak(1,kUniqBreak)=curBLR;
 			wblrPerBreak(1,kUniqBreak)=curWBLR;
             mjdPerBreak(1,kUniqBreak)=curMjd;
-
+            nobsPerBreak(1,kUniqBreak)=sum(curObs);
         end
 		meanPerBreak(1,kUniqBreak)=curBL; % save mean BL even if there is just 1 (or <limitation) estimates of that baseline
 		
@@ -341,6 +344,13 @@ for k=1:length(bas)
         bl(k,1)= NaN;
     end
     
+    isvalid_nobsPerBreak= ~isnan(nobsPerBreak);
+    if any(isvalid_nobsPerBreak)
+        nobs(k,1)= sum( nobs_all(k,isvalid_nobsPerBreak) .* nobsPerBreak(isvalid_nobsPerBreak) ) / sum( nobs_all(k,isvalid_nobsPerBreak) );
+    else
+        nobs(k,1)= NaN;
+    end    
+    
 end
 
 % delete not needed cols (due to preallocation)
@@ -365,7 +375,7 @@ if ~isempty(outfile)
         '# Breaks (Earthquakes) are taken from the vievsTrf\n#\n',...
         '# Created on %02.0f.%02.0f.%04.0f %02.0f:%02.0f:%02.0f\n',...
         '# by function repeatab.m\n#\n',...
-        '# Min number of observations of baseline (in every break-time-span): %1.0f\n',...
+        '# Min number of sessions for a baseline (in every break-time-span): %1.0f\n',...
         '# Number of baselines: %1.0f\n#\n',...
         '# col1 (cols 01-17)  baseline name \n',...
         '# col2 (cols 19-28)  mean epoch (mjd)\n',...
@@ -379,7 +389,7 @@ if ~isempty(outfile)
     for iB=1:length(bas)
         if ~isnan(blr(iB)) && blr(iB)~=0 % if there was more than one estimate
             fprintf(fid, '%-17s %10.4f %13.4f %6.2f %6.2f %5.0f\n',...
-                bas(iB).name, mjd(iB), bl(iB), blr(iB)*100, wblr(iB)*100, nobs_all(iB));
+                bas(iB).name, mjd(iB), bl(iB), blr(iB)*100, wblr(iB)*100, nobs(iB));
         end
     end    
     fclose(fid);    
