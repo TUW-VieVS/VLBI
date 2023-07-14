@@ -307,6 +307,122 @@ end
 % Markus end
 
 
+
+
+
+
+% -------------------
+% VieVS TRF file
+% -------------------
+% This TRF is the backup-TRF for VieVS. Also in this
+% backup-TRF the estimated coordinates after an earthquake are written to!
+%
+% In this function: mk_superstatFile.m it is important that the VieVStrf is saved in the "nscodes" structure
+% before the ocean loading coorections are read in. In case that some
+% telescopes are missing in ns-codes.txt then the OL corrections would be
+% ignored.
+
+fprintf('\n Loading VieVS TRF file\n\n');
+
+% read data using textscan
+fid=fopen(vievsTrfFile);
+if (fid < 0)
+   varargout{1} = ['ERROR: Cannot open the file: ', vievsTrf];
+   return;
+end
+vievsTrf=textscan(fid, '%8s %20f %16f %16f %15f %12f %12f %11f %8f %8f %f %s', 'commentstyle', '%', 'delimiter', '|');
+fclose(fid);
+nStat=size(vievsTrf{1},1); % get number of stations
+
+% see if last column has same number of entries (otherwise add empty string)
+if size(vievsTrf{12},1)<nStat
+    vievsTrf{12}{nStat}='';
+end
+
+% add all stations to ns_codes struct
+for k=1:nStat
+    % 1. find station (of current line in vievstrf file) in ns_codes ...
+    if sum(strcmpi({ns_codes.name}, vievsTrf{1}{k}))>0
+        indStat=find(strcmpi({ns_codes.name}, vievsTrf{1}{k}));
+    else
+        % try to find the station with '_' instead of ' '
+        if sum(strcmpi({ns_codes.name}, strrep(vievsTrf{1}{k}, ' ', '_')))>0
+            indStat=find(strcmpi({ns_codes.name}, strrep(vievsTrf{1}{k}, ' ', '_')));
+        else
+            % if not found, add new entry to ns_codes
+            fprintf('station %s (in vievsTRF) was not found in ns_codes -> writing station to new entry!\n', vievsTrf{1}{k});
+            indStat=size(ns_codes,2)+1;
+        end
+    end
+    
+    % 2. if station has already been inserted in ns_codes -> add new break; else simplty add another break entry
+    if size(ns_codes,2)>=indStat % ohterwise i need to create new entry (new station!)
+        if isfield(ns_codes(indStat), 'vievsTrf') % needed for k==1: no vievsTrf field exists yet
+            indStat=indStat(1);
+            if isfield(ns_codes(indStat).vievsTrf, 'break')
+                newBreakEntry=size(ns_codes(indStat).vievsTrf.break,2)+1; % 'break' field exists; get index of new break values
+            else
+                % nothing was written to current station
+            %    ns_codes(indStat).vievsTrf.name=vievsTrf{1}{k}; % write station name only once
+                newBreakEntry=1;
+            end
+        else
+            % nothing was written to current station
+        %    ns_codes(indStat).vievsTrf.name=vievsTrf{1}{k}; % write station name only once
+            newBreakEntry=1;
+        end
+    else
+        newBreakEntry=1;
+    end
+
+    % 3. write x,y,z, vx,vy,vz of current break to ns_codes
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).x=vievsTrf{2}(k);
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).y=vievsTrf{3}(k);
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).z=vievsTrf{4}(k);
+    
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).vx=vievsTrf{5}(k);
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).vy=vievsTrf{6}(k);
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).vz=vievsTrf{7}(k);
+    
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).epoch=vievsTrf{8}(k);
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).start=vievsTrf{9}(k);
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).end=vievsTrf{10}(k);
+    
+    % also write ".indatum" to struct (0 for not in datum, eg earthquake), otherwise 1
+    vievsTrf{11}(isnan(vievsTrf{11}))=1;
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).indatum=vievsTrf{11}(k);
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).comment=vievsTrf{12}{k};
+
+    % if there is no name in ns_codes for current station (usually when it did not exist before), add name
+    if isempty(ns_codes(indStat).name)
+        ns_codes(indStat).name=vievsTrf{1}{k};
+    end
+    
+end
+
+
+% since we want all ns-codes stations to have vievsTrf coordinates: Write
+% message if not.
+noVievsTrfCoords=cellfun(@isempty, {ns_codes.vievsTrf});
+
+if sum(noVievsTrfCoords)>0 % if there are ns_codes stations with no vievsTrf coordinates
+    
+    % get indices of stations where we don't have vievsTrf coordinates.
+    ind=find(noVievsTrfCoords);
+    
+    % write all those stations as one line
+    for k=1:sum(noVievsTrfCoords)
+        if ~isempty(ns_codes(ind(k)).VieTRF13)
+            % try to get VieTRF13 coordinates
+            ns_codes(ind(k)).vievsTrf.break=ns_codes(ind(k)).VieTRF13.break;
+        end
+        
+    end
+end
+
+
+
+
 % -----------------
 % 2.2 Ocean loading
 % -----------------
@@ -761,110 +877,6 @@ else
 end     
 
 
-% -------------------
-% 2.3.6 VieVS TRF file
-% -------------------
-% This TRF is the backup-TRF for VieVS and it is a mixture of the vieTrf
-% and (if no coordinates are available there) the VTRF2008. Also in this
-% backup-TRF the estimated coordinates after an earthquake are written to!
-
-fprintf('\n Loading VieVS TRF file\n\n');
-
-% read data using textscan
-fid=fopen(vievsTrfFile);
-if (fid < 0)
-   varargout{1} = ['ERROR: Cannot open the file: ', vievsTrf];
-   return;
-end
-vievsTrf=textscan(fid, '%8s %20f %16f %16f %15f %12f %12f %11f %8f %8f %f %s', 'commentstyle', '%', 'delimiter', '|');
-fclose(fid);
-nStat=size(vievsTrf{1},1); % get number of stations
-
-% see if last column has same number of entries (otherwise add empty string)
-if size(vievsTrf{12},1)<nStat
-    vievsTrf{12}{nStat}='';
-end
-
-% add all stations to ns_codes struct
-for k=1:nStat
-    % 1. find station (of current line in vievstrf file) in ns_codes ...
-    if sum(strcmpi({ns_codes.name}, vievsTrf{1}{k}))>0
-        indStat=find(strcmpi({ns_codes.name}, vievsTrf{1}{k}));
-    else
-        % try to find the station with '_' instead of ' '
-        if sum(strcmpi({ns_codes.name}, strrep(vievsTrf{1}{k}, ' ', '_')))>0
-            indStat=find(strcmpi({ns_codes.name}, strrep(vievsTrf{1}{k}, ' ', '_')));
-        else
-            % if not found, add new entry to ns_codes
-            fprintf('station %s (in vievsTRF) was not found in ns_codes -> writing station to new entry!\n', vievsTrf{1}{k});
-            indStat=size(ns_codes,2)+1;
-        end
-    end
-    
-    % 2. if station has already been inserted in ns_codes -> add new break; else simplty add another break entry
-    if size(ns_codes,2)>=indStat % ohterwise i need to create new entry (new station!)
-        if isfield(ns_codes(indStat), 'vievsTrf') % needed for k==1: no vievsTrf field exists yet
-            indStat=indStat(1);
-            if isfield(ns_codes(indStat).vievsTrf, 'break')
-                newBreakEntry=size(ns_codes(indStat).vievsTrf.break,2)+1; % 'break' field exists; get index of new break values
-            else
-                % nothing was written to current station
-            %    ns_codes(indStat).vievsTrf.name=vievsTrf{1}{k}; % write station name only once
-                newBreakEntry=1;
-            end
-        else
-            % nothing was written to current station
-        %    ns_codes(indStat).vievsTrf.name=vievsTrf{1}{k}; % write station name only once
-            newBreakEntry=1;
-        end
-    else
-        newBreakEntry=1;
-    end
-
-    % 3. write x,y,z, vx,vy,vz of current break to ns_codes
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).x=vievsTrf{2}(k);
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).y=vievsTrf{3}(k);
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).z=vievsTrf{4}(k);
-    
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).vx=vievsTrf{5}(k);
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).vy=vievsTrf{6}(k);
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).vz=vievsTrf{7}(k);
-    
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).epoch=vievsTrf{8}(k);
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).start=vievsTrf{9}(k);
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).end=vievsTrf{10}(k);
-    
-    % also write ".indatum" to struct (0 for not in datum, eg earthquake), otherwise 1
-    vievsTrf{11}(isnan(vievsTrf{11}))=1;
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).indatum=vievsTrf{11}(k);
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).comment=vievsTrf{12}{k};
-
-    % if there is no name in ns_codes for current station (usually when it did not exist before), add name
-    if isempty(ns_codes(indStat).name)
-        ns_codes(indStat).name=vievsTrf{1}{k};
-    end
-    
-end
-
-
-% since we want all ns-codes stations to have vievsTrf coordinates: Write
-% message if not.
-noVievsTrfCoords=cellfun(@isempty, {ns_codes.vievsTrf});
-
-if sum(noVievsTrfCoords)>0 % if there are ns_codes stations with no vievsTrf coordinates
-    
-    % get indices of stations where we don't have vievsTrf coordinates.
-    ind=find(noVievsTrfCoords);
-    
-    % write all those stations as one line
-    for k=1:sum(noVievsTrfCoords)
-        if ~isempty(ns_codes(ind(k)).VieTRF13)
-            % try to get VieTRF13 coordinates
-            ns_codes(ind(k)).vievsTrf.break=ns_codes(ind(k)).VieTRF13.break;
-        end
-        
-    end
-end
 
 % -----------------------
 % 2.3.9 User own TRF file
