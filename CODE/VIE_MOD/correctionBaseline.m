@@ -44,7 +44,7 @@
 %
 % ************************************************************************
 
-function [a_ngr, a_egr, scan, antenna, tau] = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tau, cell_grid_GPT3, session, iobs)
+function [a_ngr, a_egr, scan, antenna, tau] = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tau, cell_grid_GPT3, iobs, iondata, ionFileFoundLog)
 
     global c
 
@@ -329,14 +329,6 @@ function [a_ngr, a_egr, scan, antenna, tau] = correctionBaseline(scan, antenna, 
     if strcmp(parameter.vie_init.iono, 'ext')
         % use iono delay from external file and add it
 
-        % only do the first time
-        if ~exist('iondata', 'var')
-            if iSc==1
-                fprintf('Start loading external ionospheric file\n');
-            end
-            [iondata, ionFileFoundLog] = load_ionfile(parameter,session);
-        end
-
         % if iono file was found -> apply correction
         if ionFileFoundLog == 1
             % find two stationnames of current observations
@@ -351,7 +343,7 @@ function [a_ngr, a_egr, scan, antenna, tau] = correctionBaseline(scan, antenna, 
             scan(iSc).obs(iobs).ionDelext   = ionoDel;
             scan(iSc).obs(iobs).obs         = scan(iSc).obs(iobs).obs - ionoDel;
         else
-            warning('Ion. correction not found in external file! Correction set to zero.\n');
+%            warning('Ion. correction not found in external file! Correction set to zero.\n');
             scan(iSc).stat(idStation1).iono  = 0;
             scan(iSc).stat(idStation2).iono  = 0;
             scan(iSc).obs(iobs).ionDelext   = 0;
