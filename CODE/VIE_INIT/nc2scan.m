@@ -84,13 +84,13 @@ try
        out_struct.Solve.AtmSetup
     end
     if isfield(wrapper_data.Observation, 'ObsEdit') % check if ObsEdit folder exits
-        if ~any(contains(wrapper_data.Observation.ObsEdit.files, 'GroupDelayFull') & contains(wrapper_data.Observation.ObsEdit.files, '_bX'))
+        if ~any(contains(wrapper_data.Observation.ObsEdit.files, 'GroupDelayFull') & contains(wrapper_data.Observation.ObsEdit.files, ['_' freqband]))
             if strcmp(observation,'GroupDelayFull')
                 observation = 'GroupDelay';
                 fprintf('WARNING: Cannot find GroupDelayFull file in ObsEdit. Using GroupDelay instead.\n')
             end            
         end
-        if ~any(contains(wrapper_data.Observation.ObsEdit.files, 'NumGroupAmbig') & contains(wrapper_data.Observation.ObsEdit.files, '_bX')) % check if NumGroupAmbig_bX.nc exists, else turn off ambcorr
+        if ~any(contains(wrapper_data.Observation.ObsEdit.files, 'NumGroupAmbig') & contains(wrapper_data.Observation.ObsEdit.files, ['_' freqband])) % check if NumGroupAmbig_bX.nc exists, else turn off ambcorr
             ambcorr = 'off';
             fprintf('WARNING: Cannot find NumGroupAmbig file in ObsEdit. Ambiguity correction is disabled.\n')   
         end
@@ -257,7 +257,7 @@ if strcmp(parameter.vie_init.iono, 'observation_database')
             if length(ionoDelCell) == 1
                 if ionoDelCell{:}==0
                     ionoDelayInternalFlag = 0;
-                    fprintf('Cal-SlantPathIonoGroup_bX.nc exists but no valid values, ionospheric delay will not be applied\n')
+                    fprintf('Cal-SlantPathIonoGroup%s.nc exists but no valid values, ionospheric delay will not be applied\n', freqband)
                 end
             end
             if length(ionoDelSigCell) == 1
@@ -334,7 +334,7 @@ end
 
 %% QUALITY CODES FOR X-BAND and S-BAND: 
 % only used for sessions prior to 2001 in cleanScan.m 
-nc_filename = get_nc_filename({'QualityCode_bX'}, wrapper_data.Observation.Observables.files, 0);
+nc_filename = get_nc_filename({['QualityCode_' freqband]}, wrapper_data.Observation.Observables.files, 0);
 if ~isempty(nc_filename) % not mathc found in wrapper data
     qualityCode_X = num2cell(out_struct.Observables.(nc_filename).QualityCode.val);
 else

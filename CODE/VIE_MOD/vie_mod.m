@@ -511,6 +511,16 @@ if strcmp(parameter.vie_init.tropSource.name,'raytr')
 disp('use ray-tracing files')
 end
 
+
+% + EXTERNAL IONOSPERIC DELAY +
+iondata=''; ionFileFoundLog=0;
+if strcmp(parameter.vie_init.iono, 'ext')
+    fprintf('Start loading external ionospheric file\n');
+    [iondata, ionFileFoundLog] = load_ionfile(parameter,session);
+end
+% - EXTERNAL IONOSPERIC DELAY - 
+
+
 for iSc = 1:number_of_all_scans   
     % running variables for active scan
     mjd   = MJD(iSc);
@@ -634,7 +644,7 @@ for iSc = 1:number_of_all_scans
         end 
         
         % further corrections (same for both models (Sekido & Fukushima, p.141))
-        [a_ngr, a_egr, scan, antenna, tau]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tau, cell_grid_GPT3, session, iobs);
+        [a_ngr, a_egr, scan, antenna, tau]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tau, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
             
         % SOURCE STRUCTURE +
         if parameter.vie_mod.ssou==1 || parameter.vie_mod.write_jet==1

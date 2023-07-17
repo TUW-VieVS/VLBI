@@ -44,22 +44,23 @@ function [iondata,ionFileFoundLog] = load_ionfile (parameter,session)
         if isempty(ionFoundFiles)
             fprintf('ion file not found\nNo ionospheric correction is applied\n\n');
             ionFileFoundLog=0;
+            iondata='';
         else
-            % create new var just for search
-            tempIonFoundFiles=ionFoundFiles(1); %(1)
-            ionSearchSubFolder='/';
-
-            while isstruct(tempIonFoundFiles)
-                ionSearchSubFolder=[ionSearchSubFolder, tempIonFoundFiles.name, '/'];
-                tempIonFoundFiles=tempIonFoundFiles.isdir;
-            end
-            % delete '/' at end
-            ionSearchSubFolder(end)=[];
-
-            % define new azel file
-            ionFile=[ionPath, ionSearchSubFolder];
-            fprintf('.ion file not found in specified folder.\nInstead following file found:\n''%s'' - this is being used\n', ionFile);
-            ionFileFoundLog=1;
+%             % create new var just for search
+%             tempIonFoundFiles=ionFoundFiles(1); %(1)
+%             ionSearchSubFolder='/';
+% 
+%             while isstruct(tempIonFoundFiles)
+%                 ionSearchSubFolder=[ionSearchSubFolder, tempIonFoundFiles.name, '/'];
+%                 tempIonFoundFiles=tempIonFoundFiles.isdir;
+%             end
+%             % delete '/' at end
+%             ionSearchSubFolder(end)=[];
+% 
+%             % define new azel file
+%             ionFile=[ionPath, ionSearchSubFolder];
+%             fprintf('.ion file not found in specified folder.\nInstead following file found:\n''%s'' - this is being used\n', ionFile);
+%             ionFileFoundLog=1;
         end
     else
         fprintf('Reading external ion. file: %s\n', ionFile);
