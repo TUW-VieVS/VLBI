@@ -504,6 +504,13 @@ if parameter.vie_mod.gravDef == 1 && isfield(antenna, 'gravdef') && ...
           ' gravdef information in the \n antenna struct!\n'])
 end
 
+% RAY-TRACED DELAYS
+% Display here once when ray-traced delays are used, instead of in
+% antennaCorrections for every scan
+if strcmp(parameter.vie_init.tropSource.name,'raytr')
+disp('use ray-tracing files')
+end
+
 for iSc = 1:number_of_all_scans   
     % running variables for active scan
     mjd   = MJD(iSc);

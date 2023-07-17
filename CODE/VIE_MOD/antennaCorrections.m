@@ -226,7 +226,6 @@ function [scan, flgm_ctp] = antennaCorrections(iSc, iStat, scan, antenna, opt, p
 
         if raytr_used   % if ray-tracing files are used
             if ~exist('firstRaytrRun', 'var')   % read the .trp-file only in the first run
-                disp('use ray-tracing files')
                 [raytrdata, raytrFileFoundLog] = load_trpfile(parameter, session);
             end
             scan = get_trpdel(raytrdata, scan, iSc, iStat, antenna, raytrFileFoundLog, sourceNames);

@@ -87,7 +87,7 @@ elseif exist(trpFile, 'file')   ||   exist(trpFile_short, 'file')
     radiateFileFoundLog=0;
     trpFileFoundLog=1;
 else
-    error('No ray-tracing file (.trp) available for this session! Specify another source for the tropospheric delays.')
+    error('No ray-tracing file (.radiate or .trp) available for this session! Specify another source for the tropospheric delays.')
 end
 
 
