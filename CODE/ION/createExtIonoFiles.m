@@ -43,10 +43,11 @@ function varargout=createExtIonoFiles(sessionName, ionSubDir, azelFile, ionoMode
 % ##### Options: #####
 ref_freq_Hz = 8.4e9; % X-band (default)
 % ref_freq_Hz = 1567e6; % L1
+% ref_freq_Hz = 24.0e9; % Kband
 
 % Status Msg.:
 fprintf('Creating ion. file for session: %s\n', sessionName);
-fprintf('Reference frequency =  %5.2f MHz (default for X-band)\n', ref_freq_Hz * 1e-6);
+fprintf('Reference frequency =  %5.2f MHz \n', ref_freq_Hz * 1e-6);
 
 
 % Change ref. frequ. 
@@ -270,30 +271,97 @@ curMjd(2,1) = floor(azel_data{2}(end));
 % define variable for not found ionex
 % currentfolder = pwd; %gets currently working directory
 
+% ionomodel can be set in start_createExtIonoFilesGUI.m line 265'
+
 for k = 1 : 2 % loop over 2 days
+    yrdec = (yyDoySecod(k,1) + yyDoySecod(k,2)/365);
+
+
     if strcmp(ionoModel, 'CODE') == 1 % if CODE map is being used
+        if yrdec < 2022+331/365 % old naming convention till 2022, doy 330
+            ionoFilename{k,1} = ['CODG', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'I']; 
+            sfx = '.Z';
+        else
+            ionoFilename{k,1} = ['COD0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_01H_GIM.INX']; % 1h time interval
+            sfx = '.gz';
+        end
+         %url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
+         url = ['http://ftp.aiub.unibe.ch/CODE/', num2str(curYr(k)), '/', ionoFilename{k,1}, sfx]; 
+
+    elseif strcmp(ionoModel, 'IGS') == 1 
+        if yrdec < 2022+331/365 % old naming convention till 2022, doy 330
+            ionoFilename{k,1}=['igsg', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
+            sfx = '.Z';
+        else
+            ionoFilename{k,1} = ['IGS0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_02H_GIM.INX']; % 2h interval
+            sfx = '.gz';
+        end
+        url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
+    
+    elseif strcmp(ionoModel, 'ESA') == 1 % if ESA map is being used
+        if yrdec < 2022+331/365 % old naming convention till 2022, doy 330
+            ionoFilename{k,1}=['esag', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
+            sfx = '.Z';
+        elseif yrdec > 2022+330/365 && yrdec < 2023+36/365
+            ionoFilename{k,1} = ['ESA0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_02H_ION.IOX'];
+            sfx = '.gz';
+        else
+            ionoFilename{k,1} = ['ESA0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_02H_GIM.INX'];
+            sfx = '.gz';
+        end
+        url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
+
+    elseif strcmp(ionoModel, 'UQR') == 1 % if UQR map is being used        
+        % stil old naming convention (checked 2023-07-28)
+        ionoFilename{k,1}=['uqrg', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
+        sfx = '.Z';
+        url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
+
+    elseif strcmp(ionoModel, 'EMR') == 1 % if EMR map is being used
+        if yrdec < 2023+64/365 % old naming convention
+            ionoFilename{k,1}=['emrg', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
+            sfx = '.Z';
+        else
+            ionoFilename{k,1} = ['EMR0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_01H_GIM.INX'];
+            sfx = '.gz';
+        end
+       url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
+
+    elseif strcmp(ionoModel, 'JPL') == 1 % if JPL map is being used
+        % stil old naming convention (checked 2023-07-28)
+       ionoFilename{k,1}=['jplg', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
+       sfx = '.Z';
+       url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
+    end
+
+
+
         
         curIonoPath = [ionoPath(k,:), curYrStr(k,:), '/'];
         if ~exist(curIonoPath, 'dir') % if directory does not exist, create it
             mkdir(curIonoPath);
         end
-        ionoFilename{k,1} = ['CODG', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'I'];
+
         ionoFile{k,1} = [curIonoPath, ionoFilename{k,1}];
         
         if ~exist(ionoFile{k,1}, 'file') % if the ionex file is not existing unzipped
-            fprintf('CODE TEC map file does not exist:            (%s)\n', ionoFile{k,1});
-            zippedFile = [curIonoPath, ionoFilename{k,1}, '.Z'];
+            fprintf('%s TEC map file does not exist:            (%s)\n', ionoModel, ionoFile{k,1});
+            zippedFile = [curIonoPath, ionoFilename{k,1}, sfx];
             if ~exist(zippedFile, 'file') % if zipped file does not exist in folder -> download
-                fprintf('Compressed IGS TEC map file does not exist: (%s)\n', zippedFile);
-%                 url = ['ftp://ftp.unibe.ch/aiub/CODE/', num2str(curYr(k)), '/', ionoFilename{k,1}, '.Z'];
-                url = ['http://ftp.aiub.unibe.ch/CODE/', num2str(curYr(k)), '/', ionoFilename{k,1}, '.Z'];
+                fprintf('Compressed %s TEC map file does not exist: (%s)\n', ionoModel, zippedFile);
 
-                urlwrite(url, zippedFile);
-                fprintf(' ...finished downloading.\n');
+                if strcmp(ionoModel, 'CODE') == 1
+                    urlwrite(url, zippedFile);
+                    fprintf(' ...finished downloading.\n');
+                else
+                    fprintf('\n => Please, download the file from CDDIS webpage to %s: \n', [ionoPath(k,:), num2str(curYr(k)), '/']); % download from CDDIS is not set
+                    fprintf('%s\n', url);
+                end
+
             end
-            
-            % write message to user to unzip manually (and return afterwards)
-            fprintf('Zipped file (''%s'') was downloaded or already exists in\n''%s''\nPlease extract manually (to same folder)!\n\n', [ionoFilename{k,1}, '.Z'], [ionoPath(k,:), num2str(curYr(k)), '/'] );
+             
+%             % write message to user to unzip manually (and return afterwards)
+%             fprintf('Zipped file (''%s'') was downloaded or already exists in\n''%s''\nPlease extract manually (to same folder)!\n\n', [ionoFilename{k,1}, '.Z or.gz'], [ionoPath(k,:), num2str(curYr(k)), '/'] );
             
              % User has to select the LEVEL1 sub.-dir.:
             flag_input_accepted = false;
@@ -313,47 +381,7 @@ for k = 1 : 2 % loop over 2 days
 %             cd(currentfolder)
             
         end
-    else % if IGS map is being used
-        
-        curIonoPath=[ionoPath(k,:), curYrStr(k,:), '/'];
-        if ~exist(curIonoPath, 'dir')  % if directory does not exist, create it
-            mkdir(curIonoPath);
-        end
-        ionoFilename{k,1}=['igsg', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
-        ionoFile{k,1}=[curIonoPath, ionoFilename{k,1}];
-        
-        if ~exist(ionoFile{k,1}, 'file') % if the ionex file is not existing unzipped
-            fprintf('IGS TEC map file does not exist:            (%s)\n', ionoFile{k,1});
-            zippedFile = [curIonoPath, ionoFilename{k,1}, '.Z'];
-            if ~exist(zippedFile, 'file')  % if zipped file does not exist in folder -> download
-                fprintf('Compressed IGS TEC map file does not exist: (%s)\n', zippedFile);
-                url=['ftp://cddis.gsfc.nasa.gov/gps/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, '.Z'];
-                fprintf(' => File will be downloaded from URL: %s\n', url);
-                urlwrite(url, zippedFile);
-                fprintf(' ...finished downloading.\n');
-            end
-            
-            % write message to user to unzip manually (and return afterwards)
-            fprintf('Zipped file (''%s'') was downloaded or already exists in\n''%s''\nPlease extract manually (to same folder)!\n\n', [ionoFilename{k,1}, '.Z'], [ionoPath(k,:), num2str(curYr(k)), '/'] );
-            
-            % User has to select the LEVEL1 sub.-dir.:
-            flag_input_accepted = false;
-            while(~flag_input_accepted)
-                input_str = input(' => Please enter "y" after uncrompressing the file to continue:', 's');
-                % ### Check input: ###
-                switch(input_str)
-                    case 'y'
-                        flag_input_accepted = true;
-                    otherwise
-                        fprintf('    - Error: Invalid input!\n')
-                end
-            end % while(~flag_input_accepted)
-%             cd(curIonoPath)
-%             unix(strcat(ionoFilename{k,1},'.Z uncompress '));
-%             delete(strcat(ionoFilename{k,1},'.Z'));
-%             cd(currentfolder)
-        end
-    end
+
 end
 
 
@@ -414,6 +442,8 @@ end
 fprintf('Calculating delays.\n');
 
 zenDist = pi/2-azel_data{10};
+elev = azel_data{10};
+
 
 % calculate coefficients
 b_tec_inter = -2*io1.radius*1000*cos(pi-zenDist);
@@ -462,10 +492,25 @@ for k = 1 : size(azel_data{1}, 1)
     end
 end
 
+
+'You can change parameters for the mapping function in CODE/IONO/createExtIonoFiles.m line 494'
+% Single Layer Model
+% dh = 0; %km
+% alpha = 1;
+% k = 1;
+
+% Modified Single Layer Model
+% http://ftp.aiub.unibe.ch/users/schaer/igsiono/doc/mslm.pdf
+% Petrov (2023), https://iopscience.iop.org/article/10.3847/1538-3881/acc174
+dh = 56.7 %km
+alpha = 0.9782
+kscale = 1; %0.85
+
+
 % calculation of M(zd), STEC
 Mzd                                 = zeros(size(azel_data{1},1),1);
-Mzd(azel_data{4}==azel_data{4}(1))  = 1./(sqrt(1-((io1.radius/(io1.radius+io1.hgt1)).*sin(zenDist(azel_data{4}==azel_data{4}(1)))).^2));
-Mzd(azel_data{4}~=azel_data{4}(1))  = 1./(sqrt(1-((io2.radius/(io2.radius+io2.hgt1)).*sin(zenDist(azel_data{4}~=azel_data{4}(1)))).^2));
+Mzd(azel_data{4}==azel_data{4}(1))  = kscale./(sqrt(1-((io1.radius/(io1.radius+io1.hgt1+dh)).*cos(alpha.*elev(azel_data{4}==azel_data{4}(1)))).^2));
+Mzd(azel_data{4}~=azel_data{4}(1))  = kscale./(sqrt(1-((io2.radius/(io2.radius+io2.hgt1+dh)).*cos(alpha.*elev(azel_data{4}~=azel_data{4}(1)))).^2));
 STEC                                = VTEC.*Mzd;
 
 % calculate delay
