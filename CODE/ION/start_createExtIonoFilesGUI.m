@@ -171,9 +171,12 @@ tic
 % ##### get chosen sessions in listbox 3 #####
 chosenSessions = get(handles.listbox_3, 'String');
 
-% % ##### GUI does not work with vgosDB. Define the process list here:
+'##### GUI does not work with vgosDB. Define the process list in start_createExtIonoFilesGUI.m line 174:'
 % chosenSessions = ['2022/22FEB11KL [vgosDB]'
 %                   '2022/22FEB11KR [vgosDB]']
+% OR
+% load('PROCESSLIST/pl.mat')
+% chosenSessions = process_list;
 
 
 % Check, if session was selected:
@@ -256,6 +259,15 @@ else
     elseif get(handles.button_model_GNSSAltimetryFC, 'Value') == 1
         ionoModel = 'GNSSAltimetryFC';
     end
+
+'You can specify the model in start_createExtIonoFilesGUI.m line 265'
+% ionoModel = 'IGS'
+% ionoModel = 'UQR'
+% ionoModel = 'EMR'
+% ionoModel = 'CODE'
+% ionoModel = 'JPL'
+% ionoModel = 'ESA'
+
     
     % delete empty entries for all sessions where no azel file is available
     %noAzelAvailablePath=noAzelAvailablePath(~noAzelAvailable);
