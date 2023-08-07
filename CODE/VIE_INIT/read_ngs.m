@@ -344,7 +344,7 @@ while (idx_line <= nlines)
                 trmp_input  = sscanf(input_str(1:20),'%f');
                 cab1        = trmp_input(1); % Cable calibration correction (one-way) for site 1 (ns)
                 cab2        = trmp_input(2); % Cable calibration correction (one-way) for site 2 (ns)
-                cor_cabel_cal = cab2 - cab1;
+                cor_cable_cal = cab2 - cab1;
                 
             % ##### Card 6: met data #####
             elseif all(ngs_card_num == '06')
@@ -393,6 +393,11 @@ while (idx_line <= nlines)
             idx_line = idx_line-1;
         end % if new_sequ_num == sequ_num
     end % while (flag_next_sequ == 0) && (~feof(fid_ngs))
+
+    % Check if variable cor_cable_cal was created (happens only if card #5 exists)
+    if ~exist('cor_cable_cal','var')
+        cor_cable_cal = 0;
+    end
      
     % #####################################################################
     % ##### Check if the observation is OK and apply OPT file options #####
@@ -869,7 +874,7 @@ while (idx_line <= nlines)
         
         % Write observation data to scan:
         num_of_obs          = num_of_obs + 1;
-        delay               = (delay + cor_cabel_cal + coride) / 1000;
+        delay               = (delay + cor_cable_cal + coride) / 1000;
         rate                = rate + corira;
         sigdel              = sqrt(sigdel^2 + corsgd^2);
         sigrat              = sqrt(sigrat^2+corsgr^2);
