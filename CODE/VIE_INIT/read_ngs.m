@@ -163,6 +163,9 @@
 % READ_NGS version 1.00827
 function [antenna,sources,scan]=read_ngs(ngsfil, trffil, crffil, ini_opt, trf, crf, satOrbitFilePath, satOrbitFileName, satOrbitFileType)
 
+card4 = 0; % 1/0, yes/no
+
+
 % ##### Load constants #####
 % constants; % ???
 
@@ -228,15 +231,16 @@ else
 end
 
 while 1
-    if length(wholeFile{idx_line})>= 80
+    if length(strtrim(wholeFile{idx_line}))>= 80 % strtrim added because of Oleg's ngs files
         break;
     end
     idx_line = idx_line+1;
 end
 
+
 while (idx_line <= nlines)
     
-    input_str = wholeFile{idx_line};
+    input_str = strtrim(wholeFile{idx_line}); % strtrim added because of Oleg's ngs files
     idx_line = idx_line+1;
     
     % #### Read station and source names of current observation/sequence ####
@@ -252,7 +256,7 @@ while (idx_line <= nlines)
         source_name     = input_str(21:28);
         source_type     = 'q';
         tim = sscanf(input_str(30:60),'%f');
-        sequ_num        = input_str(71:78); % Sequence number (= observation number)
+        sequ_num        = input_str(72:78); % Sequence number (= observation number)
         ngs_card_num    = sscanf(input_str(79:80),'%d'); % NGS card number
     end
     
@@ -275,7 +279,7 @@ while (idx_line <= nlines)
         input_str = wholeFile{idx_line};   % Get next line:
         idx_line = idx_line+1;
         
-        new_sequ_num    = input_str(71:78);
+        new_sequ_num    = input_str(72:78);
         ngs_card_num    = input_str(79:80);
         
         if all(new_sequ_num == sequ_num) % Still the same sequence?            
@@ -338,6 +342,27 @@ while (idx_line <= nlines)
                     count_obs_delay_decreased = count_obs_delay_decreased + 1;
                 end
                 num_of_obs_in_ngs_file = num_of_obs_in_ngs_file + 1;
+
+
+            
+            % ##### Card 4: Oleg Titov's corrections (in standard NGS file the card 4 contains zeros) #####
+            % Two corrections for zenith wet delays (stations #1 and #2), NS gradients, EW gradients and the clock offset for this baseline 
+            ot_corr = 0;
+            elseif all(ngs_card_num == '04')
+                if card4==1
+                    trmp_input  = sscanf(input_str(1:80),'%f');
+                    ot_zwd1 = trmp_input(1);
+                    ot_zwd2 = trmp_input(2);
+                    ot_gradns1 = trmp_input(3);
+                    ot_gradns2 = trmp_input(4);
+                    ot_gradew1 = trmp_input(5);
+                    ot_gradew2 = trmp_input(6);
+                    ot_clkoff = trmp_input(7);
+                    ot_corr = ot_zwd2 - ot_zwd1 + ot_gradns2 - ot_gradns1 + ot_gradew2 - ot_gradew1 + ot_clkoff; % additional theoretical delay for baseline (troposphere + clock offset) [ns]
+                else
+                    ot_corr = 0;
+                end
+
                 
             % ##### Card 5: cable cal & wvr corrections #####
             elseif all(ngs_card_num == '05')
@@ -393,12 +418,12 @@ while (idx_line <= nlines)
             idx_line = idx_line-1;
         end % if new_sequ_num == sequ_num
     end % while (flag_next_sequ == 0) && (~feof(fid_ngs))
-
-    % Check if variable cor_cable_cal was created (happens only if card #5 exists)
+     
+     % Check if variable cor_cable_cal was created (happens only if card #5 exists)
     if ~exist('cor_cable_cal','var')
         cor_cable_cal = 0;
     end
-     
+
     % #####################################################################
     % ##### Check if the observation is OK and apply OPT file options #####
     % #####################################################################
@@ -874,7 +899,7 @@ while (idx_line <= nlines)
         
         % Write observation data to scan:
         num_of_obs          = num_of_obs + 1;
-        delay               = (delay + cor_cable_cal + coride) / 1000;
+        delay               = (delay + cor_cable_cal + coride - ot_corr) / 1000;
         rate                = rate + corira;
         sigdel              = sqrt(sigdel^2 + corsgd^2);
         sigrat              = sqrt(sigrat^2+corsgr^2);
