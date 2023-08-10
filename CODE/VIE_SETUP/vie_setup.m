@@ -1113,7 +1113,11 @@ end
 % Get the OPT file name and path:
 switch(datatype_str)
     case 'ngs'
-        optFileName = [session(1 : end-5), '.OPT'];
+        if strcmp(session(end-4),'_')
+            optFileName = [session(1 : end-5), '.OPT'];
+        else
+            optFileName = [session, '.OPT']; % non-conventional ngs file name
+        end
     case 'vso'
         optFileName = [session(1 : (strfind(session, ' [VSO]')-1)), '.OPT'];
     case 'vgosdb'
