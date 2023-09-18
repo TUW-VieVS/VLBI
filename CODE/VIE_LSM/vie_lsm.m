@@ -166,8 +166,9 @@
 %                                    - Some minor general revisions were done
 %   21 Sep 2017 by H. Krasna: bugs corrected which appeared after the implemenation of satellite positions update w.r.t. global solution
 %   06 Mar 2019 by D. Landskron: suffix checkbox added to the sinex files
-%   02 Dec 2021 by H.Wolf: small bugfix of calculation of parameter sigma_residuals_aposteriori - it now works also for simulations for a
+%   02 Dec 2021 by H. Wolf: small bugfix of calculation of parameter sigma_residuals_aposteriori - it now works also for simulations for a
 %                          higher number of days 
+%   18 Sep 2023 by L. Kern: small bugfix of number of constraints applied (used in vie_glob)
 % ************************************************************************
 
 function vie_lsm(antenna, sources, scan, parameter, dirpth, dirpthL2)
@@ -1728,7 +1729,11 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
         % improvement of the code!!!! This is just a preliminary version.
         % (In Vie_GLOB the respective columns/rows are deleted anyway.)
         % Hana 11/2016
-        opt_.nconstr = size(Hblk,1)-size(H(11).sm,1)-size(H(12).sm,1); % minus abs. constr for RA and De if sources estimated session-wise
+        if opt.UseSourceAbsConstrNNR % LKern 09/2023
+            opt_.nconstr = size(Hblk,1)-size(H(11).sm,1)-size(H(12).sm,1); % minus abs. constr for RA and De if sources estimated session-wise
+        else
+            opt_.nconstr = size(Hblk,1);
+        end
         opt_.lTPl = oc_observ_real'*pobserv*oc_observ_real; %l'Pl for global solution
 
         glob1.an = an_glob;
