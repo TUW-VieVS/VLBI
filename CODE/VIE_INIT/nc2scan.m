@@ -80,9 +80,9 @@ freqband = newStr{2};
 
 % check if session has been analysed by an AC (check for SOLVE/AtmSetup.nc)
 try 
-    if ~any(contains(fieldnames(out_struct.Solve),'AtmSetup'))
-       out_struct.Solve.AtmSetup
-    end
+%     if ~any(contains(fieldnames(out_struct.Solve),'AtmSetup'))
+%        out_struct.Solve.AtmSetup
+%     end
     if isfield(wrapper_data.Observation, 'ObsEdit') % check if ObsEdit folder exits
         if ~any(contains(wrapper_data.Observation.ObsEdit.files, 'GroupDelayFull') & contains(wrapper_data.Observation.ObsEdit.files, ['_' freqband]))
             if strcmp(observation,'GroupDelayFull')
