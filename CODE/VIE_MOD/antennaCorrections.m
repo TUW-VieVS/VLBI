@@ -188,8 +188,12 @@ function [scan, flgm_ctp] = antennaCorrections(iSc, iStat, scan, antenna, opt, p
         % => For the GEOCENTR station displacements are set to zero!
         if strcmp(antenna(iStat).name,'GEOCENTR')
             cposit = 0;
+            % without non-tidal station loading (w/o ntsl), needed for calibration block in sinex 
+            cposit_noNtsl = 0;
         else
             cposit = cts + cto + cta + cnta + crg + cgia + ctp + ctop + chl + cntol + cpsd;
+            % without non-tidal station loading (w/o ntsl), needed for calibration block in sinex 
+            cposit_noNtsl = cts + cto + cta + crg + cgia + ctp + ctop + cpsd; 
         end
 
         % time since reference epoch [years]
@@ -199,10 +203,16 @@ function [scan, flgm_ctp] = antennaCorrections(iSc, iStat, scan, antenna, opt, p
         antv     = ant + tep * vel;
         ant_trs  = antv + cposit + antenna(iStat).c_ecc;
         ant_crs  = t2c * ant_trs'; % transformation to the cel. system
+        % w/o ntsl for sinex calibration block
+        ant_trs_noNtsl  = antv + cposit_noNtsl + antenna(iStat).c_ecc; 
+        ant_crs_noNtsl  = t2c * ant_trs_noNtsl'; % transformation to the cel. system; 
 
         % store results per scan & station
         scan(iSc).stat(iStat).x      = ant_trs; % corrected station position in TRS [x,y,z]
         scan(iSc).stat(iStat).xcrs   = ant_crs; % corrected station position in CRS [x,y,z]
+        % w/o ntsl for sinex calibration block
+        scan(iSc).stat(iStat).x_noNtsl      = ant_trs_noNtsl; % corrected station position in TRS [x,y,z] 
+        scan(iSc).stat(iStat).xcrs_noNtsl   = ant_crs_noNtsl; % corrected station position in CRS [x,y,z] 
 
         scan(iSc).stat(iStat).pAcr_xyz = pAcr_xyz; % [-] partials for cosine Ampl. - seasonal stat. position variations
         scan(iSc).stat(iStat).pAce_xyz = pAce_xyz; % [-]

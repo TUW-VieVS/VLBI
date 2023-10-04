@@ -141,6 +141,7 @@ for pl=1:size(process_list,1)
         N_sinex = varargin{6};
         b_sinex = varargin{7};
         col_sinex = varargin{8};
+        b_sinex_cal = varargin{9};
     else
         files.N_sinex=['../DATA/LEVEL3/', subfolder, '/SINEX/N_sinex_', process_list(pl,6:end), '.mat'];
         files.b_sinex=['../DATA/LEVEL3/', subfolder, '/SINEX/b_sinex_', process_list(pl,6:end), '.mat'];
@@ -1686,6 +1687,163 @@ for pl=1:size(process_list,1)
     fprintf(fid, '%s\n%s\n%s\n', blockSpace{:});
 
 
+    %% write 2.11 SOLUTION/NORMAL_CALIBRATION block
+    blockName='SOLUTION/NORMAL_CALIBRATION LOADING_EFFECT';
+    writeFormat=' %5.0f %21s\n';
+    if ispc formatVectorValue='%22.14e'; else
+             formatVectorValue='%21.14e'; 
+    end
+    
+    % define varible index (one for each estimate)
+    curIndex=1;
+
+    % write blockstart line to file
+    fprintf(fid, '+%s\n', blockName);
+
+    % write info line
+    fprintf(fid, '*Index Vector \n');
+
+    % write b difference vector (b_sinex-b_sinex_noNtsl) to file
+    % write b difference vector for station coordinates
+    if outsnx.xyz==1
+        for k=1:numStat
+            % make proper format (e+05 instead of e+005)
+            stax_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.coorx(k)));
+            if ispc, stax_b_cal = strrep(stax_b_cal, 'e+0', 'e+'); stax_b_cal = strrep(stax_b_cal, 'e-0', 'e-');  end
+            stay_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.coory(k)));
+            if ispc, stay_b_cal = strrep(stay_b_cal, 'e+0', 'e+'); stay_b_cal = strrep(stay_b_cal, 'e-0', 'e-');   end
+            staz_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.coorz(k)));
+            if ispc, staz_b_cal = strrep(staz_b_cal, 'e+0', 'e+'); staz_b_cal = strrep(staz_b_cal, 'e-0', 'e-');   end
+
+            fprintf(fid, writeFormat, curIndex, stax_b_cal);
+            fprintf(fid, writeFormat, curIndex+1, stay_b_cal);
+            fprintf(fid, writeFormat, curIndex+2, staz_b_cal);
+            curIndex=curIndex+3;
+        end
+    end
+    
+    
+    % write b difference vector for eops 
+       
+    if outsnx.eop==1
+        % write xpol
+        for k=1:numXpol
+            curLine=eop_matrix(:,1)==col_sinex.mjd_xp(k); % index of current xpol in eop_matrix
+
+            % make correct format
+            xpo_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.xp(k)));
+            if ispc, xpo_b_cal = strrep(xpo_b_cal, 'e+0', 'e+'); xpo_b_cal = strrep(xpo_b_cal, 'e-0', 'e-');    end
+
+            fprintf(fid, writeFormat, curIndex, xpo_b_cal);  
+            curIndex=curIndex+1;   
+        end
+
+        % write ypol
+        for k=1:numYpol
+            curLine=eop_matrix(:,1)==col_sinex.mjd_yp(k); % index of current xpol in eop_matrix
+
+            % make correct format
+            ypo_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.yp(k)));
+            if ispc, ypo_b_cal = strrep(ypo_b_cal, 'e+0', 'e+'); ypo_b_cal = strrep(ypo_b_cal, 'e-0', 'e-');  end
+
+            fprintf(fid, writeFormat, curIndex, ypo_b_cal);  
+            curIndex=curIndex+1;
+        end
+
+        % write UT1-UTC
+        % constraint
+        for k=1:numDut1
+            curLine=eop_matrix(:,1)==col_sinex.mjd_dut1(k); % index of current xpol in eop_matrix
+
+            % make correct format
+            dut1_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.dut1(k)));
+            if ispc, dut1_b_cal = strrep(dut1_b_cal, 'e+0', 'e+'); dut1_b_cal = strrep(dut1_b_cal, 'e-0', 'e-');  end
+
+            fprintf(fid, writeFormat, curIndex, dut1_b_cal);  
+            curIndex=curIndex+1;
+        end
+
+        % write NUTx
+        for k=1:numXnut
+            curLine=eop_matrix(:,1)==col_sinex.mjd_dX(k); % index of current xpol in eop_matrix
+
+            % make correct format
+            dX_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.dX(k)));
+            if ispc, dX_b_cal = strrep(dX_b_cal, 'e+0', 'e+'); dX_b_cal = strrep(dX_b_cal, 'e-0', 'e-');   end
+
+            fprintf(fid, writeFormat, curIndex, dX_b_cal);  
+            curIndex=curIndex+1;
+        end
+
+        % write NUTy
+        for k=1:numYnut
+            curLine=eop_matrix(:,1)==col_sinex.mjd_dY(k); % index of current xpol in eop_matrix
+            % make correct format
+            dY_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.dY(k)));
+            if ispc, dY_b_cal = strrep(dY_b_cal, 'e+0', 'e+'); dY_b_cal = strrep(dY_b_cal, 'e-0', 'e-');   end
+
+            fprintf(fid, writeFormat, curIndex, dY_b_cal);  
+            curIndex=curIndex+1;
+        end
+    end
+    
+    % write b vector for sources
+    if outsnx.sou==1
+        for k=1:numSou
+            % make proper format (e+05 instead of e+005)
+            ra_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.ra(k)));
+            if ispc, ra_b_cal = strrep(ra_b_cal, 'e+0', 'e+'); ra_b_cal = strrep(ra_b_cal, 'e-0', 'e-');  end
+            de_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.de(k)));
+            if ispc, de_b_cal = strrep(de_b_cal, 'e+0', 'e+'); de_b_cal = strrep(de_b_cal, 'e-0', 'e-');   end
+
+            fprintf(fid, writeFormat, curIndex, ra_b_cal);
+            fprintf(fid, writeFormat, curIndex+1, de_b_cal);
+            curIndex=curIndex+2;
+        end
+    end
+    
+    
+    % write troposphere zenith wet delay
+    if outsnx.zwd==1
+        for k=1:numStat
+            clear zwdTime zwdTimeYrStr
+            zwdTime=mjd2yydoysecod(col_sinex.zwd(k).mjd);
+            zwdTimeYrStr=num2str(zwdTime(:,1));
+            numZwd=length(col_sinex.zwd(k).col);
+            for j=1:numZwd 
+                zwd_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.zwd(k).col(j)));
+                if ispc, zwd_b_cal = strrep(zwd_b_cal, 'e+0', 'e+'); zwd_b_cal = strrep(zwd_b_cal, 'e-0', 'e-');   end
+                fprintf(fid, writeFormat, curIndex, zwd_b_cal);
+                curIndex=curIndex+1;
+            end
+        end
+    end
+    
+    % write troposphere north and east gradients
+    if outsnx.tgr==1
+        for k=1:numStat
+            clear ngrTime ngrTimeYrStr
+            ngrTime=mjd2yydoysecod(col_sinex.ngr(k).mjd);
+            ngrTimeYrStr=num2str(ngrTime(:,1));
+            numNgr=length(col_sinex.ngr(k).col);
+            for j=1:numNgr 
+                ngr_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.ngr(k).col(j)));
+                if ispc, ngr_b_cal = strrep(ngr_b_cal, 'e+0', 'e+'); ngr_b_cal = strrep(ngr_b_cal, 'e-0', 'e-');   end
+                egr_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.egr(k).col(j)));
+                if ispc, egr_b_cal = strrep(egr_b_cal, 'e+0', 'e+'); egr_b_cal = strrep(egr_b_cal, 'e-0', 'e-');   end
+                fprintf(fid, writeFormat, curIndex, ngr_b_cal);
+                fprintf(fid, writeFormat, curIndex+1, egr_b_cal);
+                curIndex=curIndex+2;
+            end
+        end
+    end
+
+    
+    % write blockend line to file
+    fprintf(fid, '-%s\n', blockName);
+
+    % write headerspace
+    fprintf(fid, '%s\n%s\n%s\n', blockSpace{:});
     %% write endsinex line
     fprintf(fid, '%%ENDSNX');
     

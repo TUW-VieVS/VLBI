@@ -663,12 +663,16 @@ fprintf('4. FORMING THE REDUCED OBSERVATION VECTOR "oc_observ"\n');
 % oc_observ = [];
 numberOfLSMs = length(temp(1).obs);
 oc_observ = ([temp.obs]-repmat([temp.com],numberOfLSMs,1))'.*c*100; % [cm]
+% w/o ntsl for sinex calibration block
+oc_observ_noNtsl = ([temp.obs]-repmat([temp.com_noNtsl],numberOfLSMs,1))'.*c*100; % [cm]
 
 if opt.first ~= 1
     first_solution.ref_st = [];
     first_solution.mo = [];
 elseif opt.first == 1
     [oc_observ,first_solution,opt] = reduce_oc(n_observ,na,n_scan,scan,Pobserv,oc_observ,opt,per_stat,parameter.session_name,dirpth);
+    % w/o ntsl for sinex calibration block
+    [oc_observ_noNtsl,~,~] = reduce_oc(n_observ,na,n_scan,scan,Pobserv,oc_observ_noNtsl,opt,per_stat,parameter.session_name,dirpth);
 end
 
 if opt.second == 0
@@ -1041,6 +1045,8 @@ for i = 1 : length(A)
     Hblk        = sparse(blkdiag(Hblk,H(i).sm));
     Pobserv     = sparse(blkdiag(Pobserv,Ph(i).sm));
     oc_observ   = vertcat(oc_observ,repmat(och(i).sv,1,numberOfLSMs));
+    % w/o ntsl for sinex calibration block
+    oc_observ_noNtsl   = vertcat(oc_observ_noNtsl,repmat(och(i).sv,1,numberOfLSMs));
 	sum_dj(i+1) = sum_dj(i) + dj(i);
 	num_psob(i) = length(find((any(H(i).sm,2) == 1)));      % number of pseudo-observations for each parameter (hana 17May11)
 end
@@ -1050,16 +1056,26 @@ if sibling == 1
         oc_observ(size(oc_observ,1)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:size(oc_observ,1)-length(och(14).sv)-length(och(15).sv)-1,:) = [];
         oc_observ(size(oc_observ,1)-length(och(14).sv)-length(och(15).sv)+1:size(oc_observ,1)-length(och(15).sv)-1,:) = [];
         oc_observ(size(oc_observ,1)-length(och(15).sv)+1:size(oc_observ,1)-1,:) = [];
+        % w/o ntsl for sinex calibration block
+        oc_observ_noNtsl(size(oc_observ_noNtsl,1)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:size(oc_observ_noNtsl,1)-length(och(14).sv)-length(och(15).sv)-1,:) = [];
+        oc_observ_noNtsl(size(oc_observ_noNtsl,1)-length(och(14).sv)-length(och(15).sv)+1:size(oc_observ_noNtsl,1)-length(och(15).sv)-1,:) = [];
+        oc_observ_noNtsl(size(oc_observ_noNtsl,1)-length(och(15).sv)+1:size(oc_observ_noNtsl,1)-1,:) = [];
     end
 elseif common==1 && (nlt > 0)
     if opt.pw_stc == 0
         oc_observ(size(oc_observ,1)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:size(oc_observ,1)-length(och(14).sv)-length(och(15).sv)-nlt,:) = [];
         oc_observ(size(oc_observ,1)-length(och(14).sv)-length(och(15).sv)+1:size(oc_observ,1)-length(och(15).sv)-nlt,:) = [];
         oc_observ(size(oc_observ,1)-length(och(15).sv)+1:size(oc_observ,1)-nlt,:) = [];
+        % w/o ntsl for sinex calibration block
+        oc_observ_noNtsl(size(oc_observ_noNtsl,1)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:size(oc_observ_noNtsl,1)-length(och(14).sv)-length(och(15).sv)-nlt,:) = [];
+        oc_observ_noNtsl(size(oc_observ_noNtsl,1)-length(och(14).sv)-length(och(15).sv)+1:size(oc_observ_noNtsl,1)-length(och(15).sv)-nlt,:) = [];
+        oc_observ_noNtsl(size(oc_observ_noNtsl,1)-length(och(15).sv)+1:size(oc_observ_noNtsl,1)-nlt,:) = [];
     end
 else
     if opt.pw_stc == 0 % 1 estimate all selected station coordinates as pwl offsets (NNT/NNR is NOT available - fix at least 3 stations)
         oc_observ(size(oc_observ,1)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:size(oc_observ,1),:) = []; % omc values for rel. constraints are removed again here (from the END of the vector)!
+        % w/o ntsl for sinex calibration block
+        oc_observ_noNtsl(size(oc_observ_noNtsl,1)-length(och(13).sv)-length(och(14).sv)-length(och(15).sv)+1:size(oc_observ_noNtsl,1),:) = [];
     end
 end
 
@@ -1601,6 +1617,8 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
 
 
     oc_observ_real = oc_observ(1:n_observ);
+    % w/o ntsl for sinex calibration block
+    oc_observ_real_noNtsl = oc_observ_noNtsl(1:n_observ);
 
     A_add = horzcat(A_ra_glob,A_de_glob,A_vx,A_vy,A_vz,A_AO,...
             A_Acr,A_Ace,A_Acn,A_Asr,A_Ase,A_Asn,...
@@ -1616,13 +1634,15 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
     H_global = horzcat(Hblk,H_add);
     A_glob = vertcat(A_global,H_global);
     oc_glob = vertcat(oc_observ_real,zeros(size(Hblk,1),1));
+    % w/o ntsl for sinex calibration block
+    oc_glob_noNtsl = vertcat(oc_observ_real_noNtsl,zeros(size(Hblk,1),1));
 
     N_global = A_glob' * Pobserv * A_glob;
     b_global = A_glob' * Pobserv * oc_glob;
-
+    
     N_global = full(N_global);
     b_global = full(b_global);
-
+    
     sum_glob_dj(1) = 0;
     for i = 1 : length(glob_dj)
         sum_glob_dj(i+1) = sum_glob_dj(i) + glob_dj(i);
@@ -1782,9 +1802,13 @@ if opt.ascii_snx == 1
 
     Nsnx=A_glob' * Pobserv * A_glob;
     bsnx=A_glob' * Pobserv * oc_glob;
+    % w/o ntsl for sinex calibration block
+    bsnx_noNtsl=A_glob' * Pobserv * oc_glob_noNtsl;
 
     Nsnx = full(Nsnx);
     bsnx = full(bsnx);
+    % w/o ntsl for sinex calibration block
+    bsnx_noNtsl = full(bsnx_noNtsl);
 
     % REDUCTION
     N11=Nsnx(col_est,col_est);
@@ -1794,10 +1818,15 @@ if opt.ascii_snx == 1
 
     b1=bsnx(col_est);
     b2=bsnx(col_red);
+    % w/o ntsl for sinex calibration block
+    b1_noNtsl=bsnx_noNtsl(col_est);
+    b2_noNtsl=bsnx_noNtsl(col_red);
 
     N_sinex = N11 - N12*inv(N22)*N21;
     b_sinex = b1 - N12*inv(N22)*b2;
-
+    % w/o ntsl for sinex calibration block
+    b_sinex_noNtsl = b1_noNtsl - N12*inv(N22)*b2_noNtsl;
+    
     % Reduction of lTPl:
     lTPl = oc_observ_real'*pobserv*oc_observ_real;
     lTPlreduc = lTPl - (b2'*inv(N22)*b2);
@@ -1828,6 +1857,9 @@ if opt.ascii_snx == 1
 
     % Change units of the N matrix and b vector !!!
     [N_sinex, b_sinex]=snx_changeunits(N_sinex,b_sinex,col_sinex,outsnx);
+    % w/o ntsl for sinex calibration block
+    [~, b_sinex_noNtsl]=snx_changeunits(N_sinex,b_sinex_noNtsl,col_sinex,outsnx);
+    b_sinex_cal = b_sinex - b_sinex_noNtsl;
 
 %%% Saving of variables commented by S. Boehm (slows the processing and uses a lot of disk space)
 %     if exist(['../DATA/LEVEL3/',dirpth,'/SINEX/'])~=7
@@ -1842,7 +1874,7 @@ if opt.ascii_snx == 1
     % create an ascii sinex file in DATA/SNX
     fprintf('\nWriting SINEX file ... \n');
     write_sinex_vievs(parameter.session_name, [dirpth '/'], outsnx.firstname, outsnx.lastname, outsnx.email, outsnx.suffix,...
-                      N_sinex,b_sinex,col_sinex); % vars are loaded to the function directly -> saving uses disk space needlessly
+                      N_sinex,b_sinex,col_sinex,b_sinex_cal); % vars are loaded to the function directly -> saving uses disk space needlessly
 end
 
 

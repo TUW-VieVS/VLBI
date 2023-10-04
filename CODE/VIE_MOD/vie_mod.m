@@ -613,14 +613,22 @@ for iSc = 1:number_of_all_scans
         crsStation2 = scan(iSc).stat(idStation2).xcrs;    % station2 position CRS
         trsStation1  = scan(iSc).stat(idStation1).x;       % station1 position TRS
         trsStation2  = scan(iSc).stat(idStation2).x;       % station2 position TRS
+        % w/o ntsl for sinex calibration block
+        crsStation1_noNtsl = scan(iSc).stat(idStation1).xcrs_noNtsl;    % station1 position CRS
+        crsStation2_noNtsl = scan(iSc).stat(idStation2).xcrs_noNtsl;    % station2 position CRS
+        trsStation1_noNtsl  = scan(iSc).stat(idStation1).x_noNtsl;       % station1 position TRS
+        trsStation2_noNtsl  = scan(iSc).stat(idStation2).x_noNtsl;       % station2 position TRS
         
         rqu = rq / norm(rq);                            % unit source vector barycentrum-source, only valid for quasar obs.! For spacecrafts = [1,0,0]
         crsBaseline  = crsStation2 - crsStation1;       % baseline vector CRS
-        trsBaseline  = trsStation2-trsStation1;         % baseline vector TRS
-        
+        trsBaseline  = trsStation2 - trsStation1;         % baseline vector TRS
+                
         % station velocity due to earth rotation
         v1 = t2c *[-omega*trsStation1(2);omega*trsStation1(1);0];  % [CRS]
         v2 = t2c *[-omega*trsStation2(2);omega*trsStation2(1);0];  % [CRS]
+        % w/o ntsl for sinex calibration block
+        v1_noNtsl = t2c *[-omega*trsStation1_noNtsl(2);omega*trsStation1_noNtsl(1);0];  % [CRS]
+        v2_noNtsl = t2c *[-omega*trsStation2_noNtsl(2);omega*trsStation2_noNtsl(1);0];  % [CRS]
              
         % ##### Distinguish between source types (quasar/spacecraft) #####
         delModQ = 1;
@@ -628,24 +636,39 @@ for iSc = 1:number_of_all_scans
             case 'q'         
                 switch delModQ
                     case 1 %consensus        
-                        [tau, pGammaSun, k1a, k2a, fac1] = consensusModelQuasar(iSc, crsStation1,crsStation2, idStation1, idStation2, rqu, ephem, opt, antenna, v1, v2);
+                        [tau, pGammaSun, k1a, k2a, fac1] = consensusModelQuasar(iSc, crsStation1, crsStation2, idStation1, idStation2, rqu, ephem, opt, antenna, v1, v2);
+                        % w/o ntsl for sinex calibration block
+                        [tau_noNtsl, ~, k1a_noNtsl, k2a_noNtsl, ~] = consensusModelQuasar(iSc, crsStation1_noNtsl, crsStation2_noNtsl, idStation1, idStation2, rqu, ephem, opt, antenna, v1_noNtsl, v2_noNtsl);
 
                     case 2 % sovers / influence of planets not included yet
-                        [tau, pGammaSun, k1a, k2a, fac1] = soversModelQuasar(iSc, crsStation1,crsStation2, rqu, ephem, v2);
-                        
+                        [tau, pGammaSun, k1a, k2a, fac1] = soversModelQuasar(iSc, crsStation1, crsStation2, rqu, ephem, v2);
+                        % w/o ntsl for sinex calibration block
+                        [tau_noNtsl, ~, k1a_noNtsl, k2a_noNtsl, ~] = soversModelQuasar(iSc, crsStation1_noNtsl, crsStation2_noNtsl, rqu, ephem, v2_noNtsl);
+
                     case 3 % SSB acceleration  
-                        [tau, pGammaSun, k1a, k2a, fac1] = SSBAccelerationModelQuasar(iSc, crsStation1,crsStation2, rqu, ephem, v1, v2, opt, delt_accSSB);
+                        [tau, pGammaSun, k1a, k2a, fac1] = SSBAccelerationModelQuasar(iSc, crsStation1, crsStation2, rqu, ephem, v1, v2, opt, delt_accSSB);
+                        % w/o ntsl for sinex calibration block
+                        [tau_noNtsl, ~, k1a_noNtsl, k2a_noNtsl, ~] = SSBAccelerationModelQuasar(iSc, crsStation1_noNtsl, crsStation2_noNtsl, rqu, ephem, v1_noNtsl, v2_noNtsl, opt, delt_accSSB);
                 end
             case 's'
                 switch(delModS)                
                     case 1 % Light time equation
                         [ps1, ps2, pdSatPosRSW, pdSatPosGCRF, pdSatPosTRF, tau] = calcDelaySatellite(sources, iSc, scan, idStation1, idStation2, flag_fix_sat_pos_to_stat1, ddt_threshold, crsStation1, crsStation2, antenna, sec_of_day, mjd, max_iterations, ephem, v2, t2c);
+                        % w/o ntsl for sinex calibration block
+                        [~, ~, ~, ~, ~, tau_noNtsl] = calcDelaySatellite(sources, iSc, scan, idStation1, idStation2, flag_fix_sat_pos_to_stat1, ddt_threshold, crsStation1_noNtsl, crsStation2_noNtsl, antenna, sec_of_day, mjd, max_iterations, ephem, v2_noNtsl, t2c);
                 end        
         end 
         
         % further corrections (same for both models (Sekido & Fukushima, p.141))
         [a_ngr, a_egr, scan, antenna, tau]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tau, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
-            
+        % w/o ntsl for sinex calibration block
+        scan_noNtsl = scan;
+        scan_noNtsl(iSc).stat(iStat).x = scan(iSc).stat(iStat).x_noNtsl;
+        scan_noNtsl(iSc).stat(iStat).xcrs = scan(iSc).stat(iStat).xcrs_noNtsl;
+
+        [~, ~, ~, ~, tau_noNtsl]  = correctionBaseline(scan_noNtsl, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a_noNtsl, k2a_noNtsl, rqu, v2_noNtsl, v1_noNtsl, tau_noNtsl, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
+        clear scan_noNtsl;
+
         % SOURCE STRUCTURE +
         if parameter.vie_mod.ssou==1 || parameter.vie_mod.write_jet==1
             ind=strcmp(sources.q(scan(iSc).iso).name,cat_comp.name,'exact');
@@ -656,11 +679,16 @@ for iSc = 1:number_of_all_scans
             if isempty(ind)
                 disp(strcat('source ',sources.q(scan(iSc).iso).name,' not found in ss catalogue.'));
                 soucorr=0; jetang=90; jetjb=0; uvrange=0; uu=0; vv=0;
+                soucorr_noNtsl = 0; % w/o ntsl for sinex calibration block    
             else
                 sources.q(scan(iSc).iso).sou_model=[cat_comp.flux(ind),cat_comp.maj(ind),cat_comp.min(ind),cat_comp.angle(ind),cat_comp.dRA(ind),cat_comp.dDec(ind)];
-                [soucorr,uu,vv]=modDelay(sources.q(scan(iSc).iso).sou_model,scan(iSc).stat(idStation1).x,scan(iSc).stat(idStation2).x,([8213 8252 8353 8513 8733 8853 8913 8933]+4), 8217, sources.q(scan(iSc).iso).ra2000, sources.q(scan(iSc).iso).de2000, scan(iSc).mjd);
-                soucorr=soucorr*1e-12;
-                jetvec=(sources.q(scan(iSc).iso).sou_model(2,5:6));
+                [soucorr,uu,vv]=modDelay(sources.q(scan(iSc).iso).sou_model,trsStation1,trsStation2,([8213 8252 8353 8513 8733 8853 8913 8933]+4), 8217, sources.q(scan(iSc).iso).ra2000, sources.q(scan(iSc).iso).de2000, scan(iSc).mjd);
+                soucorr=soucorr*1e-12;                                        
+                % w/o ntsl for sinex calibration block
+                [soucorr_noNtsl,~,~]=modDelay(sources.q(scan(iSc).iso).sou_model,trsStation1_noNtsl,trsStation2_noNtsl,([8213 8252 8353 8513 8733 8853 8913 8933]+4), 8217, sources.q(scan(iSc).iso).ra2000, sources.q(scan(iSc).iso).de2000, scan(iSc).mjd);
+                soucorr_noNtsl=soucorr_noNtsl*1e-12;
+
+                jetvec=(sources.q(scan(iSc).iso).sou_model(2,5:6));           
                 jetvec=jetvec/norm(jetvec);
                 uvvec=[uu;vv];
                 uvvec=uvvec/norm(uvvec);
@@ -673,6 +701,8 @@ for iSc = 1:number_of_all_scans
         % correct for source structure
         if parameter.vie_mod.ssou==1
             tau=tau+soucorr;
+            % w/o ntsl for sinex calibration block
+            tau_noNtsl = tau_noNtsl + soucorr_noNtsl;
         end
         
         % writing jetang to external file
@@ -803,7 +833,9 @@ for iSc = 1:number_of_all_scans
         % ############################
         
         scan(iSc).obs(iobs).com = tau; %[sec]
-        
+        % w/o ntsl for sinex calibration block
+        scan(iSc).obs(iobs).com_noNtsl = tau_noNtsl; %[sec]
+
         % partial derivatives of the delay  w.r.t.: 
         scan(iSc).obs(iobs).psou                = psou;             % source coordinates [cm/mas]; =[0,0], if no quasar was observed
         scan(iSc).obs(iobs).psou_sat_gcrf       = pdSatPosGCRF;     % satellite coordinates in GCRF [sec/m]
