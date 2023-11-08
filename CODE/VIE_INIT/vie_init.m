@@ -246,6 +246,9 @@ switch(parameter.data_type)
         antenna     = nc2antenna(out_struct, trf, trffile{2}, wrapper_data);
         sources     = nc2sources(out_struct, crf, crffile{2}, wrapper_data);
         
+        % test the clock break function
+        % [scan, antenna] = ambiguityies_clockBreaks(scan, antenna);
+
         % "clean" scan struct (because of exclusions)
         % [scan, sources, antenna] = cleanScan(scan, sources, antenna, out_struct.head.StationList.val', out_struct.head.SourceList.val', ini_opt, bas_excl, parameter.obs_restrictions.Qlim, parameter.obs_restrictions.cut_off_elev);
 
