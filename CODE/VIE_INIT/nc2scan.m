@@ -175,8 +175,16 @@ fprintf('vgosdb data source:\n')
 fprintf('\t observation:\t %s/%s, nc field: %s\n', tau_folder, tau_file,tau_field )
 fprintf('\t sigma:\t\t %s/%s, nc field: %s\n', sigma_tau_folder, sigma_tau_file,sigma_tau_field )
 
-% ionosphere delay correction
 
+% save SBD and MBD for (both) frequency bands in scan struct (S/X for testing)
+%SBD1 = num2cell(out_struct.Observables.SBDelay_bS.SBDelay.val);
+%MBD1 = num2cell(out_struct.Observables.GroupDelay_bS.GroupDelay.val);
+%SBD2 = num2cell(out_struct.Observables.SBDelay_bX.SBDelay.val);
+%MBD2 = num2cell(out_struct.Observables.GroupDelay_bX.GroupDelay.val);
+
+
+
+% ionosphere delay correction
 flag_ion_corr_available = false;
 if isfield(wrapper_data.Observation, 'ObsDerived')
     nc_filename = get_nc_filename({'Cal-SlantPathIonoGroup', '_', freqband}, wrapper_data.Observation.ObsDerived.files);
@@ -574,6 +582,13 @@ for iScan=1:nScans
     [scan(iScan).obs.sgdion]=   deal(ionoDelSigCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [nano-sec]
     
     [scan(iScan).obs.amb]=   deal(tau_ambCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+
+% for testing now
+%     [scan(iScan).obs.obsSBD1]=   deal(SBD1{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+%     [scan(iScan).obs.obsMBD1]=   deal(MBD1{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+%     [scan(iScan).obs.obsSBD2]=   deal(SBD2{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+%     [scan(iScan).obs.obsMBD2]=   deal(MBD2{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+
     
     if length(delayQualityFlag)==1 % check length of delay flag vector, if it is only 1 value for the whole session, this value will be assigned to all observations
         [scan(iScan).obs.q_flag] = deal(double(delayQualityFlag{1}));
