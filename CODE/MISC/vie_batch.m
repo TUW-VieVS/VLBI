@@ -811,7 +811,7 @@ if ~isempty(process_list)
         for i_err = 1: length(sess_err) % display failed sessions
             if ~isempty(sess_err{i_err})
                 fprintf(2, 'sessions %s produced an error\n', sess_err{i_err});
-                process_list(count,:) = sess_err{i_err};
+                process_list{count} = sess_err{i_err};
                 count = count + 1;
                 flag = 1;
             end
