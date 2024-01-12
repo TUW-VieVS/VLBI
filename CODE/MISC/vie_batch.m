@@ -355,7 +355,7 @@ if ~isempty(process_list)
                         fprintf(' Input file format: VSO\n');
 
                     case 'vgosdb'
-                        parameter.session_name  = session_name(6 : (strfind(session_name, ' [vgosDB]')-1));
+                        parameter.session_name  = deblank(session_name(6 : (strfind(session_name, ' [vgosDB]')-1)));
 %                         year_tmp = str2double(parameter.session_name(1:2));
 %                         % Check if conversion was sucessfull:
 %                         if isnan(year_tmp)
@@ -628,7 +628,7 @@ if ~isempty(process_list)
                         fprintf(' Input file format: VSO\n');
 
                     case 'vgosdb'
-                        parameter.session_name  = session_name(6 : (strfind(session_name, ' [vgosDB]')-1));
+                        parameter.session_name  = deblank(session_name(6 : (strfind(session_name, ' [vgosDB]')-1)));
                         if ~contains(parameter.session_name, '-') % Check for new vgosDB naming convention
                             year_tmp = str2double(parameter.session_name(1:2));
                             % Check if conversion was sucessfull:
