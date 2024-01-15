@@ -40,6 +40,8 @@ for iSource=1:nSources
         curName ='3C390.3 ';
     elseif curName == '2344+092'
         curName = '2344+09A';
+    elseif curName == '1600+431' % in icrf2
+        curName = '1600+43A'; % IVS, = 1600+432 IERS, in icrf3
     end
     
     % find index in crf

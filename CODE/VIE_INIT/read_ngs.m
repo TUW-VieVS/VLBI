@@ -260,6 +260,12 @@ while (idx_line <= nlines)
         ngs_card_num    = sscanf(input_str(79:80),'%d'); % NGS card number
     end
     
+    
+    if strcmp(source_name, '1600+431') % in ICRF2
+        source_name = '1600+43A'; % IVS, = 1600+432 IERS, in icrf3'
+    end
+    
+    
     % check if there is blanks in the station name and replace them with "_";
     sta_names(1, sta_names(1, 1:max(find(sta_names(1,:) ~= ' '))) == ' ') = '_';
     sta_names(2, sta_names(2, 1:max(find(sta_names(2,:) ~= ' '))) == ' ') = '_';
