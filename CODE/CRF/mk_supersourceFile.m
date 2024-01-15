@@ -250,9 +250,13 @@ for k=1:size(data{1},1)
         end
         indexInSourceStruct=find(antennaFound);
     else
-        fprintf('Source %-8s in ICRF2 was not found in vievsCrf - append to struct.\n', data{2}(k,1:8)); % should not happen
-        indexInSourceStruct=size(source,2)+1;
-        source(indexInSourceStruct).IERSname=data{2}(k,1:8); % this name exists when the source is found (so is only written here)
+        if ~strcmp(data{2}(k,1:8),'1600+431')
+            fprintf('Source %-8s in ICRF2 was not found in vievsCrf - append to struct.\n', data{2}(k,1:8)); % should not happen          
+            indexInSourceStruct=size(source,2)+1;
+            source(indexInSourceStruct).IERSname=data{2}(k,1:8); % this name exists when the source is found (so is only written here)
+        else
+            indexInSourceStruct = []; % ignore 1600+431 from icrf2. It was renamed to 1600+43A. HK
+        end
     end
     
     % since there might be more sources found with the same IAU_name - go
