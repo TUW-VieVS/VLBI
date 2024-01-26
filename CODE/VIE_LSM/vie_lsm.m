@@ -789,7 +789,7 @@ for istat = 1 : na
     end
 
     % A matrix for Axis Offset
-    if opt.est_AO == 1
+    if opt.est_AO == 1 && opt.global_solve == 1
         [A_ao] = a_AO(obs_per_stat,n_observ,per_stat(istat).oc_nob);
         A_AO = horzcat(A_AO,A_ao);
     end
@@ -797,7 +797,7 @@ for istat = 1 : na
     % a_stsespos.m
     % Amplitudes of seasonal variations in the station positions
     nsewa=0;
-    if opt.est_stsespos ==1
+    if opt.est_stsespos ==1 && opt.global_solve == 1
         [AAcr,AAce,AAcn,AAsr,AAse,AAsn] = a_stsespos(obs_per_stat,n_observ,per_stat(istat).oc_nob);
         % Concatenating - for global adjustment
         A_Acr = horzcat(A_Acr,AAcr);

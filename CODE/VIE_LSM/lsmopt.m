@@ -571,6 +571,44 @@ opt.control_gui_vie_lsm = opt.control_gui_vie_lsm;
 % if sum(ids)>0
 %     opt.source(ids).rade_inc = 1;
 % end
+
+
+% % Alwasy estimate these sources (PWLO option)
+% IVSSouAlwaysEstFile = 'souIVS_alwaysEst_pwl.txt';
+% fprintf(['Loading ' IVSSouAlwaysEstFile ' \n\n'])
+% fid=fopen(['../CRF/data/' IVSSouAlwaysEstFile]);
+%     data=textscan(fid, '%8c %f %f %f %f', 'Commentstyle','#', 'delimiter', '\n');
+% fclose(fid);
+% 
+% for i = 1:size(data{1},1)
+%     ids=[];
+%     ids = strcmp(deblank({opt.source.name}),deblank(data{1}(i,:))); 
+%     if sum(ids)>0
+%         opt.source(ids).rade_inc = 1; % always estimate this source in pwl option
+%     end
+% end
+
+
+
+% % Exclude stations from NNT/NNR condition
+% stationsExclDatumFile = 'stnames_exclNNTNNR.txt';
+% fprintf(['Loading ' stationsExclDatumFile ' \n\n'])
+% fid=fopen(['../TRF/data/' stationsExclDatumFile]);
+%     data=textscan(fid, '%8c %9c %4c', 'Commentstyle','#', 'delimiter', '\n');
+% fclose(fid);
+% 
+% for i = 1:size(data{1},1)
+%     ids=[];
+%     ids = strcmp(deblank({opt.stat.name}),deblank(data{1}(i,:))); % exclude from NNT/NNR    
+%     if sum(ids)>0    
+%         opt.stat(ids).nnt_inc = 0;
+%         opt.stat(ids).nnr_inc = 0;
+%     end
+% end
+
+
+
+
 % 
 % 
 % % fix defining sources
