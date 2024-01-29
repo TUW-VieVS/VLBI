@@ -512,7 +512,7 @@ fprintf('3. FORMING THE WEIGHT MATRIX OF THE OBSERVATIONS "Pobserv"\n');
 temp = [scan.obs];
 mi_observ = [temp.sig]; % [seconds]
 stations =  parameter.vie_init.stat_dw; %list of down-weighted stations
-
+downdepbsl = 0; % down-weigthing of non-independent baselines (only baselines to a reference station influence the solution)
 
 % Add noise
 if opt.eldep_noise==1 % Elevation dependent noise
@@ -534,7 +534,7 @@ else
 end
 
 %---------------------------
-if ~isempty(stations)
+if ~isempty(stations) % Downweighting of stations
     nmi_observ = (addnoise/c).^2+(mi_observ).^2;  % [seconds2]
     an_weight = parameter.vie_init.stat_co;
     numbers = find(ismember ({antenna.name},stations)==1);
@@ -550,6 +550,26 @@ else
     nmi_observ = sqrt((addnoise/c).^2+(mi_observ).^2); % [seconds]
 end
 %-------------------
+if downdepbsl
+    refdownstat = parameter.opt.options.refclock; % reference clock station
+    % refdownstat = 'WETTZELL'
+    downbsl_w = 1e9; %[s]
+    
+    numbers=[]; i12 = []; AB = [];
+    numbers = find(ismember ({antenna.name},refdownstat)==1); % find the ref. station
+
+    i12 =  [[temp.i1]; [temp.i2] ]; % all baselines
+    for j = 1:size(numbers,2)
+        aa = find(ismember(i12(1,:),numbers(j))==1);  bb = find(ismember(i12(2,:),numbers(j))==1); 
+        ABr = [aa,bb]; ABr = sort(ABr); % baselines with the ref. stations
+        AB = setdiff([1:1:n_observ], ABr); % baselines without the ref. station - will be downweighted
+        for i = 1:size(AB,2)
+            nmi_observ(AB(i)) = nmi_observ(AB(i)) + (downbsl_w)^2;
+        end
+    end
+end
+%-------------------
+
 so = sqrt(((nmi_observ.*c*100)*(nmi_observ.*c*100)')/n_observ); % [cm] apriori std. dev. of unit weight
 opt.so = so;
 Pobserv = diag(sparse(1./((nmi_observ.^2).*c^2*100^2))); % [1/cm^2]
