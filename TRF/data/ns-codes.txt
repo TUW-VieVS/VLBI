@@ -170,10 +170,10 @@
  15 DSS15    40405S019 1515 34-m HEF at Goldstone, CA, USA
  26 DSS26    --------- ---- 34-m BWG at Goldstone, CA, USA
  34 DSS34    --------- ---- 34-m DSS34 at Tidbinbilla, Australia
- 36 DSS36    --------- ---- 34-m DSS36 at Tidbinbilla, Australia
+ 36 DSS36    50103S027 1536 34-m DSS36 at Tidbinbilla, Australia
  43 DSS43    --------- ---- 34-m Australia
  45 DSS45    50103S010 1545 34-m HEF at Tidbinbilla, Australia
- 56 DSS56    --------- ---- 34-m BWG at Madrid, Spain
+ 56 DSS56    13407S020 1556 34-m BWG at Madrid, Spain (DOMES Nr is only a dummy)
  61 ROBLED32 13407S003 1561 DSS61 Robledo, Spain
  65 DSS65    13407S010 1565 34-m HEF at Madrid, Spain
  6a DSS65A   13407S014 1567 34-m HEF at Madrid, Spain (new location)
