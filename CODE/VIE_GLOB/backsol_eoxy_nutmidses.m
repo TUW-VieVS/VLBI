@@ -1,11 +1,17 @@
 
 function backsol_eoxy_nutmidses(pathGS,path_outglob,DIROUT,DIRIN)
 
+% clear all
+% load('../DATA/GLOB/pathGS.mat')
+% path_outglob = '../OUT/GLOB/';
+% DIROUT = pathGS.out;
+% DIRIN = pathGS.L2;
+
 pthL2 = pathGS.path_in; % ../DATA/LEVEL2/
 
 curDate=clock;          % current date and time
 % writeFormat='%12.6f%10.7f%10.7f%11.8f%7.4f%7.4f%10.7f%10.7f%11.8f%9.4f%9.4f %8.2f %9.0f%10.0f%10.0f%10.0f %6.0f %8s %7.2f %10.0f%11.0f%12.0f%8.0f%8.0f%11.0f%11.0f%12.0f%8.0f%8.0f     %s\n';
-writeFormat='%12.6f%11.7f%11.7f%12.8f%8.4f%8.4f%11.7f%11.7f%12.8f%10.4f%10.4f %8.2f %9.0f%10.0f%10.0f%10.0f %6.0f %8s %7.2f %10.0f%11.0f%12.0f%8.0f%8.0f%11.0f%11.0f%12.0f%8.0f%8.0f     %s\n';
+writeFormat='%12.6f%11.7f%11.7f%12.8f%8.4f%8.4f%11.7f%11.7f%12.8f%10.4f%10.4f %8.2f %9.0f%10.0f%10.0f%10.0f %6.0f %16s %7.2f %10.0f%11.0f%12.0f%8.0f%8.0f%11.0f%11.0f%12.0f%8.0f%8.0f     %s\n';
 
 formatEOP = '%s %f %f %f %s %f %f';
 
@@ -176,7 +182,7 @@ for ifile = 1:2
          if sum(idsescode)==1
             eop.sescode(idxpolses,1) = sescode(idsescode);
          else
-            eop.sescode(idxpolses,1) = {'------'}; 
+            eop.sescode(idxpolses,1) = {glob2.opt.session_name}; 
          end
          
          
