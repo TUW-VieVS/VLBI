@@ -2,6 +2,12 @@
 
 function backsol_eoxy(pathGS,path_outglob,DIROUT,DIRIN)
 
+% clear all
+% load('../DATA/GLOB/pathGS.mat')
+% path_outglob = '../OUT/GLOB/';
+% DIROUT = pathGS.out;
+% DIRIN = pathGS.L2;
+
 pthL2 = pathGS.path_in; % ../DATA/LEVEL2/
 
 curDate=clock;          % current date and time
@@ -48,7 +54,7 @@ fprintf(fidOffic,'#                              positions and UT1-TAI angle    
 fprintf(fidOffic,'#  16   146-151 F6.4   --      Correlation between the estimates of nutation                   \n');
 fprintf(fidOffic,'#                              dX and nutation dY                                  \n');
 fprintf(fidOffic,'#  17   153-158 I6     --      Number of used observations in the session                      \n');
-fprintf(fidOffic,'#  18   160-165 A6     --      IVS session code                                                \n');
+fprintf(fidOffic,'#  18   160-165 A6     --      IVS session code (temporary changed to 16 characters)           \n');
 fprintf(fidOffic,'#  19   167-171 F5.2   hours   Session duration                                                \n');
 fprintf(fidOffic,'#  20   173-181 F9.6   asc/day Rate of X pole coordinate \n');
 fprintf(fidOffic,'#  21   183-191 F9.6   asc/day Rate of Y pole coordinate \n');
@@ -71,7 +77,7 @@ fprintf(fidOffic,'# \n');
 
 
 
-writeFormat=' %12.6f%10.6f%10.6f%11.7f%10.6f%10.6f%10.6f%10.6f%11.7f%10.6f%10.6f  %6.0f%7.0f%7.0f%7.0f%7.0f %6.0f %6s %5.2f    %6.0f%10.0f%11.0f%10.0f%10.0f%10.0f%10.0f%11.0f%3.0f%3.0f %s\n';
+writeFormat=' %12.6f%10.6f%10.6f%11.7f%10.6f%10.6f%10.6f%10.6f%11.7f%10.6f%10.6f  %6.0f%7.0f%7.0f%7.0f%7.0f %6.0f %16s %5.2f    %6.0f%10.0f%11.0f%10.0f%10.0f%10.0f%10.0f%11.0f%3.0f%3.0f %s\n';
 
 
 
@@ -226,7 +232,7 @@ for i = 1:size(sesuni,1)
      if sum(idsescode)==1
         eop.sescode(idxpolses,1) = sescode(idsescode);
      else
-        eop.sescode(idxpolses,1) = {'------'}; 
+        eop.sescode(idxpolses,1) = {glob2.opt.session_name}; 
      end
      
 
