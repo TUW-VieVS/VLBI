@@ -253,6 +253,8 @@ if ~isempty(process_list)
                     parameter.data_type = 'vgosdb'; 
                 elseif strfind(session_name, ' [VSO]')
                     parameter.data_type = 'vso'; 
+                elseif strfind(session_name, ' [VDA]')
+                    parameter.data_type = 'vda'; 
                 end
 
                 %% Get the session name, the filepath and the year (string)
@@ -355,7 +357,7 @@ if ~isempty(process_list)
                         fprintf(' Input file format: VSO\n');
 
                     case 'vgosdb'
-                        parameter.session_name  = deblank(session_name(6 : (strfind(session_name, ' [vgosDB]')-1)));
+                        parameter.session_name  = session_name(6 : (strfind(session_name, ' [vgosDB]')-1));
 %                         year_tmp = str2double(parameter.session_name(1:2));
 %                         % Check if conversion was sucessfull:
 %                         if isnan(year_tmp)
@@ -373,6 +375,14 @@ if ~isempty(process_list)
                         
                         parameter.filepath      = ['../DATA/vgosDB/', session_name(1:4), '/'];
                         fprintf(' Input file format: vgosDB\n');
+
+
+                    case 'vda'
+                        parameter.session_name  = session_name(6 : (strfind(session_name, ' [VDA]')-1));
+                        parameter.year          = session_name(1:4);
+                        parameter.filepath      = ['../DATA/VDA/', parameter.year, '/'];
+                        fprintf(' Input file format: VDA\n');
+
                 end % switch(parameter.data_type)
                 session = parameter.session_name;
 
@@ -525,6 +535,8 @@ if ~isempty(process_list)
                     parameter.data_type = 'vgosdb'; 
                 elseif strfind(session_name, ' [VSO]')
                     parameter.data_type = 'vso'; 
+                elseif strfind(session_name, ' [VDA]')
+                    parameter.data_type = 'vda'; 
                 end
 
 
@@ -628,7 +640,7 @@ if ~isempty(process_list)
                         fprintf(' Input file format: VSO\n');
 
                     case 'vgosdb'
-                        parameter.session_name  = deblank(session_name(6 : (strfind(session_name, ' [vgosDB]')-1)));
+                        parameter.session_name  = session_name(6 : (strfind(session_name, ' [vgosDB]')-1));
                         if ~contains(parameter.session_name, '-') % Check for new vgosDB naming convention
                             year_tmp = str2double(parameter.session_name(1:2));
                             % Check if conversion was sucessfull:
@@ -648,6 +660,13 @@ if ~isempty(process_list)
                         end
                         parameter.filepath      = ['../DATA/vgosDB/', session_name(1:4), '/'];
                         fprintf(' Input file format: vgosDB\n');
+
+                    case 'vda'
+                        parameter.session_name  = session_name(6 : (strfind(session_name, ' [VDA]')-1));
+                        parameter.year          = session_name(1:4);
+                        parameter.filepath      = ['../DATA/VDA/', parameter.year, '/'];
+                        fprintf(' Input file format: VDA\n');
+
                 end % switch(parameter.data_type)
                 session = parameter.session_name;
 
@@ -811,7 +830,7 @@ if ~isempty(process_list)
         for i_err = 1: length(sess_err) % display failed sessions
             if ~isempty(sess_err{i_err})
                 fprintf(2, 'sessions %s produced an error\n', sess_err{i_err});
-                process_list{count} = sess_err{i_err};
+                process_list(count,:) = sess_err{i_err};
                 count = count + 1;
                 flag = 1;
             end

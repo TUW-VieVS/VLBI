@@ -98,6 +98,9 @@ else
     parameter.obs_restrictions.cut_off_elev = minElevInputNum * pi/180; % [rad]
 end
 
+% Quality codes from fringe-fitting
+parameter.obs_restrictions.qualityCode=get(handles.checkbox_parameter_obsRestr_qualityCode, 'value');
+
 % Quality code limit:
 qLimitInputNum = str2double(get(handles.edit_parameter_obsRestr_qualityCode, 'String'));
 if isnan(qLimitInputNum)
@@ -105,6 +108,9 @@ if isnan(qLimitInputNum)
 else
     parameter.obs_restrictions.Qlim=qLimitInputNum;
 end
+
+% Suppression flags
+parameter.obs_restrictions.suppression_flags=get(handles.checkbox_parameter_obsRestr_suppression_flags, 'value');
 
 
 % ===========================

@@ -246,6 +246,36 @@ parameter.opt.options = clean_opt; % Init
 remove_special_stations = false;
 stations_to_be_removed = {''; ''; ''; ''}; % Can be set here in cell array!
 
+
+% #### suppression flags from pSolve #####
+if parameter.obs_restrictions.suppression_flags && strcmp(parameter.data_type,'vda')
+    flags_file_name = [replace(parameter.filepath,'VDA','FLAGS_PSOLVE'),parameter.session_name];
+    fid_flags = fopen([flags_file_name '_edit.txt'],'r');
+    fprintf('Applying PSOLVE suppression flags from %s_edit.txt\n',flags_file_name)
+    % Loop over all lines
+    if fid_flags ~= -1
+        FLG_PSOLVE = textscan(fid_flags,'%f','delimiter', '\n', 'whitespace', '', 'CommentStyle','#');
+        FLG_PSOLVE = FLG_PSOLVE{1};
+        scan_idx = 1;
+        sum_nobs_old = 0;
+        sum_nobs = scan(1).nobs;
+        for flag = FLG_PSOLVE'
+            red_flag = flag - sum_nobs_old;
+            while flag > sum_nobs
+                scan_idx = scan_idx+1;
+                sum_nobs_old = sum_nobs;
+                sum_nobs = sum_nobs + scan(scan_idx).nobs;
+                red_flag = flag - sum_nobs_old;
+            end
+            scan(scan_idx).obs(red_flag).q_flag = 1; % 1 - bad Qflag
+        end
+        fclose(fid_flags);
+    else
+        fprintf('couln''t find PSOLVE FLAG-file %s_edit.txt\n',flags_file_name)
+    end
+end
+
+
 % ##### OPT files #####
 
 % Init.:

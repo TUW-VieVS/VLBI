@@ -1108,6 +1108,8 @@ if strfind(session, ' [vgosDB]')
     datatype_str = 'vgosdb'; 
 elseif strfind(session, ' [VSO]')
     datatype_str = 'vso'; 
+elseif strfind(session, ' [VDA]')
+    datatype_str = 'vda'; 
 end
 
 % Get the OPT file name and path:
@@ -1122,6 +1124,8 @@ switch(datatype_str)
         optFileName = [session(1 : (strfind(session, ' [VSO]')-1)), '.OPT'];
     case 'vgosdb'
         optFileName = [session(1 : (strfind(session, ' [vgosDB]')-1)), '.OPT'];
+    case 'vda'
+        optFileName = [session(1 : (strfind(session, ' [VDA]')-1)), '.OPT'];
 end % switch(datatype_str)
 
 wantedOPTfile = ['../../VLBI_OPT/', selectedOPTdir, '/', optFileName];
@@ -1171,6 +1175,8 @@ if strfind(session, ' [vgosDB]')
     datatype_str = 'vgosdb'; 
 elseif strfind(session, ' [VSO]')
     datatype_str = 'vso'; 
+elseif strfind(session, ' [VDA]')
+    datatype_str = 'vda'; 
 end
 
 % Get the Outlier file name and path:
@@ -1181,6 +1187,8 @@ switch(datatype_str)
         sess_name_str = session(1 : (strfind(session, ' [VSO]')-1));
     case 'vgosdb'
         sess_name_str = session(1 : (strfind(session, ' [vgosDB]')-1));
+    case 'vda'
+        sess_name_str = session(1 : (strfind(session, ' [VDA]')-1));
 end % switch(datatype_str)
 
 
@@ -1276,6 +1284,38 @@ if iscell(out)
             out{iF} = [out{iF}(curSlash(end-1)+1 : tgzDot(3)-1), ' [vgosDB]'];
         else
             out{iF} = [out{iF}(curSlash(end-1)+1 : end), ' [vgosDB]'];
+        end
+    end
+
+    updateInputFilesBox(hObject, eventdata,handles,out)   
+end
+
+% --- Executes on button press in pushbutton_setInput_browseVDA.
+function pushbutton_setInput_browseVDA_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_setInput_browseVDA (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+vdaDir='../DATA/VDA/';
+if ~exist(vdaDir,'dir')
+    mkdir(vdaDir);
+end
+
+out = uipickfiles('FilterSpec', vdaDir);
+
+
+if iscell(out)
+    out=out';
+    
+    % Format: yyyy/<session_name> [VDA]
+    
+    for iF = 1 : length(out)
+        curSlash = sort([strfind(out{iF},'/'), strfind(out{iF},'\')]);
+        tgzDot = sort(strfind(out{iF},'.'));
+        if length(tgzDot) > 2
+            out{iF} = [out{iF}(curSlash(end-1)+1 : tgzDot(3)-1), ' [VDA]'];
+        else
+            out{iF} = [out{iF}(curSlash(end-1)+1 : end), ' [VDA'];
         end
     end
 
@@ -10736,6 +10776,31 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+% --- Executes on button press in checkbox_parameter_obsRestr_qualityCode.
+function checkbox_parameter_obsRestr_qualityCode_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameter_obsRestr_qualityCode (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameter_obsRestr_qualityCode
+if get(hObject, 'Value')
+    set(handles.edit_parameter_obsRestr_qualityCode, 'Enable', 'on')
+else
+    set(handles.edit_parameter_obsRestr_qualityCode, 'Enable', 'off')
+end
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in checkbox_parameter_obsRestr_suppression_flags.
+function checkbox_parameter_obsRestr_suppression_flags_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameter_obsRestr_suppression_flags (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameter_obsRestr_suppression_flags
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
 
 % --- Executes on selection change in popupmenu_parameters_ss_catalog.
 function popupmenu_parameters_ss_catalog_Callback(hObject, eventdata, handles)
