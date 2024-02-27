@@ -121,6 +121,8 @@ switch(parameter.data_type)
         obs_fle_dir_tmp              = 'VSO';
     case 'vgosdb'
         obs_fle_dir_tmp              = 'vgosDB';
+    case 'vda'
+        obs_fle_dir_tmp              = 'VDA';
 end % switch(parameter.data_type)
 
 session = parameter.session_name;
@@ -146,7 +148,6 @@ else
     trf = varargin{1};
     crf = varargin{2};
 end
-
 
 
 %% ##### Load observation data #####
@@ -335,6 +336,17 @@ switch(parameter.data_type)
         end    
         [antenna, sources, scan, parameter] = read_vso(vso_file_path, vso_file_name, trf, trffile{2}, crf, crffile{2}, sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type, parameter);
         fprintf('...reading the VSO file finished!\n');
+
+    % #############################
+    % #####     VDA           #####
+    % #############################
+    case 'vda'
+        vda_file_path = parameter.filepath; % ['../DATA/VDA/',parameter.year, '/'];
+        vda_file_name = parameter.session_name;
+        fprintf(' => Start reading %s\n', [vda_file_path, vda_file_name]);
+         
+        [antenna, sources, scan] = vda2scan(vda_file_path, vda_file_name, trffile, crffile, trf, crf);
+        fprintf('...reading the VDA file finished!\n');
         
 end % switch(parameter.data_type)
 

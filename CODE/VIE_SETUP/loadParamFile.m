@@ -188,6 +188,12 @@ end
 set(handles.edit_parameter_obsRestr_cutOff, 'String', parameter.obs_restrictions.cut_off_elev*180/pi)
 set(handles.edit_parameter_obsRestr_qualityCode, 'String', parameter.obs_restrictions.Qlim)
 
+% set suppression flags
+% set(handles.edit_parameter_obsRestr_suppression_flags, 'Value', parameter.obs_restrictions.quality_flags)
+
+% set fringe-fitting quality codes
+% set(handles.edit_parameter_obsRestr_qualityCode, 'Value', parameter.obs_restrictions.qualityCode)
+
 % set tropodelay model
 try
     switch parameter.vie_init.tropSource.name
