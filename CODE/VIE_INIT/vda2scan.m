@@ -318,9 +318,12 @@ for i=1:nScans
         subStruct_stat(j).e=scanantE(i,j);
         subStruct_stat(j).cab=scanantC(i,j);
 
-        if subStruct_stat(j).temp==0
+        if subStruct_stat(j).temp== -273.15 
             subStruct_stat(j).temp=[];
         end
+        if subStruct_stat(j).temp== -1272.15
+            subStruct_stat(j).temp=-999;
+        end       
         if subStruct_stat(j).pres==0
             subStruct_stat(j).pres=[];
         end
