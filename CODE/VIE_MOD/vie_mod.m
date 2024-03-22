@@ -301,6 +301,12 @@ if sum(obsTypeQidx) ~= 0
         [DE2000, RA2000] = correct_GA(DE2000,RA2000,mean([scan(:).mjd]));
         fprintf(1, 'ICRF3 is used --> GA will be corrected to 2015 using 5.8 muas/year\n');
     end
+    if strcmp('manualCrf',parameter.vie_init.crf(2)) && (delModQ ~= 3)
+        [DE2000, RA2000] = correct_GA(DE2000,RA2000,mean([scan(:).mjd]));
+        fprintf(1, 'Manual CRF is used --> GA will be corrected to 2015 using 5.8 muas/year\n');
+    end
+
+
     sourceNames(obsTypeQidx)     = deal({sources.q([scan(obsTypeQidx).iso]).name});
 end
 if sum(obsTypeSidx) ~= 0
