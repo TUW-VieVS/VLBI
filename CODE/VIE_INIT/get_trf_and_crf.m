@@ -63,6 +63,19 @@ if strcmp(crffile{1}(end-3:end), '.mat')
     crf = load(crffile{1});
     nam = fieldnames(crf);
     crf = eval(['crf.', nam{1}]);
-else
-    error('Manual CRF not supported yet!')
+else % a manual crf file is given -> BUT load default supersou file in any case!!
+    %error('Manual CRF not supported yet!')
+    crf = load('../CRF/supersource.mat');
+    nam = fieldnames(crf);
+    crf = eval(['crf.' nam{1}]);
+end
+
+% (2) CRF: load manual CRF (if chosen)
+if strcmpi(crffile{1}(end-3:end), '.txt')
+    % put in supersource file (variable crf)
+    crf = manualCrfToSupersouCrf(crf,crffile{1});
+    
+    % write "crfname" to crffil{2}
+    crffile{2} = 'manualCrf';
+    parameter.vie_init.crf{2} = crffile{2};
 end
