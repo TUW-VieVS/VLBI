@@ -33,7 +33,7 @@
 % 12-2022 LK - implement changes of vgosDB naming convention + master file
 
 function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsrate, flag_incloutl)
-
+HKupd = false;
     %% Get file name from GUI input
     % if a mat file is given instead of already loaded process list
     if strcmpi(process_list(end-3:end), '.mat')
@@ -272,6 +272,12 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
                mjdp(2:end-1)=[];
                dmjdp = mjdp(2)-mjdp(1);
            end
+
+           if HKupd 
+               mjdo = round((opt_.first_scan+opt_.last_scan)./2);
+               mjdp(~logical(mjdp==mjdo))=[];
+           end
+
         else
 	       mjdp = [];
            dmjdp = 0;
@@ -302,6 +308,12 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
                mjdu(2:end-1)=[];
                dmjdu = mjdu(2)-mjdu(1);
            end
+
+           if HKupd 
+               mjdo = round((opt_.first_scan+opt_.last_scan)./2);
+               mjdu(~logical(mjdu==mjdo))=[];
+           end
+
         else
 	       mjdu = [];
            dmjdu = 0;
@@ -546,6 +558,9 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
         indn = ismember(mjd , mjdn);
     
         filler = 'NA'; % parameter not estimated - place filler
+        if HKupd
+            filler = 'NaN';
+        end
         
         for mjdind = 1:length(mjd)
            eop{1}{curline+mjdind} = sprintf('%12.6f',mjd(mjdind)); % epoch [MJD]
@@ -661,6 +676,9 @@ function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsra
          eopout_name=[outfile,'.eopi'];
     else
          eopout_name=[outfile,'.eoxy'];
+         if HKupd
+            eopout_name=[outfile,'_1offset.eoxy'];
+         end
     end
     
     %% generating EOP file
