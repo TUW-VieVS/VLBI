@@ -326,6 +326,8 @@ else
     tau_ambCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
 end
 
+ambspace = num2cell(double(out_struct.(ambS_folder).(ambS_file).(ambS_field).val) .*ones(nObs,1)); % cell: nObs x 1 (sec)
+
 %% DELAY FLAG DELAY:
 if isfield(wrapper_data.Observation,'ObsEdit')
     nc_filename = get_nc_filename({'Edit'}, wrapper_data.Observation.ObsEdit.files, 0);
@@ -582,6 +584,8 @@ for iScan=1:nScans
     [scan(iScan).obs.sgdion]=   deal(ionoDelSigCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [nano-sec]
     
     [scan(iScan).obs.amb]=   deal(tau_ambCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+
+    [scan(iScan).obs.ambspace]=   deal(ambspace{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec] baseline-dependent ambiguity spacing
 
 % for testing now
 %     [scan(iScan).obs.obsSBD1]=   deal(SBD1{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
