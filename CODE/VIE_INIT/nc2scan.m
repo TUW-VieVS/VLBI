@@ -326,6 +326,10 @@ else
     tau_ambCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
 end
 
+% ambiguity size
+ambS_folder = 'Observables';
+ambS_file = ['AmbigSize_',freqband];
+ambS_field = 'AmbigSize';
 ambspace = num2cell(double(out_struct.(ambS_folder).(ambS_file).(ambS_field).val) .*ones(nObs,1)); % cell: nObs x 1 (sec)
 
 %% DELAY FLAG DELAY:
