@@ -409,7 +409,7 @@ fprintf('\n')
 %     fprintf('Ambiguities will not be changed\n');
 % end
 % fprintf('\n')
-% 
+
 %%
 
 
@@ -605,7 +605,7 @@ end
 %-------------------
 if downdepbsl
     refdownstat = parameter.opt.options.refclock; % reference clock station
-    % refdownstat = 'WETTZELL'
+    %  refdownstat = 'WETTZELL'
     downbsl_w = 1e9; %[s]
     
     numbers=[]; i12 = []; AB = [];
