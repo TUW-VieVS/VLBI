@@ -85,6 +85,7 @@ x_filesGiven=0;
 antFilesGiven=0;
 atpaFilesGiven=0;
 optFilesGiven=0;
+resFilesGiven=0;
 if nargin>3
     if ~isempty(varargin{2})
         x_files=varargin{2};
@@ -105,6 +106,12 @@ if nargin>3
                     opt_files=varargin{5};
                     optFilesGiven=1;
                 end
+                if nargin>7
+                    if ~isempty(varargin{6})
+                        res_files=varargin{6};
+                        resFilesGiven=1;
+                    end
+                end
             end
         end
     end
@@ -112,8 +119,8 @@ end
 
 % rigorous treatment of formal errors
 rigFormErr=1; % Default:
-if nargin>7
-    if varargin{6}==0
+if nargin>8
+    if varargin{7}==0
         rigFormErr=0;
     end
 end
@@ -126,14 +133,14 @@ if out2file==1
     fid = fopen(outfile,'wt');
     %------------------------------------------------
     fprintf(fid,'%%************************************************************\n');
-    fprintf(fid,'%% Columns:\n%%\t 1     .... session\n%%\t 2     .... reference time\n%%\t 3     .... baselines\n%%\t 4     .... a priori baseline lengths\n%%\t 5     .... estimated baseline lengths\n%%\t 6     .... formal errors\n'); 
+    fprintf(fid,'%% Columns:\n%%\t 1     .... session\n%%\t 2     .... reference time\n%%\t 3     .... baselines\n%%\t 4     .... a priori baseline lengths\n%%\t 5     .... estimated baseline lengths\n%%\t 6     .... formal errors\n%%\t 7     .... no. observations\n'); 
     fprintf(fid,'%% all units are in meters \n');
     fprintf(fid,'%%************************************************************\n');
     fprintf(fid,'%%\n'); 
 end
 
 %% preallocate
-bas=struct('ap', [], 'corr', [], 'name', [], 'mjd', [], 'mbas', []);
+bas=struct('ap', [], 'corr', [], 'name', [], 'mjd', [], 'mbas', [], 'nrobs', []);
 kbas=0;
 
 %% for all sessions
@@ -173,6 +180,12 @@ for ip = 1:nSes
         antenna=ant_files{ip};
     else
         load(strcat(path,'DATA/LEVEL3/',subdir,'/',num2str(sname),'_antenna'));
+    end
+
+    if resFilesGiven==1
+        res_=res_files{ip};
+    else
+        load(strcat(path,'DATA/LEVEL3/',subdir,'/res_',num2str(sname)));
     end
     
     if isempty([x_.coorx.col]) || isempty([x_.coory.col]) || isempty([x_.coorz.col])
@@ -255,8 +268,13 @@ for ip = 1:nSes
                 else
                     md=sqrt( (stat.mx(ib))^2+(stat.mx(j))^2 ); % meters
                 end
+
+                bsl12 = find(res.baselineOfObs(:,1) == ib & res.baselineOfObs(:,2) == j);
+                bsl21 = find(res.baselineOfObs(:,1) == j & res.baselineOfObs(:,2) == ib);
+                nrobs = length(bsl12)+length(bsl21); % no.obs at the baseline
+                
                 if out2file==1
-                    fprintf(fid,'%s %s %s - %s %15.4f %15.4f %7.4f\n',num2str(sname),num2str(mjd),stat1(1:8),stat2(1:8),ap,corr,md);
+                    fprintf(fid,'%s %s %s - %s %15.4f %15.4f %7.4f %6.0f\n',num2str(sname),num2str(mjd),stat1(1:8),stat2(1:8),ap,corr,md,nrobs);
                 end
 
                 % output to variable
@@ -280,6 +298,7 @@ for ip = 1:nSes
                     bas(toBasInd).corr(toBasFieldsInd)=corr;
                     bas(toBasInd).mjd(toBasFieldsInd)=mjd;
                     bas(toBasInd).mbas(toBasFieldsInd)=md;
+                    bas(toBasInd).nrobs(toBasFieldsInd)=nrobs;
                 end
             end
         end
