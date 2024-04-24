@@ -136,6 +136,8 @@ atpaFilesGiven=0;
 atpaFiles=[];
 optFilesGiven=0;
 optFiles=[];
+resFilesGiven=0;
+resFiles=[];
 if nargin>9
     if ~isempty(varargin{10})
         if ~isempty(varargin{10}{1})
@@ -154,6 +156,10 @@ if nargin>9
             optFiles=varargin{10}{4};
             optFilesGiven=1;
         end
+        if ~isempty(varargin{10}{5})
+            resFiles=varargin{10}{5};
+            resFilesGiven=1;
+        end
     end        
 end
 
@@ -165,7 +171,7 @@ end
 
 %% Get baselines
 bas=bas_out(process_list,subf,basOutFname,...
-    x_files,antFiles,atpaFiles,optFiles,rigFormErr);
+    x_files,antFiles,atpaFiles,optFiles,resFiles,rigFormErr);
 
 if isempty([bas.ap])
     varargout{1}=nan;
@@ -190,7 +196,8 @@ bl=ones(length(bas),1)*NaN;
 mjd=bl;
 blr=bl;
 wblr=bl; %weighted RMS
-nobs= bl;
+nobs= bl; % nr of sessions!
+nrOfObs = bl;
 
 bl_all=ones(length(bas),99)*NaN; % full out matrix -> row=baseline, col=one "break-timespan"
 blr_all=bl_all;
@@ -351,6 +358,8 @@ for k=1:length(bas)
         nobs(k,1)= NaN;
     end    
     
+    nrOfObs(k,1) = sum(bas(k).nrobs); % observations of the baseline
+
 end
 
 % delete not needed cols (due to preallocation)
@@ -381,15 +390,16 @@ if ~isempty(outfile)
         '# col2 (cols 19-28)  mean epoch (mjd)\n',...
         '# col3 (cols 30-42)  mean baseline length in meters\n',...
 		'# col4 (cols 44-49)  baseline length repeatability in cm\n',...
-        '# col5 (cols 51-56)  weighted baseline length repeatability in cm\n#\n',...
-        '# col6 (cols 58-62)  number of sessions\n#\n'],...
+        '# col5 (cols 51-56)  weighted baseline length repeatability in cm\n',...
+        '# col6 (cols 58-62)  number of sessions\n',...
+        '# col6 (cols 64-74)  number of observations\n#\n'],...
         curClock(3:-1:1), curClock(4:6), limitation,...
         sum(~isnan(blr) & blr~=0));
     
     for iB=1:length(bas)
         if ~isnan(blr(iB)) && blr(iB)~=0 % if there was more than one estimate
-            fprintf(fid, '%-17s %10.4f %13.4f %6.2f %6.2f %5.0f\n',...
-                bas(iB).name, mjd(iB), bl(iB), blr(iB)*100, wblr(iB)*100, nobs(iB));
+            fprintf(fid, '%-17s %10.4f %13.4f %6.2f %6.2f %5.0f  %10.0f\n',...
+                bas(iB).name, mjd(iB), bl(iB), blr(iB)*100, wblr(iB)*100, nobs(iB), nrOfObs(iB));
         end
     end    
     fclose(fid);    

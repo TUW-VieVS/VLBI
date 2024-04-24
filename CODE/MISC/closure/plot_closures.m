@@ -3,9 +3,16 @@
 % process_list=['2020/20OCT29PI [vgosDB]'
 %               '2020/20OCT29VE [vgosDB]'];
 % typ = 1; % 1 - baseline delay, 2 - geocentric delay
+%
+% src = 'all sources'
+% src = '1036+054'
+% tria = 'all stations'
+% tria = 'MACGO12M ONSA13NE WESTFORD', % only 1 blank space between the names
+%
 
+function plot_closures(process_list,typ,src,tria)
+process_list=char(process_list);
 
-function plot_closures(process_list,typ)
 close all
 
 pth = '../OUT/CLOSURES/';
@@ -22,10 +29,13 @@ time = [];
 for i = 1:size(process_list,1)
 %     fid = fopen(fullfile(closures_XA(i).folder, closures_XA(i).name));
 
+    session_pl = process_list(i,:);
+    session_name  = session_pl(1 : (strfind(session_pl, ' [vgosDB]')-1));
+
     if typ == 1
-        fid = fopen([pth 'VALUES/closures_B_' process_list(i,6:14) '.txt']);
+        fid = fopen([pth 'VALUES/closures_B_' session_name(6:end) '.txt']);
     else
-        fid = fopen([pth 'VALUES/closures_G_' process_list(i,6:14) '.txt']);
+        fid = fopen([pth 'VALUES/closures_G_' session_name(6:end) '.txt']);
     end
     C = textscan(fid,'%s %s %s %s %f %f %f %f %f %f %s','CommentStyle','%');
     fclose(fid);
@@ -60,28 +70,32 @@ for i = 1:size(process_list,1)
     all_triangles = unique(triangles);
 
     %% plot closure delays
-    tria=['all stations'];
+
     
-    src = 'all sources';
-    bool = logical(1:length(mjd)); % all sources
-    
-    
-    
-    % src = sources{1}; % pick a source and plot all closure delays
-    % src = '0749+540'
-    % src = '1300+580'
-    % src = '1851+488'
-    % bool = strcmp(src, sources);
 
 
-    % tria = ['ONSA13SW RAEGYEB WETTZ13S'];
- %    tria = ['ONSA13NE RAEGYEB WETTZ13S'];
-  %   tria = ['ISHIOKA ONSA13SW WETTZ13S'];
-     
-     
-   %  bool = strcmp(tria, triangles);
+    if strcmp(tria,'all stations') & strcmp(src,'all sources')
+        bool = logical(1:length(mjd)); % all sources and triangles
+
+    elseif strcmp(tria,'all stations') & ~strcmp(src,'all sources')  
+        % src = sources{1}; % pick a source and plot all closure delays
+        % src = '0749+540'
+        % src = '1300+580'
+        % src = '1851+488'
     
-    % bool = strcmp(src, sources) & strcmp(tria, triangles); % specific source and specific triangle
+        bool = strcmp(src, sources);
+    elseif ~strcmp(tria,'all stations') & strcmp(src,'all sources')
+    
+        % tria = ['ONSA13SW RAEGYEB WETTZ13S'];
+        % tria = ['ONSA13NE RAEGYEB WETTZ13S'];
+        % tria = ['KOKEE12M MACGO12M ONSA13NE'];
+              
+        bool = strcmp(tria, triangles);
+        
+    elseif ~strcmp(tria,'all stations') & ~strcmp(src,'all sources')
+        bool = strcmp(src, sources) & strcmp(tria, triangles); % specific source and specific triangle
+    end
+
 
     time_bool=time(bool);
     mjd_bool=mjd(bool);

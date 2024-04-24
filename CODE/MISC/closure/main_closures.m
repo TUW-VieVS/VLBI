@@ -10,6 +10,7 @@
 
 function main_closures(process_list,typ)
 
+process_list=char(process_list);
 
 format compact;
 % clc, clear, close all;
@@ -27,7 +28,6 @@ format compact;
 
 
 % % sessions from process list
-% pth = '../../../../DATA/vgosDB/';
 pth = '../DATA/vgosDB/';
 pthOUT = '../OUT/CLOSURES/';
 % process_list=['2020/20OCT29PI [vgosDB]'
@@ -35,10 +35,15 @@ pthOUT = '../OUT/CLOSURES/';
 % typ = 1; % 1 - baseline delay, 2 - geocentric delay
 
 
+
 %% uncompress files vgosDB *.tar.gz or *.tgz file
 for i = 1:size(process_list,1)
+%     curNcFolder = [pth ,process_list(i,1:14),'/'];
     
-    curNcFolder = [pth ,process_list(i,1:14),'/'];
+    session_pl = process_list(i,:);
+    session_name  = session_pl(1 : (strfind(session_pl, ' [vgosDB]')-1));
+
+    curNcFolder = [pth ,session_name '/'];
 
     % uncompress vgosDB *.tar.gz or *.tgz file
     wasCompressed = false;
@@ -60,13 +65,13 @@ for i = 1:size(process_list,1)
         end       
     end
 
-    PATH_in = [pth process_list(i,1:14)];   
+    PATH_in = [pth session_name];   
     fprintf('Read: %s \n',PATH_in);    
     scans = getScanList(PATH_in, typ);
 
     fprintf('Find closures: %s \n',PATH_in);
-    scans2closures(pthOUT, process_list(i,6:14), scans, typ);
-    
+%     scans2closures(pthOUT, process_list(i,6:14), scans, typ);
+    scans2closures(pthOUT,session_name(6:end), scans, typ);
     if wasCompressed
         rmdir(PATH_in, 's')
     end
