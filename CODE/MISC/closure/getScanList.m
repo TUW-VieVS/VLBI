@@ -37,10 +37,12 @@ for i = 1:size(staid2station_,1)
     staid2station{end+1} = staid2station_(i,:);
 end
 
-nc_filename = get_nc_filename('DelayTheoretical', wrapper_data.Observation.ObsTheoretical.files, 1);
-delayTheoretical=out_struct.ObsTheoretical.(nc_filename).DelayTheoretical.val; 
+
 
 if typ==1 % baseline delay
+    if ~isfield(wrapper_data.Observation, 'ObsEdit')
+        fprintf('\nDo not use baseline delay, ObsEdit is not available\n')
+    end
     tau_file = get_nc_filename({ observation , '_', freqband }, wrapper_data.Observation.ObsEdit.files, 1);
     groupDelayFull = out_struct.ObsEdit.(tau_file).GroupDelayFull.val;
 else % typ ==2, geocentric delay
@@ -56,9 +58,27 @@ rate_file = get_nc_filename({'GroupRate', '_', freqband}, wrapper_data.Observati
 groupRate = out_struct.Observables.(rate_file).GroupRate.val;
 sigmaGroupRate = out_struct.Observables.(rate_file).GroupRateSig.val; % sec/sec
 
-nc_filename = get_nc_filename({'Edit'}, wrapper_data.Observation.ObsEdit.files, 0);
-if ~isempty(nc_filename) % not match found in wrapper data
-    delayFlag = out_struct.ObsEdit.(nc_filename).DelayFlag.val;
+if typ==1 % baseline delay
+    if isfield(wrapper_data.Observation, 'ObsTheoretical')
+        nc_filename = get_nc_filename('DelayTheoretical', wrapper_data.Observation.ObsTheoretical.files, 1);
+        delayTheoretical=out_struct.ObsTheoretical.(nc_filename).DelayTheoretical.val; 
+    else
+        fprintf('Do not use baseline delays! Theoretical delays are not available!\n')
+        delayTheoretical = zeros(length(groupDelayFull),1);
+    end
+else
+    delayTheoretical = zeros(length(groupDelayFull),1);
+end
+
+
+if isfield(wrapper_data.Observation, 'ObsEdit')
+    nc_filename = get_nc_filename({'Edit'}, wrapper_data.Observation.ObsEdit.files, 0);
+    if ~isempty(nc_filename) % not match found in wrapper data
+       delayFlag = out_struct.ObsEdit.(nc_filename).DelayFlag.val;  
+    end
+else % Edit file with flags is missing, set all obs. to good
+    delayFlag = int16(zeros(length(groupDelayFull),1));
+    fprintf('ObsEdit file from pre-processing is missing in the vgosDB!!! Delay Flags set to zero = all obs are assume to be good!!!\n')
 end
 
 
