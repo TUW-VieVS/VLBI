@@ -356,7 +356,10 @@ if parameter.outlier.flag_remove_outlier
             
             % Check, if only one scan was found!
             % - If more than one scan was found by matching the scan reference times, the stations have to be considered in addition
-            flag_found_scan = true; 
+            flag_found_scan = true;
+            if sum(curScanLog) == 0
+                flag_found_scan = false;
+            end
             if sum(curScanLog) > 1 % More than one scan found?
                 curScanLog_ids = find(curScanLog);
                 flag_found_scan = false;

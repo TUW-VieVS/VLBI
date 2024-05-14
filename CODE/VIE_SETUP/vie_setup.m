@@ -208,6 +208,7 @@ handles.allMainUiPanels=allMainUiPanels;
 % get directories' content
 dirsInOptFolder=dir('../../VLBI_OPT/');
 dirsInOutlierFolder=dir('../DATA/OUTLIER/');
+dirsInAmbFolder=dir('../DATA/AMB/');
 dirsInTrpFolder=dir('../TRP/OUTPUT_DATA/');
 dirsInIonFolder=dir('../ION/FILES/');
 dirsInAtmFolder=dir('../NTSL/NTAL/');
@@ -280,6 +281,7 @@ end
 dirsInOptFolder(strcmp({dirsInOptFolder.name}, '.')|strcmp({dirsInOptFolder.name}, '..')|strcmp({dirsInOptFolder.name}, '.git')|~[dirsInOptFolder.isdir])=[];
 yrsToDelete=~cellfun(@isnan, cellfun(@str2double, {dirsInOutlierFolder.name}, 'UniformOutput', false));
 dirsInOutlierFolder(strcmp({dirsInOutlierFolder.name}, '.')|strcmp({dirsInOutlierFolder.name}, '..')|~[dirsInOutlierFolder.isdir]|yrsToDelete)=[];
+dirsInAmbFolder(strcmp({dirsInAmbFolder.name}, '.')|strcmp({dirsInAmbFolder.name}, '..')|~[dirsInAmbFolder.isdir])=[];
 dirsInTrpFolder(strcmp({dirsInTrpFolder.name}, '.')|strcmp({dirsInTrpFolder.name}, '..')|~[dirsInTrpFolder.isdir])=[];
 dirsInIonFolder(strcmp({dirsInIonFolder.name}, '.')|strcmp({dirsInIonFolder.name}, '..')|~[dirsInIonFolder.isdir])=[];
 dirsInAtmFolder(strcmp({dirsInAtmFolder.name}, '.')|strcmp({dirsInAtmFolder.name}, '..')|strcmp({dirsInAtmFolder.name}, 'temp')|~[dirsInAtmFolder.isdir])=[];
@@ -312,6 +314,12 @@ if isempty({dirsInOutlierFolder.name})
 else
     set(handles.popupmenu_setInput_outDir, 'string', {'', dirsInOutlierFolder.name});
 end
+
+% if isempty({dirsInAmbFolder.name})
+%     set(handles.popupmenu_setInput_ambDir, 'string', ' ');
+% else
+%     set(handles.popupmenu_setInput_ambDir, 'string', {'', dirsInOutlierFolder.name});
+% end
 
 if isempty(dirsInIonFolder)
     set(handles.popupmenu_parameters_iono_ext, 'String', ' ')
@@ -10078,6 +10086,37 @@ else
     delete(allLineHandles);
 end
 
+function togglebutton_plot_residuals_selectAmbiguities_Callback(hObject, eventdata, handles)
+% only for baseline-wise residuals that should be working - so check if
+% that's chosen
+if get(handles.radiobutton_plot_residuals_perBasel, 'Value')
+    % button was selected
+    if get(hObject, 'Value')
+    % 	set(handles.radiobutton_unit_plot, 'Enable', 'Off')
+    %     set(handles.radiobutton_unit_UTC, 'Enable', 'Off')
+    %     set(handles.radiobutton_unit_MJD, 'Enable', 'Off')
+    
+        set(handles.axes_plot_residuals,        'ButtonDownFcn', {@startSelectingOutliers,handles})
+        set(handles.figure_vievs2,              'WindowButtonUpFcn', {@endSelectingOutliers, handles})
+        set(handles.pushbutton_plot_residuals_writeAmbiguities, 'Enable', 'On')
+        
+    
+    else
+        set(handles.axes_plot_residuals,                'ButtonDownFcn', '')
+        set(handles.figure_vievs2,              'WindowButtonUpFcn', '')
+        set(handles.pushbutton_plot_residuals_writeAmbiguities, 'Enable', 'Off')
+        set(handles.pushbutton_plot_residuals_writeAmbiguities, 'String', 'Write out')
+    
+        % remove all black object (box and crosses)
+        allLineHandles=findobj(handles.axes_plot_residuals,'Type','line', 'color', 'k');
+        delete(allLineHandles);
+        allLineHandles=findobj(handles.axes_plot_residuals,'Type','line', ...
+            'color', [0 0 0.04]);
+        delete(allLineHandles);
+    end
+else
+    msgbox('Selecting ambiguities is only working for baseline-wise residuals', 'Warning', 'warn');
+end
 
 % --- Executes when selected object is changed in uipanel27.
 function uipanel27_SelectionChangeFcn(hObject, eventdata, handles)
