@@ -392,23 +392,23 @@ fprintf('\n')
 
 
 %% TESTING AMB!
-% parameter.amb.amb_file_dir = 'PU';
-% parameter.amb.flag_change_amb = true; %false
-% 
-% % Ambiguity file
-% amb_filename_path = ['../DATA/AMB/', parameter.amb.amb_file_dir, '/', parameter.filepath(end-4:end-1), '/', [parameter.session_name '_' parameter.vie_init.vgosDb_observation_parameter(end) ], '.AMB'];
-% if parameter.amb.flag_change_amb
-%     if exist(amb_filename_path, 'file')
-%         [parameter.amb.obs2change] = readAMB(amb_filename_path);
-%         fprintf('%d baselines with ambiguities will be changed\n',size(parameter.amb.obs2change,2)); 
-%         scan = changeAMB(scan, antenna, sources, parameter);
-%     else
-%         fprintf('Ambiguity list not available: %s\n', amb_filename_path);
-%     end
-% else
-%     fprintf('Ambiguities will not be changed\n');
-% end
-% fprintf('\n')
+parameter.amb.amb_file_dir = 'PU';
+parameter.amb.flag_change_amb = false; %true
+
+% Ambiguity file
+amb_filename_path = ['../DATA/AMB/', parameter.amb.amb_file_dir, '/', parameter.filepath(end-4:end-1), '/', [parameter.session_name '_' parameter.vie_init.vgosDb_observation_parameter(end) ], '.AMB'];
+if parameter.amb.flag_change_amb
+    if exist(amb_filename_path, 'file')
+        [parameter.amb.obs2change] = readAMB(amb_filename_path);
+        fprintf('%d baselines with ambiguities will be changed\n',size(parameter.amb.obs2change,2)); 
+        scan = changeAMB(scan, antenna, sources, parameter);
+    else
+        fprintf('Ambiguity list not available: %s\n', amb_filename_path);
+    end
+else
+    fprintf('Ambiguities will not be changed\n');
+end
+fprintf('\n')
 
 %%
 

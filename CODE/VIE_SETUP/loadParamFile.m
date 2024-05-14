@@ -189,10 +189,14 @@ set(handles.edit_parameter_obsRestr_cutOff, 'String', parameter.obs_restrictions
 set(handles.edit_parameter_obsRestr_qualityCode, 'String', parameter.obs_restrictions.Qlim)
 
 % set suppression flags
-% set(handles.edit_parameter_obsRestr_suppression_flags, 'Value', parameter.obs_restrictions.quality_flags)
+if isfield(parameter.obs_restrictions,'quality_flags')
+    set(handles.edit_parameter_obsRestr_suppression_flags, 'Value', parameter.obs_restrictions.quality_flags)
+end
 
 % set fringe-fitting quality codes
-% set(handles.edit_parameter_obsRestr_qualityCode, 'Value', parameter.obs_restrictions.qualityCode)
+if isfield(parameter.obs_restrictions,'qualityCode')
+    set(handles.edit_parameter_obsRestr_qualityCode, 'Value', parameter.obs_restrictions.qualityCode)
+end
 
 % set tropodelay model
 try

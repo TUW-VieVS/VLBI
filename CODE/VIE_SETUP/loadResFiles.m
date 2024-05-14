@@ -58,6 +58,8 @@ set(handles.pushbutton_plot_residuals_clockBreak, 'Enable', 'off')
 set(handles.togglebutton_plot_residuals_selectOutliers, 'Enable', 'off')
 set(handles.pushbutton_plot_residuals_removeOutliers, 'Enable', 'off')
 set(handles.togglebutton_plot_residuals_selectData, 'Enable', 'off')
+set(handles.togglebutton_plot_residuals_selectAmbiguities, 'Enable', 'off')
+set(handles.pushbutton_plot_residuals_writeAmbiguities, 'Enable', 'off')
 % set(handles.togglebutton_plot_residuals_SelectedData_output, 'Enable', 'off')
 
 % set(handles.radiobutton_unit_plot, 'Enable', 'Off')
@@ -88,6 +90,7 @@ if ~isempty(allResFiles)
     set(handles.pushbutton_plot_residuals_clockBreak, 'Enable', 'On')
     set(handles.togglebutton_plot_residuals_selectOutliers, 'Enable', 'On')
     set(handles.togglebutton_plot_residuals_selectData, 'Enable', 'On')
+    set(handles.togglebutton_plot_residuals_selectAmbiguities, 'Enable', 'On')
     
     % create short names for popupmenu
     resNamesShort=strrep({allResFiles.name}, 'res_', '');

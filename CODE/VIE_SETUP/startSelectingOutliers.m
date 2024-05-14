@@ -73,17 +73,23 @@ allLineHandles=findobj(handles.axes_plot_residuals,'Type','line', 'color', [0 0 
 delete(allLineHandles);
 
 hold(handles.axes_plot_residuals, 'on');
+if ~get(handles.togglebutton_plot_residuals_selectAmbiguities,'Value')
 handles.data.plot.outlierMarksHandle=plot(handles.axes_plot_residuals,...
     [plottedX(abs(distances)==min(abs(distances))) plottedX(abs(distances)==min(abs(distances)))],...
     [plottedY(abs(distances)==min(abs(distances))) -plottedY(abs(distances)==min(abs(distances)))], 'x',...
     'color', [0 0 0.04], 'markersize', 10, 'LineWidth', 3, 'DisplayName', 'outlier');
+else
+    handles.data.plot.outlierMarksHandle=plot(handles.axes_plot_residuals,...
+    plottedX(abs(distances)==min(abs(distances))),plottedY(abs(distances)==min(abs(distances))), '+',...
+    'color', [0 0 0.04], 'markersize', 10, 'LineWidth', 3, 'DisplayName', 'ambiguitiy');
+end
 for i = 2:length(handles.data.plot.outlierMarksHandle)
     set(get(get(handles.data.plot.outlierMarksHandle(i),'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
 end
 
 hold(handles.axes_plot_residuals, 'off');
 
-if get(handles.togglebutton_plot_residuals_selectOutliers,'Value')
+if get(handles.togglebutton_plot_residuals_selectOutliers,'Value') || get(handles.togglebutton_plot_residuals_selectAmbiguities,'Value')
 	
     % write number of outliers to button where they can be removed
 %     set(handles.pushbutton_plot_residuals_removeOutliers, 'String', ...

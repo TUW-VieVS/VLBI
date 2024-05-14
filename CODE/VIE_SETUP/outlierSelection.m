@@ -150,14 +150,20 @@ handles.data.plot.lineHandle=line(...
         'color', 'k', 'DisplayName', 'selection');
 set(get(get(handles.data.plot.lineHandle,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
 
-handles.data.plot.lineHandle=line(...
-    [x(1), x(2), x(2), x(1), x(1)], [-y(2), -y(2), -y(1), -y(1), -y(2)],...
+if ~get(handles.togglebutton_plot_residuals_selectAmbiguities,'Value')
+    handles.data.plot.lineHandle=line(...
+        [x(1), x(2), x(2), x(1), x(1)], [-y(2), -y(2), -y(1), -y(1), -y(2)],...
         'color', 'k', 'DisplayName', 'selection');
- set(get(get(handles.data.plot.lineHandle,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+    set(get(get(handles.data.plot.lineHandle,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+end
 
 
 % Check Y-Values:
-valsWithinValues = (curVals<=y(2) &  curVals>=y(1)) | (curVals<=-y(1) &  curVals>=-y(2));
+if ~get(handles.togglebutton_plot_residuals_selectAmbiguities,'Value')
+    valsWithinValues = (curVals<=y(2) &  curVals>=y(1)) | (curVals<=-y(1) &  curVals>=-y(2));
+else
+    valsWithinValues = (curVals<=y(2) &  curVals>=y(1));
+end
 % Check X-Values:
 temp=DurationHours(valsWithinValues)<=x(2) & DurationHours(valsWithinValues)>=x(1);
 
@@ -166,12 +172,18 @@ valsWithinValues(valsWithinValues==1)=temp;
 indToPlot=find(valsWithinValues);
 hold(handles.axes_plot_residuals, 'on');
 
-if get(handles.togglebutton_plot_residuals_selectOutliers,'Value')
+if get(handles.togglebutton_plot_residuals_selectOutliers,'Value') || get(handles.togglebutton_plot_residuals_selectAmbiguities,'Value')
     % write number of outliers to button where they can be removed
     set(handles.pushbutton_plot_residuals_removeOutliers, 'String','Remove')
     % plotting
-	handles.data.plot.outlierMarksHandle=plot(handles.axes_plot_residuals, [DurationHours(indToPlot) DurationHours(indToPlot)], ...
-        [curVals(indToPlot) -curVals(indToPlot)], 'x', 'color', 'k', 'markersize', 10, 'DisplayName', 'outlier','LineWidth',3);
+    if ~get(handles.togglebutton_plot_residuals_selectAmbiguities,'Value')
+	    handles.data.plot.outlierMarksHandle=plot(handles.axes_plot_residuals, [DurationHours(indToPlot) DurationHours(indToPlot)], ...
+            [curVals(indToPlot) -curVals(indToPlot)], 'x', 'color', 'k', 'markersize', 10, 'DisplayName', 'outlier','LineWidth',3);
+    else
+        	handles.data.plot.outlierMarksHandle=plot(handles.axes_plot_residuals, [DurationHours(indToPlot) DurationHours(indToPlot)], ...
+                curVals(indToPlot), '+', 'color', 'k', 'markersize', 10, 'DisplayName', 'ambiguity','LineWidth',3);
+    end
+
 	for i = 2:length(handles.data.plot.outlierMarksHandle)
         set(get(get(handles.data.plot.outlierMarksHandle(i),'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
 	end
