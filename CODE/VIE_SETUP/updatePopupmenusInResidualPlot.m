@@ -42,7 +42,7 @@ if ~isempty(allSessionsInMenu)
     baselines=getAllStringCombinations(res.allStatNames);
     set(handles.popupmenu_plot_residuals_baseline, 'Value', 1)
     set(handles.popupmenu_plot_residuals_baseline, 'String', ...
-        strcat(baselines(:,1), repmat('-', length(baselines),1), baselines(:,2)))
+        [strcat(baselines(:,1), repmat('-', length(baselines),1), baselines(:,2));"[all Baselines]"])
     set(handles.popupmenu_plot_residuals_baseline, 'Enable', 'off')
     % (c) sources
     % Create list of all sources

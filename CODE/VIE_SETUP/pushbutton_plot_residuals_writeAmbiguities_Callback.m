@@ -115,30 +115,35 @@ else
             end
             
        % ##### get the values just plotted (station, baseline, all-wise) #####
+       % currently only plotting per baseline allows ambig selection
             % ### per station ###
-            if get(handles.radiobutton_plot_residuals_perStat, 'Value')
-                curValues=sum(handles.data.plot.res(chosenSessionInd).baselineOfObs==get(handles.popupmenu_plot_residuals_station, 'Value'),2);
-                
-            % ### per baseline ###
-            elseif get(handles.radiobutton_plot_residuals_perBasel, 'Value')
+%             if get(handles.radiobutton_plot_residuals_perStat, 'Value')
+%                 curValues=sum(handles.data.plot.res(chosenSessionInd).baselineOfObs==get(handles.popupmenu_plot_residuals_station, 'Value'),2);
+%                 
+%             % ### per baseline ###
+%             elseif get(handles.radiobutton_plot_residuals_perBasel, 'Value')
                 allBaselines=get(handles.popupmenu_plot_residuals_baseline, 'String');
-                stat1=allBaselines{get(handles.popupmenu_plot_residuals_baseline,'Value')}(1:8);
-                stat2=allBaselines{get(handles.popupmenu_plot_residuals_baseline,'Value')}(10:17);
-                statNr1=~cellfun(@isempty, strfind(handles.data.plot.res(chosenSessionInd).allStatNames, stat1));
-                statNr2=~cellfun(@isempty, strfind(handles.data.plot.res(chosenSessionInd).allStatNames, stat2));
-                valsLogicalsOfFirstStat=handles.data.plot.res(chosenSessionInd).baselineOfObs==find(statNr1);
-                valsLogicalsOfSecondStat=handles.data.plot.res(chosenSessionInd).baselineOfObs==find(statNr2);
-                curValues=sum(valsLogicalsOfFirstStat+valsLogicalsOfSecondStat,2)==2;
-                
-            % ### per source ###
-            elseif get(handles.radiobutton_plot_residuals_perSource, 'Value')
-                curSource=get(handles.popupmenu_plot_residuals_source, 'Value');
-                curValues=handles.data.plot.res(chosenSessionInd).source==curSource;
-            
-            % ### all are plotted ###
-            else
-                curValues=ones(size(handles.data.plot.res(chosenSessionInd).mjd,1),1);
-            end
+                curBaseline=allBaselines{get(handles.popupmenu_plot_residuals_baseline, 'Value')};
+                if curBaseline == "[all Baselines]"
+                    curValues=ones(size(handles.data.plot.res(chosenSessionInd).mjd,1),1);
+                else
+                    stat1=allBaselines{get(handles.popupmenu_plot_residuals_baseline,'Value')}(1:8);
+                    stat2=allBaselines{get(handles.popupmenu_plot_residuals_baseline,'Value')}(10:17);
+                    statNr1=~cellfun(@isempty, strfind(handles.data.plot.res(chosenSessionInd).allStatNames, stat1));
+                    statNr2=~cellfun(@isempty, strfind(handles.data.plot.res(chosenSessionInd).allStatNames, stat2));
+                    valsLogicalsOfFirstStat=handles.data.plot.res(chosenSessionInd).baselineOfObs==find(statNr1);
+                    valsLogicalsOfSecondStat=handles.data.plot.res(chosenSessionInd).baselineOfObs==find(statNr2);
+                    curValues=sum(valsLogicalsOfFirstStat+valsLogicalsOfSecondStat,2)==2;
+                end
+%             % ### per source ###
+%             elseif get(handles.radiobutton_plot_residuals_perSource, 'Value')
+%                 curSource=get(handles.popupmenu_plot_residuals_source, 'Value');
+%                 curValues=handles.data.plot.res(chosenSessionInd).source==curSource;
+%             
+%             % ### all are plotted ###
+%             else
+%                 curValues=ones(size(handles.data.plot.res(chosenSessionInd).mjd,1),1);
+%             end
                 
 %% ############# GET AMBS ##############
             
