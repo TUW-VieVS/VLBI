@@ -248,35 +248,59 @@ elseif get(handles.radiobutton_plot_residuals_perBasel, 'Value')
     allBaselinesInMenu=get(handles.popupmenu_plot_residuals_baseline, 'String');
     curBaseline=allBaselinesInMenu{get(handles.popupmenu_plot_residuals_baseline, 'Value')};
     plotName = curBaseline;
-    
-    % get values of chosen baseline
-    obsWithCurSelection=sum(~cellfun(@isempty, strfind(baselines, curBaseline(1:8))),2) & ...
-        sum(~cellfun(@isempty, strfind(baselines, curBaseline(10:17))),2);
-    valsOfCurSelection=val(logical(obsWithCurSelection));
-    sigsOfCurSelection=val_sigma_cm(logical(obsWithCurSelection));
-    horAxis = DurationHours(logical(obsWithCurSelection));
-    
-    % see if this station has outliers
-    allOutliersLog=zeros(length(val),1);
-    allOutliersLog(outlier)=1;
-    
-    if sum(allOutliersLog & obsWithCurSelection) > 0
-        plotOutliers=1;
+    if curBaseline == "[all Baselines]"
+        valsOfCurSelection=val;
+        sigsOfCurSelection=val_sigma_cm;
+        horAxis = DurationHours;
         
-        % get station names of baseline (which is equal for all
-        % observationsin baseline-wise plots!)
-        baselinesForOutlier=...
-            repmat([{curBaseline(1:8)}, {curBaseline(10:17)}], length(outlier), 1);
+        % see if there are outliers
+        allOutliersLog=zeros(length(val),1);
+        allOutliersLog(outlier)=1;
         
-        % preallocate
-        indOutliersOfCurSelection=zeros(sum(allOutliersLog & obsWithCurSelection),1);
+        % get all (no real selection as in station/source/baseline wise)
+        if sum(allOutliersLog) > 0
+            plotOutliers=1; % Flag
+            outlierIndIWantToFind=1:length(outlier);
+            indOutliersOfCurSelection=outlier;
+            
+            % preallocate
+            baselinesForOutlier=cell(length(outlier), 1);
+            
+            for k=1:length(outlier)
+                baselinesForOutlier(k,1)=baselines(outlier(k),1);
+                baselinesForOutlier(k,2)=baselines(outlier(k),2);
+            end
+        end
+    else  
+        % get values of chosen baseline
+        obsWithCurSelection=sum(~cellfun(@isempty, strfind(baselines, curBaseline(1:8))),2) & ...
+            sum(~cellfun(@isempty, strfind(baselines, curBaseline(10:17))),2);
+        valsOfCurSelection=val(logical(obsWithCurSelection));
+        sigsOfCurSelection=val_sigma_cm(logical(obsWithCurSelection));
+        horAxis = DurationHours(logical(obsWithCurSelection));
         
-        % get index (in outlier) of outlier I want to find (ie all which include curStat)
-        outlierIndIWantToFind=find(ismember(outlier, find(allOutliersLog & obsWithCurSelection)));
+        % see if this station has outliers
+        allOutliersLog=zeros(length(val),1);
+        allOutliersLog(outlier)=1;
         
-        % find them
-        for k=1:sum(allOutliersLog & obsWithCurSelection)
-            indOutliersOfCurSelection(k)=sum(obsWithCurSelection(1:outlier(outlierIndIWantToFind(k))));
+        if sum(allOutliersLog & obsWithCurSelection) > 0
+            plotOutliers=1;
+            
+            % get station names of baseline (which is equal for all
+            % observationsin baseline-wise plots!)
+            baselinesForOutlier=...
+                repmat([{curBaseline(1:8)}, {curBaseline(10:17)}], length(outlier), 1);
+            
+            % preallocate
+            indOutliersOfCurSelection=zeros(sum(allOutliersLog & obsWithCurSelection),1);
+            
+            % get index (in outlier) of outlier I want to find (ie all which include curStat)
+            outlierIndIWantToFind=find(ismember(outlier, find(allOutliersLog & obsWithCurSelection)));
+            
+            % find them
+            for k=1:sum(allOutliersLog & obsWithCurSelection)
+                indOutliersOfCurSelection(k)=sum(obsWithCurSelection(1:outlier(outlierIndIWantToFind(k))));
+            end
         end
     end
     

@@ -130,14 +130,19 @@ else
             % ### per baseline ###
             elseif get(handles.radiobutton_plot_residuals_perBasel, 'Value')
                 allBaselines=get(handles.popupmenu_plot_residuals_baseline, 'String');
-                stat1=allBaselines{get(handles.popupmenu_plot_residuals_baseline,'Value')}(1:8);
-                stat2=allBaselines{get(handles.popupmenu_plot_residuals_baseline,'Value')}(10:17);
-                statNr1=~cellfun(@isempty, strfind(handles.data.plot.res(chosenSessionInd).allStatNames, stat1));
-                statNr2=~cellfun(@isempty, strfind(handles.data.plot.res(chosenSessionInd).allStatNames, stat2));
-                valsLogicalsOfFirstStat=handles.data.plot.res(chosenSessionInd).baselineOfObs==find(statNr1);
-                valsLogicalsOfSecondStat=handles.data.plot.res(chosenSessionInd).baselineOfObs==find(statNr2);
-                curValues=sum(valsLogicalsOfFirstStat+valsLogicalsOfSecondStat,2)==2;
-                
+                curBaseline=allBaselines{get(handles.popupmenu_plot_residuals_baseline, 'Value')};
+                if curBaseline == "[all Baselines]"
+                    curValues=ones(size(handles.data.plot.res(chosenSessionInd).mjd,1),1);
+                else
+                    allBaselines=get(handles.popupmenu_plot_residuals_baseline, 'String');
+                    stat1=allBaselines{get(handles.popupmenu_plot_residuals_baseline,'Value')}(1:8);
+                    stat2=allBaselines{get(handles.popupmenu_plot_residuals_baseline,'Value')}(10:17);
+                    statNr1=~cellfun(@isempty, strfind(handles.data.plot.res(chosenSessionInd).allStatNames, stat1));
+                    statNr2=~cellfun(@isempty, strfind(handles.data.plot.res(chosenSessionInd).allStatNames, stat2));
+                    valsLogicalsOfFirstStat=handles.data.plot.res(chosenSessionInd).baselineOfObs==find(statNr1);
+                    valsLogicalsOfSecondStat=handles.data.plot.res(chosenSessionInd).baselineOfObs==find(statNr2);
+                    curValues=sum(valsLogicalsOfFirstStat+valsLogicalsOfSecondStat,2)==2;
+                end
             % ### per source ###
             elseif get(handles.radiobutton_plot_residuals_perSource, 'Value')
                 curSource=get(handles.popupmenu_plot_residuals_source, 'Value');

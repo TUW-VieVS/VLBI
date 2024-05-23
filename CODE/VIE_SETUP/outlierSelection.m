@@ -87,11 +87,15 @@ if get(handles.radiobutton_plot_residuals_perStat, 'Value')
 elseif get(handles.radiobutton_plot_residuals_perBasel, 'Value')
     allBaselinesInMenu=get(handles.popupmenu_plot_residuals_baseline, 'String');
     curBaseline=allBaselinesInMenu{get(handles.popupmenu_plot_residuals_baseline, 'Value')}; % chosen (in popupmenu) baseline
+    if curBaseline == "[all Baselines]"
+        obsWithCurSelection=ones(size(handles.data.plot.res(curSession).mjd,1),1);
+    else
     baselineNames=handles.data.plot.res(curSession).allStatNames(handles.data.plot.res(curSession).baselineOfObs); % baseline names for all observations
     obsWithCurSelection=sum(~cellfun(@isempty, strfind(...
         baselineNames, curBaseline(1:8))),2) & ...
         sum(~cellfun(@isempty, strfind(...
         baselineNames, curBaseline(10:17))),2);
+    end
     
 % #### Per Source ####
 elseif get(handles.radiobutton_plot_residuals_perSource, 'Value') % sourcewise residuals
