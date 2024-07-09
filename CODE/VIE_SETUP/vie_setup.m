@@ -1149,22 +1149,8 @@ if ~exist(wantedOPTfile, 'file')
     writeNewOptFile(wantedOPTfile);
 end
     
-% open OPT file
-if ispc
-    matlabVersion = ver('MATLAB');
-    if str2double(matlabVersion.Version)<=8
-        dos(['start wordpad ',wantedOPTfile]);
-    else
-        % does not work for 7.11 (R2010b):
-        winopen(wantedOPTfile) % Open with default editor which is set for *.opt files
-    end
-elseif isunix
-    % system(['xterm -e ''vi ',wantedOPTfile '''']);
-    system(['gedit ',wantedOPTfile]); % Open gedit
-else % 
-    warning('Operating system unknown: not able to open OPT file in text editor.');
-end
-       
+% open OPT file (in MATLAB Editor)
+edit(wantedOPTfile);
 
 function openOutlierFile(src,eventdata,hObject,handles)
 % This function opens the outlier file of the currently selected session
@@ -1206,32 +1192,12 @@ else
     wantedOutlierFile=['../DATA/OUTLIER/', selOutDir,'/', sess_name_str, '.OUT'];
 end
 
-if exist(wantedOutlierFile, 'file')
-    % open 
-    % open(wantedOutlierFile) % Open with MATLAB Editor
-    winopen(wantedOutlierFile) % Open with default editor which is set for *.OUT files
-else
-    msgbox('No outlier file exists yet', 'No outlier file found', 'help')
-end
 
 if exist(wantedOutlierFile, 'file')
-    % open Outlier file
-    if ispc
-        matlabVersion = ver('MATLAB');
-        if str2double(matlabVersion.Version)<=8
-            dos(['start wordpad ',wantedOPTfile]);
-        else
-            % does not work for 7.11 (R2010b):
-            winopen(wantedOutlierFile) % Open with default editor which is set for *.OUT files
-        end
-    elseif isunix
-        % system(['xterm -e ''vi ',wantedOutlierFile '''']);
-        system(['gedit ',wantedOutlierFile]); % Open gedit
-    else % 
-        warning('Operating system unknown: not able to open Outlier file in text editor.');
-    end
+    % open Outlier file (in MATLAB Editor)
+    edit(wantedOutlierFile);
 else
-    msgbox('Outlier file does not exists yet', 'No outlier file found', 'help')
+    msgbox('Outlier file does not exist yet', 'No outlier file found', 'help')
 end
 
 % --- Executes on button press in checkbox_setInput_useOptFiles.
