@@ -1,17 +1,13 @@
 *
 !*.m
 !.gitignore
-!ATM
-!CATALOGS
 !CODE
 !CRF
 !DATA
 !DOC
 !EOP
 !EPHEM
-!HYDLO
 !ION
-!NTOL
 !NTSL
 !ORBIT
 !OUT
