@@ -806,7 +806,7 @@ if ~isempty(process_list)
             if flag_release_r2013b_or_later == 0
                 matlabpool close
             elseif flag_release_r2013b_or_later == 1
-%                 delete(poolobj)
+                delete(poolobj)
             end
             if ~verLessThan('Matlab','9.2')
                 if isvalid(h)
