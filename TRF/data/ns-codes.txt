@@ -149,6 +149,7 @@
 * 200228 dbb Add 13.2-m at Metsahovi as Mf METSA13M with DOMES and CDP numbers.
 * 201021 dbb Add DSS26.
 * 210309 dbb Add DSS56.
+* 240925 URUMQI13 added
 *
 * Fields:
 * 1. IVS 2-letter code. Not case sensitive, although the initial 
@@ -374,6 +375,7 @@
  Uc UCHINOUR 21710S001 7349 34-m at Uchinoura Space Observatory, Japan
  Ud USUDA64  21729S001 7246 64-m at Usuda, Japan
  Ur URUMQI   21612S001 7330 Urumqi, China
+ Um URUMQI13 21612S002 ---- Urumqi, China, VGOS
  Us USSURISK 12342S001 7247 Ussurijsk, Russia
  Uu -------- --------- ---- Ulan-Ude, Russia
  Uz -------- --------- ---- Tracking antenna, Usuda, Japan
