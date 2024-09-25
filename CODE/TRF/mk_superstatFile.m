@@ -465,7 +465,6 @@ for k=1:nFiles % 6 ocean loading files (last is optional - user own
                return;
             end
 
-
 			while ~feof(fid)
 				line=[fgetl(fid), '        '];
 				if strcmpi(line,  '        ')
@@ -508,7 +507,7 @@ for k=1:nFiles % 6 ocean loading files (last is optional - user own
 						ns_codes(iStat).ocean_loading.(ol_fieldnames{k})(5,:)=str2num(line);
 
 						line = [fgetl(fid),'                                                                                                          '];
-						ns_codes(iStat).ocean_loading.(ol_fieldnames{k})(6,:)=str2num(line);
+                        ns_codes(iStat).ocean_loading.(ol_fieldnames{k})(6,:)=str2num(line);
 					else
 						fprintf('%s (ocean_loading_%s.TXT) not found in ns_codes ('' '' -> ''_'' checked)\n', line(3:10), ol_fieldnames{k});
 					end   
