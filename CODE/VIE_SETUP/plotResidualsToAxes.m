@@ -26,6 +26,9 @@
 
 function handles = plotResidualsToAxes(handles)
 
+constants
+global c
+
 % ##### Options #####
 % Set plotstyle for residual values; 1 = lines, 2 = lines + markers, 3 = scatterplot
 plotstyle = 2;
@@ -99,7 +102,7 @@ mec = [repmat([0 0 0],13,1)
 if get(handles.radiobutton_plot_residuals_firstSolution, 'Value')
     val=handles.data.plot.res(curSession).firstVal;
     if ~isempty(handles.data.plot.res(curSession).sigma_residuals_aposteriori)
-        val_sigma_cm = handles.data.plot.res(curSession).sigma_from_fringe_fitting'*physconst('LightSpeed')*1e2;
+        val_sigma_cm = handles.data.plot.res(curSession).sigma_from_fringe_fitting'*c*1e2; % s -> cm
     else
         fprintf('sigma of observation does not exist for this session, re-run the current session to store sigmas for plotting\n')
         val_sigma_cm = zeros(length(val),1);
