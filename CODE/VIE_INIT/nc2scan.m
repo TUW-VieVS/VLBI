@@ -29,6 +29,7 @@
 %   2019-07-25, D. Landskron: zwet parameter added to scan structure
 %   2022-02-02, L. Kern: check if ObsEdit folder is empty or does not exist; GroupDelay_*.nc is used; Ambiguity correction is disabled
 %   2022-11-28, L. Kern: check for Solve/AtmSetup, else throw error (has not been analysed by AC) 
+%   2024-11-21, P. Urban: added ionospheric correction directly calculated in VieVS
 
 % ************************************************************************
 function scan=nc2scan(out_struct, nc_info, fband, ioncorr, ambcorr, wrapper_data, parameter)
@@ -253,11 +254,19 @@ groupDelayWAmbigCell = num2cell(out_struct.(tau_folder).(tau_file).(tau_field).v
 groupDelaySigCell = num2cell(out_struct.(sigma_tau_folder).(sigma_tau_file).(sigma_tau_field).val);
 
 %% IONOSPHERIC DELAY, SIGMA IONOSPHERIC DELAY and DELAY FLAG IONOSPHERIC DELAY::
+
+% required for state of vievs_iono
+handles = guidata(gcbf);  
+checkState = handles.checkboxState;  
+checkViono = get(handles.VieVSiono, 'Value');
+ionoDelaynotuse = 0;
+
 ionoDelayInternalFlag = 1;
 if strcmp(parameter.vie_init.iono, 'observation_database')
     if isempty(tau_ion_folder)
         ionoDelayInternalFlag = 0;
         fprintf('With this setting ionospheric delay will not be used\n')
+        ionoDelaynotuse = 1;
     else
         if isfield(out_struct.(tau_ion_folder),tau_ion_file)            
             ionoDelCell = num2cell(1e9*out_struct.(tau_ion_folder).(tau_ion_file).(tau_ion_field).val(1,:)); % cell: 1 x nObs            
@@ -277,7 +286,9 @@ if strcmp(parameter.vie_init.iono, 'observation_database')
             if isfield(out_struct.(tau_ion_folder).(tau_ion_file), 'Cal_SlantPathIonoGroupDataFlag') % if iono flag is given
                 ionoDelFlagcell = num2cell(double(out_struct.(tau_ion_folder).(tau_ion_file).Cal_SlantPathIonoGroupDataFlag.val));
                 if length(ionoDelFlagcell) == 1
-                    fprintf(' - Same ionospheric delay flag (= %1.0f) used for all scans!\n', ionoDelFlagcell{1})
+                    if checkViono == 0 && checkState == 1 %only show if vievs_iono is not used
+                        fprintf(' - Same ionospheric delay flag (= %1.0f) used for all scans!\n', ionoDelFlagcell{1})
+                    end
                 end
             else
                 ionoDelFlagcell = num2cell(zeros(1,length(groupDelayWAmbigCell)));
@@ -291,6 +302,22 @@ if strcmp(parameter.vie_init.iono, 'observation_database')
 else % Take ionosphere corrections from external (ion) file:
     ionoDelayInternalFlag = 0;
     fprintf('Ionospheric delay corrections will be taken from external source.\n')
+end
+
+% calculate the ionospheric correction directly in VieVS with vievs_iono
+if checkState == 1 && checkViono == 1 
+    [iono_x_corr_own, sigma_iono_x_corr_own, qflag_ion_own] = vievs_iono(out_struct,wrapper_data);
+    if length(iono_x_corr_own) > 1
+        ionoDelCell = num2cell(iono_x_corr_own.*10^9);
+        ionoDelSigCell = num2cell(sigma_iono_x_corr_own.*10^9);
+        ionoDelFlagcell = num2cell(qflag_ion_own);
+    elseif ionoDelaynotuse == 0
+        fprintf('\t Iono corr: from vgosdb, ngs, vda \n')
+    end
+end
+
+if checkState == 1 && checkViono == 0 && ionoDelaynotuse == 0
+    fprintf('\t Iono corr: from vgosdb, ngs, vda \n')
 end
 
 % in case of a zero ionoshperic delay (all ionospheric parameters will be
