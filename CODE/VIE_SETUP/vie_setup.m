@@ -22,7 +22,7 @@ function varargout = vie_setup(varargin)
 
 % Edit the above text to modify the response to help vie_setup
 
-% Last Modified by GUIDE v2.5 30-Jun-2017 14:44:55
+% Last Modified by GUIDE v2.5 21-Nov-2024 13:45:06
 
 
 % 07 Jan 2014 by Matthias Madzak: LEVEL2 bug corrected
@@ -126,6 +126,7 @@ function varargout = vie_setup(varargin)
 % 15 Jan 2020 by M. Mikschi: added gravitational deformation checkbox
 % 27 Oct 2021 by H. Wolf: removed VIE_SCHED module
 % 12 Dec 2021 by H. Wolf: added satellite position estimation panel + all needed functions 
+% 21 Nov 2024 by P. Urban: added all functions for ionospheric correction directly calculated in VieVS
 %
 %*************************************************************************
 
@@ -544,6 +545,26 @@ try
 catch
     handles.text_version.String = 'no git';
 end
+
+% Set the initial state of the buttons
+set(handles.database12, 'Value', 1); % Select database12 by default
+set(handles.VieVSiono, 'Value', 0);  % Ensure VieVSiono is unchecked
+set(handles.database12, 'TooltipString', 'data from: vgosdb, ngs, vda');
+set(handles.VieVSiono, 'TooltipString', 'directly calculated in VieVS');
+    
+% Check if ionosphere correction is on/off at the start
+handles.checkboxState = get(handles.checkbox_ionosphere_corrected, 'Value');
+if handles.checkboxState == 0
+    set(handles.database12, 'Enable', 'off');
+    set(handles.VieVSiono, 'Enable', 'off');
+else
+    set(handles.database12, 'Enable', 'on');
+    set(handles.VieVSiono, 'Enable', 'on');
+end
+
+set(handles.radiobutton_estimation_leastSquares_pwlClock, 'Value', 0);
+set(handles.radiobutton_estimation_leastSquares_pwlAndRateClock, 'Value', 0);
+set(handles.radiobutton_estimation_leastSquares_pwlRateAndQuClock, 'Value', 1);
 
 % Choose default command line output for vie_setup
 handles.output = hObject;
@@ -2602,7 +2623,7 @@ function popupMenu_refFrameSatellitePosition_Callback(hObject, eventdata, handle
 % handles    structure with handles and user data (see GUIDATA)
 auto_save_parameterfile(hObject, handles)
 
-    
+
 % --- Executes on button press in checkbox_estimation_leastSquares_clocks.
 function checkbox_estimation_leastSquares_clocks_Callback(hObject, eventdata, handles)
 % hObject    handle to checkbox_estimation_leastSquares_clocks (see GCBO)
@@ -2638,6 +2659,7 @@ end
 
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
+
 
 % --- Executes on button press in checkbox_estimation_leastSquares_clocksBasDepOffset.
 function checkbox_estimation_leastSquares_clocksBasDepOffset_Callback(hObject, eventdata, handles)
@@ -10968,3 +10990,383 @@ web 'https://vievswiki.geo.tuwien.ac.at/'
 function pushbutton_vie_sim_browseStatistics_Callback(hObject,eventdata,handles)
     [file,path] = uigetfile('*.csv','Browse for VieSched++ statistics.csv file');
     handles.edit_vie_sim_statistics_csv.String = [path file];
+
+
+% --- Executes during object creation, after setting all properties.
+function popupMenu_refFrameSatellitePosition_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupMenu_refFrameSatellitePosition (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton_rerunVieLSM.
+function pushbutton_rerunVieLSM_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_rerunVieLSM (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+
+function edit_estimation_leastSquares_clockBasDepO_minNobs_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_estimation_leastSquares_clockBasDepO_minNobs (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_estimation_leastSquares_clockBasDepO_minNobs as text
+%        str2double(get(hObject,'String')) returns contents of edit_estimation_leastSquares_clockBasDepO_minNobs as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_estimation_leastSquares_clockBasDepO_minNobs_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_estimation_leastSquares_clockBasDepO_minNobs (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_estimation_leastSquares_sources_abs_constr.
+function checkbox_estimation_leastSquares_sources_abs_constr_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_estimation_leastSquares_sources_abs_constr (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_sources_abs_constr
+
+
+
+function edit_estimation_leastSquares_sources_obs_per_source_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_estimation_leastSquares_sources_obs_per_source (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_estimation_leastSquares_sources_obs_per_source as text
+%        str2double(get(hObject,'String')) returns contents of edit_estimation_leastSquares_sources_obs_per_source as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_estimation_leastSquares_sources_obs_per_source_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_estimation_leastSquares_sources_obs_per_source (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_estimation_leastSquares_sources_obs_per_source.
+function checkbox_estimation_leastSquares_sources_obs_per_source_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_estimation_leastSquares_sources_obs_per_source (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_sources_obs_per_source
+
+
+% --- Executes on button press in pushbutton_cite.
+function pushbutton_cite_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_cite (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton_wiki.
+function pushbutton_wiki_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_wiki (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton_github.
+function pushbutton_github_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_github (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in checkbox_plot_eopOut_write_ivs_eop_format_incloutliers.
+function checkbox_plot_eopOut_write_ivs_eop_format_incloutliers_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_eopOut_write_ivs_eop_format_incloutliers (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_ivs_eop_format_incloutliers
+
+
+
+function edit_vie_sim_statistics_csv_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_vie_sim_statistics_csv (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_vie_sim_statistics_csv as text
+%        str2double(get(hObject,'String')) returns contents of edit_vie_sim_statistics_csv as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_vie_sim_statistics_csv_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_vie_sim_statistics_csv (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_folder1_sources_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_folder1_sources (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_folder3_sources_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_folder3_sources (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_folder2_sources_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_folder2_sources (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton_plot_residuals_writeAmbiguities.
+function pushbutton_plot_residuals_writeAmbiguities_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_plot_residuals_writeAmbiguities (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton_plot_residuals_removeOutliers.
+function pushbutton_plot_residuals_removeOutliers_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_plot_residuals_removeOutliers (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in checkbox_parameters_eop_interp_lin48h.
+function checkbox_parameters_eop_interp_lin48h_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_eop_interp_lin48h (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_eop_interp_lin48h
+
+
+% --- Executes on selection change in popupmenu_parameters_eop_aPriori_C04.
+function popupmenu_parameters_eop_aPriori_C04_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_eop_aPriori_C04 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_parameters_eop_aPriori_C04 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_parameters_eop_aPriori_C04
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_parameters_eop_aPriori_C04_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_eop_aPriori_C04 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit_vgosdb_observation_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_vgosdb_observation (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_vgosdb_observation as text
+%        str2double(get(hObject,'String')) returns contents of edit_vgosdb_observation as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_vgosdb_observation_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_vgosdb_observation (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit_vgosdb_wrapper_institute_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_vgosdb_wrapper_institute (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_vgosdb_wrapper_institute as text
+%        str2double(get(hObject,'String')) returns contents of edit_vgosdb_wrapper_institute as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_vgosdb_wrapper_institute_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_vgosdb_wrapper_institute (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_ambiguity_correction.
+function checkbox_ambiguity_correction_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_ambiguity_correction (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_ambiguity_correction
+
+
+% --- Executes on button press in database12.
+function database12_Callback(hObject, eventdata, handles)
+% hObject    handle to database12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of database12
+set(handles.database12, 'Value', 1);
+set(handles.VieVSiono, 'Value', 0);
+
+guidata(hObject, handles);  % Update handles structure
+
+
+% --- Executes on button press in VieVSiono.
+function VieVSiono_Callback(hObject, eventdata, handles)
+% hObject    handle to VieVSiono (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of VieVSiono
+set(handles.VieVSiono, 'Value', 1);
+set(handles.database12, 'Value', 0);
+
+guidata(hObject, handles);  % Update handles structure
+    
+
+% --- Executes on button press in checkbox_ionosphere_corrected.
+function checkbox_ionosphere_corrected_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_ionosphere_corrected (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_ionosphere_corrected
+handles.checkboxState = get(hObject, 'Value');
+
+if handles.checkboxState == 0
+    set(handles.database12, 'Value', 1);
+    set(handles.VieVSiono, 'Value', 0);
+    set(handles.VieVSiono, 'Enable', 'off')
+    set(handles.database12, 'Enable', 'off')
+else
+    set(handles.VieVSiono, 'Enable', 'on')
+    set(handles.database12, 'Enable', 'on')
+end
+
+guidata(hObject, handles);  % Update der handles-Struktur
+
+
+function edit_wrapper_version_number_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_wrapper_version_number (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_wrapper_version_number as text
+%        str2double(get(hObject,'String')) returns contents of edit_wrapper_version_number as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_wrapper_version_number_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_wrapper_version_number (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in radiobutton_estimation_leastSquares_pwlClock.
+function radiobutton_estimation_leastSquares_pwlClock_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton_estimation_leastSquares_pwlClock (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_estimation_leastSquares_pwlClock
+
+guidata(hObject, handles);  % Update handles structure
+
+
+% --- Executes on button press in radiobutton_estimation_leastSquares_pwlAndRateClock.
+function radiobutton_estimation_leastSquares_pwlAndRateClock_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton_estimation_leastSquares_pwlAndRateClock (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_estimation_leastSquares_pwlAndRateClock
+
+guidata(hObject, handles);  % Update handles structure
+
+
+% --- Executes on button press in radiobutton_estimation_leastSquares_pwlRateAndQuClock.
+function radiobutton_estimation_leastSquares_pwlRateAndQuClock_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton_estimation_leastSquares_pwlRateAndQuClock (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_estimation_leastSquares_pwlRateAndQuClock
+
+guidata(hObject, handles);  % Update handles structure
