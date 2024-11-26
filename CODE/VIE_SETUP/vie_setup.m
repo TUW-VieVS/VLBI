@@ -22,7 +22,7 @@ function varargout = vie_setup(varargin)
 
 % Edit the above text to modify the response to help vie_setup
 
-% Last Modified by GUIDE v2.5 30-Jun-2017 14:44:55
+% Last Modified by GUIDE v2.5 26-Nov-2024 10:16:51
 
 
 % 07 Jan 2014 by Matthias Madzak: LEVEL2 bug corrected
@@ -8663,7 +8663,7 @@ else
 end
 
 set(handles.popupmenu_vie_glob_trfCrf_trf_sessionWiseRedStat, 'Enable', newState);
-set(handles.text278, 'Enable', newState);
+%set(handles.text278, 'Enable', newState);
 
 % --- Executes on button press in checkbox_vie_glob_trfCrf_trf_keepConstVel.
 function checkbox_vie_glob_trfCrf_trf_keepConstVel_Callback(hObject, eventdata, handles)
@@ -8680,7 +8680,7 @@ else
 end
 
 set(handles.popupmenu_vie_glob_trfCrf_trf_keepConstVel, 'Enable', newState);
-set(handles.text281, 'Enable', newState);
+%set(handles.text281, 'Enable', newState);
 
 
 % --- Executes on button press in checkbox_vie_glob_trfCrf_trf_useVelTies.
@@ -8698,7 +8698,7 @@ else
 end
 
 set(handles.popupmenu_vie_glob_trfCrf_trf_velTies, 'Enable', newState);
-set(handles.text280, 'Enable', newState);
+%set(handles.text280, 'Enable', newState);
 
 
 % --- Executes on selection change in popupmenu_vie_glob_trfCrf_trf_sessionWiseRedStat.
@@ -8780,12 +8780,12 @@ function checkbox_vie_glob_trfCrf_crf_nnrTransInDecl_Callback(hObject, eventdata
 if get(hObject, 'value')
     set(handles.checkbox_vie_glob_trfCrf_crf_onlyNnrOnSources, 'Value', 0)
     set(handles.popupmenu_vie_glob_trfCrf_crf_sourcesForNnr, 'Enable', 'on');
-    set(handles.text283, 'Enable', 'on');
+   % set(handles.text283, 'Enable', 'on');
 else
     % if also 2nd checkbox is unticked -> make popupmenu disabled
     if get(handles.checkbox_vie_glob_trfCrf_crf_onlyNnrOnSources, 'Value')==0
         set(handles.popupmenu_vie_glob_trfCrf_crf_sourcesForNnr, 'Enable', 'off');
-        set(handles.text283, 'Enable', 'off');
+    %    set(handles.text283, 'Enable', 'off');
     end
 end
 
@@ -8801,12 +8801,12 @@ function checkbox_vie_glob_trfCrf_crf_onlyNnrOnSources_Callback(hObject, eventda
 if get(hObject, 'value')
     set(handles.checkbox_vie_glob_trfCrf_crf_nnrTransInDecl, 'Value', 0)
     set(handles.popupmenu_vie_glob_trfCrf_crf_sourcesForNnr, 'Enable', 'on');
-    set(handles.text283, 'Enable', 'on');
+%    set(handles.text283, 'Enable', 'on');
 else
     % if also 2nd checkbox is unticked -> make popupmenu disabled
     if get(handles.checkbox_vie_glob_trfCrf_crf_nnrTransInDecl, 'Value')==0
         set(handles.popupmenu_vie_glob_trfCrf_crf_sourcesForNnr, 'Enable', 'off');
-        set(handles.text283, 'Enable', 'off');
+ %       set(handles.text283, 'Enable', 'off');
     end
 end
 
@@ -8825,7 +8825,7 @@ else
 end
 
 set(handles.popupmenu_vie_glob_trfCrf_crf_fixedSources, 'Enable', newState);
-set(handles.text284, 'Enable', newState);
+%set(handles.text284, 'Enable', newState);
 
 
 % --- Executes on button press in checkbox_vie_glob_trfCrf_crf_sessionWiseReduceSources.
@@ -8843,7 +8843,7 @@ else
 end
 
 set(handles.popupmenu_vie_glob_trfCrf_crf_sessionWiseRedSources, 'Enable', newState);
-set(handles.text285, 'Enable', newState);
+%set(handles.text285, 'Enable', newState);
 
 
 % --- Executes on selection change in popupmenu_vie_glob_trfCrf_crf_sourcesForNnr.
@@ -8946,26 +8946,26 @@ if strcmp(get(hObject, 'Tag'), 'radiobuttonedit_glob_param_estSrcCoords')
     if get(handles.checkbox_vie_glob_trfCrf_crf_nnrTransInDecl, 'Value')+...
             get(handles.checkbox_vie_glob_trfCrf_crf_onlyNnrOnSources, 'Value')==0
         set(handles.popupmenu_vie_glob_trfCrf_crf_sourcesForNnr, 'Enable', 'off')
-        set(handles.text283, 'Enable', 'off')
+     %   set(handles.text283, 'Enable', 'off')
     else
         set(handles.popupmenu_vie_glob_trfCrf_crf_sourcesForNnr, 'Enable', 'on')
-        set(handles.text283, 'Enable', 'on')
+      %  set(handles.text283, 'Enable', 'on')
     end
     
     if get(handles.checkbox_vie_glob_trfCrf_crf_fixSomeSources, 'value')
         set(handles.popupmenu_vie_glob_trfCrf_crf_fixedSources, 'Enable', 'on')
-        set(handles.text284, 'Enable', 'on')
+      %  set(handles.text284, 'Enable', 'on')
     else
         set(handles.popupmenu_vie_glob_trfCrf_crf_fixedSources, 'Enable', 'off')
-        set(handles.text284, 'Enable', 'off')
+      %  set(handles.text284, 'Enable', 'off')
     end
     
     if get(handles.checkbox_vie_glob_trfCrf_crf_sessionWiseReduceSources, 'Value')
         set(handles.popupmenu_vie_glob_trfCrf_crf_sessionWiseRedSources, 'Enable', 'on')
-        set(handles.text285, 'Enable', 'on')
+      %  set(handles.text285, 'Enable', 'on')
     else
         set(handles.popupmenu_vie_glob_trfCrf_crf_sessionWiseRedSources, 'Enable', 'off')
-        set(handles.text285, 'Enable', 'off')
+       % set(handles.text285, 'Enable', 'off')
     end
 else
     set(handles.checkbox_vie_glob_trfCrf_crf_nnrTransInDecl, 'Enable', 'off')
@@ -8975,11 +8975,11 @@ else
     set(handles.checkbox_vie_glob_trfCrf_crf_fixSomeSources, 'Enable', 'off')
     set(handles.checkbox_vie_glob_trfCrf_crf_sessionWiseReduceSources, 'Enable', 'off')
     set(handles.popupmenu_vie_glob_trfCrf_crf_sourcesForNnr, 'Enable', 'off')
-    set(handles.text283, 'Enable', 'off')
-    set(handles.popupmenu_vie_glob_trfCrf_crf_fixedSources, 'Enable', 'off')
-    set(handles.text284, 'Enable', 'off')
-    set(handles.popupmenu_vie_glob_trfCrf_crf_sessionWiseRedSources, 'Enable', 'off')
-    set(handles.text285, 'Enable', 'off')
+%    set(handles.text283, 'Enable', 'off')
+%    set(handles.popupmenu_vie_glob_trfCrf_crf_fixedSources, 'Enable', 'off')
+%    set(handles.text284, 'Enable', 'off')
+%    set(handles.popupmenu_vie_glob_trfCrf_crf_sessionWiseRedSources, 'Enable', 'off')
+%    set(handles.text285, 'Enable', 'off')
 end 
 
 
@@ -10097,23 +10097,23 @@ if strcmp(get(hObject, 'Tag'), 'radiobuttonedit_glob_param_estAntCoords')
     % enable options
     set(handles.radiobutton2_vie_glob_trfCrf_trf_6HelmertParams, 'Enable', 'On')
     set(handles.radiobutton2_vie_glob_trfCrf_trf_7HelmertParams, 'Enable', 'On')
-    set(handles.text275, 'Enable', 'On')
+%    set(handles.text275, 'Enable', 'On')
     set(handles.popupmenu_vie_glob_trfCrf_trf_stations4Nnt, 'Enable', 'On')
     set(handles.checkbox_vie_glob_trfCrf_trf_reduceStats, 'Enable', 'On')
     if get(handles.checkbox_vie_glob_trfCrf_trf_reduceStats, 'Value')
         set(handles.popupmenu_vie_glob_trfCrf_trf_sessionWiseRedStat, 'Enable', 'On')
-        set(handles.text278, 'Enable', 'On')
+ %       set(handles.text278, 'Enable', 'On')
     end
     set(handles.text277, 'Enable', 'On')
     set(handles.checkbox_vie_glob_trfCrf_trf_keepConstVel, 'Enable', 'On')
     if get(handles.checkbox_vie_glob_trfCrf_trf_keepConstVel, 'Value')
         set(handles.popupmenu_vie_glob_trfCrf_trf_keepConstVel, 'Enable', 'on')
-        set(handles.text281, 'Enable', 'on')
+  %      set(handles.text281, 'Enable', 'on')
     end
     set(handles.checkbox_vie_glob_trfCrf_trf_useVelTies, 'Enable', 'On')
     if get(handles.checkbox_vie_glob_trfCrf_trf_useVelTies, 'Value')
         set(handles.popupmenu_vie_glob_trfCrf_trf_velTies, 'Enable', 'On')
-        set(handles.text280, 'Enable', 'On')
+   %     set(handles.text280, 'Enable', 'On')
     end
     set(handles.text299, 'Enable', 'On')
     
@@ -10121,18 +10121,18 @@ if strcmp(get(hObject, 'Tag'), 'radiobuttonedit_glob_param_estAntCoords')
 else % disable the options in the second interface
     set(handles.radiobutton2_vie_glob_trfCrf_trf_6HelmertParams, 'Enable', 'Off')
     set(handles.radiobutton2_vie_glob_trfCrf_trf_7HelmertParams, 'Enable', 'Off')
-    set(handles.text275, 'Enable', 'Off')
+ %   set(handles.text275, 'Enable', 'Off')
     set(handles.popupmenu_vie_glob_trfCrf_trf_stations4Nnt, 'Enable', 'Off')
     set(handles.checkbox_vie_glob_trfCrf_trf_reduceStats, 'Enable', 'Off')
     set(handles.popupmenu_vie_glob_trfCrf_trf_sessionWiseRedStat, 'Enable', 'Off')
-    set(handles.text278, 'Enable', 'Off')
+  %  set(handles.text278, 'Enable', 'Off')
     set(handles.text277, 'Enable', 'Off')
     set(handles.checkbox_vie_glob_trfCrf_trf_keepConstVel, 'Enable', 'Off')
     set(handles.popupmenu_vie_glob_trfCrf_trf_keepConstVel, 'Enable', 'Off')
-    set(handles.text281, 'Enable', 'Off')
+   % set(handles.text281, 'Enable', 'Off')
     set(handles.checkbox_vie_glob_trfCrf_trf_useVelTies, 'Enable', 'Off')
     set(handles.popupmenu_vie_glob_trfCrf_trf_velTies, 'Enable', 'Off')
-    set(handles.text280, 'Enable', 'Off')
+   % set(handles.text280, 'Enable', 'Off')
 end
     
 
@@ -10968,3 +10968,312 @@ web 'https://vievswiki.geo.tuwien.ac.at/'
 function pushbutton_vie_sim_browseStatistics_Callback(hObject,eventdata,handles)
     [file,path] = uigetfile('*.csv','Browse for VieSched++ statistics.csv file');
     handles.edit_vie_sim_statistics_csv.String = [path file];
+
+
+% --- Executes on button press in pushbutton_rerunVieLSM.
+function pushbutton_rerunVieLSM_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_rerunVieLSM (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+
+function edit_estimation_leastSquares_clockBasDepO_minNobs_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_estimation_leastSquares_clockBasDepO_minNobs (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_estimation_leastSquares_clockBasDepO_minNobs as text
+%        str2double(get(hObject,'String')) returns contents of edit_estimation_leastSquares_clockBasDepO_minNobs as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_estimation_leastSquares_clockBasDepO_minNobs_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_estimation_leastSquares_clockBasDepO_minNobs (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_estimation_leastSquares_sources_abs_constr.
+function checkbox_estimation_leastSquares_sources_abs_constr_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_estimation_leastSquares_sources_abs_constr (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_sources_abs_constr
+
+
+
+function edit_estimation_leastSquares_sources_obs_per_source_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_estimation_leastSquares_sources_obs_per_source (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_estimation_leastSquares_sources_obs_per_source as text
+%        str2double(get(hObject,'String')) returns contents of edit_estimation_leastSquares_sources_obs_per_source as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_estimation_leastSquares_sources_obs_per_source_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_estimation_leastSquares_sources_obs_per_source (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_estimation_leastSquares_sources_obs_per_source.
+function checkbox_estimation_leastSquares_sources_obs_per_source_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_estimation_leastSquares_sources_obs_per_source (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_sources_obs_per_source
+
+
+% --- Executes on button press in pushbutton_cite.
+function pushbutton_cite_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_cite (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton_wiki.
+function pushbutton_wiki_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_wiki (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton_github.
+function pushbutton_github_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_github (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes during object creation, after setting all properties.
+function popupMenu_refFrameSatellitePosition_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupMenu_refFrameSatellitePosition (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_parameters_eop_interp_lin48h.
+function checkbox_parameters_eop_interp_lin48h_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_eop_interp_lin48h (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_parameters_eop_interp_lin48h
+
+
+% --- Executes on selection change in popupmenu_parameters_eop_aPriori_C04.
+function popupmenu_parameters_eop_aPriori_C04_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_eop_aPriori_C04 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_parameters_eop_aPriori_C04 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_parameters_eop_aPriori_C04
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_parameters_eop_aPriori_C04_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_eop_aPriori_C04 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit_vgosdb_observation_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_vgosdb_observation (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_vgosdb_observation as text
+%        str2double(get(hObject,'String')) returns contents of edit_vgosdb_observation as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_vgosdb_observation_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_vgosdb_observation (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit_vgosdb_wrapper_institute_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_vgosdb_wrapper_institute (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_vgosdb_wrapper_institute as text
+%        str2double(get(hObject,'String')) returns contents of edit_vgosdb_wrapper_institute as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_vgosdb_wrapper_institute_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_vgosdb_wrapper_institute (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_ambiguity_correction.
+function checkbox_ambiguity_correction_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_ambiguity_correction (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_ambiguity_correction
+
+
+% --- Executes on button press in checkbox_ionosphere_corrected.
+function checkbox_ionosphere_corrected_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_ionosphere_corrected (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_ionosphere_corrected
+
+
+
+function edit_wrapper_version_number_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_wrapper_version_number (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_wrapper_version_number as text
+%        str2double(get(hObject,'String')) returns contents of edit_wrapper_version_number as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_wrapper_version_number_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_wrapper_version_number (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_plot_eopOut_write_ivs_eop_format_incloutliers.
+function checkbox_plot_eopOut_write_ivs_eop_format_incloutliers_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_eopOut_write_ivs_eop_format_incloutliers (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_ivs_eop_format_incloutliers
+
+
+
+function edit_vie_sim_statistics_csv_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_vie_sim_statistics_csv (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_vie_sim_statistics_csv as text
+%        str2double(get(hObject,'String')) returns contents of edit_vie_sim_statistics_csv as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_vie_sim_statistics_csv_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_vie_sim_statistics_csv (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_folder1_sources_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_folder1_sources (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_folder3_sources_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_folder3_sources (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_folder2_sources_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_folder2_sources (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton_plot_residuals_writeAmbiguities.
+function pushbutton_plot_residuals_writeAmbiguities_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_plot_residuals_writeAmbiguities (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton_plot_residuals_removeOutliers.
+function pushbutton_plot_residuals_removeOutliers_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_plot_residuals_removeOutliers (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
