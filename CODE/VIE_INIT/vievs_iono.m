@@ -110,7 +110,11 @@ if check == 0
         else
             vi = ChannelFreq_X; % channel frequency [MHz] 
         end
-        v0 = double(RefFreq_X); % reference frequency [MHz]
+        if length(RefFreq_X) > 5
+            v0 = sum(double(RefFreq_X))/length(RefFreq_X);
+        else
+            v0 = double(RefFreq_X); % reference frequency [MHz]
+        end
 
         wi = ((usb + lsb) .* ri); % weight for sums
 
@@ -164,7 +168,11 @@ if check == 0
         else
             vi = ChannelFreq_S; % channel frequency [MHz] 
         end
-        v0 = double(RefFreq_S); % reference frequency [MHz]
+        if length(RefFreq_S) > 5
+            v0 = sum(double(RefFreq_S))/length(RefFreq_S);
+        else
+            v0 = double(RefFreq_S); % reference frequency [MHz]
+        end
 
         wi = ((usb + lsb) .* ri); % weight for sums
 
