@@ -149,7 +149,11 @@
 * 200228 dbb Add 13.2-m at Metsahovi as Mf METSA13M with DOMES and CDP numbers.
 * 201021 dbb Add DSS26.
 * 210309 dbb Add DSS56.
-* 240925 URUMQI13 added
+* 231127 dbb Add three Chinese 13-m antennas as S6 SESHAN13, T1 TIANMA13, Um URUMQI13.
+*            Add DOMES and CDP numbers for SESHAN13, TIANMA13, URUMQI13.
+* 240624 dbb Add 12-m at Fortaleza, Brazil as Fz FORTZA12.
+* 240701 dbb Add VGOS antenna at Hartebeesthoek as Hv HARTVGS.
+* 240722 dbb Add DOMES and CDP numbers for HARTVGS.
 *
 * Fields:
 * 1. IVS 2-letter code. Not case sensitive, although the initial 
@@ -171,10 +175,10 @@
  15 DSS15    40405S019 1515 34-m HEF at Goldstone, CA, USA
  26 DSS26    --------- ---- 34-m BWG at Goldstone, CA, USA
  34 DSS34    --------- ---- 34-m DSS34 at Tidbinbilla, Australia
- 36 DSS36    50103S027 1536 34-m DSS36 at Tidbinbilla, Australia
+ 36 DSS36    --------- ---- 34-m DSS36 at Tidbinbilla, Australia
  43 DSS43    --------- ---- 34-m Australia
  45 DSS45    50103S010 1545 34-m HEF at Tidbinbilla, Australia
- 56 DSS56    13407S020 1556 34-m BWG at Madrid, Spain (DOMES Nr is only a dummy)
+ 56 DSS56    --------- ---- 34-m BWG at Madrid, Spain
  61 ROBLED32 13407S003 1561 DSS61 Robledo, Spain
  65 DSS65    13407S010 1565 34-m HEF at Madrid, Spain
  6a DSS65A   13407S014 1567 34-m HEF at Madrid, Spain (new location)
@@ -217,6 +221,7 @@
  Fr RAEGFLOR --------- ---- 13-m on Flores, Azores, Portugal
  Fs FORTORDS 40427M002 7241 mobile south Sand City, CA, USA
  Ft FORTLEZA 41602S001 7297 Fortaleza, Brazil
+ Fz FORTZA12 --------- ---- 12-m at Fortaleza, Brazil
  G1 NRAO85_1 40441S005 7248 85-1 NRAO Green Bank, WV, USA
  G3 NRAO85_3 40441S004 7214 85-3 NRAO Green Bank, WV, USA
  Ga VLBA85_3 40441S004 7214 85-3 antenna (different equipment)
@@ -247,7 +252,8 @@
  Hp HOHNBERG 14213M002 7630 Hohenpeissenberg, Germany
  Hr HRAS_085 40442S003 7216 HRAS at Fort Davis, TX, USA
  Hs HAYSTACK 40440S002 7205 Haystack, Westford, MA, USA 
- Ht HART15M  30302S009 7378 15-m antenna at HartRAO, South Africa
+ Ht HART15M  30302S009 7378 15-m antenna at Hartebeesthoek, South Africa
+ Hv HARTVGS  30302S011 7399 13-m VGOS antenna at Hartebeesthoek, South Africa 
  Ir IRBENE   --------- ---- 32-m antenna at Irbene, Ventspils, Latvia
  Is ISHIOKA  21791S001 7369 13-m antenna at Ishioka, Japan
  It ITAPETGA --------- ---- Itapetinga, Brazil
@@ -339,6 +345,7 @@
  Rz -------- --------- ---- Tracking antenna, Robledo, Spain
  S1 SEATTLE1 40457M001 7229 mobile Seattle, WA, USA
  S3 SINTOTU3 21731S003 7346 3-m at Kabato, Hokkaido, Japan 
+ S6 SESHAN13 21620S001 7233 13-m at Shanghai, China
  Sa RAEGSMAR 31912S001 7390 13-m on Santa Maria, Azores, Portugal
  Sb CTVASBAY 40171S001 7626 CTVA 3.6-m at Shirley's Bay, Ontario, Canada
  Sc SC-VLBA  43201S001 7615 VLBA at St. Croix, VI, USA 
@@ -357,6 +364,7 @@
  Sv SVETLOE  12350S001 7380 Svetloe, Russia
  Sw SVERT13V 12350S003 7397 13-m at Svetloe, Russia
  Sy SYOWA    66006S004 7342 Syowa, Antarctica 
+ T1 TIANMA13 21618S002 7235 13-m at Sheshan Songjiang, China
  T3 TSUKU3   21730S008 7360 3.8-m, Tsukuba, Japan
  T6 TIANMA65 21618S001 7379 Tianma 65-m antenna in the Sheshan Songjiang district of Shanghai, China
  Ta TATEYAMA 21740S001 7338 11-m Keystone at Tateyama, Japan
@@ -374,8 +382,8 @@
  Ts TSUKUB32 21730S007 7345 32-m at Tsukuba, Japan
  Uc UCHINOUR 21710S001 7349 34-m at Uchinoura Space Observatory, Japan
  Ud USUDA64  21729S001 7246 64-m at Usuda, Japan
+ Um URUMQI13 21612S002 7238 13-m at Urumqi, China
  Ur URUMQI   21612S001 7330 Urumqi, China
- Um URUMQI13 21612S002 ---- Urumqi, China, VGOS
  Us USSURISK 12342S001 7247 Ussurijsk, Russia
  Uu -------- --------- ---- Ulan-Ude, Russia
  Uz -------- --------- ---- Tracking antenna, Usuda, Japan
