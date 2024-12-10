@@ -11270,10 +11270,11 @@ function pushbutton_plot_residuals_writeAmbiguities_Callback(hObject, eventdata,
 % hObject    handle to pushbutton_plot_residuals_writeAmbiguities (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+    ext_pushbutton_plot_residuals_writeAmbiguities_Callback(hObject, eventdata, handles)
 
 % --- Executes on button press in pushbutton_plot_residuals_removeOutliers.
 function pushbutton_plot_residuals_removeOutliers_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_plot_residuals_removeOutliers (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+    ext_pushbutton_plot_residuals_removeOutliers_Callback(hObject, eventdata, handles)

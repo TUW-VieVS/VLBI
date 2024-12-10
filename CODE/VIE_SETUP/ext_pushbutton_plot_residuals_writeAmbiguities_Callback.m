@@ -19,7 +19,7 @@
 % CHANGES
 %
 
-function pushbutton_plot_residuals_writeAmbiguities_Callback(hObject, eventdata, handles)
+function ext_pushbutton_plot_residuals_writeAmbiguities_Callback(hObject, eventdata, handles)
 
 if size(handles.data.plot.outlierMarksHandle,1)==1
     nSelAmbigs=1;
