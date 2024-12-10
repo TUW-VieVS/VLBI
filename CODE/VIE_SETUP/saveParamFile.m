@@ -701,7 +701,7 @@ else
     parameter.lsmopt.sourceAbsConstrNNR = 1;
 end
 
-parameter.lsmopt.use_min_num_obs_per_est_source = get(handles.checkbox_estimation_leastSquares_sources_obs_per_source, 'Value');
+parameter.lsmopt.use_min_num_obs_per_est_source = get(handles.checkbox_est_lsm_sources_obs_per_source, 'Value');
 if parameter.lsmopt.use_min_num_obs_per_est_source
     parameter.lsmopt.min_num_obs_per_est_source=str2double(get(handles.edit_estimation_leastSquares_sources_obs_per_source, 'String'));
     if isnan(parameter.lsmopt.min_num_obs_per_est_source)

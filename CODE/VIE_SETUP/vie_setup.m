@@ -3944,7 +3944,7 @@ if get(hObject, 'Value')==0 % Checkbox disabled
     set(handles.checkbox_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'off')
 	set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
 	set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
-    set(handles.checkbox_estimation_leastSquares_sources_obs_per_source, 'Enable', 'off')    
+    set(handles.checkbox_est_lsm_sources_obs_per_source, 'Enable', 'off')    
     set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'Enable', 'off')
 
 else % == 1; Checkbox enabled
@@ -3957,8 +3957,8 @@ else % == 1; Checkbox enabled
         set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
     end
 
-    set(handles.checkbox_estimation_leastSquares_sources_obs_per_source, 'Enable', 'on')    
-    if get(handles.checkbox_estimation_leastSquares_sources_obs_per_source, 'Value')
+    set(handles.checkbox_est_lsm_sources_obs_per_source, 'Enable', 'on')    
+    if get(handles.checkbox_est_lsm_sources_obs_per_source, 'Value')
         set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'Enable', 'on')
     else
         set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'Enable', 'off')
@@ -3995,7 +3995,7 @@ end
 auto_save_parameterfile(hObject, handles)
 
 % --- Executes on button press in checkbox_estimation_leastSquares_sources_NNR.
-function checkbox_estimation_leastSquares_sources_obs_per_source_Callb(hObject, eventdata, handles)
+function checkbox_est_lsm_sources_obs_per_source_Callb(hObject, eventdata, handles)
 % hObject    handle to checkbox_estimation_leastSquares_sources_NNR (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -11032,13 +11032,13 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in checkbox_estimation_leastSquares_sources_obs_per_source.
-function checkbox_estimation_leastSquares_sources_obs_per_source_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_estimation_leastSquares_sources_obs_per_source (see GCBO)
+% --- Executes on button press in checkbox_est_lsm_sources_obs_per_source.
+function checkbox_est_lsm_sources_obs_per_source_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_est_lsm_sources_obs_per_source (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_sources_obs_per_source
+% Hint: get(hObject,'Value') returns toggle state of checkbox_est_lsm_sources_obs_per_source
 
 
 % --- Executes on button press in pushbutton_cite.
