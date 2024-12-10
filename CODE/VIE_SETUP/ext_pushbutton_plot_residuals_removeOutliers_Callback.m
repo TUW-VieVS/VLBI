@@ -22,7 +22,7 @@
 %       exist, it is created automatically.
 
 
-function pushbutton_plot_residuals_removeOutliers_Callback(hObject, eventdata, handles)
+function ext_pushbutton_plot_residuals_removeOutliers_Callback(hObject, eventdata, handles)
 
 % % for now - write message box
 % msgbox(sprintf('Not working yet!, But this button should remove %1.0f outliers', ...
