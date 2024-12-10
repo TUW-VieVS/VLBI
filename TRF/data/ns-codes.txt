@@ -154,6 +154,7 @@
 * 240624 dbb Add 12-m at Fortaleza, Brazil as Fz FORTZA12.
 * 240701 dbb Add VGOS antenna at Hartebeesthoek as Hv HARTVGS.
 * 240722 dbb Add DOMES and CDP numbers for HARTVGS.
+* 241210 vie Add DOMES and CDP numbers (from itrf2020-u2023) DSS26, DSS36, DSS56 !!! VIENNA internal update
 *
 * Fields:
 * 1. IVS 2-letter code. Not case sensitive, although the initial 
@@ -173,12 +174,12 @@
  13 DSS13    40405S039 1516 34-m at Goldstone, CA, USA
  14 GOLDMARS 40405S001 1514 70-m DSS14 at Goldstone, CA, USA
  15 DSS15    40405S019 1515 34-m HEF at Goldstone, CA, USA
- 26 DSS26    --------- ---- 34-m BWG at Goldstone, CA, USA
+ 26 DSS26    40405S042 1526 34-m BWG at Goldstone, CA, USA
  34 DSS34    --------- ---- 34-m DSS34 at Tidbinbilla, Australia
- 36 DSS36    --------- ---- 34-m DSS36 at Tidbinbilla, Australia
+ 36 DSS36    50103S027 1536 34-m DSS36 at Tidbinbilla, Australia
  43 DSS43    --------- ---- 34-m Australia
  45 DSS45    50103S010 1545 34-m HEF at Tidbinbilla, Australia
- 56 DSS56    --------- ---- 34-m BWG at Madrid, Spain
+ 56 DSS56    13407S017 1556 34-m BWG at Madrid, Spain
  61 ROBLED32 13407S003 1561 DSS61 Robledo, Spain
  65 DSS65    13407S010 1565 34-m HEF at Madrid, Spain
  6a DSS65A   13407S014 1567 34-m HEF at Madrid, Spain (new location)
