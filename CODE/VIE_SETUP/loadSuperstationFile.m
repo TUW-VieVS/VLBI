@@ -39,20 +39,20 @@ set(handles.text_parameters_refFrames_selected_superstation_file, 'String', file
 
 % define all coordinate frames which exist in superstations file (those
 % should be used for the popupmenu in vievs)
-allCoordinateFrames={'vievsTrf', 'itrf2005', 'itrf2008', 'itrf2014', 'dtrf2014',...
-    'vtrf2008', 'vtrf2014', 'ivsTrf2014b', 'VieTRF13', 'itrf2020', 'dtrf2020', 'userOwnTrf'};
+allCoordinateFrames={'vievsTrf', 'itrf2014', 'dtrf2014', 'vtrf2014', 'ivsTrf2014b', ...
+    'itrf2020', 'dtrf2020', 'itrf2020_u2023', 'userOwnTrf'};
 % update popupmenu
 newPopupmenuEntries=superstatFields(ismember(superstatFields, allCoordinateFrames));
 % set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Value', 1);
 set(handles.popupmenu_parameters_refFrames_superstationTRF, 'String', newPopupmenuEntries);
 
-% make vievsTrf default if available
-logTRFFound=~cellfun(@isempty, strfind(get(handles.popupmenu_parameters_refFrames_superstationTRF, 'String'), 'itrf2014'));
-if sum(logTRFFound)>0
-    set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Value', find(logTRFFound));
-else
-    set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Value', 1);
-end
+% % make vievsTrf default if available
+%logTRFFound=~cellfun(@isempty, strfind(get(handles.popupmenu_parameters_refFrames_superstationTRF, 'String'), 'itrf2014'));
+%if sum(logTRFFound)>0
+%    set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Value', find(logTRFFound));
+%else
+%    set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Value', 1);
+%end
 
 % update ocean/atmo tide popupmenu
 ocLoadFields=fieldnames(superstations(1).ocean_loading);
