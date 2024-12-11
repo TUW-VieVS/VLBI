@@ -22,7 +22,7 @@ function varargout = vie_setup(varargin)
 
 % Edit the above text to modify the response to help vie_setup
 
-% Last Modified by GUIDE v2.5 26-Nov-2024 10:16:51
+% Last Modified by GUIDE v2.5 11-Dec-2024 12:51:04
 
 
 % 07 Jan 2014 by Matthias Madzak: LEVEL2 bug corrected
@@ -251,8 +251,9 @@ if ~isempty(superstatfile)
     handles.data.superstationFile=['../TRF/', dirsInTrfFolder(superstatfile).name];
     set(handles.text_parameters_refFrames_selected_superstation_file, 'String', handles.data.superstationFile);
     
-    % make ITRF2020 default if available
-    logTRFFound=~cellfun(@isempty, strfind(get(handles.popupmenu_parameters_refFrames_superstationTRF, 'String'), 'itrf2020'));
+    % make ITRF2020-u2023 default if available
+    %logTRFFound=~cellfun(@isempty, strfind(get(handles.popupmenu_parameters_refFrames_superstationTRF, 'String'), 'itrf2020_u2023'));
+    logTRFFound=strcmp(get(handles.popupmenu_parameters_refFrames_superstationTRF,'String'), 'itrf2020_u2023');
     if sum(logTRFFound)>0
         set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Value', find(logTRFFound));
     end
@@ -10864,7 +10865,17 @@ auto_save_parameterfile(hObject, handles)
 
 
 
-function rerun_vie_lsm(hObject, eventdata, handles)
+function pushbutton_vie_sim_browseStatistics_Callback(hObject,eventdata,handles)
+    [file,path] = uigetfile('*.csv','Browse for VieSched++ statistics.csv file');
+    handles.edit_vie_sim_statistics_csv.String = [path file];
+
+
+% --- Executes on button press in pushbutton_rerunVieLSM.
+function pushbutton_rerunVieLSM_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_rerunVieLSM (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% function rerun_vie_lsm(hObject, eventdata, handles)
 try
     idx = handles.popupmenu_plot_residuals_session.Value;
 
@@ -10927,55 +10938,6 @@ try
 catch ex
     warning('ERROR while rerunning vie_lsm!\nMessage: %s',ex.message);
 end
-
-
-function reference(hObject, eventdata, handles)
-try
-    web('https://vievswiki.geo.tuwien.ac.at/en/VLBI-Analysis','-browser')
-catch
-    warning('An error occured when opening: https://vievswiki.geo.tuwien.ac.at/en/VLBI-Analysis')
-end
-
-function wiki(hObject, eventdata, handles)
-try
-    web('https://vievswiki.geo.tuwien.ac.at/','-browser')
-catch
-    warning('An error occured when opening: https://vievswiki.geo.tuwien.ac.at/')
-end
-
-function github(hObject, eventdata, handles)
-try
-    web('https://github.com/TUW-VieVS','-browser')
-catch
-    warning('An error occured when opening: https://github.com/TUW-VieVS')
-end
-
-% --------------------------------------------------------------------
-function menu_help_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_help (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% --------------------------------------------------------------------
-function menu_help_vievsWebsite_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_help_vievsWebsite (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-web 'https://vievswiki.geo.tuwien.ac.at/'
-
-
-function pushbutton_vie_sim_browseStatistics_Callback(hObject,eventdata,handles)
-    [file,path] = uigetfile('*.csv','Browse for VieSched++ statistics.csv file');
-    handles.edit_vie_sim_statistics_csv.String = [path file];
-
-
-% --- Executes on button press in pushbutton_rerunVieLSM.
-function pushbutton_rerunVieLSM_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_rerunVieLSM (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
 
 
 function edit_estimation_leastSquares_clockBasDepO_minNobs_Callback(hObject, eventdata, handles)
@@ -11046,6 +11008,28 @@ function pushbutton_cite_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_cite (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+% function reference(hObject, eventdata, handles)
+try
+    web('https://vievswiki.geo.tuwien.ac.at/en/VLBI-Analysis','-browser')
+catch
+    warning('An error occured when opening: https://vievswiki.geo.tuwien.ac.at/en/VLBI-Analysis')
+end
+
+
+% --------------------------------------------------------------------
+function menu_help_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_help (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function menu_help_vievsWebsite_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_help_vievsWebsite (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+web 'https://vievswiki.geo.tuwien.ac.at/'
+
 
 
 % --- Executes on button press in pushbutton_wiki.
@@ -11053,14 +11037,22 @@ function pushbutton_wiki_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_wiki (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+try
+    web('https://vievswiki.geo.tuwien.ac.at/','-browser')
+catch
+    warning('An error occured when opening: https://vievswiki.geo.tuwien.ac.at/')
+end
 
 % --- Executes on button press in pushbutton_github.
 function pushbutton_github_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_github (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+try
+    web('https://github.com/TUW-VieVS','-browser')
+catch
+    warning('An error occured when opening: https://github.com/TUW-VieVS')
+end
 
 % --- Executes during object creation, after setting all properties.
 function popupMenu_refFrameSatellitePosition_CreateFcn(hObject, eventdata, handles)

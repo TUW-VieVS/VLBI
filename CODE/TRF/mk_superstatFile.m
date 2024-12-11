@@ -56,10 +56,13 @@ userOwnTrfFile=inFiles(idiF).name;
 itrf2020File='../TRF/data/ITRF2020-IVS-TRF.SNX'; 
 
 %dtrf2020File=inFiles(idiF).name; idiF=idiF+1;
-dtrf2020File='../TRF/data/DTRF2020P_VLBI.snx'; 
+dtrf2020File='../TRF/data/DTRF2020_VLBI.snx'; %Seitz, M., Bloßfeld, M., Angermann, D., Glomsda, M., Rudenko, S., Zeitlhöfler, J., & Seitz, F. (2023). DTRF2020 (Version v2) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.8369167
 
+itrf2020u2023File='../TRF/data/ITRF2020-u2023-IVS-TRF.SNX';
 
 % Flags, for the availability of TRF files
+flag_trf_itrf2020u2023 = true;
+flag_trf_dtrf2020 = true;
 flag_trf_itrf2020 = true;
 flag_trf_itrf2014 = true;
 flag_trf_dtrf2014 = true;
@@ -93,6 +96,7 @@ atm0=struct('vienna', [], 'gsfc', [], 'vandam', []);
 ns_codes=struct('code', [], 'name', [],'domes', [], 'CDP', [], 'comments', [], ...
     'antenna_info', [], 'ecc', [], ...
     'ocean_loading', [],  ...
+    'itrf2020_u2023', [], ...
     'itrf2020', [], 'dtrf2020', [],  ...  
     'itrf2014', [], 'dtrf2014', [], ...
     'vtrf2014', [], 'ivsTrf2014b', [], 'VieTRF13', [], 'vievsTrf', [], ...
@@ -540,7 +544,7 @@ fprintf('\n2.3 Terrestrial reference frames\n')
 % --------------------------
 %  DTRF2020P_VLBI.snx
 % --------------------------
-fprintf('\n DTRF2020P_VLBI.snx\n\n');
+fprintf('\n DTRF2020_VLBI.snx\n\n');
 if exist(dtrf2020File, 'file')
 	dtrf2020File_name = 'dtrf2020';
 	[ns_codes] = trf_by_snx_reader(ns_codes,dtrf2020File,dtrf2020File_name,break0);
@@ -580,8 +584,91 @@ if exist(dtrf2020File, 'file')
         pause(2);
     end
 else
-    fprintf('ITRF2020-IVS-TRF.snx is not available\n\n');
+    fprintf('DTRF2020_VLBI.snx is not available\n\n');
     flag_trf_itrf2020 = false;
+end
+
+% --------------------------
+% xxx ITRF2020-u2023-IVS-TRF.snx
+% --------------------------
+fprintf('\n ITRF2020-u2023-IVS-TRF.snx\n\n');
+if exist(itrf2020u2023File, 'file')
+	itrf2020u2023File_name = 'itrf2020_u2023';
+	[ns_codes] = trf_by_snx_reader(ns_codes,itrf2020u2023File,itrf2020u2023File_name,break0);
+
+    setStartEndEpoch('itrf2020_u2023');
+
+    % add post-seismic deformation
+    itrf2020u2023psdfile='../TRF/data/ITRF2020-u2023-psd-vlbi.dat';
+    if exist(itrf2020u2023psdfile, 'file')
+    % load file
+        fid=fopen(itrf2020u2023psdfile);
+        if (fid < 0)
+           varargout{1} = ['ERROR: Cannot open the file: ', itrf2020u2023psdfile];
+           return;
+        end
+    
+        curLinePart=0;
+        while ~feof(fid)
+            curl=fgetl(fid); curLinePart=curLinePart+1;
+        
+            if curLinePart==4
+                curLinePart=1;
+            end
+        
+            if curLinePart==1
+                code=str2double(curl(2:5));
+                pt=curl(7:8);
+                domes=curl(10:18);
+                ep=date2mjd([str2double(curl(20:21)) 1 1])+...
+                 str2double(curl(23:25))-1+str2double(curl(27:31))/60/60/24;
+                e=sscanf(curl(35:min([72,length(curl)])), '%f')';
+            elseif curLinePart==2
+                n=sscanf(curl(35:min([72,length(curl)])), '%f')';
+            else % last (UP) line
+                u=sscanf(curl(35:min([72,length(curl)])), '%f')';
+            
+            % find proper station
+                foundStationLog=strcmpi(domes,{ns_codes.domes});
+                if sum(foundStationLog)==0
+                % try to find code
+                    if ~isnan(code) % just to be sure that not '----' or so is compared (and eventually found!!)
+                        foundStationLog=strcmpi(num2str(code),{ns_codes.CDP});
+                    end
+                end
+            
+                % if (at least now) found
+                if sum(foundStationLog)>0
+                    foundStationInd=find(foundStationLog);
+                    for iFoundStat=1:length(foundStationInd)
+                        curFoundStat=foundStationInd(iFoundStat);
+                        psdBreak=1;
+                        if isfield(ns_codes(curFoundStat).itrf2020_u2023, 'psd')
+                            psdBreak=length(ns_codes(curFoundStat).itrf2020_u2023.psd)+1;
+                        end
+                        ns_codes(curFoundStat).itrf2020_u2023.psd(psdBreak).epoch=ep;
+                        ns_codes(curFoundStat).itrf2020_u2023.psd(psdBreak).e=e;
+                        ns_codes(curFoundStat).itrf2020_u2023.psd(psdBreak).n=n;
+                        ns_codes(curFoundStat).itrf2020_u2023.psd(psdBreak).u=u;
+                    
+                    end
+                else
+                    fprintf('Station %s (in ITRF2020-u2023 psd file) not found in ns_codes!\n',...
+                        domes);
+                end
+            end
+        end
+        
+
+        fclose(fid);    
+    else
+        fprintf('Warning: psd file of ITRF2020-u2023 not found\n(%s)\npause 2sek\n',...
+            itrf2020u2023psdfile);
+        pause(2);
+    end
+else
+    fprintf('ITRF2020-u2023-IVS-TRF.snx is not available\n\n');
+    flag_trf_itrf2020u2023 = false;
 end
 
 

@@ -110,7 +110,8 @@ if strcmp(parameter.vie_init.trf{1}(end-3:end), '.mat')
         handles=loadSuperstationFile(hObject, handles, parameter.vie_init.trf{1});
         
         % select chosen trf (field)
-        logVTRF2008Found=~cellfun(@isempty, strfind(get(handles.popupmenu_parameters_refFrames_superstationTRF, 'String'), parameter.vie_init.trf{2}));
+       % logVTRF2008Found=~cellfun(@isempty, strfind(get(handles.popupmenu_parameters_refFrames_superstationTRF, 'String'), parameter.vie_init.trf{2}));
+        logVTRF2008Found=strcmp(get(handles.popupmenu_parameters_refFrames_superstationTRF,'String'), parameter.vie_init.trf{2});
         if sum(logVTRF2008Found)>0
             set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Value', find(logVTRF2008Found));
         end
