@@ -175,6 +175,24 @@ for iStat=1:nStat
         antenna(iStat).vy_sigma=[];
         antenna(iStat).vz_sigma=[];
     end
+
+    if strcmp(trfToTake,'jtrf2020')
+        jtrf_file = ['jtrf2020_defining_station_position_xyz_' antenna(iStat).domes '_' trf(indCurStatInTrf).CDP '_vlbi_data.txt'];
+        data = stat_jtrf2020displ_read(jtrf_file);
+
+        midmjd = (antenna(iStat).firstObsMjd+antenna(iStat).lastObsMjd)/2;
+        data{19} = 51544 + data{11}./86400;
+
+        [dx]=lagint4v(data{19},data{2},midmjd); % m
+        [dy]=lagint4v(data{19},data{3},midmjd); % m
+        [dz]=lagint4v(data{19},data{4},midmjd); % m
+
+
+        antenna(iStat).x = antenna(iStat).x + dx;
+        antenna(iStat).y = antenna(iStat).y + dy;
+        antenna(iStat).z = antenna(iStat).z + dz;
+        
+    end
     
     % numobs
     nc_filename = get_nc_filename('ObsCrossRef', wrapper_data.Observation.CrossReference.files, 1);

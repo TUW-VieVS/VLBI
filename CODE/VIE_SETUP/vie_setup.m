@@ -291,6 +291,9 @@ dirsInNtolFolder(strcmp({dirsInNtolFolder.name}, '.')|strcmp({dirsInNtolFolder.n
 dirsInTrfFolder( strcmp({dirsInTrfFolder.name}, '.') | strcmp({dirsInTrfFolder.name}, '..') | strcmp({dirsInTrfFolder.name}, 'SavedGuiData_superstations.txt') | cellfun(@isempty, strfind({dirsInTrfFolder.name}, '.txt')) )=[]; % Exception for superstation GUI settup savings file ("SavedGuiData_superstations.txt")
 dirsInCrfFolder(strcmp({dirsInCrfFolder.name}, '.')|strcmp({dirsInCrfFolder.name}, '..'))=[];
 dirsInEopFolder(strcmp({dirsInEopFolder.name}, '.')|strcmp({dirsInEopFolder.name}, '..'))=[];
+if isempty(dirsInEopFolder)
+    dirsInEopFolder(1).name = '';
+end
 dirsInEophfFolder(strcmp({dirsInEophfFolder.name}, '.')|strcmp({dirsInEophfFolder.name}, '..'))=[];
 dirsInDataFolder(strcmp({dirsInDataFolder.name}, '.')|strcmp({dirsInDataFolder.name}, '..')|~[dirsInDataFolder.isdir])=[];
 dirsInTurbFolder([dirsInTurbFolder.isdir])=[]; % remove all folders (i just want .dat files)
