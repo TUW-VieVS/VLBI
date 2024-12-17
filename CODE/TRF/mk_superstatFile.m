@@ -60,7 +60,10 @@ dtrf2020File='../TRF/data/DTRF2020_VLBI.snx'; %Seitz, M., Bloßfeld, M., Angerma
 
 itrf2020u2023File='../TRF/data/ITRF2020-u2023-IVS-TRF.SNX';
 
+jtrf2020Dir='../TRF/data/JTRF/jtrf2020_defining_station_position_xyz_archive_vlbi';
+
 % Flags, for the availability of TRF files
+flag_trf_jtrf2020 = true;
 flag_trf_itrf2020u2023 = true;
 flag_trf_dtrf2020 = true;
 flag_trf_itrf2020 = true;
@@ -69,7 +72,7 @@ flag_trf_dtrf2014 = true;
 flag_trf_vtrf2014 = true;
 flag_trf_vieTrf13 = false;
 flag_trf_ivstrf2014b = true;
-flag_trf_dtrf2020 = true;
+
 
 aplrgFilename1 = '../TRF/data/APL_RC_external1.txt'; % added by Hana 01/2014
 aplrgFieldname1 = 'p0_RCexternal';
@@ -98,6 +101,7 @@ ns_codes=struct('code', [], 'name', [],'domes', [], 'CDP', [], 'comments', [], .
     'ocean_loading', [],  ...
     'itrf2020_u2023', [], ...
     'itrf2020', [], 'dtrf2020', [],  ...  
+    'jtrf2020',[], ...
     'itrf2014', [], 'dtrf2014', [], ...
     'vtrf2014', [], 'ivsTrf2014b', [], 'VieTRF13', [], 'vievsTrf', [], ...
     'atmosphere_tidal_loading', [], 'oceanPoleTideLoading', [], 'aplrg', [], ...
@@ -400,8 +404,10 @@ for k=1:nStat
     % if there is no name in ns_codes for current station (usually when it did not exist before), add name
     if isempty(ns_codes(indStat).name)
         ns_codes(indStat).name=vievsTrf{1}{k};
+        ns_codes(indStat).domes='-';
+        ns_codes(indStat).CDP='-';
     end
-    
+
 end
 
 
@@ -541,8 +547,21 @@ end
 fprintf('\n2.3 Terrestrial reference frames\n')
 
 
+
 % --------------------------
-%  DTRF2020P_VLBI.snx
+%  JTRF2020 time series
+% --------------------------
+fprintf('\n JTRF2020 reference coordinates \n\n');
+if isfolder(jtrf2020Dir)
+	[ns_codes] = read_jtrf_reference_from_data_txt(ns_codes,jtrf2020Dir);  
+else
+    fprintf('JTRF2020 is not available\n\n');
+    flag_trf_jtrf2020 = false;
+end
+
+
+% --------------------------
+%  DTRF2020_VLBI.snx
 % --------------------------
 fprintf('\n DTRF2020_VLBI.snx\n\n');
 if exist(dtrf2020File, 'file')
@@ -585,7 +604,7 @@ if exist(dtrf2020File, 'file')
     end
 else
     fprintf('DTRF2020_VLBI.snx is not available\n\n');
-    flag_trf_itrf2020 = false;
+    flag_trf_dtrf2020 = false;
 end
 
 % --------------------------
@@ -1814,7 +1833,18 @@ fprintf('\n5. Saving superstations struct\n\n');
 % Delete fields for unavailable TRFs:
 
 
-
+if ~flag_trf_itrf2020u2023
+    ns_codes = rmfield(ns_codes, 'itrf2020_u2023');
+end
+if ~flag_trf_itrf2020
+    ns_codes = rmfield(ns_codes, 'itrf2020');
+end
+if ~flag_trf_dtrf2020
+    ns_codes = rmfield(ns_codes, 'dtrf2020');
+end
+if ~flag_trf_jtrf2020
+    ns_codes = rmfield(ns_codes, 'jtrf2020');
+end
 if ~flag_trf_itrf2014
     ns_codes = rmfield(ns_codes, 'itrf2014');
 end
@@ -1830,9 +1860,7 @@ end
 if ~flag_trf_ivstrf2014b
     ns_codes = rmfield(ns_codes, 'ivsTrf2014b');
 end
-if ~flag_trf_dtrf2020
-    ns_codes = rmfield(ns_codes, 'dtrf2020');
-end
+
 
 % save the main variable under name superstations
 superstations=ns_codes;
