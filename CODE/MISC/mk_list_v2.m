@@ -199,10 +199,21 @@ for i_year = 1:length(years)
                 if strcmpi(session_data_format,'VGOSDB')
                    % unpack vgosDB *.tgz or *.tar.gz
                    for ises = 1:size(sesname,1)
-                       sess=sesname(ises,:);
+                   %%
+                   % 
+                   %   for x = 1:10                   
+                   % 
+                   %   for x = 1:10
+                   %       disp(x)
+                   %   end
+                   % 
+                   %       disp(x)
+                   %   end
+                   % 
+                       sess=deblank(sesname(ises,:));
 
-                       lists(ises,:) = [num2str(year) '/' sess ' [vgosDB]'];
-                       sess_tgz = [deblank(sess),'.tgz'];
+                       lists{ises} = [num2str(year) '/' sess ' [vgosDB]'];
+                       sess_tgz = [sess,'.tgz'];
                        if exist([path_session sess_tgz],'file')
                             idyes(ises)=true;
                        else
@@ -215,7 +226,7 @@ for i_year = 1:length(years)
 
 
 names = sesname(idyes,:);
-list = lists(idyes,:);
+list = lists(idyes);
 
 
 %             fid = fopen(path_master_file,'r');
