@@ -151,6 +151,16 @@ function [scan, flgm_ctp] = antennaCorrections(iSc, iStat, scan, antenna, opt, p
             end
         end
 
+        % Non-tidal residual loading (e.g. from machine learning)
+        cntrl = [0 0 0];
+        if parameter.vie_mod.cntrl == 1
+            if isempty(antenna(iStat).cntrl_dx) == 0
+                cntrl_data = antenna(iStat).cntrl_dx;
+                cntrl(:,1) = call_spline_4(cntrl_data(:,1), cntrl_data(:,2), mjd);
+                cntrl(:,2) = call_spline_4(cntrl_data(:,1), cntrl_data(:,3), mjd);
+                cntrl(:,3) = call_spline_4(cntrl_data(:,1), cntrl_data(:,4), mjd);
+            end
+        end
 
         % Pole Tide (mean: linear or cubic)
         ctp         = [0 0 0];
@@ -191,7 +201,7 @@ function [scan, flgm_ctp] = antennaCorrections(iSc, iStat, scan, antenna, opt, p
             % without non-tidal station loading (w/o ntsl), needed for calibration block in sinex 
             cposit_noNtsl = 0;
         else
-            cposit = cts + cto + cta + cnta + crg + cgia + ctp + ctop + chl + cntol + cpsd;
+            cposit = cts + cto + cta + cnta + crg + cgia + ctp + ctop + chl + cntol + cntrl + cpsd;
             % without non-tidal station loading (w/o ntsl), needed for calibration block in sinex 
             cposit_noNtsl = cts + cto + cta + crg + cgia + ctp + ctop + cpsd; 
         end

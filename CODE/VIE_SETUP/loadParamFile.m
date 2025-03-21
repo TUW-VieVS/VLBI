@@ -520,7 +520,7 @@ else
 end
 
 % hydrology loading
-if isfield(parameter.vie_mod, 'chl') % this questin could be deleted when we are sure that no old parameter files (without this field) are used!!
+if isfield(parameter.vie_mod, 'chl') % this question could be deleted when we are sure that no old parameter files (without this field) are used!!
     set(handles.checkbox_parameters_statCorr_hydroLoading, 'Value', parameter.vie_mod.chl)
     if parameter.vie_mod.chl==1
         set(handles.popupmenu_parameters_statCorr_hydroLoading, 'Enable', 'on')
@@ -543,7 +543,7 @@ else
 end
 
 % non-tidal ocean loading
-if isfield(parameter.vie_mod, 'cntol') % this questin could be deleted when we are sure that no old parameter files (without this field) are used!!
+if isfield(parameter.vie_mod, 'cntol') % this question could be deleted when we are sure that no old parameter files (without this field) are used!!
     set(handles.checkbox_parameters_statCorr_ntol, 'Value', parameter.vie_mod.cntol)
     if parameter.vie_mod.cntol==1
         set(handles.popupmenu_parameters_statCorr_ntol, 'Enable', 'on')
@@ -565,6 +565,29 @@ else
     set(handles.popupmenu_parameters_statCorr_ntol, 'Enable', 'off')
 end
 
+% non-tidal residual loading (introduced to consider additional corrections
+% e.g. from machine learning
+if isfield(parameter.vie_mod, 'cntrl') % this question could be deleted when we are sure that no old parameter files (without this field) are used!!
+    set(handles.checkbox_parameters_statCorr_ntrl, 'Value', parameter.vie_mod.cntrl)
+    if parameter.vie_mod.cntrl==1
+        set(handles.popupmenu_parameters_statCorr_ntrl, 'Enable', 'on')
+    else
+        set(handles.popupmenu_parameters_statCorr_ntrl, 'Enable', 'off')
+    end
+    % find chosen model in current popupmenu
+    indOfModelFound=find(strcmp(get(handles.popupmenu_parameters_statCorr_ntrl, 'string'), parameter.vie_mod.cntrlm));
+    if ~isempty(indOfModelFound)
+        set(handles.popupmenu_parameters_statCorr_ntrl, 'Value', indOfModelFound)
+    else
+        msgbox(sprintf('Non-tidal residual loading model file not found.\nBe sure to select a proper one!'), 'Warning!', 'warn');
+    end
+else
+    % if this model does not exist in parameter file (old parameter file)
+    % set this model to 0 (=not use)
+    set(handles.checkbox_parameters_statCorr_ntrl, 'Value', 0)
+    % and set the fodler to chose to disable
+    set(handles.popupmenu_parameters_statCorr_ntrl, 'Enable', 'off')
+end
 
 % thermal deformation
 set(handles.checkbox_parameters_statCorr_thermalDef, 'Value', parameter.vie_mod.therm)

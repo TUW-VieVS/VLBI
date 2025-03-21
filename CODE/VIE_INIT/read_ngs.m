@@ -715,6 +715,7 @@ while (idx_line <= nlines)
                 antenna(statIdVec(iStat)).cnta_dx    = [];
                 antenna(statIdVec(iStat)).chl_dx    = [];
                 antenna(statIdVec(iStat)).cntol_dx    = [];
+                antenna(statIdVec(iStat)).cntrl_dx    = [];
                 antenna(statIdVec(iStat)).vmf3       = [];
                 antenna(statIdVec(iStat)).vmf1       = [];
                 antenna(statIdVec(iStat)).opl        = [];

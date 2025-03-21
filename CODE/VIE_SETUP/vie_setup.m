@@ -22,7 +22,7 @@ function varargout = vie_setup(varargin)
 
 % Edit the above text to modify the response to help vie_setup
 
-% Last Modified by GUIDE v2.5 11-Dec-2024 12:51:04
+% Last Modified by GUIDE v2.5 21-Mar-2025 09:02:08
 
 
 % 07 Jan 2014 by Matthias Madzak: LEVEL2 bug corrected
@@ -217,6 +217,7 @@ dirsInWorkPlFolder=dir('../WORK/PROCESSLIST/*.mat');
 % dirsInOtideFolder=dir('../OTIDE/*.mat');
 dirsInHydloFolder=dir('../NTSL/HYDL/');
 dirsInNtolFolder=dir('../NTSL/NTOL/');
+dirsInNtrlFolder=dir('../NTSL/NTRL/');
 dirsInTrfFolder=dir('../TRF/*');
 dirsInCrfFolder=dir('../CRF/*.txt');
 dirsInCrfFolderMat=dir('../CRF/*.mat');
@@ -288,6 +289,7 @@ dirsInIonFolder(strcmp({dirsInIonFolder.name}, '.')|strcmp({dirsInIonFolder.name
 dirsInAtmFolder(strcmp({dirsInAtmFolder.name}, '.')|strcmp({dirsInAtmFolder.name}, '..')|strcmp({dirsInAtmFolder.name}, 'temp')|~[dirsInAtmFolder.isdir])=[];
 dirsInHydloFolder(strcmp({dirsInHydloFolder.name}, '.')|strcmp({dirsInHydloFolder.name}, '..')|~[dirsInHydloFolder.isdir])=[];
 dirsInNtolFolder(strcmp({dirsInNtolFolder.name}, '.')|strcmp({dirsInNtolFolder.name}, '..')|~[dirsInNtolFolder.isdir])=[];
+dirsInNtrlFolder(strcmp({dirsInNtrlFolder.name}, '.')|strcmp({dirsInNtrlFolder.name}, '..')|~[dirsInNtrlFolder.isdir])=[];
 dirsInTrfFolder( strcmp({dirsInTrfFolder.name}, '.') | strcmp({dirsInTrfFolder.name}, '..') | strcmp({dirsInTrfFolder.name}, 'SavedGuiData_superstations.txt') | cellfun(@isempty, strfind({dirsInTrfFolder.name}, '.txt')) )=[]; % Exception for superstation GUI settup savings file ("SavedGuiData_superstations.txt")
 dirsInCrfFolder(strcmp({dirsInCrfFolder.name}, '.')|strcmp({dirsInCrfFolder.name}, '..'))=[];
 dirsInEopFolder(strcmp({dirsInEopFolder.name}, '.')|strcmp({dirsInEopFolder.name}, '..'))=[];
@@ -368,6 +370,11 @@ if isempty(dirsInNtolFolder)
     set(handles.popupmenu_parameters_statCorr_ntol, 'String', ' ');
 else
     set(handles.popupmenu_parameters_statCorr_ntol, 'String', {dirsInNtolFolder.name});
+end
+if isempty(dirsInNtrlFolder)
+    set(handles.popupmenu_parameters_statCorr_ntrl, 'String', ' ');
+else
+    set(handles.popupmenu_parameters_statCorr_ntrl, 'String', {dirsInNtrlFolder.name});
 end
 set(handles.popupmenu_parameters_eop_aPriori_other, 'String', {dirsInEopFolder.name})
 set(handles.popupmenu_parameters_eop_aPriori_C04, 'String', {C04InEopFolder.name})
@@ -9409,6 +9416,41 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+% --- Executes on button press in checkbox_parameters_statCorr_ntrl.
+function checkbox_parameters_statCorr_ntrl_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_parameters_statCorr_ntrl (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of
+% checkbox_parameters_statCorr_ntrl
+if get(hObject, 'Value')
+    set(handles.popupmenu_parameters_statCorr_ntrl, 'Enable', 'on')
+else
+    set(handles.popupmenu_parameters_statCorr_ntrl, 'Enable', 'off')
+end
+
+% --- Executes on selection change in popupmenu_parameters_statCorr_ntrl.
+function popupmenu_parameters_statCorr_ntrl_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_statCorr_ntrl (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_parameters_statCorr_ntrl contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_parameters_statCorr_ntrl
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_parameters_statCorr_ntrl_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_parameters_statCorr_ntrl (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
 
 % --------------------------------------------------------------------
 function menu_plotting_Callback(hObject, eventdata, handles)
@@ -10939,7 +10981,7 @@ try
     ax.YLim = ylim;
     guidata(hObject, handles)
 catch ex
-    warning('ERROR while rerunning vie_lsm!\nMessage: %s',ex.message);
+    warning(ex.identifier,'ERROR while rerunning vie_lsm!\nMessage: %s',ex.message);
 end
 
 
@@ -11273,3 +11315,4 @@ function pushbutton_plot_residuals_removeOutliers_Callback(hObject, eventdata, h
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
     ext_pushbutton_plot_residuals_removeOutliers_Callback(hObject, eventdata, handles)
+

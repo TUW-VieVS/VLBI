@@ -123,6 +123,14 @@ if parameter.vie_mod.cntol == 1
     ntol_data = stat_nontidal_read(idoy,numyrs,iye, ntsl_path,ntsl_model,ntsl_suffix);
 end
 
+if parameter.vie_mod.cntrl == 1  
+    ntsl_path = '../NTSL/NTRL/';
+    ntsl_model = parameter.vie_mod.cntrlm;
+    ntsl_suffix = '.ntrl_r';
+
+    ntrl_data = stat_nontidal_read(idoy,numyrs,iye, ntsl_path,ntsl_model,ntsl_suffix);
+end
+
 if parameter.vie_mod.chl == 1  
     ntsl_path = '../NTSL/HYDL/';
     ntsl_model = parameter.vie_mod.chlm;
@@ -237,7 +245,28 @@ for ist=1:nant
             end
         end
     end
-    
+
+     %%% Non tidal residual loading  %%% 
+    if parameter.vie_mod.cntrl == 1       
+        if ~isempty(find(strcmpi(ntrl_data{1},strtrim(aname))))
+            stcorr_xyz =  stat_nontidal_edit(ntrl_data, aname, ant, mjd1, mjd2 );
+            antenna(ist).cntrl_dx = [stcorr_xyz];  % = [station,tmjd,ah,aw,zhd,zwd]
+        else
+            antenna(ist).cntrl_dx=[];
+        end
+        
+        % Reduce data, if it contains 2 years
+        if isempty(antenna(ist).cntrl_dx)
+            flagmess.cntrl(ist)=1;
+        else
+            [antenna(ist).cntrl_dx,flag]=datachecking(antenna(ist).cntrl_dx,mjd1,mjd2);
+            if ~flag
+                flagmess.cntrl(ist)=1;
+                antenna(ist).cntrl_dx=[];
+                fprintf('%s : not enough NTRL data at session time: %f to %f\n',aname,mjd1,mjd2)
+            end
+        end
+    end
     
      %%% Hydrology loading %%%
      if parameter.vie_mod.chl == 1

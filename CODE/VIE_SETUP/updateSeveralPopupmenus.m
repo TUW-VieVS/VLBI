@@ -152,6 +152,12 @@ popupmenu_tag          = 'popupmenu_parameters_statCorr_ntol';
 folder_description_str = 'Non-tidal ocean loading data';
 update_popupmenu_folder_in_dir(path_dir, popupmenu_tag, folder_description_str, handles)
 
+% ### non-tidal residual loading ###
+path_dir               = '../NTSL/NTRL/';
+popupmenu_tag          = 'popupmenu_parameters_statCorr_ntrl';
+folder_description_str = 'Non-tidal residual loading data';
+update_popupmenu_folder_in_dir(path_dir, popupmenu_tag, folder_description_str, handles)
+
 
 % ##### EOP #####
 
