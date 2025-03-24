@@ -587,6 +587,7 @@ else
     set(handles.checkbox_parameters_statCorr_ntrl, 'Value', 0)
     % and set the fodler to chose to disable
     set(handles.popupmenu_parameters_statCorr_ntrl, 'Enable', 'off')
+    parameter.vie_mod.cntrl==0;
 end
 
 % thermal deformation
