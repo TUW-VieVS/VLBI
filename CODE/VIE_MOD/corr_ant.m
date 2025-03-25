@@ -123,6 +123,9 @@ if parameter.vie_mod.cntol == 1
     ntol_data = stat_nontidal_read(idoy,numyrs,iye, ntsl_path,ntsl_model,ntsl_suffix);
 end
 
+if ~isfield(parameter.vie_mod,'cntrl')
+    parameter.vie_mod.cntrl = 0;
+end
 if parameter.vie_mod.cntrl == 1  
     ntsl_path = '../NTSL/NTRL/';
     ntsl_model = parameter.vie_mod.cntrlm;
@@ -203,7 +206,7 @@ for ist=1:nant
     
     %%% Non tidal atmosphere loading  %%% 
     if parameter.vie_mod.cnta == 1       
-        if ~isempty(find(strcmpi(ntal_data{1},strtrim(aname))))
+        if ~isempty(find(strcmpi(ntal_data{1},strtrim(aname)), 1))
             stcorr_xyz =  stat_nontidal_edit(ntal_data, aname, ant, mjd1, mjd2 );
             antenna(ist).cnta_dx = [stcorr_xyz];  % = [station,tmjd,ah,aw,zhd,zwd]
         else
@@ -226,7 +229,7 @@ for ist=1:nant
     
     %%% Non tidal ocean loading  %%% 
     if parameter.vie_mod.cntol == 1       
-        if ~isempty(find(strcmpi(ntol_data{1},strtrim(aname))))
+        if ~isempty(find(strcmpi(ntol_data{1},strtrim(aname)), 1))
             stcorr_xyz =  stat_nontidal_edit(ntol_data, aname, ant, mjd1, mjd2 );
             antenna(ist).cntol_dx = [stcorr_xyz];  % = [station,tmjd,ah,aw,zhd,zwd]
         else
@@ -248,7 +251,7 @@ for ist=1:nant
 
      %%% Non tidal residual loading  %%% 
     if parameter.vie_mod.cntrl == 1       
-        if ~isempty(find(strcmpi(ntrl_data{1},strtrim(aname))))
+        if ~isempty(find(strcmpi(ntrl_data{1},strtrim(aname)), 1))
             stcorr_xyz =  stat_nontidal_edit(ntrl_data, aname, ant, mjd1, mjd2 );
             antenna(ist).cntrl_dx = [stcorr_xyz];  % = [station,tmjd,ah,aw,zhd,zwd]
         else
@@ -270,7 +273,7 @@ for ist=1:nant
     
      %%% Hydrology loading %%%
      if parameter.vie_mod.chl == 1
-        if ~isempty(find(strcmpi(hydl_data{1},strtrim(aname))))
+        if ~isempty(find(strcmpi(hydl_data{1},strtrim(aname)), 1))
             stcorr_xyz =  stat_nontidal_edit(hydl_data, aname, ant, mjd1, mjd2 );
             antenna(ist).chl_dx = [stcorr_xyz];  % = [station,tmjd,ah,aw,zhd,zwd]
         else
@@ -353,7 +356,7 @@ for ist=1:nant
                 fid = fopen(fil);
                 vmf3_data = textscan(fid,'%s%f%f%f%f%f%f%f%f','CommentStyle','#');
                 fclose(fid);
-                if ~isempty(find(strcmpi(vmf3_data{1},strtrim(aname))))
+                if ~isempty(find(strcmpi(vmf3_data{1},strtrim(aname)), 1))
                    
                     % reduce VMF3 data to lines that contain the respective station
                     wantedLines = ismember(vmf3_data{1,1}, strtrim(aname));
