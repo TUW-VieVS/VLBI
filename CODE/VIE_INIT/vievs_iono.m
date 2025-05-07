@@ -12,6 +12,12 @@
 %
 %   Coded for VieVS: 
 %   21 Nov 2024 by Peter Urban
+%
+%   Update:
+%   07 May 2025 by Peter Urban: sign for hBw got switched, usb and lsb
+%   lines for data reading got switched, in total results dont change to
+%   previous version
+%   
 % ************************************************************************
 
 function [iono_x_corr_own, sigma_iono_x_corr_own, qflag_ion_own] = vievs_iono(out_struct,wrapper_data)
@@ -103,8 +109,8 @@ if check == 0
             n = double(NumChannels_X); % number of channels 
         end
         ri = ChanAmpPhase_X(1, 1:n, i); % channel amplitudes (first line of ChanAmpPhase)
-        usb = NumSamples_X(1, 1:n, i); % first line for usb (upper side band)
-        lsb = NumSamples_X(2, 1:n, i); % second line for lsb (lower side band)
+        usb = NumSamples_X(2, 1:n, i); % second line for usb (upper side band)
+        lsb = NumSamples_X(1, 1:n, i); % first line for lsb (lower side band)
         if length(ChannelFreq_X) > 20
             vi = ChannelFreq_X(1:n, i); % channel frequency [MHz]
         else
@@ -122,9 +128,9 @@ if check == 0
         for j = 1:n
             if usb(j) > 0.0 && lsb(j) > 0.0
             elseif usb(j) > 0.0 && lsb(j) == 0.0      
-                vi(j) = vi(j) - HalfBwX; % subtract half bandwith
+                vi(j) = vi(j) + HalfBwX; % add half bandwith for usb
             elseif lsb(j) > 0.0 && usb(j) == 0.0       
-                vi(j) = vi(j) + HalfBwX; % add half bandwith
+                vi(j) = vi(j) - HalfBwX; % subtract half bandwith for lsb
             end
             if wi(j) == 0
                 wi(j) = 1;
@@ -161,8 +167,8 @@ if check == 0
             n = double(NumChannels_S); % number of channels 
         end
         ri = ChanAmpPhase_S(1, 1:n, i); % channel amplitudes (first line of ChanAmpPhase)
-        usb = NumSamples_S(1, 1:n, i); % first line for usb (upper side band)
-        lsb = NumSamples_S(2, 1:n, i); % second line for lsb (lower side band)
+        usb = NumSamples_S(2, 1:n, i); % second line for usb (upper side band)
+        lsb = NumSamples_S(1, 1:n, i); % first line for lsb (lower side band)
         if length(ChannelFreq_S) > 20
             vi = ChannelFreq_S(1:n, i); % channel frequency [MHz]
         else
@@ -179,10 +185,10 @@ if check == 0
         % adjust frequencies for USB/LSB confusion
         for j = 1:n
             if usb(j) > 0.0 && lsb(j) > 0.0
-            elseif usb(j) > 0.0 && lsb(j) < 10^-3   
-                vi(j) = vi(j) - HalfBwS; % subtract half bandwith
-            elseif lsb(j) > 0.0 && usb(j) < 10^-3     
-                vi(j) = vi(j) + HalfBwS; % add half bandwith
+            elseif usb(j) > 0.0 && lsb(j) == 0.0
+                vi(j) = vi(j) + HalfBwS; % add half bandwith for usb
+            elseif lsb(j) > 0.0 && usb(j) == 0.0    
+                vi(j) = vi(j) - HalfBwS; % subtract half bandwith for lsb
             end
             if wi(j) == 0
                 wi(j) = 1;
