@@ -328,8 +328,22 @@ if strcmp(ioncorr,'on')
             ionoDelCell = num2cell(iono_val_vievs.*10^9);
             ionoDelSigCell = num2cell(sigma_iono_vievs.*10^9);
             ionoDelFlagcell = num2cell(qflag_ion_vievs);
+
+            if length(groupDelayWAmbigCell) ~= length(ionoDelSigCell) % if there is a problem with the data, special rare case
+                ionoDelCell = num2cell(zeros(1, length(groupDelaySigCell)));
+                ionoDelSigCell = num2cell(zeros(1, length(groupDelaySigCell)));
+                qflag_ion_vievs = zeros(length(groupDelayWAmbigCell), 1);
+                qflag_ion_vievs(qflag_ion_vievs == 0) = -1;
+                ionoDelFlagcell = num2cell(qflag_ion_vievs);
+                fprintf('\t Ionospheric delay was NOT computed. \n')
+                fprintf('WARNING vievs_iono: Calculation of the ionospheric correction failed due to a problem of the used data \n')
+            end
+
         else
-            ionoDelayInternalFlag = 0;
+            ionoDelayInternalFlag = 1;
+            ionoDelCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
+            ionoDelSigCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
+            ionoDelFlagcell = num2cell(qflag_ion_vievs);
             fprintf('\t Ionospheric delay was NOT computed. \n')
         end
     else % Take ionosphere corrections from external (ion) file:
@@ -638,7 +652,6 @@ for iScan=1:nScans
         [scan(iScan).obs.q_code_S] = deal(qualityCode_S{obsI1Index:obsI1Index+scan(iScan).nobs-1});   
     end
     
-
     obsI1Index=obsI1Index+scan(iScan).nobs;
 
     % add cable delay
