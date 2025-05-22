@@ -46,12 +46,16 @@ try % load all the variables from the vgosdb
     NumSamples_X = out_struct.Observables.ChannelInfo_bX.NumSamples.val; % number of samples by sideband and channel 
     RefFreq_X = out_struct.Observables.RefFreq_bX.RefFreq.val; % reference frequency [MHz]
     SampleRate_X = out_struct.Observables.ChannelInfo_bX.SampleRate.val; % samplerate [Hz]
+    SampleRate_X = SampleRate_X(1);
+    if SampleRate_X < 0
+        fprintf('WARNING vievs_iono: negative samplerate in vgosDB - positive value used for calculation \n')
+    end
     if SampleRate_X == -32768000 % problem with samplerate in r1 ~ 2010
         SampleRate_X = 16000000;
     elseif SampleRate_X == 9216000 % problem with samplerate in r1 ~ 2010
-        SampleRate_X =     16000000;
-    elseif SampleRate_X == 32000000
-        try  % Check for station NYALE13N - assume 8 MHZ samplerate
+        SampleRate_X = 16000000;
+    elseif SampleRate_X == 64000000
+        try  % Check for station NYALE13N - assume 16 MHZ samplerate
             nn=size(out_struct.head.StationList.val,2);
             for ii=1:nn
                 curName=out_struct.head.StationList.val(:,ii)';
@@ -62,7 +66,7 @@ try % load all the variables from the vgosdb
             checkST = contains(names,'NYALE13N');
             scheckST = sum(checkST); 
             if scheckST == 1 % station NYALE13N included
-                SampleRate_X = 8000000;
+                SampleRate_X = 16000000;
             end
         catch
         end
@@ -70,7 +74,7 @@ try % load all the variables from the vgosdb
     SampleRate_X = abs(SampleRate_X); % samplerate only has positive values
     % BitSample_X = out_struct.Observables.ChannelInfo_bX.BITSAMPL.val; % Number of bits per sample
     % BitSample_X = max(BitSample_X); % If there is saved one value for each observation
-    HalfBwX = SampleRate_X(1)/4/1.0e6; % half bandwidth [MHz]
+    HalfBwX = SampleRate_X/4/1.0e6; % half bandwidth [MHz]
 
     ChanAmpPhase_S = out_struct.Observables.ChannelInfo_bS.ChanAmpPhase.val; % amplitude and phase of the channels
     ChannelFreq_S = out_struct.Observables.ChannelInfo_bS.ChannelFreq.val; % channel frequency [MHz] 
@@ -78,12 +82,16 @@ try % load all the variables from the vgosdb
     NumSamples_S = out_struct.Observables.ChannelInfo_bS.NumSamples.val; % number of samples by sideband and channel 
     RefFreq_S = out_struct.Observables.RefFreq_bS.RefFreq.val; % reference frequency [MHz]
     SampleRate_S = out_struct.Observables.ChannelInfo_bS.SampleRate.val; % samplerate [Hz]
+    SampleRate_S = SampleRate_S(1);
+    if SampleRate_S < 0
+        fprintf('WARNING vievs_iono: negative samplerate in vgosDB - positive value used for calculation \n')
+    end
     if SampleRate_S == -32768000 % problem with samplerate in r1 ~ 2010
         SampleRate_S = 16000000;
     elseif SampleRate_S == 9216000 % problem with samplerate in r1 ~ 2010
-        SampleRate_S =     16000000;
-    elseif SampleRate_S == 32000000
-        try  % Check for station NYALE13N - assume 8 MHZ samplerate
+        SampleRate_S = 16000000;
+    elseif SampleRate_S == 64000000
+        try  % Check for station NYALE13N - assume 16 MHZ samplerate
             nn=size(out_struct.head.StationList.val,2);
             for ii=1:nn
                 curName=out_struct.head.StationList.val(:,ii)';
@@ -94,13 +102,13 @@ try % load all the variables from the vgosdb
             checkST = contains(names,'NYALE13N');
             scheckST = sum(checkST); 
             if scheckST == 1 % station NYALE13N included
-                SampleRate_S = 8000000;
+                SampleRate_S = 16000000;
             end
         catch
         end
     end
     SampleRate_S = abs(SampleRate_S); % samplerate only has positive values
-    HalfBwS = SampleRate_S(1)/4/1.0e6; % half bandwidth [MHz]
+    HalfBwS = SampleRate_S/4/1.0e6; % half bandwidth [MHz]
     
     % get the correct name for the GroupDelayFull in all different cases
     tau_xx = wrapper_data.Observation.ObsEdit.files; 
