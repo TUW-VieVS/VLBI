@@ -22,6 +22,11 @@
 %   21 May 2025 by Peter Urban: Number of bits per sample removed - it 
 %   should always be samplerate/4, only positive samplerate for
 %   calculation, samplerate special cases 
+%   28 May 2025 by Peter Urban: Small Updates, iono-flag if QCode S/X = 0,
+%   channel weight stays 0 and will not be set to 1, channel frequency
+%   check for repeat attribute if there are not values for every
+%   observation, set NaN values to 0 for effective frequency and iono
+%   corretion
 %
 % ************************************************************************
 
@@ -40,6 +45,8 @@ end
 check = 0; % variable for checking if all needed data was read correct
 
 try % load all the variables from the vgosdb
+    QualityCode_Xv = out_struct.Observables.QualityCode_bX.QualityCode.val;
+    QualityCode_X = double(QualityCode_Xv) - 48; % Quality Code Flag
     ChanAmpPhase_X = out_struct.Observables.ChannelInfo_bX.ChanAmpPhase.val; % amplitude and phase of the channels
     ChannelFreq_X = out_struct.Observables.ChannelInfo_bX.ChannelFreq.val; % channel frequency [MHz] 
     NumChannels_X = out_struct.Observables.ChannelInfo_bX.NumChannels.val; % number of channels
@@ -75,7 +82,17 @@ try % load all the variables from the vgosdb
     % BitSample_X = out_struct.Observables.ChannelInfo_bX.BITSAMPL.val; % Number of bits per sample
     % BitSample_X = max(BitSample_X); % If there is saved one value for each observation
     HalfBwX = SampleRate_X/4/1.0e6; % half bandwidth [MHz]
+    Repeat_X = out_struct.Observables.ChannelInfo_bX.ChannelFreq.attr; % check if channel frequency is same for all observations
+    if length(ChannelFreq_X) < length(QualityCode_X) 
+        if Repeat_X(3).name == 'REPEAT'
+            % in this case the channel frequency stays the same for all observations
+        else
+            fprintf('WARNING vievs_iono: Channel Frequency not available for every obs - Repeat is missing in vgosDB - same Channel Frequency used for every obs \n')
+        end
+    end
 
+    QualityCode_Sv = out_struct.Observables.QualityCode_bS.QualityCode.val;
+    QualityCode_S = double(QualityCode_Sv) - 48; % Quality Code Flag
     ChanAmpPhase_S = out_struct.Observables.ChannelInfo_bS.ChanAmpPhase.val; % amplitude and phase of the channels
     ChannelFreq_S = out_struct.Observables.ChannelInfo_bS.ChannelFreq.val; % channel frequency [MHz] 
     NumChannels_S = out_struct.Observables.ChannelInfo_bS.NumChannels.val; % number of channels
@@ -109,6 +126,14 @@ try % load all the variables from the vgosdb
     end
     SampleRate_S = abs(SampleRate_S); % samplerate only has positive values
     HalfBwS = SampleRate_S/4/1.0e6; % half bandwidth [MHz]
+    Repeat_S = out_struct.Observables.ChannelInfo_bS.ChannelFreq.attr; % check if channel frequency is same for all observations
+    if length(ChannelFreq_S) < length(QualityCode_S) 
+        if Repeat_S(3).name == 'REPEAT'
+            % in this case the channel frequency stays the same for all observations
+        else
+            fprintf('WARNING vievs_iono: Channel Frequency not available for every obs - Repeat is missing in vgosDB - same Channel Frequency used for every obs \n')
+        end
+    end
     
     % get the correct name for the GroupDelayFull in all different cases
     tau_xx = wrapper_data.Observation.ObsEdit.files; 
@@ -218,9 +243,6 @@ if check == 0
                 elseif lsb(j) > 0.0 && usb(j) == 0.0       
                     vi(j) = vi(j) - HalfBwX; % subtract half bandwith for lsb
                 end
-                if wi(j) == 0
-                    wi(j) = 1;
-                end
             end
 
             % computation of the sums
@@ -241,6 +263,9 @@ if check == 0
     
             % iono-flag where vx could not be calculated in the correct way
             if isnan(vx(i)) || vx(i) == 0
+                qflag_ion_own(i) = -1;
+                vx(i) = 0;
+            elseif QualityCode_X(i) == 0
                 qflag_ion_own(i) = -1;
             end
         end
@@ -284,9 +309,6 @@ if check == 0
                 elseif lsb(j) > 0.0 && usb(j) == 0.0    
                     vi(j) = vi(j) - HalfBwS; % subtract half bandwith for lsb
                 end
-                if wi(j) == 0
-                    wi(j) = 1;
-                end
             end
 
             % computation of the sums
@@ -307,6 +329,9 @@ if check == 0
         
             % iono-flag where vs could not be calculated in the correct way
             if isnan(vs(i)) || vs(i) == 0
+                qflag_ion_own(i) = -1;
+                vs(i) = 0;
+            elseif QualityCode_S(i) == 0
                 qflag_ion_own(i) = -1;
             end
         end
@@ -342,6 +367,10 @@ if check == 0
         % e.g. if all channel frequencies are missing for one observation
         qflag_ion_own(isnan(iono_x_corr_own) | iono_x_corr_own == 0) = -1;
         qflag_ion_own(isnan(sigma_iono_x_corr_own) | sigma_iono_x_corr_own == 0) = -1;
+
+        % set NaN values to zero, they are already flaged
+        iono_x_corr_own(isnan(iono_x_corr_own)) = 0;
+        sigma_iono_x_corr_own(isnan(sigma_iono_x_corr_own)) = 0;
 
         qflag_ion_own = qflag_ion_own';
         sum_qflag_ion_own = sum(qflag_ion_own);
