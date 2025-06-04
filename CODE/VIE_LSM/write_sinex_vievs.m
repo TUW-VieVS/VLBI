@@ -800,8 +800,8 @@ for pl=1:size(process_list,1)
    
     %if estimation was carried out
     if parameter.lsmopt.est_singleses==1
-        infoType={'NUMBER OF OBSERVATIONS', 'NUMBER OF UNKNOWNS', 'NUMBER OF DEGREES OF FREEDOM', 'SQUARE SUM OF RESIDUALS (VTPV)', 'VARIANCE FACTOR' , 'WEIGHTED SQUARE SUM OF O-C'}; % hana
-        info={col_sinex.nr_obs, col_sinex.nr_unknowns, col_sinex.dof, col_sinex.vTPv, col_sinex.varfac, col_sinex.lTPlreduc}; % hana
+        infoType={'NUMBER OF OBSERVATIONS', 'NUMBER OF UNKNOWNS', 'SQUARE SUM OF RESIDUALS (VTPV)', 'VARIANCE FACTOR' , 'WEIGHTED SQUARE SUM OF O-C'}; % hana
+        info={col_sinex.nr_obs, col_sinex.nr_unknowns, col_sinex.vTPv, col_sinex.varfac, col_sinex.lTPlreduc}; % hana
     else
         infoType={'NUMBER OF OBSERVATIONS', 'NUMBER OF UNKNOWNS', 'WEIGHTED SQUARE SUM OF O-C'};
         info={col_sinex.nr_obs, col_sinex.nr_unknowns, col_sinex.lTPlreduc}; % hana

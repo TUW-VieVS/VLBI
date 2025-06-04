@@ -49,7 +49,7 @@ function [parameter] = checkParameterFile(parameter)
     end
     if (parameter.lsmopt.nnt_stc==1 || parameter.lsmopt.nnr_stc==1 || parameter.lsmopt.nns_stc==1) && ~isfield(parameter.lsmopt, 'addDatumCd')
         parameter.lsmopt.addDatumCd=1;
-    else
+    elseif ~isfield(parameter.lsmopt, 'addDatumCd')
         parameter.lsmopt.addDatumCd=0;
     end
     if ~isfield(parameter.lsmopt.outsnx, 'orb')
