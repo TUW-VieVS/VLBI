@@ -112,7 +112,6 @@ end
 fclose(fid);
 
 
-
 % "SORT" OUTPUT (if block names were specified in input)
 if readAllBlocks==0
     takeBlocksInd=zeros(length(readBlocks),1);

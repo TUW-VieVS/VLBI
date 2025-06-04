@@ -177,11 +177,20 @@ fprintf('\t sigma:\t\t %s/%s, nc field: %s\n', sigma_tau_folder, sigma_tau_file,
 
 
 % save SBD and MBD for (both) frequency bands in scan struct (S/X for testing)
-%SBD1 = num2cell(out_struct.Observables.SBDelay_bS.SBDelay.val);
-%MBD1 = num2cell(out_struct.Observables.GroupDelay_bS.GroupDelay.val);
-%SBD2 = num2cell(out_struct.Observables.SBDelay_bX.SBDelay.val);
-%MBD2 = num2cell(out_struct.Observables.GroupDelay_bX.GroupDelay.val);
+if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands')
+    %SBD1 = num2cell(out_struct.Observables.SBDelay_bS.SBDelay.val);
+    %MBD1 = num2cell(out_struct.Observables.GroupDelay_bS.GroupDelay.val);
+    %SBD2 = num2cell(out_struct.Observables.SBDelay_bX.SBDelay.val);
+    %MBD2 = num2cell(out_struct.Observables.GroupDelay_bX.GroupDelay.val);
 
+    % preliminary solution - ambig. from ObsEdit
+    tfl1 = get_nc_filename({ observation , '_bS'}, wrapper_data.Observation.ObsEdit.files, 1);
+    MBD1 = num2cell(out_struct.ObsEdit.(tfl1).GroupDelayFull.val); % amb. included
+    tfl2 = get_nc_filename({ observation , '_bX'}, wrapper_data.Observation.ObsEdit.files, 1);
+    MBD2 = num2cell(out_struct.ObsEdit.(tfl2).GroupDelayFull.val); % amb. included
+
+
+end
 
 
 % ionosphere delay correction
@@ -322,7 +331,11 @@ if strcmp(ioncorr,'on')
             end
         end
     elseif strcmp(parameter.vie_init.iono, 'vievs2bands')
-        [iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = vievs_iono(out_struct,wrapper_data);
+        %[iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = vievs_iono(out_struct,wrapper_data);
+        sMBD1_file = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files, 1);
+        sMBD1 = num2cell(out_struct.(sigma_tau_folder).(sMBD1_file).(sigma_tau_field).val);
+        sMBD2 = num2cell(out_struct.(sigma_tau_folder).(sigma_tau_file).(sigma_tau_field).val);
+        [iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = vievs_iono_hk(out_struct,MBD1,MBD2,sMBD1,sMBD2,parameter);
         if length(iono_val_vievs) > 1
             ionoDelayInternalFlag = 1;
             ionoDelCell = num2cell(iono_val_vievs.*10^9);
@@ -343,7 +356,7 @@ if strcmp(ioncorr,'on')
             ionoDelayInternalFlag = 1;
             ionoDelCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
             ionoDelSigCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
-            ionoDelFlagcell = num2cell(qflag_ion_vievs);
+            ionoDelFlagcell = num2cell(-ones(1, length(groupDelayWAmbigCell)));
             fprintf('\t Ionospheric delay was NOT computed. \n')
         end
     else % Take ionosphere corrections from external (ion) file:

@@ -573,8 +573,8 @@ opt.control_gui_vie_lsm = opt.control_gui_vie_lsm;
 % end
 
 
-% % Alwasy estimate these sources (PWLO option)
-% IVSSouAlwaysEstFile = 'souIVS_alwaysEst_pwl.txt';
+% Alwasy estimate these sources (PWLO option)
+% IVSSouAlwaysEstFile = '';
 % fprintf(['Loading ' IVSSouAlwaysEstFile ' \n\n'])
 % fid=fopen(['../CRF/data/' IVSSouAlwaysEstFile]);
 %     data=textscan(fid, '%8c %f %f %f %f', 'Commentstyle','#', 'delimiter', '\n');
