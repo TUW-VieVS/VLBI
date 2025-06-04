@@ -30,6 +30,10 @@
 %    vallado       2007, 172
 %
 % [rrsw,vrsw,transmat] = rv2rsw( reci,veci );
+%
+% Revision: 
+%       7 May, 2025: removed matvecmult and used normal multiplication to
+%       improve performance
 % ------------------------------------------------------------------------------
 
 function [rrsw, vrsw, transmat] = rv2rsw(reci, veci)
@@ -57,10 +61,9 @@ function [rrsw, vrsw, transmat] = rv2rsw(reci, veci)
         transmat(3,1) = wvec(1);
         transmat(3,2) = wvec(2);
         transmat(3,3) = wvec(3);
-
-        rrsw = matvecmult(transmat, reci, 3);
-        vrsw = matvecmult(transmat, veci, 3);
-
+        
+        rrsw = transmat*reci; 
+        vrsw = transmat* veci;
 
 %   alt approach
 %       rrsw(1) = mag(reci);

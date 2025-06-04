@@ -54,47 +54,47 @@ end
 
 if opt.nutdy.model ~= 1
     A(10).sm = []; H(10).sm = []; Ph(10).sm = []; och(10).sv = []; T.nutdy = [];
- else if opt.dut1.model == 1 && opt.nutdy.constrain == 0
+elseif opt.dut1.model == 1 && opt.nutdy.constrain == 0
          H(10).sm(1:size(H(10).sm,1),:) = 0; 
          Ph(10).sm(1:size(Ph(10).sm,1),:) = 0;
          och(10).sv = [];
-     end
+     %end
 end
 
 if opt.nutdx.model ~= 1
     A(9).sm = []; H(9).sm = []; Ph(9).sm = []; och(9).sv = []; T.nutdx = [];
- else if opt.dut1.model == 1 && opt.nutdx.constrain == 0
+elseif opt.dut1.model == 1 && opt.nutdx.constrain == 0
          H(9).sm(1:size(H(9).sm,1),:) = 0; 
          Ph(9).sm(1:size(Ph(9).sm,1),:) = 0;
          och(9).sv = [];
-     end
+     %end
 end
 
 if opt.dut1.model ~= 1
     A(8).sm = []; H(8).sm = []; Ph(8).sm = []; och(8).sv = []; T.dut1 = [];
- else if opt.dut1.model == 1 && opt.dut1.constrain == 0 
+elseif opt.dut1.model == 1 && opt.dut1.constrain == 0 
          H(8).sm(1:size(H(8).sm,1),:) = 0; 
          Ph(8).sm(1:size(Ph(8).sm,1),:) = 0;  
          och(8).sv = [];
-     end
+     %end
 end
 
 if opt.ypol.model ~= 1 
     A(7).sm = []; H(7).sm = []; Ph(7).sm = []; och(7).sv = []; T.ypol = [];
- else if opt.ypol.model == 1 && opt.ypol.constrain == 0    
+elseif opt.ypol.model == 1 && opt.ypol.constrain == 0    
          H(7).sm(1:size(H(7).sm,1),:) = 0; 
          Ph(7).sm(1:size(Ph(7).sm,1),:) = 0;
          och(7).sv = [];
-     end
+     %end
 end
 
 if opt.xpol.model ~= 1
      A(6).sm = []; H(6).sm = []; Ph(6).sm = []; och(6).sv = []; T.xpol = [];
- else if opt.xpol.model == 1 && opt.xpol.constrain == 0
+elseif opt.xpol.model == 1 && opt.xpol.constrain == 0
          H(6).sm(1:size(H(6).sm,1),:) = 0; 
          Ph(6).sm(1:size(Ph(6).sm,1),:) = 0;
          och(6).sv = [];
-     end   
+     %end   
 end
 
 

@@ -77,4 +77,3 @@ function [tau, pGammaSun, k1a, k2a, fac1] = consensusModelQuasar(isc, crsStation
     k1a = rqu + (vearth+v1)'/c - rqu*((rqu*(vearth+v1))')/c;
     k2a = rqu + (vearth+v2)'/c - rqu*((rqu*(vearth+v2))')/c;
 end
-

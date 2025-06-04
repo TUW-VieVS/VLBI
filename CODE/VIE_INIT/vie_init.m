@@ -106,6 +106,7 @@
 % ************************************************************************
 %
 function [antenna,sources,scan,parameter]=vie_init(obs_file_name, parameter, out_vie_init_subdir, obs_file_dir, varargin)
+
 disp('---------------------------------------------------------------')
 disp('|                     Welcome to VIE_INIT                     |')
 disp('---------------------------------------------------------------')
@@ -308,10 +309,8 @@ switch(parameter.data_type)
         
         fprintf(' => Start reading %s\n',obs_file_name);
         if isnan(str2double(obs_file_name(1))) % if first element in ngsfile is character - absolute path of NGS file is given
-            %[antenna,sources,scan] = read_ngs(obs_file_name, trffile, crffile, ini_opt, trf, crf);
             [antenna,sources,scan] = read_ngs(obs_file_name, trffile, crffile, ini_opt, trf, crf,sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type);
         else
-            %[antenna,sources,scan] = read_ngs(['../DATA/' obs_file_dir '/' obs_file_name], trffile, crffile, ini_opt, trf, crf);
             [antenna,sources,scan] = read_ngs(['../DATA/' obs_file_dir '/' obs_file_name], trffile, crffile, ini_opt, trf, crf,sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type);
         end
         fprintf('...reading the NGS file finished!\n');      
@@ -353,8 +352,7 @@ end % switch(parameter.data_type)
 
 
 % ##### Write info to CW #####
-fprintf('\n');
-fprintf('A total of %d stations, %d quasars, %d satellites, %d scans and %d observations were found.\n', length(antenna), length(sources.q), length(sources.s), length(scan), length([scan.obs]));
+fprintf('\nA total of %d stations, %d quasars, %d satellites, %d scans and %d observations were found.\n', length(antenna), length(sources.q), length(sources.s), length(scan), length([scan.obs]));
 disp('The following stations were found:')
 for i_ant = 1:length(antenna)
   fprintf('%2.0f%s%s\n',i_ant,'. ',antenna(i_ant).name)
@@ -367,4 +365,3 @@ antenna(1).session=session;
 % ???????????????????????????????????????
 
 fprintf('\nvie_init successfully finished!\n');
-

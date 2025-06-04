@@ -86,7 +86,6 @@ function [parameter,DUT1, XP, YP, DX, DY] = interpolateEOP(parameter, MJDeop, UT
 
     % Lagragne
     else % linear = 0
-        disp('Lagrange interpolation of EOP')
         parameter.eop.interp = 'lagrange';
         % subtraction of tidal variations (Defraigne and Smits) in dUT1 before interpolation
         % interpolate EOP for time of observation

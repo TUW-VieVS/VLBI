@@ -20,6 +20,10 @@
 %   
 %   Coded for VieVS: 
 %   01 May 2011 by Hana Spicakova
+%
+%	Revision:
+%   2025-02-02 by H.Wolf: added orbital elements to be written in the sinex file
+%
 % ************************************************************************ 
 
 function [N_sinex, b_sinex] = snx_changeunits(N_sinex,b_sinex,col_sinex,outsnx)  
@@ -30,6 +34,8 @@ function [N_sinex, b_sinex] = snx_changeunits(N_sinex,b_sinex,col_sinex,outsnx)
     c_xyz=[col_sinex.coorx col_sinex.coory col_sinex.coorz];
     c_eop4=[col_sinex.xp col_sinex.yp col_sinex.dX col_sinex.dY];
     c_dut1=[col_sinex.dut1];
+    c_KepEle_a=[col_sinex.KepEle1];
+    c_KepEle_5=[col_sinex.KepEle2 col_sinex.KepEle3 col_sinex.KepEle4 col_sinex.KepEle5 col_sinex.KepEle6];
     
     % zwd
     if outsnx.zwd==1
@@ -46,6 +52,10 @@ function [N_sinex, b_sinex] = snx_changeunits(N_sinex,b_sinex,col_sinex,outsnx)
         if outsnx.eop==1
             N_sinex(c_zwd,c_eop4) = N_sinex(c_zwd,c_eop4).*100; %1/cm.mas --> 1/m.mas
             N_sinex(c_zwd,c_dut1) = N_sinex(c_zwd,c_dut1).*100.*15; %1/cm.mas --> 1/m.ms
+        end
+        if outsnx.orb ==1
+            N_sinex(c_zwd,c_KepEle_a) = N_sinex(c_zwd,c_KepEle_a).*10000; %1/cm^2 --> 1/m^2
+			N_sinex(c_zwd,c_KepEle_5) = N_sinex(c_zwd,c_KepEle_5).*100; %1/cm --> 1/m or 1/mas.cm --> 1/mas.m
         end
         b_sinex(c_zwd) = b_sinex(c_zwd).*100; %1/cm --> 1/m
     end
@@ -66,6 +76,10 @@ function [N_sinex, b_sinex] = snx_changeunits(N_sinex,b_sinex,col_sinex,outsnx)
             N_sinex(c_tgr,c_eop4) = N_sinex(c_tgr,c_eop4).*100; %1/cm.mas --> 1/m.mas
             N_sinex(c_tgr,c_dut1) = N_sinex(c_tgr,c_dut1).*100.*15; %1/cm.mas --> 1/m.ms
         end
+        if outsnx.orb ==1
+            N_sinex(c_tgr,c_KepEle_a) = N_sinex(c_tgr,c_KepEle_a).*10000; %1/cm^2 --> 1/m^2
+			N_sinex(c_tgr,c_KepEle_5) = N_sinex(c_tgr,c_KepEle_5).*100; %1/cm --> 1/m or 1/mas.cm --> 1/mas.m
+        end
         b_sinex(c_tgr) = b_sinex(c_tgr).*100; %1/cm --> 1/m
     end
 
@@ -85,6 +99,10 @@ function [N_sinex, b_sinex] = snx_changeunits(N_sinex,b_sinex,col_sinex,outsnx)
            N_sinex(c_sou,c_eop4) = N_sinex(c_sou,c_eop4).*(1000*3600*180/pi); %1/mas^2 --> 1/mas.rad
            N_sinex(c_sou,c_dut1) = N_sinex(c_sou,c_dut1).*(1000*3600*180/pi*15); %1/mas^2 --> 1/ms.rad
         end
+        if outsnx.orb ==1
+            N_sinex(c_sou,c_KepEle_a) = N_sinex(c_sou,c_KepEle_a).*100*(1000*3600*180/pi); %1/cm.mas --> 1/m.rad
+			N_sinex(c_sou,c_KepEle_5) = N_sinex(c_sou,c_KepEle_5).*(1000*3600*180/pi); %1/mas --> 1/rad or 1/mas^2 --> 1/mas.rad
+        end
         b_sinex(c_sou) = b_sinex(c_sou).*(1000*3600*180/pi); %1/mas --> 1/rad
     end
     
@@ -102,7 +120,11 @@ function [N_sinex, b_sinex] = snx_changeunits(N_sinex,b_sinex,col_sinex,outsnx)
         if outsnx.eop==1
             N_sinex(c_xyz,c_eop4) = N_sinex(c_xyz,c_eop4).*100; %1/cm.mas --> 1/m.mas
             N_sinex(c_xyz,c_dut1) = N_sinex(c_xyz,c_dut1).*100.*15; %1/cm.mas --> 1/m.ms
-        end   
+        end 
+        if outsnx.orb ==1
+            N_sinex(c_xyz,c_KepEle_a) = N_sinex(c_xyz,c_KepEle_a).*10000; %1/cm^2 --> 1/m^2
+			N_sinex(c_xyz,c_KepEle_5) = N_sinex(c_xyz,c_KepEle_5).*100; %1/cm --> 1/m or 1/mas.cm --> 1/mas.m
+        end
         b_sinex(c_xyz) = b_sinex(c_xyz).*100; %1/cm --> 1/m
     end
         
@@ -126,10 +148,42 @@ function [N_sinex, b_sinex] = snx_changeunits(N_sinex,b_sinex,col_sinex,outsnx)
             N_sinex(c_eop4,c_xyz) = N_sinex(c_eop4,c_xyz).*100; %1/cm.mas --> 1/m.mas
             N_sinex(c_dut1,c_xyz) = N_sinex(c_dut1,c_xyz).*100.*15; %1/cm.mas --> 1/m.ms
         end
+        if outsnx.orb ==1
+            N_sinex(c_eop4,c_KepEle_a) = N_sinex(c_eop4,c_KepEle_a).*100; %1/cm.mas --> 1/m.mas
+            N_sinex(c_dut1,c_KepEle_a) = N_sinex(c_dut1,c_KepEle_a).*100*15; %1/cm.mas --> 1/m.ms
+			N_sinex(c_dut1,c_KepEle_5) = N_sinex(c_dut1,c_KepEle_5).*15; %1/mas --> 1/ms or 1/mas^2 --> 1/mas.ms
+        end
         b_sinex(c_dut1) = b_sinex(c_dut1).*15; %1/mas --> 1/ms
     end
-    
-    
-    
-    
-    
+
+    if outsnx.orb==1
+        %KepEle1 -> a -> cm zu m
+        N_sinex(c_KepEle_a,c_KepEle_a) = N_sinex(c_KepEle_a,c_KepEle_a).*10000; %1/cm^2 --> 1/m^2 
+		N_sinex(c_KepEle_a,c_KepEle_5) = N_sinex(c_KepEle_a,c_KepEle_5).*100; %1/([].cm) --> 1/([].m) or 1/(mas.cm) --> 1/(mas.m)
+	   if outsnx.zwd==1
+            N_sinex(c_KepEle_a,c_zwd) = N_sinex(c_KepEle_a,c_zwd).*10000; %1/cm^2 --> 1/m^2
+        end
+        if outsnx.tgr==1
+            N_sinex(c_KepEle_a,c_tgr) = N_sinex(c_KepEle_a,c_tgr).*10000; %1/cm^2 --> 1/m^2
+        end
+        if outsnx.sou==1
+            N_sinex(c_KepEle_a,c_sou) = N_sinex(c_KepEle_a,c_sou).*(1000*3600*180/pi)*100; %1/cm.mas --> 1/m.rad
+        end
+        if outsnx.xyz==1
+            N_sinex(c_KepEle_a,c_xyz) = N_sinex(c_KepEle_a,c_xyz).*10000; %1/cm^2 --> 1/m^2
+        end
+        if outsnx.eop==1
+            N_sinex(c_KepEle_a,c_eop4) = N_sinex(c_KepEle_a,c_eop4).*100; %1/cm.mas --> 1/m.mas
+            N_sinex(c_KepEle_a,c_dut1) = N_sinex(c_KepEle_a,c_dut1).*100*15; %1/cm.mas --> 1/m.ms
+        end 
+        b_sinex(c_KepEle_a) = b_sinex(c_KepEle_a).*100; %1/cm --> 1/m
+
+		% others       
+        N_sinex(c_KepEle_5,c_KepEle_a) = N_sinex(c_KepEle_5,c_KepEle_a).*100; %1/cm --> 1/m or 1/mas.cm --> 1/mas.m 
+        N_sinex(c_KepEle_5,c_zwd) = N_sinex(c_KepEle_5,c_zwd).*100; %1/cm --> 1/m or 1/mas.cm --> 1/mas.m
+		N_sinex(c_KepEle_5,c_tgr) = N_sinex(c_KepEle_5,c_tgr).*100; %1/cm --> 1/m or 1/mas.cm --> 1/mas.m
+		N_sinex(c_KepEle_5,c_sou) = N_sinex(c_KepEle_5,c_sou).*(1000*3600*180/pi); %1/mas --> 1/rad or 1/mas^2 --> 1/mas.rad
+		N_sinex(c_KepEle_5,c_xyz) = N_sinex(c_KepEle_5,c_xyz).*100; %1/cm --> 1/m or 1/mas.cm --> 1/mas.m
+		N_sinex(c_KepEle_5,c_dut1) = N_sinex(c_KepEle_5,c_dut1).*15; %1/mas --> 1/ms or 1/mas^2 --> 1/mas.ms
+    end
+end    

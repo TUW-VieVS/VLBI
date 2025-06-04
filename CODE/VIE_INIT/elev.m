@@ -24,6 +24,7 @@
 %
 %   Revision: 
 %   17 Dec 2009 by Lucia Plank: replace xyz2ellip.m with xyz2ell.m
+%   13 Jan 2025 by Helene Wolf: added end to function
 %
 % ************************************************************************
 function el = elev(mjd,ant,de,ra,varargin)
@@ -84,7 +85,5 @@ function el = elev(mjd,ant,de,ra,varargin)
 
    % zenith distance
    zd = acos(lq(3));
-   el = pi/2-zd;    
-    
-    
-    
+   el = pi/2-zd;     
+end

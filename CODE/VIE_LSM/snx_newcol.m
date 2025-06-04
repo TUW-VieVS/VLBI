@@ -19,26 +19,39 @@
 %   05 Oct 2010 by Hana Spicakova
 % ************************************************************************ 
 
-function col_sinex=snx_newcol(col_est,x_,antenna,outsnx)
+function col_sinex=snx_newcol(col_est,x_,antenna,outsnx, parameter)
 
+    if parameter.lsmopt.stc_all == 1
+        cx = "coorx";
+        cy = "coory";
+        cz = "coorz";
+    elseif parameter.lsmopt.stc_sat == 1 || (parameter.lsmopt.stc_qs && parameter.lsmopt.stc_qs_snx_sat)
+        cx = "coorx_sat";
+        cy = "coory_sat";
+        cz = "coorz_sat";
+    elseif parameter.lsmopt.stc_qu == 1 || (parameter.lsmopt.stc_qs && parameter.lsmopt.stc_qs_snx_qu)
+        cx = "coorx_qu";
+        cy = "coory_qu";
+        cz = "coorz_qu";
+    end
 
     % x-coordinate
     clear old
-    old=[x_.coorx.col]; newcol_x=[];
+    old=[x_.(cx).col]; newcol_x=[];
     for i=1:length(old)
         [a,newcol_x(i)]=find(old(i)==col_est);
     end
 
     % y-coordinate
     clear old
-    old=[x_.coory.col]; newcol_y=[];
+    old=[x_.(cy).col]; newcol_y=[];
     for i=1:length(old)
         [a,newcol_y(i)]=find(old(i)==col_est);
     end
     
     % z-coordinate
     clear old
-    old=[x_.coorz.col]; newcol_z=[];
+    old=[x_.(cz).col]; newcol_z=[];
     for i=1:length(old)
         [a,newcol_z(i)]=find(old(i)==col_est);
     end
@@ -126,6 +139,52 @@ function col_sinex=snx_newcol(col_est,x_,antenna,outsnx)
             end
         end
     end
+
+    %%
+    %Keplerelemente
+    if outsnx.orb==1
+        % KepEle1
+        clear old
+        old=[x_.KepEle1.col]; newcol_KepEle1=[];
+        for i=1:length(old)
+            [a,newcol_KepEle1(i)]=find(old(i)==col_est);
+        end
+
+        % KepEle2
+        clear old
+        old=[x_.KepEle2.col]; newcol_KepEle2=[];
+        for i=1:length(old)
+            [a,newcol_KepEle2(i)]=find(old(i)==col_est);
+        end
+
+        % KepEle3
+        clear old
+        old=[x_.KepEle3.col]; newcol_KepEle3=[];
+        for i=1:length(old)
+            [a,newcol_KepEle3(i)]=find(old(i)==col_est);
+        end
+
+        % KepEle4
+        clear old
+        old=[x_.KepEle4.col]; newcol_KepEle4=[];
+        for i=1:length(old)
+            [a,newcol_KepEle4(i)]=find(old(i)==col_est);
+        end
+
+        % KepEle5
+        clear old
+        old=[x_.KepEle5.col]; newcol_KepEle5=[];
+        for i=1:length(old)
+            [a,newcol_KepEle5(i)]=find(old(i)==col_est);
+        end
+
+        % KepEle6
+        clear old
+        old=[x_.KepEle6.col]; newcol_KepEle6=[];
+        for i=1:length(old)
+            [a,newcol_KepEle6(i)]=find(old(i)==col_est);
+        end
+    end
     
     %%
     
@@ -195,6 +254,29 @@ function col_sinex=snx_newcol(col_est,x_,antenna,outsnx)
         end
         col_sinex.ra=newcol_ra;
         col_sinex.de=newcol_de;
+    end
+
+    col_sinex.KepEle1=[];
+    col_sinex.KepEle2=[];
+    col_sinex.KepEle3=[];
+    col_sinex.KepEle4=[];
+    col_sinex.KepEle5=[];
+    col_sinex.KepEle6=[];
+
+    if outsnx.orb==1
+        col_sinex.KepEle1=newcol_KepEle1;
+        col_sinex.KepEle2=newcol_KepEle2;
+        col_sinex.KepEle3=newcol_KepEle3;
+        col_sinex.KepEle4=newcol_KepEle4;
+        col_sinex.KepEle5=newcol_KepEle5;
+        col_sinex.KepEle6=newcol_KepEle6;
+
+        col_sinex.mjd_KepEle1=x_.KepEle1.mjd;
+        col_sinex.mjd_KepEle2=x_.KepEle2.mjd;
+        col_sinex.mjd_KepEle3=x_.KepEle3.mjd;
+        col_sinex.mjd_KepEle4=x_.KepEle4.mjd;
+        col_sinex.mjd_KepEle5=x_.KepEle5.mjd;
+        col_sinex.mjd_KepEle6=x_.KepEle6.mjd;
     end
      
     

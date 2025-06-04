@@ -53,6 +53,11 @@
 
 function [antenna,scan,sources,session,parameter] = vie_sim(antenna,scan,sources,session,dirpt,parameter)
 
+%ADDED
+if iscell(antenna(1).session)
+    antenna(1).session = session;
+end
+
 % Options:
 % flag_write_vso = true;
 
@@ -74,12 +79,12 @@ if ~exist('../DATA/LEVEL4','dir')
 end
 
 
-disp ' loading sim files...'
+fprintf('loading sim files...')
 pfile1='../DATA/LEVEL4/';
 load ([pfile1 'simparam.mat'],'simparam');
-disp '... done.'
+fprintf('  done.\n')
 
-fprintf('##### Simulating session %s for %d days #####\n', session, simparam.idays)
+fprintf('Simulating session %s for %d day(s) ... \n', session, simparam.idays)
 
 % Initialize random number generator:
 if simparam.rng_use_seed % Use the seed defined in the GUI to initialize the random number generator
@@ -96,9 +101,7 @@ end
 flag_write_ngs_file = simparam.ngs;
 flag_write_vso_file = simparam.write_vso;
 
-% number of scans
 nscan = length(scan);
-% number of antennas participating
 nant = length(antenna);
 
 % preallocate structure arrays
@@ -106,9 +109,7 @@ azel = struct;
 mf = struct;
 st = zeros(nant,1);
 % extract az, el, and mjd (stationwise)
-% loop over all scans
 for i = 1:nscan
-    % loop over all stations in the scan
     for j = 1:length(scan(i).stat)
         if ~isempty(scan(i).stat(j).az)
             st(j) = st(j) + 1;
@@ -174,45 +175,87 @@ end
 % pre-allocate
 sim = struct;
 cov = struct;
+simclk_ant = zeros(nant,1);
+simclk_zwd = zeros(nant,1);
+names = strings(1, nant);
 for i = 1:nant
     sim(i).name = antenna(i).name;
-    
-    % ##### Simulate station clock #####
+
+    % simulate station clock
     if (tfil_used_falg == 1) && (sclk == 1)
-        disp (['    simulating clock for station ',antenna(i).name])
         sim(i).clk = sim_clk(azel(i).mjd,simparam1(i).sy1,simparam1(i).sy2,sim_idays);
+        simclk_ant(i) = 1;
     elseif (tfil_used_falg == 0) && (sclk == 1)
-        disp (['    simulating clock for station ',antenna(i).name])
         sim(i).clk = sim_clk(azel(i).mjd,simparam1(1).sy1,simparam1(1).sy2,sim_idays);
+        simclk_ant(i) = 1;
     else
         sim(i).clk = zeros(length(azel(i).mjd),sim_idays);
+        simclk_ant(i) = 0;
     end
     
-    % ##### Simulate troposphere slant wet delay #####
+    % simulate troposphere slant wet delay
     if (tfil_used_falg == 1) && (sswd == 1)
-        disp (['    simulating wet delay for station ',antenna(i).name])
         [swd,cv] = sim_swd(azel(i).mjd,azel(i).az,azel(i).el,mf(i).mfw,sim_idays,...
             simparam1(i).dhseg,simparam1(i).dh,simparam1(i).Cn, ...
             simparam1(i).H,simparam1(i).vn,simparam1(i).ve,simparam1(i).wzd0);
+        simclk_zwd(i) = 1;
     elseif (tfil_used_falg == 0) && (sswd == 1)
-        disp (['    simulating wet delay for station ',antenna(i).name])
         [swd,cv] = sim_swd(azel(i).mjd,azel(i).az,azel(i).el,mf(i).mfw,sim_idays,...
             simparam1(1).dhseg,simparam1(1).dh,simparam1(1).Cn, ...
             simparam1(1).H,simparam1(1).vn,simparam1(1).ve,simparam1(1).wzd0);
+        simclk_zwd(i) = 1;
     else
         swd = zeros(length(azel(i).mjd),sim_idays);
         cv = 0;
+        simclk_zwd(i) = 0;
     end
     sim(i).swd = swd;
     cov(i).cov = cv;
+    names(i) = antenna(i).name;
 end
+
+simclk_names = names(simclk_ant==1);
+simzwd_names = names(simclk_zwd==1);
+
+
+if ~isempty(simclk_names)
+    fprintf('    simulating clock for stations: ')
+    fprintf('%s ', strjoin(simclk_names(1:end), ', '))
+else
+    fprintf('    No clock simulation was performed for any station.\n')
+end
+
+if ~isempty(simzwd_names)
+    fprintf('\n    simulating wet delay for stations: ')
+    fprintf('%s ', strjoin(simzwd_names(1:end), ', '))
+else
+    fprintf('    No wet delay simulation was performed for any station.')
+end
+
+fprintf('\n')
 
 % ##### Simulate White Noise #####
 % simulate white noise to be added to the baseline observations
 obs = [scan.obs];               % Extract obs. sub-structures
-nbslobs = length([obs.obs]);    % Number of baseline observations
+nbslobs = length(obs);    % Number of baseline observations
 
 % Check, which observations types should be simulated:
+if isempty(sources.q)
+    flag_sim_quasar_obs = false;
+else
+    flag_sim_quasar_obs = true;
+end
+
+if isempty(sources.s)
+    flag_sim_satellite_obs = false;
+else
+    flag_sim_satellite_obs = true;
+end
+
+
+% shall white noise be simulated?
+if swn == 1   
+    % Check, which observations types should be simulated:
     if isempty(sources.q)
         flag_sim_quasar_obs = false;
     else
@@ -223,7 +266,7 @@ nbslobs = length([obs.obs]);    % Number of baseline observations
     else
         flag_sim_satellite_obs = true;
     end
-    
+
     % Get obs inidices for obs types:
     if flag_sim_quasar_obs && ~flag_sim_satellite_obs     % Only quasar obs
         ind_q_obs = true(nbslobs, 1);
@@ -248,17 +291,13 @@ nbslobs = length([obs.obs]);    % Number of baseline observations
         end
     end
 
-
-% shall white noise be simulated?
-if swn == 1 
     % yes
     wnoise = simparam1(1).wn;
     if isfield(simparam1(1), 'wn_sat')
         wnoise_sat  = simparam1(1).wn_sat;
     else
         wnoise_sat  = 0;
-        % Check, if wnoise_sat is available in case satellites were
-        % observed:
+        % Check, if wnoise_sat is available in case satellites are observed:
         if flag_sim_satellite_obs
            error('White noise for satellite observations should be simulated, but the parameter "wn_sat" was not defined!'); 
         end
@@ -266,6 +305,7 @@ if swn == 1
 else
     % no
     wnoise = 0;
+    wnoise_sat  = 0;
 end
 
 % set reference clock to zero if specified in the GUI
@@ -295,7 +335,6 @@ if flag_sim_quasar_obs
                 wn(ind_q_obs, i_d) = randn(sum(ind_q_obs), 1) .* sig;
             end  
         otherwise
-            disp '    '
             disp '    simulating white noise per baseline observation (quasars)'
             wn(ind_q_obs, :) = sim_wn(wnoise, sum(ind_q_obs), sim_idays);
     end
@@ -315,7 +354,6 @@ if flag_sim_satellite_obs
                 wn(ind_s_obs, i_d) = randn(sum(ind_s_obs), 1) .* sig;
             end                        
         otherwise
-            disp '    '
             disp '    simulating white noise per baseline observation (satellites)'
             wn(ind_s_obs, :) = sim_wn(wnoise_sat, sum(ind_s_obs), sim_idays);
     end
@@ -354,13 +392,19 @@ else
     zinp = 0;
     disp '    '
     disp 'computing the simulated o-c values...'
-    disp '    '
-    % loop over all scans
-    for i = 1:nscan
-        % display the progress
-        if mod(i,50) == 0
-            disp (['    progress: scan ',num2str(i),' of ',num2str(nscan)])
+    fprintf('Progress: [');
+    next_print = 10;
+    for i = 1:nscan     
+        percent = i / nscan * 100;
+        if percent >= next_print
+            if next_print < 100
+                fprintf('%d%% -> ', next_print);
+            else
+                fprintf('100%%]\n');
+            end
+            next_print = next_print + 10;
         end
+
         % number of observations at each station (not all stations participate in all scans)
         l1 = zeros(nant,1);
         l2 = zeros(nant,1);
@@ -392,8 +436,9 @@ else
             sim_st2 = sim(st2);
             st_st1 = st(st1);
             st_st2 = st(st2);
+            scan(i).obs(j).obs = [];
             for iday = 1:sim_idays
-                scan(i).obs(j).obs(iday) = sim_st2.swd(st_st2,iday) + sim_st2.clk(st_st2,iday) - sim_st1.swd(st_st1,iday) - sim_st1.clk(st_st1,iday) + wn(k,iday) + soucorr; % [s]
+                scan(i).obs(j).obs(1,iday) = sim_st2.swd(st_st2,iday) + sim_st2.clk(st_st2,iday) - sim_st1.swd(st_st1,iday) - sim_st1.clk(st_st1,iday) + wn(k,iday) + soucorr; % [s]
             end
             
             % if a white noise was specified in the turbulence parameter file or in the GUI 
@@ -419,7 +464,7 @@ disp 'saving simulated data...'
 %     mkdir(dirpt1)
 % end
 % 
-% try
+%try
 %     if sind < 10
 %         save([dirpt1 '/' session '_S00' num2str(sind) '_sim.mat'],'sim');
 %     elseif sind < 100
@@ -523,6 +568,10 @@ for iscan = 1:length(scan)
             scan(iscan).obs(iobs).obs = scan(iscan).obs(iobs).com;
         else
             scan(iscan).obs(iobs).obs = scan(iscan).obs(iobs).com + [scan(iscan).obs(iobs).obs]';
+            %scan(iscan).obs(iobs).obs = scan(iscan).obs(iobs).comChanged1 + [scan(iscan).obs(iobs).obs]'; % Orbital error ADDED
+            %temp1 = scan(iscan).obs(iobs).com + [scan(iscan).obs(iobs).obs]';
+            %temp1 = scan(iscan).obs(iobs).comChanged + [scan(iscan).obs(iobs).obs]';
+
         end
         % the sigma of the simulated delay observable is set to
         % the value of the simulated thermal noise, ionospheric formal

@@ -1,0 +1,5 @@
+#8char name   dRA[mas]  dDe[mas]   mRA[mas]  mDe[mas] wrt some catalog (dummy numbers)
+CTA21           0        0           0          0 
+3C48            0        0           0          0
+
+

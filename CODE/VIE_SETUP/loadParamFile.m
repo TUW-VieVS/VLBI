@@ -59,6 +59,8 @@ function loadParamFile(hObject, handles, fullFileName)
 % load parameter file
 load(fullFileName);
 
+parameter = checkParameterFile(parameter);
+
 % VIE_INIT
 % ================
 % set opt directory if there is a directory like this
@@ -933,7 +935,7 @@ else
     set(handles.text403, 'Enable', 'off');
     set(handles.text404, 'Enable', 'off');
 end
-
+set(handles.radiobutton_estimation_leastSquares_basdepClockoff_automatic, 'Value', parameter.lsmopt.bdco_auto);
 
 set(handles.text_run_sinex_clockParam, 'Enable', snxState)
 set(handles.radiobutton_run_sinex_clockParam_incl, 'Enable', 'off') % is never written to SINEX
@@ -1068,32 +1070,76 @@ end
 
 % estimate station coordinates
 set(handles.checkbox_estimation_leastSquares_coordinates_estimate, 'Value', parameter.lsmopt.stc)
-if parameter.lsmopt.stc==1
-    set(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Enable', 'on')
-    set(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Enable', 'on')
-    set(handles.checkbox_estimation_leastSquares_coordinates_NNS, 'Enable', 'on')
+set(handles.radiobutton_estStaCoord_SatObsOnly, 'Value', parameter.lsmopt.stc_sat)
+set(handles.radiobutton_estStaCoord_QuObsOnly, 'Value', parameter.lsmopt.stc_qu)
+set(handles.radiobutton_estStaCoord_AllObs, 'Value', parameter.lsmopt.stc_all)
+set(handles.radiobutton_estStaCoord_QSObs_Sep, 'Value', parameter.lsmopt.stc_qs)
+set(handles.rb_StaCoord_snx_qs_sat, 'Value', parameter.lsmopt.stc_qs_snx_sat)
+set(handles.rb_StaCoord_snx_qs_qu, 'Value', parameter.lsmopt.stc_qs_snx_qu)
+set(handles.checkbox_estStaCoord_AddDatumConditions, 'Value', parameter.lsmopt.addDatumCd)
+set(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Value', parameter.lsmopt.nnt_stc)
+set(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Value', parameter.lsmopt.nnr_stc)
+set(handles.checkbox_estimation_leastSquares_coordinates_NNS, 'Value', parameter.lsmopt.nns_stc)
+
+if strcmp(parameter.lsmopt.datum, 'all') 
+    set(handles.rb_estimation_leastSquares_coordinates_datum_all, 'Value', 1)
+    set(handles.rb_estimation_leastSquares_coordinates_datum_trf, 'Value', 0)
+    set(handles.checkbox_removeStatDatum, 'Enable', 'off')
+    set(handles.popupmenu_removeStatDatum_file, 'Enable', 'off')
+    set(handles.popupmenu_removeStatDatum_file, 'String', ' ')
+elseif strcmp(parameter.lsmopt.datum, 'trf') 
+    set(handles.rb_estimation_leastSquares_coordinates_datum_trf, 'Value', 1)
+    set(handles.rb_estimation_leastSquares_coordinates_datum_all, 'Value', 0)
+    set(handles.checkbox_removeStatDatum, 'Enable', 'on')
+    set(handles.popupmenu_removeStatDatum_file, 'Enable', 'on')
+    set(handles.checkbox_removeStatDatum, 'Value', parameter.lsmopt.trf_excldatum)
+    set(handles.popupmenu_removeStatDatum_file, 'String', parameter.lsmopt.trf_excldatum_file)
+end
+
+if parameter.lsmopt.stc == 1
+    set(handles.radiobutton_estStaCoord_SatObsOnly, 'Enable', 'on')
+    set(handles.radiobutton_estStaCoord_QuObsOnly, 'Enable', 'on')
+    set(handles.radiobutton_estStaCoord_AllObs, 'Enable', 'on')
+    set(handles.radiobutton_estStaCoord_QSObs_Sep, 'Enable', 'on')
+    set(handles.checkbox_estStaCoord_AddDatumConditions, 'Enable', 'on')
     if parameter.lsmopt.ascii_snx==1
         snxState='on';
     else
         snxState='off';
     end
+    if parameter.lsmopt.addDatumCd==1
+        set(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Enable', 'on')
+        set(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Enable', 'on')
+        set(handles.checkbox_estimation_leastSquares_coordinates_NNS, 'Enable', 'on')
+    else
+        set(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Enable', 'off')
+        set(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Enable', 'off')
+        set(handles.checkbox_estimation_leastSquares_coordinates_NNS, 'Enable', 'off')    
+    end
+    if parameter.lsmopt.stc_qs
+        set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'on')
+        set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'on')      
+    end
 else
+    set(handles.radiobutton_estStaCoord_SatObsOnly, 'Enable', 'off')
+    set(handles.radiobutton_estStaCoord_QuObsOnly, 'Enable', 'off')
+    set(handles.radiobutton_estStaCoord_AllObs, 'Enable', 'off')
+    set(handles.radiobutton_estStaCoord_QSObs_Sep, 'Enable', 'off')
+    set(handles.checkbox_estStaCoord_AddDatumConditions, 'Enable', 'off')
     set(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Enable', 'off')
     set(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Enable', 'off')
     set(handles.checkbox_estimation_leastSquares_coordinates_NNS, 'Enable', 'off')
     snxState='off';
 end
-set(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Value', parameter.lsmopt.nnt_stc)
-set(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Value', parameter.lsmopt.nnr_stc)
-set(handles.checkbox_estimation_leastSquares_coordinates_NNS, 'Value', parameter.lsmopt.sca_stc)
+
 if ~isfield(parameter.lsmopt, 'datum')
     parameter.lsmopt.datum = 'trf';
     msgbox('Loaded parameter file (from older VieVS version) does not contain the "datum (trf/all)" option!', 'Warning', 'warn');
 end
 if strcmp(parameter.lsmopt.datum,'trf')
-    set(handles.radiobutton_estimation_leastSquares_coordinates_datum_trf, 'Value', 1)
+    set(handles.rb_estimation_leastSquares_coordinates_datum_trf, 'Value', 1)
 elseif strcmp(parameter.lsmopt.datum,'all')
-    set(handles.radiobutton_estimation_leastSquares_coordinates_datum_all, 'Value', 1)
+    set(handles.rb_estimation_leastSquares_coordinates_datum_all, 'Value', 1)
 else
     msgbox('"parameter.lsmopt.datum" does not contain a valid option (trf/all)!', 'Warning', 'warn');
 end
@@ -1109,20 +1155,105 @@ set(handles.edit_estimation_leastSquares_sources_interval, 'String', num2str(par
 set(handles.text321, 'String', sprintf('after %s minutes', num2str(parameter.lsmopt.sour_int_rade)))
 
 set(handles.checkbox_estimation_leastSquares_sources_NNR, 'Value', parameter.lsmopt.est_sourceNNR)
-if parameter.lsmopt.est_sourceNNR
-    set(handles.checkbox_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'on')
-    set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Enable', 'on')
-    set(handles.checkbox_est_lsm_sources_obs_per_source, 'Enable', 'on')
-else
-    set(handles.checkbox_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'off')
+set(handles.checkbox_est_lsm_sources_obs_per_source, 'Enable', 'on')
+if parameter.lsmopt.pw_sou
     set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
-    set(handles.checkbox_est_lsm_sources_obs_per_source, 'Enable', 'off')
+
+    if strcmp(parameter.lsmopt.pw_sou_select, 'notcat')
+        set(handles.radiobutton_pwloSou_nonCRF, 'Value', 1)
+        set(handles.radiobutton_pwloSoulist_iers,'Enable','off')
+        set(handles.radiobutton_pwloSoulist_ivs,'Enable','off')
+        set(handles.popupmenu_pwloSou_file,'Enable','off')
+    elseif strcmp(parameter.lsmopt.pw_sou_select, 'notcat_and_file')
+        set(handles.radiobutton_pwloSou_nonCRFandfromFile, 'Value', 1)
+        if strcmp(parameter.lsmopt.pw_sou_select_file_sounames,'iers')
+            set(handles.radiobutton_pwloSoulist_iers,'Value',1)
+            set(handles.radiobutton_pwloSoulist_ivs,'Value',0)
+        else
+            set(handles.radiobutton_pwloSoulist_iers,'Value',0)
+            set(handles.radiobutton_pwloSoulist_ivs,'Value',1)
+        end
+        set(handles.radiobutton_pwloSoulist_iers,'Enable','On')
+        set(handles.radiobutton_pwloSoulist_ivs,'Enable','On')
+        set(handles.popupmenu_pwloSou_file,'Enable','On')
+        set(handles.popupmenu_pwloSou_file,'String',parameter.lsmopt.pw_sou_select_file)
+    elseif strcmp(parameter.lsmopt.pw_sou_select, 'file')
+        set(handles.radiobutton_pwloSou_fromFile, 'Value', 1)
+        if strcmp(parameter.lsmopt.pw_sou_select_file_sounames,'iers')
+            set(handles.radiobutton_pwloSoulist_iers,'Value',1)
+            set(handles.radiobutton_pwloSoulist_ivs,'Value',0)
+        else
+            set(handles.radiobutton_pwloSoulist_iers,'Value',0)
+            set(handles.radiobutton_pwloSoulist_ivs,'Value',1)
+        end
+        set(handles.radiobutton_pwloSoulist_iers,'Enable','On')
+        set(handles.radiobutton_pwloSoulist_ivs,'Enable','On')
+        set(handles.popupmenu_pwloSou_file,'Enable','on')
+        set(handles.popupmenu_pwloSou_file,'String',parameter.lsmopt.pw_sou_select_file)
+    end
+elseif parameter.lsmopt.est_sourceNNR
+    set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Enable', 'on')
+    set(handles.radiobutton_estimation_leastSquares_sources_ICRF2_def,'Enable','On')
+    set(handles.radiobutton_estimation_leastSquares_sources_fileDef,'Enable','On')
+    set(handles.radiobutton_pwloSoulist_ivs, 'Enable', 'off')
+    set(handles.popupmenu_pwloSou_file, 'Enable', 'off')
+    set(handles.radiobutton_pwloSoulist_ivs, 'Enable', 'off')
+    set(handles.radiobutton_pwloSoulist_iers, 'Enable', 'off')
+    if parameter.lsmopt.est_sourceNNR_defining
+        set(handles.radiobutton_estimation_leastSquares_sources_fileDef,'Value',0)
+        set(handles.radiobutton_estimation_leastSquares_sources_ICRF2_def,'Value',1)
+        set(handles.radiobutton_NNRSoulist_ivs,'Enable','off')
+        set(handles.radiobutton_NNRSoulist_iers,'Enable','off')
+        set(handles.popupmenu_NNRSou_file,'Enable','off')
+    elseif parameter.lsmopt.est_sourceNNR_selection
+        set(handles.radiobutton_estimation_leastSquares_sources_fileDef,'Value',1)
+        set(handles.radiobutton_estimation_leastSquares_sources_ICRF2_def,'Value',0)
+        set(handles.popupmenu_NNRSou_file,'Enable','on')
+        set(handles.radiobutton_NNRSoulist_ivs,'Enable','off')
+        set(handles.radiobutton_NNRSoulist_ivs,'Enable','off')
+        
+        if strcmp(parameter.lsmopt.NNR_sou_select_file_sounames,'iers')
+            set(handles.radiobutton_NNRSoulist_iers,'Value',1)
+            set(handles.radiobutton_NNRSoulist_ivs,'Value',0)
+        else
+            set(handles.radiobutton_NNRSoulist_iers,'Value',0)
+            set(handles.radiobutton_NNRSoulist_ivs,'Value',1)
+        end
+        set(handles.radiobutton_NNRSoulist_ivs,'Enable','on')
+        set(handles.radiobutton_NNRSoulist_iers,'Enable','on')
+    end
+else
+    set(handles.radiobutton_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'off')
+    set(handles.radiobutton_estimation_leastSquares_sources_fileDef, 'Enable', 'off')
+    set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
+    set(handles.radiobutton_NNRSoulist_ivs, 'Enable', 'off')
+    set(handles.radiobutton_NNRSoulist_iers, 'Enable', 'off')
+    set(handles.popupmenu_NNRSou_file, 'Enable', 'off')
+end
+
+set(handles.checkbox_est_lsm_sources_blacklist, 'Value', parameter.lsmopt.remove_sources_from_list )
+if parameter.lsmopt.remove_sources_from_list 
+    set(handles.radiobutton_SouBlacklist_ivs, 'Enable', 'on')
+    set(handles.radiobutton_SouBlacklist_iers, 'Enable', 'on')
+    set(handles.popupmenu_removeSou_file, 'Enable', 'on')
+    if strcmp(parameter.lsmopt.remove_sou_file_sounames,'ivs')
+        set(handles.radiobutton_SouBlacklist_ivs, 'Value', 1)
+        set(handles.radiobutton_SouBlacklist_iers, 'value', 0)
+    elseif strcmp(parameter.lsmopt.remove_sou_file_sounames,'iers')
+        set(handles.radiobutton_SouBlacklist_ivs, 'Value', 0)
+        set(handles.radiobutton_SouBlacklist_iers, 'value', 1)
+    end
+    set(handles.popupmenu_removeSou_file,'String',parameter.lsmopt.remove_sou_file)
+else
+    set(handles.radiobutton_SouBlacklist_ivs, 'Enable', 'off')
+    set(handles.radiobutton_SouBlacklist_iers, 'Enable', 'off')
+    set(handles.popupmenu_removeSou_file, 'Enable', 'off')  
 end
 
 if isfield(parameter.lsmopt, 'est_sourceNNR_defining')
-    set(handles.checkbox_estimation_leastSquares_sources_ICRF2_def, 'Value', parameter.lsmopt.est_sourceNNR_defining)
+    set(handles.radiobutton_estimation_leastSquares_sources_ICRF2_def, 'Value', parameter.lsmopt.est_sourceNNR_defining)
 else
-    set(handles.checkbox_estimation_leastSquares_sources_ICRF2_def, 'Value', 0)
+    set(handles.radiobutton_estimation_leastSquares_sources_ICRF2_def, 'Value', 0)
 end
 
 if isfield(parameter.lsmopt, 'sourceAbsConstrNNR')
@@ -1172,6 +1303,9 @@ if parameter.lsmopt.pw_sou==0 || parameter.lsmopt.est_sourceNNR==1
     set(handles.edit_estimation_leastSquares_sources_interval, 'Enable', 'off')
     set(handles.checkbox_estimation_leastSquares_sources_constr, 'Enable', 'off')
     set(handles.edit_estimation_leastSquares_sources_constr, 'Enable', 'off')
+    set(handles.radiobutton_pwloSou_nonCRF, 'Enable', 'off')
+    set(handles.radiobutton_pwloSou_nonCRFandfromFile, 'Enable', 'off')
+    set(handles.radiobutton_pwloSou_fromFile, 'Enable', 'off')
 else
     set(handles.edit_estimation_leastSquares_sources_interval, 'Enable', 'on')
     set(handles.checkbox_estimation_leastSquares_sources_constr, 'Enable', 'on')
@@ -1180,6 +1314,9 @@ else
     else
         set(handles.edit_estimation_leastSquares_sources_constr, 'Enable', 'off')
     end
+    set(handles.radiobutton_pwloSou_nonCRF, 'Enable', 'on')
+    set(handles.radiobutton_pwloSou_nonCRFandfromFile, 'Enable', 'on')
+    set(handles.radiobutton_pwloSou_fromFile, 'Enable', 'on')
 end
 
 % prepare parameters for global solution
@@ -1223,6 +1360,9 @@ set(handles.checkbox_run_globalPram_APLrg, 'Value', parameter.lsmopt.est_rg)
 
 
 % SINEX output
+if parameter.lsmopt.ascii_snx
+ set(handles.text_run_sinex_header, 'Enable', 'on')   
+end
 set(handles.checkbox_run_sinex_write, 'Value', parameter.lsmopt.ascii_snx)
 set(handles.radiobutton_run_sinex_clockParam_incl, 'Value', parameter.lsmopt.outsnx.clk)
 set(handles.radiobutton_run_sinex_zwd_incl, 'Value', parameter.lsmopt.outsnx.zwd)
@@ -1230,6 +1370,7 @@ set(handles.radiobutton_run_sinex_tropoParam_incl, 'Value', parameter.lsmopt.out
 set(handles.radiobutton_run_sinex_sources_incl, 'Value', 1)
 set(handles.radiobutton_run_sinex_stationCoords_incl, 'Value', parameter.lsmopt.outsnx.xyz)
 set(handles.radiobutton_run_sinex_eop_incl, 'Value', parameter.lsmopt.outsnx.eop)
+set(handles.radiobutton_run_sinex_orb_incl, 'Value', parameter.lsmopt.outsnx.orb)
 set(handles.checkbox_run_sinex_sources, 'Value', parameter.lsmopt.addSnxSource)
 set(handles.edit_run_sinex_firstname, 'String', parameter.lsmopt.outsnx.firstname)
 set(handles.edit_run_sinex_lastname, 'String', parameter.lsmopt.outsnx.lastname)
@@ -1268,6 +1409,7 @@ set(handles.radiobutton_run_sinex_clockParam_excl, 'Value', ~parameter.lsmopt.ou
 set(handles.radiobutton_run_sinex_zwd_excl, 'Value', ~parameter.lsmopt.outsnx.zwd)
 set(handles.radiobutton_run_sinex_tropoParam_excl, 'Value', ~parameter.lsmopt.outsnx.tgr)
 set(handles.radiobutton_run_sinex_eop_excl, 'Value', ~parameter.lsmopt.outsnx.eop)
+set(handles.radiobutton_run_sinex_orb_excl, 'Value', ~parameter.lsmopt.outsnx.orb)
 
 % sinex zwd enabling
 if (parameter.lsmopt.pw_zwd == 0) || ...
@@ -1412,3 +1554,229 @@ set(handles.checkbox_run_allowStationwise, 'Value', parameter.lsmopt.control_gui
 
 % set use of clock breaks and manually finding breaks
 set(handles.checkbox_estimation_leastSquares_clocks_useClockBreaks, 'Value', parameter.lsmopt.treat_breaks)
+
+% Satellite - Orbit Data Input
+set(handles.input_model_orbit_data, 'String', parameter.vie_init.sc_orbit_file_path_name);
+set(handles.rb_sp3, 'Value', 0);
+set(handles.rb_tle, 'Value', 0);
+set(handles.rb_ephem, 'Value', 0);
+set(handles.rb_fso, 'Value', 0);
+
+if strcmp(parameter.vie_init.sc_orbit_file_type, 'sp3')
+    set(handles.rb_sp3, 'Value', 1);
+elseif strcmp(parameter.vie_init.sc_orbit_file_type, 'tle')
+    set(handles.rb_tle, 'Value', 1)
+elseif strcmp(parameter.vie_init.sc_orbit_file_type, 'ephem')
+    set(handles.rb_ephem, 'Value', 1);
+elseif strcmp(parameter.vie_init.sc_orbit_file_type, 'fso')
+    set(handles.rb_fso, 'Value', 1)
+end
+
+% Satellite Orbit Estimation - Position NTW/RSW/XYZ
+
+if parameter.lsmopt.SatPos.pw_sat 
+    set(handles.checkBox_estimateSatellitePosition, 'Value', 1);
+    set(handles.estimationIntervalSatellitePositionString, 'Enable', 'on');
+    set(handles.estimationIntervalSatellitePositionValue, 'Enable', 'on');
+    set(handles.estimationIntervalSatellitePositionValue, 'String', parameter.lsmopt.SatPos.sat_pos_int);
+
+    set(handles.refFrameSatellitePositionString, 'Enable', 'on');
+    set(handles.popupMenu_refFrameSatellitePosition, 'Enable', 'on');
+    allRefFrames = get(handles.popupMenu_refFrameSatellitePosition, 'String');
+    RefFrameVal = find(strcmp(allRefFrames, parameter.lsmopt.SatPos.sat_pos_est_ref_frame));
+    set(handles.popupMenu_refFrameSatellitePosition, 'Value', RefFrameVal);
+
+    set(handles.checkBox_relativeConstraintsSatellitePosition, 'Enable', 'on');
+    if parameter.lsmopt.SatPos.constr_sat == 1
+        set(handles.checkBox_relativeConstraintsSatellitePosition, 'Value', 1)
+        set(handles.relativeConstraintsSatellitePositionString, 'Enable', 'on');
+        set(handles.relativeConstraintsSatellitePositionValue, 'Enable', 'on');
+        set(handles.relativeConstraintsSatellitePositionValue, 'String', parameter.lsmopt.SatPos.sat_pos_coef);
+    else
+        set(handles.checkBox_relativeConstraintsSatellitePosition, 'Value', 0)
+        set(handles.relativeConstraintsSatellitePositionString, 'Enable', 'off');
+        set(handles.relativeConstraintsSatellitePositionValue, 'Enable', 'off');
+    end
+
+    if RefFrameVal == 1 || RefFrameVal == 2
+        set(handles.checkbox_fixRadialComponent, 'Enable', 'on');
+        if parameter.lsmopt.SatPos.fixRadialComponent==1
+            set(handles.checkbox_fixRadialComponent, 'Value', 1);
+            set(handles.fixRadialComponentWeightString, 'Enable', 'on');
+            set(handles.fixRadialComponentWeightValue, 'Enable', 'on');
+            set(handles.fixRadialComponentWeightValue, 'String', parameter.lsmopt.SatPos.weightFixingRadialComponent);
+        else
+            set(handles.checkbox_fixRadialComponent, 'Value', 0);
+            set(handles.fixRadialComponentWeightString, 'Enable', 'off');
+            set(handles.fixRadialComponentWeightValue, 'Enable', 'off');
+        end
+    else
+        set(handles.checkbox_fixRadialComponent, 'Enable', 'off');
+        set(handles.fixRadialComponentWeightString, 'Enable', 'off');
+        set(handles.fixRadialComponentWeightValue, 'Enable', 'off');
+    end   
+else
+    set(handles.checkBox_estimateSatellitePosition, 'Value', 0);
+    set(handles.estimationIntervalSatellitePositionString, 'Enable', 'off');
+    set(handles.estimationIntervalSatellitePositionValue, 'Enable', 'off');
+    set(handles.refFrameSatellitePositionString, 'Enable', 'off');
+    set(handles.popupMenu_refFrameSatellitePosition, 'Enable', 'off');
+    set(handles.checkBox_relativeConstraintsSatellitePosition, 'Enable', 'off');
+    set(handles.relativeConstraintsSatellitePositionString, 'Enable', 'off');
+    set(handles.relativeConstraintsSatellitePositionValue, 'Enable', 'off');
+    set(handles.checkbox_fixRadialComponent, 'Enable', 'off');
+    set(handles.fixRadialComponentWeightString, 'Enable', 'off');
+    set(handles.fixRadialComponentWeightValue, 'Enable', 'off');
+end
+
+% Satellite Orbit Estimation - Orbital Elements
+% relative constraints missing - not sure if it will be implemented
+set(handles.cb_estKepEle, 'Value', parameter.lsmopt.KepEle.estKepEle)
+if parameter.lsmopt.KepEle.estKepEle == 1
+set(handles.rb_estKepEle_NumTau, 'Value', parameter.lsmopt.KepEle.estKepEle_NumTau)
+set(handles.rb_estKepEle_NumSatPos, 'Value', parameter.lsmopt.KepEle.estKepEle_NumSatPos)
+set(handles.rb_estKepEle_Ana, 'Value', parameter.lsmopt.KepEle.estKepEle_Ana)
+set(handles.rb_estKepEle_FRP, 'Value', parameter.lsmopt.KepEle.estKepEle_FRP)
+set(handles.edit_pathFRPFile, 'String', parameter.lsmopt.KepEle.FRPFile)
+
+set(handles.cb_estKepEle1, 'Value', parameter.lsmopt.KepEle.estKepEle1)
+set(handles.cb_estKepEle2, 'Value', parameter.lsmopt.KepEle.estKepEle2)
+set(handles.cb_estKepEle3, 'Value', parameter.lsmopt.KepEle.estKepEle3)
+set(handles.cb_estKepEle4, 'Value', parameter.lsmopt.KepEle.estKepEle4)
+set(handles.cb_estKepEle5, 'Value', parameter.lsmopt.KepEle.estKepEle5)
+set(handles.cb_estKepEle6, 'Value', parameter.lsmopt.KepEle.estKepEle6)
+
+set(handles.estIntValKepEle1, 'String', parameter.lsmopt.KepEle.estIntKepEle1)
+set(handles.estIntValKepEle2, 'String', parameter.lsmopt.KepEle.estIntKepEle2)
+set(handles.estIntValKepEle3, 'String', parameter.lsmopt.KepEle.estIntKepEle3)
+set(handles.estIntValKepEle4, 'String', parameter.lsmopt.KepEle.estIntKepEle4)
+set(handles.estIntValKepEle5, 'String', parameter.lsmopt.KepEle.estIntKepEle5)
+set(handles.estIntValKepEle6, 'String', parameter.lsmopt.KepEle.estIntKepEle6)
+end
+if parameter.lsmopt.KepEle.estKepEle == 1
+    set(handles.rb_estKepEle_NumTau, 'Enable', 'on')
+    set(handles.rb_estKepEle_NumSatPos, 'Enable', 'on')    
+    set(handles.rb_estKepEle_Ana, 'Enable', 'on')
+    set(handles.rb_estKepEle_FRP, 'Enable', 'on')
+    if parameter.lsmopt.KepEle.estKepEle_FRP == 1
+        set(handles.pb_browseFRPFile, 'Enable', 'on')
+        set(handles.edit_pathFRPFile, 'Enable', 'on')
+    else
+        set(handles.pb_browseFRPFile, 'Enable', 'off')
+        set(handles.edit_pathFRPFile, 'Enable', 'off')
+    end
+
+    set(handles.cb_estKepEle1, 'Enable', 'on')
+    set(handles.cb_estKepEle2, 'Enable', 'on')
+    set(handles.cb_estKepEle3, 'Enable', 'on')
+    set(handles.cb_estKepEle4, 'Enable', 'on')
+    set(handles.cb_estKepEle5, 'Enable', 'on')
+    set(handles.cb_estKepEle6, 'Enable', 'on')
+
+    set(handles.estIntStrKepEle1, 'Enable', 'on')
+    set(handles.estIntStrKepEle2, 'Enable', 'on')
+    set(handles.estIntStrKepEle3, 'Enable', 'on')
+    set(handles.estIntStrKepEle4, 'Enable', 'on')
+    set(handles.estIntStrKepEle5, 'Enable', 'on')
+    set(handles.estIntStrKepEle6, 'Enable', 'on')
+
+    set(handles.estIntValKepEle1, 'Enable', 'on')
+    set(handles.estIntValKepEle2, 'Enable', 'on')
+    set(handles.estIntValKepEle3, 'Enable', 'on')
+    set(handles.estIntValKepEle4, 'Enable', 'on')
+    set(handles.estIntValKepEle5, 'Enable', 'on')
+    set(handles.estIntValKepEle6, 'Enable', 'on')
+
+    if sum([parameter.lsmopt.KepEle.estKepEle1; parameter.lsmopt.KepEle.estKepEle2; parameter.lsmopt.KepEle.estKepEle3; parameter.lsmopt.KepEle.estKepEle4; parameter.lsmopt.KepEle.estKepEle5; parameter.lsmopt.KepEle.estKepEle6]) ~= 0 
+        set(handles.radiobutton_run_sinex_orb_incl, 'Enable', 'on');
+        set(handles.radiobutton_run_sinex_orb_excl, 'Enable', 'on');
+        set(handles.text_run_sinex_orb, 'Enable', 'on')
+    end
+else
+    set(handles.rb_estKepEle_NumTau, 'Enable', 'off')
+    set(handles.rb_estKepEle_NumSatPos, 'Enable', 'off')    
+    set(handles.rb_estKepEle_Ana, 'Enable', 'off')
+    set(handles.rb_estKepEle_FRP, 'Enable', 'off')
+    set(handles.pb_browseFRPFile, 'Enable', 'off')
+    set(handles.edit_pathFRPFile, 'Enable', 'off')
+    
+    set(handles.cb_estKepEle1, 'Enable', 'off')
+    set(handles.cb_estKepEle2, 'Enable', 'off')
+    set(handles.cb_estKepEle3, 'Enable', 'off')
+    set(handles.cb_estKepEle4, 'Enable', 'off')
+    set(handles.cb_estKepEle5, 'Enable', 'off')
+    set(handles.cb_estKepEle6, 'Enable', 'off')
+
+    set(handles.estIntStrKepEle1, 'Enable', 'off')
+    set(handles.estIntStrKepEle2, 'Enable', 'off')
+    set(handles.estIntStrKepEle3, 'Enable', 'off')
+    set(handles.estIntStrKepEle4, 'Enable', 'off')
+    set(handles.estIntStrKepEle5, 'Enable', 'off')
+    set(handles.estIntStrKepEle6, 'Enable', 'off')
+
+    set(handles.estIntValKepEle1, 'Enable', 'off')
+    set(handles.estIntValKepEle2, 'Enable', 'off')
+    set(handles.estIntValKepEle3, 'Enable', 'off')
+    set(handles.estIntValKepEle4, 'Enable', 'off')
+    set(handles.estIntValKepEle5, 'Enable', 'off')
+    set(handles.estIntValKepEle6, 'Enable', 'off')
+
+    set(handles.radiobutton_run_sinex_orb_incl, 'Enable', 'off');
+    set(handles.radiobutton_run_sinex_orb_excl, 'Enable', 'off');
+    set(handles.text_run_sinex_orb, 'Enable', 'off')
+end
+if parameter.lsmopt.KepEle.estKepEle == 1
+    if parameter.lsmopt.KepEle.estKepEle1 == 0
+        set(handles.estIntStrKepEle1, 'Enable', 'off');
+        set(handles.estIntValKepEle1, 'Enable', 'off');
+        set(handles.cb_relConstrKepEle1, 'Enable', 'off'); 
+        set(handles.cb_relConstrKepEle1, 'Value', 0); 
+        set(handles.relConstrValKepEle1, 'Enable', 'off');
+        set(handles.text_relConstrKepEle1, 'Enable', 'off');
+    end
+    
+    if parameter.lsmopt.KepEle.estKepEle2 == 0
+        set(handles.estIntStrKepEle2, 'Enable', 'off');
+        set(handles.estIntValKepEle2, 'Enable', 'off');
+        set(handles.cb_relConstrKepEle2, 'Enable', 'off'); 
+        set(handles.cb_relConstrKepEle2, 'Value', 0); 
+        set(handles.relConstrValKepEle2, 'Enable', 'off');
+        set(handles.text_relConstrKepEle2, 'Enable', 'off');
+    end
+    
+    if parameter.lsmopt.KepEle.estKepEle3 == 0
+        set(handles.estIntStrKepEle3, 'Enable', 'off');
+        set(handles.estIntValKepEle3, 'Enable', 'off');
+        set(handles.cb_relConstrKepEle3, 'Enable', 'off'); 
+        set(handles.cb_relConstrKepEle3, 'Value', 0); 
+        set(handles.relConstrValKepEle3, 'Enable', 'off');
+        set(handles.text_relConstrKepEle3, 'Enable', 'off');
+    end
+    
+    if parameter.lsmopt.KepEle.estKepEle4 == 0
+        set(handles.estIntStrKepEle4, 'Enable', 'off');
+        set(handles.estIntValKepEle4, 'Enable', 'off');
+        set(handles.cb_relConstrKepEle4, 'Enable', 'off'); 
+        set(handles.cb_relConstrKepEle4, 'Value', 0); 
+        set(handles.relConstrValKepEle4, 'Enable', 'off');
+        set(handles.text_relConstrKepEle4, 'Enable', 'off');
+    end
+    
+    if parameter.lsmopt.KepEle.estKepEle5 == 0
+        set(handles.estIntStrKepEle5, 'Enable', 'off');
+        set(handles.estIntValKepEle5, 'Enable', 'off');
+        set(handles.cb_relConstrKepEle5, 'Enable', 'off'); 
+        set(handles.cb_relConstrKepEle5, 'Value', 0); 
+        set(handles.relConstrValKepEle5, 'Enable', 'off');
+        set(handles.text_relConstrKepEle5, 'Enable', 'off');
+    end
+    
+    if parameter.lsmopt.KepEle.estKepEle6 == 0
+        set(handles.estIntStrKepEle6, 'Enable', 'off');
+        set(handles.estIntValKepEle6, 'Enable', 'off');
+        set(handles.cb_relConstrKepEle6, 'Enable', 'off'); 
+        set(handles.cb_relConstrKepEle6, 'Value', 0); 
+        set(handles.relConstrValKepEle6, 'Enable', 'off');
+        set(handles.text_relConstrKepEle6, 'Enable', 'off');
+    end
+end

@@ -43,21 +43,25 @@ allStationNames = strtrim(allStationNames);
 
 % Sources:
 % - Quasars
-nSources_q = size(sources.q, 2);
-if ~isempty(sources.q)
+%nSources_q = size(sources.q, 2);
+if ~isempty([sources.q.name])
     allSourceNames_q  = {sources.q.name}';
     allSourceNames_q  = strtrim(allSourceNames_q);
+    nSources_q = size({sources.q.name}, 2);
 else
     allSourceNames_q = {};
+    nSources_q = 0;
 end
 
 % - Spacecrafts/Satellites:
 nSources_s = size(sources.s, 2);
-if ~isempty(sources.s)
+if ~isempty([sources.s])
     allSourceNames_s  = {sources.s.name}';
     allSourceNames_s  = strtrim(allSourceNames_s);
+    nSources_s = size({sources.s.name}, 2);
 else
     allSourceNames_s = {};
+    nSources_s  = 0;
 end
 
 oneSecInDays = 1/60/60/24;

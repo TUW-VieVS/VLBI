@@ -32,7 +32,7 @@ nSessions = length(sessionIds);
 nObs = zeros(nSessions,1);
 nScans = zeros(nSessions,1);
 nSta = zeros(nSessions,1);
-nSrc = zeros(nSessions,1);
+%nSrc = zeros(nSessions,1);
 nSim = zeros(nSessions,1);
 
 stations = cell(nSessions,1);
@@ -74,7 +74,7 @@ for iSession=1:nSessions
     
     load([path name '/' files(1).name])
     nSta(iSession) = length(x_.coorx);
-    nSrc(iSession) = length(x_.soura);
+    %nSrc(iSession) = length(x_.soura);
     nSim(iSession) = 0;
     nObs(iSession) = x_.nobs;
     nScans(iSession) = x_.nscans;
