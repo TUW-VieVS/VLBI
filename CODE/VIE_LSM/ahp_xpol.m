@@ -82,3 +82,5 @@ Phxpol = diag(ones(1,n_unk_xpol).*1./coef_xpol^2);
 
 % FORMING THE O-C VECTOR FOR THE CONSTRAINTS
 oc_hxpol(size(Hxpol,1),1) = 0; % o-c vector for the xpol constraints
+
+end

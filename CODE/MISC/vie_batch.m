@@ -17,7 +17,6 @@
 % - vie_lsm_scanwise
 % - vie_glob
 % - get_trf_and_crf
-% - writeLEVEL3toXLSX
 %
 %
 % CHANGES
@@ -58,6 +57,7 @@
 % - 2017-12-14, A. Hellerschmied: Path to /COMPILE/MISC/ added
 % - 2018-01-18, A. Hellerschmied    - Revised for handling of VieVS with GIT
 % - 2021-10-27, H. Wolf: removed VIE_SCHED module
+% - 2025-05-15, H.Wolf: removed writeLEVEL3toXLSX function
 
 %*************************************************************************
 
@@ -68,6 +68,8 @@ load('process_list','process_list');
 load('runp','runp')
 load('guiparameter.mat');
 cleanVgosDB();
+
+parameter = checkParameterFile(parameter);
 
 pthDALE = '../'; % path to DAta LEvel (only LEVEL0 and LEVEL1 at the moment)
 % pthDALE = '/data/VIEVS/' 
@@ -131,12 +133,6 @@ if ~isfield(runp,'sim')
 end
 
 %% get parallel
-if isfield(runp, 'parallel')
-    VieVS_parallel=runp.parallel;
-else
-    VieVS_parallel=0;
-end
-
 if runp.parallel
     % Get MATLAB version (release name)
     % Use "parpool" instead of "matlabpool" for version "2013b" and following releases
@@ -147,9 +143,7 @@ if runp.parallel
     else
         flag_release_r2013b_or_later = 0;
     end
-    % get number of cores
     nCores=runp.nCores{1};
-    % write user info
     fprintf('Starting parallel VieVS...\n');
     
     % ##### Parallel computing before release R2013b #####
@@ -157,7 +151,7 @@ if runp.parallel
         % close matlabpool if already open
         matlabpool size;
         if ans~=0
-            matlabpool close;
+            parpool close;
         end
         % open matlabpool
         if strcmp(nCores, 'auto')
@@ -176,7 +170,6 @@ if runp.parallel
             % ...with the default profile:
             if strcmp(nCores, 'auto')
                 poolobj = parpool;
-                %...with the specified number of workers:
             else
                 nCores = str2double(nCores);
                 poolobj = parpool(nCores);
@@ -186,8 +179,7 @@ if runp.parallel
 end
 
 %% if you run vie_init get TRF and CRF
-    [trf, crf, parameter] = get_trf_and_crf(parameter);
-
+[trf, crf, parameter] = get_trf_and_crf(parameter);
 
 % setup for parallel counter in case MATLAB version > 9.1 (2017a). 
 number_of_sessions = size(process_list, 1);
@@ -233,10 +225,9 @@ if ~isempty(process_list)
     end
 
 
-    %% main 
     if runp.init || runp.mod || runp.lsm || runp.lsm_scanwise || runp.sim
         %% default - no parallel:
-        if VieVS_parallel==0
+        if runp.parallel==0
             delete(h);
             for isess=1:number_of_sessions
                 %% parameters for each session 
@@ -357,7 +348,7 @@ if ~isempty(process_list)
                         fprintf(' Input file format: VSO\n');
 
                     case 'vgosdb'
-                        parameter.session_name  = deblank(session_name(6 : (strfind(session_name, ' [vgosDB]')-1)));
+                        parameter.session_name  = session_name(6 : (strfind(session_name, ' [vgosDB]')-1));
 %                         year_tmp = str2double(parameter.session_name(1:2));
 %                         % Check if conversion was sucessfull:
 %                         if isnan(year_tmp)
@@ -382,8 +373,8 @@ if ~isempty(process_list)
                         parameter.year          = session_name(1:4);
                         parameter.filepath      = ['../DATA/VDA/', parameter.year, '/'];
                         fprintf(' Input file format: VDA\n');
-
-                end % switch(parameter.data_type)
+						
+                end
                 session = parameter.session_name;
 
                 try
@@ -440,8 +431,12 @@ if ~isempty(process_list)
                                 tmp=load([fil '_scan.mat']);scan=tmp.scan;
                                 tmp=load([fil '_antenna.mat']);antenna=tmp.antenna;
                                 tmp=load([fil '_sources.mat']);sources=tmp.sources;
+                                tmp=load([fil '_parameter.mat']); parameter.vie_init=tmp.parameter.vie_init; 
+                                parameter.eop =tmp.parameter.eop;
+                                parameter.vie_mod.eophf =tmp.parameter.vie_mod.eophf;
                             end
                             [antenna,scan,sources,session,parameter] = vie_sim(antenna,scan,sources,session,runp.mod_path,parameter);   % Jing SUN, Jan 10, 2012
+                            savestruct(fil,parameter,antenna,scan,sources);
                         else
                             fprintf('You need to run VIE_MOD for session %s before you can run VIE_SIM\n',session);
                         end
@@ -459,20 +454,21 @@ if ~isempty(process_list)
                                 exist([fil '_antenna.mat'], 'file')&&...
                                 exist([fil '_sources.mat'], 'file'))
 
-                            if ~runp.mod
+                            if ~runp.mod && ~runp.sim
                                 tmp=load([fil '_parameter.mat']);
                                 parameter.vie_init=tmp.parameter.vie_init;
                                 parameter.vie_mod=tmp.parameter.vie_mod;
                                 parameter.eop=tmp.parameter.eop;
+                                parameter.vie_mod.eophf=tmp.parameter.vie_mod.eophf;
                                 tmp=load([fil '_scan.mat']);scan=tmp.scan;
                                 tmp=load([fil '_antenna.mat']);antenna=tmp.antenna;
                                 tmp=load([fil '_sources.mat']);sources=tmp.sources;
                             end
-                            vie_lsm(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
+                            sources = vie_lsm(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path);
                         else
                             fprintf('You need to run VIE_MOD for session %s before you can run VIE_LSM\n', session);
                         end
-                        %end % Claudia 22/10/2012
+                       
 
                     elseif runp.lsm_scanwise %Claudia 22/10/2012
 
@@ -509,10 +505,9 @@ if ~isempty(process_list)
                     fprintf(fail_temp, '%s\n', sess_err{isess});
                     fclose(fail_temp);
                 end
-            end % for isess=1:num
-        else %--> parallel
+            end 
+        else 
             %% parallel processing
-            
 
             parfor isess = 1:number_of_sessions
                 %% parameters for each session 
@@ -640,7 +635,7 @@ if ~isempty(process_list)
                         fprintf(' Input file format: VSO\n');
 
                     case 'vgosdb'
-                        parameter.session_name  = deblank(session_name(6 : (strfind(session_name, ' [vgosDB]')-1)))
+                        parameter.session_name  = session_name(6 : (strfind(session_name, ' [vgosDB]')-1));
                         if ~contains(parameter.session_name, '-') % Check for new vgosDB naming convention
                             year_tmp = str2double(parameter.session_name(1:2));
                             % Check if conversion was sucessfull:
@@ -660,14 +655,13 @@ if ~isempty(process_list)
                         end
                         parameter.filepath      = ['../DATA/vgosDB/', session_name(1:4), '/'];
                         fprintf(' Input file format: vgosDB\n');
-
                     case 'vda'
                         parameter.session_name  = session_name(6 : (strfind(session_name, ' [VDA]')-1));
                         parameter.year          = session_name(1:4);
                         parameter.filepath      = ['../DATA/VDA/', parameter.year, '/'];
                         fprintf(' Input file format: VDA\n');
 
-                end % switch(parameter.data_type)
+                end 
                 session = parameter.session_name;
 
                 try
@@ -753,7 +747,7 @@ if ~isempty(process_list)
                                 tmp=load([fil '_antenna.mat']);antenna=tmp.antenna;
                                 tmp=load([fil '_sources.mat']);sources=tmp.sources;
                             end
-                            vie_lsm(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
+                            sources = vie_lsm(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
                         else
                             fprintf('You need to run VIE_MOD for session %s before you can run VIE_LSM\n', session);
                         end
@@ -804,7 +798,7 @@ if ~isempty(process_list)
             
             % ##### Close parallel computing #####
             if flag_release_r2013b_or_later == 0
-                matlabpool close
+                parpool close
             elseif flag_release_r2013b_or_later == 1
                 delete(poolobj)
             end
@@ -813,7 +807,7 @@ if ~isempty(process_list)
                     delete(h);
                 end
             end
-        end % if parallel
+        end 
     end
     
     %% VIE_GLOB
@@ -825,15 +819,13 @@ if ~isempty(process_list)
     if exist('process_list', 'var')
         process_list_orig = process_list;
 		clear process_list;
+        count = 1;
         flag = 0;
-        process_list = sess_err;
-        emptyCells = cellfun('isempty', process_list);
-        process_list(emptyCells)=[];
-
-        fprintf(2, '\n \n')
         for i_err = 1: length(sess_err) % display failed sessions
             if ~isempty(sess_err{i_err})
-                fprintf(2, 'session %s produced an error\n', sess_err{i_err});
+                fprintf(2, 'sessions %s produced an error\n', sess_err{i_err});
+                process_list(count,:) = sess_err{i_err};
+                count = count + 1;
                 flag = 1;
             end
         end
@@ -847,9 +839,11 @@ if ~isempty(process_list)
     end
 end
 
+
+
 if runp.lsm && runp.init && runp.sim && runp.mod
-    [t_mean_sig, t_rep] = analyse_simulations(runp.lsm_path);
-    
+    %[t_mean_sig, t_rep] = analyse_simulations(runp.lsm_path);
+	
     load ('../DATA/LEVEL4/simparam.mat','simparam');
     if(~isempty(simparam.pathToStatisticsFile))
         try
@@ -857,14 +851,6 @@ if runp.lsm && runp.init && runp.sim && runp.mod
         catch exception
             error(getReport(exception, 'extended')) % display error message and abort
         end
-    end
-end
-
-if exist('process_list_orig', 'var') && size(process_list_orig,1)>1 && runp.lsm && runp.init && runp.sim && runp.mod
-    try
-        writeLEVEL3toXLSX( runp );
-    catch exception
-        error(getReport(exception, 'extended')) % display error message and abort
     end
 end
 
@@ -1056,5 +1042,3 @@ function dispSessionNumber(number, total)
     
     fprintf(string);
 end
-
-

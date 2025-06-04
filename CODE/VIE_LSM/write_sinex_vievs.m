@@ -118,6 +118,7 @@ end
 
 
 
+
 %% calling this function as a script - just for testing...
 % clc
 % clear all
@@ -157,8 +158,7 @@ for pl=1:size(process_list,1)
     else
         snxFile=['../DATA/SNX/', subfolder, process_list(pl,6:end), suffix, '.snx'];
     end
-    files.superstation=('../TRF/superstation.mat');
-    
+  
     
     % check if SNX Folder exist
     snxfolder=['../DATA/SNX/', subfolder];
@@ -189,7 +189,7 @@ for pl=1:size(process_list,1)
         load(eval(curFileVar));
     end
     clear files curFileVar fieldn
-
+    load(parameter.vie_init.trf{1});
     
     outsnx=col_sinex.outsnx;
     
@@ -253,7 +253,7 @@ for pl=1:size(process_list,1)
         else
             antenna(k).siteCode=9999;     %hana Jun11
             antenna(k).pointCode='A';
-            antenna(k).domes=cellstr('99999S000');
+            antenna(k).domes=char('99999S000');
             antenna(k).description=antenna(k).name;
         end
     end
@@ -298,6 +298,7 @@ for pl=1:size(process_list,1)
     numDut1=size(col_sinex.dut1,2);
     numXnut=size(col_sinex.dX,2);
     numYnut=size(col_sinex.dY,2);
+    numOrb = size(col_sinex.KepEle1,2) + size(col_sinex.KepEle2,2) + size(col_sinex.KepEle3,2) + size(col_sinex.KepEle4,2) + size(col_sinex.KepEle5,2) + size(col_sinex.KepEle6,2);
     %numEstEOPs=numXpol+numYpol+numDut1+numXnut+numYnut;
     %numEOPs=size(eop_matrix,1);
     numStat=size(antenna, 2);
@@ -490,6 +491,34 @@ for pl=1:size(process_list,1)
         estsou = ' a) SOLUTION: fix all positions to their a prioris';
         estsouGA = ' ';
     end
+
+    if parameter.lsmopt.stc_all == 1
+        cx = "coorx";
+        cy = "coory";
+        cz = "coorz";
+        stacoord_text = 'all observations';
+    elseif parameter.lsmopt.stc_sat == 1
+        cx = "coorx_sat";
+        cy = "coory_sat";
+        cz = "coorz_sat";
+        stacoord_text = 'satellite observations only';
+    elseif parameter.lsmopt.stc_qu == 1 
+        cx = "coorx_qu";
+        cy = "coory_qu";
+        cz = "coorz_qu";
+        stacoord_text = 'quasar observations only';
+    elseif parameter.lsmopt.stc_qs && parameter.lsmopt.stc_qs_snx_qu
+        cx = "coorx_qu";
+        cy = "coory_qu";
+        cz = "coorz_qu";
+        stacoord_text = 'quasar observations (estimated separately)';
+    elseif parameter.lsmopt.stc_qs && parameter.lsmopt.stc_qs_snx_sat
+        cx = "coorx_sat";
+        cy = "coory_sat";
+        cz = "coorz_sat";
+        stacoord_text = 'satellite observations (estimated separately)';
+    end
+
     cutoff = parameter.obs_restrictions.cut_off_elev/pi*180; % rad --> deg
         
     comment={'Analysis description - template by Axel Nothnagel';
@@ -556,6 +585,8 @@ for pl=1:size(process_list,1)
         ' elements of interest are squeezed out by inversion steps.';
         ' vT*P*v = lT*P*l_red - xT*b';
         ' lT*P*l_red = lT*P*l - b2T*inv(N22)*b2';
+        '';
+        ['13. Station coordinates are based on ' stacoord_text];
         '';
         ['Cut-off elevation angle: ' num2str(cutoff) ' degree'];
         };
@@ -638,6 +669,12 @@ for pl=1:size(process_list,1)
         sources.q(k).siteCode=num2str(k);
     end
     
+    numSat=length(sources.s);
+    for k=1:numSat
+            fprintf(fid, ' %04s %-8s %-16s %-68s\n', num2str(k), sources.s(k).name(1:3), '---', num2str(sources.s(k).numobs)); %for galileo this has to be adjusted
+            sources.s(k).siteCode=num2str(k);
+    end
+
     % write blockend line to file
     fprintf(fid, '-%s\n', blockName);
     
@@ -765,7 +802,6 @@ for pl=1:size(process_list,1)
     if parameter.lsmopt.est_singleses==1
         infoType={'NUMBER OF OBSERVATIONS', 'NUMBER OF UNKNOWNS', 'SQUARE SUM OF RESIDUALS (VTPV)', 'VARIANCE FACTOR' , 'WEIGHTED SQUARE SUM OF O-C'}; % hana
         info={col_sinex.nr_obs, col_sinex.nr_unknowns, col_sinex.vTPv, col_sinex.varfac, col_sinex.lTPlreduc}; % hana
-
     else
         infoType={'NUMBER OF OBSERVATIONS', 'NUMBER OF UNKNOWNS', 'WEIGHTED SQUARE SUM OF O-C'};
         info={col_sinex.nr_obs, col_sinex.nr_unknowns, col_sinex.lTPlreduc}; % hana
@@ -870,9 +906,9 @@ for pl=1:size(process_list,1)
 
 
                 % calculate total estimated values
-                antenna(k).totX=antenna(k).aprX+x_.coorx(k).val/100;
-                antenna(k).totY=antenna(k).aprY+x_.coory(k).val/100;
-                antenna(k).totZ=antenna(k).aprZ+x_.coorz(k).val/100;
+                antenna(k).totX=antenna(k).aprX+x_.(cx)(k).val/100;
+                antenna(k).totY=antenna(k).aprY+x_.(cy)(k).val/100;
+                antenna(k).totZ=antenna(k).aprZ+x_.(cz)(k).val/100;
 
 
                 % preparation of values for format e+02 instead of e+002
@@ -883,11 +919,11 @@ for pl=1:size(process_list,1)
                 totZstring=sprintf(formatEstVal, antenna(k).totZ);
                 if ispc, totZstring = strrep(totZstring, 'e+0', 'e+'); totZstring = strrep(totZstring, 'e-0', 'e-'); end
 
-                totXstdString=sprintf(formatStDev, x_.coorx(k).mx/100);
+                totXstdString=sprintf(formatStDev, x_.(cx)(k).mx/100);
                 if ispc, totXstdString = strrep(totXstdString, 'e+0', 'e+'); totXstdString = strrep(totXstdString, 'e-0', 'e-');   end
-                totYstdString=sprintf(formatStDev, x_.coory(k).mx/100);
+                totYstdString=sprintf(formatStDev, x_.(cy)(k).mx/100);
                 if ispc, totYstdString = strrep(totYstdString, 'e+0', 'e+'); totYstdString = strrep(totYstdString, 'e-0', 'e-');  end
-                totZstdString=sprintf(formatStDev, x_.coorz(k).mx/100);
+                totZstdString=sprintf(formatStDev, x_.(cz)(k).mx/100);
                 if ispc, totZstdString = strrep(totZstdString, 'e+0', 'e+'); totZstdString = strrep(totZstdString, 'e-0', 'e-');  end
 
                 %                   Code  PT  1   yr:time(2) time3  m     1   estimate  stdev      
@@ -1163,6 +1199,36 @@ for pl=1:size(process_list,1)
                 end
             end
         end
+
+        %ORBIT - ESTIMATES
+        if outsnx.orb==1
+            for k=1:numSat
+                constrOrb=2; %no absolute constraints
+                for iKep=1:numOrb % Keplerelemente
+                    KepEleTime=mjd2yydoysecod(col_sinex.('mjd_KepEle' + string(iKep))(k));
+                    KepEleTimeYrStr=num2str(KepEleTime(:,1));
+                    numKepEle=length(col_sinex.('KepEle' + string(iKep))(k));
+                    unit= {'m', '-', 'mas', 'mas', 'mas', 'mas'};
+                    %aprKepEle=sources(k).('apriori_KepEle' + string(iKep));
+                    aprKepEle=0;
+                    totKepEle=aprKepEle + x_.('KepEle' + string(iKep))(k).val;
+                    totKepEleStdDev= x_.('KepEle' + string(iKep))(k).mx;
+                    if iKep==1 %cm in m 
+                        totKepEle = totKepEle/100;
+                        totKepEleStdDev = totKepEleStdDev/100;
+                    end
+                    orbname = {'ORBSMA', 'ORBECC', 'ORBINC', 'ORBRAN', 'ORBAOP', 'ORBAOL'}; 
+                    for j=1:numKepEle
+                        totKepEle=sprintf(formatEstVal, totKepEle(j));
+                        if ispc, totKepEle = strrep(totKepEle, 'e+0', 'e+'); totKepEle = strrep(totKepEle, 'e-0', 'e-');   end
+                        totKepEleStdDev=sprintf(formatStDev, totKepEleStdDev(j));
+                        if ispc, totKepEleStdDev = strrep(totKepEleStdDev, 'e+0', 'e+'); totKepEleStdDev = strrep(totKepEleStdDev, 'e-0', 'e-');  end
+                        fprintf(fid, writeFormat, curIndex, orbname{iKep}, num2str(sources(k).s.siteCode), '--', soln, KepEleTimeYrStr(j,3:end), KepEleTime(j,2), KepEleTime(j,3), unit{iKep}, constrOrb, totKepEle, totKepEleStdDev);
+                        curIndex=curIndex+1;
+                    end   
+                end
+            end
+        end
         
         
         % write blockend line to file
@@ -1383,6 +1449,33 @@ for pl=1:size(process_list,1)
         end
     end
 
+
+    %ORBIT - apriori
+    if outsnx.orb==1
+        for k=1:numSat
+            constrOrb=2; %no absolute constraints
+            for iKep=1:numOrb % Keplerelemente
+                KepEleTime=mjd2yydoysecod(col_sinex.('mjd_KepEle' + string(iKep))(k));
+                KepEleTimeYrStr=num2str(KepEleTime(:,1));
+                numKepEle=length(col_sinex.('KepEle' + string(iKep))(k));
+                unit= {'m', '-', 'mas', 'mas', 'mas', 'mas'};
+                %aprKepEle=sources(k).('apriori_KepEle' + string(iKep));
+                aprKepEle=0;
+                aprKepEleStdDev=0;
+                orbname = {'ORBSMA', 'ORBECC', 'ORBINC', 'ORBRAN', 'ORBAOP', 'ORBAOL'}; 
+                for j=1:numKepEle
+                    if ispc, aprKepEle = strrep(aprKepEle, 'e+0', 'e+'); aprKepEle = strrep(aprKepEle, 'e-0', 'e-');   end
+                    if ispc, aprKepEleStdDev = strrep(aprKepEleStdDev, 'e+0', 'e+'); aprKepEleStdDev = strrep(aprKepEleStdDev, 'e-0', 'e-');  end
+                    aprKepEle=sprintf(formatAprVal, aprKepEle);
+                    aprKepEleStdDev=sprintf(formatStDev, 0);
+                    fprintf(fid, writeFormat, curIndex, orbname{iKep}, num2str(sources(k).s.siteCode), '--', soln, KepEleTimeYrStr(j,3:end), KepEleTime(j,2), KepEleTime(j,3), unit{iKep}, constrOrb, aprKepEle, aprKepEleStdDev);
+                    curIndex=curIndex+1;
+                end   
+            end
+        end
+    end
+
+
     % write blockend line to file
     fprintf(fid, '-%s\n', blockName);
 
@@ -1554,6 +1647,28 @@ for pl=1:size(process_list,1)
         end
     end
 
+    %ORBIT - write b vector for orbit
+    if outsnx.orb==1
+        for k=1:numSat
+            constrKepEle=2; %no absolute constraints
+            orbname = {'ORBSMA', 'ORBECC', 'ORBINC', 'ORBRAN', 'ORBAOP', 'ORBAOL'};
+            unit= {'m', '-', 'mas', 'mas', 'mas', 'mas'};
+            for iKep=1:numOrb % Keplerelemente
+                KepEleTime=mjd2yydoysecod(col_sinex.('mjd_KepEle' + string(iKep))(k));
+                KepEleTimeYrStr=num2str(KepEleTime(:,1));
+                numKepEle=length(col_sinex.('KepEle' + string(iKep))(k));
+
+                for j=1:length(numKepEle)   
+                    KepEle_b=sprintf(formatVectorValue, b_sinex(col_sinex.('KepEle' + string(iKep))(k)));
+                    if ispc, KepEle_b = strrep(KepEle_b, 'e+0', 'e+'); KepEle_b = strrep(KepEle_b, 'e-0', 'e-');   end
+    
+                    fprintf(fid, writeFormat, curIndex, orbname{iKep}, num2str(sources(k).s.siteCode), '--', soln, KepEleTimeYrStr(j,3:end), KepEleTime(j,2), KepEleTime(j,3), unit{iKep}, constrKepEle, KepEle_b);                   
+                    curIndex=curIndex+1;
+                end
+            end
+        end
+    end
+
     
     % write blockend line to file
     fprintf(fid, '-%s\n', blockName);
@@ -1594,9 +1709,10 @@ for pl=1:size(process_list,1)
     tmpMatSou=[col_sinex.ra; col_sinex.de];
     tmpMatZwd=[col_sinex.zwd.col];
     tmpMatTgr=[col_sinex.ngr.col; col_sinex.egr.col];
+    tmpMatOrb=[col_sinex.KepEle1; col_sinex.KepEle2; col_sinex.KepEle3; col_sinex.KepEle4; col_sinex.KepEle5; col_sinex.KepEle6];
     
     % make one vector out of it...
-    tmpMat=[tmpMatCoor(:); tmpMatEop(:); tmpMatSou(:); tmpMatZwd(:); tmpMatTgr(:)];
+    tmpMat=[tmpMatCoor(:); tmpMatEop(:); tmpMatSou(:); tmpMatZwd(:); tmpMatTgr(:); tmpMatOrb(:)];
     
     % ... and delete zeros
     tmpMat(tmpMat==0)=[];
@@ -1643,6 +1759,9 @@ for pl=1:size(process_list,1)
         for tgr=1:numNgrAll
             N(numStatEst*3+numXpol+numYpol+numDut1+numXnut+numYnut+numSou*2+numZwdAll +(tgr-1)*2+1, col)=N_sinex(tmpMatNgr(tgr), tmpMat(col)); %north
             N(numStatEst*3+numXpol+numYpol+numDut1+numXnut+numYnut+numSou*2+numZwdAll +(tgr-1)*2+2, col)=N_sinex(tmpMatEgr(tgr), tmpMat(col)); %east
+        end
+        for iKep=1:numOrb
+            N(numStatEst*3+numXpol+numYpol+numDut1+numXnut+numYnut+numSou*2+numZwdAll+numNgrAll*2 +iKep, col)=N_sinex(tmpMatOrb(iKep), tmpMat(col)); %orbital element
         end
         
 %         for eop=1:numEOPs
@@ -1834,6 +1953,24 @@ for pl=1:size(process_list,1)
                 fprintf(fid, writeFormat, curIndex, ngr_b_cal);
                 fprintf(fid, writeFormat, curIndex+1, egr_b_cal);
                 curIndex=curIndex+2;
+            end
+        end
+    end
+
+    % ORBIT - write orbit
+    if outsnx.orb==1
+        for k=1:numSat         
+            for iKep=1:numOrb % Keplerelemente
+                %KepEleTime=mjd2yydoysecod(col_sinex.('mjd_KepEle' + string(iKep))(k));
+                %KepEleTimeYrStr=num2str(KepEleTime(:,1));
+                numKepEle=length(col_sinex.('KepEle' + string(iKep))(k));
+    
+                for j=1:numKepEle
+                    KepEle_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.('KepEle' + string(iKep))(k)));               
+                    if ispc, KepEle_b_cal = strrep(KepEle_b_cal, 'e+0', 'e+'); KepEle_b_cal = strrep(KepEle_b_cal, 'e-0', 'e-');   end              
+                    fprintf(fid, writeFormat, curIndex, KepEle_b_cal);
+                    curIndex=curIndex+1;
+                end
             end
         end
     end

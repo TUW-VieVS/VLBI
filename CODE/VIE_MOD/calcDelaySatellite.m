@@ -42,7 +42,7 @@
 % ************************************************************************
 
 
-function [ps1, ps2, pdSatPosRSW, pdSatPosGCRF, pdSatPosTRF, tau] = calcDelaySatellite(sources, iSc, scan, idStation1, idStation2, flag_fixSatPostoStat1, ddtThreshold, crsStation1, crsStation2, antenna, secOfDay, mjd, maxIterations, ephem, v2, t2c)
+function [ps1, ps2, pdSatPosRSW, pdSatPosNTW, pdSatPosGCRF, pdSatPosTRF, tau, scan, k1a, k2a, pGammaSun, fac1] = calcDelaySatellite(sources, iSc, scan, idStation1, idStation2, flag_fixSatPostoStat1, ddtThreshold, crsStation1, crsStation2, antenna, secOfDay, mjd, maxIterations, ephem, v2, t2c)
     % Init.:
     pGammaSun = []; % Not yet calculated for satellite scans
     global c
@@ -55,52 +55,104 @@ function [ps1, ps2, pdSatPosRSW, pdSatPosGCRF, pdSatPosTRF, tau] = calcDelaySate
     moon    = ephem.moon(iSc).xgeo;
 
     if (idStation1 == 1) || ~flag_fixSatPostoStat1                 
+        scan_cur = scan(iSc);
+        s_cur = sources.s(scan_cur.iso);
         % Get reference epoch for interpolation of SC pos. + vel.:
-        refidx  = find((sources.s(scan(iSc).iso).day == scan(iSc).tim(3)) & (sources.s(scan(iSc).iso).sec_of_day > secOfDay));
+        cur_date = datetime(scan_cur.tim(1), scan_cur.tim(2), scan_cur.tim(3));
+        cur_day = cur_date.Day;
+        sec_of_day_vec = s_cur.sec_of_day;
+        day_vec = s_cur.day;
+        orbit_type = s_cur.orbit_file_type;
+        
+        refidx = find((day_vec == cur_day) & (sec_of_day_vec >= secOfDay));
+        if secOfDay > 86100 && ismember(orbit_type, {'tle', 'sp3', 'fso'})
+            [sort_sec, sort_idx] = sort(sec_of_day_vec);
+            [~, mid_idx] = sort(sort_idx(end-2:end));
+            next_date = cur_date + days(1);              
+            refidx = find((day_vec == next_date.Day) & (sec_of_day_vec == sort_sec(mid_idx(2))));
+        end
+        
+        if secOfDay == 0 && ismember(orbit_type, {'sp3', 'fso'})
+            [~, idx] = sort(sec_of_day_vec);
+            mid_idx = idx(end-1);  % mittlerer der letzten drei
+            
+            if scan_cur.tim(3) == 1
+                year_before = scan_cur.tim(1) - 1;
+                is_leap = mod(year_before, 400) == 0 || (mod(year_before, 4) == 0 && mod(year_before, 100) ~= 0);
+                last_doy = 366 * is_leap + 365 * (~is_leap);
+                date_bef = datetime(year_before, 1, last_doy);
+            else
+                date_bef = cur_date - days(1);
+            end
+            refidx = find((day_vec == date_bef.Day) & ((sec_of_day_vec == sec_of_day_vec(mid_idx))));
+        end
+       
         if refidx(1) < 8
             error('S.C. ephemeris data do not cover the required time (earlier epochs needed)! Add missing data to S.C. ephem. file!');
-        elseif refidx(1)+6 > length(sources.s(scan(iSc).iso).day)
+        elseif refidx(1)+6 > length(s_cur.day)
             error('S.C. ephemeris data do not cover the required time (later epochs needed)! Add missing data to S.C. ephem. file!');
         end
-        refidx             = refidx(1)-7 : 1 : refidx(1)+6; % suitable for interpolation with "lagint9.m" and "dt" < 1 sec
-        tRefSecInterpol  = sources.s(scan(iSc).iso).sec_of_day(refidx);
-        tIntegerMjd       = floor(sources.s(scan(iSc).iso).mjd(refidx));
-        tRefMjd           = tIntegerMjd(1);
-        offsetSec          = (tIntegerMjd - tRefMjd) * 86400; % full days since first interpolation epoch in [sec]
-        tRefSecInterpol  = tRefSecInterpol + offsetSec; % add since first interpolation epoch in [sec]
-        tRefSec           = tRefSecInterpol(1);
-        tRefSecInterpol  = tRefSecInterpol - tRefSec;
-
-        tIntegerMjdObs   = floor(mjd);
-        tRefOffsetObs    = (tIntegerMjdObs - tRefMjd) * 86400;
-        tRefSecObs       = secOfDay + tRefOffsetObs;
-        tRefSecObs       = tRefSecObs -  tRefSec;
+        
+        nSamples = length(s_cur.sec_of_day);
+        refStart = max(refidx(1)-7, 1);
+        refEnd = min(refidx(1)+6, nSamples);
+        refidx = refStart:refEnd;
+        
+        tRefSecInterpol = s_cur.sec_of_day(refidx);
+        tIntegerMjd = floor(s_cur.mjd(refidx));
+        tRefMjd = tIntegerMjd(1);
+        offsetSec = (tIntegerMjd - tRefMjd) * 86400;
+        tRefSecInterpol = tRefSecInterpol + offsetSec;
+        tRefSec = tRefSecInterpol(1);
+        tRefSecInterpol = tRefSecInterpol - tRefSec;
+        
+        tIntegerMjdObs = floor(mjd);
+        tRefOffsetObs = (tIntegerMjdObs - tRefMjd) * 86400;
+        tRefSecObs = secOfDay + tRefOffsetObs;
+        tRefSecObs = tRefSecObs - tRefSec;
+      
+        x_crf = s_cur.x_crf(refidx);
+        y_crf = s_cur.y_crf(refidx);
+        z_crf = s_cur.z_crf(refidx);
+        vx_crf = s_cur.vx_crf(refidx);
+        vy_crf = s_cur.vy_crf(refidx);
+        vz_crf = s_cur.vz_crf(refidx);
+        vx_trf = s_cur.vx_trf(refidx);
+        vy_trf = s_cur.vy_trf(refidx);
+        vz_trf = s_cur.vz_trf(refidx);
 
         % Get spacecraft position at time of observation (CRF):
-        crfScPosX = lagint9(tRefSecInterpol, sources.s(scan(iSc).iso).x_crf(refidx), tRefSecObs);
-        crfScPosY = lagint9(tRefSecInterpol, sources.s(scan(iSc).iso).y_crf(refidx), tRefSecObs);
-        crfScPosZ = lagint9(tRefSecInterpol, sources.s(scan(iSc).iso).z_crf(refidx), tRefSecObs);
-        crfScPos = [crfScPosX; crfScPosY; crfScPosZ];    % (3,1), [m]   
-
-        % Get spacecraft velocity at time of observation (CRF):
-        % - Calculated from positions one second before and after the current obs. epoch
-        % => Cont. for 2 sec => no further interpolation done
-        if ~sources.s(scan(iSc).iso).flag_v_trf          
-            crfScPosXm  = lagint9(tRefSecInterpol, sources.s(scan(iSc).iso).x_crf(refidx), tRefSecObs - 1);
-            crfScPosYm  = lagint9(tRefSecInterpol, sources.s(scan(iSc).iso).y_crf(refidx), tRefSecObs - 1);
-            crfScPosZm  = lagint9(tRefSecInterpol, sources.s(scan(iSc).iso).z_crf(refidx), tRefSecObs - 1);
-            crfScPosXp  = lagint9(tRefSecInterpol, sources.s(scan(iSc).iso).x_crf(refidx), tRefSecObs + 1);
-            crfScPosYp  = lagint9(tRefSecInterpol, sources.s(scan(iSc).iso).y_crf(refidx), tRefSecObs + 1);
-            crfScPosZp  = lagint9(tRefSecInterpol, sources.s(scan(iSc).iso).z_crf(refidx), tRefSecObs + 1);
-            crfScVel  = ([crfScPosXp; crfScPosYp; crfScPosZp] - [crfScPosXm; crfScPosYm; crfScPosZm])/2;   %(3,1), [m/sec]
+        crfScPosX = lagint9(tRefSecInterpol, x_crf, tRefSecObs);
+        crfScPosY = lagint9(tRefSecInterpol, y_crf, tRefSecObs);
+        crfScPosZ = lagint9(tRefSecInterpol, z_crf, tRefSecObs);
+        crfScPos = [crfScPosX; crfScPosY; crfScPosZ];    % (3,1), [m]  
+        
+        if s_cur.flag_v_crf
+            crfScVelX = lagint9(tRefSecInterpol, vx_crf, tRefSecObs);
+            crfScVelY = lagint9(tRefSecInterpol, vy_crf, tRefSecObs);
+            crfScVelZ = lagint9(tRefSecInterpol, vz_crf, tRefSecObs);
+            crfScVel = [crfScVelX; crfScVelY; crfScVelZ];
         end
+
+        if s_cur.flag_v_trf
+            trfScVelX = lagint9(tRefSecInterpol, vx_trf, tRefSecObs);
+            trfScVelY = lagint9(tRefSecInterpol, vy_trf, tRefSecObs);
+            trfScVelZ = lagint9(tRefSecInterpol, vz_trf, tRefSecObs);
+            trfScVel = [trfScVelX; trfScVelY; trfScVelZ];
+        end
+
+        scan(iSc).trfSat = t2c' * crfScPos;
+        scan(iSc).crfSat = 1*crfScPos;
+        scan(iSc).v_crfSat = crfScVel;
+        scan(iSc).v_trfSat = trfScVel;
+
 
         % Get spacecraft position at the time of emission (CRF):
         % - According to approach "geocneu = 0" in vie_mod_tie.m (lines 735-763) by L. Plank
-        crfScPosTmp(1, :) = crfScPos';
-        t_ref_sec_obs_tmp = tRefSecObs;
 
         % Iteration init.:
+        %crfScPosTmp(1, :) = crfScPos';
+        t_ref_sec_obs_tmp = tRefSecObs;
         numberOfIterations      = 0;
         dt                      = 999999;
         ddt                     = 999999;
@@ -108,26 +160,25 @@ function [ps1, ps2, pdSatPosRSW, pdSatPosGCRF, pdSatPosTRF, tau] = calcDelaySate
         while(abs(ddt) > ddtThreshold) 
             numberOfIterations = numberOfIterations + 1;
 
-            % Get spacecraft velocity at time of observation (CRF):
-            % - from ephem. file, if available
-            if sources.s(scan(iSc).iso).flag_v_trf
-                crfScVelX = lagint9(tRefSecInterpol, sources.s(scan(iSc).iso).vx_crf(refidx), t_ref_sec_obs_tmp);
-                crfScVelY = lagint9(tRefSecInterpol, sources.s(scan(iSc).iso).vy_crf(refidx), t_ref_sec_obs_tmp);
-                crfScVelZ = lagint9(tRefSecInterpol, sources.s(scan(iSc).iso).vz_crf(refidx), t_ref_sec_obs_tmp);
+            % Get spacecraft velocity at time of observation (CRF)
+            if s_cur.flag_v_trf && numberOfIterations>1
+                crfScVelX = lagint9(tRefSecInterpol, vx_crf, t_ref_sec_obs_tmp);
+                crfScVelY = lagint9(tRefSecInterpol, vy_crf, t_ref_sec_obs_tmp);
+                crfScVelZ = lagint9(tRefSecInterpol, vz_crf, t_ref_sec_obs_tmp);
                 crfScVel = [crfScVelX; crfScVelY; crfScVelZ];
             end
 
-            % Correction:
+            % Correction
             dt_old  = dt;
             dt      = norm(crfScPos - crsStation1)/c - ((crfScPos' - crsStation1')*crfScVel)/c^2; % [sec] (6.4)
             t_ref_sec_obs_tmp = tRefSecObs - dt; % corrected epoch [sec] since "ref. time" (t_ref_sec, t_ref_mjd)
 
-            %iteration1
-            crfScPosX = lagint9(tRefSecInterpol, sources.s(scan(iSc).iso).x_crf(refidx), t_ref_sec_obs_tmp);
-            crfScPosY = lagint9(tRefSecInterpol, sources.s(scan(iSc).iso).y_crf(refidx), t_ref_sec_obs_tmp);
-            crfScPosZ = lagint9(tRefSecInterpol, sources.s(scan(iSc).iso).z_crf(refidx), t_ref_sec_obs_tmp);
+            %iteration
+            crfScPosX = lagint9(tRefSecInterpol, x_crf, t_ref_sec_obs_tmp);
+            crfScPosY = lagint9(tRefSecInterpol, y_crf, t_ref_sec_obs_tmp);
+            crfScPosZ = lagint9(tRefSecInterpol, z_crf, t_ref_sec_obs_tmp);
             crfScPos = [crfScPosX; crfScPosY; crfScPosZ];
-            crfScPosTmp(numberOfIterations +1, :) = crfScPos';
+            %crfScPosTmp(numberOfIterations +1, :) = crfScPos';
 
             ddt = dt_old - dt;
             if numberOfIterations >= maxIterations
@@ -135,7 +186,8 @@ function [ps1, ps2, pdSatPosRSW, pdSatPosGCRF, pdSatPosTRF, tau] = calcDelaySate
                 break;
             end
         end
-    end
+
+    end   
 
     % Vector station-spacecraft (source vectors) at the time of signal emission (spacecraft) and reception at station one (stations)
     L1  = crfScPos' - crsStation1';  % (1x3)
@@ -170,17 +222,13 @@ function [ps1, ps2, pdSatPosRSW, pdSatPosGCRF, pdSatPosTRF, tau] = calcDelaySate
         du  = du0*(1-n*v2/c) + dugr - 1/c^2*((v2'*v2)/2+We) * du0; % Delay:  Klioner, 1991, formular (6.3) [sec]
     end
 
-    %K   = (L1+L2)/(norm(L1)+norm(L2)); % mittlere Richtungsvektor
+    K   = (L1+L2)/(norm(L1)+norm(L2)); % mittlere Richtungsvektor
 
     % Vacuum delay:
     tau = du;
 
-    % Source vectors:
-    %k1a = L1; % Source vector station 1 
-    %k2a = L2; % Source vector station 2 
-
-    %rqu = K;
-    %rq  = K;
+    rq  = K;
+    rqu = K/norm(K);
 
     % #### partial derivative of the delay w.r.t. position of the space craft:  ####
     nL1 = norm(L1);
@@ -193,49 +241,24 @@ function [ps1, ps2, pdSatPosRSW, pdSatPosGCRF, pdSatPosTRF, tau] = calcDelaySate
     pdSatPosGCRF = pdSatPosGCRF * c; % * 100 / 100; % Unit conversion: [sec/m] => [cm/cm] = []; => estimates will be in [cm]
 
     % Rotation of PD to RSW system:
-    [~, ~, transmat] = rv2rsw(crfScPos, crfScVel);
-    pdSatPosRSW = transmat*pdSatPosGCRF;
+    [~, ~, transmatRSW] = rv2rsw(crfScPos, crfScVel);
+    pdSatPosRSW = transmatRSW*pdSatPosGCRF;
+
+    % Rotation of PD to NTW system:
+    [~, ~, transmatNTW] = rv2ntw(crfScPos, crfScVel);
+    pdSatPosNTW = transmatNTW*pdSatPosGCRF;
     
     % Rotation of PD to TRF system:
     pdSatPosTRF = t2c' * pdSatPosGCRF;
         
-    % Nummerical derivation of du0 w.r.t. ws1 (du0/dws1)
-    s = 0.5;
-    crfScPosp = crfScPos + [s; 0; 0]; % plus s m in ws1
-    L1p     = crfScPosp' - crsStation1';
-    L2p     = crfScPosp' - crsStation2';
-    crfScPosm = crfScPos - [s; 0; 0]; % minus s m in ws1
-    L1m     = crfScPosm' - crsStation1';
-    L2m     = crfScPosm' - crsStation2';
-    dudws1_num     = ( ((norm(L2p) - norm(L1p))) - ((norm(L2m) - norm(L1m))) ) / (2*s);
-
-    crfScPosp = crfScPos + [0; s; 0]; % plus s m in ws2
-    L1p     = crfScPosp' - crsStation1';
-    L2p     = crfScPosp' - crsStation2';
-    crfScPosm = crfScPos - [0; s; 0]; % minus s m in ws2
-    L1m     = crfScPosm' - crsStation1';
-    L2m     = crfScPosm' - crsStation2';
-    dudws2_num     = ( ((norm(L2p) - norm(L1p))) - ((norm(L2m) - norm(L1m))) ) / (2*s);
-
-    crfScPosp = crfScPos + [0; 0; s]; % plus s m in ws3
-    L1p     = crfScPosp' - crsStation1';
-    L2p     = crfScPosp' - crsStation2';
-    crfScPosm = crfScPos - [0; 0; s]; % minus s m in ws3
-    L1m     = crfScPosm' - crsStation1';
-    L2m     = crfScPosm' - crsStation2';
-    dudws3_num     = ( ((norm(L2p) - norm(L1p))) - ((norm(L2m) - norm(L1m))) ) / (2*s);
+    %partial derivative of du0 w.r.t. station coordinates (in TRF!)
+    ps1 = +t2c'*(L1'/norm(L1)); % partial derivative wrt to station 1 
+    ps2 = -t2c'*(L2'/norm(L2));  % partial derivative wrt to station 2
+  
+    pGammaSun = 0;
+    fac1 = 0;
     
-    npdSatPosGCRF = [dudws1_num; dudws2_num; dudws3_num];
-    
-    % check if analytical and numerical solutions are equal
-    gcrDfDiffPd = pdSatPosGCRF - npdSatPosGCRF; 
-    if gcrDfDiffPd(1,1)> 0.00001 || gcrDfDiffPd(2,1)> 0.00001 || gcrDfDiffPd(3,1)> 0.00001
-       disp('Analytical and numerical derivatives of tau wrt satellite position are not equal!')
-    end
-
-    % partial derivative of du0 w.r.t. station coordinates (in TRF!)
-    ps1 = -t2c'*(L1'/norm(L1)); % partial derivative wrt to station 1
-    ps2 = t2c'*(L2'/norm(L2));  % partial derivative wrt to station 2     
-
+    % Source vectors:
+    k1a = L1; % Source vector station 1 : crfScPos' - crsStation1'
+    k2a = L2; % Source vector station 2 : crfScPos' - crsStation2'
 end
-

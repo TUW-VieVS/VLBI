@@ -26,10 +26,10 @@
 % [outvec] = matvecmult ( mat, vec, sizeof );
 % ------------------------------------------------------------------------------
 
-function [outvec] = matvecmult ( mat, vec, sizeof );
+function [outvec] = matvecmult ( mat, vec, sizeof)
     % -------------------------  implementation   -----------------
+    outvec = zeros(sizeof,1);
     for i = 1 : sizeof
-        outvec(i) = 0.0;
         for j = 1 : sizeof
             outvec(i) = outvec(i) + mat(i,j) * vec(j);
         end    

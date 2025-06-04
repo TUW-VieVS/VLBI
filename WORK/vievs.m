@@ -38,7 +38,7 @@
 function vievs(varargin)
 
 % ##### Init.: #####
-close all;
+%close all;
 flag_runsetup = 0;
 flag_runbatch = 0;
 clc;

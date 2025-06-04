@@ -77,10 +77,8 @@ era = mod (era,p2);              % [rad]
 % prec./nut. X,Y,S
 switch nutmod
     case 'IAU_2000A'
-        disp('IAU_2000A');
         [X,Y,S] = xys2000a (tt);       %[rad]
     case 'IAU_2006/2000A'
-        disp('IAU_2006A');
         [X,Y,S] = xys2006a (tt);       %[rad]
 end
 % apply nutation corrections of EOP series

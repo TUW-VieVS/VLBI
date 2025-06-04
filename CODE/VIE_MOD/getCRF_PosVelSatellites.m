@@ -20,21 +20,22 @@
 %
 % ************************************************************************
 function [sources] = getCRF_PosVelSatellites(sources, T2C_s)
-    numberOfOrbitEpochs = length([sources.s(1).mjd]);
-    
+    global omega    
+
     % loop over space crafts:
     for iSc = 1 : length(sources.s)
+        numberOfOrbitEpochs = length([sources.s(iSc).mjd]);
         xyzCRFtmp     = zeros(numberOfOrbitEpochs, 3);
         if  sources.s(iSc).flag_v_trf
             v_xyzCRFtmp   = zeros(numberOfOrbitEpochs, 3);
         end
         % loop over all orbit pos. epochs:
-        for iOrbitEpoch = 1 : numberOfOrbitEpochs
+        for iOrbitEpoch = 1 : numberOfOrbitEpochs-1
             % Position:
             xyzCRFtmp(iOrbitEpoch, :) = (T2C_s(:, :, iOrbitEpoch) * [sources.s(iSc).x_trf(iOrbitEpoch); sources.s(iSc).y_trf(iOrbitEpoch); sources.s(iSc).z_trf(iOrbitEpoch)])';
             % Velocity:
             if  sources.s(iSc).flag_v_trf
-                v_xyzCRFtmp(iOrbitEpoch, :) = (T2C_s(:, :, iOrbitEpoch) * ([sources.s(iSc).vx_trf(iOrbitEpoch); sources.s(iSc).vy_trf(iOrbitEpoch); sources.s(iSc).vz_trf(iOrbitEpoch)] + cross([0; 0; omega], [sources.s(iSc).x_trf(iOrbitEpoch); sources.s(iSc).y_trf(iOrbitEpoch); sources.s(iSc).z_trf(iOrbitEpoch)])))';
+              v_xyzCRFtmp(iOrbitEpoch, :) = (T2C_s(:, :, iOrbitEpoch) * ([sources.s(iSc).vx_trf(iOrbitEpoch); sources.s(iSc).vy_trf(iOrbitEpoch); sources.s(iSc).vz_trf(iOrbitEpoch)] + cross([0; 0; omega], [sources.s(iSc).x_trf(iOrbitEpoch); sources.s(iSc).y_trf(iOrbitEpoch); sources.s(iSc).z_trf(iOrbitEpoch)])))';
             end
         end
         % store results in sources structure
@@ -45,7 +46,7 @@ function [sources] = getCRF_PosVelSatellites(sources, T2C_s)
             sources.s(iSc).vx_crf = v_xyzCRFtmp(:, 1);
             sources.s(iSc).vy_crf = v_xyzCRFtmp(:, 2);
             sources.s(iSc).vz_crf = v_xyzCRFtmp(:, 3);
+            sources.s(iSc).flag_v_crf = true;
         end
     end
 end
-

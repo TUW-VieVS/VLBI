@@ -64,6 +64,18 @@ function test_significance(x_, opt_, significance_sigma)
 %         end
 %     end
 % end
+
+if opt_.stc_sat == 1
+    name_x = "coorx_sat"; name_y = "coory_sat"; name_z = "coorz_sat";
+elseif opt_.stc_qu == 1
+    name_x = "coorx_qu"; name_y = "coory_qu"; name_z = "coorz_qu";
+elseif opt_.stc_all == 1
+    name_x = "coorx"; name_y = "coory"; name_z = "coorz";
+elseif opt_.stc_qs == 1
+    name_x = ["coorx_sat", "coorx_qu"]; name_y = ["coory_sat", "coory_qu"]; name_z = ["coorz_sat", "coorz_qu"];
+end
+
+
 try
     for i = 1:length(x_.antenna)
         if opt_.stat(i).nnt_inc && opt_.stat(i).nnr_inc
@@ -75,27 +87,28 @@ try
         elseif ~opt_.stat(i).nnt_inc && ~opt_.stat(i).nnr_inc
             nnr_nnt_string = '(not in NNR/NNT)';
         end
-
-        if length(x_.coorx(i).col) == 1 && ~isempty(x_.coorx(i).col) && abs(x_.coorx(i).val) > significance_sigma*x_.coorx(i).mx
-            fprintf(1,'X coordinate estimate (%5.2f +- %5.2f cm) of %s %s is significant on %2.0f sigma level\n', x_.coorx(i).val, x_.coorx(i).mx, x_.antenna(i).name, nnr_nnt_string, significance_sigma);
-        end
-        if length(x_.coory(i).col) == 1 && ~isempty(x_.coory(i).col) && abs(x_.coory(i).val) > significance_sigma*x_.coory(i).mx
-            fprintf(1,'Y coordinate estimate (%5.2f +- %5.2f cm) of %s %s is significant on %2.0f sigma level\n', x_.coory(i).val, x_.coory(i).mx, x_.antenna(i).name, nnr_nnt_string, significance_sigma);
-        end
-        if length(x_.coorz(i).col) == 1 && ~isempty(x_.coorz(i).col) && abs(x_.coorz(i).val) > significance_sigma*x_.coorz(i).mx
-            fprintf(1,'Z coordinate estimate (%5.2f +- %5.2f cm) of %s %s is significant on %2.0f sigma level\n', x_.coorz(i).val, x_.coorz(i).mx, x_.antenna(i).name, nnr_nnt_string, significance_sigma);
+        for j=1:length(x_.(name_x)(i).val)
+            if isscalar(x_.(name_x)(i).col)&& ~isempty(x_.(name_x)(i).col) && abs(x_.(name_x)(i).val(j)) > significance_sigma*x_.(name_x)(i).mx(j)
+                fprintf(1,'X coordinate estimate (%5.2f +- %5.2f cm) of %s %s is significant on %2.0f sigma level\n', x_.(name_x)(i).val(j), x_.(name_x)(i).mx(j), x_.antenna(i).name, nnr_nnt_string, significance_sigma);
+            end
+            if isscalar(x_.(name_y)(i).col) && ~isempty(x_.(name_y)(i).col) && abs(x_.(name_y)(i).val(j)) > significance_sigma*x_.(name_y)(i).mx(j)
+                fprintf(1,'Y coordinate estimate (%5.2f +- %5.2f cm) of %s %s is significant on %2.0f sigma level\n', x_.(name_y)(i).val(j), x_.(name_y)(i).mx(j), x_.antenna(i).name, nnr_nnt_string, significance_sigma);
+            end
+            if isscalar(x_.(name_z)(i).col) && ~isempty(x_.(name_z)(i).col) && abs(x_.(name_z)(i).val(j)) > significance_sigma*x_.(name_z)(i).mx(j)
+                fprintf(1,'Z coordinate estimate (%5.2f +- %5.2f cm) of %s %s is significant on %2.0f sigma level\n', x_.(name_z)(i).val(j), x_.(name_z)(i).mx(j), x_.antenna(i).name, nnr_nnt_string, significance_sigma);
+            end
         end
     end
     if isfield(opt_, 'source')
         for i = 1:length({opt_.source.name}) 
-            if length(x_.soude(i).val) == 1 && ~isempty(x_.soude(i).val) && any(abs(x_.soude(i).val) > significance_sigma*x_.soude(i).mx)
+            if isscalar(x_.soude(i).val) && ~isempty(x_.soude(i).val) && any(abs(x_.soude(i).val) > significance_sigma*x_.soude(i).mx)
                 for i_est = 1:length(x_.soude(i).val)
                     if abs(x_.soude(i).val(i_est)) > significance_sigma*x_.soude(i).mx(i_est)
                         fprintf(1,'DEC coordinate estimate (%6.3f +- %6.3f mas) of %s is significant on %2.0f sigma level\n', x_.soude(i).val(i_est), x_.soude(i).mx(i_est), opt_.source(i).IERSname, significance_sigma);
                     end
                 end
             end
-            if length(x_.soura(i).val) == 1 && ~isempty(x_.soura(i).val) && any(abs(x_.soura(i).val) > significance_sigma*x_.soura(i).mx)
+            if isscalar(x_.soura(i).val) && ~isempty(x_.soura(i).val) && any(abs(x_.soura(i).val) > significance_sigma*x_.soura(i).mx)
                 for i_est = 1: length(x_.soura(i).val)
                     if abs(x_.soura(i).val(i_est)) > significance_sigma*x_.soura(i).mx(i_est)
                         fprintf(1,'RA coordinate estimate (%6.3f +- %6.3f ms) of %s is significant on %2.0f sigma level\n', x_.soura(i).val(i_est), x_.soura(i).mx(i_est), opt_.source(i).IERSname, significance_sigma);
@@ -129,4 +142,3 @@ catch
 	fprintf(1,'Significance test failed.');
 end
 fprintf(1,'\n');
-

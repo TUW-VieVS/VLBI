@@ -141,7 +141,7 @@ opt.pw_stc = opt.pw_stc;      % 0 estimate all selected stations as one offset p
     opt.nnr_stc = opt.nnr_stc;        % 1 NNR for stations 
                                       % 0 no NNR for stations 
     % case 2 Scale for station coordinates
-    opt.sca_stc = opt.sca_stc;        % 1 Scale for stations 
+    opt.sca_stc = opt.nns_stc;        % 1 Scale for stations 
                                       % 0 no Scale for stations 
                                       
 % ---                           
@@ -191,7 +191,7 @@ for istat = 1:na
                                             % 0 do not include 
     opt.stat(istat).nnr_inc = opt.nnr_stc;  % 1 include station in rotation minimum 
                                             % 0 do not include 
-    opt.stat(istat).nns_inc = opt.sca_stc;  % 1 include station in scale minimum 
+    opt.stat(istat).nns_inc = opt.nns_stc;  % 1 include station in scale minimum 
                                             % 0 do not include 
 end
 

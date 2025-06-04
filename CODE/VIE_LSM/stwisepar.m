@@ -35,7 +35,7 @@
 % Johannes Boehm, Kamil Teke, 12.05.2009
 % mod. 12.05.2009 Kamil Teke (describtion added)
 
- function [obs_per_stat,n_unk,T_] = stwisepar(per_stat,mjdstat,istat,mjd0,int)
+function [obs_per_stat,n_unk,T_] = stwisepar(per_stat,mjdstat,istat,mjd0,int)
 
 mjd1 = min(mjdstat); % The time of the first scan in mjd [day]
 mjd2 = max(mjdstat); % The time of the last scan in mjd [day]
@@ -138,19 +138,36 @@ for inter = 1:n_unk.xyz
 end
 
 obs_per_stat.first=per_stat(istat).first;
-
 %obs_per_stat.total = length(obs_per_stat.first);
 
 obs_per_stat.mf = per_stat(istat).mf;
 obs_per_stat.az = per_stat(istat).az;
 obs_per_stat.zd = per_stat(istat).zd;
 
+obs_per_stat.dx = [];
+obs_per_stat.dy = [];
+obs_per_stat.dz = [];
+
 obs_per_stat.dx = per_stat(istat).dx;
 obs_per_stat.dy = per_stat(istat).dy;
 obs_per_stat.dz = per_stat(istat).dz;
 
-obs_per_stat.dAO = per_stat(istat).dAO;
+if isfield(per_stat(istat),'first_sat')
+    obs_per_stat.first_sat = per_stat(istat).first_sat;
+    obs_per_stat.dx_sat = per_stat(istat).dx_sat;
+    obs_per_stat.dy_sat = per_stat(istat).dy_sat;
+    obs_per_stat.dz_sat = per_stat(istat).dz_sat;
+end
 
+
+if isfield(per_stat(istat),'first_qu')
+    obs_per_stat.first_qu = per_stat(istat).first_qu;
+    obs_per_stat.dx_qu = per_stat(istat).dx_qu;
+    obs_per_stat.dy_qu = per_stat(istat).dy_qu;
+    obs_per_stat.dz_qu = per_stat(istat).dz_qu;
+end
+
+obs_per_stat.dAO = per_stat(istat).dAO;
 obs_per_stat.drg = per_stat(istat).drg;
 
 if isfield(per_stat,'pAcr')
@@ -161,3 +178,5 @@ if isfield(per_stat,'pAcr')
     obs_per_stat.pAse = per_stat(istat).pAse;
     obs_per_stat.pAsn = per_stat(istat).pAsn;
 end
+
+obs_per_stat.obs_type = per_stat(istat).obs_type;
