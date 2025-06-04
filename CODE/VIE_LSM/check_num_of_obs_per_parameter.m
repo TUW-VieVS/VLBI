@@ -47,18 +47,23 @@ else
 end
 
 
-
-
-
 %% Clean scan struct
 
 % (1) ### Excluded sources (only get scan indices => scans are deleted later ###
 
 % Get list of sources for which the threchold is not met:
-q_numobs = [sources.q.numobs]'; % Number of obs per source (quasar)
-q_flag = q_numobs < parameter.lsmopt.min_num_obs_per_est_source;
-exclSourcesInd_q = find(q_flag);
-
+%q_numobs = [sources.q.numobs]'; % Number of obs per source (quasar)
+%q_flag = q_numobs < parameter.lsmopt.min_num_obs_per_est_source;
+%exclSourcesInd_q = find(q_flag);
+if nSources_q ~=0
+    q_numobs = [sources.q.numobs]'; % Number of obs per source (quasar)
+    q_flag = q_numobs < parameter.lsmopt.min_num_obs_per_est_source;
+    exclSourcesInd_q = find(q_flag);
+else
+    q_numobs =0; % Number of obs per source (quasar)
+    q_flag = q_numobs < parameter.lsmopt.min_num_obs_per_est_source;
+    exclSourcesInd_q = find(q_flag);
+end 
 
 
 %% Delete empty scans and those to an excluded source

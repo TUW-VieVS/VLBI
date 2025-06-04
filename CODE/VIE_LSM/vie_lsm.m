@@ -121,7 +121,7 @@
 %                                 unit of residual v changed to [cm] at the comment
 %   18 Jun 2014 by Hana Krasna: sources can be estimated in vie_lsm with NNR condition
 %   29 Jul 2014 by Hana Krasna: baseline dependent weighting
-%           (Minttu Uunila coded the function calc_bas_weights.m)
+%           (Minttu Uunila coded the function calcoen v_bas_weights.m)
 %   13 Jan 2015 by Matthias Madzak: Contact details now given as input for
 %           writing SINEX files
 %   14 Jan 2015 by Daniel Landskron: shape of output in Command Window
@@ -169,9 +169,15 @@
 %   02 Dec 2021 by H. Wolf: small bugfix of calculation of parameter sigma_residuals_aposteriori - it now works also for simulations for a
 %                          higher number of days 
 %   18 Sep 2023 by L. Kern: small bugfix of number of constraints applied (used in vie_glob)
+%   15 May 2025 by H.Wolf: estimation of orbital elements added
+%                          estimation of station coordiantes based on satellite only and based on satellite and quasar observations (separately) added
+%                          changed output of saved files
+%                          created function "porcess" for the least square adjustment
+%                         
+%                             
 % ************************************************************************
 
-function vie_lsm(antenna, sources, scan, parameter, dirpth, dirpthL2)
+function sources = vie_lsm(antenna, sources, scan, parameter, dirpth, dirpthL2)
 
 tic
 
@@ -189,7 +195,7 @@ rad2mas = (180/pi)*3600*1000; % radian to milli arc second
 % Preallocate variables:
 x   = [];
 mi  = [];
-tso = []; % +hana 10Nov10
+tso = []; 
 
 % Check sub-directories:
 if ~exist('dirpth')
@@ -323,7 +329,7 @@ if parameter.opt.use_opt_files
             fprintf('%s', clean_opt.stat_dw(k,:),' ', clean_opt.stat_co(k,:))
             fprintf('\n')
             parameter.vie_init.stat_dw(k,:) = {clean_opt.stat_dw(k,:)};
-            parameter.vie_init.stat_co(k,:) = str2num(clean_opt.stat_co(k,:));
+            parameter.vie_init.stat_co(k,:) = str2double(clean_opt.stat_co(k,:));
         end
     end
 
@@ -337,26 +343,37 @@ if parameter.opt.use_opt_files
         end
     end
 
-    remove_sources_from_list = false;
-    if remove_sources_from_list
-        path2sourcelist = '';     %add the path of your .txt file here. Format is the same as glob input .txt files
-        fid = fopen(path2sourcelist);
-        if fid == -1
-            warning('File with list of removed sources can not be found\n');
-        else
-            remove_sources = textscan(fid, '%8s','Delimiter','\n');
-            remove_sources = remove_sources{1};
-            clean_opt.sour_excl = [clean_opt.sour_excl;char(remove_sources)];
-            disp('+ sources from external file removed');
-            if isfield(clean_opt, 'sour_excl_start')
-                clean_opt.sour_excl_start = [clean_opt.sour_excl_start, zeros(1,length(remove_sources))];
-                clean_opt.sour_excl_end = [clean_opt.sour_excl_end, zeros(1,length(remove_sources))];
+    if isfield(parameter.lsmopt,'remove_sources_from_list')
+        if parameter.lsmopt.remove_sources_from_list
+            path2sourcelist = ['../CRF/SELECTION/SOUREMOVE/' parameter.lsmopt.remove_sou_file];     %add the path of your .txt file here. Format is the same as glob input .txt files
+            fid = fopen(path2sourcelist);
+            if fid == -1
+                warning('File with list of removed sources can not be found\n');
             else
-                clean_opt.sour_excl_start = zeros(1,length(remove_sources));
-                clean_opt.sour_excl_end = zeros(1,length(remove_sources));
+                remove_sources = textscan(fid, '%8s','Delimiter','\n','CommentStyle','#');
+                remove_sources = remove_sources{1};
+                % file with IERS names is converted to IVS names (it has to be consistent with OPT files)
+                if strcmp(parameter.lsmopt.remove_sou_file_sounames,'iers')
+                    data = remove_sources;
+                    for i = 1:size(data,1)
+                        ids = strcmp(deblank({sources.q.IERSname}),deblank(data{i}));
+                        if sum(ids)>0
+                            remove_sources{i} = sources.q(ids).name;
+                        end
+                    end
+                end
+                clean_opt.sour_excl = [clean_opt.sour_excl;char(remove_sources)];
+                disp('+ sources from external file removed');
+                if isfield(clean_opt, 'sour_excl_start')
+                    clean_opt.sour_excl_start = [clean_opt.sour_excl_start, zeros(1,length(remove_sources))];
+                    clean_opt.sour_excl_end = [clean_opt.sour_excl_end, zeros(1,length(remove_sources))];
+                else
+                    clean_opt.sour_excl_start = zeros(1,length(remove_sources));
+                    clean_opt.sour_excl_end = zeros(1,length(remove_sources));
+                end
             end
+            fclose(fid);
         end
-        fclose(fid);
     end
 
     fprintf('Baselines to be excluded: %1.0f\n', size(clean_opt.bas_excl, 2))
@@ -390,7 +407,6 @@ end
 fprintf('\n')
 
 
-
 %% TESTING AMB!
 parameter.amb.amb_file_dir = 'PU';
 parameter.amb.flag_change_amb = false; %true
@@ -411,11 +427,10 @@ end
 fprintf('\n')
 
 %%
-
-
 % ############################
 % ##### Clean structures #####
 % ############################
+parameter.opt.options = clean_opt;
 % => Remove scans, observations, antennas and soures based on analysis options (obs. restrictions, OPT and OUTLIER files)
 [scan, sources, antenna] = cleanScan(scan, sources, antenna, parameter);
 
@@ -433,58 +448,35 @@ if (parameter.lsmopt.min_num_obs_per_est_source > 1) && (parameter.lsmopt.pw_sou
     [scan, sources, antenna] = check_num_of_obs_per_parameter(scan, sources, antenna, parameter);
 end
 
-
 fprintf('1. LOAD AND PREPARE DATA\n');
 
 opt = parameter.lsmopt;
 
-% to ensure compatibility with parameter files before the vievs update (10/2020)
-% where the estimation of scale offset was added. Can be removed in the future!
-if ~isfield(parameter.lsmopt, 'est_scale') 
-    opt.est_scale=0;
-end
-
-% to ensure compatibility with parameter files before the vievs update (10/2020)
-% where the bas-dep clock offsets were added. Can be removed in the future!
-if ~isfield(parameter.lsmopt, 'est_bdco') 
-   opt.est_bdco=0; 
-end
-
 if opt.addSnxSource==1
     opt.est_source=1;
-end
-
-% ##### Initial checks: #####
-% Check, if the sources structure has the correct format (with fields "q" and "s" for quasars and satellites respectively).
-% ==> Older format (VieVS 2.3): copy content from "sources" to "sources.q"
-% !!! Remove this check after the release of VieVS V3.0!!
-if ~isfield(sources, 'q') && ~isfield(sources, 's')
-    sources_tmp = sources;
-    clear sources;
-    sources.q = sources_tmp;
-    clear sources_tmp;
-    % In case an older scan structure (from LEVEL1) is loaded without the field scan.obs_type:
-    % ==> Assume, that only quasars were observed and add the field!
-    [scan.obs_type] = deal('q');
-    warning('The format of the "sources" structure of session %s is not supported any more => "sources" copied to "sources.q".', parameter.session_name);
 end
 
 % ##### Get session info #####
 n_scan      = length(scan);     % number of scans
 na          = length(antenna);  % number of antennas
 n_observ    = sum([scan.nobs]); % number of observations
-% number of sources
-% - Satellites
+% number of satellites
 if isfield(sources, 's')
     ns_s = length(sources.s);
 else
     ns_s = 0;
 end
-% - Quasars
-if isfield(sources, 'q')
+% number of quasars
+if isfield(sources, 'q') && ~isempty([sources.q.name])
     ns_q = length(sources.q);
 else
     ns_q = 0;
+end
+
+if ns_q == 0
+    if opt.xpol.model == 1 || opt.ypol.model == 1 ||  opt.dut1.model == 1 || opt.nutdx.model == 1 || opt.nutdy.model == 1
+        error('EOP can not be estimated from satellite observations!')
+    end
 end
 
 % Write info to CW:
@@ -494,9 +486,9 @@ if ns_q > 0
     fprintf('number of sources (quasars): %d\n',ns_q);
 end
 if ns_s > 0
-    fprintf('number of sources (sc)     : %d\n',ns_s);
+    fprintf('number of sources (sat.)   : %d\n',ns_s);
 end
-fprintf('number of obs.             : %d\n',n_observ);
+fprintf('number of observations     : %d\n',n_observ);
 
 mjd1            = min([scan.mjd]);     % The time of the first scan in mjd, UTC
 mjd0            = floor(mjd1);         % The midnight (the beginning of the day of the session), UTC
@@ -527,6 +519,7 @@ if ns_q > 0
 else
     obs_per_source = [];
 end
+
 % Satellites
 if ns_s > 0
     % preallocation:
@@ -581,7 +574,7 @@ if opt.eldep_noise==1 % Elevation dependent noise
         end
     end
 else
-    % add constand noise (noise level defined in GUI => VieVS estimation settings'; default: 1 cm)
+    % add constant noise (noise level defined in GUI -> VieVS estimation settings; default: 0.5 cm)
     addnoise = opt.add_const_noise_cm * 1e-2;
     fprintf('Constant noise added to input sig.: %4.2f cm\n', opt.add_const_noise_cm);
 end
@@ -629,113 +622,29 @@ Pobserv = diag(sparse(1./((nmi_observ.^2).*c^2*100^2))); % [1/cm^2]
 %Qll = diag(sparse((nmi_observ.^2).*c^2*100^2)); % [cm^2]
 fprintf('apriori std. dev. of unit weight. : %3.4f\n',so);
 
-% preallocation
-if ~opt.est_stsespos
-    per_stat(1,na)=struct('mjd', [], 'oc_nob', [], 'zd', [], 'first', [], 'other', [], 'mf', [], 'az', [],...
-                 'dx', [],     'dy', [], 'dz', [],    'xo', [],    'yo', [], 'zo', [],...
-                 'dAO', [], 'drg', []);
-else
-    per_stat(1,na)=struct('mjd', [], 'oc_nob', [], 'zd', [], 'first', [], 'other', [], 'mf', [], 'az', [],...
-                 'dx', [],     'dy', [], 'dz', [],    'xo', [],    'yo', [], 'zo', [],...
-                 'dAO', [], 'drg', [], 'pAcr', [], 'pAce', [], 'pAcn', [], 'pAsr', [], 'pAse', [], 'pAsn', []);
-end
-% -------------------------------------------------------------------------
-% ASSIGNING THE INPUT PARAMETERS TO EACH STATION
-for istat = 1:na % number of stations
-    i = 0; n_obs_per_src = 0;
-    for itim = 1:n_scan % number of scans per session
-        for iobs = 1:scan(itim).nobs % number of observations per scan
-            i = i + 1; % i : i. observation in the session
-            i1 = scan(itim).obs(iobs).i1;
-            i2 = scan(itim).obs(iobs).i2;
-            if i1 == istat || i2 == istat
-                n_obs_per_src = n_obs_per_src + 1; % k : k. observation of the specific station
-                per_stat(istat).mjd(n_obs_per_src) = scan(itim).mjd; % The times of scans [day]
-                per_stat(istat).oc_nob(n_obs_per_src) = i;
-                per_stat(istat).zd(n_obs_per_src) = scan(itim).stat(istat).zd;  % Boehm 21 Aug 2009, 15 Sep 2010
-                obs_mjd(i) = (scan(itim).mjd - mjd0)*24*60; % [minute]
-            end
-            if i1 == istat
-                per_stat(istat).first(n_obs_per_src) = -1;
-                per_stat(istat).other(n_obs_per_src) = i2;  % Boehm 21 Aug 2009
-
-                %
-                %   partials prepared
-                %
-
-                per_stat(istat).mf(n_obs_per_src) = scan(itim).stat(i1).mfw; % The mapping function value
-                per_stat(istat).az(n_obs_per_src) = scan(itim).stat(i1).az; % Azimuth [radians]
-                %per_stat(istat).zd(k) = scan(itim).stat(i1).zd; % Zenith distance [radians]
-
-                per_stat(istat).dx(n_obs_per_src) = -scan(itim).obs(iobs).pstat1(1); % The partial derivatives of delay wrt antenna coordinates
-                per_stat(istat).dy(n_obs_per_src) = -scan(itim).obs(iobs).pstat1(2);
-                per_stat(istat).dz(n_obs_per_src) = -scan(itim).obs(iobs).pstat1(3);
-
-                %obs_per_stat.dx(k) = scan(itim).stat(i1).pantd(1); % The partial derivatives of delay wrt antenna coordinates
-                %obs_per_stat.dy(k) = scan(itim).stat(i1).pantd(2);
-                %obs_per_stat.dz(k) = scan(itim).stat(i1).pantd(3);
-
-                per_stat(istat).xo(n_obs_per_src) = scan(itim).stat(i1).x(1); % Apriori coordinates of the antennas
-                per_stat(istat).yo(n_obs_per_src) = scan(itim).stat(i1).x(2); % y
-                per_stat(istat).zo(n_obs_per_src) = scan(itim).stat(i1).x(3); % z
-
-                per_stat(istat).dAO(n_obs_per_src) = -scan(itim).obs(iobs).pAO_st1;
-
-                per_stat(istat).drg(n_obs_per_src)= -scan(itim).obs(iobs).prg_st1;
-
-                 if opt.est_stsespos ==1
-    		        per_stat(istat).pAcr(n_obs_per_src,:) = -scan(itim).obs(iobs).pAcr_st1;
-    		        per_stat(istat).pAce(n_obs_per_src,:) = -scan(itim).obs(iobs).pAce_st1;
-    		        per_stat(istat).pAcn(n_obs_per_src,:) = -scan(itim).obs(iobs).pAcn_st1;
-    		        per_stat(istat).pAsr(n_obs_per_src,:) = -scan(itim).obs(iobs).pAsr_st1;
-    		        per_stat(istat).pAse(n_obs_per_src,:) = -scan(itim).obs(iobs).pAse_st1;
-		            per_stat(istat).pAsn(n_obs_per_src,:) = -scan(itim).obs(iobs).pAsn_st1;
-                 end
-            end
-            if i2 == istat
-                per_stat(istat).first(n_obs_per_src) = +1;
-                per_stat(istat).other(n_obs_per_src) = i1;  % Boehm 21 Aug 2009
-
-                per_stat(istat).mf(n_obs_per_src) = scan(itim).stat(i2).mfw; % The mapping function value
-                per_stat(istat).az(n_obs_per_src) = scan(itim).stat(i2).az; % Azimuth [radians]
-%                    per_stat(istat).zd(k) = scan(itim).stat(i2).zd; % Zenith distance [radians]
-
-                per_stat(istat).dx(n_obs_per_src) = scan(itim).obs(iobs).pstat2(1); % The partial derivatives of delay wrt antenna coordinates
-                per_stat(istat).dy(n_obs_per_src) = scan(itim).obs(iobs).pstat2(2);
-                per_stat(istat).dz(n_obs_per_src) = scan(itim).obs(iobs).pstat2(3);
-
-                %obs_per_stat.dx(k) = scan(itim).stat(i2).pantd(1); % The partial derivatives of delay wrt antenna coordinates
-                %obs_per_stat.dy(k) = scan(itim).stat(i2).pantd(2);
-                %obs_per_stat.dz(k) = scan(itim).stat(i2).pantd(3);
-
-                per_stat(istat).xo(n_obs_per_src) = scan(itim).stat(i2).x(1); % Apriori coordinates of the antennas
-                per_stat(istat).yo(n_obs_per_src) = scan(itim).stat(i2).x(2);
-                per_stat(istat).zo(n_obs_per_src) = scan(itim).stat(i2).x(3);
-
-                per_stat(istat).dAO(n_obs_per_src) = scan(itim).obs(iobs).pAO_st2;
-
-                per_stat(istat).drg(n_obs_per_src) = scan(itim).obs(iobs).prg_st2;
-
-                 if opt.est_stsespos ==1
-        		    per_stat(istat).pAcr(n_obs_per_src,:) = scan(itim).obs(iobs).pAcr_st2;
-        		    per_stat(istat).pAce(n_obs_per_src,:) = scan(itim).obs(iobs).pAce_st2;
-        		    per_stat(istat).pAcn(n_obs_per_src,:) = scan(itim).obs(iobs).pAcn_st2;
-        		    per_stat(istat).pAsr(n_obs_per_src,:) = scan(itim).obs(iobs).pAsr_st2;
-        		    per_stat(istat).pAse(n_obs_per_src,:) = scan(itim).obs(iobs).pAse_st2;
-		            per_stat(istat).pAsn(n_obs_per_src,:) = scan(itim).obs(iobs).pAsn_st2;
-                 end
-            end
-        end
-    end
-    fprintf('obs. of the antenna %s : %4d\n',antenna(istat).name,n_obs_per_src);
-end
+[per_stat, obs_mjd] = scan2obsPerStation(scan, na, opt, mjd0, antenna);
 
 fprintf('4. FORMING THE REDUCED OBSERVATION VECTOR "oc_observ"\n');
 % -------------------------------------------------------------------------
 % FORMING THE REDUCED OBSERVATION VECTOR (oc_observ)
-% oc_observ = [];
+
 numberOfLSMs = length(temp(1).obs);
 oc_observ = ([temp.obs]-repmat([temp.com],numberOfLSMs,1))'.*c*100; % [cm]
+
+if parameter.lsmopt.KepEle.estKepEle==1
+    if parameter.lsmopt.KepEle.estKepEle_NumTau
+        name_orb ='psat_orb_dT';
+    elseif parameter.lsmopt.KepEle.estKepEle_NumSatPos
+        name_orb ='psat_orb_dR';
+    elseif parameter.lsmopt.KepEle.estKepEle_Ana
+        name_orb ='psat_orb_ana';
+    elseif parameter.lsmopt.KepEle.estKepEle_FRP
+        name_orb ='psat_orb_FRP';
+    end
+else
+    name_orb ='psat_orb';
+end
+
 % w/o ntsl for sinex calibration block
 oc_observ_noNtsl = ([temp.obs]-repmat([temp.com_noNtsl],numberOfLSMs,1))'.*c*100; % [cm]
 
@@ -758,7 +667,7 @@ fprintf('5. FORMING THE DESIGN MATRICES "A(i).sm" ...\n' );
 % -------------------------------------------------------------------------
 % FORMING THE DESIGN MATRICES OF THE REAL OBSERVATIONS ([A1clk A2clk A3zwd])
 % SUBROUTINES THAT ARE USED "stwisepar","apwq_clk","apw_zwd"
-number_of_estimated_parameters = 20;
+number_of_estimated_parameters = 35;
 sum_.clk(1)     = 0;
 sum_.qclk(1)    = 0;
 sum_.zwd(1)     = 0;
@@ -781,8 +690,9 @@ t(1,na) = struct('clk',[],'zwd',[],'ngr',[],'egr',[],'xyz',[]);             % Es
 xo(1,na)=0; yo=xo; zo=xo;                                                   % A priori antenna coordinates
 n_(1,na) = struct('clk',[],'qclk',[],'zwd',[],'ngr',[],'egr',[],'xyz',[]);  % Number of estimated offsets per estimation interval
 
+a = struct('pwclk',[],'rqclk',[],'zwd',[],'ngr',[],'egr',[],'x',[],'y',[],'z',[]);
+
 for istat = 1 : na
-    a = struct('pwclk',[],'rqclk',[],'zwd',[],'ngr',[],'egr',[],'x',[],'y',[],'z',[]);
     %clkbreak = opt.stat(istat).clkbreak; % The vector of clock break per clock [minutes]
     mjdstat = per_stat(istat).mjd; % time of the observations per station [day]
     int.zwd = opt.stat(istat).int_zwd; % zwd estimation interval per station [minute]
@@ -793,7 +703,7 @@ for istat = 1 : na
 
     % ASSIGN ALL THE PARAMETERS FROM SCANWISE TO STATIONWISE - FORM1
     [obs_per_stat,n_unk,T_] = stwisepar(per_stat,mjdstat,istat,mjd0,int);
-
+    
     t(istat).clk = T_.clk; % estimation intervals of clock function offsets
     t(istat).zwd = T_.zwd; % estimation intervals of zenith wet delay offsets
     t(istat).ngr = T_.ngr; % estimation intervals of tropospheric north gradient offsets
@@ -817,7 +727,8 @@ for istat = 1 : na
 
     % FORMING THE DESIGN MATRIX FOR THE WET ZENITH DELAYS AS CONTINUOUS
     % PIECEWISE LINEAR FUNCTIONS
-     [Azwd] = apw_zwd(obs_per_stat,n_observ,per_stat(istat).oc_nob,n_unk,T_);
+    [Azwd] = apw_zwd(obs_per_stat,n_observ,per_stat(istat).oc_nob,n_unk,T_);
+
     % Concatenating
     a(istat).zwd = Azwd;        % (nobs of stat. x numb. of est. intervals)
     A(3).sm = horzcat(A(3).sm, a(istat).zwd);
@@ -825,6 +736,7 @@ for istat = 1 : na
     % FORMING THE DESIGN MATRIX FOR THE TROPOSPHERIC NORTH GRADIENTS AS
     % CONTINUOUS PIECEWISE LINEAR FUNCTIONS
     [Apwngr] = apw_ngr(obs_per_stat,n_observ,per_stat(istat).oc_nob,n_unk,T_);
+    
     % Concatenating
     a(istat).ngr = Apwngr;      % (nobs of stat. x numb. of est. intervals)
     A(4).sm = horzcat(A(4).sm, a(istat).ngr); % Concatenating
@@ -832,33 +744,45 @@ for istat = 1 : na
     % FORMING THE DESIGN MATRIX FOR THE TROPOSPHERIC EAST GRADIENTS AS
     % CONTINUOUS PIECEWISE LINEAR FUNCTIONS
     [Apwegr] = apw_egr(obs_per_stat,n_observ,per_stat(istat).oc_nob,n_unk,T_);
+    
     % Concatenating
     a(istat).egr = Apwegr;      % (nobs of stat. x numb. of est. intervals)
     A(5).sm = horzcat(A(5).sm, a(istat).egr); % Concatenating
 
-    if opt.pw_stc == 0 % if NO station coor. is estimated
-        % OR if ONE OFFSET per session is estimated
-        [Ax,Ay,Az] = a_xyz(obs_per_stat,n_observ,per_stat(istat).oc_nob);
-        % Concatenating
-        a(istat).x = Ax; a(istat).y = Ay; a(istat).z = Az;  % (nobs of stat. x numb. of est. intervals (=1))
-    elseif opt.pw_stc == 1 % if station coor. is estimated as PWL OFFSETS
-        [Apwx,Apwy,Apwz] = apw_xyz(obs_per_stat,n_observ,per_stat(istat).oc_nob,n_unk,T_);
-        % Concatenating
-        a(istat).x = Apwx; a(istat).y = Apwy; a(istat).z = Apwz;
+    if opt.stc == 1
+        if opt.pw_stc == 0 % if NO station coor. is estimated OR if ONE OFFSET per session is estimated
+            [Ax, Ay, Az, Ax_s, Ay_s, Az_s, Ax_q, Ay_q, Az_q] = a_xyz(obs_per_stat,n_observ,per_stat(istat), opt);
+            % Concatenating
+            a(istat).x = Ax; a(istat).y = Ay; a(istat).z = Az;  % (nobs of stat. x numb. of est. intervals (=1))
+            a(istat).x_s = Ax_s; a(istat).y_s = Ay_s; a(istat).z_s = Az_s;  % (nobs of stat. x numb. of est. intervals (=1))
+            a(istat).x_q = Ax_q; a(istat).y_q = Ay_q; a(istat).z_q = Az_q;  % (nobs of stat. x numb. of est. intervals (=1))
+        elseif opt.pw_stc == 1 % if station coor. is estimated as PWL OFFSETS
+            [Apwx,Apwy,Apwz] = apw_xyz(obs_per_stat,n_observ,per_stat(istat),n_unk,T_);
+            % Concatenating
+            a(istat).x = Apwx; a(istat).y = Apwy; a(istat).z = Apwz;
+            a(istat).x_s = []; a(istat).y_s = []; a(istat).z_s = [];
+            a(istat).x_q = []; a(istat).y_q = []; a(istat).z_q = [];
+        end
+        A(13).sm = horzcat(A(13).sm, a(istat).x);
+        A(14).sm = horzcat(A(14).sm, a(istat).y);
+        A(15).sm = horzcat(A(15).sm, a(istat).z);
+    
+        A(27).sm = horzcat(A(27).sm, a(istat).x_s);
+        A(28).sm = horzcat(A(28).sm, a(istat).y_s);
+        A(29).sm = horzcat(A(29).sm, a(istat).z_s);
+    
+        A(30).sm = horzcat(A(30).sm, a(istat).x_q);
+        A(31).sm = horzcat(A(31).sm, a(istat).y_q);
+        A(32).sm = horzcat(A(32).sm, a(istat).z_q);
     end
-    A(13).sm = horzcat(A(13).sm, a(istat).x);
-    A(14).sm = horzcat(A(14).sm, a(istat).y);
-    A(15).sm = horzcat(A(15).sm, a(istat).z);
 
     if opt.est_vel == 1
-        % +hana 18Nov09
         refvel_mjd=modjuldat(opt.refvel);
         opt.refvel_mjd=refvel_mjd;
-        fctvel=(mjd0-refvel_mjd)/36525;  % [day/century] +hana 12Nov2010
+        fctvel=(mjd0-refvel_mjd)/36525;  % [day/century]
         A_vx = A(13).sm; A_vx = A_vx*fctvel;
         A_vy = A(14).sm; A_vy = A_vy*fctvel;
         A_vz = A(15).sm; A_vz = A_vz*fctvel;
-        % -hana
     end
 
     % A matrix for Axis Offset
@@ -902,11 +826,21 @@ for istat = 1 : na
     % the number of tropospheric east gradient offsets estimated for each estimation interval
     n_(istat).egr = size(a(istat).egr,2);
     sum_.egr(istat+1) = sum_.egr(istat) + n_(istat).egr;
-     % the number of site coordinate offsets estimated for each estimation interval
-    n_(istat).xyz = size(a(istat).x,2);
-    sum_.xyz(istat+1) = sum_.xyz(istat) + n_(istat).xyz;
-end
 
+     % the number of site coordinate offsets estimated for each estimation interval
+     if opt.stc
+         if opt.stc_all == 1
+            n_(istat).xyz = size(a(istat).x,2);
+         elseif opt.stc_sat == 1
+            n_(istat).xyz = size(a(istat).x_s,2);
+         elseif opt.stc_qu == 1
+            n_(istat).xyz = size(a(istat).x_q,2);
+         elseif opt.stc_qs == 1
+            n_(istat).xyz = size(a(istat).x_s,2);
+         end
+         sum_.xyz(istat+1) = sum_.xyz(istat) + n_(istat).xyz;
+     end
+end
 clear Apwclock Arqclock Azwd Apwegr Apwngr Apwx Apwy Apwz Ax Ay Ay a A_ao
 
 % -------------------------------------------------------------------------
@@ -916,22 +850,28 @@ A_de_glob       = [];               % For global parameter estimation in vie_glo
 A_vra_glob      = [];               % For global parameter estimation in vie_glob
 A_vde_glob      = [];               % For global parameter estimation in vie_glob
 sumso.sources   = zeros(1,ns_q);    % total vector of source coor. estimates after eliminating non-observed sources
-nso.sources     = 0;                % the number of source coordinate offsets for each source
+nso.sources     = [];               % the number of source coordinate offsets for each source
+nso.sat_pos     = [];               % the number of satellite position offsets for each satellite
+nso.kep_ele     = [];               % the number of keplerian elements offsets for each keplerian element for each satellite
 
 if (opt.global_solve==1 && opt.est_source==1) || (opt.ascii_snx==1 && opt.est_source==1) || opt.est_sourceNNR==1 || opt.pw_sou == 1
-	for isou = 1 : ns_q  % loop over all sources (quasars)
+    tso(ns_q,1).sources = [];
+    a(1,ns_q).ra = [];
+    a(1,ns_q).de = [];
+    nso(1,ns_q).sources = [];
+    ra = zeros(1,ns_q);
+    de = zeros(1,ns_q);
+    for isou = 1 : ns_q  % loop over all sources (quasars)
     	mjdsource   = obs_per_source(isou).mjd;
     	int_sou     = opt.source(isou).int_rade;
 
     	% ASSIGN ALL THE PARAMETERS FROM SCANWISE TO SOURCEWISE
     	[per_source, n_unk,T_]   = sourcewisepar(opt,scan,n_scan,mjdsource,isou,mjd0,int_sou);
     	tso(isou).sources       = T_.source;
-    	a(isou).ra              = [];
-        a(isou).de              = [];
 
     	% FORMING DESIGN MATIRCES FOR SOURCE COORDINATES
     	% if one offset per session is estimated (for global solution)
-    	if  (opt.global_solve==1 && opt.est_source==1) || (opt.ascii_snx==1 && opt.est_source==1) || opt.est_sourceNNR==1 % +hana 18Jun14
+        if  (opt.global_solve==1 && opt.est_source==1) || (opt.ascii_snx==1 && opt.est_source==1) || opt.est_sourceNNR==1 % +hana 18Jun14
     	    [Ara,Ade] = a_source(per_source,n_observ);
     	    % Concatenating
     	    a(isou).ra = Ara; a(isou).de = Ade;
@@ -945,7 +885,7 @@ if (opt.global_solve==1 && opt.est_source==1) || (opt.ascii_snx==1 && opt.est_so
 
         % Preparations for global parameter estimation
     	if (opt.global_solve==1 && opt.est_source==1) || (opt.ascii_snx==1 && opt.est_source==1)
-    	    A_ra_glob = horzcat(A_ra_glob,a(isou).ra);  % design matrix for right ascensions of sources
+            A_ra_glob = horzcat(A_ra_glob,a(isou).ra);  % design matrix for right ascensions of sources
     	    A_de_glob = horzcat(A_de_glob,a(isou).de);  % design matrix for declination of sources
     	    % velocities of sources added
     	    if opt.est_source_velo ==1
@@ -962,49 +902,66 @@ if (opt.global_solve==1 && opt.est_source==1) || (opt.ascii_snx==1 && opt.est_so
     	    A(12).sm = horzcat(A(12).sm, a(isou).de);   % design matrix for declination of sources
     	    ra(isou) = opt.source(isou).ra;
     	    de(isou) = opt.source(isou).de;
+        else
+            ra = 0;
+            de = 0;
     	end
         sumso.sources(isou+1) = sumso.sources(isou) + nso(isou).sources; % total vector of source coor. estimates after eliminating non-observed sources
-	end
+    end
+else 
+    ra = 0;
+    de = 0;
 end
 
-ts.sources = sum([nso.sources]); %
-
+ts.sources = sum([nso.sources]); 
 clear Apw_ra Apw_de Ara Ade a
 
-% -------------------------------------------------------------------------
-% FORMING DESIGN MATRICES FOR SATELLITE COORDINATES
-
-number_pwlo_per_sat = 0;
-
-% If estimation of PWL offsets for satellite positions was selected
-if opt.pw_sat
-    % loop over all satellites
-    for i_sat = 1 : ns_s
-
-    	% ASSIGN ALL THE PARAMETERS FROM SCAN-WISE TO SATELLITE-WISE
-    	[per_satellite, n_unk, T_] = satellitewisepar(opt, scan, n_scan, obs_per_satellite(i_sat).mjd, i_sat, mjd0, opt.satellite(i_sat).sat_pos_int);
-    	tso(i_sat).sat = T_.sat;
-
-    	% FORMING DESIGN MATRICES FOR SATELLITE COORDINATES
-        [Apw_pos1, Apw_pos2, Apw_pos3] = apw_satellite(per_satellite, n_observ, n_unk, T_);
-        % Concatenating
-        a(i_sat).pos1 = Apw_pos1;
-        a(i_sat).pos2 = Apw_pos2;
-        a(i_sat).pos3 = Apw_pos3;
-
-        number_pwlo_per_sat(i_sat) = size(a(i_sat).pos1, 2);          % number of coordinate offsets for each satellite
-
-        A(16).sm = horzcat(A(16).sm, a(i_sat).pos1);   % design matrix for satellote coord. 1
-    	A(17).sm = horzcat(A(17).sm, a(i_sat).pos2);   % design matrix for satellote coord. 2
-        A(18).sm = horzcat(A(18).sm, a(i_sat).pos3);   % design matrix for satellote coord. 2
-        
-    end % for i_sat = 1 : ns_s
-end % if opt.pw_sat
-
-clear Apw_pos1 Apw_pos2 Apw_pos3 a
-
-
-% -------------------------------------------------------------------------
+% FORMING DESIGN MATIRCES FOR SATELLITE POSITION (NTW/XYZ/RSW)
+if ~isempty(sources.s)
+    per_satellite = get_per_satellite(opt, scan, obs_per_satellite, mjd0, name_orb);
+    if opt.SatPos.pw_sat
+        tso(ns_s,1).sat_pos = [];
+        nso(1,ns_s).sat_pos = [];
+        for isat = 1 : ns_s
+            sources = addSatellitePositionAtEstimationInterval(sources, per_satellite(isat).T_sat_pos, isat, mjd0, scan, 'position', 0);
+            [A_satpos] = apw_satellite(per_satellite(isat), n_observ);
+            nso(isat).sat_pos = size(A_satpos.pos1,2);
+            tso(isat).sat_pos = per_satellite(isat).T_sat_pos;
+    
+            A(16).sm = horzcat(A(16).sm, A_satpos.pos1);   % design matrix for satellite coord. 1
+    	    A(17).sm = horzcat(A(17).sm, A_satpos.pos2);   % design matrix for satellite coord. 2
+            A(18).sm = horzcat(A(18).sm, A_satpos.pos3);   % design matrix for satellite coord. 2
+        end 
+    end
+    clear isat
+    
+    % FORMING DESIGN MATIRCES FOR KEPLERIAN ELEMENTS
+    if opt.KepEle.estKepEle
+        tso(ns_s,1).KepEle1 = []; tso(ns_s,1).KepEle2 = []; tso(ns_s,1).KepEle3 = []; tso(ns_s,1).KepEle4 = []; tso(ns_s,1).KepEle5 = []; tso(ns_s,1).KepEle6 = [];
+        nso(1,ns_s).KepEle1 = []; nso(1,ns_s).KepEle2 = []; nso(1,ns_s).KepEle3 = []; nso(1,ns_s).KepEle4 = []; nso(1,ns_s).KepEle5 = []; nso(1,ns_s).KepEle6 = [];
+        for isat = 1 : ns_s
+            for iKep = 1:6
+                if opt.KepEle.estKepEle == 1 && iKep<7
+                    if opt.KepEle.('estKepEle' + string(iKep))
+                        [Apw_KepEle] = apw_kepler_satellite(per_satellite(isat), n_observ, iKep);
+                        sources = addSatellitePositionAtEstimationInterval(sources, per_satellite(isat).('T_KepEle' + string(iKep)), isat, mjd0, scan, 'KepEle', iKep);
+                        
+                        A(20+iKep).sm = horzcat(A(20+iKep).sm, Apw_KepEle); 
+                        tso(isat).('KepEle' + string(iKep)) = per_satellite(isat).('T_KepEle' + string(iKep));
+                        nso(isat).('KepEle' + string(iKep)) = size(Apw_KepEle, 2);
+                        clear Apw_KepEle 
+                    end
+                end
+            end
+        end
+    end
+else
+    if opt.KepEle.estKepEle == 1 
+        error('*** The estimation of orbital elements has been selected, but the schedule does not include satellite observations.')
+    elseif opt.SatPos.pw_sat ==1
+    error('*** The estimation of the satellite position has been selected, but the schedule does not include satellite observations.')
+    end
+end
 
 % XPOL (piecewise) - ahp_xpol
 [Apwxpol,T,Hxpol,Phxpol,oc_hxpol] = ahp_xpol(scan,mjd0,opt,c,rad2mas,obs_mjd);
@@ -1058,12 +1015,12 @@ fprintf('6. FORMING THE CONSTRAIN MATRIX and WEIGHT MATRIX OF CONSTRAINTS\n');
 
 sibling=0;
 
-if sibling==1
+if sibling==1 && opt.stc==1
     sites = {antenna.name};
     HbHo(1)=strmatch('HOBART12',sites);
     HbHo(2)=strmatch('HOBART26',sites);
     [H,Ph,och,t_] = hpoc_xyz_hbho(H,Ph,och,n_,opt,na,t_,HbHo); % Constraints for antenna coordinates
-else
+elseif opt.stc == 1
     [H,Ph,och] = hpoc_xyz(H,Ph,och,n_,opt,na); % Constraints for antenna coordinates
 end
 
@@ -1084,8 +1041,8 @@ end
 if opt.pw_sou == 1  || opt.est_sourceNNR==1
     [H,Ph,och,ts] = hpoc_sources(H,Ph,och,nso,ns_q,opt,ts); % Constraints for source coordinates
 end
-if opt.pw_sat
-	[H, Ph, och] = hpoc_satellites(H, Ph, och, number_pwlo_per_sat, ns_s, opt); % Constraints for satellite coordinates
+if opt.SatPos.pw_sat ||  opt.KepEle.estKepEle
+	[H, Ph, och] = hpoc_satellites(H, Ph, och, nso, ns_s, opt); % Constraints for satellite coordinates
 end
 
 
@@ -1096,19 +1053,13 @@ if opt.pw_sou == 1
     % Excluding the specified - fixed sources from the design matrix
     [nso,tso,A,H,Ph,och] = delsource(ns_q,tso,opt,nso,sumso,A,H,Ph,och);
 end
-% Add the following code if exclusion of single satellites from estimation is needed:
-% if opt.pw_sat
-% 	[H, Ph, och] = hpoc_satellites(H, Ph, och, number_pwlo_per_sat, ns_s, opt); % Constraints for satellite coordinates
-% end
-
 
 % DELETING THE REFERENCE CLOCK
 [A,H,Ph,och,nistat,n_,t] = delref(na,opt,sum_,A,H,Ph,och,n_,t);
 opt.fixed_clock = antenna(nistat).name;
 
 % FORMING "A" and "H" ACCORDING TO THE LSM OPTIONS
-[A,H,Ph,T,och,n_] = delmodel(opt,A,H,Ph,T,och,n_);
-
+% [A,H,Ph,T,och,n_] = delmodel(opt,A,H,Ph,T,och,n_);
 
 Ablk = [];
 Hblk = [];
@@ -1166,124 +1117,19 @@ vTPv        = [];
 
 %% Estimation of the parameters
 ess = opt.est_singleses;
-if ess == 1 % +hana 10Nov10
-
+if ess == 1     
     fprintf('7. ESTIMATING THE PARAMETERS WITH LEAST SQUARES\n');
-    % -------------------------------------------------------------------------
-    % LEAST SQUARES PARAMETER ESTIMATION
-    % Normal equation matrix
     A = vertcat(Ablk,Hblk);
-    N = A'*Pobserv*A;
-    N = full(N);
+    [x, v, v_real, Qxx, N] = process(A, Pobserv, opt, oc_observ, n_observ, sum_dj, xo, yo, zo, n_, na, ns_q, ra, de, nistat, antenna);
 
-    % Introducing NNT/NNR for station coordinates
-    if opt.stc == 1 % if station coordinates will be estimated
-        if opt.nnt_stc == 0
-            opt.fixed_station = 'all of them';
-            fprintf('!!! Not all station coordinates are estimated (selected are fixed)!!!\n');
-        elseif opt.nnt_stc == 1
-            if sum([opt.stat.nnt_inc])==1 && sum([opt.stat.nnr_inc])==1
-                opt.fixed_station = 'none';
-            else
-                opt.fixed_station = 'some of them';
-            end
-            [N] = helmert(n_, na, xo, yo, zo, opt, sum_dj, N);
-        end
-    end
-
-    % Introducing NNR for source coordinates
-    if opt.est_sourceNNR==1
-        fprintf('!!! NNR condition is introduced to matrix N for source coordinates!!!\n');
-        if sum([opt.source.nnr_inc]) < 3
-            fprintf(1,'Not enough sources for NNR condition. All sources are used for NNR instead\n');
-            [opt.source.nnr_inc] = deal(1);
-        end
-        
-%         for iSrc = 1:length(sources.q)
-%             if sources.q(iSrc).numobs < 20
-%                 opt.source(iSrc).nnr_inc = 0;
-%                 fprintf('Removing source %s from datum\n',opt.source(iSrc).name)
-%             end
-%         end
-     
-        [N] = nnr_cond(ns_q,ra,de,opt,sum_dj,N);
-    end
-
-    fprintf('clock %s is selected as the ref. clock for the main solution\n',antenna(nistat).name);
-
-    % change by D. Mayer 19 Jun 2015
-    % Condition number of the Normal equation matrix
-    % [unitless], close to 1 indicates a well-conditioned matrix
-    condn = cond(N);
-    [opt.condn] = condn;
-
-    % Applying LS
-    Qxx = inv(N); % [cm2] & [mas2]
-    Qxx = Qxx(1:sum_dj(length(sum_dj)),1:sum_dj(length(sum_dj)));
-
-    n = A'*Pobserv*oc_observ; % [1/cm] & [1/mas]
-    x = Qxx*n; % (16) x_c.......... [cm] & [mas]
-
-    % -------------------------------------------------------------------------
-    % ACCURACY CRITERIA
-    v = A*x - oc_observ; % RESIDUALS OF THE OBSERVATIONS -------01 [cm]
-    v_real = v(1:n_observ,:);
-
-    if opt.bsldep ==1 % Do you want to apply baseline dependent weights?
+    if opt.bsldep==1 % apply baseline dependent weights
         fprintf('VERSION WITH BASELINE DEPENDENT WEIGHTS\n')
 
-        %20140708 Baseline dependent weighting coded by Minttu Uunila
-        [var_bas,Pobserv_bas]=calc_bas_weights(scan,v_real,antenna);%
+        [~,Pobserv_bas]=calc_bas_weights(scan, v_real, antenna);
         Pobserv = sparse(blkdiag(Pobserv_bas,Pobserv(n_observ+1:end,n_observ+1:end)));
 
         fprintf('7.1 ESTIMATING THE PARAMETERS WITH LEAST SQUARES - 2nd run\n');
-        % -------------------------------------------------------------------------
-        % LEAST SQUARES PARAMETER ESTIMATION
-        % Normal equation matrix
-        %A = vertcat(Ablk,Hblk);
-        N = A'*Pobserv*A;
-        N = full(N);
-        % Condition number of the Normal equation matrix
-        % [unitless], close to 1 indicates a well-conditioned matrix
-
-        % Introducing NNT/NNR for station coordinates
-        if opt.stc == 1 % if station coordinates will be estimated
-            if opt.nnt_stc == 0
-                opt.fixed_station = 'all of them';
-                fprintf('!!! all station coordinates are not estimated (selected as fixed)!!!\n');
-            elseif opt.nnt_stc == 1
-                if sum([opt.stat.nnt_inc])==1 && sum([opt.stat.nnr_inc])==1
-                    opt.fixed_station = 'none';
-                else
-                    opt.fixed_station = 'some of them';
-                end
-                [N] = helmert(n_,na,xo,yo,zo,opt,sum_dj,N);
-            end
-        end
-
-        % Introducing NNR for source coordinates
-        if opt.est_sourceNNR==1
-            fprintf('!!! NNR condition is introduced to matrix N for source coordinates!!!\n');
-            [N] = nnr_cond(ns_q,ra,de,opt,sum_dj,N);
-        end
-
-        fprintf('clock %s is selected as the ref. clock for the main solution\n',antenna(nistat).name);
-
-        condn = cond(N);
-        [opt.condn] = condn;
-
-        % Applying LS
-        Qxx = inv(N); % [cm2] & [mas2]
-        Qxx = Qxx(1:sum_dj(length(sum_dj)),1:sum_dj(length(sum_dj)));
-
-
-        n = A'*Pobserv*oc_observ; % [1/cm] & [1/mas]
-        x = Qxx*n; % (16) x_c.......... [cm] & [mas]
-
-        % -------------------------------------------------------------------------
-        % ACCURACY CRITERIA
-        v = A*x - oc_observ; % RESIDUALS OF THE OBSERVATIONS -------01 [cm]
-        v_real = v(1:n_observ,1);
+        [x, v, v_real, Qxx, N] = process(A, Pobserv, opt, oc_observ, n_observ, sum_dj, xo, yo, zo, n_, na, ns_q, ra, de, nistat, antenna);
     end
 
     %mo = sqrt((v_real'*pobserv*v_real)/(nobserv-length(x)));  % RMS [1]
@@ -1291,22 +1137,21 @@ if ess == 1 % +hana 10Nov10
     mo = sqrt(vTPv/(n_observ+size(Hblk,1)-size(x,1)));  % RMS [2] SINEX V2.01 Appendix(2) Eq.(20)
     opt.mo = mo;
 
-    vTPv_real=diag(v_real'*Pobserv(1:n_observ,1:n_observ)*v_real);     %% numerator of wrms
-    weightsum=sum(sum(Pobserv(1:n_observ,1:n_observ)));          %% denominator of wrms
-    wrms=sqrt(vTPv_real/weightsum);                            %% wrms of post-fit residual
+    vTPv_real=diag(v_real'*Pobserv(1:n_observ,1:n_observ)*v_real);     % numerator of wrms
+    weightsum=sum(sum(Pobserv(1:n_observ,1:n_observ)));                % denominator of wrms
+    wrms=sqrt(vTPv_real/weightsum);                                    % wrms of post-fit residual
     opt.wrms = wrms;
 
-    mi = repmat(mo,length(Qxx),1).*repmat(sqrt(diag(Qxx)),1,numberOfLSMs); % std. dev. of estimated parameters [cm,mas]
-    
-    % Covariance matrix a posteriori, Cvv = sigma_0^2 * Qvv, Qvv=Qll-Q~ll, Qll= inv(P), Q~ll=A*Qxx*A'
+    mi = repmat(mo,length(Qxx),1).*repmat(sqrt(diag(Qxx)),1,numberOfLSMs); % std. dev. of1440 estimated parameters [cm,mas]
+
+    %Covariance matrix a posteriori, Cvv = sigma_0^2 * Qvv, Qvv=Qll-Q~ll, Qll= inv(P), Q~ll=A*Qxx*A'
     Qll = inv(Pobserv(1:n_observ,1:n_observ));
     Qlldach = A(1:n_observ,:)*Qxx*A(1:n_observ,:)';
     Qvv = Qll-Qlldach;
     Cvv = mo.^2 .* diag(Qvv);
     sigma_residuals_aposteriori = sqrt(Cvv);
 
-    % Outlier test begins here
-    % DETECTING OUTLIER
+    % DETECTING OUTLIERS
     if opt.basic_outlier == 1
        qll = diag(inv(pobserv));
        AQh=Ablk*sqrtm(Qxx);
@@ -1326,13 +1171,13 @@ if ess == 1 % +hana 10Nov10
              out_v(count_out) = v_i; % out_v is the vector that contains all outliers in oc_observ
           end
        end
-       fprintf('----------\n');
+       fprintf('\n');
        fprintf('detecting outliers:\n');
        fprintf('num. of outliers: %2d \n',count_out);
     else
-       fprintf('----------\n');
+       fprintf('\n');
        fprintf('outlier detection test was not applied!\n')
-       fprintf('----------\n');
+       fprintf('\n');
     end
 
     % ##### Write outliers to ASCII file: #####
@@ -1430,19 +1275,59 @@ if ess == 1 % +hana 10Nov10
     fprintf('total celestial pole (nutation dy) offsets:   %4d\n',dj(10));
     fprintf('total right ascension offsets of sources :    %4d\n',dj(11));
     fprintf('total declination offsets of sources :        %4d\n',dj(12));
-    fprintf('antenna coor. dx offsets:                     %4d\n',dj(13));
-    fprintf('antenna coor. dy offsets:                     %4d\n',dj(14));
-    fprintf('antenna coor. dz offsets:                     %4d\n',dj(15));
-    if logical(opt.pw_sat)
-        fprintf('satellite pos. 1 offsets:                     %4d\n',dj(16));
-        fprintf('satellite pos. 2 offsets:                     %4d\n',dj(17));
-        fprintf('satellite pos. 3 offsets:                     %4d\n',dj(18));
+    if opt.stc_all && opt.stc
+        fprintf('antenna coor. dx offsets (using all obs):     %4d\n',dj(13));
+        fprintf('antenna coor. dy offsets (using all obs):     %4d\n',dj(14));
+        fprintf('antenna coor. dz offsets (using all obs):     %4d\n',dj(15));
+    elseif opt.stc_sat && opt.stc   
+        fprintf('antenna coor. dx offsets (using sat obs):     %4d\n',dj(27));
+        fprintf('antenna coor. dy offsets (using sat obs):     %4d\n',dj(28));
+        fprintf('antenna coor. dz offsets (using sat obs):     %4d\n',dj(29));
+    elseif opt.stc_qu && opt.stc 
+        fprintf('antenna coor. dx offsets (using qu obs):      %4d\n',dj(30));
+        fprintf('antenna coor. dy offsets (using qu obs):      %4d\n',dj(31));
+        fprintf('antenna coor. dz offsets (using qu obs):      %4d\n',dj(32));
+    elseif opt.stc==0
+        fprintf('antenna coor. dx offsets:                     %4d\n',dj(13));
+        fprintf('antenna coor. dy offsets:                     %4d\n',dj(14));
+        fprintf('antenna coor. dz offsets:                     %4d\n',dj(15));
+    end
+    if opt.SatPos.pw_sat == 1
+        fprintf('satellite position offsets dr/dn/dx:          %4d per satellite (%d satellite(s))\n',dj(16)/ns_s ,ns_s);
+        fprintf('satellite position offsets ds/dt/dy:          %4d per satellite (%d satellite(s))\n',dj(17)/ns_s ,ns_s);
+        fprintf('satellite position offsets dw/dw/dz:          %4d per satellite (%d satellite(s))\n',dj(18)/ns_s ,ns_s);
     end
     if logical(opt.est_scale)
-        fprintf('scale parameter:                              %4d\n',dj(19));
+        fprintf('scale parameter:                          %4d\n',dj(19));
     end
     if logical(opt.est_bdco)
-        fprintf('total baseline dependent clock offsets:       %4d\n',dj(20));
+        fprintf('total baseline dependent clock offsets:   %4d\n',dj(20));
+    end
+    if opt.KepEle.estKepEle == 1
+        fprintf('semi-major axis (a):                          %4d per satellite (%d satellite(s))\n',dj(21)/ns_s ,ns_s);
+        fprintf('eccentricity (e):                             %4d per satellite (%d satellite(s))\n',dj(22)/ns_s ,ns_s);
+        fprintf('inclination (i):                              %4d per satellite (%d satellite(s))\n',dj(23)/ns_s ,ns_s);
+        fprintf('right ascension of ascending node (Omega):    %4d per satellite (%d satellite(s))\n',dj(24)/ns_s ,ns_s);
+        fprintf('argument of perigee (omega):                  %4d per satellite (%d satellite(s))\n',dj(25)/ns_s ,ns_s);
+        fprintf('argument of latitude (u0):                    %4d per satellite (%d satellite(s))\n',dj(26)/ns_s ,ns_s);
+    end
+
+    mfw_q = [];
+    mfw_s = [];
+    for iScan=1:length(scan)
+        if strcmp(scan(iScan).obs_type, 'q') 
+            for i=1:length(scan(iScan).stat)
+                if ~isempty(scan(iScan).stat(i).mfw)
+                    mfw_q(end+1) = scan(iScan).stat(i).mfw;
+                end
+            end
+        else
+            for i=1:length(scan(iScan).stat)
+                if ~isempty(scan(iScan).stat(i).mfw)
+                    mfw_s(end+1) = scan(iScan).stat(i).mfw;
+                end
+            end
+        end
     end
 
     fprintf('---------------------------------------------------------\n');
@@ -1450,7 +1335,7 @@ if ess == 1 % +hana 10Nov10
     fprintf('---------------------------------------------------------\n');
 
       
-    [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, number_pwlo_per_sat, ebsl_bdco);
+    [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, ebsl_bdco);
     x_.mo = mo;
     x_.mo_first = first_solution.mo;
     x_.units.mo = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
@@ -1459,7 +1344,7 @@ if ess == 1 % +hana 10Nov10
     x_.units.m02 = 'WRMS of post-fit residuals sqrt(v_realTPv_real/sumOfWeights) [cm]';
     x_.nobs = n_observ;
     x_.nscans = n_scan;
-    
+   
     res.mo = mo;
     res.mo_first = first_solution.mo;
     res.units.mo = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
@@ -1470,40 +1355,38 @@ if ess == 1 % +hana 10Nov10
     [atpa_.mat] = N;
     % [atpl_.vec] = n;
     [opt_] = opt;
-    % save files
 
-    fprintf('----------\n');
+    fprintf('\n');
     test_significance(x_,opt_,5);
 
-    % Save the "cleaned" VieVS structures (consistent with the results in x_ and res_):
-    fprintf('Estimated parameters are saved as ../DATA/LEVEL3/%s/x_%s.mat\n',dirpth,parameter.session_name);
+    % Save the "cleaned" VieVS structures (consistent with the results in x_ and res_): 
     save(['../DATA/LEVEL3/',dirpth,'/x_',parameter.session_name,'.mat'],'x_');
-
-    fprintf('Estimation options are saved as ../DATA/LEVEL3/%s/opt_%s.mat\n',dirpth,parameter.session_name);
     save(['../DATA/LEVEL3/',dirpth,'/opt_',parameter.session_name,'.mat'],'opt_');
-
-    fprintf('normal equation matrix is saved as ../DATA/LEVEL3/%s/atpa_%s.mat\n',dirpth,parameter.session_name);
     save(['../DATA/LEVEL3/',dirpth,'/atpa_',parameter.session_name,'.mat'],'atpa_');
-
-%     fprintf('right hand side vector is saved as ../VieVS/DATA/LEVEL3/%s/atpl_%s.mat\n',dirpth,parameter.session_name);
-%     save(['../DATA/LEVEL3/',dirpth,'/atpl_',parameter.session_name,'.mat'],'atpl_');
-
-    fprintf('Residuals are saved as ../DATA/LEVEL3/%s/res_%s.mat\n',dirpth,parameter.session_name);
     save(['../DATA/LEVEL3/',dirpth,'/res_',parameter.session_name,'.mat'],'res');
+    %save(['../DATA/LEVEL3/',dirpth,'/atpl_',parameter.session_name,'.mat'],'atpl_');
 
+    fprintf('Estimation completed. The following files were saved:\n');
+    fprintf('   - %-25s ../DATA/LEVEL3/%s/x_%s.mat\n', 'Estimated parameters:', dirpth, parameter.session_name);
+    fprintf('   - %-25s ../DATA/LEVEL3/%s/opt_%s.mat\n', 'Estimation options:', dirpth, parameter.session_name);
+    fprintf('   - %-25s ../DATA/LEVEL3/%s/atpa_%s.mat\n', 'Normal equation matrix:', dirpth, parameter.session_name);
+    fprintf('   - %-25s ../DATA/LEVEL3/%s/res_%s.mat\n', 'Residuals:', dirpth, parameter.session_name);
+    %fprintf('   - %-25s ../DATA/LEVEL3/%s/atpl_%s.mat\n', 'right hand side vector:', dirpth, parameter.session_name);
+    fprintf('\n');
 end
 
 if numberOfLSMs == 1
     % Save the "cleaned" VieVS structures (consistent with the results in x_ and res_):
     fprintf('Save VieVS data structures (outliers and OPT file options applied!)\n');
-    fprintf('  ../DATA/LEVEL3/%s/%s_antenna.mat\n',dirpth,parameter.session_name);
     save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_antenna.mat'],'antenna');
-    fprintf('  ../DATA/LEVEL3/%s/%s_source.mat\n',dirpth,parameter.session_name);
     save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_sources.mat'],'sources');
-    fprintf('  ../DATA/LEVEL3/%s/%s_parameter.mat\n',dirpth,parameter.session_name);
     save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_parameter.mat'],'parameter');
-    fprintf('  ../DATA/LEVEL3/%s/%s_scan.mat\n',dirpth,parameter.session_name);
     save(['../DATA/LEVEL3/',dirpth,'/',parameter.session_name,'_scan.mat'],'scan');
+
+    fprintf('   - %-25s   ../DATA/LEVEL3/%s/%s_antenna.mat\n', 'Antenna struct:', dirpth,parameter.session_name);
+    fprintf('   - %-25s   ../DATA/LEVEL3/%s/%s_source.mat\n', 'Source struct:',dirpth,parameter.session_name);
+    fprintf('   - %-25s   ../DATA/LEVEL3/%s/%s_parameter.mat\n', 'Parameter struct:',dirpth,parameter.session_name);
+    fprintf('   - %-25s   ../DATA/LEVEL3/%s/%s_scan.mat\n', 'Scan struct:',dirpth,parameter.session_name);
 end
 [opt_] = opt;
 
@@ -1527,19 +1410,17 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
         return
     end
 
-    [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, number_pwlo_per_sat, ebsl_bdco);
+    [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, ebsl_bdco);
 
     glob_dj = dj;
 
     x_.source=[''];
     if opt.est_source == 1
-        % +hana 21 Jun 2010
         % Assign the common and IERS name of the sources
         for isou = 1 : length(opt.source)
             x_.source(isou).name = opt.source(isou).name;
             x_.source(isou).IERSname = opt.source(isou).IERSname; % hana 24Mar13
         end
-        % -hana
 
         glob_dj(length(glob_dj)+1) = size(A_ra_glob,2);
         glob_dj(length(glob_dj)+1) = size(A_de_glob,2);
@@ -1688,7 +1569,6 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
     end
     glob_dj(length(glob_dj)+1) = size(A_gamma,2);
 
-
     oc_observ_real = oc_observ(1:n_observ);
     % w/o ntsl for sinex calibration block
     oc_observ_real_noNtsl = oc_observ_noNtsl(1:n_observ);
@@ -1800,15 +1680,11 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
             an_glob.aplrg(i,:) = antenna(i).crg; % [ref.pres, a priori RgC]
         end
 
-%         if ~isempty(dirpthL2) & ~exist(['../DATA/LEVEL2/',dirpthL2])
-%             mkdir(['../DATA/LEVEL2/',dirpthL2])
-%         end
-
         fprintf('Data for GLOBAL SOLUTION is saved as ../VieVS/DATA/LEVEL2/%s/%s_an_glob.mat\n',dirpthL2,parameter.session_name);
         fprintf('Data for GLOBAL SOLUTION is saved as ../VieVS/DATA/LEVEL2/%s/%s_par_glob.mat\n',dirpthL2,parameter.session_name);
         fprintf('Data for GLOBAL SOLUTION is saved as ../VieVS/DATA/LEVEL2/%s/%s_Nb_glob.mat\n',dirpthL2,parameter.session_name);
 
-        % hana 26March13 - needed for Vie_GLOB
+        % needed for Vie_GLOB
         if ess == 0
             opt_.source = opt.source;
         end
@@ -1821,12 +1697,13 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
         % The H(11) and H(12) are included in N_global. - Needs further
         % improvement of the code!!!! This is just a preliminary version.
         % (In Vie_GLOB the respective columns/rows are deleted anyway.)
-        % Hana 11/2016
+
         if opt.UseSourceAbsConstrNNR % LKern 09/2023
             opt_.nconstr = size(Hblk,1)-size(H(11).sm,1)-size(H(12).sm,1); % minus abs. constr for RA and De if sources estimated session-wise
         else
             opt_.nconstr = size(Hblk,1);
         end
+
         opt_.lTPl = oc_observ_real'*pobserv*oc_observ_real; %l'Pl for global solution
 
         glob1.an = an_glob;
@@ -1835,10 +1712,6 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
         glob2.eopapr = parameter.eop;
         glob3.N = N_global;
         glob3.b = b_global;
-
-%         if ~exist(['../DATA/LEVEL2/',dirpthL2])
-%             mkdir(['../DATA/LEVEL2/',dirpthL2])
-%         end
 
         if ~isempty(dirpthL2) && ~exist(['../DATA/LEVEL2/',dirpthL2])
             mkdir(['../DATA/LEVEL2/',dirpthL2])
@@ -1866,7 +1739,8 @@ if opt.ascii_snx == 1
     clear N11 N12 N21 N22 b1 b2 col_red col_est
 
     outsnx=opt.outsnx;
-    [col_red, col_est] = snx_split(x_,outsnx);
+
+    [col_red, col_est] = snx_split(x_,outsnx, parameter);
 
     % remove constraints of parameters which will be written into SINEX file
     sA=[];
@@ -1919,16 +1793,16 @@ if opt.ascii_snx == 1
     all_obs = real_obs + nconstr_red;
 
     % Save info about columns
-    col_sinex = snx_newcol(col_est, x_, antenna, outsnx);
+    col_sinex = snx_newcol(col_est, x_, antenna, outsnx, parameter);
     % Save info about statistic
     col_sinex.lTPlreduc = lTPlreduc;
     col_sinex.nr_unknowns = total_est(end);
-    col_sinex.nr_obs = all_obs; % write ALL (real+pseudo) observations into sinex!!!
+    col_sinex.nr_obs = real_obs; % write ALL (real+pseudo) observations into sinex!!!
     col_sinex.vTPv = vTPv;
-    col_sinex.varfac = mo^2; % hana 24 Apr 2013
+    col_sinex.varfac = mo.^2; 
     col_sinex.outsnx = outsnx;
 
-    % Change units of the N matrix and b vector !!!
+    % Change units of the N matrix and b vector
     [N_sinex, b_sinex]=snx_changeunits(N_sinex,b_sinex,col_sinex,outsnx);
     % w/o ntsl for sinex calibration block
     [~, b_sinex_noNtsl]=snx_changeunits(N_sinex,b_sinex_noNtsl,col_sinex,outsnx);
@@ -1949,7 +1823,6 @@ if opt.ascii_snx == 1
     write_sinex_vievs(parameter.session_name, [dirpth '/'], outsnx.firstname, outsnx.lastname, outsnx.email, outsnx.suffix,...
                       N_sinex,b_sinex,col_sinex,b_sinex_cal); % vars are loaded to the function directly -> saving uses disk space needlessly
 end
-
 
 % Command window output of resulting statistics
 if numberOfLSMs == 1

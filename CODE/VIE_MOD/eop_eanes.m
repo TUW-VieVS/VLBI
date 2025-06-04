@@ -52,8 +52,6 @@ if (nargin > 1)
         case 'interpf (Conventions)' 
         otherwise
         NARG = load (strcat('../EOP/eophf/',nam));
-        fprintf(nam);
-        fprintf('\n');
     end
 end
 if isempty (NARG) 

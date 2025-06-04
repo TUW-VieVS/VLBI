@@ -22,8 +22,7 @@ function varargout = vie_setup(varargin)
 
 % Edit the above text to modify the response to help vie_setup
 
-% Last Modified by GUIDE v2.5 21-Mar-2025 09:02:08
-
+% Last Modified by GUIDE v2.5 28-Apr-2025 15:51:20
 
 % 07 Jan 2014 by Matthias Madzak: LEVEL2 bug corrected
 % 27 Jan 2014 by Hana Krasna: icrf2nonVCS set to default
@@ -67,7 +66,7 @@ function varargout = vie_setup(varargin)
 %                                   - Renamed from vievs2_3.m to vie_setup.m
 % 07 Jan 2016 by M. Madzak: net CDF support and other minor changes
 % 21 Jun 2016 by A. Hellerschmied: Changes to start netCDF analysis tool (analyseNetcdf.m) from VieVS GUI
-% 07 Jul 2016 by A. Hellerschmied: Added checkbox "checkbox_estimation_leastSquares_sources_ICRF2_def" 
+% 07 Jul 2016 by A. Hellerschmied: Added checkbox "radiobutton_estimation_leastSquares_sources_ICRF2_def" 
 % 11 Jul 2016 by D. Mayer: Added edit field "edit_estimation_leastSquares_sources_abs_constr"
 % 14 Jul 2016 by A. Hellerschmied: - Added possibility to select VSO files as input data (changes in: updateInputFilesBox, pushbutton_setInput_browseForSessions_Callback, openOPTfile) 
 %                                  - Open/Create OPT and Outlier files also for vgosdb and vso files
@@ -170,6 +169,7 @@ function vie_setup_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % suppress the warning 'Setting the "WindowButtonUpFcn" property is not permitted while this mode is active.' which appears in Plotting - Residuals when scrolling through stations while "Zoom in" is active
 warning('off','MATLAB:modes:mode:InvalidPropertySet')
+%set(handles.uipanel_welcome.uipanel_OrbitalElementEstimation, 'Parent', handles.figure_vievs2)
 
 
 allMainUiPanels=[handles.uipanel_file_setInputFiles, ...
@@ -200,6 +200,7 @@ allMainUiPanels=[handles.uipanel_file_setInputFiles, ...
     handles.uipanel_plot_sessionAnalysis,...
 	handles.uipanel_plot_eopOut,...
     handles.uipanel_models_space_crafts,...
+    handles.uipanel_OrbitalElementEstimation,...
     handles.uipanel_welcome];
 
 % save all ui panels to handles struct
@@ -238,6 +239,11 @@ dirsInGlobCrfDatum=dir('../DATA/GLOB/CRF/DATUM/*.txt');
 dirsInGlobCrfFixed=dir('../DATA/GLOB/CRF/FIXED_SOURCES/*.txt');
 dirsInGlobCrfReduce=dir('../DATA/GLOB/CRF/REDUCE/*.txt');
 dirsInSoucatFolder=dir('../CRF/SOURCE_STRUCTURE_CAT/*.cat');
+dirsInCrfPwloEstFolder=dir('../CRF/SELECTION/SOUESTPWLO/');
+dirsInCrfNNRFolder=dir('../CRF/SELECTION/SOUDATUM/');
+dirsInCrfSouDeleteFolder=dir('../CRF/SELECTION/SOUREMOVE/');
+dirsInTrfStatNotDatumFolder=dir('../TRF/SELECTION/STATNOTDATUM/');
+
 statlistFolder='../WORK/STATIONLIST/';
 if ~exist(statlistFolder, 'dir')
     mkdir(statlistFolder);
@@ -312,6 +318,10 @@ dirsInGlobCrfDatum([dirsInGlobCrfDatum.isdir])=[];
 dirsInGlobCrfFixed([dirsInGlobCrfFixed.isdir])=[];
 dirsInGlobCrfReduce([dirsInGlobCrfReduce.isdir])=[];
 dirsInSoucatFolder([dirsInSoucatFolder.isdir])=[];
+dirsInCrfPwloEstFolder(strcmp({dirsInCrfPwloEstFolder.name}, '.')|strcmp({dirsInCrfPwloEstFolder.name}, '..')|strcmp({dirsInCrfPwloEstFolder.name}, '.gitignore'))=[];
+dirsInCrfNNRFolder(strcmp({dirsInCrfNNRFolder.name}, '.')|strcmp({dirsInCrfNNRFolder.name}, '..')|strcmp({dirsInCrfNNRFolder.name}, '.gitignore'))=[];
+dirsInCrfSouDeleteFolder(strcmp({dirsInCrfSouDeleteFolder.name}, '.')|strcmp({dirsInCrfSouDeleteFolder.name}, '..')|strcmp({dirsInCrfSouDeleteFolder.name}, '.gitignore'))=[];
+dirsInTrfStatNotDatumFolder(strcmp({dirsInTrfStatNotDatumFolder.name}, '.')|strcmp({dirsInTrfStatNotDatumFolder.name}, '..')|strcmp({dirsInTrfStatNotDatumFolder.name}, '.gitignore'))=[];
 
 % set new entries for popup menu
 set(handles.popupmenu_setInput_optDir, 'String', {dirsInOptFolder.name})
@@ -389,7 +399,7 @@ set(handles.popupmenu_plot_sessionAnalysis_subfolder3, 'String', ['/', {dirsInDa
 set(handles.popupmenu_plot_sessionAnalysis_subfolder4, 'String', ['/', {dirsInDataFolder.name}])
 set(handles.popupmenu_plot_eopOut_subfolder, 'String', ['/', {dirsInDataFolder.name}])
 
-set(handles.popupMenu_refFrameSatellitePosition, 'String', {'rsw', 'trf', 'gcrf'})
+set(handles.popupMenu_refFrameSatellitePosition, 'String', {'rsw', 'ntw', 'trf', 'gcrf'})
 
 if isempty(dirsInWorkPlFolder)
     set(handles.popupmenu_plot_eopOut_pl, 'String', ' ')
@@ -460,6 +470,31 @@ else
     set(handles.listbox_vie_sim_ss, 'String', {dirsInSoucatFolder.name});
     set(handles.popupmenu_parameters_ss_catalog, 'String', {dirsInSoucatFolder.name});
 end
+
+
+if isempty(dirsInCrfPwloEstFolder)
+    set(handles.popupmenu_pwloSou_file, 'String', ' ')
+else
+    set(handles.popupmenu_pwloSou_file, 'String', {dirsInCrfPwloEstFolder.name})
+end
+
+if isempty(dirsInCrfNNRFolder)
+    set(handles.popupmenu_NNRSou_file, 'String', ' ')
+else
+    set(handles.popupmenu_NNRSou_file, 'String', {dirsInCrfNNRFolder.name})
+end
+if isempty(dirsInCrfSouDeleteFolder)
+    set(handles.popupmenu_removeSou_file, 'String', ' ')
+else
+    set(handles.popupmenu_removeSou_file, 'String', {dirsInCrfSouDeleteFolder.name})
+end
+
+if isempty(dirsInTrfStatNotDatumFolder)
+    set(handles.popupmenu_removeStatDatum_file, 'String', ' ')
+else
+    set(handles.popupmenu_removeStatDatum_file, 'String', {dirsInTrfStatNotDatumFolder.name})
+end
+
 
 %if isempty(dirsInStatlistFolder)
 %    set(handles.listbox_vie_sched_prenet, 'String', ' ')
@@ -1967,155 +2002,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-% --------------------------------------------------------------------
-function menu_models_space_crafts_Callback(hObject, eventdata, handles)
-% hObject    handle to uipanel_models_space_crafts (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% set all uipanels to invisibel
-setAllPanelsToInvisible(hObject, handles)
-
-% set the one panel to visible
-set(handles.uipanel_models_space_crafts, 'Visible', 'On');
-
-% Update handles structure
-guidata(hObject, handles);
-
-
-% --- Executes on button press in pushbutton_models_sc_browse_for_sp3.
-function pushbutton_models_sc_browse_for_sp3_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_models_sc_browse_for_sp3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Select Sp3 file:
-[FileName, PathName] = uigetfile('*.*','Select SP3 file', '../ORBIT', 'multiselect', 'off');
-
-if ischar(FileName) && ischar(PathName)
-    set(handles.edit_models_sc_sp3_file, 'String', [PathName, FileName])
-    
-    % save parameter file automatically 
-    auto_save_parameterfile(hObject, handles)
-end
-
-
-
-% --- Executes on button press in pushbutton_browse_sp3_file.
-function pushbutton_browse_sp3_file_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_browse_sp3_file (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Select Sp3 file:
-[FileName, PathName] = uigetfile('*.*','Select SP3 file', '../ORBIT/SP3', 'multiselect', 'off');
-
-if ischar(FileName) && ischar(PathName)
-    set(handles.input_models_sc_sp3_file, 'String', [PathName, FileName])
-    % save parameter file automatically 
-    auto_save_parameterfile(hObject, handles)
-end
-
-
-% --- Executes on button press in pushbutton_browse_tle_file.
-function pushbutton_browse_tle_file_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_browse_tle_file (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Select Sp3 file:
-[FileName, PathName] = uigetfile('*.*','Select TLE file', '../ORBIT/TLE', 'multiselect', 'off');
-
-if ischar(FileName) && ischar(PathName)
-    set(handles.input_models_sc_tle_file, 'String', [PathName, FileName])
-    % save parameter file automatically 
-    auto_save_parameterfile(hObject, handles)
-end
-
-% --- Executes when selected object is changed in uibuttongroup_sp3_ephem_file.
-function uibuttongroup_sp3_ephem_file_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uibuttongroup_sp3_ephem_file 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-switch get(hObject, 'Tag')
-    case 'radiobtn_sp3'
-        set(handles.input_models_sc_tle_file, 'Enable', 'off')
-        set(handles.input_models_sc_tle_file, 'String', '')
-        set(handles.pushbutton_browse_tle_file, 'Enable', 'off')
-        set(handles.input_models_sc_sp3_file, 'Enable', 'on')
-        set(handles.pushbutton_browse_sp3_file, 'Enable', 'on')
-    otherwise
-        set(handles.input_models_sc_sp3_file, 'Enable', 'off')
-        set(handles.input_models_sc_sp3_file, 'String', '')
-        set(handles.pushbutton_browse_sp3_file, 'Enable', 'off')
-        set(handles.input_models_sc_tle_file, 'Enable', 'on')
-        set(handles.pushbutton_browse_tle_file, 'Enable', 'on')
-end
-
-   
-    
-% --- Executes on button press in radiobtn_sp3_Callback.
-function radiobtn_sp3_Callback(hObject, eventdata, handles)
-%set(handles.input_sc_ephem_file,'Enable','off')
-%set(handles.pushbutton_browse_sc_ephem_file,'Enable','off')
-
-% --- Executes on button press in radiobtn_tle_Callback.
-function radiobtn_tle_Callback(hObject, eventdata, handles)
-%set(handles.input_sc_ephem_file,'Enable','off')
-%set(handles.pushbutton_browse_sc_ephem_file,'Enable','off')
-
-
-
-
-function input_models_sc_sp3_file_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_models_sc_sp3_file (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-function input_models_sc_sp3_file_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_models_sc_sp3_file (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-function input_models_sc_tle_file_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_models_sc_sp3_file (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-function input_models_sc_tle_file_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_models_sc_sp3_file (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-function edit_models_sc_sp3_file_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_models_sc_sp3_file (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_models_sc_sp3_file as text
-%        str2double(get(hObject,'String')) returns contents of edit_models_sc_sp3_file as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit_models_sc_sp3_file_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_models_sc_sp3_file (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
 % --- Executes on button press in checkbox_parameters_statCorr_oceanPoleTides.
 function checkbox_parameters_statCorr_oceanPoleTides_Callback(hObject, eventdata, handles)
 % hObject    handle to checkbox_parameters_statCorr_oceanPoleTides (see GCBO)
@@ -2528,6 +2414,35 @@ set(handles.uipanel_estimation_leastSquares_satellitePosition, 'Visible', 'On');
 % Update handles structure
 guidata(hObject, handles);
 
+% --------------------------------------------------------------------
+function menu_estimation_leastSquares_OrbitalElements_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_estimation_leastSquares_SatellitePosition (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_OrbitalElementEstimation, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+% --------------------------------------------------------------------
+function menu_estimation_leastSquares_SatelliteParameters_Callback(hObject, ~, handles)
+% hObject    handle to menu_estimation_leastSquares_SatellitePosition (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_SatelliteParameterEstimation, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
 
 % --------------------------------------------------------------------
 function relativeConstraintsSatellitePositionValue_CreateFcn(hObject, eventdata, handles)
@@ -2556,6 +2471,18 @@ function estimationIntervalSatellitePositionValue_Callback(hObject, eventdata, h
 % handles    structure with handles and user data (see GUIDATA)
 auto_save_parameterfile(hObject, handles)
 
+% --------------------------------------------------------------------
+function fixRadialComponentWeightValue_Callback(hObject, eventdata, handles)
+% hObject    handle to estimationIntervalSatellitePositionValue (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function fixRadialComponentWeightValue_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to estimationIntervalSatellitePositionValue (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 
 
 % --------------------------------------------------------------------
@@ -2571,6 +2498,11 @@ if get(hObject, 'Value') == 1
     set(handles.refFrameSatellitePositionString, 'Enable', 'on');
     set(handles.popupMenu_refFrameSatellitePosition, 'Enable', 'on');
     set(handles.checkBox_relativeConstraintsSatellitePosition, 'Enable', 'on');
+    if get(handles.popupMenu_refFrameSatellitePosition, 'Value') == 1 || get(handles.popupMenu_refFrameSatellitePosition, 'Value') == 2
+        set(handles.checkbox_fixRadialComponent, 'Enable', 'on');
+    else
+        set(handles.checkbox_fixRadialComponent, 'Enable', 'off');
+    end
     
     if get(handles.checkBox_relativeConstraintsSatellitePosition, 'Value') == 1
         set(handles.relativeConstraintsSatellitePositionString, 'Enable', 'on');
@@ -2587,6 +2519,10 @@ else
     set(handles.checkBox_relativeConstraintsSatellitePosition, 'Enable', 'off');
     set(handles.relativeConstraintsSatellitePositionString, 'Enable', 'off');
     set(handles.relativeConstraintsSatellitePositionValue, 'Enable', 'off');
+    set(handles.checkbox_fixRadialComponent, 'Enable', 'off');
+    set(handles.fixRadialComponentWeightString, 'Enable', 'off');
+    set(handles.fixRadialComponentWeightValue, 'Enable', 'off');
+
 end
 auto_save_parameterfile(hObject, handles)
 
@@ -2607,10 +2543,37 @@ end
 auto_save_parameterfile(hObject, handles)
 
 % --------------------------------------------------------------------
+function checkBox_fixRadialComponent_Callback(hObject, eventdata, handles)
+% hObject    handle to checkBox_relativeConstraintsSatellitePosition (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_clocks
+if get(hObject, 'Value') == 1
+    set(handles.fixRadialComponentWeightString, 'Enable', 'on');
+    set(handles.fixRadialComponentWeightValue, 'Enable', 'on');
+else
+    set(handles.fixRadialComponentWeightString, 'Enable', 'off');
+    set(handles.fixRadialComponentWeightValue, 'Enable', 'off'); 
+end
+auto_save_parameterfile(hObject, handles)
+
+
+
+% --------------------------------------------------------------------
 function popupMenu_refFrameSatellitePosition_Callback(hObject, eventdata, handles)
 % hObject    handle to popupMenu_refFrameSatellitePosition (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+if get(handles.popupMenu_refFrameSatellitePosition, 'Value') == 1 || get(handles.popupMenu_refFrameSatellitePosition, 'Value') == 2
+        set(handles.checkbox_fixRadialComponent, 'Enable', 'on');
+else
+    set(handles.checkbox_fixRadialComponent, 'Value', 0);
+    set(handles.checkbox_fixRadialComponent, 'Enable', 'off');
+    set(handles.fixRadialComponentWeightValue, 'Enable', 'off');
+    set(handles.fixRadialComponentWeightString, 'Enable', 'off');
+
+end
 auto_save_parameterfile(hObject, handles)
 
     
@@ -3200,35 +3163,28 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in checkbox_estimation_leastSquares_coordinates_estimate.
-function checkbox_estimation_leastSquares_coordinates_estimate_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_estimation_leastSquares_coordinates_estimate (see GCBO)
+% --- Executes on button press in checkbox_estStaCoord_AddDatumConditions.
+function checkbox_estStaCoord_AddDatumConditions_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_estStaCoord_AddDatumConditions (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_coordinates_estimate
-
-% define wether sinex options (write station coords) should be enabled
-newSinexState='off';
+% Hint: get(hObject,'Value') returns toggle state of checkbox_estStaCoord_AddDatumConditions
 
 if get(hObject, 'Value')
     set(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Enable', 'on');
     set(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Enable', 'on');
     set(handles.checkbox_estimation_leastSquares_coordinates_NNS, 'Enable', 'on');
-    % disable option for sinex output
-    if get(handles.checkbox_run_sinex_write, 'Value')==1
-        newSinexState='on';
-    end
-    
+%	set(handles.rb_estimation_leastSquares_coordinates_datum_trf, 'Enable', 'on');
+%    set(handles.rb_estimation_leastSquares_coordinates_datum_all, 'Enable', 'on');
+
 else
     set(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Enable', 'off');
     set(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Enable', 'off');
     set(handles.checkbox_estimation_leastSquares_coordinates_NNS, 'Enable', 'off');
+%	set(handles.rb_estimation_leastSquares_coordinates_datum_trf, 'Enable', 'off');
+%    set(handles.rb_estimation_leastSquares_coordinates_datum_all, 'Enable', 'off');
 end
-
-set(handles.radiobutton_run_sinex_stationCoords_incl, 'Enable', newSinexState)
-set(handles.text_run_sinex_stationCoords, 'Enable', newSinexState)
-    
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
 
@@ -3243,6 +3199,7 @@ function checkbox_estimation_leastSquares_coordinates_NNT_Callback(hObject, even
 
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
+
 
 
 % --- Executes on button press in checkbox_estimation_leastSquares_coordinates_NNR.
@@ -3269,6 +3226,8 @@ function checkbox_estimation_leastSquares_coordinates_NNS_Callback(hObject, even
 auto_save_parameterfile(hObject, handles)
 
 
+% --- Executes on button press in checkbox_estimation_leastSquares_coordinates_NNT.
+																				  
 % --- Executes on button press in checkbox_estimation_leastSquares_eop_xpEst.
 function checkbox_estimation_leastSquares_eop_xpEst_Callback(hObject, eventdata, handles)
 % hObject    handle to checkbox_estimation_leastSquares_eop_xpEst (see GCBO)
@@ -3842,8 +3801,20 @@ if get(hObject, 'Value')==0 % disabled
     % disable option for sinex output
     set(handles.radiobutton_run_sinex_sources_incl, 'Enable', 'off')
     set(handles.text_run_sinex_sources, 'Enable', 'off')
-    set(handles.checkbox_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'off')
+    set(handles.radiobutton_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'off')
+    set(handles.radiobutton_estimation_leastSquares_sources_fileDef, 'Enable', 'off')
+    set(handles.popupmenu_NNRSou_file, 'Enable', 'off')
+    set(handles.radiobutton_NNRSoulist_ivs, 'Enable', 'off')   
+    set(handles.radiobutton_NNRSoulist_iers, 'Enable', 'off')
 	set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
+    % source selection
+    set(handles.radiobutton_pwloSou_nonCRF, 'Enable', 'off')
+    set(handles.radiobutton_pwloSou_nonCRFandfromFile, 'Enable', 'off')
+    set(handles.radiobutton_pwloSou_fromFile, 'Enable', 'off')
+    set(handles.popupmenu_pwloSou_file, 'Enable', 'off')
+    set(handles.radiobutton_pwloSoulist_ivs, 'Enable', 'off')   
+    set(handles.radiobutton_pwloSoulist_iers, 'Enable', 'off')
+    set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
 else % enabled
     set(handles.edit_estimation_leastSquares_sources_interval, 'Enable', 'on')
     set(handles.checkbox_estimation_leastSquares_sources_constr, 'Enable', 'on')
@@ -3859,11 +3830,32 @@ else % enabled
             set(handles.text_run_sinex_sources, 'Enable', 'on')
         end
     end
+
+    % source selection
+    set(handles.radiobutton_pwloSou_nonCRF, 'Enable', 'on')
+    set(handles.radiobutton_pwloSou_nonCRFandfromFile, 'Enable', 'on')
+    set(handles.radiobutton_pwloSou_fromFile, 'Enable', 'on')
+    set(handles.popupmenu_pwloSou_file, 'Enable', 'on')
+    if get(handles.radiobutton_pwloSou_fromFile, 'Value') | get(handles.radiobutton_pwloSou_nonCRFandfromFile, 'Value')
+        set(handles.popupmenu_pwloSou_file, 'Enable', 'on')
+        set(handles.radiobutton_pwloSoulist_ivs, 'Enable', 'on')   
+        set(handles.radiobutton_pwloSoulist_iers, 'Enable', 'on')
+    else
+        set(handles.popupmenu_pwloSou_file, 'Enable', 'off')
+        set(handles.radiobutton_pwloSoulist_ivs, 'Enable', 'off')   
+        set(handles.radiobutton_pwloSoulist_iers, 'Enable', 'off')
+    end
+
     
     % set(handles.checkbox_estimation_leastSquares_sources_NNR, 'Enable', 'off')
 	set(handles.checkbox_estimation_leastSquares_sources_NNR, 'Value', 0)
-    set(handles.checkbox_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'off')
+    set(handles.radiobutton_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'off')
+    set(handles.radiobutton_estimation_leastSquares_sources_fileDef, 'Enable', 'off')
+    set(handles.popupmenu_NNRSou_file, 'Enable', 'off')
+    set(handles.radiobutton_NNRSoulist_ivs, 'Enable', 'off')   
+    set(handles.radiobutton_NNRSoulist_iers, 'Enable', 'off')
 	set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
+    set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
 end
 
 % save parameter file automatically 
@@ -3952,15 +3944,32 @@ function checkbox_estimation_leastSquares_sources_NNR_Callback(hObject, eventdat
 % set enabling
 if get(hObject, 'Value')==0 % Checkbox disabled
     % set(handles.checkbox_estimation_leastSquares_sources_est, 'Enable', 'on')
-    set(handles.checkbox_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'off')
+    set(handles.radiobutton_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'off')
+    set(handles.radiobutton_estimation_leastSquares_sources_fileDef, 'Enable', 'off')
+    set(handles.popupmenu_NNRSou_file, 'Enable', 'off')
+    set(handles.radiobutton_NNRSoulist_ivs, 'Enable', 'off')   
+    set(handles.radiobutton_NNRSoulist_iers, 'Enable', 'off')
 	set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
 	set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
-    set(handles.checkbox_est_lsm_sources_obs_per_source, 'Enable', 'off')    
-    set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'Enable', 'off')
+    %set(handles.checkbox_est_lsm_sources_obs_per_source, 'Enable', 'off')    
+    %set(handles.edit_estimation_leastSquares_sources_obs_per_source, 'Enable', 'off')
 
 else % == 1; Checkbox enabled
-    set(handles.checkbox_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'on')
-    
+    set(handles.radiobutton_estimation_leastSquares_sources_ICRF2_def, 'Enable', 'on')
+    set(handles.radiobutton_estimation_leastSquares_sources_fileDef, 'Enable', 'on')
+    set(handles.popupmenu_NNRSou_file, 'Enable', 'on')
+    set(handles.radiobutton_NNRSoulist_ivs, 'Enable', 'on')   
+    set(handles.radiobutton_NNRSoulist_iers, 'Enable', 'on')
+    if get(handles.radiobutton_estimation_leastSquares_sources_fileDef, 'Value')
+        set(handles.popupmenu_NNRSou_file, 'Enable', 'on')
+        set(handles.radiobutton_NNRSoulist_ivs, 'Enable', 'on')   
+        set(handles.radiobutton_NNRSoulist_iers, 'Enable', 'on')
+    else
+        set(handles.popupmenu_NNRSou_file, 'Enable', 'off')
+        set(handles.radiobutton_NNRSoulist_ivs, 'Enable', 'off')   
+        set(handles.radiobutton_NNRSoulist_iers, 'Enable', 'off')
+    end
+
 	set(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Enable', 'on')
     if get(handles.checkbox_estimation_leastSquares_sources_abs_constr,'Value')
         set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'on')
@@ -3979,6 +3988,15 @@ else % == 1; Checkbox enabled
 	set(handles.edit_estimation_leastSquares_sources_interval, 'Enable', 'off')
     set(handles.checkbox_estimation_leastSquares_sources_constr, 'Enable', 'off')
     set(handles.edit_estimation_leastSquares_sources_constr, 'Enable', 'off')
+
+    % source selection
+    set(handles.radiobutton_pwloSou_nonCRF, 'Enable', 'off')
+    set(handles.radiobutton_pwloSou_nonCRFandfromFile, 'Enable', 'off')
+    set(handles.radiobutton_pwloSou_fromFile, 'Enable', 'off')
+    set(handles.popupmenu_pwloSou_file, 'Enable', 'off')
+    set(handles.radiobutton_pwloSoulist_ivs, 'Enable', 'off')   
+    set(handles.radiobutton_pwloSoulist_iers, 'Enable', 'off')
+
     % disable option for sinex output
     set(handles.radiobutton_run_sinex_sources_incl, 'Enable', 'off')
     set(handles.text_run_sinex_sources, 'Enable', 'off')
@@ -4006,7 +4024,7 @@ end
 auto_save_parameterfile(hObject, handles)
 
 % --- Executes on button press in checkbox_estimation_leastSquares_sources_NNR.
-function checkbox_est_lsm_sources_obs_per_source_Callb(hObject, eventdata, handles)
+function checkbox_est_lsm_sources_obs_per_source_Callback(hObject, eventdata, handles)
 % hObject    handle to checkbox_estimation_leastSquares_sources_NNR (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -4023,13 +4041,13 @@ end
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
 
-% --- Executes on button press in checkbox_estimation_leastSquares_sources_ICRF2_def.
-function checkbox_estimation_leastSquares_sources_ICRF2_def_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_estimation_leastSquares_sources_ICRF2_def (see GCBO)
+% --- Executes on button press in radiobutton_estimation_leastSquares_sources_ICRF2_def.
+function radiobutton_estimation_leastSquares_sources_ICRF2_def_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton_estimation_leastSquares_sources_ICRF2_def (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_sources_ICRF2_def
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_estimation_leastSquares_sources_ICRF2_def
 auto_save_parameterfile(hObject, handles)
 
 
@@ -4104,6 +4122,8 @@ set(handles.text_run_sinex_sources, 'Enable', newState)
 set(handles.text_run_sinex_stationCoords, 'Enable', newState)
 set(handles.text_run_sinex_eop, 'Enable', newState)
 set(handles.checkbox_run_sinex_sources, 'Enable', newState)
+set(handles.text_run_sinex_orb, 'Enable', newState)
+set(handles.text_run_sinex_satpos, 'Enable', 'off')
 set(handles.text300, 'Enable', newState)
 
 set(handles.radiobutton_run_sinex_clockParam_incl, 'Enable', 'off')
@@ -4112,11 +4132,16 @@ set(handles.radiobutton_run_sinex_tropoParam_incl, 'Enable', newState)
 set(handles.radiobutton_run_sinex_sources_incl, 'Enable', newState)
 set(handles.radiobutton_run_sinex_stationCoords_incl, 'Enable', newState)
 set(handles.radiobutton_run_sinex_eop_incl, 'Enable', newState)
+set(handles.radiobutton_run_sinex_orb_incl, 'Enable', newState)
+set(handles.radiobutton_run_sinex_satpos_incl, 'Enable', 'off')
 
 set(handles.radiobutton_run_sinex_clockParam_excl, 'Enable', newState)
 set(handles.radiobutton_run_sinex_zwd_excl, 'Enable', newState)
 set(handles.radiobutton_run_sinex_tropoParam_excl, 'Enable', newState)
 set(handles.radiobutton_run_sinex_eop_excl, 'Enable', newState)
+set(handles.radiobutton_run_sinex_orb_excl, 'Enable', newState)
+set(handles.radiobutton_run_sinex_satpos_excl, 'Enable', 'off')
+
 
 % if neither eop is estimtated -> disable EOP-options in sinex output
 if (get(handles.checkbox_estimation_leastSquares_eop_xpEst, 'Value')+...
@@ -4133,6 +4158,12 @@ end
 if get(handles.checkbox_estimation_leastSquares_coordinates_estimate, 'Value')==0
     set(handles.text_run_sinex_stationCoords, 'Enable', 'off')
     set(handles.radiobutton_run_sinex_stationCoords_incl, 'Enable', 'off')
+end
+
+if get(handles.radiobutton_estStaCoord_QSObs_Sep, 'Value')
+    set(handles.ui_StaCoord_snx_qs, 'Enable', newState)
+    set(handles.rb_StaCoord_snx_qs_sat, 'Enable', newState)
+    set(handles.rb_StaCoord_snx_qs_qu, 'Enable', newState)
 end
 
 % if gradients are not estimated -> disable sinex option
@@ -4156,6 +4187,13 @@ if get(handles.checkbox_run_sinex_sources, 'Value')==0
     set(handles.radiobutton_run_sinex_sources_incl, 'Enable', 'off')
 end
 
+% if orbital elements are not estimated -> disable option
+if get(handles.cb_estKepEle, 'Value')==0
+    set(handles.text_run_sinex_orb, 'Enable', 'off')
+    set(handles.radiobutton_run_sinex_orb_incl, 'Enable', 'off')
+    set(handles.radiobutton_run_sinex_orb_excl, 'Enable', 'off')
+end
+
 set(handles.checkbox_run_sinex_changeAnalystsName, 'Enable', newState)
 set(handles.edit_run_sinex_firstname, 'Enable', newState)
 set(handles.edit_run_sinex_lastname, 'Enable', newState)
@@ -4171,6 +4209,7 @@ set(handles.edit_run_sinex_suffix, 'Enable', newState)
 if get(handles.checkbox_run_sinex_addSuffix, 'Value')==0
     set(handles.edit_run_sinex_suffix, 'Enable', 'Off')
 end
+
 
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
@@ -4304,6 +4343,16 @@ else
 	set(handles.edit_run_outDirs_glob_pathToLevel2, 'Enable', 'on');
 	set(handles.edit_run_outDirs_glob_level2Sub, 'Enable', 'on');
 end
+
+
+% --- Executes on button press in checkbox_run_outputDirectories_runVieMod.
+function checkbox_createSkyPlots_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_outputDirectories_runVieMod (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_outputDirectories_runVieMod
+
 
 % --- Executes on button press in checkbox_run_sinex_changeAnalystsName.
 function checkbox_run_sinex_changeAnalystsName_Callback(hObject, eventdata, handles)
@@ -4982,12 +5031,67 @@ function pushbutton_run_Callback(hObject, eventdata, handles)
 
 % save gui parameters (again)
 auto_save_parameterfile(hObject, handles)
- 
-% prepare everything for calling vie_batch
-save_runp(hObject, handles)
+pp=1;
+if get(handles.checkbox_estimation_leastSquares_coordinates_estimate, 'Value')
+    %Quasar and no NNT
+    if get(handles.radiobutton_estStaCoord_QuObsOnly, 'Value') || get(handles.radiobutton_estStaCoord_QSObs_Sep, 'Value') %quasar only or Separate
+        if get(handles.checkbox_estStaCoord_AddDatumConditions, 'Value') == 0 || get(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Value') == 0 
+            answer = questdlg('Station coordinates are estimated either using only quasar observations or separately from quasar and satellite observations, but no NNT condition is applied. This may result in a singular normal equation matrix. If station coordinates are estimated separately from quasar and satellite observations, the NNT condition is applied only to the quasar-based coordinates.','Warning!', 'Proceed Anyway', 'Change Settings', 'Test');
+            switch answer
+                case 'Proceed Anyway'
+                    pp = 1;
+                case 'Change Settings'
+                    pp = 0;
+            end
+        end
+    elseif get(handles.radiobutton_estStaCoord_SatObsOnly, 'Value') 
+        if get(handles.checkbox_estStaCoord_AddDatumConditions, 'Value') == 1 && get(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Value') == 1 
+            answer = questdlg('Estimating station coordinates using satellite observations does not require NNT. Applying NNT conditions in this scenario would result in an overconstrained solution.','Warning!', 'Proceed Anyway', 'Change Settings', 'Test');
+            switch answer
+                case 'Proceed Anyway'
+                    pp = 1;
+                case 'Change Settings'
+                    pp = 0;
+            end
+        end
+    end
+    
+    %ERP are estimated (NNR required)
+    if (get(handles.checkbox_estimation_leastSquares_eop_xpEst, 'Value') && get(handles.checkbox_estimation_leastSquares_eop_ypEst, 'Value') && get(handles.checkbox_estimation_leastSquares_eop_dut1Est, 'Value'))
+        if get(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Value') == 0 %&& get(handles.checkbox_estStaCoord_AddDatumConditions, 'Value') == 1
+            %ERP estimated but NNR condition not applied --> not enough constraints
+            answer = questdlg('ERP parameters (xpol, ypol, UT1-UTC) are being estimated, but no NNR condition is applied. Estimating ERP requires the application of NNR conditions.','Warning!', 'Proceed Anyway', 'Change Settings', 'Test');
+            switch answer
+                case 'Proceed Anyway'
+                    pp = 1;
+                case 'Change Settings'
+                    pp = 0;
+            end
+        end
+    else
+        %ERP are fixed (no NNR required)
+        if get(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Value') == 1 && get(handles.checkbox_estStaCoord_AddDatumConditions, 'Value') == 1
+            %ERP estimated but NNR condition not applied --> not enough constraints
+            answer = questdlg('ERP (xpol, ypol, UT1-UTC) are fixed. Applying NNR conditions in this case would result in overconstraining the solution. Note that fixing ERP eliminates the need for NNR conditions.','Warning!', 'Proceed Anyway', 'Change Settings', 'Test');
+            switch answer
+                case 'Proceed Anyway'
+                    pp = 1;
+                case 'Change Settings'
+                    pp = 0;
+            end
+        end
+    end
+end
 
-% call vie_batch
-vie_batch
+if pp==1
+    % prepare everything for calling vie_batch
+    save_runp(hObject, handles)
+    vie_batch
+else
+    return
+end
+
+return
 
 
 % -------------------------------------------------------------------------%
@@ -7949,6 +8053,142 @@ function uipanel131_SelectionChangeFcn(hObject, eventdata, handles)
 
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
+
+
+
+
+
+
+
+% --- Executes when selected object is changed in uibuttongroup52.
+function uibuttongroup52_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uibuttongroup52 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% defines if the popupmenu (containing all folders of TRP) should be
+% updated -> is needed when external tropospheric files are created in the
+% meantime
+updatePopupmenu=0;
+
+switch get(hObject, 'Tag')
+    case 'radiobutton_pwloSou_fromFile'
+        set(handles.popupmenu_pwloSou_file, 'Enable', 'on')
+        set(handles.radiobutton_pwloSoulist_ivs, 'Enable', 'on')   
+        set(handles.radiobutton_pwloSoulist_iers, 'Enable', 'on')
+        updatePopupmenu=1;
+    case 'radiobutton_pwloSou_nonCRFandfromFile'
+        set(handles.popupmenu_pwloSou_file, 'Enable', 'on')
+        set(handles.radiobutton_pwloSoulist_ivs, 'Enable', 'on')   
+        set(handles.radiobutton_pwloSoulist_iers, 'Enable', 'on')
+        updatePopupmenu=1;
+    otherwise
+        set(handles.popupmenu_pwloSou_file, 'Enable', 'off')
+        set(handles.radiobutton_pwloSoulist_ivs, 'Enable', 'off')   
+        set(handles.radiobutton_pwloSoulist_iers, 'Enable', 'off')
+end
+
+% update popupmenu
+if updatePopupmenu==1
+    curContent=get(handles.popupmenu_pwloSou_file, 'String');
+    if ~iscell(curContent)
+        curContent = {curContent};
+    end
+    curSelected=curContent{get(handles.popupmenu_pwloSou_file, 'Value')};
+    
+    % get directory content
+    dirsInCrfPwloEstFolder=dir('../CRF/SELECTION/SOUESTPWLO/');
+    % delete '.', '..', and all files
+    dirsInCrfPwloEstFolder(strcmp({dirsInCrfPwloEstFolder.name}, '.')|strcmp({dirsInCrfPwloEstFolder.name}, '..')|strcmp({dirsInCrfPwloEstFolder.name}, '.gitignore'))=[];
+    
+    % write folders to popupmenu
+    if isempty(dirsInCrfPwloEstFolder)
+        set(handles.popupmenu_pwloSou_file, 'String', ' ')
+    else
+        set(handles.popupmenu_pwloSou_file, 'String', {dirsInCrfPwloEstFolder.name})
+    end
+    
+    % try to find previous selected to select this again
+    valueOfPrevSelectedFolder=find(strcmp({dirsInCrfPwloEstFolder.name}, curSelected));
+    if isempty(valueOfPrevSelectedFolder)
+        set(handles.popupmenu_pwloSou_file, 'Value', 1)
+    else
+        set(handles.popupmenu_pwloSou_file, 'Value', valueOfPrevSelectedFolder)
+    end
+    
+end %update popupmenu
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+
+
+
+% --- Executes when selected object is changed in uibuttongroup53.
+function uibuttongroup53_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uibuttongroup53 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+% defines if the popupmenu (containing all folders of TRP) should be
+% updated -> is needed when external tropospheric files are created in the
+% meantime
+updatePopupmenu=0;
+
+switch get(hObject, 'Tag')
+    case 'radiobutton_estimation_leastSquares_sources_fileDef'
+        set(handles.popupmenu_NNRSou_file, 'Enable', 'on')
+        set(handles.radiobutton_NNRSoulist_ivs, 'Enable', 'on')   
+        set(handles.radiobutton_NNRSoulist_iers, 'Enable', 'on')
+        updatePopupmenu=1;
+    otherwise
+        set(handles.popupmenu_NNRSou_file, 'Enable', 'off')
+        set(handles.radiobutton_NNRSoulist_ivs, 'Enable', 'off')   
+        set(handles.radiobutton_NNRSoulist_iers, 'Enable', 'off')
+end
+
+% update popupmenu
+if updatePopupmenu==1
+    curContent=get(handles.popupmenu_NNRSou_file, 'String');
+    if ~iscell(curContent)
+        curContent = {curContent};
+    end
+    curSelected=curContent{get(handles.popupmenu_NNRSou_file, 'Value')};
+    
+    % get directory content
+    dirsInCrfNNRFolder=dir('../CRF/SELECTION/SOUDATUM/');
+    % delete '.', '..', and all files
+    dirsInCrfNNRFolder(strcmp({dirsInCrfNNRFolder.name}, '.')|strcmp({dirsInCrfNNRFolder.name}, '..')|strcmp({dirsInCrfNNRFolder.name}, '.gitignore'))=[];
+    
+    % write folders to popupmenu
+    if isempty(dirsInCrfNNRFolder)
+        set(handles.popupmenu_NNRSou_file, 'String', ' ')
+    else
+        set(handles.popupmenu_NNRSou_file, 'String', {dirsInCrfNNRFolder.name})
+    end
+    
+    % try to find previous selected to select this again
+    valueOfPrevSelectedFolder=find(strcmp({dirsInCrfNNRFolder.name}, curSelected));
+    if isempty(valueOfPrevSelectedFolder)
+        set(handles.popupmenu_NNRSou_file, 'Value', 1)
+    else
+        set(handles.popupmenu_NNRSou_file, 'Value', valueOfPrevSelectedFolder)
+    end
+    
+end %update popupmenu
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+
+
+
 
 
 % --- Executes when user attempts to close figure_vievs2.
@@ -11015,6 +11255,11 @@ function checkbox_estimation_leastSquares_sources_abs_constr_Callback(hObject, e
 
 % Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_sources_abs_constr
 
+if get(hObject,'Value')
+    set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'on')
+else
+    set(handles.edit_estimation_leastSquares_sources_abs_constr, 'Enable', 'off')
+end
 
 
 function edit_estimation_leastSquares_sources_obs_per_source_Callback(hObject, eventdata, handles)
@@ -11037,15 +11282,6 @@ function edit_estimation_leastSquares_sources_obs_per_source_CreateFcn(hObject, 
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-
-% --- Executes on button press in checkbox_est_lsm_sources_obs_per_source.
-function checkbox_est_lsm_sources_obs_per_source_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_est_lsm_sources_obs_per_source (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_est_lsm_sources_obs_per_source
 
 
 % --- Executes on button press in pushbutton_cite.
@@ -11076,7 +11312,6 @@ function menu_help_vievsWebsite_Callback(hObject, eventdata, handles)
 web 'https://vievswiki.geo.tuwien.ac.at/'
 
 
-
 % --- Executes on button press in pushbutton_wiki.
 function pushbutton_wiki_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_wiki (see GCBO)
@@ -11099,6 +11334,7 @@ catch
     warning('An error occured when opening: https://github.com/TUW-VieVS')
 end
 
+
 % --- Executes during object creation, after setting all properties.
 function popupMenu_refFrameSatellitePosition_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to popupMenu_refFrameSatellitePosition (see GCBO)
@@ -11110,6 +11346,136 @@ function popupMenu_refFrameSatellitePosition_CreateFcn(hObject, eventdata, handl
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in checkbox_fixRadialComponent.
+function checkbox_fixRadialComponent_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_fixRadialComponent (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_fixRadialComponent
+
+if get(handles.checkbox_fixRadialComponent, 'Value')
+    set(handles.fixRadialComponentWeightString, 'Enable','on')
+    set(handles.fixRadialComponentWeightValue, 'Enable','on')
+else
+    set(handles.fixRadialComponentWeightString, 'Enable','off')
+    set(handles.fixRadialComponentWeightValue, 'Enable','off')
+end
+
+
+
+% --- Executes on button press in radiobutton_estStaCoord_QuObsOnly.
+function radiobutton_estStaCoord_QuObsOnly_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton_estStaCoord_QuObsOnly (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_estStaCoord_QuObsOnly
+
+if get(handles.radiobutton_estStaCoord_QuObsOnly, 'Value') 
+    set(handles.ui_StaCoord_snx_qs, 'Enable', 'off')
+    set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'off')
+    set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'off')
+end
+
+
+% --- Executes on button press in radiobutton_estStaCoord_AllObs.
+function radiobutton_estStaCoord_AllObs_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton_estStaCoord_AllObs (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_estStaCoord_AllObs
+
+if get(handles.radiobutton_estStaCoord_AllObs, 'Value') 
+    set(handles.ui_StaCoord_snx_qs, 'Enable', 'off')
+    set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'off')
+    set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'off')
+end
+
+% --- Executes on button press in checkbox_plot_eopOut_write_detailed_eop_data.
+function checkbox_plot_eopOut_write_detailed_eop_data_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_eopOut_write_detailed_eop_data (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_detailed_eop_data
+
+
+% --- Executes on button press in checkbox_plot_eopOut_write_sorted_eop_data.
+function checkbox_plot_eopOut_write_sorted_eop_data_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_eopOut_write_sorted_eop_data (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_sorted_eop_data
+
+
+% --- Executes on button press in checkbox_plot_eopOut_write_vievs_eop_data.
+function checkbox_plot_eopOut_write_vievs_eop_data_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_eopOut_write_vievs_eop_data (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_vievs_eop_data
+
+
+% --- Executes on button press in checkbox_plot_eopOut_write_ivs_eop_format.
+function checkbox_plot_eopOut_write_ivs_eop_format_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_plot_eopOut_write_ivs_eop_format (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_ivs_eop_format
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_folder1_sources_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_folder1_sources (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_folder3_sources_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_folder3_sources (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_plot_folder2_sources_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_plot_folder2_sources (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton_plot_residuals_removeOutliers.
+function pushbutton_plot_residuals_removeOutliers_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_plot_residuals_removeOutliers (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+	ext_pushbutton_plot_residuals_removeOutliers_Callback(hObject, eventdata, handles)
 
 
 % --- Executes on button press in checkbox_parameters_eop_interp_lin48h.
@@ -11138,6 +11504,29 @@ function popupmenu_parameters_eop_aPriori_C04_CreateFcn(hObject, eventdata, hand
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit_vie_sim_statistics_csv_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_vie_sim_statistics_csv (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_vie_sim_statistics_csv as text
+%        str2double(get(hObject,'String')) returns contents of edit_vie_sim_statistics_csv as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_vie_sim_statistics_csv_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_vie_sim_statistics_csv (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
@@ -11230,6 +11619,86 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+% --- Executes on button press in radiobutton_estStaCoord_SatObsOnly.
+function radiobutton_estStaCoord_SatObsOnly_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton_estStaCoord_SatObsOnly (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_estStaCoord_SatObsOnly
+
+if get(handles.radiobutton_estStaCoord_SatObsOnly, 'Value') 
+    set(handles.ui_StaCoord_snx_qs, 'Enable', 'off')
+    set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'off')
+    set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'off')
+end
+
+% --- Executes on button press in checkbox_estStaCoord_AddDatumConditions.
+function checkbox_estimation_leastSquares_coordinates_estimate_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_estStaCoord_AddDatumConditions (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_estStaCoord_AddDatumConditions
+
+% define wether sinex options (write station coords) should be enabled
+newSinexState='off';
+
+if get(hObject, 'Value')
+    set(handles.uibuttongroup_StaCoord_From, 'Enable', 'on');
+    set(handles.radiobutton_estStaCoord_SatObsOnly, 'Enable', 'on');
+    set(handles.radiobutton_estStaCoord_QuObsOnly, 'Enable', 'on');
+    set(handles.radiobutton_estStaCoord_AllObs, 'Enable', 'on');
+    set(handles.radiobutton_estStaCoord_QSObs_Sep, 'Enable', 'on');
+
+    if get(handles.checkbox_run_sinex_write, 'Value') && get(handles.radiobutton_estStaCoord_QSObs_Sep, 'Value')
+        set(handles.ui_StaCoord_snx_qs, 'Enable', 'on');
+        set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'on');
+        set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'on');
+    else
+        set(handles.ui_StaCoord_snx_qs, 'Enable', 'off');
+        set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'off');
+        set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'off');
+    end
+
+    set(handles.checkbox_estStaCoord_AddDatumConditions, 'Enable', 'on');
+    if get(handles.checkbox_estStaCoord_AddDatumConditions, 'Value')
+        set(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Enable', 'on');
+        set(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Enable', 'on');
+        set(handles.checkbox_estimation_leastSquares_coordinates_NNS, 'Enable', 'on');
+        set(handles.uibuttongroup_DatumSettings_Apply, 'Enable', 'on');
+    else
+        set(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Enable', 'off');
+        set(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Enable', 'off');
+        set(handles.checkbox_estimation_leastSquares_coordinates_NNS, 'Enable', 'off');
+        set(handles.uibuttongroup_DatumSettings_Apply, 'Enable', 'off');
+    end
+    % disable option for sinex output
+    if get(handles.checkbox_run_sinex_write, 'Value')==1
+        newSinexState='on';
+    end
+else
+    set(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Enable', 'off');
+    set(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Enable', 'off');
+    set(handles.checkbox_estimation_leastSquares_coordinates_NNS, 'Enable', 'off');
+    set(handles.radiobutton_estStaCoord_SatObsOnly, 'Enable', 'off');
+    set(handles.radiobutton_estStaCoord_QuObsOnly, 'Enable', 'off');
+    set(handles.radiobutton_estStaCoord_AllObs, 'Enable', 'off');
+        set(handles.radiobutton_estStaCoord_QSObs_Sep, 'Enable', 'off');
+    set(handles.uibuttongroup_StaCoord_From, 'Enable', 'off');
+    set(handles.checkbox_estStaCoord_AddDatumConditions, 'Enable', 'off');
+    set(handles.uibuttongroup_DatumSettings_Apply, 'Enable', 'off');
+    set(handles.ui_StaCoord_snx_qs, 'Enable', 'off');
+    set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'off');
+    set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'off');
+end
+
+set(handles.radiobutton_run_sinex_stationCoords_incl, 'Enable', newSinexState)
+set(handles.text_run_sinex_stationCoords, 'Enable', newSinexState)
+    
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
 
 % --- Executes on button press in checkbox_plot_eopOut_write_ivs_eop_format_incloutliers.
 function checkbox_plot_eopOut_write_ivs_eop_format_incloutliers_Callback(hObject, eventdata, handles)
@@ -11239,20 +11708,582 @@ function checkbox_plot_eopOut_write_ivs_eop_format_incloutliers_Callback(hObject
 
 % Hint: get(hObject,'Value') returns toggle state of checkbox_plot_eopOut_write_ivs_eop_format_incloutliers
 
+% --- Executes on button press in pushbutton_plot_residuals_writeAmbiguities.
+function pushbutton_plot_residuals_writeAmbiguities_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_plot_residuals_writeAmbiguities (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    ext_pushbutton_plot_residuals_writeAmbiguities_Callback(hObject, eventdata, handles)
 
 
-function edit_vie_sim_statistics_csv_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sim_statistics_csv (see GCBO)
+% --- Executes on button press in rb_estimation_leastSquares_coordinates_datum_trf.
+function rb_estimation_leastSquares_coordinates_datum_trf_Callback(hObject, eventdata, handles)
+% hObject    handle to rb_estimation_leastSquares_coordinates_datum_trf (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit_vie_sim_statistics_csv as text
-%        str2double(get(hObject,'String')) returns contents of edit_vie_sim_statistics_csv as a double
+% Hint: get(hObject,'Value') returns toggle state of rb_estimation_leastSquares_coordinates_datum_trf
+if get(hObject, 'Value')   
+    set(handles.checkbox_removeStatDatum, 'Enable', 'on')
+    if get(handles.checkbox_removeStatDatum, 'Value')
+        set(handles.popupmenu_removeStatDatum_file, 'Enable', 'on')
+    end
+else
+    set(handles.checkbox_removeStatDatum, 'Enable', 'off')
+    set(handles.popupmenu_removeStatDatum_file, 'Enable', 'off')
+end
+
+% --- Executes on button press in rb_estimation_leastSquares_coordinates_datum_all.
+function rb_estimation_leastSquares_coordinates_datum_all_Callback(hObject, eventdata, handles)
+% hObject    handle to rb_estimation_leastSquares_coordinates_datum_all (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of rb_estimation_leastSquares_coordinates_datum_all
+if get(hObject, 'Value')   
+    set(handles.checkbox_removeStatDatum, 'Enable', 'off')
+    set(handles.popupmenu_removeStatDatum_file, 'Enable', 'off')
+else
+    set(handles.checkbox_removeStatDatum, 'Enable', 'on')
+    set(handles.popupmenu_removeStatDatum_file, 'Enable', 'on')
+end
+
+
+% --- Executes on button press in cb_estKepEle.
+function cb_estKepEle_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_estKepEle (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_estKepEle
+if get(hObject, 'Value')
+    set(handles.rb_estKepEle_NumTau, 'Enable', 'on');
+    set(handles.rb_estKepEle_NumSatPos, 'Enable', 'on');
+    set(handles.rb_estKepEle_Ana, 'Enable', 'on');
+    set(handles.rb_estKepEle_FRP, 'Enable', 'on');
+    if get(handles.rb_estKepEle_FRP, 'Value')
+        set(handles.edit_pathFRPFile, 'Enable', 'on');
+        set(handles.pb_browseFRPFile, 'Enable', 'on');
+    end
+    set(handles.cb_estKepEle1, 'Enable', 'on');
+    set(handles.cb_estKepEle2, 'Enable', 'on');
+    set(handles.cb_estKepEle3, 'Enable', 'on');
+    set(handles.cb_estKepEle4, 'Enable', 'on');
+    set(handles.cb_estKepEle5, 'Enable', 'on');
+    set(handles.cb_estKepEle6, 'Enable', 'on');
+
+    if get(handles.rb_estKepEle_FRP, 'Value')
+        set(handles.edit_pathFRPFile, 'Enable', 'on');
+        set(handles.pb_browseFRPFile, 'Enable', 'on');
+    else
+        set(handles.edit_pathFRPFile, 'Enable', 'off');
+        set(handles.pb_browseFRPFile, 'Enable', 'off');
+    end
+
+    if get(handles.cb_estKepEle1, 'Value')    
+        set(handles.estIntStrKepEle1, 'Enable', 'on');
+        set(handles.estIntValKepEle1, 'Enable', 'on');
+    end
+    if  get(handles.cb_estKepEle2, 'Value')
+        set(handles.estIntStrKepEle2, 'Enable', 'on');
+        set(handles.estIntValKepEle2, 'Enable', 'on');
+    end
+    if get(handles.cb_estKepEle3, 'Value')
+        set(handles.estIntStrKepEle3, 'Enable', 'on');
+        set(handles.estIntValKepEle3, 'Enable', 'on');
+    end
+    if get(handles.cb_estKepEle4, 'Value')
+        set(handles.estIntStrKepEle4, 'Enable', 'on');
+        set(handles.estIntValKepEle4, 'Enable', 'on');
+    end
+    if get(handles.cb_estKepEle5, 'Value')
+        set(handles.estIntStrKepEle5, 'Enable', 'on');
+        set(handles.estIntValKepEle5, 'Enable', 'on');
+    end
+    if get(handles.cb_estKepEle6, 'Value')
+        set(handles.estIntStrKepEle6, 'Enable', 'on');
+        set(handles.estIntValKepEle6, 'Enable', 'on');
+    end
+    set(handles.text_run_sinex_orb, 'Enable', 'on')
+    set(handles.radiobutton_run_sinex_orb_incl, 'Enable', 'on')
+    set(handles.radiobutton_run_sinex_orb_excl, 'Enable', 'on')
+else
+    set(handles.rb_estKepEle_NumTau, 'Enable', 'off');
+    set(handles.rb_estKepEle_NumSatPos, 'Enable', 'off');
+    set(handles.rb_estKepEle_Ana, 'Enable', 'off');
+    set(handles.rb_estKepEle_FRP, 'Enable', 'off');
+    if get(handles.rb_estKepEle_FRP, 'Value')
+        set(handles.edit_pathFRPFile, 'Enable', 'off');
+        set(handles.pb_browseFRPFile, 'Enable', 'off');
+    end
+    set(handles.cb_estKepEle1, 'Enable', 'off');
+    set(handles.cb_estKepEle2, 'Enable', 'off');
+    set(handles.cb_estKepEle3, 'Enable', 'off');
+    set(handles.cb_estKepEle4, 'Enable', 'off');
+    set(handles.cb_estKepEle5, 'Enable', 'off');
+    set(handles.cb_estKepEle6, 'Enable', 'off');
+
+    set(handles.estIntStrKepEle1, 'Enable', 'off');
+    set(handles.estIntStrKepEle2, 'Enable', 'off');
+    set(handles.estIntStrKepEle3, 'Enable', 'off');
+    set(handles.estIntStrKepEle4, 'Enable', 'off');
+    set(handles.estIntStrKepEle5, 'Enable', 'off');
+    set(handles.estIntStrKepEle6, 'Enable', 'off');
+
+    set(handles.estIntValKepEle1, 'Enable', 'off');
+    set(handles.estIntValKepEle2, 'Enable', 'off');
+    set(handles.estIntValKepEle3, 'Enable', 'off');
+    set(handles.estIntValKepEle4, 'Enable', 'off');
+    set(handles.estIntValKepEle5, 'Enable', 'off');
+    set(handles.estIntValKepEle6, 'Enable', 'off');
+
+    set(handles.text_run_sinex_orb, 'Enable', 'off')
+    set(handles.radiobutton_run_sinex_orb_incl, 'Enable', 'off')
+    set(handles.radiobutton_run_sinex_orb_excl, 'Enable', 'off')
+end
+
+
+% --- Executes on button press in rb_estKepEle_NumTau.
+function rb_estKepEle_NumTau_Callback(hObject, eventdata, handles)
+% hObject    handle to rb_estKepEle_NumTau (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of rb_estKepEle_NumTau
+if get(hObject, 'Value')
+    set(handles.edit_pathFRPFile, 'Enable', 'off');
+    set(handles.pb_browseFRPFile, 'Enable', 'off');
+end
+
+% --- Executes on button press in rb_estKepEle_NumSatPos.
+function rb_estKepEle_NumSatPos_Callback(hObject, eventdata, handles)
+% hObject    handle to rb_estKepEle_NumSatPos (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of rb_estKepEle_NumSatPos
+if get(hObject, 'Value')
+    set(handles.edit_pathFRPFile, 'Enable', 'off');
+    set(handles.pb_browseFRPFile, 'Enable', 'off');
+end
+
+% --- Executes on button press in rb_estKepEle_Ana.
+function rb_estKepEle_Ana_Callback(hObject, eventdata, handles)
+% hObject    handle to rb_estKepEle_Ana (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of rb_estKepEle_Ana
+if get(hObject, 'Value')
+    set(handles.edit_pathFRPFile, 'Enable', 'off');
+    set(handles.pb_browseFRPFile, 'Enable', 'off');
+end
+
+% --- Executes on button press in rb_estKepEle_FRP.
+function rb_estKepEle_FRP_Callback(hObject, eventdata, handles)
+% hObject    handle to rb_estKepEle_FRP (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of rb_estKepEle_FRP
+if get(hObject, 'Value')
+    set(handles.edit_pathFRPFile, 'Enable', 'on');
+    set(handles.pb_browseFRPFile, 'Enable', 'on');
+else
+    set(handles.edit_pathFRPFile, 'Enable', 'off');
+    set(handles.pb_browseFRPFile, 'Enable', 'off');
+end
+
+
+
+
+
+function edit_pathFRPFile_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_pathFRPFile (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_pathFRPFile as text
+%        str2double(get(hObject,'String')) returns contents of edit_pathFRPFile as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function edit_vie_sim_statistics_csv_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_vie_sim_statistics_csv (see GCBO)
+function edit_pathFRPFile_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_pathFRPFile (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pb_browseFRPFile.
+function pb_browseFRPFile_Callback(hObject, eventdata, handles)
+% hObject    handle to pb_browseFRPFile (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+[FileName, PathName] = uigetfile('*.*','Select FRP file', '../ORBIT/FRP', 'multiselect', 'off');
+
+if ischar(FileName) && ischar(PathName)
+    set(handles.edit_pathFRPFile, 'String', [PathName, FileName])
+    
+    % save parameter file automatically 
+    auto_save_parameterfile(hObject, handles)
+end
+
+% --- Executes on button press in cb_estKepEle1.
+function cb_estKepEle1_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_estKepEle1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_estKepEle1
+if get(hObject, 'Value') == 1
+    set(handles.estIntStrKepEle1, 'Enable', 'on');
+    set(handles.estIntValKepEle1, 'Enable', 'on');
+else
+    set(handles.estIntStrKepEle1, 'Enable', 'off');
+    set(handles.estIntValKepEle1, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in cb_estKepEle2.
+function cb_estKepEle2_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_estKepEle2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_estKepEle2
+if get(hObject, 'Value') == 1
+    set(handles.estIntStrKepEle2, 'Enable', 'on');
+    set(handles.estIntValKepEle2, 'Enable', 'on');
+else
+    set(handles.estIntStrKepEle2, 'Enable', 'off');
+    set(handles.estIntValKepEle2, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in cb_estKepEle3.
+function cb_estKepEle3_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_estKepEle3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_estKepEle3
+if get(hObject, 'Value') == 1
+    set(handles.estIntStrKepEle3, 'Enable', 'on');
+    set(handles.estIntValKepEle3, 'Enable', 'on');
+else
+    set(handles.estIntStrKepEle3, 'Enable', 'off');
+    set(handles.estIntValKepEle3, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in cb_estKepEle4.
+function cb_estKepEle4_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_estKepEle4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_estKepEle4
+if get(hObject, 'Value') == 1
+    set(handles.estIntStrKepEle4, 'Enable', 'on');
+    set(handles.estIntValKepEle4, 'Enable', 'on');
+else
+    set(handles.estIntStrKepEle4, 'Enable', 'off');
+    set(handles.estIntValKepEle4, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in cb_estKepEle5.
+function cb_estKepEle5_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_estKepEle5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_estKepEle5
+if get(hObject, 'Value') == 1
+    set(handles.estIntStrKepEle5, 'Enable', 'on');
+    set(handles.estIntValKepEle5, 'Enable', 'on');
+else
+    set(handles.estIntStrKepEle5, 'Enable', 'off');
+    set(handles.estIntValKepEle5, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes on button press in cb_estKepEle6.
+function cb_estKepEle6_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_estKepEle6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_estKepEle6
+if get(hObject, 'Value') == 1
+    set(handles.estIntStrKepEle6, 'Enable', 'on');
+    set(handles.estIntValKepEle6, 'Enable', 'on');
+else
+    set(handles.estIntStrKepEle6, 'Enable', 'off');
+    set(handles.estIntValKepEle6, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+
+function estIntValKepEle1_Callback(hObject, eventdata, handles)
+% hObject    handle to estIntValKepEle1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of estIntValKepEle1 as text
+%        str2double(get(hObject,'String')) returns contents of estIntValKepEle1 as a double
+set(handles.text_relConstrKepEle1, 'String', sprintf('after %s minutes', get(hObject, 'String')))
+auto_save_parameterfile(hObject, handles)
+
+
+function estIntValKepEle2_Callback(hObject, eventdata, handles)
+% hObject    handle to estIntValKepEle2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of estIntValKepEle2 as text
+%        str2double(get(hObject,'String')) returns contents of estIntValKepEle2 as a double
+set(handles.text_relConstrKepEle2, 'String', sprintf('after %s minutes', get(hObject, 'String')))
+auto_save_parameterfile(hObject, handles)
+
+
+function estIntValKepEle3_Callback(hObject, eventdata, handles)
+% hObject    handle to estIntValKepEle3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of estIntValKepEle3 as text
+%        str2double(get(hObject,'String')) returns contents of estIntValKepEle3 as a double
+set(handles.text_relConstrKepEle3, 'String', sprintf('after %s minutes', get(hObject, 'String')))
+auto_save_parameterfile(hObject, handles)
+
+
+function estIntValKepEle4_Callback(hObject, eventdata, handles)
+% hObject    handle to estIntValKepEle4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of estIntValKepEle4 as text
+%        str2double(get(hObject,'String')) returns contents of estIntValKepEle4 as a double
+set(handles.text_relConstrKepEle4, 'String', sprintf('after %s minutes', get(hObject, 'String')))
+auto_save_parameterfile(hObject, handles)
+
+
+function estIntValKepEle5_Callback(hObject, eventdata, handles)
+% hObject    handle to estIntValKepEle5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of estIntValKepEle5 as text
+%        str2double(get(hObject,'String')) returns contents of estIntValKepEle5 as a double
+set(handles.text_relConstrKepEle5, 'String', sprintf('after %s minutes', get(hObject, 'String')))
+auto_save_parameterfile(hObject, handles)
+
+
+function estIntValKepEle6_Callback(hObject, eventdata, handles)
+% hObject    handle to estIntValKepEle6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of estIntValKepEle6 as text
+%        str2double(get(hObject,'String')) returns contents of estIntValKepEle6 as a double
+set(handles.text_relConstrKepEle6, 'String', sprintf('after %s minutes', get(hObject, 'String')))
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in cb_relConstrKepEle1.
+function cb_relConstrKepEle1_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_relConstrKepEle1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_relConstrKepEle1
+
+
+% --- Executes on button press in cb_relConstrKepEle2.
+function cb_relConstrKepEle2_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_relConstrKepEle2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_relConstrKepEle2
+
+
+% --- Executes on button press in cb_relConstrKepEle3.
+function cb_relConstrKepEle3_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_relConstrKepEle3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_relConstrKepEle3
+
+
+% --- Executes on button press in cb_relConstrKepEle4.
+function cb_relConstrKepEle4_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_relConstrKepEle4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_relConstrKepEle4
+
+
+% --- Executes on button press in cb_relConstrKepEle5.
+function cb_relConstrKepEle5_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_relConstrKepEle5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_relConstrKepEle5
+
+
+% --- Executes on button press in cb_relConstrKepEle6.
+function cb_relConstrKepEle6_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_relConstrKepEle6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_relConstrKepEle6
+
+
+
+
+
+
+
+
+function relConstrValKepEle1_Callback(hObject, eventdata, handles)
+% hObject    handle to relConstrValKepEle1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of relConstrValKepEle1 as text
+%        str2double(get(hObject,'String')) returns contents of relConstrValKepEle1 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function relConstrValKepEle1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to relConstrValKepEle1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function relConstrValKepEle2_Callback(hObject, eventdata, handles)
+% hObject    handle to relConstrValKepEle2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of relConstrValKepEle2 as text
+%        str2double(get(hObject,'String')) returns contents of relConstrValKepEle2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function relConstrValKepEle2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to relConstrValKepEle2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function relConstrValKepEle3_Callback(hObject, eventdata, handles)
+% hObject    handle to relConstrValKepEle3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of relConstrValKepEle3 as text
+%        str2double(get(hObject,'String')) returns contents of relConstrValKepEle3 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function relConstrValKepEle3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to relConstrValKepEle3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function relConstrValKepEle4_Callback(hObject, eventdata, handles)
+% hObject    handle to relConstrValKepEle4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of relConstrValKepEle4 as text
+%        str2double(get(hObject,'String')) returns contents of relConstrValKepEle4 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function relConstrValKepEle4_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to relConstrValKepEle4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function relConstrValKepEle5_Callback(hObject, eventdata, handles)
+% hObject    handle to relConstrValKepEle5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of relConstrValKepEle5 as text
+%        str2double(get(hObject,'String')) returns contents of relConstrValKepEle5 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function relConstrValKepEle5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to relConstrValKepEle5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function relConstrValKepEle6_Callback(hObject, eventdata, handles)
+% hObject    handle to relConstrValKepEle6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of relConstrValKepEle6 as text
+%        str2double(get(hObject,'String')) returns contents of relConstrValKepEle6 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function relConstrValKepEle6_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to relConstrValKepEle6 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -11264,12 +12295,12 @@ end
 
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu_plot_folder1_sources_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_folder1_sources (see GCBO)
+function estIntValKepEle1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to estIntValKepEle1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
-% Hint: popupmenu controls usually have a white background on Windows.
+% Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
@@ -11277,12 +12308,12 @@ end
 
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu_plot_folder3_sources_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_folder3_sources (see GCBO)
+function estIntValKepEle2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to estIntValKepEle2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
-% Hint: popupmenu controls usually have a white background on Windows.
+% Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
@@ -11290,8 +12321,220 @@ end
 
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu_plot_folder2_sources_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu_plot_folder2_sources (see GCBO)
+function estIntValKepEle3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to estIntValKepEle3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function estIntValKepEle4_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to estIntValKepEle4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function estIntValKepEle5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to estIntValKepEle5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function estIntValKepEle6_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to estIntValKepEle6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --------------------------------------------------------------------
+function menu_models_space_crafts_Callback(hObject, eventdata, handles)
+% hObject    handle to uipanel_models_space_crafts (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_models_space_crafts, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+function input_model_orbit_data_Callback(hObject, eventdata, handles)
+% hObject    handle to input_model_orbit_data (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of input_model_orbit_data as text
+%        str2double(get(hObject,'String')) returns contents of input_model_orbit_data as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function input_model_orbit_data_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to input_model_orbit_data (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in rb_sp3.
+function rb_sp3_Callback(hObject, eventdata, handles)
+% hObject    handle to rb_sp3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of rb_sp3
+
+
+% --- Executes on button press in rb_tle.
+function rb_tle_Callback(hObject, eventdata, handles)
+% hObject    handle to rb_tle (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of rb_tle
+
+
+% --- Executes on button press in rb_ephem.
+function rb_ephem_Callback(hObject, eventdata, handles)
+% hObject    handle to rb_ephem (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of rb_ephem
+
+
+% --- Executes on button press in rb_fso.
+function rb_fso_Callback(hObject, eventdata, handles)
+% hObject    handle to rb_fso (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of rb_fso
+
+
+% --- Executes on button press in pb_browse_orbit_data.
+function pb_browse_orbit_data_Callback(hObject, eventdata, handles)
+% hObject    handle to pb_browse_orbit_data (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+[FileName, PathName] = uigetfile('*.*','Select orbit data file', '../ORBIT', 'multiselect', 'off');
+
+if ischar(FileName) && ischar(PathName)
+    set(handles.input_model_orbit_data, 'String', [PathName, FileName])
+    auto_save_parameterfile(hObject, handles)
+end
+
+
+% --- Executes on button press in radiobutton_estStaCoord_QSObs_Sep.
+function radiobutton_estStaCoord_QSObs_Sep_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton_estStaCoord_QSObs_Sep (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_estStaCoord_QSObs_Sep
+if get(handles.radiobutton_estStaCoord_QSObs_Sep, 'Value') && get(handles.checkbox_run_sinex_write, 'Value')
+    set(handles.ui_StaCoord_snx_qs, 'Enable', 'on')
+    set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'on')
+    set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'on')
+else
+    set(handles.ui_StaCoord_snx_qs, 'Enable', 'off')
+    set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'off')
+    set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'off')
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function radiobutton_estStaCoord_QSObs_Sep_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to radiobutton_estStaCoord_QSObs_Sep (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes during object creation, after setting all properties.
+function radiobutton_estStaCoord_QuObsOnly_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to radiobutton_estStaCoord_QuObsOnly (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes on button press in rb_StaCoord_snx_qs_sat.
+function rb_StaCoord_snx_qs_sat_Callback(hObject, eventdata, handles)
+% hObject    handle to rb_StaCoord_snx_qs_sat (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of rb_StaCoord_snx_qs_sat
+
+
+% --- Executes during object creation, after setting all properties.
+function rb_StaCoord_snx_qs_sat_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to rb_StaCoord_snx_qs_sat (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes on button press in rb_StaCoord_snx_qs_qu.
+function rb_StaCoord_snx_qs_qu_Callback(hObject, eventdata, handles)
+% hObject    handle to rb_StaCoord_snx_qs_qu (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of rb_StaCoord_snx_qs_qu
+
+
+% --- Executes during object creation, after setting all properties.
+function rb_StaCoord_snx_qs_qu_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to rb_StaCoord_snx_qs_qu (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes on selection change in popupmenu_pwloSou_file.
+function popupmenu_pwloSou_file_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_pwloSou_file (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_pwloSou_file contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_pwloSou_file
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_pwloSou_file_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_pwloSou_file (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -11302,17 +12545,182 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in pushbutton_plot_residuals_writeAmbiguities.
-function pushbutton_plot_residuals_writeAmbiguities_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_plot_residuals_writeAmbiguities (see GCBO)
+% --- Executes on selection change in popupmenu_NNRSou_file.
+function popupmenu_NNRSou_file_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_NNRSou_file (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    ext_pushbutton_plot_residuals_writeAmbiguities_Callback(hObject, eventdata, handles)
 
-% --- Executes on button press in pushbutton_plot_residuals_removeOutliers.
-function pushbutton_plot_residuals_removeOutliers_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_plot_residuals_removeOutliers (see GCBO)
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_NNRSou_file contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_NNRSou_file
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_NNRSou_file_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_NNRSou_file (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_est_lsm_sources_blacklist.
+function checkbox_est_lsm_sources_blacklist_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_est_lsm_sources_blacklist (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    ext_pushbutton_plot_residuals_removeOutliers_Callback(hObject, eventdata, handles)
 
+% Hint: get(hObject,'Value') returns toggle state of checkbox_est_lsm_sources_blacklist
+updatePopupmenu=0;
+
+if get(hObject, 'Value')    
+    updatePopupmenu=1;
+    set(handles.popupmenu_removeSou_file, 'Enable', 'on')
+    set(handles.radiobutton_SouBlacklist_ivs, 'Enable', 'on')
+    set(handles.radiobutton_SouBlacklist_iers, 'Enable', 'on')    
+else
+    set(handles.popupmenu_removeSou_file, 'Enable', 'off')
+    set(handles.radiobutton_SouBlacklist_ivs, 'Enable', 'off')
+    set(handles.radiobutton_SouBlacklist_iers, 'Enable', 'off')    
+    
+end
+% update popupmenu
+if updatePopupmenu==1
+    curContent=get(handles.popupmenu_removeSou_file, 'String');
+    if ~iscell(curContent)
+        curContent = {curContent};
+    end
+    curSelected=curContent{get(handles.popupmenu_removeSou_file, 'Value')};
+    
+    % get directory content
+    dirsInCrfSouDeleteFolder=dir('../CRF/SELECTION/SOUREMOVE/');
+    % delete '.', '..', and all files
+    dirsInCrfSouDeleteFolder(strcmp({dirsInCrfSouDeleteFolder.name}, '.')|strcmp({dirsInCrfSouDeleteFolder.name}, '..')|strcmp({dirsInCrfSouDeleteFolder.name}, '.gitignore'))=[];
+    
+    % write folders to popupmenu
+    if isempty(dirsInCrfSouDeleteFolder)
+        set(handles.popupmenu_removeSou_file, 'String', ' ')
+    else
+        set(handles.popupmenu_removeSou_file, 'String', {dirsInCrfSouDeleteFolder.name})
+    end
+    
+    % try to find previous selected to select this again
+    valueOfPrevSelectedFolder=find(strcmp({dirsInCrfSouDeleteFolder.name}, curSelected));
+    if isempty(valueOfPrevSelectedFolder)
+        set(handles.popupmenu_removeSou_file, 'Value', 1)
+    else
+        set(handles.popupmenu_removeSou_file, 'Value', valueOfPrevSelectedFolder)
+    end
+    
+end %update popupmenu
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+
+
+
+
+
+% --- Executes on selection change in popupmenu_removeSou_file.
+function popupmenu_removeSou_file_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_removeSou_file (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_removeSou_file contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_removeSou_file
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_removeSou_file_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_removeSou_file (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_removeStatDatum.
+function checkbox_removeStatDatum_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_removeStatDatum (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_removeStatDatum
+
+updatePopupmenu=0;
+
+if get(hObject, 'Value')    
+    updatePopupmenu=1;
+    set(handles.popupmenu_removeStatDatum_file, 'Enable', 'on')
+else
+    set(handles.popupmenu_removeStatDatum_file, 'Enable', 'off')
+end
+% update popupmenu
+if updatePopupmenu==1
+    curContent=get(handles.popupmenu_removeStatDatum_file, 'String');
+    if ~iscell(curContent)
+        curContent = {curContent};
+    end
+    curSelected=curContent{get(handles.popupmenu_removeStatDatum_file, 'Value')};
+    
+    % get directory content
+    dirsInTrfStatNotDatumFolder=dir('../TRF/SELECTION/STATNOTDATUM/');
+    % delete '.', '..', and all files
+    dirsInTrfStatNotDatumFolder(strcmp({dirsInTrfStatNotDatumFolder.name}, '.')|strcmp({dirsInTrfStatNotDatumFolder.name}, '..')|strcmp({dirsInTrfStatNotDatumFolder.name}, '.gitignore'))=[];
+    
+    % write folders to popupmenu
+    if isempty(dirsInTrfStatNotDatumFolder)
+        set(handles.popupmenu_removeStatDatum_file, 'String', ' ')
+    else
+        set(handles.popupmenu_removeStatDatum_file, 'String', {dirsInTrfStatNotDatumFolder.name})
+    end
+    
+    % try to find previous selected to select this again
+    valueOfPrevSelectedFolder=find(strcmp({dirsInTrfStatNotDatumFolder.name}, curSelected));
+    if isempty(valueOfPrevSelectedFolder)
+        set(handles.popupmenu_removeStatDatum_file, 'Value', 1)
+    else
+        set(handles.popupmenu_removeStatDatum_file, 'Value', valueOfPrevSelectedFolder)
+    end
+    
+end %update popupmenu
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+
+
+
+
+
+% --- Executes on selection change in popupmenu_removeStatDatum_file.
+function popupmenu_removeStatDatum_file_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_removeStatDatum_file (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_removeStatDatum_file contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_removeStatDatum_file
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_removeStatDatum_file_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_removeStatDatum_file (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

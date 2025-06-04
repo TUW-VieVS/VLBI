@@ -157,6 +157,7 @@
 %   25 Jul 2019 by D. Landskron: zwet parameter added to scan structure
 %   15 Jan 2020 by M. Mikschi: gravitational deformation info added to station structure
 %   22 Nov 2021 by H. Wolf: read ngs file including satellite observations, creating sources.q and sources.s
+%   17 Dec 2024 by H. Wolf: added the cases of orbit data from fso file
 % ************************************************************************
 
 
@@ -165,26 +166,23 @@ function [antenna,sources,scan]=read_ngs(ngsfil, trffil, crffil, ini_opt, trf, c
 
 card4 = 0; % 1/0, yes/no
 
-
 % ##### Load constants #####
 % constants; % ???
 
-% ##### Options #####
-url_vievswiki_create_superstation   = 'http://vievswiki.geo.tuwien.ac.at/doku.php?id=public:vievs_manual:data#create_a_superstation_file';
 error_code_invalid_met_data         = -999; % Error corde for missing met. data in NGS file (numerical)
 
 % ##### preallocate structures #####
 scan        = struct('mjd', [], 'obs_type', []);
 scansource = {};
 sources.q     = struct('name', [], 'IERSname', [], 'IVSname', [], 'ICRFdes', [], 'ra2000', [], 'de2000', [], 'ra_sigma', [], 'de_sigma', [], 'corr', [], 'in_crf', [], 'flag_defining', []);
-sources.s     = struct('name', [], 'numobs', [], 'firstObsMjd', [], 'lastObsMjd', [], 'orbit_file_type', [], 'x_trf', [], 'y_trf', [], 'z_trf', [], 'x_crf', [], 'y_crf', [], 'z_crf', [], 'mjd', [], 'sec_of_day', [], 'year', [], 'month', [], 'day', [], 'hour', [], 'minu', [], 'sec', []);
+sources.s     = struct('name', [], 'id', [], 'prn_name', [], 'fso_name', [], 'numobs', 0, 'firstObsMjd', [], 'lastObsMjd', [], 'orbit_file_type', [], 'x_trf', [], 'y_trf', [], 'z_trf', [], 'x_crf', [], 'y_crf', [], 'z_crf', [], 'mjd', [], 'sec_of_day', [], 'year', [], 'month', [], 'day', [], 'hour', [], 'minu', [], 'sec', []);
 num_s = 0;
 num_q = 0;
 % ##### Initialisation #####
-numOfStat     =0;
-num_of_sources  =0;
+num_of_stat     =0;
 num_of_scans    =0;
 num_of_obs      =0;
+num_of_sat      =0;
 
 sta0.x          =[0 0 0];
 sta0.temp       =0;
@@ -227,16 +225,26 @@ if fid_ngs ~= -1
     idx_line = 1;
     nlines = length(wholeFile);
 else
-    error(' couln''t find NGS-file %s',ngsfil)
+    error(' couldn''t find NGS-file %s',ngsfil)
 end
 
 while 1
+    if strfind(wholeFile{idx_line}, 'satellite')
+        sat_line = wholeFile{idx_line};
+        sat_name = deblank(sat_line(11:end));
+        num_of_sat = num_of_sat +1;
+        sat_names{num_of_sat,1} = sat_name;
+        tle_line1 = wholeFile{idx_line+2};
+        tle_line1 = split(tle_line1,' ');
+        tle_line1(strcmp('',tle_line1)) = [];
+        id = char(tle_line1(2));
+        sat_names{num_of_sat,2} = id; %id(1:end-1);
+    end
     if length(strtrim(wholeFile{idx_line}))>= 80 % strtrim added because of Oleg's ngs files
         break;
     end
     idx_line = idx_line+1;
 end
-
 
 while (idx_line <= nlines)
     
@@ -246,25 +254,29 @@ while (idx_line <= nlines)
     % #### Read station and source names of current observation/sequence ####
     sta_names(1,:)  = input_str(1:8);
     sta_names(2,:)  = input_str(11:18);
-    if length(input_str) > 82 %satellite
-        source_name     = input_str(35:37); %only PRN 
+    l = split(input_str,' ');
+    l = l(~cellfun(@isempty, l));
+    if exist('sat_names','var') && ismember(char(l(3)),sat_names(:,1))
         source_type     = 's';
-        tim = sscanf(input_str(40:70),'%f');
-        sequ_num        = input_str(81:88); % Sequence number (= observation number)
-        ngs_card_num    = sscanf(input_str(89:90),'%d'); % NGS card number
+        source_name = char(l(3));
+        tim  = [str2double(string(l(4))), str2double(string(l(5))), str2double(string(l(6))), str2double(string(l(7))), str2double(string(l(8))), str2double(string(l(9)))]';
+        num = char(l(10));
+        sequ_num = num(1:end-2);
+        ngs_card_num    = num(end-1:end);
     else
         source_name     = input_str(21:28);
         source_type     = 'q';
         tim = sscanf(input_str(30:60),'%f');
-        sequ_num        = input_str(72:78); % Sequence number (= observation number)
-        ngs_card_num    = sscanf(input_str(79:80),'%d'); % NGS card number
+%         sequ_num        = input_str(71:78); % Sequence number (= observation number)
+%         ngs_card_num    = sscanf(input_str(79:80),'%d'); % NGS card number
+        num = char(l(10));
+        sequ_num = (num(1:end-2));
+        ngs_card_num    = (num(end-1:end));
     end
-    
-    
+   
     if strcmp(source_name, '1600+431') % in ICRF2
         source_name = '1600+43A'; % IVS, = 1600+432 IERS, in icrf3'
     end
-    
     
     % check if there is blanks in the station name and replace them with "_";
     sta_names(1, sta_names(1, 1:max(find(sta_names(1,:) ~= ' '))) == ' ') = '_';
@@ -284,11 +296,14 @@ while (idx_line <= nlines)
     while (flag_next_sequ == 0) && (idx_line <= nlines)    
         input_str = wholeFile{idx_line};   % Get next line:
         idx_line = idx_line+1;
-        
-        new_sequ_num    = input_str(72:78);
-        ngs_card_num    = input_str(79:80);
-        
-        if all(new_sequ_num == sequ_num) % Still the same sequence?            
+        l = split(input_str,' ');
+        l = l(~cellfun(@isempty, l));
+        num = char(l(end));
+        new_sequ_num = num(1:end-2);
+        ngs_card_num    = num(end-1:end);
+%         new_sequ_num    = input_str(71:78);
+%         ngs_card_num    = input_str(79:80);
+        if strcmp(new_sequ_num, sequ_num) % Still the same sequence?            
             % #### Check the current line ####
             % Check, if there are asterisks in the input line:
             id_ast = find(input_str=='*');
@@ -348,9 +363,7 @@ while (idx_line <= nlines)
                     count_obs_delay_decreased = count_obs_delay_decreased + 1;
                 end
                 num_of_obs_in_ngs_file = num_of_obs_in_ngs_file + 1;
-
-
-            
+          
             % ##### Card 4: Oleg Titov's corrections (in standard NGS file the card 4 contains zeros) #####
             % Two corrections for zenith wet delays (stations #1 and #2), NS gradients, EW gradients and the clock offset for this baseline 
             ot_corr = 0;
@@ -368,8 +381,7 @@ while (idx_line <= nlines)
                 else
                     ot_corr = 0;
                 end
-
-                
+   
             % ##### Card 5: cable cal & wvr corrections #####
             elseif all(ngs_card_num == '05')
                 trmp_input  = sscanf(input_str(1:20),'%f');
@@ -419,13 +431,13 @@ while (idx_line <= nlines)
                 corsgd      = sgdion;
                 corsgr      = sgrion;
             end
-        else
+        else 
             flag_next_sequ = 1;
             idx_line = idx_line-1;
-        end % if new_sequ_num == sequ_num
-    end % while (flag_next_sequ == 0) && (~feof(fid_ngs))
+        end
+    end
      
-     % Check if variable cor_cable_cal was created (happens only if card #5 exists)
+    % Check if variable cor_cable_cal was created (happens only if card #5 exists)
     if ~exist('cor_cable_cal','var')
         cor_cable_cal = 0;
     end
@@ -436,7 +448,6 @@ while (idx_line <= nlines)
     
     % Init.:
     flag_obs_ok = 1;
-
     
     %     % #### Check for bad jet angles ####
     %     if ~isempty(ini_opt.scan_jet)
@@ -468,7 +479,7 @@ while (idx_line <= nlines)
         
         % Loop over two station of baseline
         for iStat = 1 : 2
-            if numOfStat>0
+            if num_of_stat>0
                 foundID = find(strcmp({sta_names(iStat,:)}, {antenna.name}));
                 if ~isempty(foundID)
                     statIdVec(iStat) = foundID;
@@ -483,8 +494,8 @@ while (idx_line <= nlines)
             if statIdVec(iStat) == 0 
                 
                 % Increase of the station index:
-                numOfStat = numOfStat + 1;
-                statIdVec(iStat)=numOfStat; % New station ID
+                num_of_stat = num_of_stat + 1;
+                statIdVec(iStat)=num_of_stat; % New station ID
                   
                 % ##### Get data from superstation file #####
                 % The data from "Manual TRF files" is also available in the trf structure (as the data from the superstation file.), TRF-name: "manualTrf":
@@ -496,7 +507,7 @@ while (idx_line <= nlines)
                 
                 % #### Check, if there is an entry for the current station in the superstation file. If not => Error Msg. and abort! ####
                 if isempty(trf_id)
-                    error('Station %s not found in the superstation file. Add this station to the superstation file by following the steps described at %s\n', sta_names(iStat,:), url_vievswiki_create_superstation);
+                    error('Station %s not found in the superstation file. Add this station to the superstation file by following the steps described in the VieVS Wiki.\n', sta_names(iStat,:));
                 end
                 
                 % Save the ID of the antenna in the superstation file (needed for finding of the corrections in Vie_MOD)
@@ -553,12 +564,12 @@ while (idx_line <= nlines)
                             end
                         end
                     else
-                        error('Station %s has no vievsTRF coordinates in the superstation file. Add this station to the superstation file (to vievsTRF.txt) by following the steps described at %s\n', sta_names(iStat,:), url_vievswiki_create_superstation);
+                        error('Station %s has no vievsTRF coordinates in the superstation file. Add this station to the superstation file (to vievsTRF.txt) by following the steps described in the VieVS Wiki.\n', sta_names(iStat,:));
                     end
                     
                     % ### Check, if VieVS TRF coordinates were found: ###
                     if isempty(break_id)
-                        error('Station %s not found in the superstation file (vievsTRF). Add this station to the superstation file by following the steps described at %s\n', trf(trf_id).name, url_vievswiki_create_superstation);
+                        error('Station %s not found in the superstation file (vievsTRF). Add this station to the superstation file by following the steps described in the VieVS Wiki.\n', trf(trf_id).name);
                     end
                     
                     % ### Get the break sub-structure from the trf structure where coords should be taken ###
@@ -741,8 +752,15 @@ while (idx_line <= nlines)
                    %satellite is observed for the first time
                    num_s = num_s + 1;
                    sources.s(num_s).name = source_name;
+                   sources.s(num_s).numobs = 0;
                    sources.s(num_s).firstObsMjd = mjd;
                    sindOfNewSourceInSources = num_s;
+                   idx = find(ismember(sat_names(:,1),source_name));
+                   id = char(string(sat_names(idx,2)));
+                   sources.s(num_s).id = id;
+                   [prn, fso] = get_prn(source_name, id);
+                   sources.s(num_s).prn_name = prn;
+                   sources.s(num_s).fso_name = fso;
                 else
                    sindOfNewSourceInSources = find(sfoundSource);
                    sources.s(sindOfNewSourceInSources).lastObsMjd = mjd;
@@ -861,7 +879,7 @@ while (idx_line <= nlines)
                     qindOfNewSourceInSources = find(qfoundSource);
                     sources.q(qindOfNewSourceInSources).lastObsMjd = mjd; 
                 end
-        end %satellite vs quasar
+        end
             
 %%        
         % #################################################################
@@ -996,25 +1014,120 @@ while (idx_line <= nlines)
     end % if ngs_card_num == 1
 end
 
-%%
-% #### Add orbit data to sources.s ####
+%%  #### Add orbit data to sources.s ####
 if num_s ~= 0
     if ~isempty(satOrbitFileType)
         switch(satOrbitFileType)
-            case 'sp3'
-                % Read SP3 file and writ data to orbiot_data strucutre
-                % - GPS time epochs in SP3 files are converted to UTC 
-                [orbit_data] = read_sp3(satOrbitFilePath, satOrbitFileName,{sources.s.name});
+            case 'sp3'  %read sp3-file, create orbit_data
+                % - GPS time epochs in SP3 files are converted to UTC
+                satOrbitFileName1 = satOrbitFileName;
+                satOrbitFileName3 = satOrbitFileName;
+                
+                if length(satOrbitFileName) > 13
+                    yr = str2double(satOrbitFileName(12:15));
+                    dd = str2double(satOrbitFileName(16:18));
+
+                    base_date = datetime(yr, 1, 1) + days(dd - 1); 
+                    next_day = base_date + days(1);
+                    prev_day = base_date + days(-1);
+
+                    next_year = year(next_day);              
+                    next_doy = day(next_day, 'dayofyear');     
+                    prev_year = year(prev_day);            
+                    prev_doy = day(prev_day, 'dayofyear');         
+
+                    satOrbitFileName1(12:15) = num2str(prev_year);
+                    satOrbitFileName1(16:18) = num2str(prev_doy, '%03.0f');
+                    satOrbitFileName3(12:15) = num2str(next_year);
+                    satOrbitFileName3(16:18) = num2str(next_doy, '%03.0f');
+                else %COM
+                    if strcmp(satOrbitFileName(end-4),'0')     
+                        satOrbitFileName1(end-5) = satOrbitFileName1(end-5)-1;
+                        satOrbitFileName1(end-4) = '6';
+                    else
+                        satOrbitFileName1(end-4) = satOrbitFileName1(end-4)-1;
+                    end
+    
+                    if strcmp(satOrbitFileName(end-4),'6') 
+                        satOrbitFileName3(end-5) = satOrbitFileName3(end-5)+1;
+                        satOrbitFileName3(end-4) = '0';
+                    else
+                        satOrbitFileName3(end-4) = satOrbitFileName3(end-4)+1;
+                    end
+                end
+
+                [orbit_data1] = read_sp3(satOrbitFilePath, satOrbitFileName1,{sources.s.name}, {sources.s.prn_name});
+                [orbit_data2] = read_sp3(satOrbitFilePath, satOrbitFileName,{sources.s.name}, {sources.s.prn_name});
+                [orbit_data3] = read_sp3(satOrbitFilePath, satOrbitFileName3,{sources.s.name}, {sources.s.prn_name});
+
+                orbit_data = orbit_data1;
+
+                orbit_data.mjd_start = orbit_data1.mjd_start;
+                orbit_data.mjd_end = orbit_data3.mjd_end;
+                orbit_data.tosc = round(orbit_data2.mjd_start);
+
+                orbit_data.epoch_mjd = [orbit_data1.epoch_mjd(1:end-1); orbit_data2.epoch_mjd(1:end-1); orbit_data3.epoch_mjd];
+                orbit_data.sec_of_day = [orbit_data1.sec_of_day(1:end-1); orbit_data2.sec_of_day(1:end-1); orbit_data3.sec_of_day];
+
+                orbit_data.year  = [orbit_data1.year(1:end-1);  orbit_data2.year(1:end-1);  orbit_data3.year];
+                orbit_data.month = [orbit_data1.month(1:end-1); orbit_data2.month(1:end-1); orbit_data3.month];
+                orbit_data.day   = [orbit_data1.day(1:end-1);   orbit_data2.day(1:end-1);   orbit_data3.day];
+
+                orbit_data.hour = [orbit_data1.hour(1:end-1); orbit_data2.hour(1:end-1); orbit_data3.hour];
+                orbit_data.minu = [orbit_data1.minu(1:end-1); orbit_data2.minu(1:end-1); orbit_data3.minu];
+                orbit_data.sec  = [orbit_data1.sec(1:end-1);  orbit_data2.sec(1:end-1); orbit_data3.sec];
+
+                for i=1:length(orbit_data1.sat)
+                    if strcmp(orbit_data.sat(i).name, orbit_data2.sat(i).name) && strcmp(orbit_data.sat(i).name, orbit_data3.sat(i).name)
+                        orbit_data.sat(i).x_trf  = [ orbit_data1.sat(i).x_trf(1:end-1);  orbit_data2.sat(i).x_trf(1:end-1);  orbit_data3.sat(i).x_trf];
+                        orbit_data.sat(i).y_trf  = [ orbit_data1.sat(i).y_trf(1:end-1);  orbit_data2.sat(i).y_trf(1:end-1);  orbit_data3.sat(i).y_trf];
+                        orbit_data.sat(i).z_trf  = [ orbit_data1.sat(i).z_trf(1:end-1);  orbit_data2.sat(i).z_trf(1:end-1);  orbit_data3.sat(i).z_trf];
+                    end
+                end
+
                 [sources.s.orbit_file_type] = deal('sp3');
                 
             case 'sat_ephem_trf'
-                % Read sate emphemeris file with ITRF positions (and velocities) and writ data to orbiot_data strucutre
                 [orbit_data] = read_sat_ephem_trf(satOrbitFilePath, satOrbitFileName);
                 [sources.s.orbit_file_type] = deal('sat_ephem_trf');
             
             case 'tle'
-                error('TLE orbit file type is still not implemented');
-                
+                mjd_firstSatObs = min([sources.s.firstObsMjd]);
+                mjd_lastSatObs = max([sources.s.lastObsMjd]);
+                jd_firstSatObs = mjd_firstSatObs +  2400000.5;
+                jd_lastSatObs = mjd_lastSatObs +  2400000.5;
+                [TLE, ~, ~ ] = read_tle(satOrbitFilePath, satOrbitFileName);
+                interval = 5; % [min]
+                [sat_data, ~, ~] = tle_propagation(jd_firstSatObs - 2/24, jd_lastSatObs + 2/24, interval, TLE);
+                [sources.s.orbit_file_type] = deal('tle');
+            case 'fso'
+                satOrbitFileName1 = satOrbitFileName;
+                satOrbitFileName3 = satOrbitFileName;
+            
+                yr = str2double(satOrbitFileName(4:5));
+                dd = str2double(satOrbitFileName(6:8));
+                yr = yr+2000;
+
+                base_date = datetime(yr, 1, 1) + days(dd - 1); 
+                next_day = base_date + days(1);
+                prev_day = base_date + days(-1);
+
+                next_year = year(next_day);              
+                next_doy = day(next_day, 'dayofyear');     
+                prev_year = year(prev_day);            
+                prev_doy = day(prev_day, 'dayofyear');         
+               
+                prev_year = prev_year - 2000;
+                next_year = next_year - 2000;
+                satOrbitFileName1(4:5) = num2str(prev_year);
+                satOrbitFileName1(6:8) = num2str(prev_doy, '%03.0f');
+                satOrbitFileName3(4:5) = num2str(next_year);
+                satOrbitFileName3(6:8) = num2str(next_doy, '%03.0f');
+                                
+                [orbit_data1] = read_fso([satOrbitFilePath satOrbitFileName1]);
+                [orbit_data2] = read_fso([satOrbitFilePath satOrbitFileName]);
+                [orbit_data3] = read_fso([satOrbitFilePath satOrbitFileName3]);
+                [sources.s.orbit_file_type] = deal('fso');
             otherwise
                 error('Unknown orbit file type!');
         end
@@ -1022,15 +1135,65 @@ if num_s ~= 0
         error('No orbit data file specified (VieVS GUI menu: Models/Space Crafts)!');
     end
     
-    % Check, if all observations are covered by the orbit data time series:
-    if (max([sources.s.lastObsMjd] > orbit_data.mjd_end) || (min([sources.s.firstObsMjd]) < orbit_data.mjd_start))
-        error('Satellite observation eopochs are not covered by the orbit data time series!');
-    end   
-    % Write orbit data to the source structure:
-    [sources] = orbit_data2sources(orbit_data, sources); 
+    if strcmp(satOrbitFileType, 'sp3') || strcmp(satOrbitFileType, 'ephem')
+        % Check, if all observations are covered by the orbit data time series:
+        if (max([sources.s.lastObsMjd] > orbit_data.mjd_end) || (min([sources.s.firstObsMjd]) < orbit_data.mjd_start))
+            error('Satellite observation epochs are not covered by the orbit data time series!');
+        end   
+        % Write orbit_data to the source structure:
+        [sources] = orbit_data2sources(orbit_data, sources); 
+    elseif strcmp(satOrbitFileType, 'tle')
+        [sources] = sat_data2sources(sat_data, sources);
+    else
+        [sources1] = fso_data2sources(orbit_data1, sources);
+        [sources2] = fso_data2sources(orbit_data2, sources);
+        [sources3] = fso_data2sources(orbit_data3, sources);
+
+        for iSat = 1:length(sources.s)
+            sources.s(iSat).x_crf   = [ sources1.s(iSat).x_crf(1:end-1);  sources2.s(iSat).x_crf(1:end-1);  sources3.s(iSat).x_crf];
+            sources.s(iSat).y_crf   = [ sources1.s(iSat).y_crf(1:end-1);  sources2.s(iSat).y_crf(1:end-1);  sources3.s(iSat).y_crf];
+            sources.s(iSat).z_crf   = [ sources1.s(iSat).z_crf(1:end-1);  sources2.s(iSat).z_crf(1:end-1);  sources3.s(iSat).z_crf];
+            sources.s(iSat).vx_crf  = [ sources1.s(iSat).vx_crf(1:end-1);  sources2.s(iSat).vx_crf(1:end-1);  sources3.s(iSat).vx_crf];
+            sources.s(iSat).vy_crf  = [ sources1.s(iSat).vy_crf(1:end-1);  sources2.s(iSat).vy_crf(1:end-1);  sources3.s(iSat).vy_crf];
+            sources.s(iSat).vz_crf  = [ sources1.s(iSat).vz_crf(1:end-1);  sources2.s(iSat).vz_crf(1:end-1);  sources3.s(iSat).vz_crf];
+
+            sources.s(iSat).year  = [ sources1.s(iSat).year(1:end-1);  sources2.s(iSat).year(1:end-1);  sources3.s(iSat).year];
+            sources.s(iSat).month = [ sources1.s(iSat).month(1:end-1); sources2.s(iSat).month(1:end-1); sources3.s(iSat).month];
+            sources.s(iSat).day   = [ sources1.s(iSat).day(1:end-1);   sources2.s(iSat).day(1:end-1);   sources3.s(iSat).day];
+        
+            sources.s(iSat).hour  = [ sources1.s(iSat).hour(1:end-1); sources2.s(iSat).hour(1:end-1); sources3.s(iSat).hour];
+            sources.s(iSat).minu  = [ sources1.s(iSat).minu(1:end-1); sources2.s(iSat).minu(1:end-1); sources3.s(iSat).minu];
+            sources.s(iSat).sec   = [ sources1.s(iSat).sec(1:end-1);  sources2.s(iSat).sec(1:end-1);  sources3.s(iSat).sec];
+
+            sources.s(iSat).mjd   = [ sources1.s(iSat).mjd(1:end-1);  sources2.s(iSat).mjd(1:end-1);  sources3.s(iSat).mjd];
+            sources.s(iSat).sec_of_day = [ sources1.s(iSat).sec_of_day(1:end-1);  sources2.s(iSat).sec_of_day(1:end-1);  sources3.s(iSat).sec_of_day];
+
+            sources.s(iSat).tosc = sources2.s(iSat).tosc;
+            sources.s(iSat).flag_v_crf = sources2.s(iSat).flag_v_crf; 
+            sources.s(iSat).flag_v_trf = sources2.s(iSat).flag_v_trf; 
+        end
+    end
 else
     sources.s = [];
 end
+
+for iSat = 1:length(sources.s)
+    obs = zeros(1,length([sources.s(iSat).mjd]));
+    for iScan = 1:length(scan)
+        if scan(iScan).obs_type == 's'
+            mjdScan = scan(iScan).mjd;
+            for i=1:length([sources.s(iSat).mjd])
+                if mjdScan > sources.s(iSat).mjd(i) - 1/(24*60)*4 && mjdScan < sources.s(iSat).mjd(i) + 1/(24*60)*4
+                    obs(i) = 1;
+                end
+            end
+        else
+            continue
+        end
+    end
+    sources.s(iSat).obs = obs; 
+end
+
 
 %%
 % ##### Write warnings to CW: #####
@@ -1057,4 +1220,3 @@ if num_of_obs_in_ngs_file ~= num_of_obs
 end
 
 fclose(fid_ngs);
-

@@ -217,12 +217,18 @@ end
 
 % load orbit data file
 
-if get(handles.radiobtn_sp3,'Value') == 1
-    orbit_file_name_path_str = get(handles.input_models_sc_sp3_file,'String');
+if get(handles.rb_sp3,'Value') == 1
+    orbit_file_name_path_str = get(handles.input_model_orbit_data,'String');
     orbit_file_type       = 'sp3';
-else
-    orbit_file_name_path_str = get(handles.input_models_sc_tle_file,'String');
+elseif get(handles.rb_tle,'Value') == 1
+    orbit_file_name_path_str = get(handles.input_model_orbit_data,'String');
     orbit_file_type       = 'tle';
+elseif get(handles.rb_ephem,'Value') == 1
+    orbit_file_name_path_str = get(handles.input_model_orbit_data,'String');
+    orbit_file_type       = 'sat_ephem_trf';    
+else
+    orbit_file_name_path_str = get(handles.input_model_orbit_data,'String');
+    orbit_file_type       = 'fso';
 end
 
 if ~isempty(orbit_file_name_path_str)
@@ -237,24 +243,6 @@ else
     parameter.vie_init.sc_orbit_file_path_name  = '';
     parameter.vie_init.sc_orbit_file_type       = '';
 end
-
-
-%{
-sp3_file_name_path_str = get(handles.edit_models_sc_sp3_file,'String');
-
-if ~isempty(sp3_file_name_path_str)
-    if ~strcmp(sp3_file_name_path_str, ' ')
-        parameter.vie_init.sc_orbit_file_path_name  = sp3_file_name_path_str;
-        parameter.vie_init.sc_orbit_file_type       = 'sp3';
-    else
-        parameter.vie_init.sc_orbit_file_path_name  = '';
-        parameter.vie_init.sc_orbit_file_type       = '';
-    end
-else
-    parameter.vie_init.sc_orbit_file_path_name  = '';
-    parameter.vie_init.sc_orbit_file_type       = '';
-end
-%}
 
 % VIE_MOD
 % =========================
@@ -579,6 +567,7 @@ else
     parameter.lsmopt.bdco_minobs = bdco_mino;
 end
 parameter.lsmopt.bdco_fromOPT = get(handles.radiobutton_estimation_leastSquares_basdepClockoff_OPT, 'Value'); % 1 - read from OPT file, 0 - create the list in vie_lsm
+parameter.lsmopt.bdco_auto = get(handles.radiobutton_estimation_leastSquares_basdepClockoff_automatic, 'Value'); 
 parameter.lsmopt.bdco_nrlist = [];    
 
 % estimation of zwd
@@ -657,25 +646,71 @@ end
 
 % station coordinates estimation
 parameter.lsmopt.stc=get(handles.checkbox_estimation_leastSquares_coordinates_estimate, 'Value');
+parameter.lsmopt.stc_sat = get(handles.radiobutton_estStaCoord_SatObsOnly, 'Value');
+parameter.lsmopt.stc_qu = get(handles.radiobutton_estStaCoord_QuObsOnly, 'Value');
+parameter.lsmopt.stc_all = get(handles.radiobutton_estStaCoord_AllObs, 'Value');
+parameter.lsmopt.stc_qs = get(handles.radiobutton_estStaCoord_QSObs_Sep, 'Value');
+parameter.lsmopt.stc_qs_snx_sat = get(handles.rb_StaCoord_snx_qs_sat, 'Value');
+parameter.lsmopt.stc_qs_snx_qu = get(handles.rb_StaCoord_snx_qs_qu, 'Value');
+
 parameter.lsmopt.pw_stc=0; % is changed in sessionwise parameterization
+parameter.lsmopt.addDatumCd=get(handles.checkbox_estStaCoord_AddDatumConditions, 'Value');
 parameter.lsmopt.nnt_stc=get(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Value');
 parameter.lsmopt.nnr_stc=get(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Value');
-parameter.lsmopt.sca_stc=get(handles.checkbox_estimation_leastSquares_coordinates_NNS, 'Value');
-parameter.lsmopt.datum='trf';
-if get(handles.radiobutton_estimation_leastSquares_coordinates_datum_all, 'Value')
+parameter.lsmopt.nns_stc=get(handles.checkbox_estimation_leastSquares_coordinates_NNS, 'Value');
+if get(handles.rb_estimation_leastSquares_coordinates_datum_all, 'Value')
     parameter.lsmopt.datum='all';
+    parameter.lsmopt.trf_excldatum = 0;
 else
     parameter.lsmopt.datum='trf';
+    parameter.lsmopt.trf_excldatum = get(handles.checkbox_removeStatDatum, 'Value');
 end
+
+if parameter.lsmopt.trf_excldatum
+    allTrfExclDatum_files=get(handles.popupmenu_removeStatDatum_file, 'String');            
+    if iscell(allTrfExclDatum_files)
+        parameter.lsmopt.trf_excldatum_file=allTrfExclDatum_files{get(handles.popupmenu_removeStatDatum_file, 'Value')};
+    else
+        parameter.lsmopt.trf_excldatum_file = ' ';
+    end
+else
+    parameter.lsmopt.trf_excldatum_file = ' ';
+end
+
 parameter.lsmopt.constr_xyz=1;
 parameter.lsmopt.coef_xyz=10;
 parameter.lsmopt.int_xyz=360;
 
-
 % estimation of sources
-parameter.lsmopt.pw_sou                 = get(handles.checkbox_estimation_leastSquares_sources_est, 'Value');
-parameter.lsmopt.est_sourceNNR          = get(handles.checkbox_estimation_leastSquares_sources_NNR, 'Value');
-parameter.lsmopt.est_sourceNNR_defining = get(handles.checkbox_estimation_leastSquares_sources_ICRF2_def, 'Value');
+parameter.lsmopt.pw_sou = get(handles.checkbox_estimation_leastSquares_sources_est, 'Value');
+if parameter.lsmopt.pw_sou
+    if get(handles.radiobutton_pwloSou_nonCRF, 'Value')
+        parameter.lsmopt.pw_sou_select = 'notcat';
+        parameter.lsmopt.pw_sou_select_file = '';
+    elseif get(handles.radiobutton_pwloSou_nonCRFandfromFile, 'Value')
+        parameter.lsmopt.pw_sou_select = 'notcat_and_file';
+    elseif get(handles.radiobutton_pwloSou_fromFile, 'Value')
+        parameter.lsmopt.pw_sou_select = 'file';
+    end
+else
+    parameter.lsmopt.pw_sou_select ='';
+end
+
+% sources: name of the file with sources which will be estimated as pwlo
+parameter.lsmopt.pw_sou_select_file_sounames='';
+parameter.lsmopt.pw_sou_select_file = '';
+if strcmp(parameter.lsmopt.pw_sou_select,'notcat_and_file')|strcmp(parameter.lsmopt.pw_sou_select,'file')
+    allPwloSou_files=get(handles.popupmenu_pwloSou_file, 'String');            
+    if iscell(allPwloSou_files)
+        parameter.lsmopt.pw_sou_select_file=allPwloSou_files{get(handles.popupmenu_pwloSou_file, 'Value')};
+        if get(handles.radiobutton_pwloSoulist_ivs, 'Value')
+            parameter.lsmopt.pw_sou_select_file_sounames='ivs';
+        elseif get(handles.radiobutton_pwloSoulist_iers, 'Value')
+            parameter.lsmopt.pw_sou_select_file_sounames='iers';
+        end
+    end
+end
+
 
 % interval of sources
 sourceIntervalNum=str2double(get(handles.edit_estimation_leastSquares_sources_interval, 'String'));
@@ -694,13 +729,31 @@ else
     parameter.lsmopt.sour_coef_rade=sourceConstrCoefNum;
 end
 
-%special parameters for source estimation
+% sou: estimation with NNR
+parameter.lsmopt.est_sourceNNR          = get(handles.checkbox_estimation_leastSquares_sources_NNR, 'Value');
+parameter.lsmopt.est_sourceNNR_defining = get(handles.radiobutton_estimation_leastSquares_sources_ICRF2_def, 'Value');
+parameter.lsmopt.est_sourceNNR_selection = get(handles.radiobutton_estimation_leastSquares_sources_fileDef, 'Value');
+parameter.lsmopt.NNR_sou_select_file = '';
+parameter.lsmopt.NNR_sou_select_file_sounames='';
+if parameter.lsmopt.est_sourceNNR_selection
+    allNNRSou_files=get(handles.popupmenu_NNRSou_file, 'String'); 
+    if iscell(allNNRSou_files)
+        parameter.lsmopt.NNR_sou_select_file=allNNRSou_files{get(handles.popupmenu_NNRSou_file, 'Value')};
+        if get(handles.radiobutton_NNRSoulist_ivs, 'Value')
+            parameter.lsmopt.NNR_sou_select_file_sounames='ivs';
+        elseif get(handles.radiobutton_NNRSoulist_iers, 'Value')
+            parameter.lsmopt.NNR_sou_select_file_sounames='iers';
+        end
+    end
+end
 
+
+% special parameters for source estimation
 parameter.lsmopt.UseSourceAbsConstrNNR = get(handles.checkbox_estimation_leastSquares_sources_abs_constr, 'Value');
 if parameter.lsmopt.UseSourceAbsConstrNNR
     sourceAbsConstrNNR=str2double(get(handles.edit_estimation_leastSquares_sources_abs_constr, 'String'));
     if isnan(sourceAbsConstrNNR)
-        warning('Inappropriat input at Estimation/Leaste squares/Source coordinates ')
+        warning('Inappropriate input at Estimation/Leaste squares/Source coordinates ')
     else
         parameter.lsmopt.sourceAbsConstrNNR=sourceAbsConstrNNR;
     end
@@ -712,28 +765,124 @@ parameter.lsmopt.use_min_num_obs_per_est_source = get(handles.checkbox_est_lsm_s
 if parameter.lsmopt.use_min_num_obs_per_est_source
     parameter.lsmopt.min_num_obs_per_est_source=str2double(get(handles.edit_estimation_leastSquares_sources_obs_per_source, 'String'));
     if isnan(parameter.lsmopt.min_num_obs_per_est_source)
-        warning('Inappropriat input at Estimation/Leaste squares/Source coordinates')
+        warning('Inappropriate input at Estimation/Leaste squares/Source coordinates')
     end
 else
     parameter.lsmopt.min_num_obs_per_est_source = 0;
 end
 
 
+parameter.lsmopt.remove_sources_from_list = get(handles.checkbox_est_lsm_sources_blacklist, 'Value');
+parameter.lsmopt.remove_sou_file = '';
+parameter.lsmopt.remove_sou_file_sounames='';
+if parameter.lsmopt.remove_sources_from_list
+    allSouRemove_files=get(handles.popupmenu_removeSou_file, 'String'); 
+    if iscell(allSouRemove_files)
+        parameter.lsmopt.remove_sou_file=allSouRemove_files{get(handles.popupmenu_removeSou_file, 'Value')};
+        if get(handles.radiobutton_SouBlacklist_ivs, 'Value')
+            parameter.lsmopt.remove_sou_file_sounames='ivs';
+        elseif get(handles.radiobutton_SouBlacklist_iers, 'Value')
+            parameter.lsmopt.remove_sou_file_sounames='iers';
+        end
+    end    
+end
+
+
 % Satellite Position
 
-parameter.lsmopt.pw_sat = get(handles.checkBox_estimateSatellitePosition, 'Value'); % 1 Estimate satellite coordinates as PWL offsets, flag
+parameter.lsmopt.SatPos.pw_sat = get(handles.checkBox_estimateSatellitePosition, 'Value'); % 1 Estimate satellite coordinates as PWL offsets, flag
                                                                                     % 0 Do not estimate satellite coordinates as PWL offsets, flag
-parameter.lsmopt.sat_pos_int     = str2double(get(handles.estimationIntervalSatellitePositionValue, 'String'));       % Estimation interval for PWL offsets [minutes] (Will be set in the GUI in future!)
+parameter.lsmopt.SatPos.sat_pos_int     = str2double(get(handles.estimationIntervalSatellitePositionValue, 'String'));       % Estimation interval for PWL offsets [minutes] (Will be set in the GUI in future!)
     
 allRefFrames = get(handles.popupMenu_refFrameSatellitePosition, 'String');
-parameter.lsmopt.sat_pos_est_ref_frame = allRefFrames{get(handles.popupMenu_refFrameSatellitePosition, 'Value')}; % Definition of the reference frame in which the satellite positions will be estimated (Will be set in the GUI in future!)
+parameter.lsmopt.SatPos.sat_pos_est_ref_frame = allRefFrames{get(handles.popupMenu_refFrameSatellitePosition, 'Value')}; % Definition of the reference frame in which the satellite positions will be estimated (Will be set in the GUI in future!)
                                                                                                                       % => Used to select suitable partial derivatives (calculated in vie_mod.m) in satellitewisepar.m
-                                                                                                                      % Options: 'gcrf, 'trf', 'rsw'    
-parameter.lsmopt.constr_sat = get(handles.checkBox_relativeConstraintsSatellitePosition, 'Value');  % 1 constraints between pwl source coordinates offsets, flag 
+                                                                                                                      % Options: 'gcrf, 'trf', 'rsw', 'ntw'    
+parameter.lsmopt.SatPos.constr_sat = get(handles.checkBox_relativeConstraintsSatellitePosition, 'Value');  % 1 constraints between pwl source coordinates offsets, flag 
                                                                                                     % 0 no constraints between pwl, flag
-parameter.lsmopt.sat_pos_coef    = str2double(get(handles.relativeConstraintsSatellitePositionValue, 'String'));         % Relative constraint between PWL offsets [cm] (Will be set in the GUI in future!)       
-    
-                                        
+parameter.lsmopt.SatPos.sat_pos_coef    = str2double(get(handles.relativeConstraintsSatellitePositionValue, 'String'));         % Relative constraint between PWL offsets [cm] (Will be set in the GUI in future!)       
+
+parameter.lsmopt.SatPos.fixRadialComponent = get(handles.checkbox_fixRadialComponent, 'Value');  %  1 fix the radial component to a-priori, flag 
+                                                                                          % 0 do not fix the component to a-priori, flag
+
+parameter.lsmopt.SatPos.weightFixingRadialComponent = str2double(get(handles.fixRadialComponentWeightValue, 'String')); %Weight of fixing radial component to a-priori
+
+% Orbital Elements
+
+parameter.lsmopt.KepEle.estKepEle = get(handles.cb_estKepEle, 'Value');
+
+% Keplerian Element 1 - semimajor axis A
+parameter.lsmopt.KepEle.estKepEle1 = get(handles.cb_estKepEle1, 'Value');
+parameter.lsmopt.KepEle.estIntKepEle1    = str2double(get(handles.estIntValKepEle1, 'String'));  
+parameter.lsmopt.KepEle.relConstrKepEle1 = get(handles.cb_relConstrKepEle1, 'Value');  
+parameter.lsmopt.KepEle.relConstrValKepEle1 = str2double(get(handles.relConstrValKepEle1, 'String'));
+
+if parameter.lsmopt.KepEle.estKepEle1 == 0
+    parameter.lsmopt.KepEle.relConstrKepEle1 = 0;
+end
+
+% Keplerian Element 2 - eccentricity
+parameter.lsmopt.KepEle.estKepEle2 = get(handles.cb_estKepEle2, 'Value');
+parameter.lsmopt.KepEle.estIntKepEle2   = str2double(get(handles.estIntValKepEle2, 'String'));  
+parameter.lsmopt.KepEle.relConstrKepEle2 = get(handles.cb_relConstrKepEle2, 'Value');  
+parameter.lsmopt.KepEle.relConstrValKepEle2 = str2double(get(handles.relConstrValKepEle2, 'String'));
+
+if parameter.lsmopt.KepEle.estKepEle2 == 0
+    parameter.lsmopt.KepEle.relConstrKepEle2 = 0;
+end
+
+% Keplerian Element 3 - inclination
+parameter.lsmopt.KepEle.estKepEle3 = get(handles.cb_estKepEle3, 'Value');
+parameter.lsmopt.KepEle.estIntKepEle3    = str2double(get(handles.estIntValKepEle3, 'String'));  
+parameter.lsmopt.KepEle.relConstrKepEle3 = get(handles.cb_relConstrKepEle3, 'Value');  
+parameter.lsmopt.KepEle.relConstrValKepEle3 = str2double(get(handles.relConstrValKepEle3, 'String'));
+
+if parameter.lsmopt.KepEle.estKepEle3 == 0
+    parameter.lsmopt.KepEle.relConstrKepEle3 = 0;
+end
+
+% Keplerian Element 4 - RAAN (Omega)  
+parameter.lsmopt.KepEle.estKepEle4 = get(handles.cb_estKepEle4, 'Value');
+parameter.lsmopt.KepEle.estIntKepEle4    = str2double(get(handles.estIntValKepEle4, 'String'));  
+parameter.lsmopt.KepEle.relConstrKepEle4 = get(handles.cb_relConstrKepEle4, 'Value');  
+parameter.lsmopt.KepEle.relConstrValKepEle4 = str2double(get(handles.relConstrValKepEle4, 'String'));
+
+if parameter.lsmopt.KepEle.estKepEle4 == 0
+    parameter.lsmopt.KepEle.relConstrKepEle4 = 0;
+end
+
+% Keplerian Element 5 
+parameter.lsmopt.KepEle.estKepEle5 = get(handles.cb_estKepEle5, 'Value');
+parameter.lsmopt.KepEle.estIntKepEle5    = str2double(get(handles.estIntValKepEle5, 'String'));  
+parameter.lsmopt.KepEle.relConstrKepEle5 = get(handles.cb_relConstrKepEle5, 'Value');  
+parameter.lsmopt.KepEle.relConstrValKepEle5 = str2double(get(handles.relConstrValKepEle5, 'String'));
+
+if parameter.lsmopt.KepEle.estKepEle5 == 0
+    parameter.lsmopt.KepEle.relConstrKepEle5 = 0;
+end
+
+% Keplerian Element 6 
+parameter.lsmopt.KepEle.estKepEle6 = get(handles.cb_estKepEle6, 'Value');
+parameter.lsmopt.KepEle.estIntKepEle6    = str2double(get(handles.estIntValKepEle6, 'String'));  
+parameter.lsmopt.KepEle.relConstrKepEle6 = get(handles.cb_relConstrKepEle6, 'Value');  
+parameter.lsmopt.KepEle.relConstrValKepEle6 = str2double(get(handles.relConstrValKepEle6, 'String'));
+
+if parameter.lsmopt.KepEle.estKepEle6 == 0
+    parameter.lsmopt.KepEle.relConstrKepEle6 = 0;
+end
+
+
+%if parameter.lsmopt.KepEle.estKepEle1 || parameter.lsmopt.KepEle.estKepEle2 || parameter.lsmopt.KepEle.estKepEle3 || parameter.lsmopt.KepEle.estKepEle4 || parameter.lsmopt.KepEle.estKepEle5 || parameter.lsmopt.KepEle.estKepEle6
+%    parameter.lsmopt.KepEle.estKepEle = 1;
+%else
+%    parameter.lsmopt.KepEle.estKepEle = 0;
+%end
+parameter.lsmopt.KepEle.estKepEle_NumTau = get(handles.rb_estKepEle_NumTau, 'Value');
+parameter.lsmopt.KepEle.estKepEle_NumSatPos = get(handles.rb_estKepEle_NumSatPos, 'Value');
+parameter.lsmopt.KepEle.estKepEle_Ana = get(handles.rb_estKepEle_Ana, 'Value');
+parameter.lsmopt.KepEle.estKepEle_FRP = get(handles.rb_estKepEle_FRP, 'Value');
+parameter.lsmopt.KepEle.FRPFile = get(handles.edit_pathFRPFile, 'String'); 
+
 % prepare N and b for global solution
 parameter.lsmopt.global_solve=get(handles.checkbox_run_prepareGlobParam, 'Value');
 parameter.lsmopt.est_vel=get(handles.checkbox_run_globalPram_statVel, 'Value');
@@ -781,7 +930,6 @@ if get(handles.checkbox_run_globalPram_APLrg, 'Value')
 end
 
 
-
 % sinex output
 parameter.lsmopt.ascii_snx=get(handles.checkbox_run_sinex_write, 'Value');
 parameter.lsmopt.outsnx.clk=get(handles.radiobutton_run_sinex_clockParam_incl, 'Value');
@@ -816,6 +964,12 @@ else
     parameter.lsmopt.outsnx.eop=get(handles.radiobutton_run_sinex_eop_incl, 'Value');
 end
 
+if get(handles.rb_estKepEle_NumTau, 'Value') || get(handles.rb_estKepEle_FRP, 'Value') 
+    parameter.lsmopt.outsnx.orb=get(handles.radiobutton_run_sinex_orb_incl, 'Value');
+else
+    parameter.lsmopt.outsnx.orb=0;
+end
+
 parameter.lsmopt.outsnx.bdco = 0; % 0 = reduce bas-dep clk offset in sinex
 
 parameter.lsmopt.addSnxSource=get(handles.checkbox_run_sinex_sources, 'Value');
@@ -839,6 +993,8 @@ else
     parameter.lsmopt.outsnx.addSuffix=0;
     parameter.lsmopt.outsnx.suffix='';
 end
+
+
 
 % EOP estimation
 % xpol
@@ -966,6 +1122,5 @@ parameter.lsmopt.est_source_velo = 0;
 parameter.lsmopt.est_gamma = 0;
 parameter.lsmopt.est_FCNnut = 0; % FCN period from nutation
 parameter.lsmopt.est_FCNnutAmpl = 0; % FCN amplitudes from nutation
-
 
 save(fullOutName, 'parameter');

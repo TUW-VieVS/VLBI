@@ -167,7 +167,7 @@ for istat = 1 : na
     if opt.stc == 0
        opt.stat(na+1-istat).xyz_inc = 0;
     end
-    if opt.stat(na+1-istat).xyz_inc == 0
+    if opt.stat(na+1-istat).xyz_inc == 0 && (~isempty(A(13).sm) && ~isempty(A(14).sm) && ~isempty(A(15).sm))
         
         countxyz = countxyz + 1;
         del.xyz(countxyz) = na+1-istat;

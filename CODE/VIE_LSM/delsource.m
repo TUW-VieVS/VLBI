@@ -69,7 +69,7 @@ if opt.est_sourceNNR==0
             end
 
             nso(:,del(count)).sources = 0;
-            tso(del(count)) = [];
+            tso(del(count)).sources = [];
         end
     end
 end
