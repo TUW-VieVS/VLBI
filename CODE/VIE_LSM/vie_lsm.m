@@ -1797,7 +1797,7 @@ if opt.ascii_snx == 1
     % Save info about statistic
     col_sinex.lTPlreduc = lTPlreduc;
     col_sinex.nr_unknowns = total_est(end);
-    col_sinex.nr_obs = real_obs; % write ALL (real+pseudo) observations into sinex!!!
+    col_sinex.nr_obs = all_obs; % write ALL (real+pseudo) observations into sinex!!!
     col_sinex.vTPv = vTPv;
     col_sinex.varfac = mo.^2; 
     col_sinex.outsnx = outsnx;
