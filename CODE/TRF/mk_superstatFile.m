@@ -57,6 +57,7 @@ itrf2020File='../TRF/data/ITRF2020-IVS-TRF.SNX';
 
 %dtrf2020File=inFiles(idiF).name; idiF=idiF+1;
 dtrf2020File='../TRF/data/DTRF2020_VLBI.snx'; %Seitz, M., Bloßfeld, M., Angermann, D., Glomsda, M., Rudenko, S., Zeitlhöfler, J., & Seitz, F. (2023). DTRF2020 (Version v2) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.8369167
+%dtrf2020File='../TRF/data/DTRF2020u23_VLBI_prelim.xxx'; %Seitz, M., Bloßfeld, M., Angermann, D., Glomsda, M., Rudenko, S., Zeitlhöfler, J., & Seitz, F. (2023). DTRF2020 (Version v2) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.8369167
 
 itrf2020u2023File='../TRF/data/ITRF2020-u2023-IVS-TRF.SNX';
 
@@ -572,6 +573,7 @@ if exist(dtrf2020File, 'file')
 
     % add post-seismic deformation
     dtrf2020psddir='../TRF/data/DTRF2020_PSD/';
+    %dtrf2020psddir='../TRF/data/DTRF2020u23_PSD/';
     listdtrf2020psd = dir(dtrf2020psddir);
     
     if exist(dtrf2020psddir, 'dir')

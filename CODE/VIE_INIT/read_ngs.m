@@ -598,7 +598,9 @@ while (idx_line <= nlines)
                 antenna(statIdVec(iStat)).x              = curBreak_substruct.x;
                 antenna(statIdVec(iStat)).y              = curBreak_substruct.y;
                 antenna(statIdVec(iStat)).z              = curBreak_substruct.z;
-                
+
+
+         
                 % ### Transform Cartesian coordinates X,Y,Z to ellipsoidal to improve speed
                 [phi(statIdVec(iStat)),lam(statIdVec(iStat))] =xyz2ell([antenna(statIdVec(iStat)).x, antenna(statIdVec(iStat)).y, antenna(statIdVec(iStat)).z]);  
                 
@@ -738,6 +740,8 @@ while (idx_line <= nlines)
                 
             else %station is already in antenna, set last ObsMjd
                 antenna(statIdVec(iStat)).lastObsMjd = mjd;   
+
+
             end
         end
 %%           

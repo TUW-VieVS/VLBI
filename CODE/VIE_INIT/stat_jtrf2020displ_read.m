@@ -2,6 +2,7 @@
 function data = stat_jtrf2020displ_read(jtrf_file)
 
 jtrf2020path = '../TRF/data/JTRF/jtrf2020_defining_station_position_xyz_archive_vlbi';
+%jtrf2020path = '../TRF/data/JTRF/jtrf2020_u2022_station_position_xyz';
 fil = [jtrf2020path '/' jtrf_file];
 if exist(fil,'file')
     fid = fopen(fil);

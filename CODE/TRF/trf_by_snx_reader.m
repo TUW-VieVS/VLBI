@@ -18,6 +18,43 @@
     [blocknames blockdata]=readSnx(datafile,'blocks2read', {'SITE/ID',...
     'SOLUTION/EPOCHS', 'SOLUTION/ESTIMATE'});
 
+    if strcmp(datafilename,'dtrf2020')
+        idnonVLBI = ~strcmp('R',string([blockdata{1}.t]')) & ~strcmp('C',string([blockdata{1}.t]'));
+        blockdata{1}(idnonVLBI)=[];
+        
+        emptyCells = cellfun('isempty', {blockdata{2}.code});
+        blockdata{2}(emptyCells)=[];
+        idnonVLBI = ~strcmp('R',string([blockdata{2}.t]')) & ~strcmp('C',string([blockdata{2}.t]'));
+        blockdata{2}(idnonVLBI)=[];
+        
+        emptyCells = cellfun('isempty', {blockdata{3}.stat(:).code});
+        blockdata{3}.stat(emptyCells)=[];
+        
+        idbad=false;
+        for i=1:length(blockdata{3}.stat)
+             idbad1 = strcmp(string(blockdata{3}.stat(i).code),string([blockdata{1}.code]'));
+             idbad= idbad |idbad1;      
+        end
+        blockdata{1}(~idbad)=[];
+        
+        
+        clear idbad
+        idbad=false;
+        for i=1:length(blockdata{3}.stat)
+             idbad1 = strcmp(string(blockdata{3}.stat(i).code),string([blockdata{2}.code]'));
+             idbad= idbad |idbad1;      
+        end
+        blockdata{2}(~idbad)=[];
+
+        % a= sum([blockdata{1}.code]' - [blockdata{3}.stat.code]');
+        % if a~=0
+        %     'TRF problem!!!'
+        % end
+        % a= sum([blockdata{2}.code]' - [blockdata{3}.stat.code]');
+        % if a~=0
+        %     'TRF problem!!!'
+        % end
+    end
     for kSta=1:length(blockdata{3}.stat)
     % find current station in ns_codes
         foundStatLog=strcmpi(blockdata{1}(kSta).domes, {ns_codes.domes});
@@ -58,7 +95,6 @@
                         else
                             ns_codes(curIStat).(datafilename).break(breakInd).start = blockdata{2}(kSta).break(breakInd).start;
                         end
-                    
                         ns_codes(curIStat).(datafilename).break(breakInd).end = blockdata{2}(kSta).break(breakInd).end;
                     end      
                 
