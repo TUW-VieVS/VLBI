@@ -11196,6 +11196,7 @@ try
         outlierTest = 'normal';
     end
     
+    saveParamFile(hObject, handles, 'guiparameter.mat');
     vie_batch(name, outlierTest, outlierDirectory);
     handles=loadResFiles(hObject, handles);
     handles.popupmenu_plot_residuals_session.Value = idx;
