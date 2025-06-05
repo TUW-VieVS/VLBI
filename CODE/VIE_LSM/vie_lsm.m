@@ -1298,10 +1298,10 @@ if ess == 1
         fprintf('satellite position offsets dw/dw/dz:          %4d per satellite (%d satellite(s))\n',dj(18)/ns_s ,ns_s);
     end
     if logical(opt.est_scale)
-        fprintf('scale parameter:                          %4d\n',dj(19));
+        fprintf('scale parameter:                              %4d\n',dj(19));
     end
     if logical(opt.est_bdco)
-        fprintf('total baseline dependent clock offsets:   %4d\n',dj(20));
+        fprintf('total baseline dependent clock offsets:       %4d\n',dj(20));
     end
     if opt.KepEle.estKepEle == 1
         fprintf('semi-major axis (a):                          %4d per satellite (%d satellite(s))\n',dj(21)/ns_s ,ns_s);
