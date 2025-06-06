@@ -24,19 +24,22 @@
 %   07 Oct 2009 by Kamil Teke: header added
 %
 % ************************************************************************
-function [Ara,Ade] = a_source(per_source,nobserv)
+function [Ara,Ade,Ascale] = a_source(per_source,nobserv)
 
 Ara(nobserv,1) = 0;
 Ade(nobserv,1) = 0;
+Ascale(nobserv,1)=0;
 
 total = per_source.total; % total number of observations of the specific source in a session
 nob = per_source.nob; % the row numbers of the observations to that source in the oc vector, A, and P matrices 
 ra = per_source.ra; % [cm/mas] --- partial derivatives of the right ascension coordinates of the source 
 de = per_source.de; % [cm/mas] --- partial derivatives of the declination coordinates of the source
+scale = per_source.scale; % sec partial derivatives of the time delay w.r.t. scale factor
 
  % assigning the partial derivatives to the specific rows of the observations which
  % are to made to the corresponding sourse  
 for k = 1 : total
     Ara(nob(k),1) = ra(k);
     Ade(nob(k),1) = de(k); 
+    Ascale(nob(k),1) = scale(k); 
 end

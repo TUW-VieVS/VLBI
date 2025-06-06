@@ -91,7 +91,9 @@ for i=1:length(parGS)
 
     elseif strcmp(parGS(i).name,'bdco')==1
         g_bdco=i;
-
+    
+    elseif strcmp(parGS(i).name,'scale')==1
+        g_scale=i;
     end
 end
 
@@ -118,6 +120,7 @@ g.g_accSSB= [g_accSSB];
 g.g_svrade= [g_svra, g_svra+1];
 g.g_gamma = [g_gamma];
 g.g_bdco = [g_bdco];
+g.g_scale = [g_scale];
 
 
 

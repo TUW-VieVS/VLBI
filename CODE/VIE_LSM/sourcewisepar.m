@@ -56,6 +56,9 @@ for itim = 1:ntim % number of scans per session
                 per_source.nob(k) = i; % row number of observation in o-c per source
                 per_source.ra(k) = scan(itim).obs(iobs).psou(1);  % [cm/mas]
                 per_source.de(k) = scan(itim).obs(iobs).psou(2);  % [cm/mas]
+
+                per_source.scale(k) = scan(itim).obs(iobs).pscale  * (scan(itim).mjd - 57023)/(365.25);         % 57023; % 2015.0; [sec.yr], tau = F.b.s/c , F = 1, scale; results (a,s)/c; ;  % [sec]
+
                 per_source.minute(k) = (scan(itim).mjd - mjd0)*24*60; % The times of scans in minutes per source
                 for h1 = 1 : n_unk.sou % n_unk.sou : number of source coor. estimation intervals in a session
                     if h1 == n_unk.sou

@@ -59,7 +59,7 @@
 
 function [ar,actp,parGS] = par_newcol(parGS,parGS_hl,antenna,refantbr,refnamec,qnames,qrefname,aostname,rgstname,ise,lnc,lnv,lns,lnao,...
                                                llove,lshida,lFCNset,stseasname,lse,nvsou,laccSSB,lhpole,llpole,lgamma,lrg,...
-                                               ltidpm,ltidut)
+                                               ltidpm,ltidut,qrefnameScale,lnScale)
 
 
 
@@ -507,5 +507,35 @@ if parGS(g.g_tidut).id==1
     parGS(g.g_tidut).newcol= globp +1 :globp + ltidut;
     globp=globp+ltidut;
 end  
+
+
+%scale
+if parGS(g.g_scale).id==1 
+
+    arScale=[]; ref_idm=[];
+    l=1;
+    % put source into the right column
+    for iso = 1:size(qnames,1) % sources in the current session
+        qname=qnames(iso,:);
+        fq=[];
+        fq=strcmp(cellstr(qname),cellstr(qrefnameScale)); % find the source
+        if sum(fq)~=0
+            [ref_idm]=find(fq==1);
+            arScale(l,:)=[parGS(g.g_scale).oldcol(iso),globp+ref_idm];       %actual_reference indices of source
+            l=l+1;
+        end
+    end
+   
+  
+    if ~isempty(arScale)    
+        ar(actp+1:actp+size(arScale,1), :)=arScale;
+        actp=size(ar,1);
+        parGS(g.g_scale).newcol=[globp+1:globp+lnScale];
+    end
+        globp=globp+lnScale;        % hana Nov16
+    
+    
+end
+
 
 %%

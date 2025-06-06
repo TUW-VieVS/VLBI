@@ -320,6 +320,7 @@ if sum(obsTypeQidx) ~= 0
         [DE2000, RA2000] = correct_GA(DE2000,RA2000,mean([scan(:).mjd]));
         fprintf(1, 'ICRF3 is used --> GA will be corrected to 2015 using 5.8 muas/year\n');
     end
+
     if strcmp('manualCrf',parameter.vie_init.crf(2)) && (delModQ ~= 3)
         [DE2000, RA2000] = correct_GA(DE2000,RA2000,mean([scan(:).mjd]));
         fprintf(1, 'Manual CRF is used --> GA will be corrected to 2015 using 5.8 muas/year\n');
@@ -1002,8 +1003,10 @@ for iSc = 1:number_of_all_scans
         scan(iSc).obs(iobs).pFCN     = pFCN_bl;     % [cm] for FCN
         scan(iSc).obs(iobs).pacc     = pacc;        % dt/dacc SSB acceleration [sec^3/cm]
         scan(iSc).obs(iobs).pGamma   = pGammaSun;   % [sec]       
+
         scan(iSc).obs(iobs).pscale   = -fac1;       % [sec] Correction to the scale factor
-    
+        scan(iSc).obs(iobs).pscalesou   = -fac1*delt_accSSB/(86400*365.25);         % [sec.yr], tau = F.b.s/c , F = 1, scale; results (a,s)/c;     
+       
         if flag_save_results
             i_result = i_result + 1;
             result.com(i_result)   = tau; % Computed delay

@@ -131,6 +131,10 @@ parGS(IDglob).name = 'gamma'; parGS(IDglob).id=0; IDglob=IDglob+1;
 
 parGS(IDglob).name = 'bdco'; parGS(IDglob).id=2; IDglob=IDglob+1; % reduce (2) or delete (0) bas-dep clock offset
 
+NobsScale = 5000; % lower limit of observations for sources for which the scale correction will be estimated
+parGS(IDglob).name = 'scale'; parGS(IDglob).id=1; IDglob=IDglob+1; % scale
+
+
 [g] = globind(parGS);
 
 
@@ -645,7 +649,7 @@ clear nrq
 special_EOP = 0;
 special_EOP_sessions{1}='';
 if special_EOP
-    special_EOP_file = 'fix_EOP_for_single_baseline_sessions.txt';
+    special_EOP_file = 'EOPsmallnet_vie2023.txt';
     % format NGS: 18AUG08XA_N005, format vgosDB: 19AUG12XA
     fid_special_EOP = fopen(['../DATA/GLOB/EOP/' special_EOP_file]);
     special_EOP_sessions = textscan(fid_special_EOP,'%s');
@@ -653,6 +657,25 @@ if special_EOP
     reduced_flag = 0;
 end
 %------------------------------------------------------------
+
+
+
+
+lnScale=0; %scale
+qrefnameScale=['']; %scale
+numobsScale=0;
+if parGS(g.g_scale).id==1 && parGS(g.g_srade(1)).id==0 %scale
+    % create qrefname: names of the sources in the adjustment
+    [qrefname, souactiv] = refname_sou(path, ses, fixedsou, reducsou);
+end
+
+if parGS(g.g_scale).id==1 %scale
+    % find sources with N observations for the scale estimation
+    idScale=find(sum(souactiv,2)>NobsScale);
+    qrefnameScale = qrefname.IERS(idScale,:);
+    numobsScale=sum(souactiv(idScale,:),2);
+    lnScale = size(qrefnameScale,1); % final number of sources for the scale correction in the global adjustment
+end
 
 
 % Next parameters: EOP
@@ -751,7 +774,7 @@ for ise=1:lse
     % NEW COLUMNS for the parameters
     [ar,actp,parGS] = par_newcol(parGS,parGS_hl,antenna,refantbr,refnamec,qnames,qrefname.IERS,aostname,rgstname,ise,lnc,lnv,lns,lnao,...
         llove,lshida,lFCNset,stseasname,lse,nvsou,laccSSB,lhpole,llpole,lgamma,lrg,...
-        ltidpm,ltidut);
+        ltidpm,ltidut,qrefnameScale,lnScale);
 
     parsplit(ise).ar=ar; % actual-reference
     
@@ -796,7 +819,7 @@ end
 
 % aesp --> all estimated parameters: size of the new N-matrix
 aesp = ncoord+nveloc+nsou+nvsou+lmjd_eop+lnao+llove+lshida+lFCNset+laccSSB+lstseaspos+lhpole+llpole+lgamma+lrg+...
-    ltidpm+ltidut;
+    ltidpm+ltidut+lnScale;
 
 %% Sorting and splitting the N-matrix and b-vector
 if save_intermediate_results_flag
@@ -1135,7 +1158,7 @@ Bcvqv = [Bc                zeros(sBc1,sBv2)  zeros(sBc1,sBq2)   zeros(sBc1,sBvq2
 
 B = [Bcvqv zeros(sBc1+sBv1+sBq1+sBvq1+sBvt1,lmjd_eop+lnao+llove+lshida+...
     lFCNset+laccSSB+lstseaspos+lhpole+llpole+lgamma+lrg+...
-    ltidpm+ltidut)];
+    ltidpm+ltidut+lnScale)]; %scale
 
 b=[bfree; zeros(sBc1+sBv1+sBq1+sBvq1+sBvt1,1)];
 
@@ -1226,7 +1249,7 @@ end
 
 globsol = saveres(parGS,parGS_hl,globsol,refname,refnamec,datumantc,scale,...
     qrefname,datumsouc,fixedsou,sou_dz,RA_all,De_all,eb,...
-    trffile,crffile,aostname,stseasname,P_stseaspos,rgstname,apriori_aplrg);
+    trffile,crffile,aostname,stseasname,P_stseaspos,rgstname,apriori_aplrg,qrefnameScale,numobsScale);
 
 
 if parGS(g.g_coord(1)).id==1

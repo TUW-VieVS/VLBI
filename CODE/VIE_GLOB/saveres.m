@@ -32,7 +32,7 @@
 
 function globsol = saveres(parGS,parGS_hl,globsol,refname,refnamec,datumant,scale,...
                            qrefname,datumsouc,fixedsou,sou_dz,RA_all,De_all,eb,...
-                           trffile,crffile,aostname,stseasname,P_stseaspos,rgstname,apriori_aplrg)
+                           trffile,crffile,aostname,stseasname,P_stseaspos,rgstname,apriori_aplrg,qrefnameScale,numobsScale)
 
 [g] = globind(parGS);
 
@@ -116,7 +116,7 @@ else
     globsol.stseaspos.id=0;
 end
 
-for i=1:size(stseasname)
+for i=1:size(stseasname,1)
     globsol.stseaspos.results(i).aname=[''];
     globsol.stseaspos.results(i).Acr=[];
     globsol.stseaspos.results(i).Asr=[];
@@ -214,6 +214,14 @@ globsol.gamma.id=parGS(g.g_gamma).id;
 globsol.gamma.val=[];
 globsol.gamma.sigma=[];
 globsol.gamma.col=[];
+
+globsol.dscale.id = parGS(g.g_scale).id;
+globsol.dscale.val = [];
+globsol.dscale.sigma = [];
+globsol.dscale.souname = [''];
+globsol.dscale.numObs = [];
+globsol.dscale.col = [];
+
 
 
 %%
@@ -334,11 +342,11 @@ end
 if parGS(g.g_stseaspos_Ar(1)).id==1 || parGS(g.g_stseaspos_Ae(1)).id==1 || parGS(g.g_stseaspos_An(1)).id==1
     id=find(cell2mat(parGS(g.g_stseaspos_Ar(1)).spec)==1);
     globsol.stseaspos.periods_solardays = P_stseaspos(id);
-    for i=1:size(stseasname)
+    for i=1:size(stseasname,1)
         globsol.stseaspos.results(i).aname=stseasname(i,:);
     end
     if parGS(g.g_stseaspos_Ar(1)).id==1 
-        for i=1:size(stseasname)
+        for i=1:size(stseasname,1)
             c=[]; s=[]; A=[]; ph=[]; sigma_ph=[];
             c=x(cell2mat(parGS(g.g_stseaspos_Ar(1)).newcol(i)));
             s=x(cell2mat(parGS(g.g_stseaspos_Ar(2)).newcol(i)));
@@ -384,7 +392,7 @@ if parGS(g.g_stseaspos_Ar(1)).id==1 || parGS(g.g_stseaspos_Ae(1)).id==1 || parGS
         end
     end
     if parGS(g.g_stseaspos_An(1)).id==1 
-        for i=1:size(stseasname)
+        for i=1:size(stseasname,1)
             c=[]; s=[]; A=[]; ph=[]; sigma_ph=[];
             c=x(cell2mat(parGS(g.g_stseaspos_An(1)).newcol(i)));
             s=x(cell2mat(parGS(g.g_stseaspos_An(2)).newcol(i)));
@@ -575,5 +583,15 @@ if parGS(g.g_tidut).id==1
     globsol.tiduts.col = parGS(g.g_tidut).newcol(numut+1:numut*2);
     globsol.tidnum.ut1 = parGS(g.g_tidut).spectid;
 end
+
+
+if parGS(g.g_scale).id==1
+    globsol.dscale.val = x(parGS(g.g_scale).newcol)./c; %cm/sec --> -   (-/yr)
+    globsol.dscale.sigma = varpar(parGS(g.g_scale).newcol)./c; %cm/sec --> -  (-/yr)
+    globsol.dscale.souname = qrefnameScale;
+    globsol.dscale.numObs = numobsScale;
+    globsol.dscale.col = parGS(g.g_scale).newcol;
+end
+
 
 %%

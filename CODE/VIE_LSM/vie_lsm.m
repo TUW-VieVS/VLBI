@@ -854,6 +854,8 @@ nso.sources     = [];               % the number of source coordinate offsets fo
 nso.sat_pos     = [];               % the number of satellite position offsets for each satellite
 nso.kep_ele     = [];               % the number of keplerian elements offsets for each keplerian element for each satellite
 
+A_scale_glob =[]; %scale
+
 if (opt.global_solve==1 && opt.est_source==1) || (opt.ascii_snx==1 && opt.est_source==1) || opt.est_sourceNNR==1 || opt.pw_sou == 1
     tso(ns_q,1).sources = [];
     a(1,ns_q).ra = [];
@@ -871,10 +873,11 @@ if (opt.global_solve==1 && opt.est_source==1) || (opt.ascii_snx==1 && opt.est_so
 
     	% FORMING DESIGN MATIRCES FOR SOURCE COORDINATES
     	% if one offset per session is estimated (for global solution)
-        if  (opt.global_solve==1 && opt.est_source==1) || (opt.ascii_snx==1 && opt.est_source==1) || opt.est_sourceNNR==1 % +hana 18Jun14
-    	    [Ara,Ade] = a_source(per_source,n_observ);
+    	if  (opt.global_solve==1 && opt.est_source==1) || (opt.ascii_snx==1 && opt.est_source==1) || opt.est_sourceNNR==1 % +hana 18Jun14
+    	    [Ara,Ade,Ascale] = a_source(per_source,n_observ); %scale
     	    % Concatenating
     	    a(isou).ra = Ara; a(isou).de = Ade;
+            a(isou).scale = Ascale;  %scale [sec]
     	elseif opt.pw_sou == 1                          % if pwl offsets are estimated
     	    [Apw_ra,Apw_de] = apw_source(per_source,n_observ,n_unk,T_);
     	    % Concatenating
@@ -887,7 +890,10 @@ if (opt.global_solve==1 && opt.est_source==1) || (opt.ascii_snx==1 && opt.est_so
     	if (opt.global_solve==1 && opt.est_source==1) || (opt.ascii_snx==1 && opt.est_source==1)
             A_ra_glob = horzcat(A_ra_glob,a(isou).ra);  % design matrix for right ascensions of sources
     	    A_de_glob = horzcat(A_de_glob,a(isou).de);  % design matrix for declination of sources
-    	    % velocities of sources added
+    	    %if opt.est_source_scale ==1
+                A_scale_glob = horzcat(A_scale_glob,a(isou).scale); %scale
+            %end
+            % velocities of sources added
     	    if opt.est_source_velo ==1
     	        refvelsou_mjd= 51544; %2000
     	        opt.refvelsou_mjd=refvelsou_mjd;
@@ -1569,6 +1575,10 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
     end
     glob_dj(length(glob_dj)+1) = size(A_gamma,2);
 
+    % Scale parameter for each source
+    glob_dj(length(glob_dj)+1) = size(A_scale_glob,2); %scale
+
+
     oc_observ_real = oc_observ(1:n_observ);
     % w/o ntsl for sinex calibration block
     oc_observ_real_noNtsl = oc_observ_noNtsl(1:n_observ);
@@ -1577,7 +1587,7 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
             A_Acr,A_Ace,A_Acn,A_Asr,A_Ase,A_Asn,...
             A_hpole,A_lpole,A_rg,A_FCNnut,A_FCNnutAc,A_FCNnutAs,...
             A_tidap,A_tidbp,A_tidam,A_tidbm,A_tidutc,A_tiduts,...
-            A_love,A_shida,A_FCN,A_accSSB,A_vra_glob,A_vde_glob,A_gamma);
+            A_love,A_shida,A_FCN,A_accSSB,A_vra_glob,A_vde_glob,A_gamma,A_scale_glob);
         %
         % N.B. x_.col_ order should be consistent with concatenation in the matrix
         %
@@ -1656,6 +1666,9 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
     x_.col_souvra= sum_glob_dj(IDglobdj) + 1 : 1 : sum_glob_dj(IDglobdj+1);  IDglobdj=IDglobdj+1;
     x_.col_souvde= sum_glob_dj(IDglobdj) + 1 : 1 : sum_glob_dj(IDglobdj+1);  IDglobdj=IDglobdj+1;
     x_.col_gamma = sum_glob_dj(IDglobdj) + 1 : 1 : sum_glob_dj(IDglobdj+1);  IDglobdj=IDglobdj+1;
+
+    x_.col_scale = sum_glob_dj(IDglobdj) + 1 : 1 : sum_glob_dj(IDglobdj+1);  IDglobdj=IDglobdj+1;
+
 
 
     if opt.global_solve == 1
