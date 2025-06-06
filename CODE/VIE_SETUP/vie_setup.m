@@ -575,7 +575,7 @@ try
     
     if status_tag == 0 && length(tag)>1
         f = gcf;
-        f.Name = sprintf('Vienna VLBI and Satellite Software %s',tag);
+        f.Name = sprintf('VieVS VLBI %s',tag);
     end
     
     if status_hash == 0 && status_tag== 0 && length(tag) > 1 && length(hash) == 7
