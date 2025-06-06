@@ -1018,6 +1018,34 @@ while (idx_line <= nlines)
     end % if ngs_card_num == 1
 end
 
+
+if strcmp(trffil{2},'jtrf2020')
+    for iStat=1:length(antenna)
+        trf_id = find(strcmpi({trf.name}, antenna(iStat).name));
+        jtrf_file = ['jtrf2020_defining_station_position_xyz_' antenna(iStat).domes '_' trf(trf_id).CDP '_vlbi_data.txt'];
+        data = stat_jtrf2020displ_read(jtrf_file);
+
+        midmjd = (antenna(iStat).firstObsMjd+antenna(iStat).lastObsMjd)/2;
+        data{19} = 51544 + data{11}./86400;
+        dx=0;dy=0;dz=0;
+        if ~isempty(data{1})
+            if midmjd>data{19}(1)
+                [dx]=lagint4v(data{19},data{2},midmjd); % m
+                [dy]=lagint4v(data{19},data{3},midmjd); % m
+                [dz]=lagint4v(data{19},data{4},midmjd); % m
+            end
+        end
+
+        antenna(iStat).x = antenna(iStat).x + dx;
+        antenna(iStat).y = antenna(iStat).y + dy;
+        antenna(iStat).z = antenna(iStat).z + dz;
+    end
+end
+
+
+
+
+
 %%  #### Add orbit data to sources.s ####
 if num_s ~= 0
     if ~isempty(satOrbitFileType)
