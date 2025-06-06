@@ -177,8 +177,8 @@ for iStat=1:nStat
     end
 
     if strcmp(trfToTake,'jtrf2020')
-        %jtrf_file = ['jtrf2020_defining_station_position_xyz_' antenna(iStat).domes '_' trf(indCurStatInTrf).CDP '_vlbi_data.txt'];
-        jtrf_file = ['jtrf2020_u2022_station_position_xyz_' antenna(iStat).domes '_' trf(indCurStatInTrf).CDP '_vlbi_data.txt'];
+        jtrf_file = ['jtrf2020_defining_station_position_xyz_' antenna(iStat).domes '_' trf(indCurStatInTrf).CDP '_vlbi_data.txt'];
+        %jtrf_file = ['jtrf2020_u2022_station_position_xyz_' antenna(iStat).domes '_' trf(indCurStatInTrf).CDP '_vlbi_data.txt'];
         data = stat_jtrf2020displ_read(jtrf_file);
 
         midmjd = (antenna(iStat).firstObsMjd+antenna(iStat).lastObsMjd)/2;

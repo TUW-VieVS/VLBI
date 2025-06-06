@@ -348,7 +348,7 @@ if ~isempty(process_list)
                         fprintf(' Input file format: VSO\n');
 
                     case 'vgosdb'
-                        parameter.session_name  = session_name(6 : (strfind(session_name, ' [vgosDB]')-1));
+                       parameter.session_name  = deblank(session_name(6 : (strfind(session_name, ' [vgosDB]')-1)));
 %                         year_tmp = str2double(parameter.session_name(1:2));
 %                         % Check if conversion was sucessfull:
 %                         if isnan(year_tmp)
@@ -635,7 +635,7 @@ if ~isempty(process_list)
                         fprintf(' Input file format: VSO\n');
 
                     case 'vgosdb'
-                        parameter.session_name  = session_name(6 : (strfind(session_name, ' [vgosDB]')-1));
+                        parameter.session_name  = deblank(session_name(6 : (strfind(session_name, ' [vgosDB]')-1)));
                         if ~contains(parameter.session_name, '-') % Check for new vgosDB naming convention
                             year_tmp = str2double(parameter.session_name(1:2));
                             % Check if conversion was sucessfull:
@@ -819,13 +819,15 @@ if ~isempty(process_list)
     if exist('process_list', 'var')
         process_list_orig = process_list;
 		clear process_list;
-        count = 1;
         flag = 0;
+        process_list = sess_err;
+        emptyCells = cellfun('isempty', process_list);
+        process_list(emptyCells)=[];
+
+        fprintf(2, '\n \n')
         for i_err = 1: length(sess_err) % display failed sessions
             if ~isempty(sess_err{i_err})
-                fprintf(2, 'sessions %s produced an error\n', sess_err{i_err});
-                process_list(count,:) = sess_err{i_err};
-                count = count + 1;
+                fprintf(2, 'session %s produced an error\n', sess_err{i_err});
                 flag = 1;
             end
         end
