@@ -247,7 +247,18 @@ switch(parameter.data_type)
         scan        = nc2scan(out_struct, nc_info, fb, ioncorr, ambcorr, wrapper_data, parameter);
         antenna     = nc2antenna(out_struct, trf, trffile{2}, wrapper_data);
         sources     = nc2sources(out_struct, crf, crffile{2}, wrapper_data);
-        
+
+
+%% vgosDB control
+% if isfield(out_struct.Observables.ChannelInfo_bX, 'BITSAMPL')
+%         antenna(1).bitsamp = out_struct.Observables.ChannelInfo_bX.BITSAMPL.val;
+% else
+%         antenna(1).bitsamp = 0;
+% end
+% antenna(1).samplerate = out_struct.Observables.ChannelInfo_bX.SampleRate.val;
+% antenna(1).program = out_struct.head.Program.val;
+% antenna(1).createdby = out_struct.head.CreatedBy.val;
+%%
 
         % test the clock break function
         % [scan, antenna] = ambiguityies_clockBreaks(scan, antenna);

@@ -117,3 +117,9 @@ if isfield(x_,'bdclko')
 else
     parGS(g.g_bdco).oldcol = [];
 end
+
+if isfield(x_,'col_scale')
+    parGS(g.g_scale).oldcol = x_.col_scale;
+else
+    parGS(g.g_scale).oldcol = [];
+end
