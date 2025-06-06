@@ -132,7 +132,7 @@ parGS(IDglob).name = 'gamma'; parGS(IDglob).id=0; IDglob=IDglob+1;
 parGS(IDglob).name = 'bdco'; parGS(IDglob).id=2; IDglob=IDglob+1; % reduce (2) or delete (0) bas-dep clock offset
 
 NobsScale = 5000; % lower limit of observations for sources for which the scale correction will be estimated
-parGS(IDglob).name = 'scale'; parGS(IDglob).id=1; IDglob=IDglob+1; % scale
+parGS(IDglob).name = 'scale'; parGS(IDglob).id=0; IDglob=IDglob+1; % scale
 
 
 [g] = globind(parGS);
@@ -649,7 +649,7 @@ clear nrq
 special_EOP = 0;
 special_EOP_sessions{1}='';
 if special_EOP
-    special_EOP_file = 'EOPsmallnet_vie2023.txt';
+    special_EOP_file = 'fix_EOP_for_single_baseline_sessions.txt';
     % format NGS: 18AUG08XA_N005, format vgosDB: 19AUG12XA
     fid_special_EOP = fopen(['../DATA/GLOB/EOP/' special_EOP_file]);
     special_EOP_sessions = textscan(fid_special_EOP,'%s');
@@ -1336,7 +1336,7 @@ save([pathGS.path_out '_ESTIMATES/' pathGS.out '/globsol_small_' dir_in],'globso
 fprintf('\n\n Done! \n');
 
 fprintf('\n Estimates in TXT format are stored in VieVS/OUT/GLOB/_ESTIMATES/%s/glob_results_%s.txt \n',pathGS.out ,dir_in);
-fprintf('\n Figures in EPS format are stored in VieVS/OUT/GLOB/_PLOTS/%s/... \n',pathGS.out);
+fprintf('\n Figures in PNG format are stored in VieVS/OUT/GLOB/_PLOTS/%s/... \n',pathGS.out);
 
 
 
