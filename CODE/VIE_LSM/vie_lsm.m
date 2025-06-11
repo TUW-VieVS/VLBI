@@ -1065,7 +1065,7 @@ end
 opt.fixed_clock = antenna(nistat).name;
 
 % FORMING "A" and "H" ACCORDING TO THE LSM OPTIONS
-% [A,H,Ph,T,och,n_] = delmodel(opt,A,H,Ph,T,och,n_);
+[A,H,Ph,T,och,n_] = delmodel(opt,A,H,Ph,T,och,n_);
 
 Ablk = [];
 Hblk = [];
