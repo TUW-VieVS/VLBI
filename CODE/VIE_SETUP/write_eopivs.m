@@ -303,7 +303,7 @@ HKupd = false;
                    mjdu(abs(mjdu-mjdsesmid)>1)=[];
                end
            elseif (flag_intensive && length(mjdu)==3) % sometimes also intensives have three values
-               mjdu(abs(mjdu-mjdsesmid)>dmjdu)=[];
+               mjdu(2)=[];
            elseif (dmjdu<1 && flag_ut1tight && ~flag_intensive)
                mjdu(2:end-1)=[];
                dmjdu = mjdu(2)-mjdu(1);
