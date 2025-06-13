@@ -264,7 +264,7 @@ HKupd = false;
            % for 24h interval keep only the two values near session midpoint
            if (dmjdp>=1 && length(mjdp)>=3)
                if mjdp(2)==mjdsesmid
-                   mjdp(2)=[];
+                   mjdp(3)=[];
                else
                    mjdp(abs(mjdp-mjdsesmid)>1)=[];
                end
@@ -298,12 +298,19 @@ HKupd = false;
            % for 24h interval keep only the two values near session midpoint
            if (dmjdu >=1 && length(mjdu)>=3)
                if mjdu(2)==mjdsesmid
-                   mjdu(2)=[];
+                   mjdu(3)=[];
                else
                    mjdu(abs(mjdu-mjdsesmid)>1)=[];
                end
            elseif (flag_intensive && length(mjdu)==3) % sometimes also intensives have three values
-               mjdu(abs(mjdu-mjdsesmid)>dmjdu)=[];
+               if mjdu(2)==mjdsesmid
+                   mjdu(3)=[];
+               else
+                   mjdu(abs(mjdu-mjdsesmid)>dmjdu)=[];
+               end
+           elseif (flag_intensive && length(mjdu)>3) % if there are more than three values it is probably not an intensive
+               fprintf('ERROR: Session %s is probably not an Intensive, it is skipped for the eopi file!\n',IVSsesnam);
+               continue
            elseif (dmjdu<1 && flag_ut1tight && ~flag_intensive)
                mjdu(2:end-1)=[];
                dmjdu = mjdu(2)-mjdu(1);
@@ -335,7 +342,7 @@ HKupd = false;
            % for 24h interval keep only the two values near session midpoint
            if (dmjdn>=1 && length(mjdn)>=3)
                if mjdn(2)==mjdsesmid
-                   mjdn(2)=[];
+                   mjdn(3)=[];
                else
                    mjdn(abs(mjdn-mjdsesmid)>1)=[];
                end
