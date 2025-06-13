@@ -112,4 +112,7 @@ function [parameter] = checkParameterFile(parameter)
     if ~isfield(parameter.vie_mod, 'cntrl')
         parameter.vie_mod.cntrl = 0;
     end
+    if ~isfield(parameter.vie_mod, 'cntrlm')
+        parameter.vie_mod.cntrlm = ' ';
+    end
 end
