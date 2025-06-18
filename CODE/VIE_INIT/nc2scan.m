@@ -335,7 +335,7 @@ if strcmp(ioncorr,'on')
         sMBD1_file = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files, 1);
         sMBD1 = num2cell(out_struct.(sigma_tau_folder).(sMBD1_file).(sigma_tau_field).val);
         sMBD2 = num2cell(out_struct.(sigma_tau_folder).(sigma_tau_file).(sigma_tau_field).val);
-        [iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = vievs_iono_hk(out_struct,MBD1,MBD2,sMBD1,sMBD2,parameter);
+        [iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = vievs_iono(out_struct,wrapper_data,MBD1,MBD2,sMBD1,sMBD2,parameter);
         if length(iono_val_vievs) > 1
             ionoDelayInternalFlag = 1;
             ionoDelCell = num2cell(iono_val_vievs.*10^9);
