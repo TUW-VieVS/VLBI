@@ -492,7 +492,7 @@ function [opt] = lsmopt(antenna, sources, na, ns_q, ns_s, obs_per_source, obs_pe
                         IVSSouAlwaysEstFile = opt.pw_sou_select_file;
                         fprintf(['Loading ' IVSSouAlwaysEstFile ' \n\n'])
                         fid=fopen(['../CRF/SELECTION/SOUESTPWLO/' IVSSouAlwaysEstFile]);
-                            data=textscan(fid, '%8c %f %f %f %f', 'Commentstyle','#', 'delimiter', '\n');
+                            data=textscan(fid, '%8c  %*[^\n]', 'Commentstyle','#');
                         fclose(fid);
                     
                         for i = 1:size(data{1},1)
