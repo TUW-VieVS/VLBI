@@ -1080,6 +1080,21 @@ function checkbox_setInput_eliminOutliers_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of checkbox_setInput_eliminOutliers
 
+
+% Enable/Disable popupmenu to select the OPT file
+if get(handles.checkbox_setInput_eliminOutliers, 'Value') == 0
+    set(handles.popupmenu_setInput_outDir, 'Enable', 'off')
+else
+    set(handles.popupmenu_setInput_outDir, 'Enable', 'on')
+end
+
+auto_save_parameterfile(hObject, handles)
+
+
+
+
+
+
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
 
@@ -11185,8 +11200,10 @@ try
     if eliminOutliers
         allOutDirInList = get(handles.popupmenu_setInput_outDir, 'String');
         outlierDirectory = allOutDirInList{get(handles.popupmenu_setInput_outDir, 'Value')};
+        set(handles.popupmenu_setInput_outDir, 'Enable', 'on')
     else
         outlierDirectory = 'none';
+         set(handles.popupmenu_setInput_outDir, 'Enable', 'off')
     end
     if handles.checkbox_run_simpleOutlierTest.Value == 0 && handles.checkbox_run_normalOutlierTest.Value == 0
         outlierTest = 'none';

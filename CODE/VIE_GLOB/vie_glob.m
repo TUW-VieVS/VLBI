@@ -109,6 +109,11 @@ function vie_glob
 save_intermediate_results_flag = 0;
 path_level='../';
 
+rms_check = 0;
+del_ses = 0;
+special_EOP = 0;
+special_EOP_file = 'EOPsmallnet.txt'; % format NGS: 18AUG08XA_N005, format vgosDB: 19AUG12XA
+
 % % Read which parametres are to be estimated ('paramGS.m')
 % guiglob
 % uiwait(guiglob)
@@ -338,7 +343,7 @@ for ise = 1:lse
 end
 
 % Delete sessions with big a posteriori sigma
-rms_check = 1;
+
 maxRMS=pathGS.maxRMS;
 badses='';
 badses_mo=[];
@@ -358,7 +363,7 @@ end
 
 
 % Delete sessions defined in an external file
-del_ses = 0;
+
 bad=[];
 if del_ses
     flname='../DATA/GLOB/bad_ses_rms5_nan.txt' % solution with vgos
@@ -646,11 +651,9 @@ clear nrq
 
 
 %------------------------------special EOP-------------------
-special_EOP = 0;
+
 special_EOP_sessions{1}='';
-if special_EOP
-    special_EOP_file = 'fix_EOP_for_single_baseline_sessions.txt';
-    % format NGS: 18AUG08XA_N005, format vgosDB: 19AUG12XA
+if special_EOP    
     fid_special_EOP = fopen(['../DATA/GLOB/EOP/' special_EOP_file]);
     special_EOP_sessions = textscan(fid_special_EOP,'%s');
     fclose(fid_special_EOP);

@@ -256,7 +256,8 @@ while (idx_line <= nlines)
     sta_names(2,:)  = input_str(11:18);
     l = split(input_str,' ');
     l = l(~cellfun(@isempty, l));
-    if exist('sat_names','var') && ismember(char(l(3)),sat_names(:,1))
+    %if exist('sat_names','var') && ismember(char(l(3)),sat_names(:,1))
+    if length(input_str) > 82 %satellite
         source_type     = 's';
         source_name = char(l(3));
         tim  = [str2double(string(l(4))), str2double(string(l(5))), str2double(string(l(6))), str2double(string(l(7))), str2double(string(l(8))), str2double(string(l(9)))]';
@@ -267,11 +268,11 @@ while (idx_line <= nlines)
         source_name     = input_str(21:28);
         source_type     = 'q';
         tim = sscanf(input_str(30:60),'%f');
-%         sequ_num        = input_str(71:78); % Sequence number (= observation number)
-%         ngs_card_num    = sscanf(input_str(79:80),'%d'); % NGS card number
-        num = char(l(10));
-        sequ_num = (num(1:end-2));
-        ngs_card_num    = (num(end-1:end));
+         sequ_num        = input_str(71:78); % Sequence number (= observation number)
+         ngs_card_num    = sscanf(input_str(79:80),'%d'); % NGS card number
+%        num = char(l(10));
+%        sequ_num = (num(1:end-2));
+%        ngs_card_num    = (num(end-1:end));
     end
    
     if strcmp(source_name, '1600+431') % in ICRF2
@@ -299,10 +300,10 @@ while (idx_line <= nlines)
         l = split(input_str,' ');
         l = l(~cellfun(@isempty, l));
         num = char(l(end));
-        new_sequ_num = num(1:end-2);
-        ngs_card_num    = num(end-1:end);
-%         new_sequ_num    = input_str(71:78);
-%         ngs_card_num    = input_str(79:80);
+%        new_sequ_num = num(1:end-2);
+%        ngs_card_num    = num(end-1:end);
+         new_sequ_num    = input_str(71:78);
+         ngs_card_num    = input_str(79:80);
         if strcmp(new_sequ_num, sequ_num) % Still the same sequence?            
             % #### Check the current line ####
             % Check, if there are asterisks in the input line:
