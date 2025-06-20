@@ -347,7 +347,8 @@ function [x_] = splitx(x, first_solution, mi, na, sum_dj, n_, mjd0, mjd1, t, T, 
                 if ess==1
                     for ioffset = 1 : nso(isou).sources
                         x_.soura(jsou).val(ioffset,:) = x(sum_dj(11) + sumsou + ioffset,:)/15; % [ms] estimated value
-                        x_.soura(jsou).mjd(ioffset)  = tso(jsou).sources(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate
+                        %x_.soura(jsou).mjd(ioffset)  = tso(jsou).sources(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate; HK: doesn't work after the orbit update
+                        x_.soura(jsou).mjd(ioffset)  = tso(isou).sources(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate; HK: changed
                         x_.soura(jsou).mx(ioffset,:) = mi(sum_dj(11) + sumsou + ioffset,:)/15; % [ms] std. dev. of the estimate
                         x_.soura(jsou).col(ioffset)  = sum_dj(11) + sumsou + ioffset; % [1] - COLumn of the estimate in A or N
                     end
@@ -358,8 +359,9 @@ function [x_] = splitx(x, first_solution, mi, na, sum_dj, n_, mjd0, mjd1, t, T, 
                 if ess==1
                     for ioffset = 1 : nso(isou).sources
                         x_.soude(jsou).val(ioffset,:) = x(sum_dj(12) + sumsou + ioffset,:); % [mas] estimated value
-                        x_.soude(jsou).mjd(ioffset) = tso(jsou).sources(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate
-                        x_.soude(jsou).mx(ioffset,:) = mi(sum_dj(12) + sumsou + ioffset,:); % [mas] std. dev. of the estimate
+                        %x_.soude(jsou).mjd(ioffset) = tso(jsou).sources(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate; HK: doesn't work after the orbit update
+                        x_.soude(jsou).mjd(ioffset) = tso(isou).sources(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate; HK: changed
+                        x_.soude(jsou).mx(ioffset,:) = mi(sum_dj(12) + sumsou + ioffset,:); % [mas] std. dev. of the estimate;
                         x_.soude(jsou).col(ioffset) = sum_dj(12) + sumsou + ioffset; % [1] - COLumn of the estimate in A or N
                     end
                 end
