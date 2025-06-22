@@ -42,7 +42,7 @@ for iSource=1:nSources
         curName = '2344+09A';
     elseif curName == '1600+431' % in icrf2
         curName = '1600+43A'; % IVS, = 1600+432 IERS, in icrf3
-    elseif curName == '3C48    ' & out_struct.Observables.TimeUTC.YMDHM.val(1) > 2017
+    elseif curName == '3C48    ' & double(out_struct.Scan.TimeUTC.YMDHM.val(1,1)) > 2017
         curName = '3C48B   ';
     end
     

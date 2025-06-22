@@ -112,7 +112,7 @@ path_level='../';
 rms_check = 0;
 del_ses = 0;
 special_EOP = 0;
-special_EOP_file = 'EOPsmallnet.txt'; % format NGS: 18AUG08XA_N005, format vgosDB: 19AUG12XA
+special_EOP_file = 'EOP.txt'; % format NGS: 18AUG08XA_N005, format vgosDB: 19AUG12XA
 
 % % Read which parametres are to be estimated ('paramGS.m')
 % guiglob
@@ -1205,6 +1205,10 @@ varpar=full(varpar);
 
 
 %%
+
+%'vie_glob line 1209!!!'
+%refantbr(15).break_apr = [0 99999]
+
 eb=[];
 if parGS(g.g_coord(1)).id==1
     if parGS(g.g_vel(1)).id==1
