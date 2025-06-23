@@ -22,7 +22,7 @@ function varargout = start_createExtIonoFilesGUI(varargin)
 
 % Edit the above text to modify the response to help start_createExtIonoFilesGUI
 
-% Last Modified by GUIDE v2.5 09-Aug-2011 09:42:21
+% Last Modified by GUIDE v2.5 23-Jun-2025 15:46:34
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -72,73 +72,84 @@ end
 % UIWAIT makes start_createExtTropoFilesGUI wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 % add auxiliary folder to path
-addpath('../ION/PROGRAM/auxiliary/'); % still needed for gpt (rest is in VIE_MOD_V1d)
+%addpath('../ION/PROGRAM/auxiliary/'); % still needed for gpt (rest is in VIE_MOD_V1d)
 addpath('../OUT/'); % for azel_out_auto.m
 
 
 
-% add auxiliary folder to path
-% addpath('..\auxiliary\');
+% get LEVEL1 content
+dirsInOptFolder=dir('../DATA/LEVEL1/');
+dirsInOptFolder(strcmp({dirsInOptFolder.name}, '.')|strcmp({dirsInOptFolder.name}, '..')|strcmp({dirsInOptFolder.name}, '.git')|~[dirsInOptFolder.isdir])=[];
+% set new entries for popup menu
+set(handles.popupmenu_selectL1, 'String', {dirsInOptFolder.name})
 
 
-% % go to folder of this .m file and make it to cd
-% slashIdx=strfind(mfilename('fullpath'), '\');
-% curMFilePath=mfilename('fullpath');
-% cd(curMFilePath(1:slashIdx(end)));
 
-% fill listboxes
-% define folder where ngs year folders are
-ngsdir='../DATA/NGS/';
+% % add auxiliary folder to path
+% % addpath('..\auxiliary\');
+% 
+% 
+% % % go to folder of this .m file and make it to cd
+% % slashIdx=strfind(mfilename('fullpath'), '\');
+% % curMFilePath=mfilename('fullpath');
+% % cd(curMFilePath(1:slashIdx(end)));
+% 
+% % fill listboxes
+% % define folder where ngs year folders are
+% ngsdir='../DATA/NGS/';
+% 
+% % get files and folders of this path
+% ngsdirContent=dir(ngsdir);
+% 
+% % go through all entries of ngsdir to find folders
+% ngsYrs=cell(size(ngsdirContent,1),1);
+% for k=1:size(ngsdirContent,1)
+%     % if is a directory, add it to cell array
+%     if exist([ngsdir, ngsdirContent(k).name], 'dir')
+%         ngsYrs{k}=ngsdirContent(k).name;
+%     end
+% end
+% 
+% % delete empty rows
+% ngsYrs(cellfun(@isempty, ngsYrs))=[];
+% 
+% 
+% % update listbox 1 (first from left)
+% set(handles.listbox_1, 'String', ngsYrs);
+% 
+% % fill listbox 4 (first from right, containing process lists)
+% % get content of process list folder
+% %pldir='../../../WORK/PROCESSLIST/';
+% pldir='../WORK/PROCESSLIST/';
+% pldirContent=dir(pldir);
+% 
+% % preallocating
+% process_lists=cell(size(pldirContent,1),1);
+% for k=1:size(pldirContent,1)
+%     % find out if is .mat file
+%     if size(pldirContent(k).name,2)>=5 % we need min "1.mat"
+%         if strcmp(pldirContent(k).name(end-3:end), '.mat')
+%             process_lists{k}= pldirContent(k).name(1:end-4);
+%         end
+%     end
+% end
+% 
+% % delete empty cells
+% process_lists(cellfun(@isempty, process_lists))=[];
+% 
+% % update listbox
+% set(handles.listbox_4, 'String', process_lists);
+% 
+% % get old content for listbox3
+% if exist('GUIsavings.mat', 'file')
+%     %load('GUIsavings.mat');
+%     %set(handles.listbox_3, 'String', listbox3_content);
+% 
+%     %listbox3_content=get(handles.listbox_3, 'String');
+% end
 
-% get files and folders of this path
-ngsdirContent=dir(ngsdir);
-
-% go through all entries of ngsdir to find folders
-ngsYrs=cell(size(ngsdirContent,1),1);
-for k=1:size(ngsdirContent,1)
-    % if is a directory, add it to cell array
-    if exist([ngsdir, ngsdirContent(k).name], 'dir')
-        ngsYrs{k}=ngsdirContent(k).name;
-    end
-end
-
-% delete empty rows
-ngsYrs(cellfun(@isempty, ngsYrs))=[];
-
-
-% update listbox 1 (first from left)
-set(handles.listbox_1, 'String', ngsYrs);
-
-% fill listbox 4 (first from right, containing process lists)
-% get content of process list folder
-%pldir='../../../WORK/PROCESSLIST/';
-pldir='../WORK/PROCESSLIST/';
-pldirContent=dir(pldir);
-
-% preallocating
-process_lists=cell(size(pldirContent,1),1);
-for k=1:size(pldirContent,1)
-    % find out if is .mat file
-    if size(pldirContent(k).name,2)>=5 % we need min "1.mat"
-        if strcmp(pldirContent(k).name(end-3:end), '.mat')
-            process_lists{k}= pldirContent(k).name(1:end-4);
-        end
-    end
-end
-
-% delete empty cells
-process_lists(cellfun(@isempty, process_lists))=[];
-
-% update listbox
-set(handles.listbox_4, 'String', process_lists);
-
-% get old content for listbox3
-if exist('GUIsavings.mat', 'file')
-    load('GUIsavings.mat');
-    set(handles.listbox_3, 'String', listbox3_content);
-    
-    %listbox3_content=get(handles.listbox_3, 'String');
-end
+ newPopupmenuEntriesSelectIonoModel = {'CODE', 'EMR','ESA','IGS', 'JPL','UQR','ETH'};
+ set(handles.popupmenu_SelectIonoModel, 'String', newPopupmenuEntriesSelectIonoModel);
 
 
 % Save the change you made to the structure
@@ -169,19 +180,30 @@ function button_createTropoFiles_Callback(hObject, eventdata, handles)
 tic
 
 % ##### get chosen sessions in listbox 3 #####
-chosenSessions = get(handles.listbox_3, 'String');
+% chosenSessions = get(handles.listbox_3, 'String');
 
-'##### GUI does not work with vgosDB. Define the process list in start_createExtIonoFilesGUI.m line 174:'
 % chosenSessions = ['2022/22FEB11KL [vgosDB]'
 %                   '2022/22FEB11KR [vgosDB]']
 % OR
 % load('PROCESSLIST/pl.mat')
-% chosenSessions = process_list;
 
+chosenSessions = handles.allSelectedFiles;
+
+
+ idmodel= get(handles.popupmenu_SelectIonoModel,'Value');
+ ionoModelall=cellstr(get(handles.popupmenu_SelectIonoModel,'String'));
+ ionoModel = char(string(ionoModelall(idmodel)));
+
+ % get currently selected L1 directory
+L1dirs=get(handles.popupmenu_selectL1, 'String');
+L1SubDir=L1dirs{get(handles.popupmenu_selectL1, 'value')};
+
+runDownloadGIM = get(handles.checkbox_runDownloadGIM, 'value');
+runComputeION = get(handles.checkbox_runComputeION, 'value');
 
 % Check, if session was selected:
 if isempty(chosenSessions)
-    text = 'Chose session from listbox';
+    text = 'Choose at least one session!';
     msgbox(text,'Help','warn');
     
     % set button to disable
@@ -209,15 +231,16 @@ else
     % for all chosen sessions
     for k = 1 : size(chosenSessions, 1)
         
-        curSession = chosenSessions(k, 6:end);
-        
+        curSession2 = split(chosenSessions{k});
+        curSession=curSession2{1}(6:end);
+
         % Check, is the session name (in process list) contains the tags " [vgosDB]" or " [VSO]":
         % => This is required to get the actual filename in case of vgosDB or vso files.
         % => Just remove everything after the first blank!
-        blank_ind = min(strfind(curSession, ' '));
-        if ~isempty(blank_ind)
-            curSession = curSession(1 : blank_ind-1);
-        end
+        % blank_ind = min(strfind(curSession, ' '));
+        % if ~isempty(blank_ind)
+        %     curSession = curSession(1 : blank_ind-1);
+        % end
         
         % if there is an azel file with the same name as the current
         % session in the main directory AZEL
@@ -227,7 +250,7 @@ else
         else % look for azel-file in subfolder of year (AZEL/2008/)
             % find index of current year in filesInAzelDir (where
             % azel-file could/should be
-            wantedAzelPath{k} = [azelPath, chosenSessions(k,1:4), '/'];
+            wantedAzelPath{k} = [azelPath, curSession2{1}(1:4), '/'];
             
             % if folder of current year does not exist, create it
             if ~exist(wantedAzelPath{k}, 'dir')
@@ -248,25 +271,17 @@ else
     
     % DO THIS IN ANY CASE | if there is at least one with available azel
     % get iono model (one of CODE, IGS,...)
-    if get(handles.button_model_code, 'Value') == 1
-        ionoModel = 'CODE';
-    elseif get(handles.button_model_IGS, 'Value') == 1
-        ionoModel = 'IGS';
-    elseif get(handles.button_model_gnss, 'Value') == 1
-        ionoModel = 'GNSS';
-    elseif get(handles.button_model_GNSSAltimetry, 'Value') == 1
-        ionoModel = 'GNSSAltimetry';
-    elseif get(handles.button_model_GNSSAltimetryFC, 'Value') == 1
-        ionoModel = 'GNSSAltimetryFC';
-    end
-
-'You can specify the model in start_createExtIonoFilesGUI.m line 265'
-% ionoModel = 'IGS'
-% ionoModel = 'UQR'
-% ionoModel = 'EMR'
-% ionoModel = 'CODE'
-% ionoModel = 'JPL'
-% ionoModel = 'ESA'
+    % if get(handles.button_model_code, 'Value') == 1
+    %     ionoModel = 'CODE';
+    % elseif get(handles.button_model_IGS, 'Value') == 1
+    %     ionoModel = 'IGS';
+    % elseif get(handles.button_model_gnss, 'Value') == 1
+    %     ionoModel = 'GNSS';
+    % elseif get(handles.button_model_GNSSAltimetry, 'Value') == 1
+    %     ionoModel = 'GNSSAltimetry';
+    % elseif get(handles.button_model_GNSSAltimetryFC, 'Value') == 1
+    %     ionoModel = 'GNSSAltimetryFC';
+    % end
 
     
     % delete empty entries for all sessions where no azel file is available
@@ -284,21 +299,24 @@ else
     
     % ##### create external errorMsgstropospheric files for all sessions #####
     for k = 1 : size(chosenSessions, 1)
-        
-        curSession  = chosenSessions(k,6:end);
-        % Check, is the session name (in process list) contains the tags " [vgosDB]" or " [VSO]":
-        % => This is required to get the actual filename in case of vgosDB or vso files.
-        % => Just remove everything after the first blank!
-        blank_ind = min(strfind(curSession, ' '));
-        if ~isempty(blank_ind)
-            curSession = curSession(1 : blank_ind-1);
-        end
+        curSession2 = split(chosenSessions{k});
+        curSession=curSession2{1}(6:end);
+
+        % curSession  = chosenSessions(k,6:end);
+        % % Check, is the session name (in process list) contains the tags " [vgosDB]" or " [VSO]":
+        % % => This is required to get the actual filename in case of vgosDB or vso files.
+        % % => Just remove everything after the first blank!
+        % blank_ind = min(strfind(curSession, ' '));
+        % if ~isempty(blank_ind)
+        %     curSession = curSession(1 : blank_ind-1);
+        % end
         
         % Get name and path of AZEL file:
         curAzelFile = [wantedAzelPath{k}, 'azel_', curSession, '.txt'];
         
         % call the function createExtIonoFiles.m
-        errorMsgs(k, 1) = createExtIonoFiles(curSession, subdirectory, curAzelFile, ionoModel);
+        errorMsgs(k, 1) = createExtIonoFiles(curSession, subdirectory, curAzelFile, ionoModel,L1SubDir,runDownloadGIM,runComputeION);
+
     end
     
     if ~exist('errorMsgs', 'var')
@@ -307,13 +325,20 @@ else
     
     % write processing log
     fprintf('\n\n ======== LOG =========\n\n');
+
+
     % ERROR=0: sucessful
-    fprintf('%1.0f file(s): successfully created\n', sum(errorMsgs == 0))
+    if runDownloadGIM
+    fprintf('%1.0f file(s): GIMs successfully downloaded\n', sum(errorMsgs == 0))
+    elseif runComputeION
+    fprintf('%1.0f file(s): .ion successfully created\n', sum(errorMsgs == 0))
+    end
+    
     if sum(errorMsgs == 0) > 0
         idxNoError=find(errorMsgs == 0);
         
         for k = 1 : sum(errorMsgs == 0)
-            fprintf('     session: %s\n', chosenSessions(idxNoError(k), :));
+            fprintf('     session: %s\n', string(chosenSessions(idxNoError(k), :)));
         end
     end
     fprintf('\n');
@@ -717,3 +742,337 @@ function button_model_code_KeyPressFcn(hObject, eventdata, handles)
 %	Character: character interpretation of the key(s) that was pressed
 %	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on selection change in popupmenu_SelectIonoModel.
+function popupmenu_SelectIonoModel_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_SelectIonoModel (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_SelectIonoModel contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_SelectIonoModel
+guidata(hObject, handles);
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_SelectIonoModel_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_SelectIonoModel (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton_setInput_browseForProcLists.
+function pushbutton_setInput_browseForProcLists_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_setInput_browseForProcLists (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+[FileName, PathName] = uigetfile('*.mat','Select process lists', './PROCESSLIST/', 'multiselect', 'on');
+
+fileWasChosen=1;
+
+if isempty(FileName)
+    fileWasChosen=0;
+elseif ~iscell(FileName)
+    if FileName == 0
+        fileWasChosen=0;
+    end
+end
+       
+if fileWasChosen
+    % get number of files
+    if iscell(FileName)
+        nFiles=size(FileName,2);
+    else
+        nFiles=1;
+    end
+    
+    % for all files
+    for iFile=1:nFiles
+        % load process list
+        
+        % if we have a cell == if we have more than 1 process_list selected
+        if iscell(FileName)
+            load([PathName, FileName{iFile}])
+        else
+            load([PathName, FileName])
+        end
+        
+        % if we have now the process_list variable
+        if exist('process_list', 'var')
+            % get current listbox entries
+            curContent=get(handles.listbox_setInput_processList, 'String');
+            
+            % delete last entry of process_list when it is ''
+            if strcmp(process_list(size(process_list,1)), ' ')
+                process_list(size(process_list,1),:)=[];
+            end
+            
+            % make cellstr out of process_list
+            process_list_cellstr=cellstr(process_list);
+            
+            % if listbox is empty: just take chosen process_list
+            if isempty(curContent)
+                newContent=process_list_cellstr;
+            else % else: make unique
+                newContent=unique([curContent; process_list_cellstr]);
+            end
+
+            % update listbox
+            set(handles.listbox_setInput_processList, 'String', newContent);
+        end
+        
+    end
+
+    % save all selected sessions to handles struct
+    handles.allSelectedFiles=newContent;
+    
+    % save changes to handles struct
+    guidata(hObject, handles);
+end
+
+
+% --- Executes on selection change in listbox_setInput_processList.
+function listbox_setInput_processList_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox_setInput_processList (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns listbox_setInput_processList contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox_setInput_processList
+
+
+% --- Executes during object creation, after setting all properties.
+function listbox_setInput_processList_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listbox_setInput_processList (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton_setInput_browseVgos.
+function pushbutton_setInput_browseVgos_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_setInput_browseVgos (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+vgosDir='../DATA/vgosDB/';
+if ~exist(vgosDir,'dir')
+    mkdir(vgosDir);
+end
+
+out = uipickfiles('FilterSpec', vgosDir);
+
+
+if iscell(out)
+    out=out';
+    
+    % Format: yyyy/<session_name> [vgosDB]
+    
+    for iF = 1 : length(out)
+        curSlash = sort([strfind(out{iF},'/'), strfind(out{iF},'\')]);
+        tgzDot = sort(strfind(out{iF},'.'));
+        if length(tgzDot) > 2
+            out{iF} = [out{iF}(curSlash(end-1)+1 : tgzDot(3)-1), ' [vgosDB]'];
+        else
+            out{iF} = [out{iF}(curSlash(end-1)+1 : end), ' [vgosDB]'];
+        end
+    end
+
+    updateInputFilesBox(hObject, eventdata,handles,out)   
+end
+
+% Function to update input-files-listbox
+function updateInputFilesBox(hObject, eventdata,handles,newFiles)
+
+% if something was given
+if ~isempty(newFiles) && sum(strcmpi(newFiles,''))==0 % second: if cell, returned is [0 0]
+    newFiles=cellstr(newFiles);
+    
+    % \ -> /
+    newFiles=strrep(newFiles, '\', '/');
+    
+    % if the popupmenu is empty, just take the new sessions
+    if isempty(get(handles.listbox_setInput_processList, 'String'))
+        files4listbox=newFiles;
+        %allSelectedFilenames=FileName;
+    else
+        files4listbox=unique([handles.allSelectedFiles; newFiles]);
+    end
+
+    % \ -> /
+    files4listbox=strrep(files4listbox, '\', '/');
+
+    % set only filename (for clear view) to listbox string
+    set(handles.listbox_setInput_processList, 'String', files4listbox);
+
+    % save all selected sessions to handles struct
+    handles.allSelectedFiles=files4listbox;
+
+    % save changes to handles struct
+    guidata(hObject, handles);
+end
+
+
+% --- Executes on button press in pushbutton_setInput_browseForSessions.
+function pushbutton_setInput_browseForSessions_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_setInput_browseForSessions (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+[FileName, PathName] = uigetfile('*.*','Select VLBI sessions', '../DATA/NGS', 'multiselect', 'on');
+
+if ischar(FileName) || iscell(FileName)
+
+    FileName = cellstr(FileName);
+
+    fileWasChosen=1;
+
+    if isempty(FileName)
+        fileWasChosen=0;
+    elseif ~iscell(FileName)
+        if FileName == 0
+            fileWasChosen=0;
+        end
+    end
+
+    if fileWasChosen
+        % Distinguish between NGS and VSO (VieVS simple observation files) files:
+        if ~isempty(strfind(PathName, 'NGS'))
+            filetype_str = 'ngs';
+        elseif ~isempty(strfind(PathName, 'SIM')) || ~isempty(strfind(PathName, 'SCHED'))
+            % Check file name:
+            switch(FileName{1}(end-3:end))
+                case '.vso'
+                    filetype_str = 'vso';
+                otherwise % => NGS
+                    filetype_str = 'ngs';
+            end
+        elseif ~isempty(strfind(PathName, 'VSO'))
+            filetype_str = 'vso';
+        else
+            fileWasChosen = 0;
+            fprintf('ERROR: Invalid filepath for input data! Valid fileapths: <VieVS root>/DATA/NGS/, <VieVS root>/DATA/VSO/, <VieVS root>/DATA/SIM/ or <VieVS root>/DATA/SCHED/\n');
+        end
+    end % if fileWasChosen
+
+    if fileWasChosen
+
+        % make relative paths from PathName
+        switch(filetype_str)
+            case 'ngs'
+                subfolder_name_str = 'NGS';
+            case 'vso'
+                subfolder_name_str = 'VSO';
+                % Add ' [VSO]' to filename
+                for i = 1 : length(FileName)
+                    FileName{i} = [FileName{i}, ' [VSO]'];
+                end
+        end % switch(filetype_str)
+
+        % remove part until /DATA/<subfolder_name_str>/ from PathName
+        if ispc
+            indOfNGSfolder=strfind(PathName, ['DATA\', subfolder_name_str]) + 6 + length(subfolder_name_str);
+        else
+            indOfNGSfolder=strfind(PathName, ['DATA/', subfolder_name_str]) + 6 + length(subfolder_name_str);
+        end
+        if ~isempty(indOfNGSfolder)
+            PathName=PathName(indOfNGSfolder:end);
+        end
+
+        % get newly selected file(s) to one cellstr
+        newFiles=cellstr([(repmat(PathName, size(cellstr(FileName),2),1)), char(FileName)]);
+
+        % update listbox
+        updateInputFilesBox(hObject, eventdata,handles,newFiles)
+
+        
+    end
+    
+end
+
+
+% --- Executes on button press in pushbutton_setInput_clearProcList.
+function pushbutton_setInput_clearProcList_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_setInput_clearProcList (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% get current content of listbox
+curContent=get(handles.listbox_setInput_processList, 'String');
+
+if ~isempty(curContent)
+    % delete all selected entries entry
+    
+    curContent(get(handles.listbox_setInput_processList, 'Value'))=[];
+    
+    % get current value
+    curValue=get(handles.listbox_setInput_processList, 'Value');
+    
+    % set the current value either to the current value or to the latest
+    % (if the former latest was deleted). If no session is there anymore,
+    % take 1.
+    set(handles.listbox_setInput_processList, 'Value', ...
+        min([max(curValue), max(length(curContent),1)]));
+
+    % update listbox
+    set(handles.listbox_setInput_processList, 'String', curContent);
+
+    % and also save it to handles struct
+    handles.allSelectedFiles=curContent;
+
+    % save changes to handles struct
+    guidata(hObject, handles);
+end
+
+
+% --- Executes on selection change in popupmenu_selectL1.
+function popupmenu_selectL1_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_selectL1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_selectL1 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_selectL1
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_selectL1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_selectL1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox_runDownloadGIM.
+function checkbox_runDownloadGIM_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_runDownloadGIM (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_runDownloadGIM
+% save changes to handles struct
+    guidata(hObject, handles);
+
+% --- Executes on button press in checkbox_runComputeION.
+function checkbox_runComputeION_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_runComputeION (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_runComputeION
+% save changes to handles struct
+    guidata(hObject, handles);

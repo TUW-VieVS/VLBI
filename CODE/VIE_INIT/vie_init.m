@@ -259,6 +259,13 @@ switch(parameter.data_type)
 % antenna(1).program = out_struct.head.Program.val;
 % antenna(1).createdby = out_struct.head.CreatedBy.val;
 %%
+        fband = fb{:}(end);
+        flnm = ['RefFreq_b', fband];
+        if isfield(out_struct.Observables.(flnm),'RefFreq')
+            refFreq=double(out_struct.Observables.(flnm).RefFreq.val); %MHz
+        else
+            refFreq='missingInvgosDB';
+        end
 
         % test the clock break function
         % [scan, antenna] = ambiguityies_clockBreaks(scan, antenna);
@@ -361,6 +368,7 @@ switch(parameter.data_type)
         
 end % switch(parameter.data_type)
 
+parameter.vie_init.refFreq = refFreq;
 
 % ##### Write info to CW #####
 fprintf('\nA total of %d stations, %d quasars, %d satellites, %d scans and %d observations were found.\n', length(antenna), length(sources.q), length(sources.s), length(scan), length([scan.obs]));

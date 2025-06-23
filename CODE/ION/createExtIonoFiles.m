@@ -38,60 +38,34 @@
 %**************************************************************************
 
 
-function varargout=createExtIonoFiles(sessionName, ionSubDir, azelFile, ionoModel)
+function varargout=createExtIonoFiles(sessionName, ionSubDir, azelFile, ionoModel,L1SubDir,runDownloadGIM,runComputeION)
 
 % ##### Options: #####
-ref_freq_Hz = 8.4e9; % X-band (default)
+% ref_freq_Hz = 8.4e9; % X-band (default)
 % ref_freq_Hz = 1567e6; % L1
 % ref_freq_Hz = 24.0e9; % Kband
 
 % Status Msg.:
 fprintf('Creating ion. file for session: %s\n', sessionName);
-fprintf('Reference frequency =  %5.2f MHz \n', ref_freq_Hz * 1e-6);
-
-
-% Change ref. frequ. 
-flag_input_accepted = false;
-while(~flag_input_accepted)
-    input_str = input(' => Please enter "y" to take the default ref. frequ., or enter an alternative frequ. [MHz]:', 's');
-    switch(input_str)
-        case 'y'
-            fprintf('Reference frequency =  %5.2f MHz\n', ref_freq_Hz * 1e-6);
-            flag_input_accepted = true;
-        otherwise
-            [ref_freq_MHz, status] = str2num(input_str);
-            if status ~= 1
-                fprintf('       - ERROR: Invalid input: Only numbers allowed (or "y")!\n')
-            else
-                ref_freq_Hz = ref_freq_MHz * 1e6;
-                fprintf('Reference frequency =  %5.2f MHz\n', ref_freq_MHz);
-                flag_input_accepted = true;
-            end
-    end
-end % while(~flag_input_accepted)
-
 
 %~~~~~~~~~~~~~~~~~~~~~~~~ DEFINITIONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 % ##### Define filepaths #####
 % Output Ion. file:
 fidOutPath      = ['../ION/FILES/', ionSubDir, '/'];
 fidOutFile      = [sessionName, '.ion'];
+
+fidURLs=fopen([fidOutPath, '_urls.txt'],'a');
+
 % Ion. maps:
 ionoPath        = repmat('../ION/MAPS/', 2, 1);
 % Antenna structure in LEVEL1 directory (output from VIE_MOD)
-antPath         = '../DATA/LEVEL1/';
+antPath         = ['../DATA/LEVEL1/' L1SubDir '/'];
 antennaStruct   = [antPath, sessionName, '_antenna.mat'];
-
-% ##### add path to auxiliary code #####
-addpath('../ION/PROGRAM/auxiliary/');
 
 % ##### Get constants #####
 constants
 global c
 
-
-% ##### Init.: #####
-level1_subdir_str = '';
 
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~ FOLDERS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -123,73 +97,38 @@ end
 %~~~~~~~~~~~~~~~~~~~~~~~ LOAD ANTENNA STRUCT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 fprintf(' => Load antenna structure from LEVEL1 dir.: %s\n', [sessionName, '_antenna.mat']);
 
-if ~exist(antennaStruct, 'file')
-    
-    % #### Get directories, where the required antenna file is located: ####
-    antFoundFiles = dirr([antPath, '*', sessionName, '_antenna.mat']);
-    
-    % Check, if the antenna file was found:
-    if isempty(antFoundFiles)
-        errorMessage = 5;
-        varargout(1) = {errorMessage};
-        return;
-    end
-    
-    % #### In case of multiple results => User has to select the correct directory: ####
-    % Only one dir.:
-    if length(antFoundFiles) == 1
-        fprintf('   - antenna struct. found in dir.: %s\n', [antPath, antFoundFiles.name])
-        tempAntFoundFiles = antFoundFiles(1);
-        level1_subdir_str = tempAntFoundFiles.name;
-        
-        % Multiple directories:
-    else
-        fprintf('   - antenna struct. found in multiple directories.: %s\n', [antPath, antFoundFiles.name])
-        for i_tmp = 1 : length(antFoundFiles)
-            fprintf('      - %2d : %s\n',i_tmp, [antPath, antFoundFiles(i_tmp).name])
-        end
-        
-        % User has to select the LEVEL1 sub.-dir.:
-        flag_input_accepted = false;
-        while(~flag_input_accepted)
-            input_str = input('       => Please select the correct LEVEL1 sub-dir. (enter number):', 's');
-            [selected_dir, status] = str2num(input_str);
-            % ### Check input: ###
-            % Is a number?
-            if status ~= 1
-                fprintf('       - ERROR: Invalid input: Only numbers allowed!\n')
-            else
-                if (selected_dir < 1) || (selected_dir > length(antFoundFiles))
-                    fprintf('       - ERROR: Invalid input: Enter a number between 1 and %d!\n', length(antFoundFiles));
-                else
-                    flag_input_accepted = true;
-                    fprintf('       - Selected sub.-dir.: %s\n', antFoundFiles(selected_dir).name)
-                end
-            end
-        end % while(~flag_input_accepted)
-        tempAntFoundFiles = antFoundFiles(selected_dir);
-        level1_subdir_str = tempAntFoundFiles.name;
-    end
-    
-    % create new var just for search
-    antSearchSubFolder='/';
-    
-    while isstruct(tempAntFoundFiles)
-        antSearchSubFolder = [antSearchSubFolder, tempAntFoundFiles.name, '/'];
-        tempAntFoundFiles = tempAntFoundFiles.isdir;
-    end
-    
-    % delete '\' at end
-    antSearchSubFolder(end)=[];
-    
-    % define new antenna file
-    antennaStruct=[antPath, antSearchSubFolder];
-    
-else
-    antSearchSubFolder='';
-end
+
 % load antenna struct
-load(antennaStruct);
+load(antennaStruct); %antenna
+load([antennaStruct(1:end-11) 'parameter.mat']); %parameter
+
+
+
+ref_freq_Hz = parameter.vie_init.refFreq* 1e6; % Hz
+%ref_freq_Hz = 24.0e9; % Kband
+
+fprintf('Reference frequency =  %5.2f MHz \n', ref_freq_Hz * 1e-6);
+% Change ref. frequ. 
+% flag_input_accepted = false;
+flag_input_accepted = true;
+while(~flag_input_accepted)
+    input_str = input(' => Please enter "y" to take the default ref. frequ., or enter an alternative frequ. [MHz]:', 's');
+    switch(input_str)
+        case 'y'
+            fprintf('Reference frequency =  %5.2f MHz\n', ref_freq_Hz * 1e-6);
+            flag_input_accepted = true;
+        otherwise
+            [ref_freq_MHz, status] = str2num(input_str);
+            if status ~= 1
+                fprintf('       - ERROR: Invalid input: Only numbers allowed (or "y")!\n')
+            else
+                ref_freq_Hz = ref_freq_MHz * 1e6;
+                fprintf('Reference frequency =  %5.2f MHz\n', ref_freq_MHz);
+                flag_input_accepted = true;
+            end
+    end
+end % while(~flag_input_accepted)
+
 
 
 
@@ -212,7 +151,7 @@ if ~exist(azelFile, 'file')
     process_list = [year_str, '/', sessionName];
     
     % LEVEL1 sub.-dir.:
-    subdir_azel_str = level1_subdir_str;
+    subdir_azel_str = L1SubDir;
     
     % call azel_out.m to create azel file:
     azel_out(process_list, subdir_azel_str, path_azel_file_str)
@@ -271,79 +210,90 @@ curMjd(2,1) = floor(azel_data{2}(end));
 % define variable for not found ionex
 % currentfolder = pwd; %gets currently working directory
 
-% ionomodel can be set in start_createExtIonoFilesGUI.m line 265'
+% ionomodel can be set in start_createExtIonoFilesGUI.m line 151'
 
 for k = 1 : 2 % loop over 2 days
     yrdec = (yyDoySecod(k,1) + yyDoySecod(k,2)/365);
 
-
-    if strcmp(ionoModel, 'CODE') == 1 % if CODE map is being used
-        if yrdec < 2022+331/365 % old naming convention till 2022, doy 330
-            ionoFilename{k,1} = ['CODG', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'I']; 
-            sfx = '.Z';
-        else
-            ionoFilename{k,1} = ['COD0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_01H_GIM.INX']; % 1h time interval
-            sfx = '.gz';
-        end
-         %url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
-         url = ['http://ftp.aiub.unibe.ch/CODE/', num2str(curYr(k)), '/', ionoFilename{k,1}, sfx]; 
-
-    elseif strcmp(ionoModel, 'IGS') == 1 
-        if yrdec < 2022+331/365 % old naming convention till 2022, doy 330
-            ionoFilename{k,1}=['igsg', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
-            sfx = '.Z';
-        else
-            ionoFilename{k,1} = ['IGS0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_02H_GIM.INX']; % 2h interval
-            sfx = '.gz';
-        end
-        url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
+         if strcmp(ionoModel, 'CODE') == 1 % if CODE map is being used
+            if yrdec < 2022+331/365 % old naming convention till 2022, doy 330
+                ionoFilename{k,1} = ['CODG', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'I']; 
+                sfx = '.Z';
+            else
+                ionoFilename{k,1} = ['COD0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_01H_GIM.INX']; % 1h time interval
+                sfx = '.gz';
+            end
+             %url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
+             url = ['http://ftp.aiub.unibe.ch/CODE/', num2str(curYr(k)), '/', ionoFilename{k,1}, sfx]; 
     
-    elseif strcmp(ionoModel, 'ESA') == 1 % if ESA map is being used
-        if yrdec < 2022+331/365 % old naming convention till 2022, doy 330
-            ionoFilename{k,1}=['esag', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
+        elseif strcmp(ionoModel, 'IGS') == 1 
+            if yrdec < 2022+331/365 % old naming convention till 2022, doy 330
+                ionoFilename{k,1}=['igsg', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
+                sfx = '.Z';
+            else
+                ionoFilename{k,1} = ['IGS0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_02H_GIM.INX']; % 2h interval
+                sfx = '.gz';
+            end
+            url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
+        
+        elseif strcmp(ionoModel, 'ESA') == 1 % if ESA map is being used
+            if yrdec < 2022+331/365 % old naming convention till 2022, doy 330
+                ionoFilename{k,1}=['esag', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
+                sfx = '.Z';
+            elseif yrdec > 2022+330/365 && yrdec < 2023+36/365
+                ionoFilename{k,1} = ['ESA0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_02H_ION.IOX'];
+                sfx = '.gz';
+            else
+                ionoFilename{k,1} = ['ESA0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_02H_GIM.INX'];
+                sfx = '.gz';
+            end
+            url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
+    
+        elseif strcmp(ionoModel, 'UQR') == 1 % if UQR map is being used        
+            % stil old naming convention (checked 2023-07-28)
+            ionoFilename{k,1}=['uqrg', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
             sfx = '.Z';
-        elseif yrdec > 2022+330/365 && yrdec < 2023+36/365
-            ionoFilename{k,1} = ['ESA0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_02H_ION.IOX'];
-            sfx = '.gz';
-        else
-            ionoFilename{k,1} = ['ESA0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_02H_GIM.INX'];
-            sfx = '.gz';
+            url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
+    
+        elseif strcmp(ionoModel, 'EMR') == 1 % if EMR map is being used
+            if yrdec < 2023+64/365 % old naming convention
+                ionoFilename{k,1}=['emrg', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
+                sfx = '.Z';
+            else
+                ionoFilename{k,1} = ['EMR0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_01H_GIM.INX'];
+                sfx = '.gz';
+            end
+           url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
+        elseif strcmp(ionoModel, 'JPL') == 1 % if JPL map is being used
+            if yrdec < 2023+219/365 % old naming convention %3023...
+                ionoFilename{k,1}=['jplg', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
+                sfx = '.Z';
+            else
+                % !!! JPL changed only the compressed name to the new
+                % convention but the uncompressed is still the old one!!!
+                ionoFilename{k,1} = ['JPL0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_02H_GIM.INX'];
+                sfx = '.gz';
+            end
+           url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
+        
+        elseif strcmp(ionoModel, 'ETH') == 1 % if ETH (intern) map is being used
+            % stil old naming convention
+           ionoFilename{k,1}=['sf1g', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
+           %sfx = '.Z'; % not compressed
+           url=['private'];
+    
         end
-        url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
 
-    elseif strcmp(ionoModel, 'UQR') == 1 % if UQR map is being used        
-        % stil old naming convention (checked 2023-07-28)
-        ionoFilename{k,1}=['uqrg', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
-        sfx = '.Z';
-        url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
 
-    elseif strcmp(ionoModel, 'EMR') == 1 % if EMR map is being used
-        if yrdec < 2023+64/365 % old naming convention
-            ionoFilename{k,1}=['emrg', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
-            sfx = '.Z';
-        else
-            ionoFilename{k,1} = ['EMR0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_01H_GIM.INX'];
-            sfx = '.gz';
-        end
-       url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
 
-    elseif strcmp(ionoModel, 'JPL') == 1 % if JPL map is being used
-        % stil old naming convention (checked 2023-07-28)
-       ionoFilename{k,1}=['jplg', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
-       sfx = '.Z';
-       url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
+        
+    curIonoPath = [ionoPath(k,:), curYrStr(k,:), '/'];
+    if ~exist(curIonoPath, 'dir') % if directory does not exist, create it
+        mkdir(curIonoPath);
     end
 
-
-
-        
-        curIonoPath = [ionoPath(k,:), curYrStr(k,:), '/'];
-        if ~exist(curIonoPath, 'dir') % if directory does not exist, create it
-            mkdir(curIonoPath);
-        end
-
-        ionoFile{k,1} = [curIonoPath, ionoFilename{k,1}];
-        
+    ionoFile{k,1} = [curIonoPath, ionoFilename{k,1}];
+    if runDownloadGIM
         if ~exist(ionoFile{k,1}, 'file') % if the ionex file is not existing unzipped
             fprintf('%s TEC map file does not exist:            (%s)\n', ionoModel, ionoFile{k,1});
             zippedFile = [curIonoPath, ionoFilename{k,1}, sfx];
@@ -352,219 +302,227 @@ for k = 1 : 2 % loop over 2 days
 
                 if strcmp(ionoModel, 'CODE') == 1
                     urlwrite(url, zippedFile);
+                    %            untar('example/example.tar','example');
                     fprintf(' ...finished downloading.\n');
+
+                elseif strcmp(ionoModel, 'ETH') == 1
+                    fprintf('\n => Please, save the ETH iono file to %s: \n', [ionoPath(k,:), num2str(curYr(k)), '/']); % private
+                    
                 else
                     fprintf('\n => Please, download the file from CDDIS webpage to %s: \n', [ionoPath(k,:), num2str(curYr(k)), '/']); % download from CDDIS is not set
                     fprintf('%s\n', url);
+                    fprintf(fidURLs,  'curl -b ~/.urs_cookies -L -n %s -o %s;\n', url, [ionoFilename{k,1}, sfx])
                 end
+
 
             end
-             
-%             % write message to user to unzip manually (and return afterwards)
-%             fprintf('Zipped file (''%s'') was downloaded or already exists in\n''%s''\nPlease extract manually (to same folder)!\n\n', [ionoFilename{k,1}, '.Z or.gz'], [ionoPath(k,:), num2str(curYr(k)), '/'] );
-            
-             % User has to select the LEVEL1 sub.-dir.:
-            flag_input_accepted = false;
-            while(~flag_input_accepted)
-                input_str = input(' => Please enter "y" after uncrompressing the file to continue:', 's');
-                % ### Check input: ###
-                switch(input_str)
-                    case 'y'
-                        flag_input_accepted = true;
-                    otherwise
-                        fprintf('    - Error: Invalid input!')
-                end
-            end % while(~flag_input_accepted)
-%             cd(curIonoPath)
-%             unix(strcat(ionoFilename{k,1},'.Z uncompress ')); %uncompress
-%             delete(strcat(ionoFilename{k,1},'.Z'));
-%             cd(currentfolder)
-            
+
+    % %             % write message to user to unzip manually (and return afterwards)
+    % %             fprintf('Zipped file (''%s'') was downloaded or already exists in\n''%s''\nPlease extract manually (to same folder)!\n\n', [ionoFilename{k,1}, '.Z or.gz'], [ionoPath(k,:), num2str(curYr(k)), '/'] );
+    % 
+    %              % User has to select the LEVEL1 sub.-dir.:
+    %             flag_input_accepted = false;
+    %             while(~flag_input_accepted)
+    %                 input_str = input(' => Please enter "y" after uncrompressing the file to continue:', 's');
+    %                 % ### Check input: ###
+    %                 switch(input_str)
+    %                     case 'y'
+    %                         flag_input_accepted = true;
+    %                     otherwise
+    %                         fprintf('    - Error: Invalid input!')
+    %                 end
+    %             end % while(~flag_input_accepted)
+    % %             cd(curIonoPath)
+    % %             unix(strcat(ionoFilename{k,1},'.Z uncompress ')); %uncompress
+    % %             delete(strcat(ionoFilename{k,1},'.Z'));
+    % %             cd(currentfolder)
+                
         end
-
-end
-
-
-
-%~~~~~~~~~~~~~~~~~~~~~~~~~ READ IONEX FILES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-flag_ionex_files_equal = strcmp(ionoFile{1,1}, ionoFile{2,1});
-
-if flag_ionex_files_equal
-    fprintf('Reading IONEX file: %s\n', ionoFile{1,1});
-    io1 = ionex_read(ionoFile{1,1});
-    io2 = io1;
-else
-    fprintf('Reading IONEX files: %s and %s\n', ionoFile{1,1}, ionoFile{2,1});
-    io1 = ionex_read(ionoFile{1,1});
-    io2 = ionex_read(ionoFile{2,1});
-end
-
-
-%~~~~~~~~~~~~~~~~~~~~ ADD COLUMNS TO azel_data ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-% new column number to write antenna index
-newCol4azel = size(azel_data,2)+1;
-
-% all unique stations
-uniqueStat = unique(azel_data{8});
-
-for k = 1 : size(uniqueStat, 1)
-    % find this station in antenna struct, in vmf1Data cell
-    curAntIdx = find(~cellfun(@isempty, strfind({antenna.name}, uniqueStat{k})));
-    
-    % if station was not found in antenna struct
-    if isempty(curAntIdx)
-        errorMessage = 6;
-        varargout(1) = {errorMessage};
-        return;
     end
-    
-    % get rows where antenna-struct-index should be written to (rows of current stations)
-    rows2write = ~cellfun(@isempty, strfind(azel_data{8}, uniqueStat{k}));
-    
-    % write this one index to many lines (where thsi one station is)
-    azel_data{newCol4azel}(rows2write,1) = curAntIdx;
-    
-    % write x,y,z to following columns of azel
-    azel_data{newCol4azel+1}(rows2write,1) = antenna(curAntIdx).x;
-    azel_data{newCol4azel+2}(rows2write,1) = antenna(curAntIdx).y;
-    azel_data{newCol4azel+3}(rows2write,1) = antenna(curAntIdx).z;
-    
-    % write ellipsoidal lat, lon, h to azel
-    [lat,lon,h] = xyz2ell([antenna(curAntIdx).x, antenna(curAntIdx).y, antenna(curAntIdx).z]);
-    
-    azel_data{newCol4azel+4}(rows2write,1) = lat;
-    azel_data{newCol4azel+5}(rows2write,1) = lon;
-    azel_data{newCol4azel+6}(rows2write,1) = h;
 end
 
 
-%~~~~~~~~~~~~~~~~~~~ CALCULATION OF DELAY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fprintf('Calculating delays.\n');
+display('Uncompress the files in ../ION/MAPS/') 
 
-zenDist = pi/2-azel_data{10};
-elev = azel_data{10};
-
-
-% calculate coefficients
-b_tec_inter = -2*io1.radius*1000*cos(pi-zenDist);
-c_tec_inter = -((io1.hgt1*1000)^2+2*(io1.radius*1000)*(io1.hgt1*1000));
-d1          = (-b_tec_inter+sqrt(b_tec_inter.^2-4*c_tec_inter))/2;
-
-dren(:,1) = d1.*cos(zenDist);
-dren(:,2) = d1.*sin(zenDist).*sin(azel_data{9});
-dren(:,3) = d1.*sin(zenDist).*cos(azel_data{9});
-
-Incremento_xyz = ren2xyz(dren, azel_data{18}, azel_data{19});
-
-xipp = azel_data{15} + Incremento_xyz(:,1);
-yipp = azel_data{16} + Incremento_xyz(:,2);
-zipp = azel_data{17} + Incremento_xyz(:,3);
-
-% calculate latitude
-latpp           = zeros(size(zipp,1),1); % preallocate
-latpp(zipp>0)   = (pi/2-atan(sqrt(xipp(zipp>0).^2+yipp(zipp>0).^2)./zipp(zipp>0)));
-latpp(zipp<=0)  = pi/2-(pi+atan(sqrt(xipp(zipp<=0).^2+yipp(zipp<=0).^2)./zipp(zipp<=0)));
-
-% calculate longitude
-lonpp                   = zeros(size(zipp,1),1); % preallocate
-lonpp(xipp>0 & yipp>0)  = atan(yipp(xipp>0 & yipp>0)./xipp(xipp>0 & yipp>0));
-lonpp(xipp>0 & yipp<0)  = 2*pi+atan(yipp(xipp>0 & yipp<0)./xipp(xipp>0 & yipp<0));
-lonpp(xipp<=0)          = pi+atan(yipp(xipp<=0)./xipp(xipp<=0));
-
-% Convert in Grad
-latpp = latpp*180/pi;
-lonpp = lonpp*180/pi;
-
-lonpp(lonpp < -180) = lonpp(lonpp < -180)+360;
-lonpp(lonpp > 180)  = lonpp(lonpp > 180)-360;
-latpp(latpp < -90)  = -(180+latpp(latpp < -90));
-latpp(latpp > 90)   = 180-latpp(latpp > 90);
-
-% calculation of VTEC
-VTEC = zeros(size(azel_data{1},1),1); % preallocate
-
-% for all lines in azel (loop needed for interpolation function)
-for k = 1 : size(azel_data{1}, 1)         
-    if azel_data{4}(k) == azel_data{4}(1)
-        VTEC(k,1) = interpolation(io1, latpp(k), lonpp(k), azel_data{5}(k), azel_data{6}(k), azel_data{7}(k)); %doy
+if runComputeION 
+    %~~~~~~~~~~~~~~~~~~~~~~~~~ READ IONEX FILES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    flag_ionex_files_equal = strcmp(ionoFile{1,1}, ionoFile{2,1});
+    
+    if flag_ionex_files_equal
+        fprintf('Reading IONEX file: %s\n', ionoFile{1,1});
+        io1 = ionex_read(ionoFile{1,1});
+        io2 = io1;
     else
-        VTEC(k,1) = interpolation(io2, latpp(k), lonpp(k), azel_data{5}(k), azel_data{6}(k), azel_data{7}(k));
+        fprintf('Reading IONEX files: %s and %s\n', ionoFile{1,1}, ionoFile{2,1});
+        io1 = ionex_read(ionoFile{1,1});
+        io2 = ionex_read(ionoFile{2,1});
     end
-end
-
-
-'You can change parameters for the mapping function in CODE/IONO/createExtIonoFiles.m line 494'
-% Single Layer Model
-% dh = 0; %km
-% alpha = 1;
-% k = 1;
-
-% Modified Single Layer Model
-% http://ftp.aiub.unibe.ch/users/schaer/igsiono/doc/mslm.pdf
-% Petrov (2023), https://iopscience.iop.org/article/10.3847/1538-3881/acc174
-dh = 56.7 %km
-alpha = 0.9782
-kscale = 1; %0.85
-
-
-% calculation of M(zd), STEC
-Mzd                                 = zeros(size(azel_data{1},1),1);
-Mzd(azel_data{4}==azel_data{4}(1))  = kscale./(sqrt(1-((io1.radius/(io1.radius+io1.hgt1+dh)).*cos(alpha.*elev(azel_data{4}==azel_data{4}(1)))).^2));
-Mzd(azel_data{4}~=azel_data{4}(1))  = kscale./(sqrt(1-((io2.radius/(io2.radius+io2.hgt1+dh)).*cos(alpha.*elev(azel_data{4}~=azel_data{4}(1)))).^2));
-STEC                                = VTEC.*Mzd;
-
-% calculate delay
-ion =(40.28e16/ref_freq_Hz^2)*STEC/c; % [sec]
-
-
-%~~~~~~~~~~~~~~~~~~~~~~~~ WRITE .ION FILE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fprintf('Write ion. file: %s\n', [fidOutPath, fidOutFile]);
-
-% get dates for observations
-years2write     = zeros(size(azel_data{1},1),1);
-months2write    = years2write;
-days2write      = years2write;
-
-years2write(azel_data{4}==azel_data{4}(1))  = curYr(1,1);
-years2write(azel_data{4}~=azel_data{4}(1))  = curYr(2,1);
-months2write(azel_data{4}==azel_data{4}(1)) = month1st;
-months2write(azel_data{4}~=azel_data{4}(1)) = month2nd;
-days2write(azel_data{4}==azel_data{4}(1))   = day1st;
-days2write(azel_data{4}~=azel_data{4}(1))   = day2nd;
-
-% open file for writing
-fidOut=fopen([fidOutPath, fidOutFile], 'w');
-
-% write header information
-curClock = clock;
-fprintf(fidOut, '# IONOSPHERIC DELAY\n#\n# This file was created on: %02.0f.%02.0f.%0.0f (%02.0f:%02.0f:%02.0f)\n#\n# Session: %s\n# IONEX-Map used: %s\n# Ref. frequ = %5.2f MHz\n#\n#\n', curClock(3), curClock(2), curClock(1), curClock(4), curClock(5), curClock(6), sessionName, ionoModel, ref_freq_Hz*1e-6);
-fprintf(fidOut, '%s\n','#               X[m]		   Y[m]			  Z[m]	   geocLat(°) long(°)   ellHeight[m]');
-
-% write stations
-for stat = 1 : size(antenna, 2)
-    [lat,lon,h] = xyz2ell([antenna(stat).x, antenna(stat).y, antenna(stat).z]);
-    if lon < 0
-        lon = lon+2*pi;
+    
+    
+    %~~~~~~~~~~~~~~~~~~~~ ADD COLUMNS TO azel_data ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    % new column number to write antenna index
+    newCol4azel = size(azel_data,2)+1;
+    
+    % all unique stations
+    uniqueStat = unique(azel_data{8});
+    
+    for k = 1 : size(uniqueStat, 1)
+        % find this station in antenna struct, in vmf1Data cell
+        curAntIdx = find(~cellfun(@isempty, strfind({antenna.name}, uniqueStat{k})));
+        
+        % if station was not found in antenna struct
+        if isempty(curAntIdx)
+            errorMessage = 6;
+            varargout(1) = {errorMessage};
+            return;
+        end
+        
+        % get rows where antenna-struct-index should be written to (rows of current stations)
+        rows2write = ~cellfun(@isempty, strfind(azel_data{8}, uniqueStat{k}));
+        
+        % write this one index to many lines (where thsi one station is)
+        azel_data{newCol4azel}(rows2write,1) = curAntIdx;
+        
+        % write x,y,z to following columns of azel
+        azel_data{newCol4azel+1}(rows2write,1) = antenna(curAntIdx).x;
+        azel_data{newCol4azel+2}(rows2write,1) = antenna(curAntIdx).y;
+        azel_data{newCol4azel+3}(rows2write,1) = antenna(curAntIdx).z;
+        
+        % write ellipsoidal lat, lon, h to azel
+        [lat,lon,h] = xyz2ell([antenna(curAntIdx).x, antenna(curAntIdx).y, antenna(curAntIdx).z]);
+        
+        azel_data{newCol4azel+4}(rows2write,1) = lat;
+        azel_data{newCol4azel+5}(rows2write,1) = lon;
+        azel_data{newCol4azel+6}(rows2write,1) = h;
     end
-    fprintf(fidOut, '#  %-8s  %13.4f %13.4f %13.4f  %8.4f %8.4f %6.1f\n', antenna(stat).name, antenna(stat).x, antenna(stat).y, antenna(stat).z, lat*180/pi, lon*180/pi, h);
-end
-
-% write comment line
-fprintf(fidOut, '#\n#\n#\n#%s\n','                  Scan  YYYY.MM.DD-hh:mm:ss.s  Station   Azi(°)    Elev(°)  P(mbar) T[°C]  SlantPathDel(sec)');
-
-% write data lines to file
-for k = 1 : size(azel_data{1},1)
     
-    % make proper format of delay
-    totDelStr           = sprintf('%16.8d', ion(k));
-%     totDelStr(end-2)    = []; % Why removing the "-" ???????
     
-    fprintf(fidOut,  'O  %-16s%5.0f %4.0f.%02.0f.%02.0f-%02.0f:%02.0f:%04.1f  %-8s  %9.5f %8.5f  %6.1f %5.1f  %s\n', ['$',sessionName], azel_data{1}(k), years2write(k,1), months2write(k,1), days2write(k,1), azel_data{5}(k), azel_data{6}(k), azel_data{7}(k), azel_data{8}{k}, azel_data{9}(k)*180/pi, azel_data{10}(k)*180/pi, azel_data{13}(k), azel_data{12}(k), totDelStr);
+    %~~~~~~~~~~~~~~~~~~~ CALCULATION OF DELAY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    fprintf('Calculating delays.\n');
+    
+    zenDist = pi/2-azel_data{10};
+    elev = azel_data{10};
+    
+    
+    % calculate coefficients
+    b_tec_inter = -2*io1.radius*1000*cos(pi-zenDist);
+    c_tec_inter = -((io1.hgt1*1000)^2+2*(io1.radius*1000)*(io1.hgt1*1000));
+    d1          = (-b_tec_inter+sqrt(b_tec_inter.^2-4*c_tec_inter))/2;
+    
+    dren(:,1) = d1.*cos(zenDist);
+    dren(:,2) = d1.*sin(zenDist).*sin(azel_data{9});
+    dren(:,3) = d1.*sin(zenDist).*cos(azel_data{9});
+    
+    Incremento_xyz = ren2xyz(dren, azel_data{18}, azel_data{19});
+    
+    xipp = azel_data{15} + Incremento_xyz(:,1);
+    yipp = azel_data{16} + Incremento_xyz(:,2);
+    zipp = azel_data{17} + Incremento_xyz(:,3);
+    
+    % calculate latitude
+    latpp           = zeros(size(zipp,1),1); % preallocate
+    latpp(zipp>0)   = (pi/2-atan(sqrt(xipp(zipp>0).^2+yipp(zipp>0).^2)./zipp(zipp>0)));
+    latpp(zipp<=0)  = pi/2-(pi+atan(sqrt(xipp(zipp<=0).^2+yipp(zipp<=0).^2)./zipp(zipp<=0)));
+    
+    % calculate longitude
+    lonpp                   = zeros(size(zipp,1),1); % preallocate
+    lonpp(xipp>0 & yipp>0)  = atan(yipp(xipp>0 & yipp>0)./xipp(xipp>0 & yipp>0));
+    lonpp(xipp>0 & yipp<0)  = 2*pi+atan(yipp(xipp>0 & yipp<0)./xipp(xipp>0 & yipp<0));
+    lonpp(xipp<=0)          = pi+atan(yipp(xipp<=0)./xipp(xipp<=0));
+    
+    % Convert in Grad
+    latpp = latpp*180/pi;
+    lonpp = lonpp*180/pi;
+    
+    lonpp(lonpp < -180) = lonpp(lonpp < -180)+360;
+    lonpp(lonpp > 180)  = lonpp(lonpp > 180)-360;
+    latpp(latpp < -90)  = -(180+latpp(latpp < -90));
+    latpp(latpp > 90)   = 180-latpp(latpp > 90);
+    
+    % calculation of VTEC
+    VTEC = zeros(size(azel_data{1},1),1); % preallocate
+    
+    % for all lines in azel (loop needed for interpolation function)
+    for k = 1 : size(azel_data{1}, 1)         
+        if azel_data{4}(k) == azel_data{4}(1)
+            VTEC(k,1) = interpolation(io1, latpp(k), lonpp(k), azel_data{5}(k), azel_data{6}(k), azel_data{7}(k)); %doy
+        else
+            VTEC(k,1) = interpolation(io2, latpp(k), lonpp(k), azel_data{5}(k), azel_data{6}(k), azel_data{7}(k));
+        end
+    end
+    
+    
+    % Single Layer Model
+    % dh = 0; %km
+    % alpha = 1;
+    % k = 1;
+    
+    % Modified Single Layer Model
+    % http://ftp.aiub.unibe.ch/users/schaer/igsiono/doc/mslm.pdf
+    % Petrov (2023), https://iopscience.iop.org/article/10.3847/1538-3881/acc174
+    dh = 56.7; %km
+    alpha = 0.9782;
+    kscale = 1; %0.85
+    
+    
+    % calculation of M(zd), STEC
+    Mzd                                 = zeros(size(azel_data{1},1),1);
+    Mzd(azel_data{4}==azel_data{4}(1))  = kscale./(sqrt(1-((io1.radius/(io1.radius+io1.hgt1+dh)).*cos(alpha.*elev(azel_data{4}==azel_data{4}(1)))).^2));
+    Mzd(azel_data{4}~=azel_data{4}(1))  = kscale./(sqrt(1-((io2.radius/(io2.radius+io2.hgt1+dh)).*cos(alpha.*elev(azel_data{4}~=azel_data{4}(1)))).^2));
+    STEC                                = VTEC.*Mzd;
+    
+    % calculate delay
+    ion =(40.28e16/ref_freq_Hz^2)*STEC/c; % [sec]
+    
+    
+    %~~~~~~~~~~~~~~~~~~~~~~~~ WRITE .ION FILE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    fprintf('Write ion. file: %s\n', [fidOutPath, fidOutFile]);
+    
+    % get dates for observations
+    years2write     = zeros(size(azel_data{1},1),1);
+    months2write    = years2write;
+    days2write      = years2write;
+    
+    years2write(azel_data{4}==azel_data{4}(1))  = curYr(1,1);
+    years2write(azel_data{4}~=azel_data{4}(1))  = curYr(2,1);
+    months2write(azel_data{4}==azel_data{4}(1)) = month1st;
+    months2write(azel_data{4}~=azel_data{4}(1)) = month2nd;
+    days2write(azel_data{4}==azel_data{4}(1))   = day1st;
+    days2write(azel_data{4}~=azel_data{4}(1))   = day2nd;
+    
+    % open file for writing
+    fidOut=fopen([fidOutPath, fidOutFile], 'w');
+    
+    % write header information
+    curClock = clock;
+    fprintf(fidOut, '# IONOSPHERIC DELAY\n#\n# This file was created on: %02.0f.%02.0f.%0.0f (%02.0f:%02.0f:%02.0f)\n#\n# Session: %s\n# IONEX-Map used: %s\n# Ref. frequ = %5.2f MHz\n#\n#\n', curClock(3), curClock(2), curClock(1), curClock(4), curClock(5), curClock(6), sessionName, ionoModel, ref_freq_Hz*1e-6);
+    fprintf(fidOut, '%s\n','#               X[m]		   Y[m]			  Z[m]	   geocLat(°) long(°)   ellHeight[m]');
+    
+    % write stations
+    for stat = 1 : size(antenna, 2)
+        [lat,lon,h] = xyz2ell([antenna(stat).x, antenna(stat).y, antenna(stat).z]);
+        if lon < 0
+            lon = lon+2*pi;
+        end
+        fprintf(fidOut, '#  %-8s  %13.4f %13.4f %13.4f  %8.4f %8.4f %6.1f\n', antenna(stat).name, antenna(stat).x, antenna(stat).y, antenna(stat).z, lat*180/pi, lon*180/pi, h);
+    end
+    
+    % write comment line
+    fprintf(fidOut, '#\n#\n#\n#%s\n','                  Scan  YYYY.MM.DD-hh:mm:ss.s  Station   Azi(°)    Elev(°)  P(mbar) T[°C]  SlantPathDel(sec)');
+    
+    % write data lines to file
+    for k = 1 : size(azel_data{1},1)
+        
+        % make proper format of delay
+        totDelStr           = sprintf('%16.8d', ion(k));
+    %     totDelStr(end-2)    = []; % Why removing the "-" ???????
+        
+        fprintf(fidOut,  'O  %-16s%5.0f %4.0f.%02.0f.%02.0f-%02.0f:%02.0f:%04.1f  %-8s  %9.5f %8.5f  %6.1f %5.1f  %s\n', ['$',sessionName], azel_data{1}(k), years2write(k,1), months2write(k,1), days2write(k,1), azel_data{5}(k), azel_data{6}(k), azel_data{7}(k), azel_data{8}{k}, azel_data{9}(k)*180/pi, azel_data{10}(k)*180/pi, azel_data{13}(k), azel_data{12}(k), totDelStr);
+    end
+    
+    % close file
+    fclose all;
 end
-
-% close file
-fclose all;
-
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
