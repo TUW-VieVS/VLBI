@@ -9267,7 +9267,7 @@ set(handles.pushbutton_parameters_iono_create, 'Enable', 'off')
 auto_save_parameterfile(hObject, handles)
 
 % add folder to path
-addpath('../ION/PROGRAM/GUI/');
+%addpath('../ION/PROGRAM/GUI/');
 
 % open GUI to create external ionospheric files
 start_createExtIonoFilesGUI

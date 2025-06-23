@@ -32,6 +32,7 @@ function [scan, sources, antenna]=cleanScan(scan, sources, antenna, parameter)
 
 %% Options
 flag_pring_debug_info = false;
+nocablegeneral = false;
 
 %% Precalculations
 nScans = size(scan,2);
@@ -88,6 +89,22 @@ end
 %% Clean scan struct
 
 % (1a) No cable calibration
+
+if scan(1).mjd>58181 & nocablegeneral
+    disp('no cable cal for VLBA since 2018-Mar-04')
+    parameter.opt.options.no_cab = [parameter.opt.options.no_cab;
+    'BR-VLBA '
+    'FD-VLBA '
+    'HN-VLBA '
+    'KP-VLBA '
+    'LA-VLBA '
+    'MK-VLBA '
+    'NL-VLBA '
+    'OV-VLBA '
+    'PIETOWN '
+    'SC-VLBA '];
+end
+
 if ~isempty(parameter.opt.options.no_cab)
     
     % get antenna numbers

@@ -2,33 +2,42 @@ function [erg] = ionex_read(pname)
 % Read IONEX-files
 
 url=fopen(strcat(pname));
-while (1)
- txt=fgetl(url);
- chk=strfind(txt,'EPOCH OF FIRST MAP');
- if ~isempty(chk)
-     break
- end
-end
-zwi.start_year=str2double(txt(1:6));
-zwi.start_month=str2double(txt(7:12));
-zwi.start_day=str2double(txt(13:18));
-zwi.start_hour=str2double(txt(19:24));
-zwi.start_minute=str2double(txt(25:30));
-zwi.start_second=str2double(txt(31:36));
+% while (1)
+%  txt=fgetl(url);
+%  chk=strfind(txt,'EPOCH OF FIRST MAP');
+%  if ~isempty(chk)
+%      break
+%  end
+% end
+% zwi.start_year=str2double(txt(1:6));
+% zwi.start_month=str2double(txt(7:12));
+% zwi.start_day=str2double(txt(13:18));
+% zwi.start_hour=str2double(txt(19:24));
+% zwi.start_minute=str2double(txt(25:30));
+% zwi.start_second=str2double(txt(31:36));
+% 
+% while (1)
+%  txt=fgetl(url);
+%  chk=strfind(txt,'EPOCH OF LAST MAP');
+%  if ~isempty(chk)
+%      break
+%  end
+% end
+% zwi.end_year=str2double(txt(1:6));
+% zwi.end_month=str2double(txt(7:12));
+% zwi.end_day=str2double(txt(13:18));
+% zwi.end_hour=str2double(txt(19:24));
+% zwi.end_minute=str2double(txt(25:30));
+% zwi.end_second=str2double(txt(31:36));
+% 
 
-while (1)
- txt=fgetl(url);
- chk=strfind(txt,'EPOCH OF LAST MAP');
- if ~isempty(chk)
-     break
- end
-end
-zwi.end_year=str2double(txt(1:6));
-zwi.end_month=str2double(txt(7:12));
-zwi.end_day=str2double(txt(13:18));
-zwi.end_hour=str2double(txt(19:24));
-zwi.end_minute=str2double(txt(25:30));
-zwi.end_second=str2double(txt(31:36));
+
+
+
+% zwi.interval = 3600 %ETH
+% zwi.number_of_maps = 25 %ETH
+
+
 
 while (1)
  txt=fgetl(url);
@@ -49,23 +58,29 @@ while (1)
 end
 zwi.number_of_maps=str2double(txt(1:6));
 
-while (1)
- txt=fgetl(url);
- chk=strfind(txt,'MAPPING FUNCTION');
- if ~isempty(chk)
-     break
- end
-end
-zwi.mapping_function=txt(3:6);
 
-while (1)
- txt=fgetl(url);
- chk=strfind(txt,'ELEVATION CUTOFF');
- if ~isempty(chk)
-     break
- end
-end
-zwi.cutoff=str2double(txt(1:8));
+
+
+
+
+
+% while (1)
+%  txt=fgetl(url);
+%  chk=strfind(txt,'MAPPING FUNCTION');
+%  if ~isempty(chk)
+%      break
+%  end
+% end
+% zwi.mapping_function=txt(3:6);
+% 
+% while (1)
+%  txt=fgetl(url);
+%  chk=strfind(txt,'ELEVATION CUTOFF');
+%  if ~isempty(chk)
+%      break
+%  end
+% end
+% zwi.cutoff=str2double(txt(1:8));
 
 while (1)
  txt=fgetl(url);
@@ -76,14 +91,14 @@ while (1)
 end
 zwi.radius=str2double(txt(1:8));
 
-while (1)
- txt=fgetl(url);
- chk=strfind(txt,'MAP DIMENSION');
- if ~isempty(chk)
-     break
- end
-end
-zwi.map_dimension=str2double(txt(1:6));
+% while (1)
+%  txt=fgetl(url);
+%  chk=strfind(txt,'MAP DIMENSION');
+%  if ~isempty(chk)
+%      break
+%  end
+% end
+% zwi.map_dimension=str2double(txt(1:6));
 
 while (1)
  txt=fgetl(url);
@@ -138,6 +153,8 @@ while (1)
      break
  end
 end
+
+
 
 % starts reading VTEC maps
 karten=[];
