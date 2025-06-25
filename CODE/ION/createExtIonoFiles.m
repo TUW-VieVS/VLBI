@@ -104,7 +104,7 @@ load([antennaStruct(1:end-11) 'parameter.mat']); %parameter
 
 
 
-ref_freq_Hz = parameter.vie_init.refFreq* 1e6; % Hz
+ref_freq_Hz = parameter.vie_init.refFreq(1)* 1e6; % Hz
 %ref_freq_Hz = 24.0e9; % Kband
 
 fprintf('Reference frequency =  %5.2f MHz \n', ref_freq_Hz * 1e-6);

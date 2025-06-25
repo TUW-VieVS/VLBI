@@ -732,14 +732,14 @@ for iSc = 1:number_of_all_scans
         end 
         
         % further corrections (same for both models (Sekido & Fukushima, p.141))
-        [a_ngr, a_egr, scan, antenna, tau]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tau, cell_grid_GPT3);
+        [a_ngr, a_egr, scan, antenna, tau]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tau, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
         
-        [~, ~, ~, ~, tauC_KepEle1]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle1, cell_grid_GPT3);
-        [~, ~, ~, ~, tauC_KepEle2]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle2, cell_grid_GPT3);
-        [~, ~, ~, ~, tauC_KepEle3]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle3, cell_grid_GPT3);
-        [~, ~, ~, ~, tauC_KepEle4]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle4, cell_grid_GPT3);
-        [~, ~, ~, ~, tauC_KepEle5]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle5, cell_grid_GPT3);
-        [~, ~, ~, ~, tauC_KepEle6]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle6, cell_grid_GPT3);
+        [~, ~, ~, ~, tauC_KepEle1]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle1, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
+        [~, ~, ~, ~, tauC_KepEle2]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle2, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
+        [~, ~, ~, ~, tauC_KepEle3]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle3, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
+        [~, ~, ~, ~, tauC_KepEle4]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle4, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
+        [~, ~, ~, ~, tauC_KepEle5]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle5, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
+        [~, ~, ~, ~, tauC_KepEle6]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle6, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
 
         scan(iSc).obs(iobs).comCKepEle1 = tauC_KepEle1; %[sec]
         scan(iSc).obs(iobs).comCKepEle2 = tauC_KepEle2; %[sec]

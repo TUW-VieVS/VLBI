@@ -9,6 +9,18 @@ function backsol_eoxy_nutmidses(pathGS,path_outglob,DIROUT,DIRIN)
 
 pthL2 = pathGS.path_in; % ../DATA/LEVEL2/
 
+
+
+% DIRIN = ' ';
+% DIROUT = ' ';
+% pthL2 ='../DATA/LEVEL2/'
+% path_outglob= '../OUT/GLOB/'
+
+
+
+
+
+
 curDate=clock;          % current date and time
 % writeFormat='%12.6f%10.7f%10.7f%11.8f%7.4f%7.4f%10.7f%10.7f%11.8f%9.4f%9.4f %8.2f %9.0f%10.0f%10.0f%10.0f %6.0f %8s %7.2f %10.0f%11.0f%12.0f%8.0f%8.0f%11.0f%11.0f%12.0f%8.0f%8.0f     %s\n';
 writeFormat='%12.6f%11.7f%11.7f%12.8f%8.4f%8.4f%11.7f%11.7f%12.8f%10.4f%10.4f %8.2f %9.0f%10.0f%10.0f%10.0f %6.0f %16s %7.2f %10.0f%11.0f%12.0f%8.0f%8.0f%11.0f%11.0f%12.0f%8.0f%8.0f     %s\n';
@@ -165,6 +177,16 @@ for ifile = 1:2
         end
     
         
+
+
+      'backsol_eoxy_nutmidses.m, l 170'
+        superstations(270).code=' Ku'
+        superstations(271).code=' Ky'
+        superstations(272).code=' Kt'
+
+
+
+
         % stations in the session
         ant = {glob2.opt.stat.name};
         ancode=[''];
