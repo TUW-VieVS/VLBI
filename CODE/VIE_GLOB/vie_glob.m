@@ -111,8 +111,9 @@ path_level='../';
 
 rms_check = 0;
 del_ses = 0;
+flname_del_ses='bad_ses.txt';
 special_EOP = 0;
-special_EOP_file = 'EOP.txt'; % format NGS: 18AUG08XA_N005, format vgosDB: 19AUG12XA
+special_EOP_file = 'fix_EOP.txt';
 urumqi13aprbreak = false;
 
 % % Read which parametres are to be estimated ('paramGS.m')
@@ -367,9 +368,7 @@ end
 
 bad=[];
 if del_ses
-    flname='../DATA/GLOB/bad_ses_rms5_nan.txt' % solution with vgos
-%    flname='../DATA/GLOB/bad_ses_rms5_nan_allVGOS.txt' % sx solution
-    fileID = fopen(flname);
+    fileID = fopen(flname_del_ses);
     badzwd = textscan(fileID,'%s ','CommentStyle','%');
     fclose(fileID);
     
@@ -1207,9 +1206,11 @@ varpar=full(varpar);
 
 %%
 if urumqi13aprbreak
-'vie_glob line 1209!!!: VGOS URUMQI13 - apriori break'
-idab=strcmp(deblank({refantbr.name}),'URUMQI13');
-refantbr(idab).break_apr = [0 99999];
+    'vie_glob line 1209!!!: VGOS URUMQI13 - apriori break'
+    idab=strcmp(deblank({refantbr.name}),'URUMQI13');
+    if sum(idab)>0
+        refantbr(idab).break_apr = [0 99999];
+    end
 end
 
 eb=[];
