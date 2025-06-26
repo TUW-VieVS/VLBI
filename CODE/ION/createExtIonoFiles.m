@@ -281,7 +281,18 @@ for k = 1 : 2 % loop over 2 days
            ionoFilename{k,1}=['sf1g', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
            %sfx = '.Z'; % not compressed
            url=['private'];
-    
+
+        elseif strcmp(ionoModel, 'CAS') == 1 % if CAS map is being used
+            if yrdec < 2023+219/365 % old naming convention ... %% HAS TO BE CHECKED
+                ionoFilename{k,1}=['casg', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
+                sfx = '.Z';
+            else
+                % !!! JPL changed only the compressed name to the new
+                % convention but the uncompressed is still the old one!!!
+                ionoFilename{k,1} = ['CAS0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_30M_GIM.INX'];
+                sfx = '.gz';
+            end
+           url=['private'];
         end
 
 
