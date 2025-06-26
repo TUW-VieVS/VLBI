@@ -179,10 +179,10 @@ for ifile = 1:2
         
 
 
-      'backsol_eoxy_nutmidses.m, l 170'
-        superstations(270).code=' Ku'
-        superstations(271).code=' Ky'
-        superstations(272).code=' Kt'
+      % 'backsol_eoxy_nutmidses.m, l 170'
+      %   superstations(270).code=' Ku'
+      %   superstations(271).code=' Ky'
+      %   superstations(272).code=' Kt'
 
 
 

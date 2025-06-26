@@ -148,8 +148,14 @@ set(handles.popupmenu_selectL1, 'String', {dirsInOptFolder.name})
 %     %listbox3_content=get(handles.listbox_3, 'String');
 % end
 
- newPopupmenuEntriesSelectIonoModel = {'CODE', 'EMR','ESA','IGS', 'JPL','UQR','ETH'};
- set(handles.popupmenu_SelectIonoModel, 'String', newPopupmenuEntriesSelectIonoModel);
+
+
+% get ION/MAPS content
+dirsInIonoMFolder=dir('../ION/MAPS/');
+dirsInIonoMFolder(strcmp({dirsInIonoMFolder.name}, '.')|strcmp({dirsInIonoMFolder.name}, '..')|strcmp({dirsInIonoMFolder.name}, '.git')|~[dirsInIonoMFolder.isdir])=[];
+% set new entries for popup menu
+ %newPopupmenuEntriesSelectIonoModel = {'CODE', 'EMR','ESA','IGS', 'JPL','UQR','ETH','CAS'};
+ set(handles.popupmenu_SelectIonoModel, 'String', {dirsInIonoMFolder.name});
 
 
 % Save the change you made to the structure
