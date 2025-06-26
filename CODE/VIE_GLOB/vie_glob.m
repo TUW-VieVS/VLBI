@@ -116,6 +116,7 @@ special_EOP = 0;
 special_EOP_file = 'EOPsmallnet_vie2024b.txt'; % format NGS: 18AUG08XA_N005, format vgosDB: 19AUG12XA
 urumqi13aprbreak = false; %true for vgos
 
+
 % % Read which parametres are to be estimated ('paramGS.m')
 % guiglob
 % uiwait(guiglob)
