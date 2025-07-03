@@ -156,7 +156,7 @@ if nargin>9
             optFiles=varargin{10}{4};
             optFilesGiven=1;
         end
-        if ~isempty(varargin{10}{5})
+        if size(varargin{10},2)>4 && ~isempty(varargin{10}{5})
             resFiles=varargin{10}{5};
             resFilesGiven=1;
         end
