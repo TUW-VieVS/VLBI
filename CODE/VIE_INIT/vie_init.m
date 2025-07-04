@@ -331,7 +331,9 @@ switch(parameter.data_type)
         else
             [antenna,sources,scan] = read_ngs(['../DATA/' obs_file_dir '/' obs_file_name], trffile, crffile, ini_opt, trf, crf,sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type);
         end
-        fprintf('...reading the NGS file finished!\n');      
+        fprintf('...reading the NGS file finished!\n');   
+
+        refFreq='missingInvgosDB';
 
     % #############################
     % #####     VSO           #####

@@ -22,7 +22,7 @@ function varargout = vie_setup(varargin)
 
 % Edit the above text to modify the response to help vie_setup
 
-% Last Modified by GUIDE v2.5 28-Apr-2025 15:51:20
+% Last Modified by GUIDE v2.5 04-Jul-2025 18:04:39
 
 % 07 Jan 2014 by Matthias Madzak: LEVEL2 bug corrected
 % 27 Jan 2014 by Hana Krasna: icrf2nonVCS set to default
@@ -567,7 +567,11 @@ RGB = cat(3,R,G,B);
 
 imshow(RGB)
 
+% Write current year to field for download period
+handles.edit_downloadData_period.String = sprintf('%s',num2str(year(datetime)));
+
 try
+    
     [status_hash,hash] = system('git rev-parse --short HEAD');
     hash = strtrim(hash);
     [status_tag,tag] = system('git describe --abbrev=0');
@@ -665,7 +669,7 @@ function menu_file_setInputFiles_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% set all uipanels to invisibel
+% set all uipanels to invisible
 setAllPanelsToInvisible(hObject, handles)
 
 % set the one panel to visible
@@ -674,14 +678,17 @@ set(handles.uipanel_file_setInputFiles, 'Visible', 'On');
 % Update handles structure
 guidata(hObject, handles);
 
-
 % --------------------------------------------------------------------
-function menu_file_exit_Callback(hObject, eventdata, handles)
-% hObject    handle to menu_file_exit (see GCBO)
+function menu_file_welcome_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_file_welcome (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-close(handles.figure_vievs2);
+% set all uipanels to invisible
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_welcome, 'Visible', 'On');
 
 % --------------------------------------------------------------------
 function menu_file_parameterFiles_loadDefaults_Callback(hObject, eventdata, handles)
@@ -12712,12 +12719,6 @@ if updatePopupmenu==1
     end
     
 end %update popupmenu
-% save parameter file automatically 
-auto_save_parameterfile(hObject, handles)
-
-
-
-
 
 
 
@@ -12742,3 +12743,43 @@ function popupmenu_removeStatDatum_file_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+function edit_downloadData_period_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_downloadData_period (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_downloadData_period as text
+%        str2double(get(hObject,'String')) returns contents of edit_downloadData_period as a double
+
+% --- Executes during object creation, after setting all properties.
+function edit_downloadData_period_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_downloadData_period (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes on button press in pushbutton_downloadData.
+function pushbutton_downloadData_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_downloadData (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+downloadDataFiles(handles);
+
+
+% save parameter file automatically 
+auto_save_parameterfile(hObject, handles)
+
+
+% --------------------------------------------------------------------
+function menu_exit_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_exit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+close(handles.figure_vievs2);
