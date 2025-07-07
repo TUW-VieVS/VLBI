@@ -387,7 +387,12 @@ else
     set(handles.popupmenu_parameters_statCorr_ntrl, 'String', {dirsInNtrlFolder.name});
 end
 set(handles.popupmenu_parameters_eop_aPriori_other, 'String', {dirsInEopFolder.name})
-set(handles.popupmenu_parameters_eop_aPriori_C04, 'String', {C04InEopFolder.name})
+if ~isempty({C04InEopFolder.name})
+    set(handles.popupmenu_parameters_eop_aPriori_C04, 'String', {C04InEopFolder.name})
+else
+    handles.popupmenu_parameters_eop_aPriori_C04.String = 'C04_20_1962_now.txt';
+    msgbox('The chosen C04 EOP file is not available in the EOP directory! Go to Welcome panel and press Download!','No C04 file!');
+end
 set(handles.popupmenu_parameters_eop_oceanTideModel, 'String', [{dirsInEophfFolder.name},'interpf (Conventions)','Combi_IGG_Bonn'])
 set(handles.popupmenu_plot_folder1_subfolder, 'String', ['/', {dirsInDataFolder.name}])
 set(handles.popupmenu_plot_folder2_subfolder, 'String', ['/', {dirsInDataFolder.name}])

@@ -70,7 +70,7 @@ function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, paramet
     end
 
     % ##### Get EOP epochs #####
-    % - Observation eopochs +5 days in beginning and end of time series
+    % - Observation epochs +5 days in beginning and end of time series
     mjd_min = floor(min(MJD)) - 5;
     mjd_max = ceil(max(MJD)) + 5;
 
@@ -83,7 +83,7 @@ function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, paramet
             % Open file:
             fid = fopen(eop_file_str);
             if fid == -1
-                error('Failed to open EOP file: %s\n', eop_file_str);
+                error('Failed to open EOP file: %s, go to Welcome panel and press Download!\n', eop_file_str);
             end
 
             % Read data:
@@ -97,7 +97,7 @@ function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, paramet
             mjd_ind = (mjd >= mjd_min) & (mjd <= mjd_max);
 
             % Check, if EOP data is available for the observation epochs:
-            if sum(mjd >= mjd_max) == 0
+            if sum(mjd_ind) < 11
                 error('No EOP data available for observation epochs (+-5 days for interpolation)! EOP file: %s', eop_file_str);
             end
 
@@ -125,7 +125,7 @@ function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, paramet
             % Open file:
             fid = fopen(eop_file_str);
             if fid == -1
-                error('Failed to open EOP file: %s\n', eop_file_str);
+                error('Failed to open EOP file: %s, go to Welcome panel and press Download!\n', eop_file_str);
             end
 
             % Read data:
@@ -140,7 +140,7 @@ function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, paramet
 
   
             % Check, if EOP data is available for the observation epochs:
-            if sum(mjd >= mjd_max) == 0
+            if sum(mjd_ind) < 11
                 error('No EOP data available for observation epochs (+-5 days for interpolation)! EOP file: %s', eop_file_str);
             end
 
@@ -169,7 +169,7 @@ function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, paramet
             % Open file:
             fid = fopen(eop_file_str);
             if fid == -1
-                error('Failed to open EOP file: %s\n', eop_file_str);
+                error('Failed to open EOP file: %s, go to Welcome panel and press Download!\n', eop_file_str);
             end
 
             % Read data:
@@ -183,7 +183,7 @@ function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, paramet
             mjd_ind = (mjd >= mjd_min) & (mjd <= mjd_max);
 
             % Check, if EOP data is available for the observation epochs:
-            if sum(mjd >= mjd_max) == 0
+            if sum(mjd_ind) < 11
                 error('No EOP data available for observation epochs (+-5 days for interpolation)! EOP file: %s', eop_file_str);
             end
 
@@ -229,7 +229,7 @@ function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, paramet
             % Open file:
             fid = fopen(eop_file_str);
             if fid == -1
-                error('Failed to open EOP file: %s\n', eop_file_str);
+                error('Failed to open EOP file: %s, go to Welcome panel and press Download!\n', eop_file_str);
             end
 
             % Read data:
@@ -243,7 +243,7 @@ function [mjd, xp_rad, yp_rad, dut1_sec, dX_rad, dY_rad] = load_eop(MJD, paramet
             mjd_ind = (mjd >= mjd_min) & (mjd <= mjd_max);
 
             % Check, if EOP data is available for the observation epochs:
-            if sum(mjd >= mjd_max) == 0
+            if sum(mjd_ind) < 11
                 error('No EOP data available for observation epochs (+-5 days for interpolation)! EOP file: %s', eop_file_str);
             end
 

@@ -33,7 +33,7 @@ try
     finfile = '../EOP/finals_all_IAU2000.txt';
     finurl = 'https://maia.usno.navy.mil/ser7/finals2000A.daily.extended';
     websave(finfile, finurl);
-    fprintf('\nEOP files successfully written to ../EOP/\n');
+    fprintf('\nEOP files successfully written to ../EOP/\n.');
 catch
     warning('There was a problem with your EOP download!');
 end
