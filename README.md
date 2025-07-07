@@ -50,7 +50,7 @@ Please be aware that this repository contains more or less only the program code
 
 ### Data download button in Graphical User Interface (GUI)
 * Since 2025-07-07 all data files necessary or recommended for standard processing can be downloaded with one button press directly from the Welcome panel. These are EOP files (finals, C04, JPL), mapping function files (VMF3), and non-tidal atmospheric loading files (NTAL/VIE).
-* Usage: go to the Welcome panel (it appears when you start VieVS-VLBI and you can go back to it via the menu: *File* &#10148; *Welcome panel* ), enter the required year or time range into the input field and press <kbd>Download<kbd> .
+* Usage: go to the Welcome panel (it appears when you start VieVS-VLBI and you can go back to it via the menu: *File* &#10148; *Welcome panel* ), enter the required year or time range into the input field and press <kbd>Download</kbd>.
 * The files are renamed and downloaded to the correct directories (those described below) automatically.
 * Data from CDDIS (vgosDB, master files,...) cannot be downloaded automatically because they require an Earthdata Login.
 * If you want to use VMF1, gradients, or ray-traced delays follow the instructions below.
