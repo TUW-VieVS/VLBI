@@ -43,10 +43,17 @@ If your main directory is called 'VieVS' for example, your folder structure shou
 Please be aware that this repository contains more or less only the program code. The data files necessary for processing have to be downloaded from external sources.
 
 ### Observation data
-* Please note: in order to access the data achive of CDDIS you need an Earthdata Login as described here https://cddis.nasa.gov/Data_and_Derived_Products/CDDIS_Archive_Access.html.
+* Please note: in order to access the data achive of CDDIS you need an Earthdata Login as described here https://www.earthdata.nasa.gov/centers/cddis-daac/archive-access.
 * NGS can be downloaded for example from https://cddis.nasa.gov/archive/vlbi/ivsdata/ngs/ and have to be stored in year folders (NGS-files have to be uncompressed): `/VLBI/DATA/NGS/yyyy/`
 * vgosDB can be downloaded from https://cddis.nasa.gov/archive/vlbi/ivsdata/vgosdb/ and have to be stored in year folders as you download them (compressed tar files, *.tgz or *.tar.gz): `/VLBI/DATA/vgosDB/yyyy/`
 * Master files are needed for the automatic generation of a process list, they can be downloaded from https://cddis.nasa.gov/archive/vlbi/ivscontrol/ as yearly *.txt files and have to be stored in : `/VLBI/DATA/MASTER`
+
+### Data download button in GUI
+* Since 2025-07-07 all data files necessary or recommended for standard processing can be downloaded with one button press directly from the Welcome panel. These are EOP files (finals, C04, JPL), mapping function files (VMF3), and non-tidal atmospheric loading files (NTAL/VIE).
+* Usage: go to the Welcome panel (it appears when you start VieVS-VLBI and you can go back to it via the menu: *File* &#10148; *Welcome panel*), enter the required year or time range into the input field and press <kbd>Download<kbd>.
+* The files are renamed and downloaded to the correct directories (those described below) automatically.
+* Data from CDDIS (vgosDB, master files,...) cannot be downloaded automatically because they require an Earthdata Login.
+* If you want to use VMF1, gradients, or ray-traced delays follow the instructions below.
 
 ### Earth Orientation parameters
 * EOP C04 can be downloaded from https://datacenter.iers.org/data/latestVersion/EOP_20_C04_one_file_1962-now.txt. Take "EOP_20_C04_one_file_1962-now.txt" and store it as `C04_20_1962_now.txt` in `/VLBI/EOP/`.

@@ -33,7 +33,7 @@ try
     finfile = '../EOP/finals_all_IAU2000.txt';
     finurl = 'https://maia.usno.navy.mil/ser7/finals2000A.daily.extended';
     websave(finfile, finurl);
-    fprintf('\nEOP files successfully written to ../EOP/\n.');
+    fprintf('EOP files successfully written to ../EOP/.\n');
 catch
     warning('There was a problem with your EOP download!');
 end
@@ -70,7 +70,7 @@ try
            aplurl = ['https://vmf.geo.tuwien.ac.at/APL_products/VLBI/yearly/y',num2str(curyear),'.apl_r'];
            websave(aplpath,aplurl);
        end
-       fprintf('\nVMF3 and NTAL files downloaded successfully.\n');
+       fprintf('VMF3 and NTAL files downloaded successfully.\n');
     end
 catch
     warning('off','backtrace');
