@@ -48,18 +48,20 @@ Please be aware that this repository contains more or less only the program code
 * vgosDB can be downloaded from https://cddis.nasa.gov/archive/vlbi/ivsdata/vgosdb/ and have to be stored in year folders as you download them (compressed tar files, *.tgz or *.tar.gz): `/VLBI/DATA/vgosDB/yyyy/`
 * Master files are needed for the automatic generation of a process list, they can be downloaded from https://cddis.nasa.gov/archive/vlbi/ivscontrol/ as yearly *.txt files and have to be stored in : `/VLBI/DATA/MASTER`
 
-### Data download button in GUI
+### Data download button in Graphical User Interface (GUI)
 * Since 2025-07-07 all data files necessary or recommended for standard processing can be downloaded with one button press directly from the Welcome panel. These are EOP files (finals, C04, JPL), mapping function files (VMF3), and non-tidal atmospheric loading files (NTAL/VIE).
-* Usage: go to the Welcome panel (it appears when you start VieVS-VLBI and you can go back to it via the menu: *File* &#10148; *Welcome panel*), enter the required year or time range into the input field and press <kbd>Download<kbd>.
+* Usage: go to the Welcome panel (it appears when you start VieVS-VLBI and you can go back to it via the menu: *File* &#10148; *Welcome panel* ), enter the required year or time range into the input field and press <kbd>Download<kbd> .
 * The files are renamed and downloaded to the correct directories (those described below) automatically.
 * Data from CDDIS (vgosDB, master files,...) cannot be downloaded automatically because they require an Earthdata Login.
 * If you want to use VMF1, gradients, or ray-traced delays follow the instructions below.
 
 ### Earth Orientation parameters
+* Please note: the instructions for EOP download are obsolete if you use the Download button on the Welcome panel in the GUI.
 * EOP C04 can be downloaded from https://datacenter.iers.org/data/latestVersion/EOP_20_C04_one_file_1962-now.txt. Take "EOP_20_C04_one_file_1962-now.txt" and store it as `C04_20_1962_now.txt` in `/VLBI/EOP/`.
 * EOP finals can be downloaded from https://datacenter.iers.org/data/latestVersion/finals.all.iau2000.txt. Take "finals.all.iau2000.txt" and store it as `finals_all_IAU2000.txt` in `/VLBI/EOP/`.
 
 ### Troposphere delay models, ray-tracing data and non-tidal station loading
+* Please note: if you do not need more than VMF3 and non-tidal atmospheric loading (NTAL/VIE) you can use the GUI Download button described above and ignore these instructions.
 * Mapping functions: VMF1 and VMF3 can be retrieved from http://vmf.geo.tuwien.ac.at/trop_products/VLBI/ . Choose the yearly files and store them in the respective folder (VMF1 or VMF3) in `/VLBI/TRP/`.
 * Gradients are available from http://vmf.geo.tuwien.ac.at/trop_products/VLBI/GRAD/ . Choose the yearly files and store them in the respective folder in `/VLBI/TRP/GRAD`. 
 * Ray-traced delays are available from http://vmf.geo.tuwien.ac.at/trop_products/VLBI/RAYTR/RADIATE/. The *.radiate files have to be stored in year folders in `/VLBI/TRP/RAYTRACING_DATA/yyyy/`.
