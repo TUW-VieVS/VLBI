@@ -38,7 +38,7 @@
 %   28 Aug 2018 by D. Landskron: bug correct corrected with excluding only a time frame of a station
 % ************************************************************************
 
-function [ini_opt, bas_excl]=readOPT(optfil,remove_sprecial_stations,stations_to_be_removed)
+function [ini_opt, bas_excl]=readOPT(optfil,remove_special_stations,stations_to_be_removed)
 
 station_remove_flags = true(size(stations_to_be_removed,1),1);
 
@@ -88,7 +88,7 @@ while ~feof(fid)
             flag_excl_time_period = false;
             temp_str = textscan(str, '%s', 'delimiter', ' -', 'MultipleDelimsAsOne',1, 'CommentStyle', '#'); % parse line, delimiters: ' ', '-'
             
-            if remove_sprecial_stations
+            if remove_special_stations
                 index_special_removed_station = strcmp(temp_str{1}{1},stations_to_be_removed);
                 if sum(index_special_removed_station) > 0 
                     temp_str{1} = stations_to_be_removed(index_special_removed_station);
@@ -409,7 +409,7 @@ while ~feof(fid)
     end
 end
 
-if remove_sprecial_stations
+if remove_special_stations
     ini_opt.sta_excl = [ini_opt.sta_excl;char(stations_to_be_removed(station_remove_flags))];
     
     if isfield(ini_opt, 'sta_excl_start')

@@ -34,7 +34,7 @@
 
 function antenna=nc2antenna(out_struct, trf, chosenTrf, wrapper_data)
 
-url_vievswiki_create_superstation = 'http://vievswiki.geo.tuwien.ac.at/doku.php?id=public:vievs_manual:data#create_a_superstation_file';
+url_vievswiki_create_superstation = 'https://vievswiki.geo.tuwien.ac.at/VLBI-Analysis/Input-data#create-a-superstation-file';
 
 % number of stations in session
 nStat=size(out_struct.head.StationList.val,2);
