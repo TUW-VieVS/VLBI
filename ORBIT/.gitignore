@@ -1,5 +1,7 @@
 *
 !.gitignore
-!SAT_EPHEM_TRF
+!EPHEM_TRF
 !SP3
 !TLE
+!FSO
+!FRP
