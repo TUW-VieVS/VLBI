@@ -65,12 +65,12 @@ function [H, Ph, och] = hpoc_satellites(H, Ph, och, nso, n_sat, opt)
         Ph_pos2 = Ph_pos1;
         Ph_pos3 = Ph_pos1;  
     
-        if opt.SatPos.fixRadialComponent == 1
-            weight = opt.SatPos.weightFixingRadialComponent;
+        if opt.SatPos.constrRadialComponent == 1
+            constr_RComp = opt.SatPos.constrRadialComponentValue;
             
             if strcmp(opt.SatPos.sat_pos_est_ref_frame, 'rsw') || strcmp(opt.SatPos.sat_pos_est_ref_frame, 'ntw') 
                 H_pos1_fix = diag(ones(1,size(H_pos1,2)));
-                Ph_pos1_fix = diag(weight*ones(1,size(H_pos1,2)));
+                Ph_pos1_fix = diag((1/constr_RComp)*ones(1,size(H_pos1,2)));
                 H_pos1 = [H_pos1; H_pos1_fix];
                 Ph_pos1 =[blkdiag(Ph_pos1,Ph_pos1_fix)];
                 oc_pos1 = [oc_pos1;[zeros(size(H_pos1_fix,1),1)]];
