@@ -55,9 +55,6 @@ function [parameter] = checkParameterFile(parameter)
     if ~isfield(parameter.lsmopt.outsnx, 'orb')
         parameter.lsmopt.outsnx.orb=0;
     end
-    if ~isfield(parameter, 'createSkyPlots')
-        parameter.createSkyPlots=0;
-    end
     if ~isfield(parameter.lsmopt,'SatPos')
         parameter.lsmopt.SatPos.pw_sat=0;
         parameter.lsmopt.SatPos.sat_pos_int=0;

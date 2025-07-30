@@ -802,10 +802,10 @@ parameter.lsmopt.SatPos.constr_sat = get(handles.checkBox_relativeConstraintsSat
                                                                                                     % 0 no constraints between pwl, flag
 parameter.lsmopt.SatPos.sat_pos_coef    = str2double(get(handles.relativeConstraintsSatellitePositionValue, 'String'));         % Relative constraint between PWL offsets [cm] (Will be set in the GUI in future!)       
 
-parameter.lsmopt.SatPos.fixRadialComponent = get(handles.checkbox_fixRadialComponent, 'Value');  %  1 fix the radial component to a-priori, flag 
-                                                                                          % 0 do not fix the component to a-priori, flag
+parameter.lsmopt.SatPos.constrRadialComponent = get(handles.checkbox_constrRadialComponent, 'Value');  %  1 constrain the radial component to a-priori, flag 
+                                                                                          % 0 do not constrain the component to a-priori, flag
 
-parameter.lsmopt.SatPos.weightFixingRadialComponent = str2double(get(handles.fixRadialComponentWeightValue, 'String')); %Weight of fixing radial component to a-priori
+parameter.lsmopt.SatPos.constrRadialComponentValue = str2double(get(handles.constrRadialComponentWeightValue, 'String')); %constraint for fixing radial component to a-priori
 
 % Orbital Elements
 

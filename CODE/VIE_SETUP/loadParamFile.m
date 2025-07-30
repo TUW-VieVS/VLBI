@@ -1599,21 +1599,21 @@ if parameter.lsmopt.SatPos.pw_sat
     end
 
     if RefFrameVal == 1 || RefFrameVal == 2
-        set(handles.checkbox_fixRadialComponent, 'Enable', 'on');
-        if parameter.lsmopt.SatPos.fixRadialComponent==1
-            set(handles.checkbox_fixRadialComponent, 'Value', 1);
-            set(handles.fixRadialComponentWeightString, 'Enable', 'on');
-            set(handles.fixRadialComponentWeightValue, 'Enable', 'on');
-            set(handles.fixRadialComponentWeightValue, 'String', parameter.lsmopt.SatPos.weightFixingRadialComponent);
+        set(handles.checkbox_constrRadialComponent, 'Enable', 'on');
+        if parameter.lsmopt.SatPos.constrRadialComponent==1
+            set(handles.checkbox_constrRadialComponent, 'Value', 1);
+            set(handles.constrRadialComponentWeightString, 'Enable', 'on');
+            set(handles.constrRadialComponentWeightValue, 'Enable', 'on');
+            set(handles.constrRadialComponentWeightValue, 'String', parameter.lsmopt.SatPos.constrRadialComponentValue);
         else
-            set(handles.checkbox_fixRadialComponent, 'Value', 0);
-            set(handles.fixRadialComponentWeightString, 'Enable', 'off');
-            set(handles.fixRadialComponentWeightValue, 'Enable', 'off');
+            set(handles.checkbox_constrRadialComponent, 'Value', 0);
+            set(handles.constrRadialComponentWeightString, 'Enable', 'off');
+            set(handles.constrRadialComponentWeightValue, 'Enable', 'off');
         end
     else
-        set(handles.checkbox_fixRadialComponent, 'Enable', 'off');
-        set(handles.fixRadialComponentWeightString, 'Enable', 'off');
-        set(handles.fixRadialComponentWeightValue, 'Enable', 'off');
+        set(handles.checkbox_constrRadialComponent, 'Enable', 'off');
+        set(handles.constrRadialComponentWeightString, 'Enable', 'off');
+        set(handles.constrRadialComponentWeightValue, 'Enable', 'off');
     end   
 else
     set(handles.checkBox_estimateSatellitePosition, 'Value', 0);
@@ -1624,9 +1624,9 @@ else
     set(handles.checkBox_relativeConstraintsSatellitePosition, 'Enable', 'off');
     set(handles.relativeConstraintsSatellitePositionString, 'Enable', 'off');
     set(handles.relativeConstraintsSatellitePositionValue, 'Enable', 'off');
-    set(handles.checkbox_fixRadialComponent, 'Enable', 'off');
-    set(handles.fixRadialComponentWeightString, 'Enable', 'off');
-    set(handles.fixRadialComponentWeightValue, 'Enable', 'off');
+    set(handles.checkbox_constrRadialComponent, 'Enable', 'off');
+    set(handles.constrRadialComponentWeightString, 'Enable', 'off');
+    set(handles.constrRadialComponentWeightValue, 'Enable', 'off');
 end
 
 % Satellite Orbit Estimation - Orbital Elements

@@ -22,7 +22,7 @@ function varargout = vie_setup(varargin)
 
 % Edit the above text to modify the response to help vie_setup
 
-% Last Modified by GUIDE v2.5 04-Jul-2025 18:04:39
+% Last Modified by GUIDE v2.5 29-Jul-2025 13:39:49
 
 % 07 Jan 2014 by Matthias Madzak: LEVEL2 bug corrected
 % 27 Jan 2014 by Hana Krasna: icrf2nonVCS set to default
@@ -2499,14 +2499,14 @@ function estimationIntervalSatellitePositionValue_Callback(hObject, eventdata, h
 auto_save_parameterfile(hObject, handles)
 
 % --------------------------------------------------------------------
-function fixRadialComponentWeightValue_Callback(hObject, eventdata, handles)
+function constrRadialComponentWeightValue_Callback(hObject, eventdata, handles)
 % hObject    handle to estimationIntervalSatellitePositionValue (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 
 % --------------------------------------------------------------------
-function fixRadialComponentWeightValue_CreateFcn(hObject, eventdata, handles)
+function constrRadialComponentWeightValue_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to estimationIntervalSatellitePositionValue (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -2526,9 +2526,9 @@ if get(hObject, 'Value') == 1
     set(handles.popupMenu_refFrameSatellitePosition, 'Enable', 'on');
     set(handles.checkBox_relativeConstraintsSatellitePosition, 'Enable', 'on');
     if get(handles.popupMenu_refFrameSatellitePosition, 'Value') == 1 || get(handles.popupMenu_refFrameSatellitePosition, 'Value') == 2
-        set(handles.checkbox_fixRadialComponent, 'Enable', 'on');
+        set(handles.checkbox_constrRadialComponent, 'Enable', 'on');
     else
-        set(handles.checkbox_fixRadialComponent, 'Enable', 'off');
+        set(handles.checkbox_constrRadialComponent, 'Enable', 'off');
     end
     
     if get(handles.checkBox_relativeConstraintsSatellitePosition, 'Value') == 1
@@ -2546,9 +2546,9 @@ else
     set(handles.checkBox_relativeConstraintsSatellitePosition, 'Enable', 'off');
     set(handles.relativeConstraintsSatellitePositionString, 'Enable', 'off');
     set(handles.relativeConstraintsSatellitePositionValue, 'Enable', 'off');
-    set(handles.checkbox_fixRadialComponent, 'Enable', 'off');
-    set(handles.fixRadialComponentWeightString, 'Enable', 'off');
-    set(handles.fixRadialComponentWeightValue, 'Enable', 'off');
+    set(handles.checkbox_constrRadialComponent, 'Enable', 'off');
+    set(handles.constrRadialComponentWeightString, 'Enable', 'off');
+    set(handles.constrRadialComponentWeightValue, 'Enable', 'off');
 
 end
 auto_save_parameterfile(hObject, handles)
@@ -2570,35 +2570,17 @@ end
 auto_save_parameterfile(hObject, handles)
 
 % --------------------------------------------------------------------
-function checkBox_fixRadialComponent_Callback(hObject, eventdata, handles)
-% hObject    handle to checkBox_relativeConstraintsSatellitePosition (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_estimation_leastSquares_clocks
-if get(hObject, 'Value') == 1
-    set(handles.fixRadialComponentWeightString, 'Enable', 'on');
-    set(handles.fixRadialComponentWeightValue, 'Enable', 'on');
-else
-    set(handles.fixRadialComponentWeightString, 'Enable', 'off');
-    set(handles.fixRadialComponentWeightValue, 'Enable', 'off'); 
-end
-auto_save_parameterfile(hObject, handles)
-
-
-
-% --------------------------------------------------------------------
 function popupMenu_refFrameSatellitePosition_Callback(hObject, eventdata, handles)
 % hObject    handle to popupMenu_refFrameSatellitePosition (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 if get(handles.popupMenu_refFrameSatellitePosition, 'Value') == 1 || get(handles.popupMenu_refFrameSatellitePosition, 'Value') == 2
-        set(handles.checkbox_fixRadialComponent, 'Enable', 'on');
+        set(handles.checkbox_constrRadialComponent, 'Enable', 'on');
 else
-    set(handles.checkbox_fixRadialComponent, 'Value', 0);
-    set(handles.checkbox_fixRadialComponent, 'Enable', 'off');
-    set(handles.fixRadialComponentWeightValue, 'Enable', 'off');
-    set(handles.fixRadialComponentWeightString, 'Enable', 'off');
+    set(handles.checkbox_constrRadialComponent, 'Value', 0);
+    set(handles.checkbox_constrRadialComponent, 'Enable', 'off');
+    set(handles.constrRadialComponentWeightValue, 'Enable', 'off');
+    set(handles.constrRadialComponentWeightString, 'Enable', 'off');
 
 end
 auto_save_parameterfile(hObject, handles)
@@ -11378,22 +11360,22 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in checkbox_fixRadialComponent.
-function checkbox_fixRadialComponent_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_fixRadialComponent (see GCBO)
+% --- Executes on button press in checkbox_constrRadialComponent.
+function checkbox_constrRadialComponent_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_constrRadialComponent (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of checkbox_fixRadialComponent
+% Hint: get(hObject,'Value') returns toggle state of checkbox_constrRadialComponent
 
-if get(handles.checkbox_fixRadialComponent, 'Value')
-    set(handles.fixRadialComponentWeightString, 'Enable','on')
-    set(handles.fixRadialComponentWeightValue, 'Enable','on')
+if get(handles.checkbox_constrRadialComponent, 'Value')
+    set(handles.constrRadialComponentWeightString, 'Enable','on')
+    set(handles.constrRadialComponentWeightValue, 'Enable','on')
 else
-    set(handles.fixRadialComponentWeightString, 'Enable','off')
-    set(handles.fixRadialComponentWeightValue, 'Enable','off')
+    set(handles.constrRadialComponentWeightString, 'Enable','off')
+    set(handles.constrRadialComponentWeightValue, 'Enable','off')
 end
-
+auto_save_parameterfile(hObject, handles)
 
 
 % --- Executes on button press in radiobutton_estStaCoord_QuObsOnly.
