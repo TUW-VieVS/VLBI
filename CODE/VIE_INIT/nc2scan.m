@@ -36,6 +36,7 @@ function scan=nc2scan(out_struct, nc_info, fband, ioncorr, ambcorr, wrapper_data
 
 % ##### Options #####
 error_code_invalid_met_data = -999; % Error corde for missing met. data in NGS file (numerical)
+saveSBDMBDinscan=false;
 
 %% PREALLOCATING
 nScans=out_struct.head.NumScan.val; % get number of scans, stored in Head.nc
@@ -176,20 +177,27 @@ fprintf('\t observation:\t %s/%s, nc field: %s\n', tau_folder, tau_file,tau_fiel
 fprintf('\t sigma:\t\t %s/%s, nc field: %s\n', sigma_tau_folder, sigma_tau_file,sigma_tau_field )
 
 
-% save SBD and MBD for (both) frequency bands in scan struct (S/X for testing)
-if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands')
-    %SBD1 = num2cell(out_struct.Observables.SBDelay_bS.SBDelay.val);
-    %MBD1 = num2cell(out_struct.Observables.GroupDelay_bS.GroupDelay.val);
-    %SBD2 = num2cell(out_struct.Observables.SBDelay_bX.SBDelay.val);
-    %MBD2 = num2cell(out_struct.Observables.GroupDelay_bX.GroupDelay.val);
 
-    % preliminary solution - ambig. from ObsEdit
+if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands')
+    % save SBD and MBD for (both) frequency bands in scan struct (S/X for testing)
+    if saveSBDMBDinscan
+        SBD1obs = num2cell(out_struct.Observables.SBDelay_bS.SBDelay.val);
+        MBD1obs = num2cell(out_struct.Observables.GroupDelay_bS.GroupDelay.val);
+        SBD2obs = num2cell(out_struct.Observables.SBDelay_bX.SBDelay.val);
+        MBD2obs = num2cell(out_struct.Observables.GroupDelay_bX.GroupDelay.val);
+    end
+
+    % preliminary solution 
+    % ionospheric contribution is calculated from MBD from ObsEdit, i.e. with solved ambiguities
+    % should be changed in future
     tfl1 = get_nc_filename({ observation , '_bS'}, wrapper_data.Observation.ObsEdit.files, 1);
     MBD1 = num2cell(out_struct.ObsEdit.(tfl1).GroupDelayFull.val); % amb. included
+    sMBD1_file = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files, 1);
+    sMBD1 = num2cell(out_struct.(sigma_tau_folder).(sMBD1_file).(sigma_tau_field).val);
+
     tfl2 = get_nc_filename({ observation , '_bX'}, wrapper_data.Observation.ObsEdit.files, 1);
     MBD2 = num2cell(out_struct.ObsEdit.(tfl2).GroupDelayFull.val); % amb. included
-
-
+    sMBD2 = num2cell(out_struct.(sigma_tau_folder).(sigma_tau_file).(sigma_tau_field).val);
 end
 
 
@@ -330,34 +338,27 @@ if strcmp(ioncorr,'on')
                 warning('Ionospheric delay can not be used because was not found\n')
             end
         end
-    elseif strcmp(parameter.vie_init.iono, 'vievs2bands')
-        %[iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = vievs_iono(out_struct,wrapper_data);
-        sMBD1_file = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files, 1);
-        sMBD1 = num2cell(out_struct.(sigma_tau_folder).(sMBD1_file).(sigma_tau_field).val);
-        sMBD2 = num2cell(out_struct.(sigma_tau_folder).(sigma_tau_file).(sigma_tau_field).val);
-        [iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = vievs_iono(out_struct,wrapper_data,MBD1,MBD2,sMBD1,sMBD2,parameter);
+    elseif strcmp(parameter.vie_init.iono, 'vievs2bands')        
+        %[iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = vievs_iono(out_struct,wrapper_data,MBD1,MBD2,sMBD1,sMBD2,parameter); 
+        %iono_val_vievs=iono_val_vievs.*1e9; % ns
+        %sigma_iono_vievs=sigma_iono_vievs.*1e9; % ns
+        [iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = iono_contribution_dualB(out_struct,MBD1,MBD2,sMBD1,sMBD2,parameter); %ns
+
         if length(iono_val_vievs) > 1
             ionoDelayInternalFlag = 1;
-            ionoDelCell = num2cell(iono_val_vievs.*10^9);
-            ionoDelSigCell = num2cell(sigma_iono_vievs.*10^9);
+            ionoDelCell = num2cell(iono_val_vievs);
+            ionoDelSigCell = num2cell(sigma_iono_vievs);
             ionoDelFlagcell = num2cell(qflag_ion_vievs);
 
             if length(groupDelayWAmbigCell) ~= length(ionoDelSigCell) % if there is a problem with the data, special rare case
-                ionoDelCell = num2cell(zeros(1, length(groupDelaySigCell)));
-                ionoDelSigCell = num2cell(zeros(1, length(groupDelaySigCell)));
-                qflag_ion_vievs = zeros(length(groupDelayWAmbigCell), 1);
-                qflag_ion_vievs(qflag_ion_vievs == 0) = -1;
-                ionoDelFlagcell = num2cell(qflag_ion_vievs);
                 fprintf('\t Ionospheric delay was NOT computed. \n')
-                fprintf('WARNING vievs_iono: Calculation of the ionospheric correction failed due to a problem of the used data \n')
+                fprintf('length(groupDelayWAmbigCell) ~= length(ionoDelSigCell) , nc2scan.m \n')
+                %return
             end
-
         else
-            ionoDelayInternalFlag = 1;
-            ionoDelCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
-            ionoDelSigCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
-            ionoDelFlagcell = num2cell(-ones(1, length(groupDelayWAmbigCell)));
             fprintf('\t Ionospheric delay was NOT computed. \n')
+            fprintf('length(iono_val_vievs) < 1 , nc2scan.m \n')
+            %return
         end
     else % Take ionosphere corrections from external (ion) file:
         ionoDelayInternalFlag = 0;
@@ -635,12 +636,12 @@ for iScan=1:nScans
 
     [scan(iScan).obs.ambspace]=   deal(ambspace{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec] baseline-dependent ambiguity spacing
 
-% for testing now
-%     [scan(iScan).obs.obsSBD1]=   deal(SBD1{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
-%     [scan(iScan).obs.obsMBD1]=   deal(MBD1{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
-%     [scan(iScan).obs.obsSBD2]=   deal(SBD2{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
-%     [scan(iScan).obs.obsMBD2]=   deal(MBD2{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
-
+    if saveSBDMBDinscan
+        [scan(iScan).obs.obsSBD1]=   deal(SBD1obs{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+        [scan(iScan).obs.obsMBD1]=   deal(MBD1obs{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+        [scan(iScan).obs.obsSBD2]=   deal(SBD2obs{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+        [scan(iScan).obs.obsMBD2]=   deal(MBD2obs{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+    end
     
     if length(delayQualityFlag)==1 % check length of delay flag vector, if it is only 1 value for the whole session, this value will be assigned to all observations
         [scan(iScan).obs.q_flag] = deal(double(delayQualityFlag{1}));
