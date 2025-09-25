@@ -22,10 +22,10 @@ function varargout = vie_setup(varargin)
 
 % Edit the above text to modify the response to help vie_setup
 
-% Last Modified by GUIDE v2.5 29-Jul-2025 13:39:49
+% Last Modified by GUIDE v2.5 21-Aug-2025 12:53:29
 
 % 07 Jan 2014 by Matthias Madzak: LEVEL2 bug corrected
-% 27 Jan 2014 by Hana Krasna: icrf2nonVCS set to default
+% 27 Jan 2014 by Hana Krasna: icrf2nonVCS set to defaultdsaf
 % 31 Jan 2014 by Lucia Plank: time added for excluded station in OPT file
 % 12 Feb 2014 by Lucia Plank: source structure simulation added
 % 25 Mar 2014 by Lucia Plank: typo & bug corrected (load parameter file)
@@ -201,6 +201,7 @@ allMainUiPanels=[handles.uipanel_file_setInputFiles, ...
 	handles.uipanel_plot_eopOut,...
     handles.uipanel_models_space_crafts,...
     handles.uipanel_OrbitalElementEstimation,...
+    handles.uipanel_models_ambiguities,...
     handles.uipanel_welcome];
 
 % save all ui panels to handles struct
@@ -599,6 +600,10 @@ try
 catch
     handles.text_version.String = 'no git';
 end
+
+set(handles.radiobutton_obsFile, 'Value', 1);
+set(handles.radiobutton_vievsAmb, 'Value', 0);
+
 
 % Choose default command line output for vie_setup
 handles.output = hObject;
@@ -11597,6 +11602,29 @@ function checkbox_ambiguity_correction_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+if get(handles.checkbox_ambiguity_correction, 'Value') == 0
+    set(handles.radiobutton_obsFile, 'Enable', 'off')
+    set(handles.radiobutton_vievsAmb, 'Enable', 'off') 
+    set(handles.checkbox_residual_compute, 'Enable', 'off') 
+    set(handles.checkbox_residual_apply, 'Enable', 'off') 
+    set(handles.checkbox_residual_compute, 'Value', 0) 
+    set(handles.checkbox_residual_apply, 'Value', 0) 
+    set(handles.radiobutton_obsFile, 'Value', 0) 
+    set(handles.radiobutton_vievsAmb, 'Value', 0) 
+else
+    set(handles.radiobutton_obsFile, 'Enable', 'on')
+    set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
+    set(handles.checkbox_residual_compute, 'Enable', 'on') 
+    set(handles.checkbox_residual_apply, 'Enable', 'on') 
+    set(handles.checkbox_residual_compute, 'Value', 0) 
+    set(handles.checkbox_residual_apply, 'Value', 0) 
+    set(handles.radiobutton_obsFile, 'Value', 1) 
+    set(handles.radiobutton_vievsAmb, 'Value', 0) 
+end
+
+% Update handles structure
+guidata(hObject, handles);
+
 % Hint: get(hObject,'Value') returns toggle state of checkbox_ambiguity_correction
 
 
@@ -12631,6 +12659,119 @@ if updatePopupmenu==1
 end %update popupmenu
 % save parameter file automatically 
 auto_save_parameterfile(hObject, handles)
+
+
+
+
+
+% --------------------------------------------------------------------
+function menu_models_ambiguities_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_models_ambiguities (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% set all uipanels to invisibel
+setAllPanelsToInvisible(hObject, handles)
+
+% set the one panel to visible
+set(handles.uipanel_models_ambiguities, 'Visible', 'On');
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+% --- Executes on button press in checkbox_residual.
+% function checkbox_residual_Callback(hObject, eventdata, handles)
+% % hObject    handle to checkbox_residual (see GCBO)
+% % eventdata  reserved - to be defined in a future version of MATLAB
+% % handles    structure with handles and user data (see GUIDATA)
+% 
+% set(handles.checkbox_residual_compute, 'Value', 1);
+% set(handles.checkbox_residual_apply, 'Value', 1);
+% 
+% if get(handles.checkbox_residual, 'Value') == 0
+%     set(handles.checkbox_residual_compute, 'Value', 0);
+%     set(handles.checkbox_residual_apply, 'Value', 0);
+% end
+% 
+% % Update handles structure
+% guidata(hObject, handles);
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_residual
+
+
+% --- Executes on button press in radiobutton_obsFile.
+function radiobutton_obsFile_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton_obsFile (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+set(handles.radiobutton_obsFile, 'Value', 1);
+set(handles.radiobutton_vievsAmb, 'Value', 0);
+
+% Update handles structure
+guidata(hObject, handles);
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_obsFile
+
+
+% --- Executes on button press in radiobutton_vievsAmb.
+function radiobutton_vievsAmb_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton_vievsAmb (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+set(handles.radiobutton_obsFile, 'Value', 0);
+set(handles.radiobutton_vievsAmb, 'Value', 1);
+
+% Update handles structure
+guidata(hObject, handles);
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_vievsAmb
+
+% AmbCheck = handles.checkbox_ambiguity_correction.Value;
+% if AmbCheck
+%     set(handles.radiobutton_obsFile_Callback, 'Enable', 'on')
+% else
+%     set(handles.radiobutton_vievsAmb_Callback, 'Enable', 'off')
+% end
+
+
+% --- Executes on button press in checkbox_residual_compute.
+function checkbox_residual_compute_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_residual_compute (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Update handles structure
+guidata(hObject, handles);
+
+% set(handles.checkbox_residual_compute, 'Value', 1);
+% % Update handles structure
+% guidata(hObject, handles);
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_residual_compute
+
+
+% --- Executes on button press in checkbox_residual_apply.
+function checkbox_residual_apply_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_residual_apply (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Update handles structure
+guidata(hObject, handles);
+
+% set(handles.checkbox_residual_apply, 'Value', 1);
+% % Update handles structure
+% guidata(hObject, handles);
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_residual_apply
+
+
+
+
 
 
 

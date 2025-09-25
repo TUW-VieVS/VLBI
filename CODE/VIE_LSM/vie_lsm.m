@@ -411,9 +411,24 @@ fprintf('\n')
 parameter.amb.amb_file_dir = 'PU';
 parameter.amb.flag_change_amb = false; %true
 
+if strcmp(parameter.vie_init.amb, 'vievscalc')
+    parameter.amb.flag_change_amb = true; %true
+end
+if parameter.lsmopt.res_compute
+    parameter.amb.flag_change_amb = true; %true
+end
+if parameter.lsmopt.res_apply
+    parameter.amb.flag_change_amb = true; %true
+end
+
+checkPath = ['../DATA/AMB/', parameter.amb.amb_file_dir, '/', parameter.filepath(end-4:end-1), '/'];
+if ~exist(checkPath,'dir')
+    mkdir(checkPath);
+end
+
 % Ambiguity file
 amb_filename_path = ['../DATA/AMB/', parameter.amb.amb_file_dir, '/', parameter.filepath(end-4:end-1), '/', [parameter.session_name '_' parameter.vie_init.vgosDb_observation_parameter(end) ], '.AMB'];
-if parameter.amb.flag_change_amb
+if parameter.amb.flag_change_amb 
     if exist(amb_filename_path, 'file')
         [parameter.amb.obs2change] = readAMB(amb_filename_path);
         fprintf('%d baselines with ambiguities will be changed\n',size(parameter.amb.obs2change,2)); 
@@ -1735,6 +1750,19 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
         save(['../DATA/LEVEL2/',dirpthL2,'/',parameter.session_name,'_Nb_glob.mat'],'glob3');
     end
 end
+
+% Compute Ambiguities based on the Residuals of the First Solution
+if parameter.lsmopt.res_compute
+    [amb2] = vievs_amb_Res(parameter, antenna, sources, scan, res);
+end
+
+% ambResidualsCorr = false;
+% % Automatical Residual Correction for remaining ambiguites based on the
+% % first solution
+% if ambResidualsCorr
+%     [amb2] = vievs_amb_Res(parameter, antenna, sources, scan, res);
+% end
+
 
 % -------------------------------------------------------------------------
 % +hana 16 May 2011

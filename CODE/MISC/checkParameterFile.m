@@ -15,6 +15,7 @@
 %   3 June 2025 by H. Wolf 
 %
 %   Revision:
+%   2025-Sep-25, P. Urban: ambiguity parameters added
 %
 % ************************************************************************
 
@@ -112,4 +113,16 @@ function [parameter] = checkParameterFile(parameter)
     if ~isfield(parameter.vie_mod, 'cntrlm')
         parameter.vie_mod.cntrlm = ' ';
     end
+    
+    % ambiguity related parameters 
+    if ~isfield(parameter.vie_init, 'res_compute')
+        parameter.vie_init.res_compute = 0;
+    end
+    if ~isfield(parameter.vie_init, 'res_apply')
+        parameter.vie_init.res_apply = 0;
+    end
+    if ~isfield(parameter.vie_init, 'amb')
+        parameter.vie_init.amb='observation_database_amb';
+    end
+ 
 end
