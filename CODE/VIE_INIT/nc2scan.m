@@ -79,6 +79,10 @@ newStr = split(fband,'_');
 observation = newStr{1};
 freqband = newStr{2};
 
+if strcmp(parameter.vie_init.amb, 'vievscalc')
+    ambcorr = 'off';
+end
+
 % check if session has been analysed by an AC (check for SOLVE/AtmSetup.nc)
 try 
 %     if ~any(contains(fieldnames(out_struct.Solve),'AtmSetup'))

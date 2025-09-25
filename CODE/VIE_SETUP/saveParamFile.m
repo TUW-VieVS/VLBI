@@ -215,6 +215,14 @@ else % external file was chosen
     end
 end
 
+% ambiguity correction
+if get(handles.radiobutton_obsFile, 'Value')
+    parameter.vie_init.amb='observation_database_amb';
+elseif get(handles.radiobutton_vievsAmb, 'Value')
+    parameter.vie_init.amb='vievscalc';
+end
+
+
 % load orbit data file
 
 if get(handles.rb_sp3,'Value') == 1
@@ -1093,6 +1101,9 @@ parameter.lsmopt.est_singleses=get(handles.checkbox_run_estParameters, 'Value');
 % allow station/sessionwise parameterization
 parameter.lsmopt.control_gui_vie_lsm=get(handles.checkbox_run_allowStationwise, 'Value');
 
+% ambiguity correction with Residuals
+parameter.lsmopt.res_compute = get(handles.checkbox_residual_compute, 'Value');
+parameter.lsmopt.res_apply = get(handles.checkbox_residual_apply, 'Value');
 
 
 % save the parameter file to file (before: create path if not exists)

@@ -210,7 +210,8 @@ switch(parameter.data_type)
         try
         % read netCDF data
         [out_struct, nc_info]=read_nc(curNcFolder);
-                  
+        
+        
         % convert gui values to vie_init values
         [fb,in,ambcorr,ioncorr,wrapper_v,wrapper_k] = vgosdbinGUI2vieinit(parameter.vie_init.vgosDb_observation_parameter,parameter.vie_init.vgosDb_institute,parameter.vie_init.ambiguity_correction,parameter.vie_init.iono_correction,parameter.vie_init.vgosDb_wrapper_version);
                         
@@ -247,6 +248,12 @@ switch(parameter.data_type)
         scan        = nc2scan(out_struct, nc_info, fb, ioncorr, ambcorr, wrapper_data, parameter);
         antenna     = nc2antenna(out_struct, trf, trffile{2}, wrapper_data);
         sources     = nc2sources(out_struct, crf, crffile{2}, wrapper_data);
+        
+        % Automatic Ambiguity Resolution based on multiband-singleband
+        % delay differences with triangle delay closures
+        if strcmp(parameter.vie_init.amb, 'vievscalc')  
+            [amb1] = vievs_amb(out_struct,wrapper_data, parameter, antenna, sources, scan);
+        end
 
 
 %% vgosDB control
