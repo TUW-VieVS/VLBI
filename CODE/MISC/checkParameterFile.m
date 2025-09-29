@@ -118,8 +118,14 @@ function [parameter] = checkParameterFile(parameter)
     if ~isfield(parameter.vie_init, 'res_compute')
         parameter.vie_init.res_compute = 0;
     end
+    if ~isfield(parameter.lsmopt, 'res_compute')
+        parameter.lsmopt.res_compute = 0;
+    end
     if ~isfield(parameter.vie_init, 'res_apply')
         parameter.vie_init.res_apply = 0;
+    end
+    if ~isfield(parameter.lsmopt, 'res_apply')
+        parameter.lsmopt.res_apply = 0;
     end
     if ~isfield(parameter.vie_init, 'amb')
         parameter.vie_init.amb='observation_database_amb';
