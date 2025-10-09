@@ -7,16 +7,27 @@
 %   from vgosDB files and writes it to corresponding OPT files.
 %
 % INPUT
-% - session_name        - Session name (= name of vgosDB folder in .../DATA/vgosDB/<year>/)
-% - OPT_subdir          - Name of the subdirectory for the OPT files "MYOPT" (will
+% - session_name        - Session name (= name of vgosDB folder in .../DATA/vgosDB/<year>/, e.g., '19910402-navex9')
+% - OPT_subdir          - Name of the subdirectory for the OPT files 'MYOPT' (will
 %                         be created if it does not exist)
 % - path_VieVS          - Path to VieVS-VLBI. Example: if you have your VieVS-VLBI installation
-%                         in /home/mydir/VieVS/VLBI, then your input would be: "/home/mydir/VieVS".
+%                         in /home/mydir/VieVS/VLBI, then your input would be: '/home/mydir/VieVS'.
 %                         
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function write_vgosDB_ClockInfo_to_OPT(session_name, OPT_subdir, path_VieVS)
 
 % ##### Read nc files #####
+
+% Convert inputs to character arrays if they are strings
+if isstring(session_name)
+    session_name = char(session_name);
+end
+if isstring(OPT_subdir)
+    OPT_subdir = char(OPT_subdir);
+end
+if isstring(path_VieVS)
+    path_VieVS = char(path_VieVS);
+end
 
 % Get year:
 if ~contains(session_name, '-') % Check for new vgosDB naming convention
