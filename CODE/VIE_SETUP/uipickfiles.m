@@ -1439,8 +1439,9 @@ function filenames = annotate_file_names(filenames,dir_listing,fsdata)
 % prepends a folder icon or bullet symbol.
 for i = 1:length(filenames)
 	if dir_listing(i).isdir
-		filenames{i} = sprintf('%s%s%s%s',fsdata.pre,filenames{i},...
-			fsdata.filesep,fsdata.post);
+		%filenames{i} = sprintf('%s%s%s%s',fsdata.pre,filenames{i},...
+		    %	fsdata.filesep,fsdata.post);
+        filenames{i} = sprintf('%s/',filenames{i});
 	end
 end
 end
@@ -1493,7 +1494,7 @@ fsdata.style = folder_style_pref;
 % try to create it.  If that fails set style = 2.
 if fsdata.style == 1
 	icon_path = fullfile(prefdir,'uipickfiles_folder_icon.png');
-	if ~exist(icon_path,'file')
+	if exist(icon_path,'file')~=2
 		success = generate_folder_icon(icon_path);
 		if ~success
 			fsdata.style = 2;

@@ -1138,30 +1138,26 @@ function listbox_setInput_processList_ButtonDownFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% if there is an entry in the listbox at all
+% Check if there is an entry in the listbox
 if ~isempty(get(handles.listbox_setInput_processList, 'String'))
+    % Create the context menu
+    cmenu = uicontextmenu('Parent', handles.figure_vievs2);
 
-    % create the menu at proper position
-    curMousePosition=get(handles.figure_vievs2, 'CurrentPoint');
-    cmenu = uicontextmenu('Parent',handles.figure_vievs2,'Position',curMousePosition);
-    
-    % create function handles
-    %fHandles_openOPTfile=@{openOPTfile, handles};
-    allSessionsInList=get(handles.listbox_setInput_processList, 'String');
-    session=allSessionsInList{get(handles.listbox_setInput_processList, 'Value')};
-    
-   
-    % create entries with the pointer to the callbacks
-    item1 = uimenu(cmenu, 'Label', 'Open/Create OPT file', 'Callback', {@openOPTfile,hObject,handles});
-    item2 = uimenu(cmenu, 'Label', 'Open outlier file', 'Callback', {@openOutlierFile,hObject,handles});
-    % is the selected dataset a netCDF file?
-%     if isempty(strfind(session,'/')) && isempty(strfind(session,'\'))
-    if strfind(session, ' [vgosDB]')
-        item3 = uimenu(cmenu, 'Label', 'Analyse netCDF file', 'Callback', {@analyseNetcdfFile,hObject,handles});
-    end    
-        
-    % set visible
-    set(cmenu, 'Visible', 'on');
+    % Get the selected session
+    allSessionsInList = get(handles.listbox_setInput_processList, 'String');
+    session = allSessionsInList{get(handles.listbox_setInput_processList, 'Value')};
+
+    % Create menu items with callbacks
+    uimenu(cmenu, 'Label', 'Open/Create OPT file', 'Callback', {@openOPTfile, hObject, handles});
+    uimenu(cmenu, 'Label', 'Open outlier file', 'Callback', {@openOutlierFile, hObject, handles});
+
+    % Check if the selected dataset is a netCDF file
+    if contains(session, ' [vgosDB]')
+        uimenu(cmenu, 'Label', 'Analyse netCDF file', 'Callback', {@analyseNetcdfFile, hObject, handles});
+    end
+
+    % Set the context menu to the listbox
+    set(handles.listbox_setInput_processList, 'UIContextMenu', cmenu);
 end
 
 function analyseNetcdfFile(src,eventdata,hObject,handles)
