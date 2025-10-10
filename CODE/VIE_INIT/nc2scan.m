@@ -37,7 +37,7 @@ function scan=nc2scan(out_struct, nc_info, fband, ioncorr, ambcorr, wrapper_data
 % ##### Options #####
 error_code_invalid_met_data = -999; % Error corde for missing met. data in NGS file (numerical)
 saveSBDMBDinscan=false;
-eFr2scan=true; % save effective frequencies in scan
+eFr2scan=false; % save effective frequencies in scan
 
 %% PREALLOCATING
 nScans=out_struct.head.NumScan.val; % get number of scans, stored in Head.nc
@@ -243,6 +243,23 @@ else
     fprintf('\t Iono corr: off\n')
 end
 
+if eFr2scan
+    if isfield(wrapper_data.Observation, 'ObsDerived')
+        ideF=contains(wrapper_data.Observation.ObsDerived.files,'EffFreq_b');
+        if sum(ideF)==0 
+            eFr2scan = false;
+            fprintf('Cannot find effective frequency data: ObsDerived/')
+        end
+    end
+    if eFr2scan
+        tau_eFr_folder = 'ObsDerived';
+        tau_eFr_file = wrapper_data.Observation.ObsDerived.files(ideF);
+        tau_eFr_field = 'FreqGroupIono';
+    end
+end
+
+
+
 % ambiguity
 if amb_k ~= 0
        
@@ -310,6 +327,11 @@ ambspace = num2cell(double(out_struct.(ambS_folder).(ambS_file).(ambS_field).val
 ionoDelayInternalFlag = 1;
 if strcmp(ioncorr,'on')
     if strcmp(parameter.vie_init.iono, 'observation_database')
+        if eFr2scan
+            for i=1:size(tau_eFr_file,2)
+                effFreqCell{i} = num2cell(out_struct.(tau_eFr_folder).(tau_eFr_file{i}(1:end-3)).(tau_eFr_field).val);
+            end
+        end
         if isempty(tau_ion_folder)
             ionoDelayInternalFlag = 0;
             fprintf('With this setting ionospheric delay will not be used\n')
@@ -317,10 +339,6 @@ if strcmp(ioncorr,'on')
             if isfield(out_struct.(tau_ion_folder),tau_ion_file)            
                 ionoDelCell = num2cell(1e9*out_struct.(tau_ion_folder).(tau_ion_file).(tau_ion_field).val(1,:)); % cell: 1 x nObs            
                 ionoDelSigCell = num2cell(1e9*out_struct.(sigma_tau_ion_folder).(sigma_tau_ion_file).(sigma_tau_ion_field).val(1,:)); % cell: 1 x nObs
-                if eFr2scan
-                    effFreqSCell = num2cell(out_struct.(tau_ion_folder).EffFreq_bS.FreqGroupIono.val);
-                    effFreqXCell = num2cell(out_struct.(tau_ion_folder).EffFreq_bX.FreqGroupIono.val);                
-                end
                 if length(ionoDelCell) == 1
                     if ionoDelCell{:}==0
                         ionoDelayInternalFlag = 0;
@@ -358,8 +376,8 @@ if strcmp(ioncorr,'on')
             ionoDelCell = num2cell(iono_val_vievs);
             ionoDelSigCell = num2cell(sigma_iono_vievs);
             ionoDelFlagcell = num2cell(qflag_ion_vievs);
-            effFreqSCell = num2cell(vs_vievs.*1000); %MHz
-            effFreqXCell = num2cell(vx_vievs.*1000); %MHz
+            effFreqCell{1} = num2cell(vs_vievs.*1000); %MHz
+            effFreqCell{2} = num2cell(vx_vievs.*1000); %MHz
 
             if length(groupDelayWAmbigCell) ~= length(ionoDelSigCell) % if there is a problem with the data, special rare case
                 fprintf('\t Ionospheric delay was NOT computed. \n')
@@ -372,6 +390,7 @@ if strcmp(ioncorr,'on')
             %return
         end
     else % Take ionosphere corrections from external (ion) file:
+        eFr2scan=false;
         ionoDelayInternalFlag = 0;
         fprintf('Ionospheric delay corrections will be taken from external source.\n')
     end
@@ -643,8 +662,10 @@ for iScan=1:nScans
     [scan(iScan).obs.delion]=   deal(ionoDelCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [nano-sec]
     [scan(iScan).obs.sgdion]=   deal(ionoDelSigCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [nano-sec]
     if eFr2scan
-        [scan(iScan).obs.eFreqS]=   deal(effFreqSCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); 
-        [scan(iScan).obs.eFreqX]=   deal(effFreqXCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); 
+        for i=1:size(tau_eFr_file,2)
+            eFrB = ['eFreq' tau_eFr_file{i}(10)];
+            [scan(iScan).obs.(eFrB)]=   deal(effFreqCell{i}{obsI1Index:obsI1Index+scan(iScan).nobs-1}); 
+        end
     end
     [scan(iScan).obs.amb]=   deal(tau_ambCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
     [scan(iScan).obs.ambspace]=   deal(ambspace{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec] baseline-dependent ambiguity spacing
