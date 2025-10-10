@@ -306,7 +306,7 @@ if isfield(parameter.vie_init, 'iono') % older parameter files do not have that 
             set(handles.radiobutton_parameters_iono_fromNGS, 'Value', 1)
             set(handles.popupmenu_parameters_iono_ext, 'Enable', 'off')
             set(handles.pushbutton_parameters_iono_create, 'Enable', 'off')
-        otherwise % external iono delay
+        case 'ext'
             set(handles.radiobutton_parameters_iono_ext, 'Value', 1)
             set(handles.popupmenu_parameters_iono_ext, 'Enable', 'on')
             set(handles.pushbutton_parameters_iono_create, 'Enable', 'on')
@@ -316,7 +316,10 @@ if isfield(parameter.vie_init, 'iono') % older parameter files do not have that 
             else
                 msgbox(sprintf('Folder of external ionosperic file not found!\nBe sure to select a proper one!'), 'Warning', 'warn');
             end
-            
+        case 'vievs2bands'
+            set(handles.radiobutton_parameters_iono_vievs2bands, 'Value', 1)
+            set(handles.popupmenu_parameters_iono_ext, 'Enable', 'off')
+            set(handles.pushbutton_parameters_iono_create, 'Enable', 'off')        
     end
 else
     set(handles.radiobutton_parameters_iono_fromNGS, 'Value', 1)
