@@ -52,12 +52,15 @@ function [x, v, v_real, Qxx, N] = process(A, Pobserv, opt, oc_observ, n_observ, 
 
     % apply NNR for source coordinates
     if opt.est_sourceNNR==1
-        fprintf('NNR condition for source coordinates is introduced to N matrix!\n');
-        if sum([opt.source.nnr_inc]) < 3
-            fprintf(1,'Not enough sources for NNR condition. All sources are used for NNR instead.\n');
-            [opt.source.nnr_inc] = deal(1);
-        end     
-        [N] = nnr_cond(ns_q,ra,de,opt,sum_dj,N);
+        if sum([opt.source.nnr_inc]) > 2
+            fprintf('NNR condition for source coordinates is introduced to N matrix!\n');
+           % fprintf(1,'Not enough sources for NNR condition. All sources are used for NNR instead.\n');
+           % [opt.source.nnr_inc] = deal(1);
+           %end     
+           [N] = nnr_cond(ns_q,ra,de,opt,sum_dj,N);
+        else
+            fprintf('Less than 3 datum sources!\n');
+       end
     end
 
     fprintf('clock %s is selected as the ref. clock for the main solution\n',antenna(nistat).name);

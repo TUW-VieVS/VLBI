@@ -6,7 +6,7 @@
 % Hana Krasna, 2025 Aug 10
 
 
-function [ionoX, sigma_ionoX, qflag_ion] = iono_contribution_dualB(out_struct,ctau_s,ctau_x,csigma_tau_s,csigma_tau_x,parameter)
+function [ionoX, sigma_ionoX, qflag_ion,vs,vx] = iono_contribution_dualB(out_struct,ctau_s,ctau_x,csigma_tau_s,csigma_tau_x,parameter)
 fileoutput=false;
 
 tau_s=[ctau_s{:}]' .*1e9; % ns

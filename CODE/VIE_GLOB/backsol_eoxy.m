@@ -2,11 +2,11 @@
 
 function backsol_eoxy(pathGS,path_outglob,DIROUT,DIRIN)
 
-% clear all
-% load('../DATA/GLOB/pathGS.mat')
-% path_outglob = '../OUT/GLOB/';
-% DIROUT = pathGS.out;
-% DIRIN = pathGS.L2;
+ % clear all
+ % load('../DATA/GLOB/pathGS.mat')
+ % path_outglob = '../OUT/GLOB/';
+ % DIROUT = pathGS.out;
+ % DIRIN = pathGS.L2;
 
 pthL2 = pathGS.path_in; % ../DATA/LEVEL2/
 

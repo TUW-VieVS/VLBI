@@ -46,10 +46,10 @@
 %   corrected
 %   2025-02-02 by H.Wolf: added Keplerian Element estimation
 % ************************************************************************
-function [x_] = splitx(x, first_solution, mi, na, sum_dj, n_, mjd0, mjd1, t, T, opt, antenna, ns_q, nso, tso, ess, ns_s, ebsl)
+function [x_] = splitx(x, first_solution, mi, na, sum_dj, n_, mjd0, mjd1, t, T, opt, antenna, ns_q, nso, tso, ess, ns_s, ebsl,agnc)
 
-    global c
-    
+c = 299792458; % velocity in m/s
+
     % -------------------------------------------------------------------------
     % DIVIDING THE VECTOR X
     % -------------------------------------------------------------------------
@@ -329,6 +329,7 @@ function [x_] = splitx(x, first_solution, mi, na, sum_dj, n_, mjd0, mjd1, t, T, 
         x_.soura(jsou).mx = [];
         x_.soura(jsou).col = [];
         x_.soura(jsou).inNNR = [];
+        x_.soura(jsou).crade = [];
         x_.soude(jsou).val = [];
         x_.soude(jsou).mjd = [];
         x_.soude(jsou).mx = [];
@@ -347,9 +348,11 @@ function [x_] = splitx(x, first_solution, mi, na, sum_dj, n_, mjd0, mjd1, t, T, 
                 if ess==1
                     for ioffset = 1 : nso(isou).sources
                         x_.soura(jsou).val(ioffset,:) = x(sum_dj(11) + sumsou + ioffset,:)/15; % [ms] estimated value
-                        x_.soura(jsou).mjd(ioffset)  = tso(isou).sources(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate
+                        %x_.soura(jsou).mjd(ioffset)  = tso(jsou).sources(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate; HK: doesn't work after the orbit update
+                        x_.soura(jsou).mjd(ioffset)  = tso(isou).sources(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate; HK: changed
                         x_.soura(jsou).mx(ioffset,:) = mi(sum_dj(11) + sumsou + ioffset,:)/15; % [ms] std. dev. of the estimate
                         x_.soura(jsou).col(ioffset)  = sum_dj(11) + sumsou + ioffset; % [1] - COLumn of the estimate in A or N
+                        x_.soura(jsou).crade(ioffset)  =agnc(sumsou + ioffset); % correlation
                     end
                 end
                 % -------------------------------------------------------------------------
@@ -358,7 +361,8 @@ function [x_] = splitx(x, first_solution, mi, na, sum_dj, n_, mjd0, mjd1, t, T, 
                 if ess==1
                     for ioffset = 1 : nso(isou).sources
                         x_.soude(jsou).val(ioffset,:) = x(sum_dj(12) + sumsou + ioffset,:); % [mas] estimated value
-                        x_.soude(jsou).mjd(ioffset) = tso(isou).sources(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate
+                        %x_.soude(jsou).mjd(ioffset) = tso(jsou).sources(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate; HK: doesn't work after the orbit update
+                        x_.soude(jsou).mjd(ioffset) = tso(isou).sources(ioffset)/(24*60) + mjd0; % [MJD] - time of the estimate; HK: changed
                         x_.soude(jsou).mx(ioffset,:) = mi(sum_dj(12) + sumsou + ioffset,:); % [mas] std. dev. of the estimate;
                         x_.soude(jsou).col(ioffset) = sum_dj(12) + sumsou + ioffset; % [1] - COLumn of the estimate in A or N
                     end
@@ -377,6 +381,7 @@ function [x_] = splitx(x, first_solution, mi, na, sum_dj, n_, mjd0, mjd1, t, T, 
                 x_.soura(jsou).mx = mi(sum_dj(11) + jsou ,:)/15; % [ms] std. dev. of the estimate
                 x_.soura(jsou).col = sum_dj(11) + jsou ; % [1] - COLumn of the estimate in A or N
                 x_.soura(jsou).inNNR = opt.source(jsou).nnr_inc; % included in NNR 1/0
+                x_.soura(jsou).crade =agnc(jsou); % correlation
                 
                 x_.soude(jsou).val = x(sum_dj(12) + jsou ,:); % [mas] estimated value
                 x_.soude(jsou).mjd = ceil(mjd1); % mjd1 : midnight

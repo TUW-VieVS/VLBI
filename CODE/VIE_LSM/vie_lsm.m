@@ -1138,6 +1138,7 @@ vTPv        = [];
 
 %% Estimation of the parameters
 ess = opt.est_singleses;
+agnc=0;
 if ess == 1     
     fprintf('7. ESTIMATING THE PARAMETERS WITH LEAST SQUARES\n');
     A = vertcat(Ablk,Hblk);
@@ -1164,6 +1165,12 @@ if ess == 1
     opt.wrms = wrms;
 
     mi = repmat(mo,length(Qxx),1).*repmat(sqrt(diag(Qxx)),1,numberOfLSMs); % std. dev. of1440 estimated parameters [cm,mas]
+
+    %Correlation for source coordinates
+    agncol=[sum_dj(11)+1:sum_dj(12); sum_dj(12)+1:sum_dj(13)]';
+    for k = 1:(sum_dj(12)-sum_dj(11))
+        agnc(k) = Qxx(agncol(k,1),agncol(k,2)) / sqrt(Qxx(agncol(k,1),agncol(k,1)) * Qxx(agncol(k,2),agncol(k,2)) );
+    end
 
     %Covariance matrix a posteriori, Cvv = sigma_0^2 * Qvv, Qvv=Qll-Q~ll, Qll= inv(P), Q~ll=A*Qxx*A'
     Qll = inv(Pobserv(1:n_observ,1:n_observ));
@@ -1356,7 +1363,7 @@ if ess == 1
     fprintf('---------------------------------------------------------\n');
 
       
-    [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, ebsl_bdco);
+    [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, ebsl_bdco, agnc);
     x_.mo = mo;
     x_.mo_first = first_solution.mo;
     x_.units.mo = 'chi of main solution vTPv/degOfFreedom [] (NOT SQUARED!)';
@@ -1431,7 +1438,7 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
         return
     end
 
-    [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, ebsl_bdco);
+    [x_] = splitx(x,first_solution,mi,na,sum_dj,n_,mjd0,mjd1,t,T,opt,antenna,ns_q,nso,tso,ess, ns_s, ebsl_bdco, agnc);
 
     glob_dj = dj;
 
