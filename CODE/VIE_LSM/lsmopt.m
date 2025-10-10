@@ -478,6 +478,7 @@ function [opt] = lsmopt(antenna, sources, na, ns_q, ns_s, obs_per_source, obs_pe
                     if sources.q(isou).numobs < 3  
                 	    opt.source(isou).nnr_inc = 0;
                     end
+                    %opt.source(isou).nnr_inc = 0 %remove all sources from the NNR condition
                 end
             end
         end % for isou = 1 : ns_q

@@ -37,6 +37,7 @@ function scan=nc2scan(out_struct, nc_info, fband, ioncorr, ambcorr, wrapper_data
 % ##### Options #####
 error_code_invalid_met_data = -999; % Error corde for missing met. data in NGS file (numerical)
 saveSBDMBDinscan=false;
+eFr2scan=true; % save effective frequencies in scan
 
 %% PREALLOCATING
 nScans=out_struct.head.NumScan.val; % get number of scans, stored in Head.nc
@@ -316,6 +317,10 @@ if strcmp(ioncorr,'on')
             if isfield(out_struct.(tau_ion_folder),tau_ion_file)            
                 ionoDelCell = num2cell(1e9*out_struct.(tau_ion_folder).(tau_ion_file).(tau_ion_field).val(1,:)); % cell: 1 x nObs            
                 ionoDelSigCell = num2cell(1e9*out_struct.(sigma_tau_ion_folder).(sigma_tau_ion_file).(sigma_tau_ion_field).val(1,:)); % cell: 1 x nObs
+                if eFr2scan
+                    effFreqSCell = num2cell(out_struct.(tau_ion_folder).EffFreq_bS.FreqGroupIono.val);
+                    effFreqXCell = num2cell(out_struct.(tau_ion_folder).EffFreq_bX.FreqGroupIono.val);                
+                end
                 if length(ionoDelCell) == 1
                     if ionoDelCell{:}==0
                         ionoDelayInternalFlag = 0;
@@ -346,13 +351,15 @@ if strcmp(ioncorr,'on')
         %[iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = vievs_iono(out_struct,wrapper_data,MBD1,MBD2,sMBD1,sMBD2,parameter); 
         %iono_val_vievs=iono_val_vievs.*1e9; % ns
         %sigma_iono_vievs=sigma_iono_vievs.*1e9; % ns
-        [iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = iono_contribution_dualB(out_struct,MBD1,MBD2,sMBD1,sMBD2,parameter); %ns
+        [iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs, vs_vievs, vx_vievs] = iono_contribution_dualB(out_struct,MBD1,MBD2,sMBD1,sMBD2,parameter); %ns
 
         if length(iono_val_vievs) > 1
             ionoDelayInternalFlag = 1;
             ionoDelCell = num2cell(iono_val_vievs);
             ionoDelSigCell = num2cell(sigma_iono_vievs);
             ionoDelFlagcell = num2cell(qflag_ion_vievs);
+            effFreqSCell = num2cell(vs_vievs.*1000); %MHz
+            effFreqXCell = num2cell(vx_vievs.*1000); %MHz
 
             if length(groupDelayWAmbigCell) ~= length(ionoDelSigCell) % if there is a problem with the data, special rare case
                 fprintf('\t Ionospheric delay was NOT computed. \n')
@@ -635,9 +642,11 @@ for iScan=1:nScans
     [scan(iScan).obs.sig]=deal(delaySigmaTimesIonoSigma{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
     [scan(iScan).obs.delion]=   deal(ionoDelCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [nano-sec]
     [scan(iScan).obs.sgdion]=   deal(ionoDelSigCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [nano-sec]
-    
+    if eFr2scan
+        [scan(iScan).obs.eFreqS]=   deal(effFreqSCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); 
+        [scan(iScan).obs.eFreqX]=   deal(effFreqXCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); 
+    end
     [scan(iScan).obs.amb]=   deal(tau_ambCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
-
     [scan(iScan).obs.ambspace]=   deal(ambspace{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec] baseline-dependent ambiguity spacing
 
     if saveSBDMBDinscan
