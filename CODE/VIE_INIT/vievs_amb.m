@@ -15,6 +15,8 @@
 %       25.09.2025 by Peter Urban
 %
 %   Update:
+%       15.10.2025 by Peter Urban: adjustment of the threshold maximum
+%       closure limit and several smaller improvements
 %
 % ************************************************************************
 
@@ -31,9 +33,11 @@ fprintf('\t Ambig corr: directly calculated in VieVS \n')
 
 amb1 = 1;
 
-threshold = 10;  % Threshold for closure value
 ambspace = (out_struct.Observables.AmbigSize_bX.AmbigSize.val).* 10^9; % Ambiguity spacing [ns]
-ambspace = min(ambspace);
+% ambspace = min(ambspace);
+ambspace = mode(ambspace);
+threshold = ambspace/2;  % Threshold for closure value
+% threshold = 10;  % Threshold for closure value
 
 medianSpecial = 0; % check if a special case for median calculation exist
 
@@ -51,7 +55,7 @@ mnn = length(antenna); % Total number of stations
 
 % Read all the data and save it for calculations
 for i = 1:length(scan) 
-    for j = 1:length(scan(i).obs)  
+    for j = 1:length(scan(i).obs) 
         mb_sb_X(idx_X).scan = i;
         mb_sb_X(idx_X).obs = j;
         mb_sb_X(idx_X).diff = diffX(idx_X); % [ns]
@@ -60,7 +64,7 @@ for i = 1:length(scan)
         mb_sb_X(idx_X).mjd = scan(i).mjd;
         mb_sb_X(idx_X).isoV = scan(i).iso;
         idx_X = idx_X + 1;
-        % if i == 3 || j == 3 % Exclude Station 3 for one particular Session
+        % if i == 4 || j == 4 % Exclude Station 3 for one particular Session
         %     mb_sb_X(idx_X).diff = NaN; 
         % end
     end
@@ -71,7 +75,19 @@ end
 %% Ambiguity Calculation with Iterative Baseline Correction
 
 allBaselines = NaN(mnn, mnn);  % Table for all baseline medians
-combinations = combnk(1:mnn, 3); % Generate all combinations of 3 stations
+combinations = nchoosek(1:mnn, 3); % Generate all combinations of 3 stations 
+
+% comb_orig = combinations;
+% comb_rand = combinations(randperm(size(combinations,1)), :);
+% start_row = 86;
+% comb_shifted = [combinations(start_row:end, :);
+%     combinations(1:start_row-1, :)];
+% save('comb_shifted.mat');
+% idxx = find(combinations(:,1) == 4, 1,"first");
+% if ~isempty(idxx)
+%     comb_shifted = [combinations(idxx:end, :);
+%         combinations(1:idxx-1, :)];
+% end
 
 i1Indices = [mb_sb_X.i1]';
 i2Indices = [mb_sb_X.i2]';
@@ -121,28 +137,6 @@ while iteration_changes
     iteration_count = iteration_count + 1;
     total_iteration_count = total_iteration_count + 1;
     iteration_changes = false;  % Reset flag at the beginning of each iteration
-    
-    % fprintf('Iteration %d:\n', iteration_count);
-    
-    if iteration_count > 10 % in order to avoid endless loops
-        threshold = 15;
-        iteration_count = 0;
-    end
-    
-    if iteration_count > 10 && threshold == 15 % in order to avoid endless loops
-        threshold = 20;
-        iteration_count = 0;
-    end
-    
-%     if iteration_count > 25 && threshold == 20 % in order to avoid endless loops
-%         threshold = 25;
-%         iteration_count = 0;
-%     end
-    
-%     if iteration_count > 25 && threshold == 25 % in order to avoid endless loops
-%         threshold = 30;
-%         iteration_count = 0;
-%     end
 
     for idx = 1:size(combinations, 1)
         i = combinations(idx, 1);  % Station 1 (i1)
@@ -253,26 +247,75 @@ while iteration_changes
         end
     end
 
-    if ~iteration_changes % If no changes were made, stop the iterations
-        % fprintf('   No changes in this iteration. Stopping.\n');
-        break;
-    end
+    % if ~iteration_changes % If no changes were made, stop the iterations
+    %     % fprintf('   No changes in this iteration. Stopping.\n');
+    %     % break;
+    % end
     
-    if total_iteration_count == 100 % Break if there is endless loop problem with calculation
+    if total_iteration_count == 5 % Break if there is endless loop problem with calculation
         break;
     end
     
 end
 
-if threshold == 10
-fprintf('\t \t All closures are below the closure limit of 10 ns after %d iterations. \n', iteration_count);
+
+
+%% Check if all closures are below the limit of half ambiguity spacing
+
+closureLimitCheck = 0;
+
+for idx = 1:size(combinations, 1)
+    i = combinations(idx, 1);  % Station 1 (i1)
+    j = combinations(idx, 2);  % Station 2 (i2)
+    k = combinations(idx, 3);  % Station 3 (i3)
+    updateIdx21 = [i, j];
+    updateIdx32 = [j, k];
+    updateIdx13 = [i, k];
+    currentAdjustment21 = adjustmentsTable{updateIdx21(1), updateIdx21(2)};
+    currentAdjustment32 = adjustmentsTable{updateIdx32(1), updateIdx32(2)};
+    currentAdjustment13 = adjustmentsTable{updateIdx13(1), updateIdx13(2)};
+
+    % Compute the Closure value only if there are no NaN values
+    median_diff21 = allBaselines(i, j) + currentAdjustment21;  % i1 - i2
+    median_diff32 = allBaselines(j, k) + currentAdjustment32;  % i2 - i3
+    median_diff13 = allBaselines(i, k) + currentAdjustment13;  % i1 - i3
+
+    % Check for NaN values and skip calculation if any are present
+    if isnan(median_diff21) || isnan(median_diff32) || isnan(median_diff13)
+        continue;  % Skip this combination if any value is NaN
+    end
+
+    % Centroid calculation
+    P1 = [antenna(i).x, antenna(i).y, antenna(i).z]';
+    P2 = [antenna(j).x, antenna(j).y, antenna(j).z]';
+    P3 = [antenna(k).x, antenna(k).y, antenna(k).z]';
+    sv = (P1 + P2 + P3) / 3;  % Centroid
+
+    % Basis vectors from the stations
+    b13 = P3 - P1;  % Vector from i1 to i3
+    b32 = P3 - P2;  % Vector from i2 to i3
+    b21 = P2 - P1;  % Vector from i1 to i2
+
+    % Cross product to calculate orientation
+    cc1 = cross(b13, b32);
+    cc2 = cross(b21, b13);
+    cc3 = cross(b32, b21);
+    sun = (cc1 + cc2 + cc3)';  % Sum of cross products for orientation
+
+    si = sign(sun * sv); % Calculate the sign for the triangle
+    closure_value = (median_diff21 + median_diff32 - median_diff13) * si; % Calculate Closure Value
+
+    if abs(closure_value) > 25 % If the Closure value is within the threshold, no adjustment is needed
+        closureLimitCheck = closureLimitCheck+1;
+    end
 end
-if threshold == 15
-    fprintf('\t \t All closures are below the closure limit after %d iterations. \n', iteration_count);
-    fprintf('\t \t WARNING vievs_amb: A greater triangle closure limit of 15 ns used, please check the observations \n')
-elseif threshold == 20
-    fprintf('\t \t All closures are below the closure limit after %d iterations. \n', iteration_count);
-    fprintf('\t \t WARNING vievs_amb: A greater triangle closure limit of 20 ns used, please check the observations \n')
+
+threshold = round(threshold);
+
+if closureLimitCheck > 0
+    fprintf('\t \t %d out of %d closure combinations are exceeding the closure limit of %d ns. \n', closureLimitCheck, length(combinations), threshold);
+elseif closureLimitCheck == 0
+    fprintf('\t \t All closures are below the closure limit of %d ns. \n',threshold);
 end
 
 
@@ -496,6 +539,79 @@ fprintf('\t \t Ambiguities written to %s\n', output_file_path);
 % allsum = length(diffs)
 
 
+
+%% Plot of Baselines
+% Needed for testing only
+
+% % tic;
+% 
+% % Unique (i1, i2) pairs
+% uniquePairs = unique([[mb_sb_X.i1]', [mb_sb_X.i2]'], 'rows'); 
+% 
+% % Precompute indices and store
+% i1Indices = [mb_sb_X.i1]';
+% i2Indices = [mb_sb_X.i2]';
+% diffs = [mb_sb_X.diff]';
+% mjds = [mb_sb_X.mjd]';
+% 
+% % Analysis of each (i1, i2) pair
+% for k = 1:size(uniquePairs, 1)
+%     i1 = uniquePairs(k, 1);
+%     i2 = uniquePairs(k, 2);
+% 
+%     % Extract entries for this (i1, i2) pair
+%     indices = find(i1Indices == i1 & i2Indices == i2);
+% 
+%     % Skip if a baseline has less than 10 values
+% %     if length(indices) < 10
+% %         continue;
+% %     end 
+% 
+%     % Extract values for diffs and mjds
+%     diffsForPair = diffs(indices);
+%     mjdsForPair = mjds(indices);
+% 
+%     % Create a separate plot for this (i1, i2) pair
+%     if i1 == 4
+%     % if i1 == 13 && i2 == 14
+% 
+%     figure;
+%     plot(mjdsForPair, diffsForPair, '-o', 'LineWidth', 1.5, 'DisplayName', 'Data');
+%     hold on;
+%     % Initialize variables for legend entries
+%     legendEntries = {'Data'};  % Start with the data plot in the legend
+%     % Add grid and legend
+%     grid on;
+%     legend(legendEntries, 'Location', 'best');
+%     title(sprintf('Baseline Differences: i1 = %d, i2 = %d', i1, i2));
+%     xlabel('MJD (Modified Julian Date)');
+%     ylabel('MB-SB difference (ns)');
+%     hold off;
+% 
+%     % hold on;
+% 
+%     % figure;
+%     % plot(mjdsForPair, sigObsDIFFForPair, '-o', 'LineWidth', 1.5, 'DisplayName', 'Data');
+%     % hold on;
+%     % % Initialize variables for legend entries
+%     % legendEntries = {'Data'};  % Start with the data plot in the legend
+%     % % Add grid and legend
+%     % grid on;
+%     % legend(legendEntries, 'Location', 'best');
+%     % title(sprintf('Baseline Differences Sigma: i1 = %d, i2 = %d', i1, i2));
+%     % xlabel('MJD (Modified Julian Date)');
+%     % ylabel('MB-SB difference (ns)');
+%     % hold off;
+% 
+% 
+%     end
+% 
+% end
+% 
+% % toc;
+
+
+
 %% Function to calculate the adjusted median
 
 if medianSpecial == 1
@@ -506,8 +622,6 @@ end
 endTime = round(toc);
 
 fprintf('\t Ambig corr: finished after %d seconds \n', endTime')
-
-
 
 function adjustedMedian = calculateAdjustedMedian(values, Amb)
     sortedValues = sort(values); % Sorted list of all values
