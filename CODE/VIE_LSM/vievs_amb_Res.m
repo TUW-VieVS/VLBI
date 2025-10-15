@@ -13,6 +13,7 @@
 %       25.09.2025 by Peter Urban
 %
 %   Update:
+%       15.10.2025 by Peter Urban: several smaller improvements
 %
 % ************************************************************************
 
@@ -30,8 +31,10 @@ ambspaceCM = abs(ambspace*30); % Ambiguity Spacing positive [cm]
 % ambspaceCM1 = ambspaceCM*0.7;
 % ambspaceCM2 = ambspaceCM*1.3;
 % Border values because ambiguity value does not match with exact value
-ambspaceNS1 = ambspace*0.8; % lower border
-ambspaceNS2 = ambspace*1.2; % upper border
+ambspaceNS1 = ambspace*0.95; % lower border
+ambspaceNS2 = ambspace*1.05; % upper border
+% ambspaceNS1 = ambspace*0.8; % lower border
+% ambspaceNS2 = ambspace*1.2; % upper border
 
 resFirst = res.firstVal; % First Solution Residuals [cm]
 AmbValue = zeros(size(resFirst));
@@ -48,6 +51,30 @@ for k = 1:length(resFirst)
                 elseif diffs_ns > 2*ambspaceNS1 && diffs_ns < 2*ambspaceNS2
                     AmbValue(k) = 2*ambspaceCM;
                     break;
+                elseif diffs_ns > 3*ambspaceNS1 && diffs_ns < 3*ambspaceNS2
+                    AmbValue(k) = 3*ambspaceCM;
+                    break;
+                elseif diffs_ns > 4*ambspaceNS1 && diffs_ns < 4*ambspaceNS2
+                    AmbValue(k) = 4*ambspaceCM;
+                    break;
+                elseif diffs_ns > 5*ambspaceNS1 && diffs_ns < 5*ambspaceNS2
+                    AmbValue(k) = 5*ambspaceCM;
+                    break;
+                elseif diffs_ns > 6*ambspaceNS1 && diffs_ns < 6*ambspaceNS2
+                    AmbValue(k) = 6*ambspaceCM;
+                    break;
+                elseif diffs_ns > 7*ambspaceNS1 && diffs_ns < 7*ambspaceNS2
+                    AmbValue(k) = 7*ambspaceCM;
+                    break;
+                elseif diffs_ns > 8*ambspaceNS1 && diffs_ns < 8*ambspaceNS2
+                    AmbValue(k) = 8*ambspaceCM;
+                    break;
+                elseif diffs_ns > 9*ambspaceNS1 && diffs_ns < 9*ambspaceNS2
+                    AmbValue(k) = 9*ambspaceCM;
+                    break;
+                elseif diffs_ns > 10*ambspaceNS1 && diffs_ns < 10*ambspaceNS2
+                    AmbValue(k) = 10*ambspaceCM;
+                    break;
                 end
             elseif sign(-ambspaceNS1) == sign(diffs_ns) % negative ambiguities
                 if diffs_ns > -ambspaceNS2 && diffs_ns < -ambspaceNS1
@@ -55,6 +82,30 @@ for k = 1:length(resFirst)
                     break;
                 elseif diffs_ns > -2*ambspaceNS2 && diffs_ns < -2*ambspaceNS1
                     AmbValue(k) = -2*ambspaceCM;
+                    break;
+                elseif diffs_ns > -3*ambspaceNS2 && diffs_ns < -3*ambspaceNS1
+                    AmbValue(k) = -3*ambspaceCM;
+                    break;
+                elseif diffs_ns > -4*ambspaceNS2 && diffs_ns < -4*ambspaceNS1
+                    AmbValue(k) = -4*ambspaceCM;
+                    break;
+                elseif diffs_ns > -5*ambspaceNS2 && diffs_ns < -5*ambspaceNS1
+                    AmbValue(k) = -5*ambspaceCM;
+                    break;
+                elseif diffs_ns > -6*ambspaceNS2 && diffs_ns < -6*ambspaceNS1
+                    AmbValue(k) = -6*ambspaceCM;
+                    break;
+                elseif diffs_ns > -7*ambspaceNS2 && diffs_ns < -7*ambspaceNS1
+                    AmbValue(k) = -7*ambspaceCM;
+                    break;
+                elseif diffs_ns > -8*ambspaceNS2 && diffs_ns < -8*ambspaceNS1
+                    AmbValue(k) = -8*ambspaceCM;
+                    break;
+                elseif diffs_ns > -9*ambspaceNS2 && diffs_ns < -9*ambspaceNS1
+                    AmbValue(k) = -9*ambspaceCM;
+                    break;
+                elseif diffs_ns > -10*ambspaceNS2 && diffs_ns < -10*ambspaceNS1
+                    AmbValue(k) = -10*ambspaceCM;
                     break;
                 end
             end
@@ -77,7 +128,6 @@ end
 
 % AmbValue
 % save('AmbValue.mat','AmbValue')
-
 
 
 %% Save Ambiguities to TXT File
@@ -150,10 +200,10 @@ for k = 1:length(resFirst)
 
     ambNumberCount = ambNumberCount + 1;   
     fprintf('\t \t %s\n', strjoin(line_data, ' '));
-            
+
     % Write the line to the file, using spaces for separation
     fprintf(file_id, '%s\n', strjoin(line_data, ' ')); 
-    
+
 end
 
 fclose(file_id);
@@ -170,5 +220,97 @@ fprintf('Ambiguities Residual Correction: finished after %.1f seconds \n', endti
 % numZeros = sum(diffs == 0);
 % disp(['Number of NaN values: ', num2str(numNaNs)]);
 % disp(['Number of zero values: ', num2str(numZeros)]);
+
+
+
+
+
+
+
+%% Baseline-wise ambiguity residual correction
+% Maybe useful for later testing
+% 
+% fprintf('\n');
+% fprintf('Ambiguities Residual Correction: On \n');
+% 
+% amb2 = 1;
+% 
+% resFirst = res.firstVal; % First Solution Residuals [cm]
+% AmbValue = zeros(size(resFirst));
+% res_i1 = res.baselineOfObs(:,1); 
+% res_i2 = res.baselineOfObs(:,2); 
+% % res_source = res.source; 
+% % res_mjd = res.mjd; 
+% mnn = length(antenna); % Total number of stations
+% 
+% ambspace = (scan(1).obs(1).ambspace).* 10^9; % Ambiguity Spacing [ns]
+% ambspaceCM = abs(ambspace*30); % Ambiguity Spacing positive [cm]
+% 
+% % Border values because ambiguity value does not match with exact value
+% ambspaceNS1 = ambspace*0.90; % lower border
+% ambspaceNS2 = ambspace*1.1; % upper border
+% 
+% %         diffs = resFirst(k)-resFirst;
+% %         for jj = 1:length(resFirst) % try to find remaining ambiguities in the residuals
+% %             diffs_ns = diffs(jj)/30;
+% 
+% 
+% for i = 1:mnn
+%     for j = 1:mnn
+% 
+%         idx = find(res_i1 == i & res_i2 == j);
+%         bl_length = length(idx);
+%         resFirst_bl = resFirst(idx);
+%         med_resFirst_bl = median(resFirst_bl);
+% 
+%         % if bl_length > 1
+% 
+%         for k = 1:bl_length
+%             % xx = idx(k);
+%         if abs(resFirst_bl(k)) > ambspaceCM/2
+%             % diffs_ns_ = resFirst_bl(k)-resFirst_bl;
+%             diffs_ns_ = resFirst_bl(k)-med_resFirst_bl;
+%             diffs_ns = diffs_ns_/30;
+% 
+%             if sign(ambspaceNS1) == sign(diffs_ns) % positive ambiguities
+%                 if diffs_ns > ambspaceNS1 && diffs_ns < ambspaceNS2
+%                     AmbValue(idx(k)) = ambspaceCM;
+%                     % break;
+%                 elseif diffs_ns > 2*ambspaceNS1 && diffs_ns < 2*ambspaceNS2
+%                     AmbValue(idx(k)) = 2*ambspaceCM;
+%                     % break;
+%                 elseif diffs_ns > 3*ambspaceNS1 && diffs_ns < 3*ambspaceNS2
+%                     AmbValue(idx(k)) = 3*ambspaceCM;
+%                     % break;
+%                 elseif diffs_ns > 4*ambspaceNS1 && diffs_ns < 4*ambspaceNS2
+%                     AmbValue(idx(k)) = 4*ambspaceCM;
+%                     % break;
+%                 end
+%              elseif sign(-ambspaceNS1) == sign(diffs_ns) % negative ambiguities
+%                 if diffs_ns > -ambspaceNS2 && diffs_ns < -ambspaceNS1
+%                     AmbValue(idx(k)) = -ambspaceCM;
+%                     % break;
+%                 elseif diffs_ns > -2*ambspaceNS2 && diffs_ns < -2*ambspaceNS1
+%                     AmbValue(idx(k)) = -2*ambspaceCM;
+%                     % break;
+%                 elseif diffs_ns > -3*ambspaceNS2 && diffs_ns < -3*ambspaceNS1
+%                     AmbValue(idx(k)) = -3*ambspaceCM;
+%                     % break;
+%                 elseif diffs_ns > -4*ambspaceNS2 && diffs_ns < -4*ambspaceNS1
+%                     AmbValue(idx(k)) = -4*ambspaceCM;
+%                     % break;
+%                 end
+%             end
+%         end
+% 
+%         end
+%         % end
+% 
+% 
+%     end
+% end
+
+
+
 
 end
