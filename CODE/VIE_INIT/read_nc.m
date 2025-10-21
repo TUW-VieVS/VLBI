@@ -117,7 +117,6 @@ end
 [~,i_max_ver]=max(Head_version);
 basepath = fileparts(pwd); 
 directory = fullfile(basepath, regexprep(directory, '^[\.\\/]+', ''));
-directory = append(directory, '\');
 headNcFile=dir([directory,top_level(i_head_files(i_max_ver)).name]);
 headNcFile=[directory,headNcFile(1).name];
 
