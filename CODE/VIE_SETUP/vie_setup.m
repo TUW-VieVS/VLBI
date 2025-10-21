@@ -22,7 +22,8 @@ function varargout = vie_setup(varargin)
 
 % Edit the above text to modify the response to help vie_setup
 
-% Last Modified by GUIDE v2.5 21-Aug-2025 12:53:29
+% Last Modified by GUIDE v2.5 17-Oct-2025 11:38:15
+
 
 % 07 Jan 2014 by Matthias Madzak: LEVEL2 bug corrected
 % 27 Jan 2014 by Hana Krasna: icrf2nonVCS set to defaultdsaf
@@ -723,9 +724,11 @@ function menu_file_parameterFiles_loadParameters_Callback(hObject, eventdata, ha
 % handles    structure with handles and user data (see GUIDATA)
 
 % get file from explorer
+basepath = fileparts(pwd);
+path = fullfile(basepath, 'WORK', 'PARAMETERS');
 [FileName, PathName] = uigetfile({'*.mat', 'Matlab Binary Format (*.mat)'}, ...
     'Select a parameter file',...
-    '../WORK/PARAMETERS/');
+    path);
 
 if ~isempty(FileName)
     
@@ -745,10 +748,11 @@ function menu_file_parameterFiles_saveParameters_Callback(hObject, eventdata, ha
 % handles    structure with handles and user data (see GUIDATA)
 
 % get a file
+path = fullfile(pwd, 'PARAMETERS');
 [filename, pathname, filterindex] = uiputfile( ...
 {'*.mat', 'Matlab Binary Format (*.mat)'},...
  'Save as',...
- '../WORK/PARAMETERS/');
+ path);
 
 % see if something was chosen
 if ~isempty(filename)
@@ -768,6 +772,7 @@ function menu_file_parameterFiles_saveProcessList_Callback(hObject, eventdata, h
 % handles    structure with handles and user data (see GUIDATA)
 
 % get a file
+
 [filename, pathname, filterindex] = uiputfile( ...
 {'process_list.mat', 'Matlab Binary Format (*.mat)'},...
  'Save as',...
@@ -797,8 +802,8 @@ function pushbutton_setInput_browseForProcLists_Callback(hObject, eventdata, han
 % hObject    handle to pushbutton_setInput_browseForProcLists (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-[FileName, PathName] = uigetfile('*.mat','Select process lists', './PROCESSLIST/', 'multiselect', 'on');
+startpath = fullfile(pwd, 'PROCESSLIST');
+[FileName, PathName] = uigetfile('*.mat','Select process lists', startpath, 'multiselect', 'on');
 
 fileWasChosen=1;
 
@@ -933,7 +938,9 @@ function pushbutton_setInput_browseForSessions_Callback(hObject, eventdata, hand
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-[FileName, PathName] = uigetfile('*.*','Select VLBI sessions', '../DATA/NGS', 'multiselect', 'on');
+basepath = fileparts(pwd);  
+startpath = fullfile(basepath, 'DATA', 'NGS');
+[FileName, PathName] = uigetfile('*.*','Select VLBI sessions', startpath, 'multiselect', 'on');
 
 if ischar(FileName) || iscell(FileName)
 
@@ -1311,8 +1318,8 @@ function pushbutton_setInput_browseVgos_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_setInput_browseVgos (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-vgosDir='../DATA/vgosDB/';
+basepath = fileparts(pwd);  % geht einen Ordner nach oben
+vgosDir = fullfile(basepath, 'DATA', 'vgosDB');
 if ~exist(vgosDir,'dir')
     mkdir(vgosDir);
 end
@@ -1328,8 +1335,10 @@ if iscell(out)
     for iF = 1 : length(out)
         curSlash = sort([strfind(out{iF},'/'), strfind(out{iF},'\')]);
         tgzDot = sort(strfind(out{iF},'.'));
-        if length(tgzDot) > 2
+        if strcmp(out{iF}(1),'.') && length(tgzDot)>2
             out{iF} = [out{iF}(curSlash(end-1)+1 : tgzDot(3)-1), ' [vgosDB]'];
+        elseif isscalar(tgzDot)
+            out{iF} = [out{iF}(curSlash(end-1)+1 : tgzDot(1)-1), ' [vgosDB]'];
         else
             out{iF} = [out{iF}(curSlash(end-1)+1 : end), ' [vgosDB]'];
         end
@@ -1344,7 +1353,8 @@ function pushbutton_setInput_browseVDA_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-vdaDir='../DATA/VDA/';
+basepath = fileparts(pwd);  % geht einen Ordner nach oben
+vdaDir = fullfile(basepath, 'DATA', 'VDA');
 if ~exist(vdaDir,'dir')
     mkdir(vdaDir);
 end
@@ -4168,12 +4178,6 @@ end
 if get(handles.checkbox_estimation_leastSquares_coordinates_estimate, 'Value')==0
     set(handles.text_run_sinex_stationCoords, 'Enable', 'off')
     set(handles.radiobutton_run_sinex_stationCoords_incl, 'Enable', 'off')
-end
-
-if get(handles.radiobutton_estStaCoord_QSObs_Sep, 'Value')
-    set(handles.ui_StaCoord_snx_qs, 'Enable', newState)
-    set(handles.rb_StaCoord_snx_qs_sat, 'Enable', newState)
-    set(handles.rb_StaCoord_snx_qs_qu, 'Enable', newState)
 end
 
 % if gradients are not estimated -> disable sinex option
@@ -11387,12 +11391,6 @@ function radiobutton_estStaCoord_QuObsOnly_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of radiobutton_estStaCoord_QuObsOnly
 
-if get(handles.radiobutton_estStaCoord_QuObsOnly, 'Value') 
-    set(handles.ui_StaCoord_snx_qs, 'Enable', 'off')
-    set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'off')
-    set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'off')
-end
-
 
 % --- Executes on button press in radiobutton_estStaCoord_AllObs.
 function radiobutton_estStaCoord_AllObs_Callback(hObject, eventdata, handles)
@@ -11402,11 +11400,6 @@ function radiobutton_estStaCoord_AllObs_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of radiobutton_estStaCoord_AllObs
 
-if get(handles.radiobutton_estStaCoord_AllObs, 'Value') 
-    set(handles.ui_StaCoord_snx_qs, 'Enable', 'off')
-    set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'off')
-    set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'off')
-end
 
 % --- Executes on button press in checkbox_plot_eopOut_write_detailed_eop_data.
 function checkbox_plot_eopOut_write_detailed_eop_data_Callback(hObject, eventdata, handles)
@@ -11663,11 +11656,6 @@ function radiobutton_estStaCoord_SatObsOnly_Callback(hObject, eventdata, handles
 
 % Hint: get(hObject,'Value') returns toggle state of radiobutton_estStaCoord_SatObsOnly
 
-if get(handles.radiobutton_estStaCoord_SatObsOnly, 'Value') 
-    set(handles.ui_StaCoord_snx_qs, 'Enable', 'off')
-    set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'off')
-    set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'off')
-end
 
 % --- Executes on button press in checkbox_estStaCoord_AddDatumConditions.
 function checkbox_estimation_leastSquares_coordinates_estimate_Callback(hObject, eventdata, handles)
@@ -11686,16 +11674,6 @@ if get(hObject, 'Value')
     set(handles.radiobutton_estStaCoord_QuObsOnly, 'Enable', 'on');
     set(handles.radiobutton_estStaCoord_AllObs, 'Enable', 'on');
     set(handles.radiobutton_estStaCoord_QSObs_Sep, 'Enable', 'on');
-
-    if get(handles.checkbox_run_sinex_write, 'Value') && get(handles.radiobutton_estStaCoord_QSObs_Sep, 'Value')
-        set(handles.ui_StaCoord_snx_qs, 'Enable', 'on');
-        set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'on');
-        set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'on');
-    else
-        set(handles.ui_StaCoord_snx_qs, 'Enable', 'off');
-        set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'off');
-        set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'off');
-    end
 
     set(handles.checkbox_estStaCoord_AddDatumConditions, 'Enable', 'on');
     if get(handles.checkbox_estStaCoord_AddDatumConditions, 'Value')
@@ -11724,9 +11702,6 @@ else
     set(handles.uibuttongroup_StaCoord_From, 'Enable', 'off');
     set(handles.checkbox_estStaCoord_AddDatumConditions, 'Enable', 'off');
     set(handles.uibuttongroup_DatumSettings_Apply, 'Enable', 'off');
-    set(handles.ui_StaCoord_snx_qs, 'Enable', 'off');
-    set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'off');
-    set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'off');
 end
 
 set(handles.radiobutton_run_sinex_stationCoords_incl, 'Enable', newSinexState)
@@ -11793,6 +11768,7 @@ function cb_estKepEle_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of cb_estKepEle
 if get(hObject, 'Value')
+    set(handles.ui_estKepEle_Elements, 'Enable', 'on')
     set(handles.rb_estKepEle_NumTau, 'Enable', 'on');
     set(handles.rb_estKepEle_NumSatPos, 'Enable', 'on');
     set(handles.rb_estKepEle_Ana, 'Enable', 'on');
@@ -11961,10 +11937,16 @@ function pb_browseFRPFile_Callback(hObject, eventdata, handles)
 % hObject    handle to pb_browseFRPFile (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-[FileName, PathName] = uigetfile('*.*','Select FRP file', '../ORBIT/FRP', 'multiselect', 'off');
+basepath = fileparts(pwd);
+startpath = fullfile(basepath, 'ORBIT', 'FRP');
+if ~isfolder(startpath)
+    warning('Folder not found, open Default-Folder.');
+    startpath = pwd;
+end
+[FileName, PathName] = uigetfile('*.*','Select FRP file', startpath, 'multiselect', 'off');
 
 if ischar(FileName) && ischar(PathName)
-    set(handles.edit_pathFRPFile, 'String', [PathName, FileName])
+    set(handles.edit_pathFRPFile, 'String', ['../ORBIT/FRP/', FileName])
     
     % save parameter file automatically 
     auto_save_parameterfile(hObject, handles)
@@ -12486,10 +12468,16 @@ function pb_browse_orbit_data_Callback(hObject, eventdata, handles)
 % hObject    handle to pb_browse_orbit_data (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-[FileName, PathName] = uigetfile('*.*','Select orbit data file', '../ORBIT', 'multiselect', 'off');
-
+basepath = fileparts(pwd);  
+startpath = fullfile(basepath, 'ORBIT');
+[FileName, PathName] = uigetfile('*.*','Select orbit data file', startpath, 'multiselect', 'off');
+if endsWith(PathName, filesep)
+    PathName = PathName(1:end-1);
+end
+[~, folder1] = fileparts(PathName(1:end));
+relpath = fullfile('..', 'ORBIT', folder1, '\');
 if ischar(FileName) && ischar(PathName)
-    set(handles.input_model_orbit_data, 'String', [PathName, FileName])
+    set(handles.input_model_orbit_data, 'String', [relpath, FileName])
     auto_save_parameterfile(hObject, handles)
 end
 
@@ -12501,15 +12489,6 @@ function radiobutton_estStaCoord_QSObs_Sep_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of radiobutton_estStaCoord_QSObs_Sep
-if get(handles.radiobutton_estStaCoord_QSObs_Sep, 'Value') && get(handles.checkbox_run_sinex_write, 'Value')
-    set(handles.ui_StaCoord_snx_qs, 'Enable', 'on')
-    set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'on')
-    set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'on')
-else
-    set(handles.ui_StaCoord_snx_qs, 'Enable', 'off')
-    set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'off')
-    set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'off')
-end
 
 
 % --- Executes during object creation, after setting all properties.
@@ -12522,38 +12501,6 @@ function radiobutton_estStaCoord_QSObs_Sep_CreateFcn(hObject, eventdata, handles
 % --- Executes during object creation, after setting all properties.
 function radiobutton_estStaCoord_QuObsOnly_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to radiobutton_estStaCoord_QuObsOnly (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-
-% --- Executes on button press in rb_StaCoord_snx_qs_sat.
-function rb_StaCoord_snx_qs_sat_Callback(hObject, eventdata, handles)
-% hObject    handle to rb_StaCoord_snx_qs_sat (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of rb_StaCoord_snx_qs_sat
-
-
-% --- Executes during object creation, after setting all properties.
-function rb_StaCoord_snx_qs_sat_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to rb_StaCoord_snx_qs_sat (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-
-% --- Executes on button press in rb_StaCoord_snx_qs_qu.
-function rb_StaCoord_snx_qs_qu_Callback(hObject, eventdata, handles)
-% hObject    handle to rb_StaCoord_snx_qs_qu (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of rb_StaCoord_snx_qs_qu
-
-
-% --- Executes during object creation, after setting all properties.
-function rb_StaCoord_snx_qs_qu_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to rb_StaCoord_snx_qs_qu (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -12907,3 +12854,24 @@ function menu_exit_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 close(handles.figure_vievs2);
+
+
+% --------------------------------------------------------------------
+function Ambiguities_Callback(hObject, eventdata, handles)
+% hObject    handle to Ambiguities (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes during object creation, after setting all properties.
+function uipanel_models_ambiguities_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to uipanel_models_ambiguities (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes during object deletion, before destroying properties.
+function uipanel_models_ambiguities_DeleteFcn(hObject, eventdata, handles)
+% hObject    handle to uipanel_models_ambiguities (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)

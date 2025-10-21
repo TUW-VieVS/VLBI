@@ -71,8 +71,8 @@
 %  - trf_name_str           - Name of selected TRF realiation within the trf structure (string)
 %  - crf                    - VieVS crf data strucure
 %  - crf_name_str           - Name of selected CRF realiation within the crf structure (string)
-%  - sat_orbit_file_path    - 
-%  - sat_orbit_file_name    - 
+%  - satOrbitFilePath    - 
+%  - satOrbitFileName    - 
 %  - sat_orbit_file_type    - 
 %  - parameter              - VieVS parameter structure
 %
@@ -113,7 +113,7 @@
 %  2019-07-25, D. Landskron: zwet parameter added to scan structure
 %
 %
-function [antenna, sources, scan, parameter] = read_vso(vso_file_path, vso_file_name, trf, trf_name_str, crf, crf_name_str, sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type, parameter)
+function [antenna, sources, scan, parameter] = read_vso(vso_file_path, vso_file_name, trf, trf_name_str, crf, crf_name_str, satOrbitFilePath, satOrbitFileName, sat_orbit_file_type, parameter)
 
 % ##### Load constants #####
 
@@ -162,7 +162,7 @@ vso_format = 0;
 % ###############################
 
 % #### Load VSO file ####
-fid_vso = fopen([vso_file_path, vso_file_name], 'r');
+fid_vso = fopen(['../DATA/VSO/' vso_file_path, vso_file_name], 'r');
 if fid_vso == -1
     error(['Cannot open VSO file: ', vso_file_path, vso_file_name]);
 end 
@@ -251,9 +251,9 @@ fclose(fid_vso);
 % | Delay reference epoch            | Stat. 1 name  | Stat. 2 name  | source name | obs. type | baseline delay [nsec] | delay formal error [nsec] | Ion delay [nsec] | Ion formal error [nsec] |
 % | YYYY MM DD hh mm ss.ssssssssssss | <max 8 char.> | <max 8 char.> | <string>    |   s/q     |      float            |      float                |      float       |      float              |
 
-year 			= vso_data{1};
+yr 			= vso_data{1};
 mon 			= vso_data{2};
-day 			= vso_data{3};
+dd 			= vso_data{3};
 hour 			= vso_data{4};
 minu 			= vso_data{5};
 sec 			= vso_data{6};
@@ -295,7 +295,7 @@ elseif vso_format == 6
     
 end
 
-number_of_all_obs   = length(year);
+number_of_all_obs   = length(yr);
 
 % Check obs_type_str  
 if sum(strcmp(obs_type_str, 'q') | strcmp(obs_type_str, 's')) ~= number_of_all_obs
@@ -303,12 +303,12 @@ if sum(strcmp(obs_type_str, 'q') | strcmp(obs_type_str, 's')) ~= number_of_all_o
 end
 
 % Convert epochs to MJD:
-% mjd = juliandate([year, mon, day, hour, minu, sec]) -  2400000.5;
-mjd = modjuldat(year, mon, day, hour, minu, sec);
+% mjd = juliandate([yr, mon, dd, hour, minu, sec]) -  2400000.5;
+mjd = modjuldat(yr, mon, dd, hour, minu, sec);
 
 
 % DOY:
-[itim,doy] = dday(year, mon, day, hour, minu);
+[itim,doy] = dday(yr, mon, dd, hour, minu);
 
 [~, ~, local_soure_id] = unique(source_name_str);
 
@@ -727,13 +727,76 @@ if ~isempty(sources.s)
         switch(sat_orbit_file_type)
             case 'sp3'
                 % Read SP3 file and writ data to orbiot_data strucutre
-                % - GPS time epochs in SP3 files are converted to UTC 
-                [orbit_data] = read_sp3(sat_orbit_file_path, sat_orbit_file_name,{sources.s.name});
-                [sources.s.orbit_file_type] = deal('sp3');
+                % - GPS time epochs in SP3 files are converted to UTC
+                satOrbitFileName1 = satOrbitFileName;
+                satOrbitFileName3 = satOrbitFileName;
                 
+                if length(satOrbitFileName) > 13
+                    yyr = str2double(satOrbitFileName(12:15));
+                    ddy = str2double(satOrbitFileName(16:18));
+
+                    base_date = datetime(yyr, 1, 1) + days(ddy - 1); 
+                    next_day = base_date + days(1);
+                    prev_day = base_date + days(-1);
+
+                    next_year = year(next_day);              
+                    next_doy = day(next_day, 'dayofyear');     
+                    prev_year = year(prev_day);            
+                    prev_doy = day(prev_day, 'dayofyear');         
+
+                    satOrbitFileName1(12:15) = num2str(prev_year);
+                    satOrbitFileName1(16:18) = num2str(prev_doy, '%03.0f');
+                    satOrbitFileName3(12:15) = num2str(next_year);
+                    satOrbitFileName3(16:18) = num2str(next_doy, '%03.0f');
+                else %COM
+                    if strcmp(satOrbitFileName(end-4),'0')     
+                        satOrbitFileName1(end-5) = satOrbitFileName1(end-5)-1;
+                        satOrbitFileName1(end-4) = '6';
+                    else
+                        satOrbitFileName1(end-4) = satOrbitFileName1(end-4)-1;
+                    end
+    
+                    if strcmp(satOrbitFileName(end-4),'6') 
+                        satOrbitFileName3(end-5) = satOrbitFileName3(end-5)+1;
+                        satOrbitFileName3(end-4) = '0';
+                    else
+                        satOrbitFileName3(end-4) = satOrbitFileName3(end-4)+1;
+                    end
+                end
+                [orbit_data1] = read_sp3(satOrbitFilePath, satOrbitFileName1,{sources.s.name}, {sources.s.name});
+                [orbit_data2] = read_sp3(satOrbitFilePath, satOrbitFileName,{sources.s.name}, {sources.s.name});
+                [orbit_data3] = read_sp3(satOrbitFilePath, satOrbitFileName3,{sources.s.name}, {sources.s.name});
+
+                orbit_data = orbit_data1;
+
+                orbit_data.mjd_start = orbit_data1.mjd_start;
+                orbit_data.mjd_end = orbit_data3.mjd_end;
+                orbit_data.tosc = round(orbit_data2.mjd_start);
+
+                orbit_data.epoch_mjd = [orbit_data1.epoch_mjd(1:end-1); orbit_data2.epoch_mjd(1:end-1); orbit_data3.epoch_mjd];
+                orbit_data.sec_of_day = [orbit_data1.sec_of_day(1:end-1); orbit_data2.sec_of_day(1:end-1); orbit_data3.sec_of_day];
+
+                orbit_data.year  = [orbit_data1.year(1:end-1);  orbit_data2.year(1:end-1);  orbit_data3.year];
+                orbit_data.month = [orbit_data1.month(1:end-1); orbit_data2.month(1:end-1); orbit_data3.month];
+                orbit_data.day   = [orbit_data1.day(1:end-1);   orbit_data2.day(1:end-1);   orbit_data3.day];
+
+                orbit_data.hour = [orbit_data1.hour(1:end-1); orbit_data2.hour(1:end-1); orbit_data3.hour];
+                orbit_data.minu = [orbit_data1.minu(1:end-1); orbit_data2.minu(1:end-1); orbit_data3.minu];
+                orbit_data.sec  = [orbit_data1.sec(1:end-1);  orbit_data2.sec(1:end-1); orbit_data3.sec];
+
+                for i=1:length(orbit_data1.sat)
+                    if strcmp(orbit_data.sat(i).name, orbit_data2.sat(i).name) && strcmp(orbit_data.sat(i).name, orbit_data3.sat(i).name)
+                        orbit_data.sat(i).x_trf  = [ orbit_data1.sat(i).x_trf(1:end-1);  orbit_data2.sat(i).x_trf(1:end-1);  orbit_data3.sat(i).x_trf];
+                        orbit_data.sat(i).y_trf  = [ orbit_data1.sat(i).y_trf(1:end-1);  orbit_data2.sat(i).y_trf(1:end-1);  orbit_data3.sat(i).y_trf];
+                        orbit_data.sat(i).z_trf  = [ orbit_data1.sat(i).z_trf(1:end-1);  orbit_data2.sat(i).z_trf(1:end-1);  orbit_data3.sat(i).z_trf];
+                    end
+                end
+
+                [sources.s.orbit_file_type] = deal('sp3');
+
             case 'sat_ephem_trf'
                 % Read sate emphemeris file with ITRF positions (and velocities) and writ data to orbit_data strucutre
-                [orbit_data] = read_sat_ephem_trf(sat_orbit_file_path, sat_orbit_file_name);
+                [orbit_data] = read_sat_ephem_trf(satOrbitFilePath, satOrbitFileName);
                 [sources.s.orbit_file_type] = deal('sat_ephem_trf');
 
             otherwise
@@ -774,9 +837,9 @@ if ~strcmp(parameter.vie_init.iono, 'observation_database') && exist('ion_del', 
     ion_del = zeros(length(ion_del),1); % Set to zero
 end
 
-year_scan   = year(scan2obs_ind);
+year_scan   = yr(scan2obs_ind);
 mon_scan    = mon(scan2obs_ind);
-day_scan    = day(scan2obs_ind);
+day_scan    = dd(scan2obs_ind);
 hour_scan   = hour(scan2obs_ind);
 min_scan    = minu(scan2obs_ind);
 sec_scan    = sec(scan2obs_ind);

@@ -658,8 +658,6 @@ parameter.lsmopt.stc_sat = get(handles.radiobutton_estStaCoord_SatObsOnly, 'Valu
 parameter.lsmopt.stc_qu = get(handles.radiobutton_estStaCoord_QuObsOnly, 'Value');
 parameter.lsmopt.stc_all = get(handles.radiobutton_estStaCoord_AllObs, 'Value');
 parameter.lsmopt.stc_qs = get(handles.radiobutton_estStaCoord_QSObs_Sep, 'Value');
-parameter.lsmopt.stc_qs_snx_sat = get(handles.rb_StaCoord_snx_qs_sat, 'Value');
-parameter.lsmopt.stc_qs_snx_qu = get(handles.rb_StaCoord_snx_qs_qu, 'Value');
 
 parameter.lsmopt.pw_stc=0; % is changed in sessionwise parameterization
 parameter.lsmopt.addDatumCd=get(handles.checkbox_estStaCoord_AddDatumConditions, 'Value');

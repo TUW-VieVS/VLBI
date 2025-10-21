@@ -303,6 +303,7 @@ for pl=1:size(process_list,1)
     %numEOPs=size(eop_matrix,1);
     numStat=size(antenna, 2);
     numSou=length(col_sinex.sounames);
+    numSat=length(col_sinex.satnames);
     
     %% write headerline
     %if existsnx==0
@@ -497,26 +498,33 @@ for pl=1:size(process_list,1)
         cy = "coory";
         cz = "coorz";
         stacoord_text = 'all observations';
+        staX = "STAX"; 
+        staY = "STAY"; 
+        staZ = "STAZ"; 
     elseif parameter.lsmopt.stc_sat == 1
         cx = "coorx_sat";
         cy = "coory_sat";
         cz = "coorz_sat";
         stacoord_text = 'satellite observations only';
+        staX = "STAX"; 
+        staY = "STAY"; 
+        staZ = "STAZ"; 
     elseif parameter.lsmopt.stc_qu == 1 
         cx = "coorx_qu";
         cy = "coory_qu";
         cz = "coorz_qu";
         stacoord_text = 'quasar observations only';
-    elseif parameter.lsmopt.stc_qs && parameter.lsmopt.stc_qs_snx_qu
-        cx = "coorx_qu";
-        cy = "coory_qu";
-        cz = "coorz_qu";
-        stacoord_text = 'quasar observations (estimated separately)';
-    elseif parameter.lsmopt.stc_qs && parameter.lsmopt.stc_qs_snx_sat
-        cx = "coorx_sat";
-        cy = "coory_sat";
-        cz = "coorz_sat";
-        stacoord_text = 'satellite observations (estimated separately)';
+        staX = "STAX"; 
+        staY = "STAY"; 
+        staZ = "STAZ"; 
+    elseif parameter.lsmopt.stc_qs 
+        cx = ["coorx_sat", "coorx_qu"];
+        cy = ["coory_sat", "coory_qu"];
+        cz = ["coorz_sat", "coorz_qu"];
+        stacoord_text = 'quasar and satellite observations (estimated separately)';
+        staX = ["STAX_S", "STAX"]; 
+        staY = ["STAY_S", "STAY"]; 
+        staZ = ["STAZ_S", "STAZ"]; 
     end
 
     cutoff = parameter.obs_restrictions.cut_off_elev/pi*180; % rad --> deg
@@ -669,7 +677,6 @@ for pl=1:size(process_list,1)
         sources.q(k).siteCode=num2str(k);
     end
     
-    numSat=length(sources.s);
     for k=1:numSat
             fprintf(fid, ' %04s %-8s %-16s %-68s\n', num2str(k), sources.s(k).name(1:3), '---', num2str(sources.s(k).numobs)); %for galileo this has to be adjusted
             sources.s(k).siteCode=num2str(k);
@@ -893,49 +900,52 @@ for pl=1:size(process_list,1)
         if outsnx.xyz==1
         % write x,y,z coordinates
             cpsd_all = cPostSeismDeform(midmjd,antenna);
-            for k=1:numStat
-                % Solution ID   
-                soln=num2str(1);
-
-
-                % calculate apriori values
-                %                  coordx   +     vx      * (   mean scan mjd - itrf epoch mjd )/ diff(mjd)->years                                
-                antenna(k).aprX=antenna(k).x+antenna(k).vx*(midmjd-antenna(k).epoch)/365.25 + cpsd_all(1,1,k);
-                antenna(k).aprY=antenna(k).y+antenna(k).vy*(midmjd-antenna(k).epoch)/365.25 + cpsd_all(2,1,k);
-                antenna(k).aprZ=antenna(k).z+antenna(k).vz*(midmjd-antenna(k).epoch)/365.25 + cpsd_all(3,1,k);
-
-
-                % calculate total estimated values
-                antenna(k).totX=antenna(k).aprX+x_.(cx)(k).val/100;
-                antenna(k).totY=antenna(k).aprY+x_.(cy)(k).val/100;
-                antenna(k).totZ=antenna(k).aprZ+x_.(cz)(k).val/100;
-
-
-                % preparation of values for format e+02 instead of e+002
-                totXstring=sprintf(formatEstVal, antenna(k).totX);
-                if ispc, totXstring = strrep(totXstring, 'e+0', 'e+'); totXstring = strrep(totXstring, 'e-0', 'e-');   end
-                totYstring=sprintf(formatEstVal, antenna(k).totY);
-                if ispc, totYstring = strrep(totYstring, 'e+0', 'e+'); totYstring = strrep(totYstring, 'e-0', 'e-'); end
-                totZstring=sprintf(formatEstVal, antenna(k).totZ);
-                if ispc, totZstring = strrep(totZstring, 'e+0', 'e+'); totZstring = strrep(totZstring, 'e-0', 'e-'); end
-
-                totXstdString=sprintf(formatStDev, x_.(cx)(k).mx/100);
-                if ispc, totXstdString = strrep(totXstdString, 'e+0', 'e+'); totXstdString = strrep(totXstdString, 'e-0', 'e-');   end
-                totYstdString=sprintf(formatStDev, x_.(cy)(k).mx/100);
-                if ispc, totYstdString = strrep(totYstdString, 'e+0', 'e+'); totYstdString = strrep(totYstdString, 'e-0', 'e-');  end
-                totZstdString=sprintf(formatStDev, x_.(cz)(k).mx/100);
-                if ispc, totZstdString = strrep(totZstdString, 'e+0', 'e+'); totZstdString = strrep(totZstdString, 'e-0', 'e-');  end
-
-                %                   Code  PT  1   yr:time(2) time3  m     1   estimate  stdev      
-    %             fprintf(fid, format, curIndex, 'STAX',   num2str(antenna(k).siteCode), antenna(k).pointCode, soln, statTimeYrStr(7:3:end), statTime(1,2), statTime(1,3), 'm', constrEstCoord, totXstring, totXstdString);
-    %             fprintf(fid, format, curIndex+1, 'STAY', num2str(antenna(k).siteCode), antenna(k).pointCode, soln, statTimeYrStr(8:3:end), statTime(2,2), statTime(2,3), 'm', constrEstCoord, totYstring, totYstdString);
-    %             fprintf(fid, format, curIndex+2, 'STAZ', num2str(antenna(k).siteCode), antenna(k).pointCode, soln, statTimeYrStr(9:3:end), statTime(3,2), statTime(3,3), 'm', constrEstCoord, totZstring, totZstdString);
-
-                fprintf(fid, writeFormat, curIndex,  'STAX', num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrEstCoord, totXstring, totXstdString);
-                fprintf(fid, writeFormat, curIndex+1,'STAY', num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrEstCoord, totYstring, totYstdString);
-                fprintf(fid, writeFormat, curIndex+2,'STAZ', num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrEstCoord, totZstring, totZstdString);
-
-             curIndex=curIndex+3;                                   
+            
+            for j=1:length(cx)
+                for k=1:numStat
+                    % Solution ID   
+                    soln=num2str(1);
+    
+    
+                    % calculate apriori values
+                    %                  coordx   +     vx      * (   mean scan mjd - itrf epoch mjd )/ diff(mjd)->years                                
+                    antenna(k).aprX=antenna(k).x+antenna(k).vx*(midmjd-antenna(k).epoch)/365.25 + cpsd_all(1,1,k);
+                    antenna(k).aprY=antenna(k).y+antenna(k).vy*(midmjd-antenna(k).epoch)/365.25 + cpsd_all(2,1,k);
+                    antenna(k).aprZ=antenna(k).z+antenna(k).vz*(midmjd-antenna(k).epoch)/365.25 + cpsd_all(3,1,k);
+    
+    
+                    % calculate total estimated values
+                    antenna(k).totX=antenna(k).aprX+x_.(cx(j))(k).val/100;
+                    antenna(k).totY=antenna(k).aprY+x_.(cy(j))(k).val/100;
+                    antenna(k).totZ=antenna(k).aprZ+x_.(cz(j))(k).val/100;
+    
+    
+                    % preparation of values for format e+02 instead of e+002
+                    totXstring=sprintf(formatEstVal, antenna(k).totX);
+                    if ispc, totXstring = strrep(totXstring, 'e+0', 'e+'); totXstring = strrep(totXstring, 'e-0', 'e-');   end
+                    totYstring=sprintf(formatEstVal, antenna(k).totY);
+                    if ispc, totYstring = strrep(totYstring, 'e+0', 'e+'); totYstring = strrep(totYstring, 'e-0', 'e-'); end
+                    totZstring=sprintf(formatEstVal, antenna(k).totZ);
+                    if ispc, totZstring = strrep(totZstring, 'e+0', 'e+'); totZstring = strrep(totZstring, 'e-0', 'e-'); end
+    
+                    totXstdString=sprintf(formatStDev, x_.(cx(j))(k).mx/100);
+                    if ispc, totXstdString = strrep(totXstdString, 'e+0', 'e+'); totXstdString = strrep(totXstdString, 'e-0', 'e-');   end
+                    totYstdString=sprintf(formatStDev, x_.(cy(j))(k).mx/100);
+                    if ispc, totYstdString = strrep(totYstdString, 'e+0', 'e+'); totYstdString = strrep(totYstdString, 'e-0', 'e-');  end
+                    totZstdString=sprintf(formatStDev, x_.(cz(j))(k).mx/100);
+                    if ispc, totZstdString = strrep(totZstdString, 'e+0', 'e+'); totZstdString = strrep(totZstdString, 'e-0', 'e-');  end
+    
+                    %                   Code  PT  1   yr:time(2) time3  m     1   estimate  stdev      
+        %             fprintf(fid, format, curIndex, 'STAX',   num2str(antenna(k).siteCode), antenna(k).pointCode, soln, statTimeYrStr(7:3:end), statTime(1,2), statTime(1,3), 'm', constrEstCoord, totXstring, totXstdString);
+        %             fprintf(fid, format, curIndex+1, 'STAY', num2str(antenna(k).siteCode), antenna(k).pointCode, soln, statTimeYrStr(8:3:end), statTime(2,2), statTime(2,3), 'm', constrEstCoord, totYstring, totYstdString);
+        %             fprintf(fid, format, curIndex+2, 'STAZ', num2str(antenna(k).siteCode), antenna(k).pointCode, soln, statTimeYrStr(9:3:end), statTime(3,2), statTime(3,3), 'm', constrEstCoord, totZstring, totZstdString);
+    
+                    fprintf(fid, writeFormat, curIndex,  staX(j), num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrEstCoord, totXstring, totXstdString);
+                    fprintf(fid, writeFormat, curIndex+1, staY(j), num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrEstCoord, totYstring, totYstdString);
+                    fprintf(fid, writeFormat, curIndex+2, staZ(j), num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrEstCoord, totZstring, totZstdString);
+    
+                 curIndex=curIndex+3;                                   
+                end
             end
         end
         
@@ -1268,34 +1278,36 @@ for pl=1:size(process_list,1)
     % write data
     if outsnx.xyz==1
         % x,y,z coordinates
-        for k=1:numStat
-            % solution ID
-            soln=num2str(1);
-
-            antenna(k).aprX_sigma=0;
-            antenna(k).aprY_sigma=0;
-            antenna(k).aprZ_sigma=0;
-
-            % get format e+02
-            aprX=sprintf(formatAprVal, antenna(k).aprX);
-            if ispc, aprX = strrep(aprX, 'e+0', 'e+'); aprX = strrep(aprX, 'e-0', 'e-');   end
-            aprY=sprintf(formatAprVal, antenna(k).aprY);
-            if ispc, aprY = strrep(aprY, 'e+0', 'e+'); strrep(aprY, 'e-0', 'e-');  end
-            aprZ=sprintf(formatAprVal, antenna(k).aprZ);
-            if ispc, aprZ = strrep(aprZ, 'e+0', 'e+'); strrep(aprZ, 'e-0', 'e-');  end
-
-            aprX_sigma=sprintf(formatStDev, antenna(k).aprX_sigma);
-            if ispc, aprX_sigma = strrep(aprX_sigma, 'e+0', 'e+'); aprX_sigma = strrep(aprX_sigma, 'e-0', 'e-');  end
-            aprY_sigma=sprintf(formatStDev, antenna(k).aprY_sigma);
-            if ispc, aprY_sigma = strrep(aprY_sigma, 'e+0', 'e+'); aprY_sigma = strrep(aprY_sigma, 'e-0', 'e-');   end
-            aprZ_sigma=sprintf(formatStDev, antenna(k).aprZ_sigma);
-            if ispc, aprZ_sigma = strrep(aprZ_sigma, 'e+0', 'e+'); aprZ_sigma = strrep(aprZ_sigma, 'e-0', 'e-');  end
-
-            % write one line for each x,y,z
-            fprintf(fid, writeFormat, curIndex,  'STAX', num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrApr, aprX, aprX_sigma);
-            fprintf(fid, writeFormat, curIndex+1,'STAY', num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrApr, aprY, aprY_sigma);
-            fprintf(fid, writeFormat, curIndex+2,'STAZ', num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrApr, aprZ, aprZ_sigma);
-            curIndex=curIndex+3;
+        for j=1:length(cx)
+            for k=1:numStat
+                % solution ID
+                soln=num2str(1);
+    
+                antenna(k).aprX_sigma=0;
+                antenna(k).aprY_sigma=0;
+                antenna(k).aprZ_sigma=0;
+    
+                % get format e+02
+                aprX=sprintf(formatAprVal, antenna(k).aprX);
+                if ispc, aprX = strrep(aprX, 'e+0', 'e+'); aprX = strrep(aprX, 'e-0', 'e-');   end
+                aprY=sprintf(formatAprVal, antenna(k).aprY);
+                if ispc, aprY = strrep(aprY, 'e+0', 'e+'); strrep(aprY, 'e-0', 'e-');  end
+                aprZ=sprintf(formatAprVal, antenna(k).aprZ);
+                if ispc, aprZ = strrep(aprZ, 'e+0', 'e+'); strrep(aprZ, 'e-0', 'e-');  end
+    
+                aprX_sigma=sprintf(formatStDev, antenna(k).aprX_sigma);
+                if ispc, aprX_sigma = strrep(aprX_sigma, 'e+0', 'e+'); aprX_sigma = strrep(aprX_sigma, 'e-0', 'e-');  end
+                aprY_sigma=sprintf(formatStDev, antenna(k).aprY_sigma);
+                if ispc, aprY_sigma = strrep(aprY_sigma, 'e+0', 'e+'); aprY_sigma = strrep(aprY_sigma, 'e-0', 'e-');   end
+                aprZ_sigma=sprintf(formatStDev, antenna(k).aprZ_sigma);
+                if ispc, aprZ_sigma = strrep(aprZ_sigma, 'e+0', 'e+'); aprZ_sigma = strrep(aprZ_sigma, 'e-0', 'e-');  end
+    
+                % write one line for each x,y,z
+                fprintf(fid, writeFormat, curIndex,  staX(j), num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrApr, aprX, aprX_sigma);
+                fprintf(fid, writeFormat, curIndex+1,staY(j), num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrApr, aprY, aprY_sigma);
+                fprintf(fid, writeFormat, curIndex+2,staZ(j), num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrApr, aprZ, aprZ_sigma);
+                curIndex=curIndex+3;
+            end
         end
     end
     
@@ -1501,19 +1513,21 @@ for pl=1:size(process_list,1)
     % write b vector to file
     % write b vector for station coordinates
     if outsnx.xyz==1
-        for k=1:numStat
-            % make proper format (e+05 instead of e+005)
-            stax_b=sprintf(formatVectorValue, b_sinex(col_sinex.coorx(k)));
-            if ispc, stax_b = strrep(stax_b, 'e+0', 'e+'); stax_b = strrep(stax_b, 'e-0', 'e-');  end
-            stay_b=sprintf(formatVectorValue, b_sinex(col_sinex.coory(k)));
-            if ispc, stay_b = strrep(stay_b, 'e+0', 'e+'); stay_b = strrep(stay_b, 'e-0', 'e-');   end
-            staz_b=sprintf(formatVectorValue, b_sinex(col_sinex.coorz(k)));
-            if ispc, staz_b = strrep(staz_b, 'e+0', 'e+'); staz_b = strrep(staz_b, 'e-0', 'e-');   end
-
-            fprintf(fid, writeFormat, curIndex, 'STAX',   num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrNevCoord, stax_b);
-            fprintf(fid, writeFormat, curIndex+1, 'STAY', num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrNevCoord, stay_b);
-            fprintf(fid, writeFormat, curIndex+2, 'STAZ', num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrNevCoord, staz_b);
-            curIndex=curIndex+3;
+        for j=1:length(cx)
+            for k=1:numStat
+                % make proper format (e+05 instead of e+005)
+                stax_b=sprintf(formatVectorValue, b_sinex(col_sinex.(cx(j))(k)));
+                if ispc, stax_b = strrep(stax_b, 'e+0', 'e+'); stax_b = strrep(stax_b, 'e-0', 'e-');  end
+                stay_b=sprintf(formatVectorValue, b_sinex(col_sinex.(cy(j))(k)));
+                if ispc, stay_b = strrep(stay_b, 'e+0', 'e+'); stay_b = strrep(stay_b, 'e-0', 'e-');   end
+                staz_b=sprintf(formatVectorValue, b_sinex(col_sinex.(cz(j))(k)));
+                if ispc, staz_b = strrep(staz_b, 'e+0', 'e+'); staz_b = strrep(staz_b, 'e-0', 'e-');   end
+    
+                fprintf(fid, writeFormat, curIndex, staX(j),   num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrNevCoord, stax_b);
+                fprintf(fid, writeFormat, curIndex+1, staY(j), num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrNevCoord, stay_b);
+                fprintf(fid, writeFormat, curIndex+2, staZ(j), num2str(antenna(k).siteCode), antenna(k).pointCode, soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'm', constrNevCoord, staz_b);
+                curIndex=curIndex+3;
+            end
         end
     end
     
@@ -1700,7 +1714,22 @@ for pl=1:size(process_list,1)
     tmpMatEop=zeros(maxNumEops, 5);
     
     % get all indices for N Matrix in one array
-    tmpMatCoor=[col_sinex.coorx; col_sinex.coory; col_sinex.coorz];
+    %tmpMatCoor=[col_sinex.coorx; col_sinex.coory; col_sinex.coorz];
+    tmpMatCoor = [];
+    if isfield(col_sinex, 'coorx') && isfield(col_sinex, 'coory') && isfield(col_sinex, 'coorz')
+        tmpMatCoor = [col_sinex.coorx; col_sinex.coory; col_sinex.coorz];
+    elseif isfield(col_sinex, 'coorx_sat') && isfield(col_sinex, 'coory_sat') && isfield(col_sinex, 'coorz_sat')
+        tmpMatCoor = [col_sinex.coorx_sat; col_sinex.coory_sat; col_sinex.coorz_sat];
+        % check if also stations from quasar coordinates are estimated
+        if isfield(col_sinex, 'coorx_qu') && isfield(col_sinex, 'coory_qu') && isfield(col_sinex, 'coorz_qu')
+            tmpMatCoor = [tmpMatCoor; col_sinex.coorx_qu; col_sinex.coory_qu; col_sinex.coorz_qu];
+        end
+    elseif isfield(col_sinex, 'coorx_qu') && isfield(col_sinex, 'coory_qu') && isfield(col_sinex, 'coorz_qu')
+        tmpMatCoor = [col_sinex.coorx_qu; col_sinex.coory_qu; col_sinex.coorz_qu];
+    end
+
+
+
     tmpMatEop(1:numXpol, 1)=col_sinex.xp;
     tmpMatEop(1:numYpol, 2)=col_sinex.yp;
     tmpMatEop(1:numDut1, 3)=col_sinex.dut1;
@@ -1726,42 +1755,49 @@ for pl=1:size(process_list,1)
     if outsnx.xyz==0; numStatEst=0; end % if station coordinates are fixed
     
     for col=1:size(N,1)
-        for stat=1:numStatEst
-            N((stat-1)*3+1,col)=N_sinex(col_sinex.coorx(stat), tmpMat(col));
-            N((stat-1)*3+2,col)=N_sinex(col_sinex.coory(stat), tmpMat(col));
-            N((stat-1)*3+3,col)=N_sinex(col_sinex.coorz(stat), tmpMat(col));
+        for j=1:length(cx)
+            if j==1
+                add = 0; 
+            else 
+                add = numStatEst*3;
+            end
+            for stat=1:numStatEst
+                N((stat-1)*3+1+add,col)=N_sinex(col_sinex.(cx(j))(stat), tmpMat(col));
+                N((stat-1)*3+2+add,col)=N_sinex(col_sinex.(cy(j))(stat), tmpMat(col));
+                N((stat-1)*3+3+add,col)=N_sinex(col_sinex.(cz(j))(stat), tmpMat(col));
+            end
         end
         for xpo=1:numXpol
-            N(numStatEst*3+ xpo, col)=N_sinex(col_sinex.xp(xpo), tmpMat(col));
+            N(numStatEst*length(cx)*3+ xpo, col)=N_sinex(col_sinex.xp(xpo), tmpMat(col));
         end
         for ypo=1:numYpol
-            N(numStatEst*3+numXpol +ypo, col)=N_sinex(col_sinex.yp(ypo), tmpMat(col));
+            N(numStatEst*length(cx)*3+numXpol +ypo, col)=N_sinex(col_sinex.yp(ypo), tmpMat(col));
         end
         for dut1=1:numDut1
-            N(numStatEst*3+numXpol+numYpol +dut1, col)=N_sinex(col_sinex.dut1(dut1), tmpMat(col));
+            N(numStatEst*length(cx)*3+numXpol+numYpol +dut1, col)=N_sinex(col_sinex.dut1(dut1), tmpMat(col));
         end
         for dX=1:numXnut
-            N(numStatEst*3+numXpol+numYpol+numDut1 +dX, col)=N_sinex(col_sinex.dX(dX), tmpMat(col));
+            N(numStatEst*length(cx)*3+numXpol+numYpol+numDut1 +dX, col)=N_sinex(col_sinex.dX(dX), tmpMat(col));
         end
         for dY=1:numYnut
-            N(numStatEst*3+numXpol+numYpol+numDut1+numXnut +dY, col)=N_sinex(col_sinex.dY(dY), tmpMat(col));
+            N(numStatEst*length(cx)*3+numXpol+numYpol+numDut1+numXnut +dY, col)=N_sinex(col_sinex.dY(dY), tmpMat(col));
         end
         for sou=1:numSou
-            N(numStatEst*3+numXpol+numYpol+numDut1+numXnut+numYnut +(sou-1)*2+1, col)=N_sinex(col_sinex.ra(sou), tmpMat(col));
-            N(numStatEst*3+numXpol+numYpol+numDut1+numXnut+numYnut +(sou-1)*2+2, col)=N_sinex(col_sinex.de(sou), tmpMat(col));
+            N(numStatEst*length(cx)*3+numXpol+numYpol+numDut1+numXnut+numYnut +(sou-1)*2+1, col)=N_sinex(col_sinex.ra(sou), tmpMat(col));
+            N(numStatEst*length(cx)*3+numXpol+numYpol+numDut1+numXnut+numYnut +(sou-1)*2+2, col)=N_sinex(col_sinex.de(sou), tmpMat(col));
         end
         numZwdAll=length(tmpMatZwd);
         for zwd=1:numZwdAll
-            N(numStatEst*3+numXpol+numYpol+numDut1+numXnut+numYnut+numSou*2 +zwd, col)=N_sinex(tmpMatZwd(zwd), tmpMat(col));
+            N(numStatEst*length(cx)*3+numXpol+numYpol+numDut1+numXnut+numYnut+numSou*2 +zwd, col)=N_sinex(tmpMatZwd(zwd), tmpMat(col));
         end
         tmpMatNgr=[col_sinex.ngr.col]; tmpMatEgr=[col_sinex.egr.col];
         numNgrAll=size(tmpMatTgr,2);
         for tgr=1:numNgrAll
-            N(numStatEst*3+numXpol+numYpol+numDut1+numXnut+numYnut+numSou*2+numZwdAll +(tgr-1)*2+1, col)=N_sinex(tmpMatNgr(tgr), tmpMat(col)); %north
-            N(numStatEst*3+numXpol+numYpol+numDut1+numXnut+numYnut+numSou*2+numZwdAll +(tgr-1)*2+2, col)=N_sinex(tmpMatEgr(tgr), tmpMat(col)); %east
+            N(numStatEst*length(cx)*3+numXpol+numYpol+numDut1+numXnut+numYnut+numSou*2+numZwdAll +(tgr-1)*2+1, col)=N_sinex(tmpMatNgr(tgr), tmpMat(col)); %north
+            N(numStatEst*length(cx)*3+numXpol+numYpol+numDut1+numXnut+numYnut+numSou*2+numZwdAll +(tgr-1)*2+2, col)=N_sinex(tmpMatEgr(tgr), tmpMat(col)); %east
         end
         for iKep=1:numOrb
-            N(numStatEst*3+numXpol+numYpol+numDut1+numXnut+numYnut+numSou*2+numZwdAll+numNgrAll*2 +iKep, col)=N_sinex(tmpMatOrb(iKep), tmpMat(col)); %orbital element
+            N(numStatEst*length(cx)*3+numXpol+numYpol+numDut1+numXnut+numYnut+numSou*2+numZwdAll+numNgrAll*2 +iKep, col)=N_sinex(tmpMatOrb(iKep), tmpMat(col)); %orbital element
         end
         
 %         for eop=1:numEOPs
@@ -1825,19 +1861,21 @@ for pl=1:size(process_list,1)
     % write b difference vector (b_sinex-b_sinex_noNtsl) to file
     % write b difference vector for station coordinates
     if outsnx.xyz==1
-        for k=1:numStat
-            % make proper format (e+05 instead of e+005)
-            stax_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.coorx(k)));
-            if ispc, stax_b_cal = strrep(stax_b_cal, 'e+0', 'e+'); stax_b_cal = strrep(stax_b_cal, 'e-0', 'e-');  end
-            stay_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.coory(k)));
-            if ispc, stay_b_cal = strrep(stay_b_cal, 'e+0', 'e+'); stay_b_cal = strrep(stay_b_cal, 'e-0', 'e-');   end
-            staz_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.coorz(k)));
-            if ispc, staz_b_cal = strrep(staz_b_cal, 'e+0', 'e+'); staz_b_cal = strrep(staz_b_cal, 'e-0', 'e-');   end
-
-            fprintf(fid, writeFormat, curIndex, stax_b_cal);
-            fprintf(fid, writeFormat, curIndex+1, stay_b_cal);
-            fprintf(fid, writeFormat, curIndex+2, staz_b_cal);
-            curIndex=curIndex+3;
+        for j=1:length(cx)
+            for k=1:numStat
+                % make proper format (e+05 instead of e+005)
+                stax_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.(cx(j))(k)));
+                if ispc, stax_b_cal = strrep(stax_b_cal, 'e+0', 'e+'); stax_b_cal = strrep(stax_b_cal, 'e-0', 'e-');  end
+                stay_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.(cy(j))(k)));
+                if ispc, stay_b_cal = strrep(stay_b_cal, 'e+0', 'e+'); stay_b_cal = strrep(stay_b_cal, 'e-0', 'e-');   end
+                staz_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.(cz(j))(k)));
+                if ispc, staz_b_cal = strrep(staz_b_cal, 'e+0', 'e+'); staz_b_cal = strrep(staz_b_cal, 'e-0', 'e-');   end
+    
+                fprintf(fid, writeFormat, curIndex, stax_b_cal);
+                fprintf(fid, writeFormat, curIndex+1, stay_b_cal);
+                fprintf(fid, writeFormat, curIndex+2, staz_b_cal);
+                curIndex=curIndex+3;
+            end
         end
     end
     

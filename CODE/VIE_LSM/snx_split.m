@@ -35,16 +35,12 @@ col_red = [[x_.pwclk.col] [x_.rqclk.col] [x_.bdclko.col]];
 % station coordinates cannot be reduced in SINEX file in this version
 if parameter.lsmopt.stc_all == 1
     col_est = [[x_.coorx.col] [x_.coory.col] [x_.coorz.col]];
-elseif parameter.lsmopt.stc_sat == 1 || (parameter.lsmopt.stc_qs && parameter.lsmopt.stc_qs_snx_sat)
+elseif parameter.lsmopt.stc_sat == 1
     col_est = [[x_.coorx_sat.col] [x_.coory_sat.col] [x_.coorz_sat.col]];
-    if parameter.lsmopt.stc_qs && parameter.lsmopt.stc_qs_snx_sat
-        col_red = [col_red [x_.coorx_qu.col] [x_.coory_qu.col] [x_.coorz_qu.col]];
-    end
-elseif parameter.lsmopt.stc_qu == 1 || (parameter.lsmopt.stc_qs && parameter.lsmopt.stc_qs_snx_qu)
+elseif parameter.lsmopt.stc_qu == 1
     col_est = [[x_.coorx_qu.col] [x_.coory_qu.col] [x_.coorz_qu.col]];
-    if parameter.lsmopt.stc_qs && parameter.lsmopt.stc_qs_snx_qu
-        col_red = [col_red [x_.coorx_sat.col] [x_.coory_sat.col] [x_.coorz_sat.col]];
-    end
+elseif parameter.lsmopt.stc_qs
+    col_est = [[x_.coorx_sat.col] [x_.coory_sat.col] [x_.coorz_sat.col] [x_.coorx_qu.col] [x_.coory_qu.col] [x_.coorz_qu.col]];
 end      
 
 if outsnx.zwd == 0

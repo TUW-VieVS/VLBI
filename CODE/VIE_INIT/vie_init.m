@@ -290,12 +290,16 @@ switch(parameter.data_type)
         fprintf('...reading the vgosDB file finished!\n');
         
         catch ME
-           rmdir(curNcFolder, 's');
+           basepath = fileparts(pwd); 
+           curNcFolder = fullfile(basepath, regexprep(curNcFolder, '^[\.\\/]+', ''));
+           rmdir(curNcFolder(1:end), 's');
            rethrow(ME)
         end
         
         % remove the unpacked vgosDB folder
         if wasCompressed
+            basepath = fileparts(pwd); 
+            curNcFolder = fullfile(basepath, regexprep(curNcFolder, '^[\.\\/]+', ''));
             rmdir(curNcFolder, 's');
         end
     
@@ -362,6 +366,7 @@ switch(parameter.data_type)
             sat_orbit_file_type = '';
         end    
         [antenna, sources, scan, parameter] = read_vso(vso_file_path, vso_file_name, trf, trffile{2}, crf, crffile{2}, sat_orbit_file_path, sat_orbit_file_name, sat_orbit_file_type, parameter);
+        refFreq='missingInvgosDB';
         fprintf('...reading the VSO file finished!\n');
 
     % #############################
