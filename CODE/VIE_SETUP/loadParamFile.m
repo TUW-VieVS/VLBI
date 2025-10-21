@@ -1113,8 +1113,6 @@ set(handles.radiobutton_estStaCoord_SatObsOnly, 'Value', parameter.lsmopt.stc_sa
 set(handles.radiobutton_estStaCoord_QuObsOnly, 'Value', parameter.lsmopt.stc_qu)
 set(handles.radiobutton_estStaCoord_AllObs, 'Value', parameter.lsmopt.stc_all)
 set(handles.radiobutton_estStaCoord_QSObs_Sep, 'Value', parameter.lsmopt.stc_qs)
-set(handles.rb_StaCoord_snx_qs_sat, 'Value', parameter.lsmopt.stc_qs_snx_sat)
-set(handles.rb_StaCoord_snx_qs_qu, 'Value', parameter.lsmopt.stc_qs_snx_qu)
 set(handles.checkbox_estStaCoord_AddDatumConditions, 'Value', parameter.lsmopt.addDatumCd)
 set(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Value', parameter.lsmopt.nnt_stc)
 set(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Value', parameter.lsmopt.nnr_stc)
@@ -1154,10 +1152,6 @@ if parameter.lsmopt.stc == 1
         set(handles.checkbox_estimation_leastSquares_coordinates_NNT, 'Enable', 'off')
         set(handles.checkbox_estimation_leastSquares_coordinates_NNR, 'Enable', 'off')
         set(handles.checkbox_estimation_leastSquares_coordinates_NNS, 'Enable', 'off')    
-    end
-    if parameter.lsmopt.stc_qs
-        set(handles.rb_StaCoord_snx_qs_sat, 'Enable', 'on')
-        set(handles.rb_StaCoord_snx_qs_qu, 'Enable', 'on')      
     end
 else
     set(handles.radiobutton_estStaCoord_SatObsOnly, 'Enable', 'off')

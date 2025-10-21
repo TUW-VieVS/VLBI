@@ -113,6 +113,9 @@ function [parameter] = checkParameterFile(parameter)
     if ~isfield(parameter.vie_mod, 'cntrlm')
         parameter.vie_mod.cntrlm = ' ';
     end
+    if ~isfield(parameter, 'createSkyPlots')
+        parameter.createSkyPlots = 0;
+    end
     
     % ambiguity related parameters 
     if ~isfield(parameter.vie_init, 'res_compute')

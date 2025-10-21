@@ -482,7 +482,7 @@ else
     ns_s = 0;
 end
 % number of quasars
-if isfield(sources, 'q') && ~isempty([sources.q.name])
+if isfield(sources, 'q') && ~isempty([sources.q])
     ns_q = length(sources.q);
 else
     ns_q = 0;
@@ -1307,11 +1307,11 @@ if ess == 1
         fprintf('antenna coor. dx offsets (using all obs):     %4d\n',dj(13));
         fprintf('antenna coor. dy offsets (using all obs):     %4d\n',dj(14));
         fprintf('antenna coor. dz offsets (using all obs):     %4d\n',dj(15));
-    elseif opt.stc_sat && opt.stc   
+    elseif (opt.stc_sat && opt.stc) ||  (opt.stc_qs && opt.stc)
         fprintf('antenna coor. dx offsets (using sat obs):     %4d\n',dj(27));
         fprintf('antenna coor. dy offsets (using sat obs):     %4d\n',dj(28));
         fprintf('antenna coor. dz offsets (using sat obs):     %4d\n',dj(29));
-    elseif opt.stc_qu && opt.stc 
+    elseif (opt.stc_qu && opt.stc) ||  (opt.stc_qs && opt.stc)
         fprintf('antenna coor. dx offsets (using qu obs):      %4d\n',dj(30));
         fprintf('antenna coor. dy offsets (using qu obs):      %4d\n',dj(31));
         fprintf('antenna coor. dz offsets (using qu obs):      %4d\n',dj(32));
@@ -1326,10 +1326,36 @@ if ess == 1
         fprintf('satellite position offsets dw/dw/dz:          %4d per satellite (%d satellite(s))\n',dj(18)/ns_s ,ns_s);
     end
     if logical(opt.est_scale)
-        fprintf('scale parameter:                              %4d\n',dj(19));
+        fprintf('scale parameter:                          %4d\n',dj(19));
     end
     if logical(opt.est_bdco)
-        fprintf('total baseline dependent clock offsets:       %4d\n',dj(20));
+        fprintf('total baseline dependent clock offsets:   %4d\n',dj(20));
+    end
+    if opt.KepEle.estKepEle == 1
+        fprintf('semi-major axis (a):                          %4d per satellite (%d satellite(s))\n',dj(21)/ns_s ,ns_s);
+        fprintf('eccentricity (e):                             %4d per satellite (%d satellite(s))\n',dj(22)/ns_s ,ns_s);
+        fprintf('inclination (i):                              %4d per satellite (%d satellite(s))\n',dj(23)/ns_s ,ns_s);
+        fprintf('right ascension of ascending node (Omega):    %4d per satellite (%d satellite(s))\n',dj(24)/ns_s ,ns_s);
+        fprintf('argument of perigee (omega):                  %4d per satellite (%d satellite(s))\n',dj(25)/ns_s ,ns_s);
+        fprintf('argument of latitude (u0):                    %4d per satellite (%d satellite(s))\n',dj(26)/ns_s ,ns_s);
+    end
+
+    mfw_q = [];
+    mfw_s = [];
+    for iScan=1:length(scan)
+        if strcmp(scan(iScan).obs_type, 'q') 
+            for i=1:length(scan(iScan).stat)
+                if ~isempty(scan(iScan).stat(i).mfw)
+                    mfw_q(end+1) = scan(iScan).stat(i).mfw;
+                end
+            end
+        else
+            for i=1:length(scan(iScan).stat)
+                if ~isempty(scan(iScan).stat(i).mfw)
+                    mfw_s(end+1) = scan(iScan).stat(i).mfw;
+                end
+            end
+        end
     end
     if opt.KepEle.estKepEle == 1
         fprintf('semi-major axis (a):                          %4d per satellite (%d satellite(s))\n',dj(21)/ns_s ,ns_s);

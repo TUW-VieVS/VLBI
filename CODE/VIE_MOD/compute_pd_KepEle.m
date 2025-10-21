@@ -22,7 +22,7 @@
 %   Revision:
 %
 % ************************************************************************
-function [pdKepEle_dT, pdKepEle_dR, pdKepEle_ana, pdKepEle_FRP] = compute_pd_KepEle(GM, scan, sat, dKepEle, tau, tauC_KepEle1, tauC_KepEle2, tauC_KepEle3, tauC_KepEle4, tauC_KepEle5, tauC_KepEle6, rad2mas, pdSatPosGCRF, parameter)
+function [pdKepEle_dT, pdKepEle_dR, pdKepEle_ana, pdKepEle_FRP] = compute_pd_KepEle(GM, scan, sat, satnum, dKepEle, tau, tauC_KepEle1, tauC_KepEle2, tauC_KepEle3, tauC_KepEle4, tauC_KepEle5, tauC_KepEle6, rad2mas, coerpr,trpr,hrpr,tbnd,sclpar, pdSatPosGCRF, parameter)
     global c       
     tosc = sat.tosc;
     r = scan.crfSat;
@@ -44,7 +44,7 @@ function [pdKepEle_dT, pdKepEle_dR, pdKepEle_ana, pdKepEle_FRP] = compute_pd_Kep
     [drdpar_dR] = drdorb_num(GM, scan.mjd, tosc, r, v);  %numerical drdpar
 
     %FRP
-    if parameter.lsmopt.KepEle.estKepEle_FRP
+    if parameter.lsmopt.KepEle.estKepEle_FRP && parameter.lsmopt.KepEle.estKepEle
         [drdpar_FRP,~] = getrpr(sat.fso_name,scan.time_gps,coerpr,trpr,hrpr,tbnd,sclpar,satnum);
     else
         drdpar_FRP = zeros(6,3);

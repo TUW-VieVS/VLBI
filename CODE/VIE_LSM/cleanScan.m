@@ -45,7 +45,7 @@ allStationNames = strtrim(allStationNames);
 % Sources:
 % - Quasars
 %nSources_q = size(sources.q, 2);
-if ~isempty([sources.q.name])
+if ~isempty([sources.q])
     allSourceNames_q  = {sources.q.name}';
     allSourceNames_q  = strtrim(allSourceNames_q);
     nSources_q = size({sources.q.name}, 2);

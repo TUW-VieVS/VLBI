@@ -161,6 +161,7 @@
 %   25 Nov 2021 by H. Wolf: created some external functions 
 %   17 Dec 2024 by H. Wolf: added option to estimate orbital elements
 %   25 May 2025 by H. Wolf: changed command window output
+%   07 Aug 2025 by H. Wolf: added partials of satellite time delay w.r.t. EOPs
 %
 % ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %  NOTATION:
@@ -561,6 +562,16 @@ if isfield(sources, 's')
     end
 end
 
+if ~parameter.lsmopt.KepEle.estKepEle_FRP
+    coerpr = 0;
+    trpr = 0;
+    hrpr = 0;
+    tbnd = 0;
+    sclpar = 0;
+    satnum=0;
+end
+
+
 % *************************
 %  loop over scans
 % *************************
@@ -728,8 +739,9 @@ for iSc = 1:number_of_all_scans
                         [~, ~, ~, ~, ~, ~, tauC_KepEle4, ~, ~, ~, ~, ~] = calcDelaySatellite(sourcesChanged_KepEle4, iSc, scan, idStation1, idStation2, flag_fix_sat_pos_to_stat1, ddt_threshold, crsStation1, crsStation2, antenna, sec_of_day, mjd, max_iterations, ephem, v2, t2c);
                         [~, ~, ~, ~, ~, ~, tauC_KepEle5, ~, ~, ~, ~, ~] = calcDelaySatellite(sourcesChanged_KepEle5, iSc, scan, idStation1, idStation2, flag_fix_sat_pos_to_stat1, ddt_threshold, crsStation1, crsStation2, antenna, sec_of_day, mjd, max_iterations, ephem, v2, t2c);
                         [~, ~, ~, ~, ~, ~, tauC_KepEle6, ~, ~, ~, ~, ~] = calcDelaySatellite(sourcesChanged_KepEle6, iSc, scan, idStation1, idStation2, flag_fix_sat_pos_to_stat1, ddt_threshold, crsStation1, crsStation2, antenna, sec_of_day, mjd, max_iterations, ephem, v2, t2c);
-                 end
-        end 
+                        [pdeop] = getSatelliteDelayPartials_dEOP(scan(iSc).crfSat, trsStation1, trsStation2, crsStation1, crsStation2, dQdxp, dQdyp, dQdut, dQddX, dQddY, v2);
+                end
+        end
         
         % further corrections (same for both models (Sekido & Fukushima, p.141))
         [a_ngr, a_egr, scan, antenna, tau]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tau, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
@@ -748,8 +760,8 @@ for iSc = 1:number_of_all_scans
         scan(iSc).obs(iobs).comCKepEle5 = tauC_KepEle5; %[sec]
         scan(iSc).obs(iobs).comCKepEle6 = tauC_KepEle6; %[sec]
         
-        if scan(iSc).obs_type == 's'  
-            [pdKepEle_dT, pdKepEle_dR, pdKepEle_ana, pdKepEle_FRP] = compute_pd_KepEle(GM, scan(iSc), sources.s(scan(iSc).iso), dKepEle, tau, tauC_KepEle1, tauC_KepEle2, tauC_KepEle3, tauC_KepEle4, tauC_KepEle5, tauC_KepEle6, rad2mas, pdSatPosGCRF, parameter);      
+        if scan(iSc).obs_type == 's' 
+            [pdKepEle_dT, pdKepEle_dR, pdKepEle_ana, pdKepEle_FRP] = compute_pd_KepEle(GM, scan(iSc), sources.s(scan(iSc).iso), satnum, dKepEle, tau, tauC_KepEle1, tauC_KepEle2, tauC_KepEle3, tauC_KepEle4, tauC_KepEle5, tauC_KepEle6, rad2mas, coerpr,trpr,hrpr,tbnd,sclpar, pdSatPosGCRF, parameter);      
         end
     
         % w/o ntsl for sinex calibration block
@@ -829,11 +841,11 @@ for iSc = 1:number_of_all_scans
             pdX = K'* (dQddX * trsBaseline')/c;
             pdY = K'* (dQddY * trsBaseline')/c;
         else %satellite observation
-            pdx = 0;
-            pdy = 0;
-            put = 0;
-            pdX = 0;
-            pdY = 0;
+            pdx = pdeop(1);
+            pdy = pdeop(2);
+            put = pdeop(3);
+            pdX = pdeop(4);
+            pdY = pdeop(5);
         end
         
         % wrt source coordinates [cm/mas]

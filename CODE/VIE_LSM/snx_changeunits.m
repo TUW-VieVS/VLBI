@@ -31,12 +31,25 @@ function [N_sinex, b_sinex] = snx_changeunits(N_sinex,b_sinex,col_sinex,outsnx)
     c_zwd=[col_sinex.zwd.col];
     c_tgr=[[col_sinex.ngr.col] [col_sinex.egr.col]];
     c_sou=[col_sinex.ra col_sinex.de];
-    c_xyz=[col_sinex.coorx col_sinex.coory col_sinex.coorz];
     c_eop4=[col_sinex.xp col_sinex.yp col_sinex.dX col_sinex.dY];
     c_dut1=[col_sinex.dut1];
     c_KepEle_a=[col_sinex.KepEle1];
     c_KepEle_5=[col_sinex.KepEle2 col_sinex.KepEle3 col_sinex.KepEle4 col_sinex.KepEle5 col_sinex.KepEle6];
     
+    c_xyz = [];
+    if isfield(col_sinex, 'coorx') && isfield(col_sinex, 'coory') && isfield(col_sinex, 'coorz')
+        c_xyz = [col_sinex.coorx col_sinex.coory col_sinex.coorz];
+    elseif isfield(col_sinex, 'coorx_sat') && isfield(col_sinex, 'coory_sat') && isfield(col_sinex, 'coorz_sat')
+        c_xyz = [col_sinex.coorx_sat col_sinex.coory_sat col_sinex.coorz_sat];
+        % check if also stations from quasar coordinates are estimated
+        if isfield(col_sinex, 'coorx_qu') && isfield(col_sinex, 'coory_qu') && isfield(col_sinex, 'coorz_qu')
+            c_xyz = [c_xyz col_sinex.coorx_qu col_sinex.coory_qu col_sinex.coorz_qu];
+        end
+    elseif isfield(col_sinex, 'coorx_qu') && isfield(col_sinex, 'coory_qu') && isfield(col_sinex, 'coorz_qu')
+        c_xyz = [col_sinex.coorx_qu col_sinex.coory_qu col_sinex.coorz_qu];
+    end
+
+
     % zwd
     if outsnx.zwd==1
         N_sinex(c_zwd,c_zwd) = N_sinex(c_zwd,c_zwd).*10000; %1/cm^2 --> 1/m^2

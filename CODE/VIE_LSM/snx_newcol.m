@@ -25,35 +25,48 @@ function col_sinex=snx_newcol(col_est,x_,antenna,outsnx, parameter)
         cx = "coorx";
         cy = "coory";
         cz = "coorz";
-    elseif parameter.lsmopt.stc_sat == 1 || (parameter.lsmopt.stc_qs && parameter.lsmopt.stc_qs_snx_sat)
+    elseif parameter.lsmopt.stc_sat == 1
         cx = "coorx_sat";
         cy = "coory_sat";
         cz = "coorz_sat";
-    elseif parameter.lsmopt.stc_qu == 1 || (parameter.lsmopt.stc_qs && parameter.lsmopt.stc_qs_snx_qu)
+    elseif parameter.lsmopt.stc_qu == 1
         cx = "coorx_qu";
         cy = "coory_qu";
         cz = "coorz_qu";
+    elseif parameter.lsmopt.stc_qs
+        cx = ["coorx_sat", "coorx_qu"];
+        cy = ["coory_sat", "coory_qu"];
+        cz = ["coorz_sat", "coorz_qu"];
     end
 
     % x-coordinate
-    clear old
-    old=[x_.(cx).col]; newcol_x=[];
-    for i=1:length(old)
-        [a,newcol_x(i)]=find(old(i)==col_est);
+    newcol_x=[];
+    for j=1:length(cx)
+        clear old
+        old=[x_.(cx(j)).col]; 
+        for i=1:length(old)
+            [a,newcol_x(j,i)]=find(old(i)==col_est);
+        end
     end
 
     % y-coordinate
-    clear old
-    old=[x_.(cy).col]; newcol_y=[];
-    for i=1:length(old)
-        [a,newcol_y(i)]=find(old(i)==col_est);
+    newcol_y=[];
+    for j=1:length(cy)
+        clear old
+        old=[x_.(cy(j)).col]; 
+        for i=1:length(old)
+            [a,newcol_y(j,i)]=find(old(i)==col_est);
+        end
     end
     
     % z-coordinate
-    clear old
-    old=[x_.(cz).col]; newcol_z=[];
-    for i=1:length(old)
-        [a,newcol_z(i)]=find(old(i)==col_est);
+    newcol_z=[];
+    for j=1:length(cz)
+        clear old
+        old=[x_.(cz(j)).col]; 
+        for i=1:length(old)
+            [a,newcol_z(j,i)]=find(old(i)==col_est);
+        end
     end
 
     %%
@@ -184,6 +197,14 @@ function col_sinex=snx_newcol(col_est,x_,antenna,outsnx, parameter)
         for i=1:length(old)
             [a,newcol_KepEle6(i)]=find(old(i)==col_est);
         end
+
+        % satellite name
+        clear old
+        satnames = strings(length(x_.KepEle1), 1);
+        for i=1:length(x_.KepEle1)
+            satnames(i)=[x_.KepEle1(1).name];
+        end
+
     end
     
     %%
@@ -216,9 +237,11 @@ function col_sinex=snx_newcol(col_est,x_,antenna,outsnx, parameter)
         end
     end
     
-    col_sinex.coorx=newcol_x;
-    col_sinex.coory=newcol_y;
-    col_sinex.coorz=newcol_z;
+    for j=1:length(cx)
+        col_sinex.(cx(j))=newcol_x(j,:);
+        col_sinex.(cy(j))=newcol_y(j,:);
+        col_sinex.(cz(j))=newcol_z(j,:);
+    end
     
     
     col_sinex.xp=[];
@@ -262,7 +285,7 @@ function col_sinex=snx_newcol(col_est,x_,antenna,outsnx, parameter)
     col_sinex.KepEle4=[];
     col_sinex.KepEle5=[];
     col_sinex.KepEle6=[];
-
+    col_sinex.satnames=[];
     if outsnx.orb==1
         col_sinex.KepEle1=newcol_KepEle1;
         col_sinex.KepEle2=newcol_KepEle2;
@@ -277,6 +300,7 @@ function col_sinex=snx_newcol(col_est,x_,antenna,outsnx, parameter)
         col_sinex.mjd_KepEle4=x_.KepEle4.mjd;
         col_sinex.mjd_KepEle5=x_.KepEle5.mjd;
         col_sinex.mjd_KepEle6=x_.KepEle6.mjd;
+        col_sinex.satnames = satnames;
     end
      
     

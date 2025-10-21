@@ -49,6 +49,8 @@ function [ wrapper_data ] = read_vgosdb_wrapper(path_nc, session_name, institute
     num_institutions    = length(institute);
        
     % ##### Get wrapper filename #####
+    basepath = fileparts(pwd); 
+    path_nc = fullfile(basepath, regexprep(path_nc, '^[\.\\/]+', ''));
     tmp = dir(path_nc);
     tmp = {tmp.name};
     
