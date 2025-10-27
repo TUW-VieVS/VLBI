@@ -21,22 +21,28 @@
 
 function col_sinex=snx_newcol(col_est,x_,antenna,outsnx, parameter)
 
-    if parameter.lsmopt.stc_all == 1
-        cx = "coorx";
-        cy = "coory";
-        cz = "coorz";
-    elseif parameter.lsmopt.stc_sat == 1
-        cx = "coorx_sat";
-        cy = "coory_sat";
-        cz = "coorz_sat";
-    elseif parameter.lsmopt.stc_qu == 1
-        cx = "coorx_qu";
-        cy = "coory_qu";
-        cz = "coorz_qu";
-    elseif parameter.lsmopt.stc_qs
-        cx = ["coorx_sat", "coorx_qu"];
-        cy = ["coory_sat", "coory_qu"];
-        cz = ["coorz_sat", "coorz_qu"];
+    if parameter.lsmopt.stc
+        if parameter.lsmopt.stc_all
+            cx = "coorx";
+            cy = "coory";
+            cz = "coorz";
+        elseif parameter.lsmopt.stc_sat
+            cx = "coorx_sat";
+            cy = "coory_sat";
+            cz = "coorz_sat";
+        elseif parameter.lsmopt.stc_qu
+            cx = "coorx_qu";
+            cy = "coory_qu";
+            cz = "coorz_qu";
+        elseif parameter.lsmopt.stc_qs
+            cx = ["coorx_sat", "coorx_qu"];
+            cy = ["coory_sat", "coory_qu"];
+            cz = ["coorz_sat", "coorz_qu"];
+        end
+    else
+        cx = [];
+        cy = [];
+        cz = [];
     end
 
     % x-coordinate
