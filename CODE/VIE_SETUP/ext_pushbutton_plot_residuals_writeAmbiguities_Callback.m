@@ -106,7 +106,7 @@ else
 %             end
             
             band_letter = parameter.vie_init.vgosDb_observation_parameter(end);
-            AMBfolder = ['../DATA/AMB/PU/', yearStr, '/'];
+            AMBfolder = ['../DATA/AMB/', yearStr, '/'];
             AMBfilename = [allPopupmenuEntriesSessions{chosenSessionInd}, '_', band_letter, '.AMB'];
 
             % Check if outlier folder exists => if not => create it!

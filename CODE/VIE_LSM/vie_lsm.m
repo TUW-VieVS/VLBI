@@ -407,11 +407,13 @@ end
 fprintf('\n')
 
 
-%% TESTING AMB!
-parameter.amb.amb_file_dir = 'PU';
+%% Applying Ambiguities from .AMB file
 parameter.amb.flag_change_amb = false; %true
 
 if strcmp(parameter.vie_init.amb, 'vievscalc')
+    parameter.amb.flag_change_amb = true; %true
+end
+if strcmp(parameter.vie_init.amb, 'useAmbFile')
     parameter.amb.flag_change_amb = true; %true
 end
 if parameter.lsmopt.res_compute
@@ -421,18 +423,23 @@ if parameter.lsmopt.res_apply
     parameter.amb.flag_change_amb = true; %true
 end
 
-checkPath = ['../DATA/AMB/', parameter.amb.amb_file_dir, '/', parameter.filepath(end-4:end-1), '/'];
+checkPath = ['../DATA/AMB/', parameter.filepath(end-4:end-1), '/'];
 if ~exist(checkPath,'dir')
     mkdir(checkPath);
 end
 
 % Ambiguity file
-amb_filename_path = ['../DATA/AMB/', parameter.amb.amb_file_dir, '/', parameter.filepath(end-4:end-1), '/', [parameter.session_name '_' parameter.vie_init.vgosDb_observation_parameter(end) ], '.AMB'];
+amb_filename_path = ['../DATA/AMB/', parameter.filepath(end-4:end-1), '/', [parameter.session_name '_' parameter.vie_init.vgosDb_observation_parameter(end) ], '.AMB'];
 if parameter.amb.flag_change_amb 
     if exist(amb_filename_path, 'file')
-        [parameter.amb.obs2change] = readAMB(amb_filename_path);
-        fprintf('%d baselines with ambiguities will be changed\n',size(parameter.amb.obs2change,2)); 
-        scan = changeAMB(scan, antenna, sources, parameter);
+        fprintf('Ambiguities from .AMB file are applied:\n');
+        try
+            [parameter.amb.obs2change] = readAMB(amb_filename_path);
+            fprintf('%d ambiguities will be applied to the observations\n',size(parameter.amb.obs2change,2)); 
+            scan = changeAMB(scan, antenna, sources, parameter);
+        catch
+            fprintf('.AMB file is empty\n');
+        end
     else
         fprintf('Ambiguity list not available: %s\n', amb_filename_path);
     end

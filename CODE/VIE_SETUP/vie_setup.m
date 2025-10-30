@@ -22,7 +22,7 @@ function varargout = vie_setup(varargin)
 
 % Edit the above text to modify the response to help vie_setup
 
-% Last Modified by GUIDE v2.5 17-Oct-2025 11:38:15
+% Last Modified by GUIDE v2.5 29-Oct-2025 09:07:51
 
 
 % 07 Jan 2014 by Matthias Madzak: LEVEL2 bug corrected
@@ -604,6 +604,7 @@ end
 
 set(handles.radiobutton_obsFile, 'Value', 1);
 set(handles.radiobutton_vievsAmb, 'Value', 0);
+set(handles.radiobutton_useAmbFile, 'Value', 0); 
 
 
 % Choose default command line output for vie_setup
@@ -11594,21 +11595,25 @@ function checkbox_ambiguity_correction_Callback(hObject, eventdata, handles)
 if get(handles.checkbox_ambiguity_correction, 'Value') == 0
     set(handles.radiobutton_obsFile, 'Enable', 'off')
     set(handles.radiobutton_vievsAmb, 'Enable', 'off') 
+    set(handles.radiobutton_useAmbFile, 'Enable', 'off') 
     set(handles.checkbox_residual_compute, 'Enable', 'off') 
     set(handles.checkbox_residual_apply, 'Enable', 'off') 
     set(handles.checkbox_residual_compute, 'Value', 0) 
     set(handles.checkbox_residual_apply, 'Value', 0) 
     set(handles.radiobutton_obsFile, 'Value', 0) 
     set(handles.radiobutton_vievsAmb, 'Value', 0) 
+    set(handles.radiobutton_useAmbFile, 'Value', 0);
 else
     set(handles.radiobutton_obsFile, 'Enable', 'on')
     set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
+    set(handles.radiobutton_useAmbFile, 'Enable', 'on') 
     set(handles.checkbox_residual_compute, 'Enable', 'on') 
     set(handles.checkbox_residual_apply, 'Enable', 'on') 
     set(handles.checkbox_residual_compute, 'Value', 0) 
     set(handles.checkbox_residual_apply, 'Value', 0) 
     set(handles.radiobutton_obsFile, 'Value', 1) 
     set(handles.radiobutton_vievsAmb, 'Value', 0) 
+    set(handles.radiobutton_useAmbFile, 'Value', 0);
 end
 
 % Update handles structure
@@ -12652,6 +12657,7 @@ function radiobutton_obsFile_Callback(hObject, eventdata, handles)
 
 set(handles.radiobutton_obsFile, 'Value', 1);
 set(handles.radiobutton_vievsAmb, 'Value', 0);
+set(handles.radiobutton_useAmbFile, 'Value', 0);
 
 % Update handles structure
 guidata(hObject, handles);
@@ -12665,6 +12671,7 @@ function radiobutton_vievsAmb_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+set(handles.radiobutton_useAmbFile, 'Value', 0);
 set(handles.radiobutton_obsFile, 'Value', 0);
 set(handles.radiobutton_vievsAmb, 'Value', 1);
 
@@ -12672,6 +12679,23 @@ set(handles.radiobutton_vievsAmb, 'Value', 1);
 guidata(hObject, handles);
 
 % Hint: get(hObject,'Value') returns toggle state of radiobutton_vievsAmb
+
+% --- Executes on button press in radiobutton_useAmbFile.
+function radiobutton_useAmbFile_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton_useAmbFile (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+set(handles.radiobutton_obsFile, 'Value', 0);
+set(handles.radiobutton_vievsAmb, 'Value', 0);
+set(handles.radiobutton_useAmbFile, 'Value', 1);
+
+% Update handles structure
+guidata(hObject, handles);
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_useAmbFile
+
+
 
 % AmbCheck = handles.checkbox_ambiguity_correction.Value;
 % if AmbCheck
