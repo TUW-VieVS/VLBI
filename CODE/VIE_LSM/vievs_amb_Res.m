@@ -133,15 +133,14 @@ end
 %% Save Ambiguities to TXT File
 
 % Ambiguity file
-parameter.amb.amb_file_dir = 'PU';
 parameter.amb.flag_change_amb = true; %true
 
-checkPath = ['../DATA/AMB/', parameter.amb.amb_file_dir, '/', parameter.filepath(end-4:end-1), '/'];
+checkPath = ['../DATA/AMB/', parameter.filepath(end-4:end-1), '/'];
 if ~exist(checkPath,'dir')
     mkdir(checkPath);
 end
 
-output_file_path = ['../DATA/AMB/', parameter.amb.amb_file_dir, '/', parameter.filepath(end-4:end-1), '/', [parameter.session_name '_' parameter.vie_init.vgosDb_observation_parameter(end) ], '.AMB'];
+output_file_path = ['../DATA/AMB/', parameter.filepath(end-4:end-1), '/', [parameter.session_name '_' parameter.vie_init.vgosDb_observation_parameter(end) ], '.AMB'];
 
 exist(output_file_path, 'file');
 

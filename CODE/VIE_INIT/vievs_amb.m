@@ -77,18 +77,6 @@ end
 allBaselines = NaN(mnn, mnn);  % Table for all baseline medians
 combinations = nchoosek(1:mnn, 3); % Generate all combinations of 3 stations 
 
-% comb_orig = combinations;
-% comb_rand = combinations(randperm(size(combinations,1)), :);
-% start_row = 86;
-% comb_shifted = [combinations(start_row:end, :);
-%     combinations(1:start_row-1, :)];
-% save('comb_shifted.mat');
-% idxx = find(combinations(:,1) == 4, 1,"first");
-% if ~isempty(idxx)
-%     comb_shifted = [combinations(idxx:end, :);
-%         combinations(1:idxx-1, :)];
-% end
-
 i1Indices = [mb_sb_X.i1]';
 i2Indices = [mb_sb_X.i2]';
 diffs = [mb_sb_X.diff]';
@@ -396,15 +384,14 @@ end
 %% Save Ambiguities to TXT File
 
 % Ambiguity file
-parameter.amb.amb_file_dir = 'PU';
 parameter.amb.flag_change_amb = true; %true
 
-checkPath = ['../DATA/AMB/', parameter.amb.amb_file_dir, '/', parameter.filepath(end-4:end-1), '/'];
+checkPath = ['../DATA/AMB/', parameter.filepath(end-4:end-1), '/'];
 if ~exist(checkPath,'dir')
     mkdir(checkPath);
 end
 
-output_file_path = ['../DATA/AMB/', parameter.amb.amb_file_dir, '/', parameter.filepath(end-4:end-1), '/', [parameter.session_name '_' parameter.vie_init.vgosDb_observation_parameter(end) ], '.AMB'];
+output_file_path = ['../DATA/AMB/', parameter.filepath(end-4:end-1), '/', [parameter.session_name '_' parameter.vie_init.vgosDb_observation_parameter(end) ], '.AMB'];
 
 exist(output_file_path, 'file');
 

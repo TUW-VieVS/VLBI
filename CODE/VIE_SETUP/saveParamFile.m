@@ -220,6 +220,8 @@ if get(handles.radiobutton_obsFile, 'Value')
     parameter.vie_init.amb='observation_database_amb';
 elseif get(handles.radiobutton_vievsAmb, 'Value')
     parameter.vie_init.amb='vievscalc';
+elseif get(handles.radiobutton_useAmbFile, 'Value')
+    parameter.vie_init.amb='useAmbFile';
 end
 
 

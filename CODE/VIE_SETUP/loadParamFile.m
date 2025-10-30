@@ -336,8 +336,10 @@ if isfield(parameter.vie_init, 'amb')
         case 'observation_database_amb'
             set(handles.radiobutton_obsFile, 'Value', 1) 
             set(handles.radiobutton_vievsAmb, 'Value', 0) 
+            set(handles.radiobutton_useAmbFile, 'Value', 0);
             set(handles.radiobutton_obsFile, 'Enable', 'on')
             set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
+            set(handles.radiobutton_useAmbFile, 'Enable', 'on')
             set(handles.checkbox_residual_compute, 'Enable', 'on') 
             set(handles.checkbox_residual_apply, 'Enable', 'on') 
             set(handles.checkbox_residual_compute, 'Value', 0) 
@@ -345,8 +347,21 @@ if isfield(parameter.vie_init, 'amb')
         case 'vievscalc'
             set(handles.radiobutton_obsFile, 'Value', 0);
             set(handles.radiobutton_vievsAmb, 'Value', 1);   
+            set(handles.radiobutton_useAmbFile, 'Value', 0);
             set(handles.radiobutton_obsFile, 'Enable', 'on')
             set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
+            set(handles.radiobutton_useAmbFile, 'Enable', 'on')
+            set(handles.checkbox_residual_compute, 'Enable', 'on') 
+            set(handles.checkbox_residual_apply, 'Enable', 'on') 
+            set(handles.checkbox_residual_compute, 'Value', 0) 
+            set(handles.checkbox_residual_apply, 'Value', 0) 
+        case 'useAmbFile'
+            set(handles.radiobutton_obsFile, 'Value', 0);
+            set(handles.radiobutton_vievsAmb, 'Value', 0);   
+            set(handles.radiobutton_useAmbFile, 'Value', 1);
+            set(handles.radiobutton_obsFile, 'Enable', 'on')
+            set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
+            set(handles.radiobutton_useAmbFile, 'Enable', 'on')
             set(handles.checkbox_residual_compute, 'Enable', 'on') 
             set(handles.checkbox_residual_apply, 'Enable', 'on') 
             set(handles.checkbox_residual_compute, 'Value', 0) 
@@ -358,12 +373,14 @@ if isfield(parameter.vie_init, 'ambiguity_correction')
      if parameter.vie_init.ambiguity_correction == 0
         set(handles.radiobutton_obsFile, 'Enable', 'off')
         set(handles.radiobutton_vievsAmb, 'Enable', 'off') 
+        set(handles.radiobutton_useAmbFile, 'Enable', 'off')
         set(handles.checkbox_residual_compute, 'Enable', 'off') 
         set(handles.checkbox_residual_apply, 'Enable', 'off') 
         set(handles.checkbox_residual_compute, 'Value', 0) 
         set(handles.checkbox_residual_apply, 'Value', 0) 
         set(handles.radiobutton_obsFile, 'Value', 0) 
         set(handles.radiobutton_vievsAmb, 'Value', 0) 
+        set(handles.radiobutton_useAmbFile, 'Value', 0) 
      end
 end
 
