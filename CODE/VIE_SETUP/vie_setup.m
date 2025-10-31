@@ -208,6 +208,8 @@ allMainUiPanels=[handles.uipanel_file_setInputFiles, ...
 % save all ui panels to handles struct
 handles.allMainUiPanels=allMainUiPanels;
 
+set(handles.figure_vievs2, 'WindowStyle', 'normal');
+
 % get directories' content
 dirsInOptFolder=dir('../../VLBI_OPT/');
 dirsInOutlierFolder=dir('../DATA/OUTLIER/');
