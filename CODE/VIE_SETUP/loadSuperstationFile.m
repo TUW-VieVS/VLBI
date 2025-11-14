@@ -40,7 +40,7 @@ set(handles.text_parameters_refFrames_selected_superstation_file, 'String', file
 % define all coordinate frames which exist in superstations file (those
 % should be used for the popupmenu in vievs)
 allCoordinateFrames={'vievsTrf', 'itrf2014', 'dtrf2014', 'vtrf2014', 'ivsTrf2014b', ...
-    'itrf2020', 'dtrf2020', 'jtrf2020', 'itrf2020_u2023', 'userOwnTrf'};
+    'itrf2020', 'dtrf2020', 'jtrf2020', 'itrf2020_u2023', 'itrf2020_u2024','userOwnTrf'};
 % update popupmenu
 newPopupmenuEntries=superstatFields(ismember(superstatFields, allCoordinateFrames));
 % set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Value', 1);

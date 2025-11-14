@@ -262,9 +262,9 @@ if ~isempty(superstatfile)
     handles.data.superstationFile=['../TRF/', dirsInTrfFolder(superstatfile).name];
     set(handles.text_parameters_refFrames_selected_superstation_file, 'String', handles.data.superstationFile);
     
-    % make ITRF2020-u2023 default if available
-    %logTRFFound=~cellfun(@isempty, strfind(get(handles.popupmenu_parameters_refFrames_superstationTRF, 'String'), 'itrf2020_u2023'));
-    logTRFFound=strcmp(get(handles.popupmenu_parameters_refFrames_superstationTRF,'String'), 'itrf2020_u2023');
+    % make ITRF2020-u2024 default if available
+    %logTRFFound=~cellfun(@isempty, strfind(get(handles.popupmenu_parameters_refFrames_superstationTRF, 'String'), 'itrf2020_u2024'));
+    logTRFFound=strcmp(get(handles.popupmenu_parameters_refFrames_superstationTRF,'String'), 'itrf2020_u2024');
     if sum(logTRFFound)>0
         set(handles.popupmenu_parameters_refFrames_superstationTRF, 'Value', find(logTRFFound));
     end
