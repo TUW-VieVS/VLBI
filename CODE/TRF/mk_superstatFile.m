@@ -23,7 +23,10 @@ idiF=1;
 nsCodesFile=inFiles(idiF).name; idiF=idiF+1;
 antennaInfoFile=inFiles(idiF).name; idiF=idiF+1;
 eccdatFile=inFiles(idiF).name; idiF=idiF+1;
+inFiles(idiF).name = '../TRF/data/gravity_deform_model_v2025-09-28.txt';
+fprintf('!!! Attention: Gravitational deformation taken from : %s\n\n',inFiles(idiF).name);
 gravdefFile=inFiles(idiF).name; idiF=idiF+1;
+
 itrf2014File=inFiles(idiF).name; idiF=idiF+1;
 dtrf2014File=inFiles(idiF).name; idiF=idiF+1;
 vtrf2014File=inFiles(idiF).name; idiF=idiF+1;
@@ -60,11 +63,16 @@ dtrf2020File='../TRF/data/DTRF2020_VLBI.snx'; %Seitz, M., Bloßfeld, M., Angerma
 %dtrf2020File='../TRF/data/DTRF2020u23_VLBI_prelim.xxx'; %Seitz, M., Bloßfeld, M., Angermann, D., Glomsda, M., Rudenko, S., Zeitlhöfler, J., & Seitz, F. (2023). DTRF2020 (Version v2) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.8369167
 
 itrf2020u2023File='../TRF/data/ITRF2020-u2023-IVS-TRF.SNX';
+itrf2020u2023psdfile='../TRF/data/ITRF2020-u2023-psd-vlbi.dat';
+
+itrf2020u2024File='../TRF/data/ITRF2020-u2024-IVS-TRF.SNX'; %Altamimi, Z., Rebischung, P., Collilieux, X., Métivier, L., Barnéoud, J., Chanard, K., and de La Serve, M. (2025) ITRF2020-u2024 [Data set]. IERS ITRS Center Hosted by IGN and IPGP, https://doi.org/10.18715/IPGP.2025.MH0MIN1J
+itrf2020u2024psdfile='../TRF/data/ITRF2020-u2024-psd-vlbi.dat';
 
 jtrf2020Dir='../TRF/data/JTRF/jtrf2020_defining_station_position_xyz_archive_vlbi';
 
 % Flags, for the availability of TRF files
 flag_trf_jtrf2020 = true;
+flag_trf_itrf2020u2024 = true;
 flag_trf_itrf2020u2023 = true;
 flag_trf_dtrf2020 = true;
 flag_trf_itrf2020 = true;
@@ -100,6 +108,7 @@ atm0=struct('vienna', [], 'gsfc', [], 'vandam', []);
 ns_codes=struct('code', [], 'name', [],'domes', [], 'CDP', [], 'comments', [], ...
     'antenna_info', [], 'ecc', [], ...
     'ocean_loading', [],  ...
+    'itrf2020_u2024', [], ...
     'itrf2020_u2023', [], ...
     'itrf2020', [], 'dtrf2020', [],  ...  
     'jtrf2020',[], ...
@@ -112,17 +121,6 @@ ns_codes=struct('code', [], 'name', [],'domes', [], 'CDP', [], 'comments', [], .
 % 2. read files
 % =============
 
-% First check, if vievsTRF is available!
-% - It is required in any case, because it is used as backup TRF file!
-if isempty(vievsTrfFile)
-    varargout{1} = 'The loction of the vievsTRF.txt (mandatory!) is not specified! Define the file location and run the program again.';
-    return;
-end
-
-% -----------------------
-% 2.1 Antenna information
-% -----------------------
-fprintf('2.1 Antenna information\n')
 
 % ----------------
 % 2.1.1 ns-codes.txt
@@ -174,6 +172,134 @@ end
 
 
 
+
+% First check, if vievsTRF is available!
+% - It is required in any case, because it is used as backup TRF file!
+if isempty(vievsTrfFile)
+    varargout{1} = 'The loction of the vievsTRF.txt (mandatory!) is not specified! Define the file location and run the program again.';
+    return;
+end
+
+
+
+
+% -------------------
+% VieVS TRF file
+% -------------------
+% This TRF is the backup-TRF for VieVS. Also in this
+% backup-TRF the estimated coordinates after an earthquake are written to!
+%
+% In this function: mk_superstatFile.m it is important that the VieVStrf is saved in the "nscodes" structure
+% before the ocean loading coorections are read in. In case that some
+% telescopes are missing in ns-codes.txt then the OL corrections would be
+% ignored.
+
+fprintf('\n Loading VieVS TRF file\n\n');
+
+% read data using textscan
+fid=fopen(vievsTrfFile);
+if (fid < 0)
+   varargout{1} = ['ERROR: Cannot open the file: ', vievsTrf];
+   return;
+end
+vievsTrf=textscan(fid, '%8s %20f %16f %16f %15f %12f %12f %11f %8f %8f %f %s', 'commentstyle', '%', 'delimiter', '|');
+fclose(fid);
+nStat=size(vievsTrf{1},1); % get number of stations
+
+% see if last column has same number of entries (otherwise add empty string)
+if size(vievsTrf{12},1)<nStat
+    vievsTrf{12}{nStat}='';
+end
+
+% add all stations to ns_codes struct
+for k=1:nStat
+    % 1. find station (of current line in vievstrf file) in ns_codes ...
+    if sum(strcmpi({ns_codes.name}, vievsTrf{1}{k}))>0
+        indStat=find(strcmpi({ns_codes.name}, vievsTrf{1}{k}));
+    else
+        % try to find the station with '_' instead of ' '
+        if sum(strcmpi({ns_codes.name}, strrep(vievsTrf{1}{k}, ' ', '_')))>0
+            indStat=find(strcmpi({ns_codes.name}, strrep(vievsTrf{1}{k}, ' ', '_')));
+        else
+            % if not found, add new entry to ns_codes
+            fprintf('station %s (in vievsTRF) was not found in ns_codes -> writing station to new entry!\n', vievsTrf{1}{k});
+            indStat=size(ns_codes,2)+1;
+        end
+    end
+    
+    % 2. if station has already been inserted in ns_codes -> add new break; else simplty add another break entry
+    if size(ns_codes,2)>=indStat % ohterwise i need to create new entry (new station!)
+        if isfield(ns_codes(indStat), 'vievsTrf') % needed for k==1: no vievsTrf field exists yet
+            indStat=indStat(1);
+            if isfield(ns_codes(indStat).vievsTrf, 'break')
+                newBreakEntry=size(ns_codes(indStat).vievsTrf.break,2)+1; % 'break' field exists; get index of new break values
+            else
+                % nothing was written to current station
+            %    ns_codes(indStat).vievsTrf.name=vievsTrf{1}{k}; % write station name only once
+                newBreakEntry=1;
+            end
+        else
+            % nothing was written to current station
+        %    ns_codes(indStat).vievsTrf.name=vievsTrf{1}{k}; % write station name only once
+            newBreakEntry=1;
+        end
+    else
+        newBreakEntry=1;
+    end
+
+    % 3. write x,y,z, vx,vy,vz of current break to ns_codes
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).x=vievsTrf{2}(k);
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).y=vievsTrf{3}(k);
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).z=vievsTrf{4}(k);
+    
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).vx=vievsTrf{5}(k);
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).vy=vievsTrf{6}(k);
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).vz=vievsTrf{7}(k);
+    
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).epoch=vievsTrf{8}(k);
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).start=vievsTrf{9}(k);
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).end=vievsTrf{10}(k);
+    
+    % also write ".indatum" to struct (0 for not in datum, eg earthquake), otherwise 1
+    vievsTrf{11}(isnan(vievsTrf{11}))=1;
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).indatum=vievsTrf{11}(k);
+    ns_codes(indStat).vievsTrf.break(newBreakEntry).comment=vievsTrf{12}{k};
+
+    % if there is no name in ns_codes for current station (usually when it did not exist before), add name
+    if isempty(ns_codes(indStat).name)
+        ns_codes(indStat).name=vievsTrf{1}{k};
+        ns_codes(indStat).domes='-';
+        ns_codes(indStat).CDP='-';
+    end
+
+end
+
+
+% since we want all ns-codes stations to have vievsTrf coordinates: Write
+% message if not.
+noVievsTrfCoords=cellfun(@isempty, {ns_codes.vievsTrf});
+
+if sum(noVievsTrfCoords)>0 % if there are ns_codes stations with no vievsTrf coordinates
+    
+    % get indices of stations where we don't have vievsTrf coordinates.
+    ind=find(noVievsTrfCoords);
+    
+    % write all those stations as one line
+    for k=1:sum(noVievsTrfCoords)
+        if ~isempty(ns_codes(ind(k)).VieTRF13)
+            % try to get VieTRF13 coordinates
+            ns_codes(ind(k)).vievsTrf.break=ns_codes(ind(k)).VieTRF13.break;
+        end
+        
+    end
+end
+
+
+
+% -----------------------
+% 2.1 Antenna information
+% -----------------------
+fprintf('2.1 Antenna information\n')
 
 
 % --------------------
@@ -314,123 +440,6 @@ if ~isempty(gravdefFile)
     [ns_codes] = gravdef_parser(ns_codes, gravdefFile);
 end
 % Markus end
-
-
-
-
-
-
-% -------------------
-% VieVS TRF file
-% -------------------
-% This TRF is the backup-TRF for VieVS. Also in this
-% backup-TRF the estimated coordinates after an earthquake are written to!
-%
-% In this function: mk_superstatFile.m it is important that the VieVStrf is saved in the "nscodes" structure
-% before the ocean loading coorections are read in. In case that some
-% telescopes are missing in ns-codes.txt then the OL corrections would be
-% ignored.
-
-fprintf('\n Loading VieVS TRF file\n\n');
-
-% read data using textscan
-fid=fopen(vievsTrfFile);
-if (fid < 0)
-   varargout{1} = ['ERROR: Cannot open the file: ', vievsTrf];
-   return;
-end
-vievsTrf=textscan(fid, '%8s %20f %16f %16f %15f %12f %12f %11f %8f %8f %f %s', 'commentstyle', '%', 'delimiter', '|');
-fclose(fid);
-nStat=size(vievsTrf{1},1); % get number of stations
-
-% see if last column has same number of entries (otherwise add empty string)
-if size(vievsTrf{12},1)<nStat
-    vievsTrf{12}{nStat}='';
-end
-
-% add all stations to ns_codes struct
-for k=1:nStat
-    % 1. find station (of current line in vievstrf file) in ns_codes ...
-    if sum(strcmpi({ns_codes.name}, vievsTrf{1}{k}))>0
-        indStat=find(strcmpi({ns_codes.name}, vievsTrf{1}{k}));
-    else
-        % try to find the station with '_' instead of ' '
-        if sum(strcmpi({ns_codes.name}, strrep(vievsTrf{1}{k}, ' ', '_')))>0
-            indStat=find(strcmpi({ns_codes.name}, strrep(vievsTrf{1}{k}, ' ', '_')));
-        else
-            % if not found, add new entry to ns_codes
-            fprintf('station %s (in vievsTRF) was not found in ns_codes -> writing station to new entry!\n', vievsTrf{1}{k});
-            indStat=size(ns_codes,2)+1;
-        end
-    end
-    
-    % 2. if station has already been inserted in ns_codes -> add new break; else simplty add another break entry
-    if size(ns_codes,2)>=indStat % ohterwise i need to create new entry (new station!)
-        if isfield(ns_codes(indStat), 'vievsTrf') % needed for k==1: no vievsTrf field exists yet
-            indStat=indStat(1);
-            if isfield(ns_codes(indStat).vievsTrf, 'break')
-                newBreakEntry=size(ns_codes(indStat).vievsTrf.break,2)+1; % 'break' field exists; get index of new break values
-            else
-                % nothing was written to current station
-            %    ns_codes(indStat).vievsTrf.name=vievsTrf{1}{k}; % write station name only once
-                newBreakEntry=1;
-            end
-        else
-            % nothing was written to current station
-        %    ns_codes(indStat).vievsTrf.name=vievsTrf{1}{k}; % write station name only once
-            newBreakEntry=1;
-        end
-    else
-        newBreakEntry=1;
-    end
-
-    % 3. write x,y,z, vx,vy,vz of current break to ns_codes
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).x=vievsTrf{2}(k);
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).y=vievsTrf{3}(k);
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).z=vievsTrf{4}(k);
-    
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).vx=vievsTrf{5}(k);
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).vy=vievsTrf{6}(k);
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).vz=vievsTrf{7}(k);
-    
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).epoch=vievsTrf{8}(k);
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).start=vievsTrf{9}(k);
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).end=vievsTrf{10}(k);
-    
-    % also write ".indatum" to struct (0 for not in datum, eg earthquake), otherwise 1
-    vievsTrf{11}(isnan(vievsTrf{11}))=1;
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).indatum=vievsTrf{11}(k);
-    ns_codes(indStat).vievsTrf.break(newBreakEntry).comment=vievsTrf{12}{k};
-
-    % if there is no name in ns_codes for current station (usually when it did not exist before), add name
-    if isempty(ns_codes(indStat).name)
-        ns_codes(indStat).name=vievsTrf{1}{k};
-        ns_codes(indStat).domes='-';
-        ns_codes(indStat).CDP='-';
-    end
-
-end
-
-
-% since we want all ns-codes stations to have vievsTrf coordinates: Write
-% message if not.
-noVievsTrfCoords=cellfun(@isempty, {ns_codes.vievsTrf});
-
-if sum(noVievsTrfCoords)>0 % if there are ns_codes stations with no vievsTrf coordinates
-    
-    % get indices of stations where we don't have vievsTrf coordinates.
-    ind=find(noVievsTrfCoords);
-    
-    % write all those stations as one line
-    for k=1:sum(noVievsTrfCoords)
-        if ~isempty(ns_codes(ind(k)).VieTRF13)
-            % try to get VieTRF13 coordinates
-            ns_codes(ind(k)).vievsTrf.break=ns_codes(ind(k)).VieTRF13.break;
-        end
-        
-    end
-end
-
 
 
 
@@ -609,6 +618,90 @@ else
     flag_trf_dtrf2020 = false;
 end
 
+
+% --------------------------
+% xxx ITRF2020-u2024-IVS-TRF.snx
+% --------------------------
+fprintf('\n ITRF2020-u2024-IVS-TRF.snx\n\n');
+if exist(itrf2020u2024File, 'file')
+	itrf2020u2024File_name = 'itrf2020_u2024';
+	[ns_codes] = trf_by_snx_reader(ns_codes,itrf2020u2024File,itrf2020u2024File_name,break0);
+
+    setStartEndEpoch('itrf2020_u2024');
+
+    % add post-seismic deformation
+    if exist(itrf2020u2024psdfile, 'file')
+    % load file
+        fid=fopen(itrf2020u2024psdfile);
+        if (fid < 0)
+           varargout{1} = ['ERROR: Cannot open the file: ', itrf2020u2024psdfile];
+           return;
+        end
+    
+        curLinePart=0;
+        while ~feof(fid)
+            curl=fgetl(fid); curLinePart=curLinePart+1;
+        
+            if curLinePart==4
+                curLinePart=1;
+            end
+        
+            if curLinePart==1
+                code=str2double(curl(2:5));
+                pt=curl(7:8);
+                domes=curl(10:18);
+                ep=date2mjd([str2double(curl(20:21)) 1 1])+...
+                 str2double(curl(23:25))-1+str2double(curl(27:31))/60/60/24;
+                e=sscanf(curl(35:min([72,length(curl)])), '%f')';
+            elseif curLinePart==2
+                n=sscanf(curl(35:min([72,length(curl)])), '%f')';
+            else % last (UP) line
+                u=sscanf(curl(35:min([72,length(curl)])), '%f')';
+            
+            % find proper station
+                foundStationLog=strcmpi(domes,{ns_codes.domes});
+                if sum(foundStationLog)==0
+                % try to find code
+                    if ~isnan(code) % just to be sure that not '----' or so is compared (and eventually found!!)
+                        foundStationLog=strcmpi(num2str(code),{ns_codes.CDP});
+                    end
+                end
+            
+                % if (at least now) found
+                if sum(foundStationLog)>0
+                    foundStationInd=find(foundStationLog);
+                    for iFoundStat=1:length(foundStationInd)
+                        curFoundStat=foundStationInd(iFoundStat);
+                        psdBreak=1;
+                        if isfield(ns_codes(curFoundStat).itrf2020_u2024, 'psd')
+                            psdBreak=length(ns_codes(curFoundStat).itrf2020_u2024.psd)+1;
+                        end
+                        ns_codes(curFoundStat).itrf2020_u2024.psd(psdBreak).epoch=ep;
+                        ns_codes(curFoundStat).itrf2020_u2024.psd(psdBreak).e=e;
+                        ns_codes(curFoundStat).itrf2020_u2024.psd(psdBreak).n=n;
+                        ns_codes(curFoundStat).itrf2020_u2024.psd(psdBreak).u=u;
+                    
+                    end
+                else
+                    fprintf('Station %s (in %s) not found in ns_codes!\n',...
+                        domes, itrf2020u2024psdfile);
+                end
+            end
+        end
+        
+
+        fclose(fid);    
+    else
+        fprintf('Warning: psd file of ITRF2020-u2024 not found\n(%s)\npause 2sek\n',...
+            itrf2020u2024psdfile);
+        pause(2);
+    end
+else
+    fprintf('%s is not available\n\n',itrf2020u2024File);
+    flag_trf_itrf2020u2024 = false;
+end
+
+
 % --------------------------
 % xxx ITRF2020-u2023-IVS-TRF.snx
 % --------------------------
@@ -620,7 +713,6 @@ if exist(itrf2020u2023File, 'file')
     setStartEndEpoch('itrf2020_u2023');
 
     % add post-seismic deformation
-    itrf2020u2023psdfile='../TRF/data/ITRF2020-u2023-psd-vlbi.dat';
     if exist(itrf2020u2023psdfile, 'file')
     % load file
         fid=fopen(itrf2020u2023psdfile);
@@ -1834,7 +1926,9 @@ fprintf('\n5. Saving superstations struct\n\n');
 
 % Delete fields for unavailable TRFs:
 
-
+if ~flag_trf_itrf2020u2024
+    ns_codes = rmfield(ns_codes, 'itrf2020_u2024');
+end
 if ~flag_trf_itrf2020u2023
     ns_codes = rmfield(ns_codes, 'itrf2020_u2023');
 end
