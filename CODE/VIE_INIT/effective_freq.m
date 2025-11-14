@@ -57,13 +57,14 @@ SamRate = out_struct.Observables.(fileChannInfo).SampleRate.val *1e-6; % MHz
 % non-standard values in vgosDB for Sample rate
 stats = cellstr(out_struct.head.StationList.val'); % may be station dependent
 
-if fileoutput_F
-   if isfield (out_struct.head, 'ExpName')
-       exper=out_struct.head.ExpName.val';
-   else
-       exper=out_struct.head.Session.val';
-   end
 
+if isfield (out_struct.head, 'ExpName')
+   exper=out_struct.head.ExpName.val';
+else
+   exper=out_struct.head.Session.val';
+end
+
+if fileoutput_F
     fid = fopen(['sampleRate_' num2str(SamRate(1)) '.txt'],'a');
     fprintf(fid,'%s   %s \n', exper, parameter.session_name);
     fclose(fid);
@@ -76,14 +77,20 @@ if SamRate(1) == -32.768 % e.g. 08NOV12XA, 18JAN25XC
     if sum(contains(deblank(stats),'VLBA')) > 0 %ug002 USNO-CRF sessions, UG002A/18JAN18XC
         SamRate = 64; %MSamples
     else
-        SamRate = 16; 
+        SamRate = 16; % it is a guess
     end
 elseif SamRate(1) == -28.672 % ug002 USNO-CRF sessions
-    SamRate = 64; %MSamples 
+    SamRate = 64; %MSamples , guess
 elseif SamRate(1) == 0 % E Sessions
-    SamRate = 32; %? MSamples (chan.BW 16MHz) 
+    %SamRate = 32; %? MSamples (chan.BW 16MHz) 
+    %SamRate = 8; %? MSamples (chan.BW 4MHz) 
+    fprintf('Zero sample rate in vgosDB!!!')
+    fid = fopen(['sessions_Samrate0.txt'],'a');
+    fprintf(fid,'%s   %s     %s\n', out_struct.head.Session.val, parameter.session_name, freqband);
+    fclose(fid);
+    return
 elseif SamRate(1) == 9.216
-    SamRate = 16; %MSamples
+    SamRate = 16; %MSamples; guess
 elseif ~isempty(find(SamRate==64))    
     if sum(strcmp(deblank(stats),'NYALE13N')) %reduce Nn's channel width from 32 to 8 
         SamRate = 16;
@@ -92,6 +99,20 @@ end
 % Info> AUSCOPE stations and Ishioka only record USB channels
 
 hBW = SamRate/4;  % MHz
+
+% fileID = fopen('CHANNELBW/channels_SR_-32.768.txt')
+% ChanBw = textscan(fileID,'%s  %f %f %s %s');
+% fclose(fileID);
+% 
+% isesBw = strcmpi(ChanBw{4},string(exper));
+% if sum(isesBw)>0
+%     sesBW = ChanBw{2}(isesBw);
+%     hBW = sesBW/2;
+% 
+%     fid = fopen(['changedChanBW.txt'],'a');
+%     fprintf(fid,'%10s %20s %2s %5.3f\n', exper, parameter.session_name, freqband, hBW*2); % channel bandwidth in MHz
+%     fclose(fid);
+% end
 
 
 %% WEIGHTS
@@ -216,7 +237,7 @@ end
 if AmpAvail
     wi = sNsam2 .* sChAmpl;
 else
-    wi = ones(nObs,nChan); % identical weights if channel amplitudes are missing
+    wi = squeeze(sum(double(Nsam > 0),1))';
 end
 
 tableSB = zeros(nChan,nObs);
@@ -227,6 +248,7 @@ for iObs=1:nObs
     % it happens that the numSample is a little bit different between the
     % LSB and USB. Compare, if it is greater than 10%
     p10 = 0.1.*NSam1(1,:);
+
     idShift = find(abs(NSam1(1,:)-NSam1(2,:)) > p10);
 
     if ~isempty(idShift)
