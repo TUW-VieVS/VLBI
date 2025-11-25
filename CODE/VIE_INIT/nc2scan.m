@@ -198,14 +198,17 @@ if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands')
     % preliminary solution 
     % ionospheric contribution is calculated from MBD from ObsEdit, i.e. with solved ambiguities
     % should be changed in future
-    tfl1 = get_nc_filename({ observation , '_bS'}, wrapper_data.Observation.ObsEdit.files, 1);
-    MBD1 = num2cell(out_struct.ObsEdit.(tfl1).GroupDelayFull.val); % amb. included
-    sMBD1_file = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files, 1);
-    sMBD1 = num2cell(out_struct.(sigma_tau_folder).(sMBD1_file).(sigma_tau_field).val);
-
-    tfl2 = get_nc_filename({ observation , '_bX'}, wrapper_data.Observation.ObsEdit.files, 1);
-    MBD2 = num2cell(out_struct.ObsEdit.(tfl2).GroupDelayFull.val); % amb. included
-    sMBD2 = num2cell(out_struct.(sigma_tau_folder).(sigma_tau_file).(sigma_tau_field).val);
+    if ~isempty(get_nc_filename({ observation , '_bS'}, wrapper_data.Observation.ObsEdit.files, 3))
+    %if isfield(wrapper_data.Observation.Observables.files, { observation , '_bS'})
+        tfl1 = get_nc_filename({ observation , '_bS'}, wrapper_data.Observation.ObsEdit.files, 1);
+        MBD1 = num2cell(out_struct.ObsEdit.(tfl1).GroupDelayFull.val); % amb. included
+        sMBD1_file = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files, 1);
+        sMBD1 = num2cell(out_struct.(sigma_tau_folder).(sMBD1_file).(sigma_tau_field).val);
+    
+        tfl2 = get_nc_filename({ observation , '_bX'}, wrapper_data.Observation.ObsEdit.files, 1);
+        MBD2 = num2cell(out_struct.ObsEdit.(tfl2).GroupDelayFull.val); % amb. included
+        sMBD2 = num2cell(out_struct.(sigma_tau_folder).(sigma_tau_file).(sigma_tau_field).val);
+    end
 end
 
 
@@ -368,7 +371,7 @@ if strcmp(ioncorr,'on')
                 warning('Ionospheric delay can not be used because was not found\n')
             end
         end
-    elseif strcmp(parameter.vie_init.iono, 'vievs2bands')        
+    elseif strcmp(parameter.vie_init.iono, 'vievs2bands') &  isfield(out_struct.Observables, {['GroupDelay' , '_bS']})   % observation instead of 'GroupDelay'
         %[iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = vievs_iono(out_struct,wrapper_data,MBD1,MBD2,sMBD1,sMBD2,parameter); 
         %iono_val_vievs=iono_val_vievs.*1e9; % ns
         %sigma_iono_vievs=sigma_iono_vievs.*1e9; % ns
