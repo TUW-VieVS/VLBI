@@ -111,7 +111,7 @@ HKupd = false;
         %% get IVS session code from masterfile or vgosDB file
         path2masterfiles = '../DATA/MASTER/';
         
-        if syear >= 2023
+        if contains(sname, '-')
             IVSsesnam = scode;
         elseif flag_intensive && str2double(syear) > 1991
             path2masterfile = strcat(path2masterfiles, 'master', num2str(syear(3:4)), '-int.txt');
