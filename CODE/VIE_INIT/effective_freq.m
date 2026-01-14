@@ -82,13 +82,13 @@ if SamRate(1) == -32.768 % e.g. 08NOV12XA, 18JAN25XC
 elseif SamRate(1) == -28.672 % ug002 USNO-CRF sessions
     SamRate = 64; %MSamples , guess
 elseif SamRate(1) == 0 % E Sessions
-    %SamRate = 32; %? MSamples (chan.BW 16MHz) 
+    SamRate = 32; %? MSamples (chan.BW 16MHz) 
     %SamRate = 8; %? MSamples (chan.BW 4MHz) 
-    fprintf('Zero sample rate in vgosDB!!!')
-    fid = fopen(['sessions_Samrate0.txt'],'a');
-    fprintf(fid,'%s   %s     %s\n', out_struct.head.Session.val, parameter.session_name, freqband);
-    fclose(fid);
-    return
+    % fprintf('Zero sample rate in vgosDB!!!')
+    % fid = fopen(['sessions_Samrate0.txt'],'a');
+    % fprintf(fid,'%s   %s     %s\n', out_struct.head.Session.val, parameter.session_name, freqband);
+    % fclose(fid);
+    % return
 elseif SamRate(1) == 9.216
     SamRate = 16; %MSamples; guess
 elseif ~isempty(find(SamRate==64))    
@@ -252,12 +252,24 @@ for iObs=1:nObs
     idShift = find(abs(NSam1(1,:)-NSam1(2,:)) > p10);
 
     if ~isempty(idShift)
-        [irowSam,~,~] = find(NSam1(:,idShift)~=0); % probably not needed, should be USB in any case
-    
-        if irowSam(1)==irowUSB
-            tableSB(idShift,iObs) = 1;
-        elseif irowSam(1)==irowLSB
-            tableSB(idShift,iObs) = -1;
+        [irowSam,icolSam,~] = find(NSam1(:,idShift)~=0); % check for USB and LSB
+        [uicol, ~, ~] = unique(icolSam);
+        if length(uicol) ~= length(icolSam) % [4 4 4 4 46 46 46 46; 46 0 0 0 0 0 0 46]
+            counts = accumarray(icolSam, 1);
+            bothSBsCOL = uicol(counts > 1);
+            [indcol, ~]=find(icolSam ==bothSBsCOL);
+            irowSam(indcol)=[];
+            indcol=[];
+            [indcol, ~]=find(idShift ==bothSBsCOL);
+            idShift(indcol)=[];
+        end
+
+        % check over all channels (in case some channel was dropped)
+        for ichn = 1:length(irowSam)
+            if irowSam(ichn)==irowUSB
+                tableSB(idShift(ichn),iObs) = 1;
+            elseif irowSam(ichn)==irowLSB
+                tableSB(idShift(ichn),iObs) = -1;
                 if iObs==1
                     fprintf('LSB only channel identified in %s. Is this expected???\n',freqband)              
                     if fileoutput
@@ -266,6 +278,7 @@ for iObs=1:nObs
                         fclose(fid);
                     end
                 end
+            end
         end
     else
         if iObs==1
@@ -279,6 +292,9 @@ for iObs=1:nObs
     end
 end
 
+% if freqband=='bX'
+%     tableSB(8,:)=tableSB(8,:).*-1
+% end
 tabhBW = tableSB.*hBW';
 
 % move reference channel frequencies to the middle of the channels
@@ -315,9 +331,9 @@ for iObs= 1 : nObs
     end
 
 
-    %neef = (sum(roi))^2 / (roi*roi'); %effective sample size
-    %stder2 = roi* ((vi-eFreq(iObs,1)).^2) / sum(roi);
-    %sigma_eFreq(iObs) = sqrt(stder2 /neef)   / NumChanPerObs(iObs) ; %MHz 
+    % neef = (sum(roi))^2 / (roi*roi'); %effective sample size
+    % stder2 = roi* ((vi-eFreq(iObs,1)).^2) / sum(roi);
+    % sigma_eFreq(iObs) = sqrt(stder2 /neef)  / NumChanPerObs(iObs) ; %MHz 
     sigma_eFreq(iObs) = 0 ; %MHz  constant 
 
 

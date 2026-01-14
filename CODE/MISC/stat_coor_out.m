@@ -25,7 +25,12 @@ function [ ] = stat_coor_out( folder )
         load([pathl3 fileNames{i}])
         load([pathl3 fileNames{i}(3:end-4) '_antenna.mat'])
         load([pathl3 fileNames{i}(3:end-4) '_parameter.mat'])
-        
+
+        load([pathl3 'atpa_' fileNames{i}(3:end-4) '.mat']) % covariances
+        % Co-variance matrix
+        N = [atpa_.mat];
+        Qx = inv(N);
+       
         mjda = [x_.coorx.mjd];
         mjd=mjda(1);
         
@@ -60,14 +65,15 @@ function [ ] = stat_coor_out( folder )
        mxyzT = [[x_.coorx.mx]./100; [x_.coory.mx]./100; [x_.coorz.mx]./100];
        mxyz=mxyzT';
         
-       
+        Qxyz=Qx([[x_.coorx.col],[x_.coory.col],[x_.coorz.col]],[[x_.coorx.col],[x_.coory.col],[x_.coorz.col]]); %xyz
+
         % transform xyz->hen
         [lat,lon,~]=xyz2ell(totXYZ);
         dxyz = totXYZ-[aprX,aprY,aprZ];
         [dhen]=xyz2ren(dxyz,lat,lon);
-        [mhen,~]=xyz2ren_sigma(mxyz,lat,lon);
-       
-       
+
+        [mhen]=xyz2ren_CorrelSigma(lat,lon,Qxyz,x_);
+        %[mhen,~]=xyz2ren_sigma(mxyz,lat,lon);
        
        anames = {antenna(idest).name};
        for j = 1:length(antenna(idest))
