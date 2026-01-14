@@ -199,6 +199,7 @@ fprintf('\t sigma:\t\t %s/%s, nc field: %s\n', sigma_tau_folder, sigma_tau_file,
         sMBD2obs = num2cell(out_struct.Observables.GroupDelay_bX.GroupDelaySig.val);
     end
 
+    
 if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands') & parameter.vie_init.iono_correction
     if ~isempty(get_nc_filename({ observation , '_bS'}, wrapper_data.Observation.ObsEdit.files, 3)) %VGOS
         % preliminary solution 
@@ -375,7 +376,11 @@ if strcmp(ioncorr,'on')
                 warning('Ionospheric delay can not be used because was not found\n')
             end
         end
+<<<<<<< HEAD
     elseif strcmp(parameter.vie_init.iono, 'vievs2bands') &  isfield(out_struct.Observables, {['GroupDelay' , '_bS']})   % observation instead of 'GroupDelay'       
+=======
+    elseif strcmp(parameter.vie_init.iono, 'vievs2bands') &  isfield(out_struct.Observables, {['GroupDelay' , '_bS']})   % observation instead of 'GroupDelay'
+>>>>>>> 6f46a99d8229e6db6e1689b1ac8e7ad3cfe3440f
         %[iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = vievs_iono(out_struct,wrapper_data,MBD1,MBD2,sMBD1,sMBD2,parameter); 
         %iono_val_vievs=iono_val_vievs.*1e9; % ns
         %sigma_iono_vievs=sigma_iono_vievs.*1e9; % ns
