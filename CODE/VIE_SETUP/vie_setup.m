@@ -22,7 +22,7 @@ function varargout = vie_setup(varargin)
 
 % Edit the above text to modify the response to help vie_setup
 
-% Last Modified by GUIDE v2.5 29-Oct-2025 09:07:51
+% Last Modified by GUIDE v2.5 07-Jan-2026 16:03:00
 
 
 % 07 Jan 2014 by Matthias Madzak: LEVEL2 bug corrected
@@ -12901,3 +12901,12 @@ function uipanel_models_ambiguities_DeleteFcn(hObject, eventdata, handles)
 % hObject    handle to uipanel_models_ambiguities (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function uitoggletool1_OffCallback(hObject, eventdata, handles)
+% hObject    handle to uitoggletool1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+ handles=plotResidualsToAxes(handles);
+ guidata(hObject, handles)
