@@ -28,6 +28,7 @@ function handles = plotResidualsToAxes(handles)
 
 constants
 global c
+cm_per_ps = 0.0299792458;   % speed of light [cm/ps]
 
 % ##### Options #####
 % Set plotstyle for residual values; 1 = lines, 2 = lines + markers, 3 = scatterplot
@@ -498,8 +499,6 @@ if plotOutliers==1 && ...
     end
 end
 
-ylim=get(gca,'ylim');
-xlim=get(gca,'xlim');
 
 
 txt = '';
@@ -530,11 +529,17 @@ else
     end
 end
 
-text(xlim(1)+(xlim(2)-xlim(1))*0.025,ylim(2)-(ylim(2)-ylim(1))*0.025,txt,'VerticalAlignment','top');
 
-% txt2 = datestr(datetime(SessionStartTimeMJD,'ConvertFrom','modifiedJulianDate'));
-% text(xlim(1)+(xlim(2)-xlim(1))*0.025,ylim(1)+(ylim(2)-ylim(1))*0.05,['first observation: ' txt2],'VerticalAlignment','top');
+ylimcm=get(gca,'ylim');
+xlim=get(gca,'xlim');
 
-hold off
+text(xlim(1)+(xlim(2)-xlim(1))*0.025,ylimcm(2)-(ylimcm(2)-ylimcm(1))*0.025,txt,'VerticalAlignment','top');
 
+% residuals in ns on the right y axis
+yyaxis (gca,'right')
+ylim([ylimcm./cm_per_ps]);
+ylabel('[ps]')
+
+yyaxis (gca,'left')
 hold(handles.axes_plot_residuals, 'off')
+yyaxis (gca,'left')

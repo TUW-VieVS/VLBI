@@ -186,20 +186,25 @@ fprintf('\t sigma:\t\t %s/%s, nc field: %s\n', sigma_tau_folder, sigma_tau_file,
 
 
 
-if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands')
     % save SBD and MBD for (both) frequency bands in scan struct (S/X for testing)
     if saveSBDMBDinscan
         SBD1obs = num2cell(out_struct.Observables.SBDelay_bS.SBDelay.val);
         MBD1obs = num2cell(out_struct.Observables.GroupDelay_bS.GroupDelay.val);
         SBD2obs = num2cell(out_struct.Observables.SBDelay_bX.SBDelay.val);
         MBD2obs = num2cell(out_struct.Observables.GroupDelay_bX.GroupDelay.val);
+
+        sSBD1obs = num2cell(out_struct.Observables.SBDelay_bS.SBDelaySig.val);
+        sMBD1obs = num2cell(out_struct.Observables.GroupDelay_bS.GroupDelaySig.val);
+        sSBD2obs = num2cell(out_struct.Observables.SBDelay_bX.SBDelaySig.val);
+        sMBD2obs = num2cell(out_struct.Observables.GroupDelay_bX.GroupDelaySig.val);
     end
 
-    % preliminary solution 
-    % ionospheric contribution is calculated from MBD from ObsEdit, i.e. with solved ambiguities
-    % should be changed in future
-    if ~isempty(get_nc_filename({ observation , '_bS'}, wrapper_data.Observation.ObsEdit.files, 3))
-    %if isfield(wrapper_data.Observation.Observables.files, { observation , '_bS'})
+    
+if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands') & parameter.vie_init.iono_correction
+    if ~isempty(get_nc_filename({ observation , '_bS'}, wrapper_data.Observation.ObsEdit.files, 3)) %VGOS
+        % preliminary solution 
+        % ionospheric contribution is calculated from MBD from ObsEdit, i.e. with solved ambiguities
+        % should be changed in future
         tfl1 = get_nc_filename({ observation , '_bS'}, wrapper_data.Observation.ObsEdit.files, 1);
         MBD1 = num2cell(out_struct.ObsEdit.(tfl1).GroupDelayFull.val); % amb. included
         sMBD1_file = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files, 1);
@@ -371,7 +376,11 @@ if strcmp(ioncorr,'on')
                 warning('Ionospheric delay can not be used because was not found\n')
             end
         end
+<<<<<<< HEAD
+    elseif strcmp(parameter.vie_init.iono, 'vievs2bands') &  isfield(out_struct.Observables, {['GroupDelay' , '_bS']})   % observation instead of 'GroupDelay'       
+=======
     elseif strcmp(parameter.vie_init.iono, 'vievs2bands') &  isfield(out_struct.Observables, {['GroupDelay' , '_bS']})   % observation instead of 'GroupDelay'
+>>>>>>> 6f46a99d8229e6db6e1689b1ac8e7ad3cfe3440f
         %[iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = vievs_iono(out_struct,wrapper_data,MBD1,MBD2,sMBD1,sMBD2,parameter); 
         %iono_val_vievs=iono_val_vievs.*1e9; % ns
         %sigma_iono_vievs=sigma_iono_vievs.*1e9; % ns
@@ -664,7 +673,7 @@ for iScan=1:nScans
     [scan(iScan).obs.i2] = deal(obs2BaselineCell{obsI1Index:obsI1Index+scan(iScan).nobs-1,2});
 
     [scan(iScan).obs.obs]=   deal(groupDelayWAmbigCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
-    [scan(iScan).obs.sig]=deal(delaySigmaTimesIonoSigma{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+    [scan(iScan).obs.sig]= deal(delaySigmaTimesIonoSigma{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
     [scan(iScan).obs.delion]=   deal(ionoDelCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [nano-sec]
     [scan(iScan).obs.sgdion]=   deal(ionoDelSigCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [nano-sec]
     if eFr2scan
@@ -681,6 +690,13 @@ for iScan=1:nScans
         [scan(iScan).obs.obsMBD1]=   deal(MBD1obs{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
         [scan(iScan).obs.obsSBD2]=   deal(SBD2obs{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
         [scan(iScan).obs.obsMBD2]=   deal(MBD2obs{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+
+        [scan(iScan).obs.sigSBD1]=   deal(sSBD1obs{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+        [scan(iScan).obs.sigMBD1]=   deal(sMBD1obs{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+        [scan(iScan).obs.sigSBD2]=   deal(sSBD2obs{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+        [scan(iScan).obs.sigMBD2]=   deal(sMBD2obs{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+
+
     end
     
     if length(delayQualityFlag)==1 % check length of delay flag vector, if it is only 1 value for the whole session, this value will be assigned to all observations
@@ -714,6 +730,10 @@ for iScan=1:nScans
         for iObs = 1 : length(scan(iScan).obs)
             corcab = scan(iScan).stat(scan(iScan).obs(iObs).i2).cab - scan(iScan).stat(scan(iScan).obs(iObs).i1).cab; % [ns]
             scan(iScan).obs(iObs).obs = scan(iScan).obs(iObs).obs + corcab*(1e-9);
+            if saveSBDMBDinscan
+                scan(iScan).obs(iObs).obsSBD2=scan(iScan).obs(iObs).obsSBD2+ corcab*(1e-9);
+            end
+
         end
     end
     
@@ -727,7 +747,7 @@ for iScan=1:nScans
     % ambiguity correction
     if amb_k ~= 0
         for iObs = 1 : length(scan(iScan).obs)
-            scan(iScan).obs(iObs).obs = scan(iScan).obs(iObs).obs + scan(iScan).obs(iObs).amb;
+           scan(iScan).obs(iObs).obs = scan(iScan).obs(iObs).obs + scan(iScan).obs(iObs).amb;
         end
     end
     

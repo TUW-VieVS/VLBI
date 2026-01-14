@@ -56,6 +56,12 @@ sigma_ionoX = sqrt((partial_tau_x .* sigma_tau_x).^2 + ...
                  (sqrt(2)*1e-3)^2 + ...            % take constant 2ps²
                  (sqrt(2)*1e-3)^2); % [ns]
 
+% sigma_ionoX = sqrt((partial_tau_x .* sigma_tau_x).^2 + ...
+%                  (partial_tau_s .* sigma_tau_s).^2 + ...
+%                  (partial_vx .* sqrt(2)*1e-3).^2 + ...            % take constant 2ps² . delay
+%                  (partial_vs .* sqrt(2)*1e-3).^2); % [ns]
+
+
 
 %% plots
 % if isfield (out_struct.head, 'ExpName')
