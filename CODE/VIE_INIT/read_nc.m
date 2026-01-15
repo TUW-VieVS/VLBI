@@ -76,6 +76,7 @@ end
 
 
 % some vgosdb files work only with head_V00X.nc and some only with head.nc
+if ~contains(directory, '-')
 problematic_vgosDB=   string([ '02DEC30XA'
     '03AUG11XA'
     '03JAN13XA'
@@ -107,8 +108,51 @@ problematic_vgosDB=   string([ '02DEC30XA'
 
 sses = directory(end-9:end-1);
 
+else
+    slashind = strfind(directory,'/');
+    sses = directory(slashind(4)+1:slashind(5)-1);
+    if length(sses)==14
+        problematic_vgosDB=   string([ '20021230-r1051'
+        '20030811-r1083'
+        '20030113-r1053'
+        '20031117-r1097'
+        '20030922-r1089'
+        '20040202-r1108'
+        '20040301-r1112'
+        '20060201-rdv55'
+        '20060216-r4211'
+        '20070726-r4286'
+        '20080816-c0805'
+        '20080817-c0806'
+        '20080505-r1327'
+        '20091118-iya09'
+        '20100125-r1415'
+        '20110516-r1483'
+        '20120416-r1529'
+        '20150206-a1502'
+        '20170515-r1792'
+        '20170914-r4809'
+        '20180503-r4840']);
+    elseif length(sses)==15
+        problematic_vgosDB=   string([ '20011129-jd0107'
+        '20040915-apsg14'
+        '20050817-rd0508'
+        '20050817-rd0508'
+        '20161124-aug033'
+        '20170428-uf001g'
+        '20170805-uf001o'
+        '20170812-uf001p'
+        '20180408-ug002e']);
+    else
+        problematic_vgosDB=   "anythingwith17let";
+    end
+
+end
+
 if sum(contains(problematic_vgosDB, sses))==0
-    Head_version(Head_version==-1) = 99;   % because the file "Head.nc" is the one with the highest Version number: Attention: perhaps GSFC changes this one day, because it actually contradicts the naming convention of other files (e.g. in station folders)
+    Head_version(Head_version==-1) = 99;   % because the file "Head.nc" is the one with the 
+    % highest Version number: Attention: perhaps GSFC changes this one day, because it actually 
+    % contradicts the naming convention of other files (e.g. in station folders)
 else
     'read_nc.m line 110 problems with HEAD VERSION'
 end
