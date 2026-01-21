@@ -12908,5 +12908,5 @@ function uitoggletool1_OffCallback(hObject, eventdata, handles)
 % hObject    handle to uitoggletool1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
- handles=plotResidualsToAxes(handles);
- guidata(hObject, handles)
+ %handles=plotResidualsToAxes(handles);
+ %guidata(hObject, handles)
