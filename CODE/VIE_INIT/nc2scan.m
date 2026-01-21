@@ -38,6 +38,7 @@ function scan=nc2scan(out_struct, nc_info, fband, ioncorr, ambcorr, wrapper_data
 error_code_invalid_met_data = -999; % Error corde for missing met. data in NGS file (numerical)
 saveSBDMBDinscan=false;
 eFr2scan=false; % save effective frequencies in scan
+fileoutput=false;
 
 %% PREALLOCATING
 nScans=out_struct.head.NumScan.val; % get number of scans, stored in Head.nc
@@ -199,7 +200,8 @@ fprintf('\t sigma:\t\t %s/%s, nc field: %s\n', sigma_tau_folder, sigma_tau_file,
         sMBD2obs = num2cell(out_struct.Observables.GroupDelay_bX.GroupDelaySig.val);
     end
 
-    
+MBD1=[]; MBD2=[]; sMBD1=[]; sMBD2=[]; 
+MBD1badAmb = false;
 if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands') & parameter.vie_init.iono_correction
     if ~isempty(get_nc_filename({ observation , '_bS'}, wrapper_data.Observation.ObsEdit.files, 3)) %VGOS
         % preliminary solution 
@@ -209,10 +211,24 @@ if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands') & para
         MBD1 = num2cell(out_struct.ObsEdit.(tfl1).GroupDelayFull.val); % amb. included
         sMBD1_file = get_nc_filename({'GroupDelay', '_bS'}, wrapper_data.Observation.Observables.files, 1);
         sMBD1 = num2cell(out_struct.(sigma_tau_folder).(sMBD1_file).(sigma_tau_field).val);
+
+        % In some databases the S-band delay in ObsEdit is missing for specific baselines! Try to
+        % use the S-band delay from Observables (Ambig. have to be in the database! Otherwise not helpful!)
+        hasZero = cellfun(@(x) isnumeric(x) && any(x(:) == 0), MBD1);
+        if any(hasZero)
+            MBD1 = num2cell(out_struct.Observables.GroupDelay_bS.GroupDelay.val);
+            MBD1badAmb = true;
+        end
     
         tfl2 = get_nc_filename({ observation , '_bX'}, wrapper_data.Observation.ObsEdit.files, 1);
         MBD2 = num2cell(out_struct.ObsEdit.(tfl2).GroupDelayFull.val); % amb. included
         sMBD2 = num2cell(out_struct.(sigma_tau_folder).(sigma_tau_file).(sigma_tau_field).val);
+    else
+        if fileoutput
+            fid = fopen(['sessions_missing_Sband_ObsEdit.txt'],'a');
+            fprintf(fid,'%s   %s \n', out_struct.head.Session.val, parameter.session_name); fclose(fid);
+            %return
+        end
     end
 end
 
@@ -327,6 +343,39 @@ else
     tau_ambCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
 end
 
+if MBD1badAmb %S-band MBD
+    if fileoutput
+        fid = fopen(['sessions_missing_partly_Sband_ObsEdit.txt'],'a');
+        fprintf(fid,'%s   %s \n', out_struct.head.Session.val, parameter.session_name); fclose(fid);
+        %return
+    end
+    fprintf('S-band incomplete in ObsEdit, VieVS tries Observables!\n') 
+    if amb_k ~= 0
+        % check for integer number ambiguities
+        if isfield(out_struct.(ambN_folder),ambN_file)
+            ambN_S= double(out_struct.(ambN_folder).([ambN_file(1:end-1) 'S']).(ambN_field).val); % cell: nObs x 1
+        else
+            fprintf('Ambiguity S-band data not available: %s is missing\n',[ambN_folder,'/',ambN_file])
+        end
+    
+        % check for ambiguity size
+        if isfield(out_struct.(ambS_folder),[ambS_file(1:end-1) 'S'])
+            ambS_S = double(out_struct.(ambS_folder).([ambS_file(1:end-1) 'S']).(ambS_field).val); % cell: nObs x 1 (sec)
+        else
+            fprintf('Ambiguity S-band data not available: %s is missing\n',[ambS_folder,[ambS_file(1:end-1) 'S']])        
+        end
+        
+        % calculate ambiguity spacing and apply observation type factor
+        tau_ambCell_S = num2cell(amb_k*ambN_S.*ambS_S);
+    else
+        tau_ambCell_S = num2cell(zeros(1, length(groupDelayWAmbigCell)));
+        fprintf('Ambiguity S-band data not available: %s is missing\n',[ambS_folder,[ambS_file(1:end-1) 'S']])
+    end
+    MBD1 = num2cell([MBD1{:}] + [tau_ambCell_S{:}])'; % S band
+end
+
+
+
 % ambiguity size
 ambS_folder = 'Observables';
 ambS_file = ['AmbigSize_',freqband];
@@ -336,6 +385,7 @@ ambspace = num2cell(double(out_struct.(ambS_folder).(ambS_file).(ambS_field).val
 
 %% IONOSPHERIC DELAY, SIGMA IONOSPHERIC DELAY and DELAY FLAG IONOSPHERIC DELAY::
 ionoDelayInternalFlag = 1;
+iono_val_vievs=[];
 if strcmp(ioncorr,'on')
     if strcmp(parameter.vie_init.iono, 'observation_database')
         if eFr2scan
@@ -377,7 +427,7 @@ if strcmp(ioncorr,'on')
             end
         end
 
-    elseif strcmp(parameter.vie_init.iono, 'vievs2bands') &  isfield(out_struct.Observables, {['GroupDelay' , '_bS']})   % observation instead of 'GroupDelay'       
+    elseif strcmp(parameter.vie_init.iono, 'vievs2bands') &  isfield(out_struct.Observables, {['GroupDelay' , '_bS']}) &  ~isempty(MBD1) &  ~isempty(MBD2)% observation instead of 'GroupDelay'       
         %[iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = vievs_iono(out_struct,wrapper_data,MBD1,MBD2,sMBD1,sMBD2,parameter); 
         %iono_val_vievs=iono_val_vievs.*1e9; % ns
         %sigma_iono_vievs=sigma_iono_vievs.*1e9; % ns
@@ -404,11 +454,12 @@ if strcmp(ioncorr,'on')
     else % Take ionosphere corrections from external (ion) file:
         eFr2scan=false;
         ionoDelayInternalFlag = 0;
-        fprintf('Ionospheric delay corrections will be taken from external source.\n')
+        fprintf('Ionospheric delay corrections will be taken from external source or not applied!!!\n')
     end
 else
     ionoDelayInternalFlag = 0;
 end
+
 
 % in case of a zero ionoshperic delay (all ionospheric parameters will be
 % set to zero, but with a correcto vector size to allow for vector addtion)
@@ -416,6 +467,12 @@ if ionoDelayInternalFlag == 0
     ionoDelCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
     ionoDelSigCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
     ionoDelFlagcell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
+
+     if fileoutput
+        fid = fopen(['sessions_no_iono_applied.txt'],'a');
+        fprintf(fid,'%s   %s \n', out_struct.head.Session.val, parameter.session_name); fclose(fid);
+        %return
+    end   
 end
 
 
@@ -679,6 +736,7 @@ for iScan=1:nScans
             [scan(iScan).obs.(eFrB)]=   deal(effFreqCell{i}{obsI1Index:obsI1Index+scan(iScan).nobs-1}); 
         end
     end
+    
     [scan(iScan).obs.amb]=   deal(tau_ambCell{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
     [scan(iScan).obs.ambspace]=   deal(ambspace{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec] baseline-dependent ambiguity spacing
 

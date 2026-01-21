@@ -21,6 +21,15 @@ end
 
 % reference frequency
 fileRefv =    ['RefFreq_' freqband];
+if ~isfield(out_struct.Observables,fileRefv)
+    fprintf('\nReference frequency for %s is missing in the database!\n', freqband);
+    if fileoutput
+        fid = fopen('sessions_refFreq_missing.txt','a');
+        fprintf(fid,'%s   %s   %s \n',freqband, out_struct.head.Session.val, parameter.session_name);
+        fclose(fid);
+        %return
+    end
+end
 v0 =out_struct.Observables.(fileRefv).RefFreq.val(1); % MHz
 if length(v0)>1
     disp('Reference frequency as vector?!?')
@@ -28,7 +37,15 @@ end
 
 % ref. channel frequencies: rvi
 fileChannInfo = ['ChannelInfo_' freqband];
-
+if ~isfield(out_struct.Observables,fileChannInfo)
+    fprintf('\nChannel Info for %s is missing in the database!\n', freqband);
+    if fileoutput
+        fid = fopen('sessions_ChannelInfo_missing.txt','a');
+        fprintf(fid,'%s   %s   %s \n',freqband, out_struct.head.Session.val, parameter.session_name);
+        fclose(fid);
+        %return
+    end
+end
 ChanFrAtr = {out_struct.Observables.(fileChannInfo).ChannelFreq.attr.name}; % check if channel frequency is same for all observations
 idRep = contains(ChanFrAtr,'REPEAT');
 
