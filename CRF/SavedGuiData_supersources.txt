@@ -16,7 +16,7 @@
 # VieCRF13.txt --------------
             VieCRF10a, download | 0
              VieCRF10a, specify | 1
-         VieCRF10a, editTextbox |  
+         VieCRF10a, editTextbox | 
 #
 # vievsCrf.txt --------------
              vievsCrf, download | 0
@@ -31,7 +31,7 @@
 # 'userdefined' --------------
               userCrf, download | 0
                userCrf, specify | 1
-           userCrf, editTextbox |  
+           userCrf, editTextbox | 
 #
 # IVS_SrcNamesTable.txt --------------
           translation, download | 0
