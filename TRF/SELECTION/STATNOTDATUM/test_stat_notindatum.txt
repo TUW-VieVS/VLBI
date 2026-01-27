@@ -1,4 +1,8 @@
 #stat name (optionally domes and cdp)
 WETTZELL  xxxxxxxxx  xxxx
 ISHIOKA   21791S001  7369 
-
+MOPRA     xxxxxxxxx  xxxx
+KVNUS     xxxxxxxxx  xxxx
+KVNYS     xxxxxxxxx  xxxx
+KVNTN     xxxxxxxxx  xxxx
+KVNPC     xxxxxxxxx  xxxx

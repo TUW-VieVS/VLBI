@@ -257,12 +257,12 @@ switch(parameter.data_type)
 
 
 %% vgosDB control
-% if isfield(out_struct.Observables.ChannelInfo_bX, 'BITSAMPL')
-%         antenna(1).bitsamp = out_struct.Observables.ChannelInfo_bX.BITSAMPL.val;
-% else
-%         antenna(1).bitsamp = 0;
-% end
-% antenna(1).samplerate = out_struct.Observables.ChannelInfo_bX.SampleRate.val;
+if isfield(out_struct.Observables.ChannelInfo_bX, 'BITSAMPL')
+        antenna(1).bitsamp = out_struct.Observables.ChannelInfo_bX.BITSAMPL.val;
+else
+        antenna(1).bitsamp = 0;
+end
+antenna(1).samplerate = out_struct.Observables.ChannelInfo_bX.SampleRate.val;
 % antenna(1).program = out_struct.head.Program.val;
 % antenna(1).createdby = out_struct.head.CreatedBy.val;
 %%
@@ -270,6 +270,14 @@ switch(parameter.data_type)
         flnm = ['RefFreq_b', fband];
         if isfield(out_struct.Observables.(flnm),'RefFreq')
             refFreq=double(out_struct.Observables.(flnm).RefFreq.val); %MHz
+            
+            % fileChannInfo =  ['ChannelInfo_b' fband];
+            % f1=double(out_struct.Observables.(fileChannInfo).ChannelFreq.val(1,1));
+            % f2=double(out_struct.Observables.(fileChannInfo).ChannelFreq.val(end,1));
+            % SamRate = out_struct.Observables.(fileChannInfo).SampleRate.val; % Hz
+            % hBW = SamRate/4 *1e-6;
+            % 
+            % refFreq=(f1+f2)/2 + hBW; %MHz
         else
             refFreq='missingInvgosDB';
         end

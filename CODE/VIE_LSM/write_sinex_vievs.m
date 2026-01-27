@@ -479,12 +479,12 @@ for pl=1:size(process_list,1)
     
     if parameter.lsmopt.est_sourceNNR ==1      
         if parameter.lsmopt.UseSourceAbsConstrNNR == 1
-            estsou = [' c) other (SOLUTION: NNR condition on sources in the a priori catalog and constraints of ' num2str(parameter.lsmopt.sourceAbsConstrNNR) ' mas on all sources)'];
+            estsou = [' c) other (SOLUTION: NNR condition on sources in the a priori catalog and constraints of ' num2str(parameter.lsmopt.sourceAbsConstrNNR) ' mas on all defining sources)'];
         else
             estsou = [' c) other (SOLUTION: NNR condition on sources in the a priori catalog)'];
         end
         if strncmpi('icrf3',parameter.vie_init.crf(2),5)
-            estsouGA = ' The galactic aberration model (5.8 muas/year) is applied for consistency with ICRF3.';
+            estsouGA = [' The galactic aberration model (' num2str(sources.q(1).GAval) ' muas/year) is applied for consistency with ICRF3.'];
         else
             estsouGA = ' The galactic aberration model is not applied.';
         end
@@ -672,7 +672,11 @@ for pl=1:size(process_list,1)
                 fprintf(fid, ' %04s %-8s %-16s %-68s\n', num2str(k), sources.q(k).IVSname, sources.q(k).ICRFdes, num2str(sources.q(k).numobs));
             end
         else
-            fprintf(fid, ' %04s %-8s %-16s %-68s\n', num2str(k), sources.q(k).IERSname, sources.q(k).ICRFdes, num2str(sources.q(k).numobs));
+            if contains(sources.q(k).IERSname,'VIE')
+                fprintf(fid, ' %04s %-8s %-16s %-68s\n', num2str(k), sources.q(k).IVSname, sources.q(k).ICRFdes, num2str(sources.q(k).numobs));
+            else
+                fprintf(fid, ' %04s %-8s %-16s %-68s\n', num2str(k), sources.q(k).IERSname, sources.q(k).ICRFdes, num2str(sources.q(k).numobs));
+            end
         end
         sources.q(k).siteCode=num2str(k);
     end
@@ -874,7 +878,9 @@ for pl=1:size(process_list,1)
         aprDate=mjd2yydoysecod(midmjd);
         aprDateYrStr=num2str(aprDate(1));
     end
-    
+
+    SouaprDate = mjd2yydoysecod(sources.q(1).GAref); 
+    SouaprDateYrStr=num2str(SouaprDate(1));
     
     % if option was chosen in gui
     if parameter.lsmopt.est_singleses==1
@@ -1119,8 +1125,8 @@ for pl=1:size(process_list,1)
                 totDestdString=sprintf(formatStDev,sources.q(k).totDeStd);
                 if ispc, totDestdString = strrep(totDestdString, 'e+0', 'e+'); totDestdString = strrep(totDestdString, 'e-0', 'e-');  end
 
-                fprintf(fid, writeFormat, curIndex,  'RS_RA', num2str(sources.q(k).siteCode), '--', soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'rad', sources.q(k).constrEstSou, totRastring, totRastdString);
-                fprintf(fid, writeFormat, curIndex+1,'RS_DE', num2str(sources.q(k).siteCode), '--', soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'rad', sources.q(k).constrEstSou, totDestring, totDestdString);
+                fprintf(fid, writeFormat, curIndex,  'RS_RA', num2str(sources.q(k).siteCode), '--', soln, SouaprDateYrStr(3:end), SouaprDate(1,2), SouaprDate(1,3), 'rad', sources.q(k).constrEstSou, totRastring, totRastdString);
+                fprintf(fid, writeFormat, curIndex+1,'RS_DE', num2str(sources.q(k).siteCode), '--', soln, SouaprDateYrStr(3:end), SouaprDate(1,2), SouaprDate(1,3), 'rad', sources.q(k).constrEstSou, totDestring, totDestdString);
 
                 curIndex=curIndex+2;
             end
@@ -1409,8 +1415,8 @@ for pl=1:size(process_list,1)
             if ispc, aprde_sigma = strrep(aprde_sigma, 'e+0', 'e+'); aprde_sigma = strrep(aprde_sigma, 'e-0', 'e-');   end
 
             % write one line for each RA De
-            fprintf(fid, writeFormat, curIndex,  'RS_RA',num2str(sources.q(k).siteCode), '--', soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'rad', constrApr, aprra, aprra_sigma);
-            fprintf(fid, writeFormat, curIndex+1,'RS_DE',num2str(sources.q(k).siteCode), '--', soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'rad', constrApr, aprde, aprde_sigma);
+            fprintf(fid, writeFormat, curIndex,  'RS_RA',num2str(sources.q(k).siteCode), '--', soln, SouaprDateYrStr(3:end), SouaprDate(1,2), SouaprDate(1,3), 'rad', constrApr, aprra, aprra_sigma);
+            fprintf(fid, writeFormat, curIndex+1,'RS_DE',num2str(sources.q(k).siteCode), '--', soln, SouaprDateYrStr(3:end), SouaprDate(1,2), SouaprDate(1,3), 'rad', constrApr, aprde, aprde_sigma);
             curIndex=curIndex+2;
         end
     end
@@ -1616,8 +1622,8 @@ for pl=1:size(process_list,1)
             de_b=sprintf(formatVectorValue, b_sinex(col_sinex.de(k)));
             if ispc, de_b = strrep(de_b, 'e+0', 'e+'); de_b = strrep(de_b, 'e-0', 'e-');   end
 
-            fprintf(fid, writeFormat, curIndex,  'RS_RA', num2str(sources.q(k).siteCode), '--', soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'rad', constrNevSou, ra_b);
-            fprintf(fid, writeFormat, curIndex+1,'RS_DE', num2str(sources.q(k).siteCode), '--', soln, aprDateYrStr(3:end), aprDate(1,2), aprDate(1,3), 'rad', constrNevSou, de_b);
+            fprintf(fid, writeFormat, curIndex,  'RS_RA', num2str(sources.q(k).siteCode), '--', soln, SouaprDateYrStr(3:end), SouaprDate(1,2), SouaprDate(1,3), 'rad', constrNevSou, ra_b);
+            fprintf(fid, writeFormat, curIndex+1,'RS_DE', num2str(sources.q(k).siteCode), '--', soln, SouaprDateYrStr(3:end), SouaprDate(1,2), SouaprDate(1,3), 'rad', constrNevSou, de_b);
             curIndex=curIndex+2;
         end
     end

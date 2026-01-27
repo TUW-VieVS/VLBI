@@ -33,7 +33,7 @@
 % 12-2022 LK - implement changes of vgosDB naming convention + master file
 
 function write_eopivs(process_list, subdir, outfile, flag_intensive, flag_offsrate, flag_incloutl)
-HKupd = false;
+HKupd = true;
     %% Get file name from GUI input
     % if a mat file is given instead of already loaded process list
     if strcmpi(process_list(end-3:end), '.mat')

@@ -154,10 +154,7 @@
 * 240624 dbb Add 12-m at Fortaleza, Brazil as Fz FORTZA12.
 * 240701 dbb Add VGOS antenna at Hartebeesthoek as Hv HARTVGS.
 * 240722 dbb Add DOMES and CDP numbers for HARTVGS.
-* 241220 dbb Add DOMES and CDP numbers for DSS26, DSS36, DSS56.
-* 250403 dbb Add VGOS antenna at Matera as Mb MATERAVG with DOMES and CDP numbers.
-* 250630 dbb Add 13-m antenna at Chiang Mai, Thailand as Cm CHANGM13.
-* 250729 dbb Change IVS Station name for Matera VGOS to MATVGOS.
+* 241210 vie Add DOMES and CDP numbers (from itrf2020-u2023) DSS26, DSS36, DSS56 !!! VIENNA internal update
 *
 * Fields:
 * 1. IVS 2-letter code. Not case sensitive, although the initial 
@@ -211,7 +208,6 @@
  Ce CEBRER26 --------- ---- DSS62 Robledo, Spain
  Cg CARROLGA 40453M001 7228 mobile Carrollton, GA, USA
  Ch CHLBOLTN 13201S002 7215 Chilbolton, England
- Cm CHANGM13 --------- ---- 13-m at Chiang Mai, Thailand
  Cn CARNUSTY 13296M002 7603 mobile Carnoustie, Scotland
  Da DAITO    21738S001 7326 Daito Islands, Japan
  Dm DEADMANL 40431M001 7267 mobile Deadman Lake, CA, USA
@@ -292,7 +288,6 @@
  Le LEONRDOK 40454M001 7292 mobile Leonard, OK, USA
  M2 MV2ONSLA 10402M006 7211 mobile at Onsala, Sweden
  Ma MATERA   12734S005 7243 Matera, Italy 
- Mb MATVGOS  12734S009 7299 VGOS antenna at Matera, Basilicata, Italy 
  Mc MEDICINA 12711S001 7230 Medicina, Italy 
  Md MARPOINT 40490S001 7217 Maryland Point, MD, USA
  Me MON_PEAK 40497M003 7274 mobile Monument Peak, CA, USA
@@ -306,7 +301,7 @@
  Mm -------- --------- ---- JCMT, Mauna Kea, HI, USA
  Mn MIZNAO10 21702S010 7324 NAO 10-m antenna at Mizusawa, Japan 
  Mo MOJAVE12 40405S009 7222 12-m at Goldstone, CA, USA
- *Mp MOPRA    --------- ---- ATNF, Siding Sprint, Australia
+ Mp MOPRA    --------- ---- ATNF, Siding Sprint, Australia
  Mq MOJ_7288 40405M013 7288 mobile Mojave, CA, USA
  Mr MARCUS   21733S002 7310 Minami-tori Shima, Japan 
  Ms MILESMON 40455M001 7038 mobile Miles City, MT, USA
@@ -423,9 +418,7 @@
  Yu YUMA     40493M001 7894 mobile Yuma, CA, USA
  Zc ZELENCHK 12351S001 7381 Zelenchukskaya, Russia
  Zv ZELRT13V 12351S003 7383 13-m at Zelenchukskaya, Russia
-*
- Mp MOPRA    59999S001 8009 ATNF, Siding Sprint, Australia
- Kp KVNPC    23951S001 8001 KVNPC
- Kt KVNTN    23952S001 8002 KVNTN
- Ku KVNUS    23953S001 8003 KVNUS
- Ky KVNYS    23954S001 8004 KVNYS                  
+ Xa XXGRANCA --------- 9991
+ Xb XXFORTAL --------- 9992
+ Xc XXKUALAL --------- 9993
+ Xd XXCHIANG --------- 9994

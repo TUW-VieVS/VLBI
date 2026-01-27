@@ -21,17 +21,16 @@
 %   06 Sep 2019 by David Mayer
 
 
-function [de_GA, ra_GA] = correct_GA(de, ra, ave_date_session)
+function [de_GA, ra_GA] = correct_GA(de, ra, ave_date_session,GA_ref,GA_val)
 
     RA_Gal = deg2rad(266.4); % coordinates of galactic center
     DE_Gal = deg2rad(-28.94);
-    GA_val = 5.8; %muas/year
-    GA_ref = date2mjd([2015 1 1]); %reference epoch of icrf3
     GA_val = deg2rad(GA_val*1e-6/3600); %rad/year
     
     GA_vec = [  cos(DE_Gal)*cos(RA_Gal);
                 cos(DE_Gal)*sin(RA_Gal);
                 sin(DE_Gal)]; % coordinates of galactic center
+    
     time_delta = (ave_date_session - GA_ref)/365.25; % differrence to reference epoch in years
 
     SIN_DE = sin(de);
