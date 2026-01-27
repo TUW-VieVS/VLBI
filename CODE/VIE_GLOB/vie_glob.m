@@ -111,10 +111,10 @@ path_level='../';
 
 rms_check = 0;
 del_ses = 0;
-flname_del_ses='../DATA/GLOB/bad_ses_rms5_nan.txt';
+flname_del_ses='bad_ses.txt';
 special_EOP = 0;
-special_EOP_file = 'EOPsmallnet_vie2024b.txt'; % format NGS: 18AUG08XA_N005, format vgosDB: 19AUG12XA
-urumqi13aprbreak = false; %true for vgos
+special_EOP_file = 'fix_EOP.txt';
+urumqi13aprbreak = false;
 
 
 % % Read which parametres are to be estimated ('paramGS.m')
