@@ -479,9 +479,9 @@ for pl=1:size(process_list,1)
     
     if parameter.lsmopt.est_sourceNNR ==1      
         if parameter.lsmopt.UseSourceAbsConstrNNR == 1
-            estsou = [' c) other (SOLUTION: NNR condition on sources in the a priori catalog and constraints of ' num2str(parameter.lsmopt.sourceAbsConstrNNR) ' mas on all defining sources)'];
+            estsou = [' c) other (SOLUTION: NNR condition on defining sources in the a priori catalog and constraints of ' num2str(parameter.lsmopt.sourceAbsConstrNNR) ' mas on all sources)'];
         else
-            estsou = [' c) other (SOLUTION: NNR condition on sources in the a priori catalog)'];
+            estsou = [' c) other (SOLUTION: NNR condition on defining sources in the a priori catalog)'];
         end
         if strncmpi('icrf3',parameter.vie_init.crf(2),5)
             estsouGA = [' The galactic aberration model (' num2str(sources.q(1).GAval) ' muas/year) is applied for consistency with ICRF3.'];

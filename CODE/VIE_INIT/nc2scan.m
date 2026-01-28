@@ -200,6 +200,29 @@ fprintf('\t sigma:\t\t %s/%s, nc field: %s\n', sigma_tau_folder, sigma_tau_file,
         sMBD2obs = num2cell(out_struct.Observables.GroupDelay_bX.GroupDelaySig.val);
     end
 
+
+
+
+%% QUALITY CODES FOR X-BAND and S-BAND: 
+% only used for sessions prior to 2001 in cleanScan.m 
+nc_filename = get_nc_filename({['QualityCode_' freqband]}, wrapper_data.Observation.Observables.files, 0);
+if ~isempty(nc_filename) % not mathc found in wrapper data
+    qualityCode_X = num2cell(out_struct.Observables.(nc_filename).QualityCode.val);
+else
+    fprintf(' - No quality codes for X-band defined in wrapper file: Quality code is set to "0" for all X-band observations!\n')
+    qualityCode_X = {0};
+end
+
+nc_filename = get_nc_filename({'QualityCode_bS'}, wrapper_data.Observation.Observables.files, 0);
+if ~isempty(nc_filename) % not mathc found in wrapper data
+    qualityCode_S = num2cell(out_struct.Observables.(nc_filename).QualityCode.val);
+else
+    fprintf(' - No quality codes for S-band defined in wrapper file: Quality code is set to "0" for all S-band observations!\n')
+    qualityCode_S = {0};
+end
+
+
+%%
 MBD1=[]; MBD2=[]; sMBD1=[]; sMBD2=[]; 
 MBD1badAmb = false;
 if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands') & parameter.vie_init.iono_correction
@@ -215,7 +238,10 @@ if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands') & para
         % In some databases the S-band delay in ObsEdit is missing for specific baselines! Try to
         % use the S-band delay from Observables (Ambig. have to be in the database! Otherwise not helpful!)
         hasZero = cellfun(@(x) isnumeric(x) && any(x(:) == 0), MBD1);
-        if any(hasZero)
+        % Quality code > 4
+        hasQh4 = cellfun(@(x)  (ischar(x) && isspace(x)) ||  (~isempty(x) && ~isnan(str2double(x)) && str2double(x) < 5), qualityCode_S);
+
+        if any(hasZero & hasQh4)
             MBD1 = num2cell(out_struct.Observables.GroupDelay_bS.GroupDelay.val);
             MBD1badAmb = true;
         end
@@ -288,6 +314,12 @@ end
 
 
 % ambiguity
+% ambiguity size
+ambS_folder = 'Observables';
+ambS_file = ['AmbigSize_',freqband];
+ambS_field = 'AmbigSize';
+ambspace = num2cell(double(out_struct.(ambS_folder).(ambS_file).(ambS_field).val) .*ones(nObs,1)); % cell: nObs x 1 (sec)
+
 if amb_k ~= 0
        
     ambN_folder = 'ObsEdit';
@@ -301,11 +333,6 @@ if amb_k ~= 0
     end
     
     ambN_field = 'NumGroupAmbig';
-    
-    % ambiguity size
-    ambS_folder = 'Observables';
-    ambS_file = ['AmbigSize_',freqband];
-    ambS_field = 'AmbigSize';
     
     fprintf('\t ambiguity (integer number): \t %s/%s, nc field: %s\n',ambN_folder, ambN_file, ambN_field)
     fprintf('\t ambiguity (length): \t\t %s/%s, nc field: %s\n', ambS_folder, ambS_file, ambS_field)
@@ -343,7 +370,7 @@ else
     tau_ambCell = num2cell(zeros(1, length(groupDelayWAmbigCell)));
 end
 
-if MBD1badAmb %S-band MBD
+if MBD1badAmb %S-band MBD, switch for S-band to observables!!!
     if fileoutput
         fid = fopen(['sessions_missing_partly_Sband_ObsEdit.txt'],'a');
         fprintf(fid,'%s   %s \n', out_struct.head.Session.val, parameter.session_name); fclose(fid);
@@ -373,14 +400,6 @@ if MBD1badAmb %S-band MBD
     end
     MBD1 = num2cell([MBD1{:}] + [tau_ambCell_S{:}])'; % S band
 end
-
-
-
-% ambiguity size
-ambS_folder = 'Observables';
-ambS_file = ['AmbigSize_',freqband];
-ambS_field = 'AmbigSize';
-ambspace = num2cell(double(out_struct.(ambS_folder).(ambS_file).(ambS_field).val) .*ones(nObs,1)); % cell: nObs x 1 (sec)
 
 
 %% IONOSPHERIC DELAY, SIGMA IONOSPHERIC DELAY and DELAY FLAG IONOSPHERIC DELAY::
@@ -490,23 +509,7 @@ else
     delayQualityFlag = {0};
 end
 
-%% QUALITY CODES FOR X-BAND and S-BAND: 
-% only used for sessions prior to 2001 in cleanScan.m 
-nc_filename = get_nc_filename({['QualityCode_' freqband]}, wrapper_data.Observation.Observables.files, 0);
-if ~isempty(nc_filename) % not mathc found in wrapper data
-    qualityCode_X = num2cell(out_struct.Observables.(nc_filename).QualityCode.val);
-else
-    fprintf(' - No quality codes for X-band defined in wrapper file: Quality code is set to "0" for all X-band observations!\n')
-    qualityCode_X = {0};
-end
 
-nc_filename = get_nc_filename({'QualityCode_bS'}, wrapper_data.Observation.Observables.files, 0);
-if ~isempty(nc_filename) % not mathc found in wrapper data
-    qualityCode_S = num2cell(out_struct.Observables.(nc_filename).QualityCode.val);
-else
-    fprintf(' - No quality codes for S-band defined in wrapper file: Quality code is set to "0" for all S-band observations!\n')
-    qualityCode_S = {0};
-end
 
 %% SIGMA FINAL DELAY:  
 delaySigmaTimesIonoSigma=num2cell(sqrt([groupDelaySigCell{:}].^2 + ([ionoDelSigCell{:}]*1e-9).^2)); % [sec]    cell: 1 x nObs
