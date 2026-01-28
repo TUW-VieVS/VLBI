@@ -238,10 +238,10 @@ if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands') & para
         % In some databases the S-band delay in ObsEdit is missing for specific baselines! Try to
         % use the S-band delay from Observables (Ambig. have to be in the database! Otherwise not helpful!)
         hasZero = cellfun(@(x) isnumeric(x) && any(x(:) == 0), MBD1);
-        % Quality code > 4
-        hasQh4 = cellfun(@(x)  (ischar(x) && isspace(x)) ||  (~isempty(x) && ~isnan(str2double(x)) && str2double(x) < 5), qualityCode_S);
-
-        if any(hasZero & hasQh4)
+        % Quality code < 5
+        hasQu5 = cellfun(@(x)  (ischar(x) && isspace(x)) ||  (~isempty(x) && ~isnan(str2double(x)) && str2double(x) < 5), qualityCode_S);
+        hasQa4=~hasQu5; % Qcode above4
+        if any(hasZero & hasQa4) % no S-band delay for a good observation is the problem, try Observables
             MBD1 = num2cell(out_struct.Observables.GroupDelay_bS.GroupDelay.val);
             MBD1badAmb = true;
         end
@@ -320,10 +320,8 @@ ambS_file = ['AmbigSize_',freqband];
 ambS_field = 'AmbigSize';
 ambspace = num2cell(double(out_struct.(ambS_folder).(ambS_file).(ambS_field).val) .*ones(nObs,1)); % cell: nObs x 1 (sec)
 
-if amb_k ~= 0
-       
-    ambN_folder = 'ObsEdit';
-    
+ambN_folder = 'ObsEdit';
+%if amb_k ~= 0 
     % check if ObsEdit folder exists (mandatory for ambig values)
     if isfield(wrapper_data.Observation, 'ObsEdit')
         nc_filename = get_nc_filename({'NumGroupAmbig', freqband}, wrapper_data.Observation.ObsEdit.files, 1);
@@ -334,10 +332,10 @@ if amb_k ~= 0
     
     ambN_field = 'NumGroupAmbig';
     
-    fprintf('\t ambiguity (integer number): \t %s/%s, nc field: %s\n',ambN_folder, ambN_file, ambN_field)
-    fprintf('\t ambiguity (length): \t\t %s/%s, nc field: %s\n', ambS_folder, ambS_file, ambS_field)
+   % fprintf('\t ambiguity (integer number): \t %s/%s, nc field: %s\n',ambN_folder, ambN_file, ambN_field)
+   % fprintf('\t ambiguity (length): \t\t %s/%s, nc field: %s\n', ambS_folder, ambS_file, ambS_field)
     
-end
+%end
 
 %% DELAY:
 groupDelayWAmbigCell = num2cell(out_struct.(tau_folder).(tau_file).(tau_field).val);
@@ -376,8 +374,8 @@ if MBD1badAmb %S-band MBD, switch for S-band to observables!!!
         fprintf(fid,'%s   %s \n', out_struct.head.Session.val, parameter.session_name); fclose(fid);
         %return
     end
-    fprintf('S-band incomplete in ObsEdit, VieVS tries Observables!\n') 
-    if amb_k ~= 0
+    fprintf('S-band incomplete in ObsEdit, VieVS tries Observables and searches for ambiguities!\n') 
+    %if amb_k ~= 0
         % check for integer number ambiguities
         if isfield(out_struct.(ambN_folder),ambN_file)
             ambN_S= double(out_struct.(ambN_folder).([ambN_file(1:end-1) 'S']).(ambN_field).val); % cell: nObs x 1
@@ -393,11 +391,11 @@ if MBD1badAmb %S-band MBD, switch for S-band to observables!!!
         end
         
         % calculate ambiguity spacing and apply observation type factor
-        tau_ambCell_S = num2cell(amb_k*ambN_S.*ambS_S);
-    else
-        tau_ambCell_S = num2cell(zeros(1, length(groupDelayWAmbigCell)));
-        fprintf('Ambiguity S-band data not available: %s is missing\n',[ambS_folder,[ambS_file(1:end-1) 'S']])
-    end
+        tau_ambCell_S = num2cell(1*ambN_S.*ambS_S);
+    %else
+     %   tau_ambCell_S = num2cell(zeros(1, length(groupDelayWAmbigCell)));
+     %   fprintf('Ambiguity S-band data not available: %s is missing\n',[ambS_folder,[ambS_file(1:end-1) 'S']])
+    %end
     MBD1 = num2cell([MBD1{:}] + [tau_ambCell_S{:}])'; % S band
 end
 
