@@ -336,8 +336,8 @@ if sum(obsTypeQidx) ~= 0
         fprintf(1, 'Manual CRF is used --> GA will be corrected to 2015 using 5.8 muas/year\n');
     end
 
-    sources.q(1).GAref = GA_ref; % reference epoch of a priori catalog [mjd]
-    sources.q(1).GAval = GA_val; %muas/year
+    [sources.q.GAref] = deal(GA_ref); % reference epoch of a priori catalog [mjd]
+    [sources.q.GAval] = deal(GA_val); %muas/year
     
     sourceNames(obsTypeQidx)     = deal({sources.q([scan(obsTypeQidx).iso]).name});
 end
