@@ -1211,6 +1211,13 @@ ANTENNA_INFO  WETTZ13S  FO_SECN MO_AZEL RA_NO   ME_COMP   7.8  0    0    943.9  
 ANTENNA_INFO  WHTHORSE  FO_SECN MO_AZEL RA_NO   ME_INCM  -0.3  0    0    926.2    3.9  0.0000  0      1.00E-5   2.8000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2 only
 #----------------------------------------------------------------------------------------
+ANTENNA_INFO  WIDE85_3  FO_PRIM MO_EQUA RA_NO   ME_COMP   9.6  0    0    922.0   25.9  0.5600  0      1.00E-5  13.0800 1.20E-5   6.7085 1.20E-5   2.2200 1.20E-5  10.9700 1.20E-5
+# Copy of NRAO85_3 for the sake of usability for old test sessions with different names for NRAO85_3
+# Information as from F. Ghigo 980831
+# axis offset estimated by L.  Petrov    (pre 2008)   6.7076 +- 0.0003
+# Axis offset estimated by Dan Macmillan 2014.01.07,  6.7065 +- 0.0004
+# axis offset estimated by Dan Macmillan 2020.02.14,  6.7085 +- 0.0003
+#----------------------------------------------------------------------------------------
 ANTENNA_INFO  YAKATAGA  FO_SECN MO_AZEL RA_NO   ME_INCM   4.3  0    0   1005.0    3.9  0.0000  0      1.00E-5   2.8000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5   0.0000 1.20E-5
 # mobile site with MV-2 only
 #----------------------------------------------------------------------------------------

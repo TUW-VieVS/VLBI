@@ -33,7 +33,6 @@ function [scan, sources, antenna]=cleanScan(scan, sources, antenna, parameter)
 %% Options
 flag_pring_debug_info = false;
 nocablegeneral = false;
-
 %% Precalculations
 nScans = size(scan,2);
 

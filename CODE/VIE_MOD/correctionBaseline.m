@@ -326,33 +326,38 @@ function [a_ngr, a_egr, scan, antenna, tau] = correctionBaseline(scan, antenna, 
     tau = c_axis + c_therm + c_gravdef + tau; % [sec]
 
     % + EXTERNAL IONOSPERIC DELAY +
-    if strcmp(parameter.vie_init.iono, 'ext')
+    if strcmp(parameter.vie_init.iono, 'ext') 
         % use iono delay from external file and add it
-
-        % if iono file was found -> apply correction
-        if ionFileFoundLog == 1
-            % find two stationnames of current observations
-            statNameI1      = antenna(scan(iSc).obs(iobs).i1).name;
-            statNameI2      = antenna(scan(iSc).obs(iobs).i2).name;
-            [dion1, dion2]  = get_iondel(iondata,scan(iSc).tim,statNameI1,statNameI2);
-            ionoDel         = dion2 - dion1; %[sec]
-%            cis = 0.1; % coefficient for the ionosphere sigma
-%            ionoSig         = sqrt((cis*dion1)^2 + (cis*dion2)^2); %sec
-
-            % add to observed delay
-            scan(iSc).stat(idStation1).iono  = dion1;
-            scan(iSc).stat(idStation2).iono  = dion2;
-            scan(iSc).obs(iobs).ionDelext   = ionoDel;
-            scan(iSc).obs(iobs).obs         = scan(iSc).obs(iobs).obs - ionoDel;
-%            scan(iSc).obs(iobs).ionSigext   = ionoSig;
-%            scan(iSc).obs(iobs).sig         = sqrt(scan(iSc).obs(iobs).sig^2 + ionoSig^2); % add sigma for external iono calibration to the sigma of the delay
+        if parameter.vie_init.iono_correction==1
+            % if iono file was found -> apply correction
+            if ionFileFoundLog == 1
+                % find two stationnames of current observations
+                statNameI1      = antenna(scan(iSc).obs(iobs).i1).name;
+                statNameI2      = antenna(scan(iSc).obs(iobs).i2).name;
+                [dion1, dion2]  = get_iondel(iondata,scan(iSc).tim,statNameI1,statNameI2);
+                ionoDel         = dion2 - dion1; %[sec]
+    %            cis = 0.1; % coefficient for the ionosphere sigma
+    %            ionoSig         = sqrt((cis*dion1)^2 + (cis*dion2)^2); %sec
+    
+                % add to observed delay
+                scan(iSc).stat(idStation1).iono  = dion1;
+                scan(iSc).stat(idStation2).iono  = dion2;
+                scan(iSc).obs(iobs).ionDelext   = ionoDel;
+                scan(iSc).obs(iobs).obs         = scan(iSc).obs(iobs).obs - ionoDel;
+    %            scan(iSc).obs(iobs).ionSigext   = ionoSig;
+    %            scan(iSc).obs(iobs).sig         = sqrt(scan(iSc).obs(iobs).sig^2 + ionoSig^2); % add sigma for external iono calibration to the sigma of the delay
+            else
+    %            warning('Ion. correction not found in external file! Correction set to zero.\n');
+                scan(iSc).stat(idStation1).iono  = 0;
+                scan(iSc).stat(idStation2).iono  = 0;
+                scan(iSc).obs(iobs).ionDelext   = 0;
+            end
         else
-%            warning('Ion. correction not found in external file! Correction set to zero.\n');
             scan(iSc).stat(idStation1).iono  = 0;
             scan(iSc).stat(idStation2).iono  = 0;
-            scan(iSc).obs(iobs).ionDelext   = 0;
+            scan(iSc).obs(iobs).ionDelext   = 0;  
         end
     end
     %  - EXTERNAL IONOSPERIC DELAY -
-end
+
 

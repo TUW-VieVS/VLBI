@@ -306,7 +306,7 @@
  Mm -------- --------- ---- JCMT, Mauna Kea, HI, USA
  Mn MIZNAO10 21702S010 7324 NAO 10-m antenna at Mizusawa, Japan 
  Mo MOJAVE12 40405S009 7222 12-m at Goldstone, CA, USA
- Mp MOPRA    --------- ---- ATNF, Siding Sprint, Australia
+ *Mp MOPRA    --------- ---- ATNF, Siding Sprint, Australia
  Mq MOJ_7288 40405M013 7288 mobile Mojave, CA, USA
  Mr MARCUS   21733S002 7310 Minami-tori Shima, Japan 
  Ms MILESMON 40455M001 7038 mobile Miles City, MT, USA
@@ -423,3 +423,9 @@
  Yu YUMA     40493M001 7894 mobile Yuma, CA, USA
  Zc ZELENCHK 12351S001 7381 Zelenchukskaya, Russia
  Zv ZELRT13V 12351S003 7383 13-m at Zelenchukskaya, Russia
+*
+ Mp MOPRA    59999S001 8009 ATNF, Siding Sprint, Australia
+ Kp KVNPC    23951S001 8001 KVNPC
+ Kt KVNTN    23952S001 8002 KVNTN
+ Ku KVNUS    23953S001 8003 KVNUS
+ Ky KVNYS    23954S001 8004 KVNYS                  

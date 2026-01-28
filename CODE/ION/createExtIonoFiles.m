@@ -276,9 +276,9 @@ for k = 1 : 2 % loop over 2 days
             end
            url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
         
-        elseif strcmp(ionoModel, 'ETH') == 1 % if ETH (intern) map is being used
+        elseif strcmp(ionoModel, 'ETH_ML') == 1 % if ETH (intern) map is being used
             % stil old naming convention
-           ionoFilename{k,1}=['sf1g', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i'];
+           ionoFilename{k,1}=['s1fg', sprintf('%03.0f', yyDoySecod(k,2)), '0.', curYrStr(k,3:4), 'i']; %'sf1g'
            %sfx = '.Z'; % not compressed
            url=['private'];
 

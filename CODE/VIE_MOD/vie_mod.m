@@ -317,15 +317,28 @@ obsTypeSidx = strcmp({scan.obs_type}, 's');
 if sum(obsTypeQidx) ~= 0
     RA2000(obsTypeQidx)          = deal([sources.q([scan(obsTypeQidx).iso]).ra2000]);
     DE2000(obsTypeQidx)          = deal([sources.q([scan(obsTypeQidx).iso]).de2000]);
+    GA_ref=0;GA_val=0;
     if strncmpi('icrf3',parameter.vie_init.crf(2),5) && (delModQ ~= 3)
-        [DE2000, RA2000] = correct_GA(DE2000,RA2000,mean([scan(:).mjd]));
+        GA_val = 5.8; %muas/year
+        GA_ref = date2mjd([2015 1 1]); %reference epoch of icrf3
+
+        [DE2000, RA2000] = correct_GA(DE2000,RA2000,mean([scan(:).mjd]), GA_ref,GA_val);
         fprintf(1, 'ICRF3 is used --> GA will be corrected to 2015 using 5.8 muas/year\n');
     end
 
     if strcmp('manualCrf',parameter.vie_init.crf(2)) && (delModQ ~= 3)
-        [DE2000, RA2000] = correct_GA(DE2000,RA2000,mean([scan(:).mjd]));
+    %if strcmp('VieCRF13',parameter.vie_init.crf(2)) && (delModQ ~= 3)
+        
+        GA_val = 5.8; %muas/year
+        GA_ref = date2mjd([2015 1 1]); %reference epoch of icrf3
+
+        [DE2000, RA2000] = correct_GA(DE2000,RA2000,mean([scan(:).mjd]), GA_ref,GA_val);
         fprintf(1, 'Manual CRF is used --> GA will be corrected to 2015 using 5.8 muas/year\n');
     end
+
+    sources.q(1).GAref = GA_ref; % reference epoch of a priori catalog [mjd]
+    sources.q(1).GAval = GA_val; %muas/year
+    
     sourceNames(obsTypeQidx)     = deal({sources.q([scan(obsTypeQidx).iso]).name});
 end
 if sum(obsTypeSidx) ~= 0
@@ -535,7 +548,7 @@ end
 
 % EXTERNAL IONOSPERIC DELAY 
 iondata=''; ionFileFoundLog=0;
-if strcmp(parameter.vie_init.iono, 'ext')
+if strcmp(parameter.vie_init.iono, 'ext') & parameter.vie_init.iono_correction==1
     fprintf('Start loading external ionospheric file\n');
     [iondata, ionFileFoundLog] = load_ionfile(parameter,session);
 end 

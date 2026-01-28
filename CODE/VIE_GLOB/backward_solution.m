@@ -17,7 +17,7 @@
 function backward_solution(DIRIN, DIROUT)
 % % 
 % % % Which parameters do you want to estimate?
- solbck.eop=1;
+ solbck.eop=1
  solbck.zwd=1;
  solbck.tgr=1;
  solbck.ant=1;

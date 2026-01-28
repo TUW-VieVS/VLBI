@@ -174,6 +174,7 @@ for ifile = 1:2
       %   superstations(271).code=' Ky'
       %   superstations(272).code=' Kt'
 
+
         % stations in the session
         ant = {glob2.opt.stat.name};
         ancode=[''];

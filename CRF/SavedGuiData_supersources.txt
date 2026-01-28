@@ -16,7 +16,7 @@
 # VieCRF13.txt --------------
             VieCRF10a, download | 0
              VieCRF10a, specify | 1
-         VieCRF10a, editTextbox | ../CRF/data/VieCRF13.txt
+         VieCRF10a, editTextbox | 
 #
 # vievsCrf.txt --------------
              vievsCrf, download | 0
