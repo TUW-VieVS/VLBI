@@ -274,11 +274,12 @@ for iObs=1:nObs
         if length(uicol) ~= length(icolSam) % [4 4 4 4 46 46 46 46; 46 0 0 0 0 0 0 46]
             counts = accumarray(icolSam, 1);
             bothSBsCOL = uicol(counts > 1);
-            [indcol, ~]=find(icolSam ==bothSBsCOL);
-            irowSam(indcol)=[];
-            indcol=[];
-            [indcol, ~]=find(idShift ==bothSBsCOL);
-            idShift(indcol)=[];
+                indcol=[];
+                [indcol, ~]=find(ismember(icolSam,bothSBsCOL));
+                irowSam(indcol)=[];
+                indcol=[];
+                [indcol, ~]=find(ismember(idShift,bothSBsCOL));
+                idShift(indcol)=[];
         end
 
         % check over all channels (in case some channel was dropped)
