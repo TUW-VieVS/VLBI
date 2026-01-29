@@ -378,7 +378,8 @@ if MBD1badAmb %S-band MBD, switch for S-band to observables!!!
     %if amb_k ~= 0
         % check for integer number ambiguities
         if isfield(out_struct.(ambN_folder),ambN_file)
-            ambN_S= double(out_struct.(ambN_folder).([ambN_file(1:end-1) 'S']).(ambN_field).val); % cell: nObs x 1
+            ambN_fileS = strrep(ambN_file, freqband, 'bS');
+            ambN_S= double(out_struct.(ambN_folder).(ambN_fileS).(ambN_field).val); % cell: nObs x 1
         else
             fprintf('Ambiguity S-band data not available: %s is missing\n',[ambN_folder,'/',ambN_file])
         end
@@ -387,7 +388,7 @@ if MBD1badAmb %S-band MBD, switch for S-band to observables!!!
         if isfield(out_struct.(ambS_folder),[ambS_file(1:end-1) 'S'])
             ambS_S = double(out_struct.(ambS_folder).([ambS_file(1:end-1) 'S']).(ambS_field).val); % cell: nObs x 1 (sec)
         else
-            fprintf('Ambiguity S-band data not available: %s is missing\n',[ambS_folder,[ambS_file(1:end-1) 'S']])        
+            fprintf('Ambiguity S-band data not available: %s is missing\n',[ambS_folder,strrep(ambS_file, freqband, 'bS')]);        
         end
         
         % calculate ambiguity spacing and apply observation type factor
