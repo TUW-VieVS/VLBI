@@ -377,9 +377,17 @@ if MBD1badAmb %S-band MBD, switch for S-band to observables!!!
     fprintf('S-band incomplete in ObsEdit, VieVS tries Observables and searches for ambiguities!\n') 
     %if amb_k ~= 0
         % check for integer number ambiguities
-        if isfield(out_struct.(ambN_folder),ambN_file)
-            ambN_fileS = strrep(ambN_file, freqband, 'bS');
-            ambN_S= double(out_struct.(ambN_folder).(ambN_fileS).(ambN_field).val); % cell: nObs x 1
+        ambN_fileS = get_nc_filename({'NumGroupAmbig', 'bS'}, wrapper_data.Observation.ObsEdit.files, 1);
+        if isfield(out_struct.(ambN_folder),ambN_fileS)
+            %ambN_fileS = strrep(ambN_file, freqband, 'bS');
+               %  % check if this Sband Ambig. file exist
+            %if isfield(out_struct.(ambN_folder),ambN_fileS)
+            %    ambN_S= double(out_struct.(ambN_folder).(ambN_fileS).(ambN_field).val); % cell: nObs x 1
+            %else
+                %  % search for the S-band Ambig. file which was chosen in GUI for the wrapper file
+                %ambN_fileS = get_nc_filename({'NumGroupAmbig', 'bS'}, wrapper_data.Observation.ObsEdit.files, 1);
+                ambN_S= double(out_struct.(ambN_folder).(ambN_fileS).(ambN_field).val); % cell: nObs x 1
+            %end
         else
             fprintf('Ambiguity S-band data not available: %s is missing\n',[ambN_folder,'/',ambN_file])
         end
@@ -449,7 +457,7 @@ if strcmp(ioncorr,'on')
         %[iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = vievs_iono(out_struct,wrapper_data,MBD1,MBD2,sMBD1,sMBD2,parameter); 
         %iono_val_vievs=iono_val_vievs.*1e9; % ns
         %sigma_iono_vievs=sigma_iono_vievs.*1e9; % ns
-        [iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs, vs_vievs, vx_vievs] = iono_contribution_dualB(out_struct,MBD1,MBD2,sMBD1,sMBD2,parameter); %ns
+        [iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs, vs_vievs, vx_vievs] = iono_contribution_dualB(out_struct,MBD1,MBD2,sMBD1,sMBD2,parameter,wrapper_data); %ns
 
         if length(iono_val_vievs) > 1
             ionoDelayInternalFlag = 1;
