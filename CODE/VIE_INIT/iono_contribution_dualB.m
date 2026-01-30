@@ -6,7 +6,7 @@
 % Hana Krasna, 2025 Aug 10
 
 
-function [ionoX, sigma_ionoX, qflag_ion,vs,vx] = iono_contribution_dualB(out_struct,ctau_s,ctau_x,csigma_tau_s,csigma_tau_x,parameter)
+function [ionoX, sigma_ionoX, qflag_ion,vs,vx] = iono_contribution_dualB(out_struct,ctau_s,ctau_x,csigma_tau_s,csigma_tau_x,parameter,wrapper_data)
 fileoutput=false;
 
 tau_s=[ctau_s{:}]' .*1e9; % ns
@@ -16,8 +16,8 @@ sigma_tau_x=[csigma_tau_x{:}]' .*1e9; % ns
 
 qflag_ion = zeros(length(tau_x), 1);
 
-[vx, sigma_vx, qflag_vx]= effective_freq(out_struct,'bX',parameter); % GHz
-[vs, sigma_vs, qflag_vs]= effective_freq(out_struct,'bS',parameter); % GHz
+[vx, sigma_vx, qflag_vx]= effective_freq(out_struct,'bX',parameter,wrapper_data); % GHz
+[vs, sigma_vs, qflag_vs]= effective_freq(out_struct,'bS',parameter,wrapper_data); % GHz
 
 
 

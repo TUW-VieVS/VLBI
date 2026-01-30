@@ -3,14 +3,18 @@
 %
 % Hana Krasna, 2025 Aug 10
 
-function [eFreqGHz,sigma_eFreqGHz,qflag_v] = effective_freq(out_struct,freqband,parameter)
+function [eFreqGHz,sigma_eFreqGHz,qflag_v] = effective_freq(out_struct,freqband,parameter,wrapper_data)
 
 
 fileoutput=false;
 fileoutput_F=false;
-
+    
+fileChannInfoS = get_nc_filename({ 'ChannelInfo_' , 'bS'}, wrapper_data.Observation.Observables.files, 0);
+if isempty(fileChannInfoS)
+    fprintf('\nChannel Info for S-band is missing in the database!!!\n');
+end
 if fileoutput
-    if ~isfield(out_struct.Observables, 'ChannelInfo_bS')
+    if isempty(fileChannInfoS)
         fid = fopen(['sessions_missing_ChannelInfo_bS.txt'],'a');
         fprintf(fid,'%s   %s \n', out_struct.head.Session.val, parameter.session_name);
         fclose(fid);
@@ -34,9 +38,10 @@ v0 =out_struct.Observables.(fileRefv).RefFreq.val(1); % MHz
 if length(v0)>1
     disp('Reference frequency as vector?!?')
 end
+      
 
 % ref. channel frequencies: rvi
-fileChannInfo = ['ChannelInfo_' freqband];
+fileChannInfo = get_nc_filename({ 'ChannelInfo_' , freqband}, wrapper_data.Observation.Observables.files, 0);
 if ~isfield(out_struct.Observables,fileChannInfo)
     fprintf('\nChannel Info for %s is missing in the database!\n', freqband);
     if fileoutput
@@ -136,6 +141,7 @@ hBW = SamRate/4;  % MHz
 
 % NumSamples '# of samples by sideband and channel'
 % NumAp '# of AP by sideband and channel'
+%nampar='';
 if isfield (out_struct.Observables.(fileChannInfo), 'NumSamples')
     namparNS = 'NumSamples';
 elseif isfield (out_struct.Observables.(fileChannInfo), 'NumAp')
@@ -147,6 +153,8 @@ elseif isfield (out_struct.Observables.(fileChannInfo), 'NumAp')
             fclose(fid);
             %return
         end
+elseif isfield (out_struct.Observables.(fileChannInfo), 'NumAccum') % No. of accum. periods in Channel (S2)
+    fprintf('\nNumAccum instead of NumSamples and NumAp? \nIs not coded for VieVS Iono Correction yet! XG, S2 sessions!\n')
 else    
    disp('Both: NumSamples and NumAp missing!!!')    
         if fileoutput
@@ -161,8 +169,9 @@ end
 % info from S-band
 % find LSB and USB according to 0 in S-band
 % distinction according to 0 in S-band (!!!assumption!!!: only USB in S-band)
-if isfield (out_struct.Observables,'ChannelInfo_bS')
-    NS1=out_struct.Observables.ChannelInfo_bS.(namparNS).val(:,:,1);
+
+if isfield (out_struct.Observables,fileChannInfoS)
+    NS1=out_struct.Observables.(fileChannInfoS).(namparNS).val(:,:,1);
 else
     NS1=out_struct.Observables.(fileChannInfo).(namparNS).val(:,:,1); % S-band missing
 end
@@ -318,8 +327,7 @@ tabhBW = tableSB.*hBW';
 % move reference channel frequencies to the middle of the channels
 viAll = rvi+tabhBW; % MHz
 
-
-fileQualityCode = ['QualityCode_' freqband];
+fileQualityCode = get_nc_filename({ 'QualityCode_' , freqband}, wrapper_data.Observation.Observables.files, 0);
 emptyCells = cellfun(@(x) strcmp(x, {''}), deblank(num2cell(out_struct.Observables.(fileQualityCode).QualityCode.val)));
 out_struct.Observables.(fileQualityCode).QualityCode.val(emptyCells)=['0'];
 QualityCode = out_struct.Observables.(fileQualityCode).QualityCode.val;% Quality Code Flag
