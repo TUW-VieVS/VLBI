@@ -48,7 +48,11 @@ end
 
 % vgosDb_wrapper_version
 if ~isempty(e)
-    wrapper_v=str2num(e);
+    if ~isempty(str2num(e))
+        wrapper_v=str2num(e);
+    else
+        wrapper_v=e;
+    end
 end
 
 end

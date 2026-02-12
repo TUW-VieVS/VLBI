@@ -121,12 +121,12 @@ function [ wrapper_data ] = read_vgosdb_wrapper(path_nc, session_name, institute
     %   - if a version number is defined, the wrapper with this version and the institution with highest priority is taken
     
     % _V
-    if isempty(wrapper_version)
+    if isempty(wrapper_version) || strcmp(wrapper_version, 'highest version')
         % any k is valid!
         flag_array(V_list >= min_wrapper_version, 1) = V_list(V_list >= min_wrapper_version);
     else
-        if strcmp(wrapper_version, 'highest_version')
-            flag_array(V_list >= min_wrapper_version, 1) = V_list(V_list >= min_wrapper_version);
+        if strcmp(wrapper_version, '>3')
+            flag_array(V_list >= 4, 1) = V_list(V_list >= 4);
         else % only take specified version:
            if all(V_list ~= wrapper_version)
              error('No valid wrapper file found with version number: %d',wrapper_version); 
