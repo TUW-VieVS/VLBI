@@ -260,13 +260,9 @@ if ~isempty(process_list)
                         else
                             parameter.session_name  = session_name(max(ind_tmp) + 1 : end);
                             if (length(ind_tmp) == 1) && (length(session_name(1:min(ind_tmp-1))) == 4)
-                                % Format: yyy/<session_name>
+                                % Format: yyyy/<session_name>
                                 if ~isnan(str2double(session_name(1:4)))
-                                    if (str2double(session_name(1:4)) < 2025) && (str2double(session_name(1:4)) > 1979)
-                                        parameter.filepath =  ['../DATA/NGS/', session_name(1:4), '/'];
-                                    else
-                                        flag_absolut_path = true;
-                                    end
+                                    parameter.filepath =  ['../DATA/NGS/', session_name(1:4), '/'];
                                 else
                                     flag_absolut_path = true;
                                 end
@@ -279,20 +275,24 @@ if ~isempty(process_list)
                         if flag_absolut_path
                             parameter.filepath =  session_name(1 : max(ind_tmp));
                         end
-
-                        year_tmp = str2double(parameter.session_name(1:2));
-                        % Check if converversion was sucessfull:
-                        if isnan(year_tmp)
-                            error('Invalid NGS file name: The first two letters have to represent the year of the session! Please keept the standard naming convention, e.g. "16AUG26XU_N004"!');
+                        
+                        if contains(parameter.session_name, '-') % new NGS/vgosDB name YYYYMMDD-SSSSS
+                            parameter.year = parameter.session_name(1:4);
                         else
-                            % Convert two digit year to four digits!
-                            if year_tmp < 79
-                                year_tmp = year_tmp + 2000;
-                            elseif year_tmp >= 79
-                                year_tmp = year_tmp + 1900;
+                            year_tmp = str2double(parameter.session_name(1:2));
+                            % Check if converversion was sucessfull:
+                            if isnan(year_tmp)
+                                error('Invalid NGS file name: The first two letters have to represent the year of the session! Please keept the standard naming convention, e.g. "16AUG26XU_N004"!');
+                            else
+                                % Convert two digit year to four digits!
+                                if year_tmp < 79
+                                    year_tmp = year_tmp + 2000;
+                                elseif year_tmp >= 79
+                                    year_tmp = year_tmp + 1900;
+                                end
                             end
+                            parameter.year = num2str(year_tmp); % year has to be saved as string!
                         end
-                        parameter.year = num2str(year_tmp); % year has to be saved as string!
                         fprintf(' Input file format: NGS\n');
 
                     case 'vso'
@@ -311,7 +311,7 @@ if ~isempty(process_list)
                             if (length(ind_tmp) == 1) && (length(session_name(1:min(ind_tmp-1))) == 4)
                                 % Format: yyy/<session_name>
                                 if ~isnan(str2double(session_name(1:4)))
-                                    if (str2double(session_name(1:4)) < 2025) && (str2double(session_name(1:4)) > 1979)
+                                    if (str2double(session_name(1:4)) < 2099) && (str2double(session_name(1:4)) > 1979)
                                         parameter.filepath  =  ['../DATA/VSO/', session_name(1:4), '/'];
                                         parameter.year      = session_name(1:4);
                                     else
