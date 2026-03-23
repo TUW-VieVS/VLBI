@@ -344,7 +344,11 @@ HKupd = false;
                if mjdn(2)==mjdsesmid
                    mjdn(3)=[];
                else
-                   mjdn(abs(mjdn-mjdsesmid)>1)=[];
+                   if dmjdn==2
+                       mjdn(abs(mjdn-mjdsesmid)>2)=[];
+                   else
+                       mjdn(abs(mjdn-mjdsesmid)>1)=[];
+                   end
                end
            elseif (dmjdn<1 && flag_nuttight)
                mjdn(2:end-1)=[];

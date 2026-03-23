@@ -177,7 +177,7 @@ switch observation
 
     otherwise
 
-        warning('Observable typ not supported in VieVS\nSupported types: GroupDelayFull, GroupDelay, SBDelay')
+        warning('Observable type not supported in VieVS\nSupported types: GroupDelayFull, GroupDelay, SBDelay')
 
 end
 
@@ -208,6 +208,8 @@ fprintf('\t sigma:\t\t %s/%s, nc field: %s\n', sigma_tau_folder, sigma_tau_file,
 nc_filename = get_nc_filename({['QualityCode_' freqband]}, wrapper_data.Observation.Observables.files, 0);
 if ~isempty(nc_filename) % not mathc found in wrapper data
     qualityCode_X = num2cell(out_struct.Observables.(nc_filename).QualityCode.val);
+    noValX = cellfun(@isspace,qualityCode_X);
+    qualityCode_X(noValX) = num2cell('0');
 else
     fprintf(' - No quality codes for X-band defined in wrapper file: Quality code is set to "0" for all X-band observations!\n')
     qualityCode_X = {0};
@@ -216,6 +218,8 @@ end
 nc_filename = get_nc_filename({'QualityCode_bS'}, wrapper_data.Observation.Observables.files, 0);
 if ~isempty(nc_filename) % not mathc found in wrapper data
     qualityCode_S = num2cell(out_struct.Observables.(nc_filename).QualityCode.val);
+    noValS = cellfun(@isspace,qualityCode_S);
+    qualityCode_S(noValS) = num2cell('0');
 else
     fprintf(' - No quality codes for S-band defined in wrapper file: Quality code is set to "0" for all S-band observations!\n')
     qualityCode_S = {0};

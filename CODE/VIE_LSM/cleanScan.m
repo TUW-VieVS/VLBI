@@ -490,7 +490,7 @@ if parameter.obs_restrictions.suppression_flags
         qualOfObsOfCurScan_deluflag = [scan(iScan).obs.q_flag];    
         qualOfObsOfCurScan_IonFlag = [scan(iScan).obs.q_flag_ion];
         obs2Delete_deluflag = qualOfObsOfCurScan_deluflag ~= 0; % fixed to zero
-        obs2Delete_IonFlag =  qualOfObsOfCurScan_IonFlag ~= 0 & qualOfObsOfCurScan_IonFlag ~= -3; % fixed to zero or -3 (small uncertainties)
+        obs2Delete_IonFlag =  qualOfObsOfCurScan_IonFlag ~= 0;% fixed to zero 
     
         % % due to a bug by GSFC, for all observations before December 2000 also the quality code (not only the quality flag) must be checked. As long as they do not fix this bug and upload ALL vgosDB files before this date anew, this following step must be done
         % % as soon as GSFC has fixed the bug and updated ALL vgosDB sessions from 1979-2000, please remove the section inside the "if" again and leave only the part after "else". Also remove the fprintf part with the variable "code_print_info" below
