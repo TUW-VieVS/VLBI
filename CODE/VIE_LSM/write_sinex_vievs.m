@@ -1728,7 +1728,7 @@ for pl=1:size(process_list,1)
         tmpMatCoor = [col_sinex.coorx_sat; col_sinex.coory_sat; col_sinex.coorz_sat];
         % check if also stations from quasar coordinates are estimated
         if isfield(col_sinex, 'coorx_qu') && isfield(col_sinex, 'coory_qu') && isfield(col_sinex, 'coorz_qu')
-            tmpMatCoor = [tmpMatCoor; col_sinex.coorx_qu; col_sinex.coory_qu; col_sinex.coorz_qu];
+            tmpMatCoor = horzcat(tmpMatCoor, [col_sinex.coorx_qu; col_sinex.coory_qu; col_sinex.coorz_qu]);
         end
     elseif isfield(col_sinex, 'coorx_qu') && isfield(col_sinex, 'coory_qu') && isfield(col_sinex, 'coorz_qu')
         tmpMatCoor = [col_sinex.coorx_qu; col_sinex.coory_qu; col_sinex.coorz_qu];
