@@ -39,7 +39,7 @@ fid=fopen([paths.path_out 'CRF/' paths.out '/crf_' paths.L2 '.txt'],'wt');
 fprintf(fid,'%% A priori catalogue of source positions used for the analysis: %s \n', globsol.source.apriori_cat{1});
 fprintf(fid,'%% Estimates dRA, dDe from LEVEL2 data: %s \n\n\n',paths.L2);
 
-fprintf(fid,'%% source         RA [h min sec]              De [° min arcsec ]    \n\n');
+fprintf(fid,'%% IERS name       RA [h min sec]              De [° min arcsec ]     IVS name\n\n');
 
 % RA
 RA_apr=globsol.source.apriori_rade(:,1);  %[rad]
@@ -72,6 +72,8 @@ De_sec=(De_min1-De_min)*60; %[sec]
 
 [refname_s,ind]=sortrows(globsol.source.refname.IERS);
 a1 = char(refname_s);
+a2 = globsol.source.refname.IVS(ind,:);
+
 
 res= [RA_h RA_min RA_sec De_deg De_min De_sec De_est_deg]; % results
 sres=res(ind,:); % sorted results
@@ -80,7 +82,7 @@ numSou = size(globsol.source.refname.IERS,1);
 
 
 for i=1:numSou  % acoording to the columns in N-matrix
-    fprintf(fid,'%c%c%c%c%c%c%c%c        %2.0f  %2.0f  %11.8f         %3.0f  %2.0f  %10.7f     \n', a1(i,:), sres(i,1), sres(i,2), sres(i,3), sres(i,4), sres(i,5), sres(i,6));
+    fprintf(fid,'%c%c%c%c%c%c%c%c        %2.0f  %2.0f  %11.8f         %3.0f  %2.0f  %10.7f    %s \n', a1(i,:), sres(i,1), sres(i,2), sres(i,3), sres(i,4), sres(i,5), sres(i,6), a2(i,:));
 end
 
 fclose(fid);
@@ -206,7 +208,7 @@ for i=1:numSou
        sou(idsort(i)).correl, sou(idsort(i)).first_last_mean_O(:,3),...
        sou(idsort(i)).first_last_mean_O(:,1:2), sou(idsort(i)).Nexp , sou(idsort(i)).Nobs , sou(idsort(i)).refnameIVS );
 
-    fprintf(fidOffic_IVSformat,writeFormat_IVS, sou(idsort(i)).refnameIVS, sou(idsort(i)).refnameIERS, ...
+    fprintf(fidOffic_IVSformat,writeFormat_IVS, sou(idsort(i)).refnameIVS, sou(idsort(i)).refnameIERSnoVIE, ...
        num2str(res(idsort(i),1)), num2str(res(idsort(i),2)), res(idsort(i),3),...
        sign, num2str(abs(res(idsort(i),4))), ...
        num2str(res(idsort(i),5)), res(idsort(i),6), mRADe(idsort(i),:),...

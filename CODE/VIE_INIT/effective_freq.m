@@ -42,6 +42,8 @@ end
 
 % ref. channel frequencies: rvi
 fileChannInfo = get_nc_filename({ 'ChannelInfo_' , freqband}, wrapper_data.Observation.Observables.files, 0);
+%fileChannInfo = ['ChannelInfo_' , freqband]; % in some _V00x the NumSample is missing
+
 if ~isfield(out_struct.Observables,fileChannInfo)
     fprintf('\nChannel Info for %s is missing in the database!\n', freqband);
     if fileoutput
@@ -356,6 +358,8 @@ for iObs= 1 : nObs
        eFreq(iObs,1) = vi; % effective freq. equals the one channel
     end
 
+    %ss.s1(iObs)=s1; ss.s2(iObs)=s2; ss.s3(iObs)=s3; ss.s4(iObs)=s4; ss.s5(iObs)=s5; ss.s6(iObs)=s6; ss.s7(iObs)=s7;
+
 
     % neef = (sum(roi))^2 / (roi*roi'); %effective sample size
     % stder2 = roi* ((vi-eFreq(iObs,1)).^2) / sum(roi);
@@ -372,6 +376,9 @@ for iObs= 1 : nObs
     end
 
 end
+%bsls=out_struct.Observables.Baseline.Baseline.val
+%save('ss','ss')
+%save('bsls','bsls')
 
 eFreqGHz = eFreq.*1e-3;
 sigma_eFreqGHz= sigma_eFreq.*1e-3;

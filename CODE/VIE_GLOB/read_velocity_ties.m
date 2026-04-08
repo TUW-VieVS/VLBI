@@ -38,15 +38,8 @@ if fid~=-1
         j=j+1;
         k=1;
         str=fgetl(fid);
-        islash=find(str=='\');
-        while 8+10*k-10<islash
-            if sum(isletter(str(1+10*k-10 : 8+10*k-10)))>0
-                velties(j).aname(k,1:8)= str(1+10*k-10 : 8+10*k-10);
-                k=k+1;
-            else
-                k=k+1;
-            end
-        end
+
+        velties(j).aname = split(str);
         clear str    
     end
 

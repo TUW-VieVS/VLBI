@@ -755,6 +755,9 @@ for iScan=1:nScans
         [scan(iScan).obs.obsMBD1]=   deal(MBD1obs{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
         [scan(iScan).obs.obsSBD2]=   deal(SBD2obs{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
         [scan(iScan).obs.obsMBD2]=   deal(MBD2obs{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
+        %[scan(iScan).obs.obsMBD1]=   deal(MBD1{obsI1Index:obsI1Index+scan(iScan).nobs-1}) % [sec]
+        %[scan(iScan).obs.obsMBD2]=   deal(MBD2{obsI1Index:obsI1Index+scan(iScan).nobs-1}) % [sec]
+        
 
         [scan(iScan).obs.sigSBD1]=   deal(sSBD1obs{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]
         [scan(iScan).obs.sigMBD1]=   deal(sMBD1obs{obsI1Index:obsI1Index+scan(iScan).nobs-1}); % [sec]

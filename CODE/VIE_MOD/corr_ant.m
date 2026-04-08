@@ -455,12 +455,17 @@ for ist=1:nant
             if isfield(trf(IDsuper).(trffile{2}), 'psd')
                 antenna(ist).psd=trf(IDsuper).(trffile{2}).psd;
             elseif strcmp(trffile{2}, 'vievsTrf')
-                if isfield(trf(IDsuper).itrf2020, 'psd')
-                    antenna(ist).psd=trf(IDsuper).itrf2020.psd; % apply psd from ITRF2020 to vievsTRF
-                    fprintf('ITRF2020 psd applied at station %8s !!!\n',antenna(ist).name);
+                if isfield(trf(IDsuper).itrf2020_u2024, 'psd')
+                    antenna(ist).psd=trf(IDsuper).itrf2020_u2024.psd; % apply psd from ITRF2020 to vievsTRF
+                    fprintf('ITRF2020_u2024 psd applied at station %8s !!!\n',antenna(ist).name);
                 end
             end
         end
+    else
+         if isfield(trf(IDsuper).itrf2020_u2024, 'psd')
+            antenna(ist).psd=trf(IDsuper).itrf2020_u2024.psd; % apply psd from ITRF2020 to vievsTRF
+            fprintf('ITRF2020_u2024 psd applied at station %8s !!!\n',antenna(ist).name);
+         end
     end
     
     

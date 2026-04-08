@@ -37,7 +37,8 @@ k=0;
 for i=1:length(velties)   
    IndRefnamec=[];
    for j=1:size(velties(i).aname,1)
-        f=find(strcmp(cellstr(velties(i).aname(j,:)),cellstr(refnamec))==1);
+        %f=find(strcmp(cellstr(velties(i).aname(j,:)),cellstr(refnamec))==1);
+         f=find(strcmp(deblank(string(velties(i).aname{j})),cellstr(refnamec))==1);
         if ~isempty(f)
             IndRefnamec = [IndRefnamec f(1)];
         end
