@@ -157,7 +157,9 @@ for ip = 1:nSes
     else
         sname='XXXXXX'; % better but does not work for older data: x_files{1}(ip).session;
     end
-   
+
+       fprintf('session %s\n', num2str(sname))
+
     if x_filesGiven==1
         x_=x_files{1}(ip);
     else

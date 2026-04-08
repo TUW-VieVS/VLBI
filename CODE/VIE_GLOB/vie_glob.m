@@ -102,20 +102,21 @@
 %  22 Jan 2018 by Hana Krasna: Backward solution is called by vie_glob
 % ************************************************************************
 
+
 function vie_glob
 % clear all
 % close all
 % clc
-save_intermediate_results_flag = 0;
+diary
+save_intermediate_results_flag = 1;
 path_level='../';
 
 rms_check = 0;
-del_ses = 0;
+del_ses = 1;
 flname_del_ses='bad_ses.txt';
 special_EOP = 0;
 special_EOP_file = 'fix_EOP.txt';
 urumqi13aprbreak = false;
-
 
 % % Read which parametres are to be estimated ('paramGS.m')
 % guiglob
@@ -974,6 +975,13 @@ if save_intermediate_results_flag
 	save('workspace4.mat');
 	%load('workspace4.mat');
 end
+
+
+
+
+
+
+
 if parGS(g.g_coord(1)).id==1 || parGS(g.g_srade(1)).id==1
     fprintf('\n 4 ... Preparing B matrix for datum definition \n\n')
 end
@@ -1010,7 +1018,16 @@ if parGS(g.g_coord(1)).id==1
         nam=fieldnames(trf);
         trf=eval(['trf.' nam{1}]);
     end
-    
+   
+    for ista = 1:length(trf)
+        if ~isempty(trf(ista).(trffile{2}))
+            for k = 1:numel(trf(ista).(trffile{2}).break)
+                trf(ista).(trffile{2}).break(k).start = round(trf(ista).(trffile{2}).break(k).start);
+                trf(ista).(trffile{2}).break(k).end = round(trf(ista).(trffile{2}).break(k).end);
+            end
+        end
+    end
+
     % (2) TRF: load manual TRF (if chosen)
     if strcmpi(trffile{1}(end-3:end), '.txt')
         % put in superstation file (variable trf)
@@ -1350,7 +1367,7 @@ fprintf('\n\n Done! \n');
 fprintf('\n Estimates in TXT format are stored in VieVS/OUT/GLOB/_ESTIMATES/%s/glob_results_%s.txt \n',pathGS.out ,dir_in);
 fprintf('\n Figures in PNG format are stored in VieVS/OUT/GLOB/_PLOTS/%s/... \n',pathGS.out);
 
-
+diary off
 
 
 

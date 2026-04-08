@@ -1,0 +1,4 @@
+#stat name (optionally domes and cdp)
+SESHAN13  xxxxxxxxx  xxxx
+URUMQI13  xxxxxxxxx  xxxx
+HARTVGS   xxxxxxxxx  xxxx

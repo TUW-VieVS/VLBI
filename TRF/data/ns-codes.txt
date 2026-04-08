@@ -158,6 +158,7 @@
 * 250403 dbb Add VGOS antenna at Matera as Mb MATERAVG with DOMES and CDP numbers.
 * 250630 dbb Add 13-m antenna at Chiang Mai, Thailand as Cm CHANGM13.
 * 250729 dbb Change IVS Station name for Matera VGOS to MATVGOS.
+* 251020 dbb Add DOMES and CDP numbers for CHANGM13.
 *
 * Fields:
 * 1. IVS 2-letter code. Not case sensitive, although the initial 
@@ -211,7 +212,7 @@
  Ce CEBRER26 --------- ---- DSS62 Robledo, Spain
  Cg CARROLGA 40453M001 7228 mobile Carrollton, GA, USA
  Ch CHLBOLTN 13201S002 7215 Chilbolton, England
- Cm CHANGM13 --------- ---- 13-m at Chiang Mai, Thailand
+ Cm CHANGM13 21912S001 7606 13-m at Chiang Mai, Thailand
  Cn CARNUSTY 13296M002 7603 mobile Carnoustie, Scotland
  Da DAITO    21738S001 7326 Daito Islands, Japan
  Dm DEADMANL 40431M001 7267 mobile Deadman Lake, CA, USA
@@ -306,7 +307,7 @@
  Mm -------- --------- ---- JCMT, Mauna Kea, HI, USA
  Mn MIZNAO10 21702S010 7324 NAO 10-m antenna at Mizusawa, Japan 
  Mo MOJAVE12 40405S009 7222 12-m at Goldstone, CA, USA
- *Mp MOPRA    --------- ---- ATNF, Siding Sprint, Australia
+* Mp MOPRA    --------- ---- ATNF, Siding Sprint, Australia
  Mq MOJ_7288 40405M013 7288 mobile Mojave, CA, USA
  Mr MARCUS   21733S002 7310 Minami-tori Shima, Japan 
  Ms MILESMON 40455M001 7038 mobile Miles City, MT, USA
@@ -424,8 +425,9 @@
  Zc ZELENCHK 12351S001 7381 Zelenchukskaya, Russia
  Zv ZELRT13V 12351S003 7383 13-m at Zelenchukskaya, Russia
 *
- Mp MOPRA    59999S001 8009 ATNF, Siding Sprint, Australia
- Kp KVNPC    23951S001 8001 KVNPC
- Kt KVNTN    23952S001 8002 KVNTN
- Ku KVNUS    23953S001 8003 KVNUS
- Ky KVNYS    23954S001 8004 KVNYS                  
+* Mp MOPRA    59999S001 8009 ATNF, Siding Sprint, Australia
+* Kp KVNPC    23951S001 8001 KVNPC
+* Kt KVNTN    23952S001 8002 KVNTN
+* Ku KVNUS    23953S001 8003 KVNUS
+* Ky KVNYS    23954S001 8004 KVNYS    
+

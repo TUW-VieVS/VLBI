@@ -31,7 +31,11 @@
 %   07 Jun 2017 by Hana Krasna: bug fixed by computing the new position (if the estimated catalogue has different epoch as the a priori)
 %%
 
- function newtrf(refantbr,globsol,paths,trf)
+function newtrf(refantbr,globsol,paths,trf)
+
+% for i=1:length(refantbr)    
+%     refantbr(i).break_apr = round(refantbr(i).break_apr);
+% end
 
 if exist([paths.path_out 'TRF/' paths.out])~=7
 	mkdir([paths.path_out 'TRF/' paths.out])

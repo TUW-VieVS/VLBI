@@ -78,7 +78,6 @@
 
 function varargout = repeatab(varargin)
 
-
 %% default input arguments
 subf='';
 process_list='process_list.mat';
@@ -106,7 +105,7 @@ if nargin>0
                 outfile=varargin{4};
                 if nargin>4
                     basOutFname=varargin{5};
-                
+
                     if nargin>5
                         if ~isempty(varargin{6}); makeFig=varargin{6}; end
                         if nargin>6
@@ -120,13 +119,13 @@ if nargin>0
 
                         end
                     end
-                
+
                 end
             end
         end
     end
 end
- 
+
 % get files (x_,...)
 x_filesGiven=0;
 x_files=[];
@@ -173,6 +172,8 @@ end
 bas=bas_out(process_list,subf,basOutFname,...
     x_files,antFiles,atpaFiles,optFiles,resFiles,rigFormErr);
 
+%save('bas_test.mat','bas')
+
 if isempty([bas.ap])
     varargout{1}=nan;
     varargout{2}=nan;
@@ -182,259 +183,358 @@ if isempty([bas.ap])
     return
 end
 
-% load superstations file
-if strcmpi(superstations(end-3:end),'.mat') % if it's a filename
-    superstations=load(superstations);
-    fieldsSuper=fieldnames(superstations); 
-    superstations=superstations.(fieldsSuper{1});
-end
 
-superstations(find(strcmpi({superstations.name}, 'USUDA64 '))).vievsTrf.break.end  = 55591;
-
-%% preallocate
-bl=ones(length(bas),1)*NaN;
-mjd=bl;
-blr=bl;
-wblr=bl; %weighted RMS
-nobs= bl; % nr of sessions!
-nrOfObs = bl;
-
-bl_all=ones(length(bas),99)*NaN; % full out matrix -> row=baseline, col=one "break-timespan"
-blr_all=bl_all;
-wblr_all=bl_all;
-nobs_all=bl_all;
-mjds_all=bl_all; % mean of mjds
-mjdStart_all=bl_all;
-mjdEnd_all=bl_all;
-
-
-%% loop over baselines
-for k=1:length(bas)
-
-    % get station indices in superstation file
-    index_1=find(strcmpi({superstations.name}, bas(k).name(1:8)));
-    index_2=find(strcmpi({superstations.name}, bas(k).name(10:17)));
-    
-    if isempty(index_1)
-        curS_trim=strtrim(bas(k).name(1:8));
-        curS__=strrep(curS_trim,' ', '_'); % might be only 6 chars
-        curS=[curS__, repmat(' ', 1, 8-length(curS__))];
-        index_1=find(strcmpi({superstations.name}, curS));
-    end
-    if isempty(index_2)
-        curS_trim=strtrim(bas(k).name(10:17));
-        curS__=strrep(curS_trim,' ', '_'); % might be only 6 chars
-        curS=[curS__, repmat(' ', 1, 8-length(curS__))];
-        index_2=find(strcmpi({superstations.name}, curS));
-    end
-     
-    % get start/end epochs of breaks for both indices
-    if ~isfield(superstations(index_1).vievsTrf.break,'start') % some stations have no start field
-        i1_breakStart=0;
-        i1_breakEnd=999999;
-    else
-        i1_breakStart=[superstations(index_1).vievsTrf.break.start];
-        i1_breakEnd=[superstations(index_1).vievsTrf.break.end];
-    end
-    if ~isfield(superstations(index_2).vievsTrf.break,'start') % some stations have no start field
-        i2_breakStart=0;
-        i2_breakEnd=999999;
-    else
-        i2_breakStart=[superstations(index_2).vievsTrf.break.start];
-        i2_breakEnd=[superstations(index_2).vievsTrf.break.end];
-    end
-    
-    % get break index for all bas-estimates
-    allObsEp=bas(k).mjd; % for all those epochs -> get breaks of both (participating stations)
-    breakInd=zeros(2,length(allObsEp)); % contains breaks for both stations (row) for all epochs (columns) of bas-observations
- 
-    for iEp=1:length(allObsEp)        
-        
-        breakInd(1,iEp)=find(i1_breakStart<=allObsEp(iEp) & ...
-            i1_breakEnd>allObsEp(iEp));
-        
-        breakInd(2,iEp)=find(i2_breakStart<=allObsEp(iEp) & ...
-            i2_breakEnd>allObsEp(iEp));
-    end
-    allBreakCombis=unique(breakInd','rows')';
-    nUniqBreaks=size(allBreakCombis,2);
-    blrPerBreak=ones(1,nUniqBreaks)*NaN;
-    wblrPerBreak=blrPerBreak;
-    mjdPerBreak= blrPerBreak;
-    meanPerBreak=blrPerBreak;
-    nobsPerBreak=blrPerBreak;
-    for kUniqBreak=1:nUniqBreaks
-        % get observations of current unique combination
-        curObs=breakInd(1,:)==allBreakCombis(1,kUniqBreak) & ...
-            breakInd(2,:)==allBreakCombis(2,kUniqBreak);
-        curBL=mean(bas(k).corr(curObs));
-        curMjd=mean(bas(k).mjd(curObs));
-        mjdStart_all(k,kUniqBreak)=min(bas(k).mjd(curObs));
-        mjdEnd_all(k,kUniqBreak)=max(bas(k).mjd(curObs));
-        curBLR=NaN; % intialization is necessary for each new baseline cycle
-        curWBLR=NaN; % intialization is necessary for each new baseline cycle
-        
-        if sum(curObs)>1 % to distinguish equal lengths (->std=0) from one observation (-> std remains NaN since curBLR and curWBLR initialized as NaN)
-            
-            curMjds=bas(k).mjd(curObs); % sort by mjd...
-            curCorr=bas(k).corr(curObs);
-			curWeights=1./(bas(k).mbas(curObs).^2); % can be Inf (if formal error is 0), inverse of squared formal error
-            % treat infinite numbers
-            if sum(isinf(curWeights))>0
-                curWeights(~isinf(curWeights))=0;
-                curWeights(isinf(curWeights))=1;
-            end
-            [curMjds_sort,sI]=sort(curMjds);
-            curCorr_sort=curCorr(sI);
-			curW_sort=curWeights(sI);
-            p_linFit=polyfit(curMjds_sort,curCorr_sort,1);
-            
-            
-            curCorr_sort_linFitRem=curCorr_sort-polyval(p_linFit,curMjds_sort); 
-            curBLR=std( curCorr_sort_linFitRem );
-            
-            sum_curW_sort=sum(curW_sort); % sum of weights
-			curWBLR=sqrt( sum(curW_sort.*(curCorr_sort_linFitRem-mean(curCorr_sort_linFitRem)).^2) / (sum_curW_sort - sum(curW_sort.^2)/sum_curW_sort) ); % unbiased wblr estimation
-            
-        end        
-        
-        if sum(curObs)>=limitation % if there are enough observations inside current break
-
-            blrPerBreak(1,kUniqBreak)=curBLR;
-			wblrPerBreak(1,kUniqBreak)=curWBLR;
-            mjdPerBreak(1,kUniqBreak)=curMjd;
-            nobsPerBreak(1,kUniqBreak)=sum(curObs);
-        end
-		meanPerBreak(1,kUniqBreak)=curBL; % save mean BL even if there is just 1 (or <limitation) estimates of that baseline
-		
-        % save for later use
-        blr_all(k,kUniqBreak)=curBLR;
-		wblr_all(k,kUniqBreak)=curWBLR;
-        bl_all(k,kUniqBreak)=curBL;
-        nobs_all(k,kUniqBreak)=sum(curObs);
-        mjds_all(k,kUniqBreak)=mean(bas(k).mjd(curObs));
-    end
-
-    % Get the final blr, wblr, mjd for one baseline: weighted mean over all proper (more than limit
-    % observations) breaks.
-    % A valid bl is determined also if limit is not reached by the number of observations.
-    % The values are determined as weighted mean from the values of all individual break
-    % intervals. The weights are the number of observations in each break interval.
-    % In case not any break interval delivered a valid value, if the number of observations did not
-    % reach the limit, the result is set to NaN.
-    
-    isvalid_blrPerBreak= ~isnan(blrPerBreak);
-    if any(isvalid_blrPerBreak)
-        blr(k,1)= sum( nobs_all(k,isvalid_blrPerBreak) .* blrPerBreak(isvalid_blrPerBreak) ) / sum( nobs_all(k,isvalid_blrPerBreak) );
-    else
-        blr(k,1)= NaN;
-    end
-    
-    isvalid_wblrPerBreak= ~isnan(wblrPerBreak);
-    if any(isvalid_wblrPerBreak)
-        wblr(k,1)= sum( nobs_all(k,isvalid_wblrPerBreak) .* wblrPerBreak(isvalid_wblrPerBreak) ) / sum( nobs_all(k,isvalid_wblrPerBreak) );
-    else
-        wblr(k,1)= NaN;
-    end
-    
-    isvalid_mjdPerBreak= ~isnan(mjdPerBreak);
-    if any(isvalid_mjdPerBreak)
-        mjd(k,1)= sum( nobs_all(k,isvalid_mjdPerBreak) .* mjdPerBreak(isvalid_mjdPerBreak) ) / sum( nobs_all(k,isvalid_mjdPerBreak) );
-    else
-        mjd(k,1)= NaN;
-    end
-    
-    isvalid_meanPerBreak= ~isnan(meanPerBreak);
-    if any(isvalid_meanPerBreak)
-        bl(k,1)= sum( nobs_all(k,isvalid_meanPerBreak) .* meanPerBreak(isvalid_meanPerBreak) ) / sum( nobs_all(k,isvalid_meanPerBreak) );
-    else
-        bl(k,1)= NaN;
-    end
-    
-    isvalid_nobsPerBreak= ~isnan(nobsPerBreak);
-    if any(isvalid_nobsPerBreak)
-        nobs(k,1)= sum( nobs_all(k,isvalid_nobsPerBreak) .* nobsPerBreak(isvalid_nobsPerBreak) ) / sum( nobs_all(k,isvalid_nobsPerBreak) );
-    else
-        nobs(k,1)= NaN;
-    end    
-    
-    nrOfObs(k,1) = sum(bas(k).nrobs); % observations of the baseline
-
-end
-
-% delete not needed cols (due to preallocation)
-cols2del=sum(isnan(nobs_all))==size(nobs_all,1);
-blr_all(:,cols2del)=[];
-wblr_all(:,cols2del)=[];
-%bl_all(:,cols2del)=[]; % not output, thus commented
-nobs_all(:,cols2del)=[];
-mjds_all(:,cols2del)=[];
-mjdStart_all(:,cols2del)=[];
-mjdEnd_all(:,cols2del)=[];
 
 %% OUTPUT
 
 % 1. output to textfile
 if ~isempty(outfile)
     curClock=clock;
+    igres = 1; %m
     fid=fopen(outfile, 'w');
     fprintf(fid,['# Baseline length repeatability from Vienna VLBI Software\n',...
-        '# Mean values over all break-time-spans\n',...
-        '# Linear fit removed before calculation of standard deviation\n#\n',...
-        '# Breaks (Earthquakes) are taken from the vievsTrf\n#\n',...
+        '# Computed over all break-time-spans\n',...
         '# Created on %02.0f.%02.0f.%04.0f %02.0f:%02.0f:%02.0f\n',...
         '# by function repeatab.m\n#\n',...
+        '# Ignored residuals: > %6.3f m\n',...
         '# Min number of sessions for a baseline (in every break-time-span): %1.0f\n',...
         '# Number of baselines: %1.0f\n#\n',...
         '# col1 (cols 01-17)  baseline name \n',...
         '# col2 (cols 19-28)  mean epoch (mjd)\n',...
         '# col3 (cols 30-42)  mean baseline length in meters\n',...
-		'# col4 (cols 44-49)  baseline length repeatability in cm\n',...
-        '# col5 (cols 51-56)  weighted baseline length repeatability in cm\n',...
+		'# col4 (cols 44-49)  wrms: baseline length repeatability of residuals in cm\n',...
+        '# col5 (cols 51-56)  wstd: baseline length repeatability w.r.t. weighted mean of residuals in cm\n',...
         '# col6 (cols 58-62)  number of sessions\n',...
         '# col6 (cols 64-74)  number of observations\n#\n'],...
-        curClock(3:-1:1), curClock(4:6), limitation,...
-        sum(~isnan(blr) & blr~=0));
+        curClock(3:-1:1), curClock(4:6), igres, limitation,...
+        sum(length(bas)));
     
     for iB=1:length(bas)
-        if ~isnan(blr(iB)) && blr(iB)~=0 % if there was more than one estimate
-            fprintf(fid, '%-17s %10.4f %13.4f %6.2f %6.2f %5.0f  %10.0f\n',...
-                bas(iB).name, mjd(iB), bl(iB), blr(iB)*100, wblr(iB)*100, nobs(iB), nrOfObs(iB));
+
+        mx=[bas(iB).mbas];
+        x=[bas(iB).corr]-[bas(iB).ap];
+
+        idbad=[];
+        idbad=find(x > igres); % difference > 1 m
+        if ~isempty(idbad)
+            x(idbad)=[];
+            mx(idbad)=[];
+            fprintf('for %s wrms %3.0f sessions removed: residuals > %6.3f m\n', bas(iB).name, length(idbad),igres)
         end
+        P=1./(mx.^2);
+        % weighted mean 
+        wr0=sum(x.*P)./(sum(P));
+        
+        ri0=x-wr0;
+        uper=sum(ri0.^2.*P);
+        lw = sum(P);
+        % weighted std
+        wstandev=sqrt(uper/lw); 
+        wrms1 = sqrt(((x.*x)*P')/sum(P)); 
+
+        bas(iB).nrobs(idbad)=[];
+        bas(iB).mjd(idbad)=[];
+        bas(iB).corr(idbad)=[];
+        bas(iB).ap(idbad)=[];
+
+        nrSess=length(x);
+        nrObs=sum(bas(iB).nrobs);
+        meanmjd=mean(bas(iB).mjd);
+        meanbl=mean(bas(iB).corr);
+
+        if nrSess >= limitation
+            fprintf(fid, '%-17s %10.4f %13.4f   %6.2f %6.2f %8.0f %8.0f\n',...
+                bas(iB).name, meanmjd, meanbl, wrms1*100, wstandev*100, nrSess, nrObs);
+        end
+        bas(iB).meanbl = meanbl;
+        bas(iB).wstandev = wstandev;
+        bas(iB).meanbl=meanbl;
     end    
     fclose(fid);    
 end
 
+
+
 % 2. create figure
 if makeFig==1
     figure('name', 'Baseline length repeatability');
-    plot(bl/1000,blr*100,'ko', 'markerfacecolor', 'k');
-    title('(Unweighted) baseline length repeatability');   
+    plot([bas.meanbl],[bas.wstandev].*100,'ko', 'markerfacecolor', 'k');
+    title('Baseline length repeatability');   
     xlabel('Baseline length (km)');
     ylabel('Standard deviation (cm)');
 end
 
 % 3. print to command windows
 if printToCommand==1
-    fprintf(' nr baselineName----- basLength--- BLR---- weighted\n');
+    fprintf(' nr baselineName----- basLength--- wBLR\n');
     % print all found baselines (even those with no observatios... they
     % will print NaN!)
     for iB=1:length(bas)
-        fprintf('%3.0f %s %11.2fm %5.2fcm %5.2fcm\n', ...
-            iB, bas(iB).name, bl(iB), blr(iB)*100, wblr(iB)*100);
+        fprintf('%3.0f %s %11.2f m %5.2f cm \n', ...
+            iB, bas(iB).name, bas(iB).meanbl, bas(iB).wstandev*100);
     end    
 end
 
 
 %% Assign variable outputs
-varargout{1}=blr;
-varargout{2}=wblr;
-varargout{3}=bl;        % baseline lengths (m)
-varargout{4}={bas.name}';% baseline names
-varargout{5}=blr_all;   % baseline length repeatabilites (m)
-varargout{6}=wblr_all;   % weighted baseline length repeatabilites (m)
-varargout{7}=nobs_all;  % Number of observation.
-varargout{8}=mjds_all;  % mean mjds
-varargout{9}=mjdStart_all;
-varargout{10}=mjdEnd_all;
+varargout{1}='-';
+% varargout{1}=blr;
+% varargout{2}=wblr;
+% varargout{3}=bl;        % baseline lengths (m)
+% varargout{4}={bas.name}';% baseline names
+% varargout{5}=blr_all;   % baseline length repeatabilites (m)
+% varargout{6}=wblr_all;   % weighted baseline length repeatabilites (m)
+% varargout{7}=nobs_all;  % Number of observation.
+% varargout{8}=mjds_all;  % mean mjds
+% varargout{9}=mjdStart_all;
+% varargout{10}=mjdEnd_all;
+
+
+
+
+%% OLD CODE
+% SEPARATION FOR INTERVALS BETWEEN BREAKS (does not work correct)
+% 
+% 
+% % load superstations file
+% if strcmpi(superstations(end-3:end),'.mat') % if it's a filename
+%     superstations=load(superstations);
+%     fieldsSuper=fieldnames(superstations); 
+%     superstations=superstations.(fieldsSuper{1});
+% end
+% 
+% 
+% % superstations(find(strcmpi({superstations.name}, 'USUDA64 '))).vievsTrf.break.end  = 99999 %55591;
+% 
+% %% preallocate
+% bl=ones(length(bas),1)*NaN;
+% mjd=bl;
+% blr=bl;
+% wblr=bl; %weighted RMS
+% nobs= bl; % nr of sessions!
+% nrOfObs = bl;
+% 
+% bl_all=ones(length(bas),99)*NaN; % full out matrix -> row=baseline, col=one "break-timespan"
+% blr_all=bl_all;
+% wblr_all=bl_all;
+% nobs_all=bl_all;
+% mjds_all=bl_all; % mean of mjds
+% mjdStart_all=bl_all;
+% mjdEnd_all=bl_all;
+% 
+% 
+% %% loop over baselines
+% for k=1:length(bas)
+% 
+%     % get station indices in superstation file
+%     index_1=find(strcmpi({superstations.name}, bas(k).name(1:8)));
+%     index_2=find(strcmpi({superstations.name}, bas(k).name(10:17)));
+% 
+%     if isempty(index_1)
+%         curS_trim=strtrim(bas(k).name(1:8));
+%         curS__=strrep(curS_trim,' ', '_'); % might be only 6 chars
+%         curS=[curS__, repmat(' ', 1, 8-length(curS__))];
+%         index_1=find(strcmpi({superstations.name}, curS));
+%     end
+%     if isempty(index_2)
+%         curS_trim=strtrim(bas(k).name(10:17));
+%         curS__=strrep(curS_trim,' ', '_'); % might be only 6 chars
+%         curS=[curS__, repmat(' ', 1, 8-length(curS__))];
+%         index_2=find(strcmpi({superstations.name}, curS));
+%     end
+% 
+%     % % get start/end epochs of breaks for both indices
+%     % if ~isfield(superstations(index_1).(aprTRF).break,'start') % some stations have no start field
+%     %     i1_breakStart=0;
+%     %     i1_breakEnd=999999;
+%     % else
+%     %     i1_breakStart=[superstations(index_1).(aprTRF).break.start];
+%     %     i1_breakEnd=[superstations(index_1).(aprTRF).break.end];
+%     % end
+%     % if ~isfield(superstations(index_2).(aprTRF).break,'start') % some stations have no start field
+%     %     i2_breakStart=0;
+%     %     i2_breakEnd=999999;
+%     % else
+%     %     i2_breakStart=[superstations(index_2).(aprTRF).break.start];
+%     %     i2_breakEnd=[superstations(index_2).(aprTRF).break.end];
+%     % end
+% 
+%     % get start/end epochs of breaks for both indices
+% 
+%     if isempty(superstations(index_1).(aprTRF)) % not in apriori trf
+%         i1_breakStart=0;
+%         i1_breakEnd=999999;
+%     else
+%         i1_breakStart=[superstations(index_1).(aprTRF).break.start];
+%         i1_breakEnd=[superstations(index_1).(aprTRF).break.end];
+%     end
+%     if isempty(superstations(index_2).(aprTRF)) % some stations have no start field
+%         i2_breakStart=0;
+%         i2_breakEnd=999999;
+%     else
+%         i2_breakStart=[superstations(index_2).(aprTRF).break.start];
+%         i2_breakEnd=[superstations(index_2).(aprTRF).break.end];
+%     end
+% 
+%     % get break index for all bas-estimates
+%     allObsEp=bas(k).mjd; % for all those epochs -> get breaks of both (participating stations)
+%     breakInd=zeros(2,length(allObsEp)); % contains breaks for both stations (row) for all epochs (columns) of bas-observations
+%     for iEp=1:length(allObsEp)        
+%         breakInd(1,iEp)=find(i1_breakStart<=allObsEp(iEp) & ...
+%             i1_breakEnd>allObsEp(iEp));
+% 
+%         breakInd(2,iEp)=find(i2_breakStart<=allObsEp(iEp) & ...
+%             i2_breakEnd>allObsEp(iEp));
+%     end
+%     allBreakCombis=unique(breakInd','rows')';
+%     nUniqBreaks=size(allBreakCombis,2);
+%     blrPerBreak=ones(1,nUniqBreaks)*NaN;
+%     wblrPerBreak=blrPerBreak;
+%     mjdPerBreak= blrPerBreak;
+%     meanPerBreak=blrPerBreak;
+%     nobsPerBreak=blrPerBreak;
+%     for kUniqBreak=1:nUniqBreaks
+%         % get observations of current unique combination
+%         curObs=breakInd(1,:)==allBreakCombis(1,kUniqBreak) & ...
+%             breakInd(2,:)==allBreakCombis(2,kUniqBreak);
+%         curBL=mean(bas(k).corr(curObs));
+%         curMjd=mean(bas(k).mjd(curObs));
+%         mjdStart_all(k,kUniqBreak)=min(bas(k).mjd(curObs));
+%         mjdEnd_all(k,kUniqBreak)=max(bas(k).mjd(curObs));
+%         curBLR=NaN; % intialization is necessary for each new baseline cycle
+%         curWBLR=NaN; % intialization is necessary for each new baseline cycle
+% 
+%         if sum(curObs)>1 % to distinguish equal lengths (->std=0) from one observation (-> std remains NaN since curBLR and curWBLR initialized as NaN)
+% 
+%             curMjds=bas(k).mjd(curObs); % sort by mjd...
+%             curCorr=bas(k).corr(curObs);
+% 			curWeights=1./(bas(k).mbas(curObs).^2); % can be Inf (if formal error is 0), inverse of squared formal error
+%             % treat infinite numbers
+%             if sum(isinf(curWeights))>0
+%                 curWeights(~isinf(curWeights))=0;
+%                 curWeights(isinf(curWeights))=1;
+%             end
+%             [curMjds_sort,sI]=sort(curMjds);
+%             curCorr_sort=curCorr(sI);
+% 			curW_sort=curWeights(sI);
+%             p_linFit=polyfit(curMjds_sort,curCorr_sort,1);
+% 
+% 
+%             curCorr_sort_linFitRem=curCorr_sort-polyval(p_linFit,curMjds_sort); 
+%             curBLR=std( curCorr_sort_linFitRem );
+% 
+%             sum_curW_sort=sum(curW_sort); % sum of weights
+% 			curWBLR=sqrt( sum(curW_sort.*(curCorr_sort_linFitRem-mean(curCorr_sort_linFitRem)).^2) / (sum_curW_sort - sum(curW_sort.^2)/sum_curW_sort) ); % unbiased wblr estimation
+% 
+%         end        
+% 
+%         if sum(curObs)>=limitation % if there are enough observations inside current break
+% 
+%             blrPerBreak(1,kUniqBreak)=curBLR;
+% 			wblrPerBreak(1,kUniqBreak)=curWBLR;
+%             mjdPerBreak(1,kUniqBreak)=curMjd;
+%             nobsPerBreak(1,kUniqBreak)=sum(curObs);
+%         end
+% 		meanPerBreak(1,kUniqBreak)=curBL; % save mean BL even if there is just 1 (or <limitation) estimates of that baseline
+% 
+%         % save for later use
+%         blr_all(k,kUniqBreak)=curBLR;
+% 		wblr_all(k,kUniqBreak)=curWBLR;
+%         bl_all(k,kUniqBreak)=curBL;
+%         nobs_all(k,kUniqBreak)=sum(curObs);
+%         mjds_all(k,kUniqBreak)=mean(bas(k).mjd(curObs));
+%     end
+% 
+%     % Get the final blr, wblr, mjd for one baseline: weighted mean over all proper (more than limit
+%     % observations) breaks.
+%     % A valid bl is determined also if limit is not reached by the number of observations.
+%     % The values are determined as weighted mean from the values of all individual break
+%     % intervals. The weights are the number of observations in each break interval.
+%     % In case not any break interval delivered a valid value, if the number of observations did not
+%     % reach the limit, the result is set to NaN.
+% 
+%     isvalid_blrPerBreak= ~isnan(blrPerBreak);
+%     if any(isvalid_blrPerBreak)
+%         blr(k,1)= sum( nobs_all(k,isvalid_blrPerBreak) .* blrPerBreak(isvalid_blrPerBreak) ) / sum( nobs_all(k,isvalid_blrPerBreak) );
+%     else
+%         blr(k,1)= NaN;
+%     end
+% 
+%     isvalid_wblrPerBreak= ~isnan(wblrPerBreak);
+%     if any(isvalid_wblrPerBreak)
+%         wblr(k,1)= sum( nobs_all(k,isvalid_wblrPerBreak) .* wblrPerBreak(isvalid_wblrPerBreak) ) / sum( nobs_all(k,isvalid_wblrPerBreak) );
+%     else
+%         wblr(k,1)= NaN;
+%     end
+% 
+%     isvalid_mjdPerBreak= ~isnan(mjdPerBreak);
+%     if any(isvalid_mjdPerBreak)
+%         mjd(k,1)= sum( nobs_all(k,isvalid_mjdPerBreak) .* mjdPerBreak(isvalid_mjdPerBreak) ) / sum( nobs_all(k,isvalid_mjdPerBreak) );
+%     else
+%         mjd(k,1)= NaN;
+%     end
+% 
+%     isvalid_meanPerBreak= ~isnan(meanPerBreak);
+%     if any(isvalid_meanPerBreak)
+%         bl(k,1)= sum( nobs_all(k,isvalid_meanPerBreak) .* meanPerBreak(isvalid_meanPerBreak) ) / sum( nobs_all(k,isvalid_meanPerBreak) );
+%     else
+%         bl(k,1)= NaN;
+%     end
+% 
+%     isvalid_nobsPerBreak= ~isnan(nobsPerBreak);
+%     if any(isvalid_nobsPerBreak)
+%         nobs(k,1)= sum( nobs_all(k,isvalid_nobsPerBreak) .* nobsPerBreak(isvalid_nobsPerBreak) ) / sum( nobs_all(k,isvalid_nobsPerBreak) );
+%     else
+%         nobs(k,1)= NaN;
+%     end    
+% 
+%     nrOfObs(k,1) = sum(bas(k).nrobs); % observations of the baseline
+% 
+% end
+% 
+% % delete not needed cols (due to preallocation)
+% cols2del=sum(isnan(nobs_all))==size(nobs_all,1);
+% blr_all(:,cols2del)=[];
+% wblr_all(:,cols2del)=[];
+% %bl_all(:,cols2del)=[]; % not output, thus commented
+% nobs_all(:,cols2del)=[];
+% mjds_all(:,cols2del)=[];
+% mjdStart_all(:,cols2del)=[];
+% mjdEnd_all(:,cols2del)=[];
+% 
+% %% OUTPUT
+% 
+% % 1. output to textfile
+% if ~isempty(outfile)
+%     curClock=clock;
+%     fid=fopen(outfile, 'w');
+%     fprintf(fid,['# Baseline length repeatability from Vienna VLBI Software\n',...
+%         '# Mean values over all break-time-spans\n',...
+%         '# Linear fit removed before calculation of standard deviation\n#\n',...
+%         '# Breaks (Earthquakes) are taken from the apriori TRF\n#\n',...
+%         '# Created on %02.0f.%02.0f.%04.0f %02.0f:%02.0f:%02.0f\n',...
+%         '# by function repeatab.m\n#\n',...
+%         '# Min number of sessions for a baseline (in every break-time-span): %1.0f\n',...
+%         '# Number of baselines: %1.0f\n#\n',...
+%         '# col1 (cols 01-17)  baseline name \n',...
+%         '# col2 (cols 19-28)  mean epoch (mjd)\n',...
+%         '# col3 (cols 30-42)  mean baseline length in meters\n',...
+% 		'# col4 (cols 44-49)  baseline length repeatability in cm\n',...
+%         '# col5 (cols 51-56)  weighted baseline length repeatability in cm\n',...
+%         '# col6 (cols 58-62)  number of sessions\n',...
+%         '# col6 (cols 64-74)  number of observations\n#\n'],...
+%         curClock(3:-1:1), curClock(4:6), limitation,...
+%         sum(~isnan(blr) & blr~=0));
+% 
+%     for iB=1:length(bas)
+%         if ~isnan(blr(iB)) && blr(iB)~=0 % if there was more than one estimate
+%             fprintf(fid, '%-17s %10.4f %13.4f %6.2f %6.2f %5.0f  %10.0f\n',...
+%                 bas(iB).name, mjd(iB), bl(iB), blr(iB)*100, wblr(iB)*100, nobs(iB), nrOfObs(iB));
+%         end
+%     end    
+%     fclose(fid);    
+% end
+
+
+
 
