@@ -45,10 +45,10 @@ fprintf(fid,'Solution calculated: %s\n',date);
 fprintf(fid,'Date of first session: %c%c%c%c%c%c%c\n',ses_time{1}(1:7));
 fprintf(fid,'Date of last session:  %c%c%c%c%c%c%c\n',ses_time{end}(1:7));
 fprintf(fid,'Number of sessions in the solution: %1.0f\n',size(globsol.sessions,2));
-fprintf(fid,'Number of estimated periods: %2.0f\n',length(np));
+fprintf(fid,'Number of estimated terms: %2.0f\n',length(np));
 fprintf(fid,'********************************************************************\n');
 fprintf(fid,'\n');
-fprintf(fid,'Tide       argument     period     B+   rms       A+   rms        B-   rms       A-   rms\n');
+fprintf(fid,'name       argument     period     B+   rms       A+   rms        B-   rms       A-   rms\n');
 fprintf(fid,'      X  l  l'' F  D OM   [h]     microarcsec    microarcsec     microarcsec    microarcsec\n');
 fprintf(fid,'********************************************************************************************** \n');
 for j = 1:length(np)
@@ -77,10 +77,10 @@ fprintf(fid,'Solution calculated: %s\n',date);
 fprintf(fid,'Date of first session: %c%c%c%c%c%c%c\n',ses_time{1}(1:7));
 fprintf(fid,'Date of last session:  %c%c%c%c%c%c%c\n',ses_time{end}(1:7));
 fprintf(fid,'Number of sessions in the solution: %1.0f\n',size(globsol.sessions,2));
-fprintf(fid,'Number of estimated periods: %2.0f\n',length(np));
+fprintf(fid,'Number of estimated terms: %2.0f\n',length(np));
 fprintf(fid,'********************************************************************\n');
 fprintf(fid,'\n');
-fprintf(fid,'Tide       argument     period     Us   rms        Uc   rms    \n');
+fprintf(fid,'name       argument     period     Us   rms        Uc   rms    \n');
 fprintf(fid,'      X  l  l'' F  D OM   [h]       microsec        microsec    \n');
 fprintf(fid,'********************************************************************\n');
 for j = 1:length(np)
