@@ -1,5 +1,5 @@
 % Comment the tides you do not(!) want to estimate in the global solution with %
-%
+% Terms 52 and 143 should not be estimated, they are too close to S1 or R2!
 % tide  Multipliers of fundamental arguments
 % name  GMST+pi, l, l', F, D, OM,   Num 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -54,7 +54,7 @@ term,   1,  0, -2, -2,  2, -2,     48
 pi1 ,   1,  0, -1, -2,  2, -2,     49
 term,   1,  0,  0, -2,  2, -1,     50
 P1  ,   1,  0,  0, -2,  2, -2,     51
-term,   1,  0,  1, -2,  2, -2,     52
+% term,   1,  0,  1, -2,  2, -2,     52
 S1  ,   1,  0, -1,  0,  0,  0,     53
 term,   1,  0,  0,  0,  0,  1,     54
 K1  ,   1,  0,  0,  0,  0,  0,     55
@@ -145,7 +145,7 @@ T2  ,   2,  0, -1, -2,  2, -2,    139
 term,   2,  0,  0, -2,  2, -1,    140
 S2  ,   2,  0,  0, -2,  2, -2,    141
 R2  ,   2,  0,  1, -2,  2, -2,    142
-term,   2,  0, -1,  0,  0,  0,    143
+% term,   2,  0, -1,  0,  0,  0,    143
 term,   2,  0,  0,  0,  0,  1,    144
 K2  ,   2,  0,  0,  0,  0,  0,    145
 term,   2,  0,  0,  0,  0, -1,    146
