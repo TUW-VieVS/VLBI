@@ -127,18 +127,18 @@ elseif get(handles.radiobutton_plot_sessionAnalysis_baselLeRep, 'Value')
     end
     
     limitation=10;
-    outfile=[]; % no file: []
+    outfile='../OUT/basout_dummyfile.txt'; % no file: []
+    basoutdummy = '../OUT/basout_dummyfile.txt';
     rigFormErr=0;
     printToCommand=0;
     process_list = handles.data.plot.sessionAnalysis.sessionnamesShort{1}.list;
-    [blr,wblr,bl,blnames]=repeatab(curSubfolder, process_list(coordsAvail,:), limitation, outfile, [],  0, printToCommand, [], rigFormErr,...
+    [blr,bl,blnames]=repeatab(curSubfolder, process_list(coordsAvail,:), limitation, outfile, basoutdummy,  0, printToCommand, [], rigFormErr,...
         { {handles.data.plot.sessionAnalysis.x_files(1).x_(coordsAvail)},...
         {handles.data.plot.sessionAnalysis.antennaFiles(1).antenna(coordsAvail).antenna},... % CHeck here!
         {handles.data.plot.sessionAnalysis.atpaFiles(1).atpa(coordsAvail).atpa},...
         {handles.data.plot.sessionAnalysis.optFiles(1).opt(coordsAvail).opt} });
-    nanVals=isnan(blr);
+    nanVals=(blr<1e-5);
     blr=blr(~nanVals);
-    wblr=wblr(~nanVals);
     bl=bl(~nanVals);
     blnames=blnames(~nanVals);
 
@@ -147,7 +147,11 @@ elseif get(handles.radiobutton_plot_sessionAnalysis_baselLeRep, 'Value')
     end
     
     plot(bl/1000,blr*100, 'o', 'color', 'k', 'linewidth',2)
+    title('Baseline length repeatability');   
+    xlabel('Baseline length (km)');
+    ylabel('Standard deviation (cm)');
     hold on
+
 
     % quadratic curve (LS)
     A=[(bl(:)/1000).^2, bl(:)/1000,ones(length(bl),1)];
@@ -197,17 +201,17 @@ elseif get(handles.radiobutton_plot_sessionAnalysis_baselLeRep, 'Value')
             end
 
             limitation=10;
-            outfile=[]; % no file: []
+            outfile='../OUT/basout_dummyfile.txt'; % no file: []
+            basoutdummy = '../OUT/basout_dummyfile.txt';
             process_list = handles.data.plot.sessionAnalysis.sessionnamesShort{curInd}.list;
-            [blr,wblr,bl,blnames]=repeatab(curSubfolder, process_list(coordsAvail,:), limitation, outfile, [], ...
+            [blr,bl,blnames]=repeatab(curSubfolder, process_list(coordsAvail,:), limitation, outfile, basoutdummy, ...
                 0, printToCommand, [], rigFormErr,...
                 { {handles.data.plot.sessionAnalysis.x_files(curInd).x_(coordsAvail)},...
                 {handles.data.plot.sessionAnalysis.antennaFiles(curInd).antenna(coordsAvail).antenna},...
                 {handles.data.plot.sessionAnalysis.atpaFiles(curInd).atpa(coordsAvail).atpa},...
                 {handles.data.plot.sessionAnalysis.optFiles(curInd).opt(coordsAvail).opt} });
-            nanVals=isnan(blr);
+            nanVals=(blr<1e-5);
             blr=blr(~nanVals);
-            wblr=wblr(~nanVals);
             bl=bl(~nanVals);
             blnames=blnames(~nanVals);
 
@@ -227,7 +231,9 @@ elseif get(handles.radiobutton_plot_sessionAnalysis_baselLeRep, 'Value')
             end
         end
     end
-    
+    if exist(basoutdummy,'file')
+        delete(basoutdummy);
+    end
     hold off
     
 elseif get(handles.radiobutton_plot_sessionAnalysis_corMatrix, 'Value')

@@ -277,11 +277,10 @@ end
 
 
 %% Assign variable outputs
-varargout{1}='-';
-% varargout{1}=blr;
-% varargout{2}=wblr;
-% varargout{3}=bl;        % baseline lengths (m)
-% varargout{4}={bas.name}';% baseline names
+%varargout{1}='-';
+varargout{1}=[bas.wstandev];
+varargout{2}=[bas.meanbl];        % baseline lengths (m)
+varargout{3}={bas.name}';% baseline names
 % varargout{5}=blr_all;   % baseline length repeatabilites (m)
 % varargout{6}=wblr_all;   % weighted baseline length repeatabilites (m)
 % varargout{7}=nobs_all;  % Number of observation.
