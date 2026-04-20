@@ -5,6 +5,8 @@
 %   Input:										
 %      globsol              a structure with estimates and all relavant
 %                           information about the global adjustment
+%      tide                 a structure with tidal periods, names and multipliers
+%                           of fundamental arguments, created in vie_mod
 %      ses_time             order of sessions according to time
 %      paths                paths to directories
 %
@@ -45,7 +47,7 @@ fprintf(fid,'Solution calculated: %s\n',date);
 fprintf(fid,'Date of first session: %c%c%c%c%c%c%c\n',ses_time{1}(1:7));
 fprintf(fid,'Date of last session:  %c%c%c%c%c%c%c\n',ses_time{end}(1:7));
 fprintf(fid,'Number of sessions in the solution: %1.0f\n',size(globsol.sessions,2));
-fprintf(fid,'Number of estimated terms: %2.0f\n',length(np));
+fprintf(fid,'Number of estimated terms: %2.0f\n',length(np)+length(nr));
 fprintf(fid,'********************************************************************\n');
 fprintf(fid,'\n');
 fprintf(fid,'name       argument     period     B+   rms       A+   rms        B-   rms       A-   rms\n');
