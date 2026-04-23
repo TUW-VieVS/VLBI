@@ -253,6 +253,71 @@ if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands') & para
         tfl2 = get_nc_filename({ observation , '_bX'}, wrapper_data.Observation.ObsEdit.files, 1);
         MBD2 = num2cell(out_struct.ObsEdit.(tfl2).GroupDelayFull.val); % amb. included
         sMBD2 = num2cell(out_struct.(sigma_tau_folder).(sigma_tau_file).(sigma_tau_field).val);
+
+        % This part includes ambiguities which are directly calculated in VieVS 
+        if strcmp(parameter.vie_init.amb, 'useAmbFile') 
+            ambcorr = 'off';
+
+            parameter.amb.flag_change_amb = true; %true
+            checkPath = ['../DATA/AMB/', parameter.filepath(end-4:end-1), '/'];
+            if ~exist(checkPath,'dir')
+                mkdir(checkPath);
+            end
+
+            output_file_pathX = ['../DATA/AMB/', parameter.filepath(end-4:end-1), '/', [parameter.session_name '_X'], '.AMB'];
+            exist(output_file_pathX, 'file');
+            output_file_pathS = ['../DATA/AMB/', parameter.filepath(end-4:end-1), '/', [parameter.session_name '_S'], '.AMB'];
+            exist(output_file_pathS, 'file');
+
+            if parameter.amb.flag_change_amb
+                if exist(output_file_pathX, 'file') && exist(output_file_pathS, 'file')
+                    outfileX = output_file_pathX;
+                    fid = fopen(outfileX,'r');
+                    a = 1;
+                    while ~feof(fid)
+                        str = fgetl(fid);
+                        obsambX(a).sta1 = str(1:8);
+                        obsambX(a).sta2 = str(10:17);
+                        obsambX(a).mjd = str2num(str(19:36));
+                        obsambX(a).sou = str(38:45);
+                        obsambX(a).amb = str2num(str(47:end));
+                        a=a+1;
+                    end
+                    fclose(fid);
+
+                    outfileS = output_file_pathS;
+                    fid = fopen(outfileS,'r');
+                    a = 1;
+                    while ~feof(fid)
+                        str = fgetl(fid);
+                        obsambS(a).sta1 = str(1:8);
+                        obsambS(a).sta2 = str(10:17);
+                        obsambS(a).mjd = str2num(str(19:36));
+                        obsambS(a).sou = str(38:45);
+                        obsambS(a).amb = str2num(str(47:end));
+                        a=a+1;
+                    end
+                    fclose(fid);
+
+                    a1 = [out_struct.Observables.GroupDelay_bS.GroupDelay.val];
+                    b1 = [obsambS.amb]'.*10^-9;
+                    c1 = a1+b1;
+
+                    a2 = [out_struct.Observables.GroupDelay_bX.GroupDelay.val];
+                    b2 = [obsambX.amb]'.*10^-9;
+                    c2 = a2+b2;
+
+                    MBD1 = num2cell(c1); % obs + S-amb from file
+                    MBD2 = num2cell(c2); % obs + X-amb from file
+                    MBD1badAmb = false;
+
+                else
+                    fprintf('\t Warning: Ambiguity list not available: %s\n', output_file_pathX);
+                    fprintf('\t Warning: Ambiguity list not available: %s\n', output_file_pathS);
+                end
+            end
+        end
+
     else
         if fileoutput
             fid = fopen(['sessions_missing_Sband_ObsEdit.txt'],'a');
@@ -261,7 +326,6 @@ if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands') & para
         end
     end
 end
-
 
 % ionosphere delay correction
 flag_ion_corr_available = false;
