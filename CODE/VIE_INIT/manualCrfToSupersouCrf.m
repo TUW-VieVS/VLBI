@@ -9,7 +9,7 @@ function crf=manualCrfToSupersouCrf(crf,filename)
 fid=fopen(filename, 'r');
     % read manualCrfData
     manualCrfData=textscan(fid, '%21c  %11c  %f %f %f %03s %f %f %f %f %f %f %f %f %f %f %8c', ...
-    'headerlines', 10, 'delimiter', '\n', 'CommentStyle', '#');
+    'headerlines', 0, 'delimiter', '\n', 'CommentStyle', '#');
 %      manualCrfData=textscan(fid, '%21c  %11c  %f %f %f %03s %f %f %f %f %f %f %f %f %f %f %f', ...
 %     'headerlines', 22, 'delimiter', '\n'); % icrf3
 fclose(fid);

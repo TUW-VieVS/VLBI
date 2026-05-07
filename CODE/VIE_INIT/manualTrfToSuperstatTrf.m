@@ -13,7 +13,7 @@ function trf=manualTrfToSuperstatTrf(trf,filename)
 fid=fopen(filename, 'r');
 
 % read data
-manualTrfData=textscan(fid, '%8c %f %f %f %f %f %f %f %f %f %f %s', 'commentstyle', '%');
+manualTrfData=textscan(fid, '%8c %f %f %f %f %f %f %f %f %f %f %s', 'commentstyle', '#');
     
 fclose(fid);
     
