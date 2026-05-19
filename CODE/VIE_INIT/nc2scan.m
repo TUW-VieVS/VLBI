@@ -254,7 +254,8 @@ if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands') & para
         MBD2 = num2cell(out_struct.ObsEdit.(tfl2).GroupDelayFull.val); % amb. included
         sMBD2 = num2cell(out_struct.(sigma_tau_folder).(sigma_tau_file).(sigma_tau_field).val);
 
-        % This part includes ambiguities which are directly calculated in VieVS 
+        % This part includes ambiguities which are directly calculated in
+        % VieVS and later used for calculation of the ionospheric correction
         if strcmp(parameter.vie_init.amb, 'useAmbFile') 
             ambcorr = 'off';
 
@@ -301,11 +302,65 @@ if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands') & para
 
                     a1 = [out_struct.Observables.GroupDelay_bS.GroupDelay.val];
                     b1 = [obsambS.amb]'.*10^-9;
-                    c1 = a1+b1;
 
                     a2 = [out_struct.Observables.GroupDelay_bX.GroupDelay.val];
                     b2 = [obsambX.amb]'.*10^-9;
-                    c2 = a2+b2;
+
+                    if length(a1) ~= length(b1) || length(a2) ~= length(b2) % fix the bug if ambiguities are added manually at the end of the .AMB-file
+                        staaaat1 = obs2Baseline(:,1); % all i1
+                        staaaat2 = obs2Baseline(:,2); % all i2
+                        numstationsss = out_struct.head.StationList.val;
+                        staatname = char(zeros(size(numstationsss,2),8));
+                        for iStat = 1:size(numstationsss,2)
+                            curName = numstationsss(:,iStat)';
+                            curNameLong = [curName, '          '];
+                            staatname(iStat,:) = curNameLong(1:8);
+                        end
+                        staatname = strtrim(string(staatname)); % all station names string
+                        nc_filename222 = get_nc_filename({'TimeUTC'}, wrapper_data.Scan.Scan.files, 1);
+                        scanMjd222 =  modjuldat(double(out_struct.Scan.(nc_filename222).YMDHM.val(1,:)'), double(out_struct.Scan.(nc_filename222).YMDHM.val(2,:)'), double(out_struct.Scan.(nc_filename222).YMDHM.val(3,:)')) + double(out_struct.Scan.(nc_filename222).YMDHM.val(4,:))'./24 + double(out_struct.Scan.(nc_filename222).YMDHM.val(5,:))'./60./24 + out_struct.Scan.(nc_filename222).Second.val/60/60/24;
+                        mjdvec = scanMjd222(obs2Scan); % all mjd
+                        souvec = scan2Source(obs2Scan); % all iso
+                        nSources222 = out_struct.head.SourceList.val;
+                        curName222 = char(zeros(size(nSources222,2),8));
+                        for iStat = 1:size(nSources222,2)
+                            curName2 = nSources222(:,iStat)';
+                            curNameLong2 = [curName2, '          '];
+                            curName222(iStat,:) = curNameLong2(1:8);
+                        end
+                        souvecstring1 = strtrim(string(curName222)); % all station names string
+                        souvecstring = souvecstring1(souvec);
+                        staat1name = staatname(staaaat1);
+                        staat2name = staatname(staaaat2);
+
+                        if length(a1) ~= length(b1)
+                            ambvec = zeros(length(mjdvec),1);
+                            for a = 1:length(obsambX)
+                                idx = strcmp(strtrim(staat1name), strtrim(obsambX(a).sta1)) & ...
+                                strcmp(strtrim(staat2name), strtrim(obsambX(a).sta2)) & ...
+                                abs(mjdvec - obsambX(a).mjd) < 1e-10 & ...
+                                strcmp(strtrim(souvecstring), strtrim(obsambX(a).sou));
+                                ambvec(idx) = ambvec(idx) + obsambS(a).amb;
+                            end
+                            b1 = ambvec.*10^-9; % amb S-band
+                        end
+
+                        if length(a2) ~= length(b2)
+                            ambvec = zeros(length(mjdvec),1);
+                            for a = 1:length(obsambX)
+                                idx = strcmp(strtrim(staat1name), strtrim(obsambX(a).sta1)) & ...
+                                strcmp(strtrim(staat2name), strtrim(obsambX(a).sta2)) & ...
+                                abs(mjdvec - obsambX(a).mjd) < 1e-10 & ...
+                                strcmp(strtrim(souvecstring), strtrim(obsambX(a).sou));
+                                ambvec(idx) = ambvec(idx) + obsambX(a).amb;
+                            end
+                            b2 = ambvec.*10^-9; % amb X-band
+                        end
+
+                    end
+
+                    c1 = a1+b1; % obs + amb S-band
+                    c2 = a2+b2; % obs + amb X-band
 
                     MBD1 = num2cell(c1); % obs + S-amb from file
                     MBD2 = num2cell(c2); % obs + X-amb from file
