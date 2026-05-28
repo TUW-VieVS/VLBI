@@ -48,6 +48,13 @@ popupmenu_tag          = 'popupmenu_setInput_optDir';
 folder_description_str = 'OPT file directory';
 update_popupmenu_folder_in_dir(path_dir, popupmenu_tag, folder_description_str, handles)
 
+% ### AMB-directory ###
+path_dir               = '../DATA/AMB/';
+popupmenu_tag          = 'popupmenu_AmbDir';
+folder_description_str = 'AMB file directory';
+update_popupmenu_folder_in_dir(path_dir, popupmenu_tag, folder_description_str, handles)
+
+
 % ### Outlier-directory ###
 curContent=get(handles.popupmenu_setInput_outDir, 'String');
 if ~iscell(curContent)

@@ -22,7 +22,7 @@ function varargout = vie_setup(varargin)
 
 % Edit the above text to modify the response to help vie_setup
 
-% Last Modified by GUIDE v2.5 07-Jan-2026 16:03:00
+% Last Modified by GUIDE v2.5 26-May-2026 10:39:34
 
 
 % 07 Jan 2014 by Matthias Madzak: LEVEL2 bug corrected
@@ -335,11 +335,13 @@ else
     set(handles.popupmenu_setInput_outDir, 'string', {'', dirsInOutlierFolder.name});
 end
 
-% if isempty({dirsInAmbFolder.name})
-%     set(handles.popupmenu_setInput_ambDir, 'string', ' ');
-% else
-%     set(handles.popupmenu_setInput_ambDir, 'string', {'', dirsInOutlierFolder.name});
-% end
+% set new entries for ambiguity popup menu
+set(handles.popupmenu_AmbDir, 'String', {dirsInAmbFolder.name})
+if isempty({dirsInAmbFolder.name})
+    set(handles.popupmenu_AmbDir, 'string', ' ');
+else
+    set(handles.popupmenu_AmbDir, 'string', {'', dirsInAmbFolder.name});
+end
 
 if isempty(dirsInIonFolder)
     set(handles.popupmenu_parameters_iono_ext, 'String', ' ')
@@ -607,6 +609,9 @@ end
 set(handles.radiobutton_obsFile, 'Value', 1);
 set(handles.radiobutton_vievsAmb, 'Value', 0);
 set(handles.radiobutton_useAmbFile, 'Value', 0); 
+set(handles.checkbox_residual_compute, 'Value', 0); 
+set(handles.popupmenu_AmbDir, 'Enable', 'off')
+
 
 
 % Choose default command line output for vie_setup
@@ -11599,9 +11604,7 @@ if get(handles.checkbox_ambiguity_correction, 'Value') == 0
     set(handles.radiobutton_vievsAmb, 'Enable', 'off') 
     set(handles.radiobutton_useAmbFile, 'Enable', 'off') 
     set(handles.checkbox_residual_compute, 'Enable', 'off') 
-    set(handles.checkbox_residual_apply, 'Enable', 'off') 
     set(handles.checkbox_residual_compute, 'Value', 0) 
-    set(handles.checkbox_residual_apply, 'Value', 0) 
     set(handles.radiobutton_obsFile, 'Value', 0) 
     set(handles.radiobutton_vievsAmb, 'Value', 0) 
     set(handles.radiobutton_useAmbFile, 'Value', 0);
@@ -11610,13 +11613,12 @@ else
     set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
     set(handles.radiobutton_useAmbFile, 'Enable', 'on') 
     set(handles.checkbox_residual_compute, 'Enable', 'on') 
-    set(handles.checkbox_residual_apply, 'Enable', 'on') 
     set(handles.checkbox_residual_compute, 'Value', 0) 
-    set(handles.checkbox_residual_apply, 'Value', 0) 
     set(handles.radiobutton_obsFile, 'Value', 1) 
     set(handles.radiobutton_vievsAmb, 'Value', 0) 
     set(handles.radiobutton_useAmbFile, 'Value', 0);
 end
+
 
 % Update handles structure
 guidata(hObject, handles);
@@ -12631,35 +12633,27 @@ set(handles.uipanel_models_ambiguities, 'Visible', 'On');
 guidata(hObject, handles);
 
 
-% --- Executes on button press in checkbox_residual.
-% function checkbox_residual_Callback(hObject, eventdata, handles)
-% % hObject    handle to checkbox_residual (see GCBO)
-% % eventdata  reserved - to be defined in a future version of MATLAB
-% % handles    structure with handles and user data (see GUIDATA)
-% 
-% set(handles.checkbox_residual_compute, 'Value', 1);
-% set(handles.checkbox_residual_apply, 'Value', 1);
-% 
-% if get(handles.checkbox_residual, 'Value') == 0
-%     set(handles.checkbox_residual_compute, 'Value', 0);
-%     set(handles.checkbox_residual_apply, 'Value', 0);
-% end
-% 
-% % Update handles structure
-% guidata(hObject, handles);
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_residual
-
-
 % --- Executes on button press in radiobutton_obsFile.
 function radiobutton_obsFile_Callback(hObject, eventdata, handles)
 % hObject    handle to radiobutton_obsFile (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-set(handles.radiobutton_obsFile, 'Value', 1);
-set(handles.radiobutton_vievsAmb, 'Value', 0);
-set(handles.radiobutton_useAmbFile, 'Value', 0);
+if get(handles.radiobutton_obsFile, 'Value') ==1
+    set(handles.radiobutton_obsFile, 'Enable', 'on')
+    set(handles.radiobutton_vievsAmb, 'Enable', 'off') 
+    set(handles.radiobutton_useAmbFile, 'Enable', 'on') 
+    set(handles.checkbox_residual_compute, 'Enable', 'on') 
+elseif get(handles.radiobutton_obsFile, 'Value') ==1 && get(handles.radiobutton_useAmbFile, 'Value') ==1 
+    set(handles.radiobutton_obsFile, 'Enable', 'on')
+    set(handles.radiobutton_vievsAmb, 'Enable', 'off') 
+    set(handles.radiobutton_vievsAmb, 'Value', 0) 
+    set(handles.radiobutton_useAmbFile, 'Enable', 'on') 
+    set(handles.checkbox_residual_compute, 'Enable', 'on') 
+else
+    set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
+    set(handles.radiobutton_vievsAmb, 'Value', 0) 
+end
 
 % Update handles structure
 guidata(hObject, handles);
@@ -12673,9 +12667,12 @@ function radiobutton_vievsAmb_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-set(handles.radiobutton_useAmbFile, 'Value', 0);
-set(handles.radiobutton_obsFile, 'Value', 0);
-set(handles.radiobutton_vievsAmb, 'Value', 1);
+% set(handles.radiobutton_vievsAmb, 'Value', 1);
+
+if get(handles.radiobutton_vievsAmb, 'Value') ==1
+    set(handles.radiobutton_useAmbFile, 'Value', 1);
+    set(handles.popupmenu_AmbDir, 'Enable', 'on')
+end
 
 % Update handles structure
 guidata(hObject, handles);
@@ -12688,23 +12685,31 @@ function radiobutton_useAmbFile_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-set(handles.radiobutton_obsFile, 'Value', 0);
-set(handles.radiobutton_vievsAmb, 'Value', 0);
-set(handles.radiobutton_useAmbFile, 'Value', 1);
+% set(handles.radiobutton_useAmbFile, 'Value', 1);
+
+if get(handles.radiobutton_useAmbFile, 'Value') == 0
+    set(handles.popupmenu_AmbDir, 'Enable', 'off')
+    set(handles.radiobutton_vievsAmb, 'Value', 0);
+    set(handles.checkbox_residual_compute, 'Value', 0);
+else
+    set(handles.popupmenu_AmbDir, 'Enable', 'on')
+    set(handles.radiobutton_vievsAmb, 'Enable', 'on')
+end
+if get(handles.radiobutton_obsFile, 'Value') ==1 && get(handles.radiobutton_useAmbFile, 'Value') ==1 
+    set(handles.radiobutton_obsFile, 'Enable', 'on')
+    set(handles.radiobutton_vievsAmb, 'Enable', 'off') 
+    set(handles.radiobutton_vievsAmb, 'Value', 0) 
+    set(handles.radiobutton_useAmbFile, 'Enable', 'on') 
+    set(handles.checkbox_residual_compute, 'Enable', 'on') 
+else
+    set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
+    set(handles.radiobutton_vievsAmb, 'Value', 0) 
+end
 
 % Update handles structure
 guidata(hObject, handles);
 
 % Hint: get(hObject,'Value') returns toggle state of radiobutton_useAmbFile
-
-
-
-% AmbCheck = handles.checkbox_ambiguity_correction.Value;
-% if AmbCheck
-%     set(handles.radiobutton_obsFile_Callback, 'Enable', 'on')
-% else
-%     set(handles.radiobutton_vievsAmb_Callback, 'Enable', 'off')
-% end
 
 
 % --- Executes on button press in checkbox_residual_compute.
@@ -12713,39 +12718,16 @@ function checkbox_residual_compute_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+if get(handles.checkbox_residual_compute, 'Value') ==1
+   set(handles.radiobutton_useAmbFile, 'Value', 1);
+   set(handles.popupmenu_AmbDir, 'Enable', 'on') 
+end
+
 % Update handles structure
 guidata(hObject, handles);
 
-% set(handles.checkbox_residual_compute, 'Value', 1);
-% % Update handles structure
-% guidata(hObject, handles);
 
 % Hint: get(hObject,'Value') returns toggle state of checkbox_residual_compute
-
-
-% --- Executes on button press in checkbox_residual_apply.
-function checkbox_residual_apply_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_residual_apply (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Update handles structure
-guidata(hObject, handles);
-
-% set(handles.checkbox_residual_apply, 'Value', 1);
-% % Update handles structure
-% guidata(hObject, handles);
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox_residual_apply
-
-
-
-
-
-
-
-
-
 
 
 % --- Executes on selection change in popupmenu_removeSou_file.
@@ -12910,3 +12892,33 @@ function uitoggletool1_OffCallback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
  %handles=plotResidualsToAxes(handles);
  %guidata(hObject, handles)
+
+
+% --- Executes on selection change in popupmenu_AmbDir.
+function popupmenu_AmbDir_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_AmbDir (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_AmbDir contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_AmbDir
+
+% save parameter file automatically 
+% auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_AmbDir_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_AmbDir (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% get currently selected OPT directory
+% AMBdirs=get(handles.popupmenu_AmbDir, 'String');
+% selectedAMBdir=AMBdirs{get(handles.popupmenu_AmbDir, 'value')};

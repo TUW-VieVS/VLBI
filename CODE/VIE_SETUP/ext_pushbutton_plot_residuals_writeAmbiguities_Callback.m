@@ -106,7 +106,27 @@ else
 %             end
             
             band_letter = parameter.vie_init.vgosDb_observation_parameter(end);
-            AMBfolder = ['../DATA/AMB/', yearStr, '/'];
+            % amb directory
+            allAmbDirs=get(handles.popupmenu_AmbDir, 'String');
+            if ~isempty(allAmbDirs)
+                parameter.vie_init.AmbDir=allAmbDirs{get(handles.popupmenu_AmbDir, 'Value')};
+            end
+            % LEVEL 0 output sub-directory
+            if get(handles.checkbox_run_outDirs_diffSubs, 'Value')
+                % different subs were chosen
+                parameter.vie_init.level0OutDir=get(handles.edit_run_outDirs_level0, 'String');
+            else
+                % One sub-directory
+                parameter.vie_init.level0OutDir=get(handles.edit_run_outDirs_oneSub, 'String');
+            end
+            if strcmp(parameter.vie_init.AmbDir, parameter.vie_init.level0OutDir)
+                AmbDir = parameter.vie_init.level0OutDir;
+            elseif isempty(parameter.vie_init.AmbDir)
+                AmbDir = parameter.vie_init.level0OutDir;
+            else
+                AmbDir = parameter.vie_init.AmbDir;
+            end
+            AMBfolder = ['../DATA/AMB/', AmbDir, '/'];
             AMBfilename = [allPopupmenuEntriesSessions{chosenSessionInd}, '_', band_letter, '.AMB'];
 
             % Check if outlier folder exists => if not => create it!

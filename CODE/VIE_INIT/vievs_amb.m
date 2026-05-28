@@ -459,12 +459,20 @@ end
 % Ambiguity file
 parameter.amb.flag_change_amb = true; %true
 
-checkPath = ['../DATA/AMB/', parameter.filepath(end-4:end-1), '/'];
+if strcmp(parameter.vie_init.AmbDir, parameter.vie_init.level0OutDir)
+    AmbDir = parameter.vie_init.level0OutDir;
+elseif isempty(parameter.vie_init.AmbDir)
+    AmbDir = parameter.vie_init.level0OutDir;
+else
+    AmbDir = parameter.vie_init.AmbDir;
+end
+
+checkPath = ['../DATA/AMB/', AmbDir, '/'];
 if ~exist(checkPath,'dir')
     mkdir(checkPath);
 end
 
-output_file_path = ['../DATA/AMB/', parameter.filepath(end-4:end-1), '/', [parameter.session_name '_' parameter.vie_init.vgosDb_observation_parameter(end) ], '.AMB'];
+output_file_path = ['../DATA/AMB/', AmbDir, '/', [parameter.session_name '_' parameter.vie_init.vgosDb_observation_parameter(end) ], '.AMB'];
 
 exist(output_file_path, 'file');
 

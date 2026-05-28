@@ -81,10 +81,10 @@ newStr = split(fband,'_');
 observation = newStr{1};
 freqband = newStr{2};
 
-if strcmp(parameter.vie_init.amb, 'vievscalc')
+if parameter.vie_init.ambClosure == 1 
     ambcorr = 'off';
 end
-if strcmp(parameter.vie_init.amb, 'useAmbFile')
+if parameter.vie_init.ambFile == 1 
     ambcorr = 'off';
 end
 
@@ -256,18 +256,26 @@ if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands') & para
 
         % This part includes ambiguities which are directly calculated in
         % VieVS and later used for calculation of the ionospheric correction
-        if strcmp(parameter.vie_init.amb, 'useAmbFile') 
+        if parameter.vie_init.ambFile == 1
             ambcorr = 'off';
 
+            if strcmp(parameter.vie_init.AmbDir, parameter.vie_init.level0OutDir)
+                AmbDir = parameter.vie_init.level0OutDir;
+            elseif isempty(parameter.vie_init.AmbDir)
+                AmbDir = parameter.vie_init.level0OutDir;
+            else
+                AmbDir = parameter.vie_init.AmbDir;
+            end
+
             parameter.amb.flag_change_amb = true; %true
-            checkPath = ['../DATA/AMB/', parameter.filepath(end-4:end-1), '/'];
+            checkPath = ['../DATA/AMB/', AmbDir, '/'];
             if ~exist(checkPath,'dir')
                 mkdir(checkPath);
             end
 
-            output_file_pathX = ['../DATA/AMB/', parameter.filepath(end-4:end-1), '/', [parameter.session_name '_X'], '.AMB'];
+            output_file_pathX = ['../DATA/AMB/', AmbDir, '/', [parameter.session_name '_X'], '.AMB'];
             exist(output_file_pathX, 'file');
-            output_file_pathS = ['../DATA/AMB/', parameter.filepath(end-4:end-1), '/', [parameter.session_name '_S'], '.AMB'];
+            output_file_pathS = ['../DATA/AMB/', AmbDir, '/', [parameter.session_name '_S'], '.AMB'];
             exist(output_file_pathS, 'file');
 
             if parameter.amb.flag_change_amb

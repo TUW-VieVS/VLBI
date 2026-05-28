@@ -410,26 +410,31 @@ fprintf('\n')
 %% Applying Ambiguities from .AMB file
 parameter.amb.flag_change_amb = false; %true
 
-if strcmp(parameter.vie_init.amb, 'vievscalc')
+if parameter.vie_init.ambClosure == 1
     parameter.amb.flag_change_amb = true; %true
 end
-if strcmp(parameter.vie_init.amb, 'useAmbFile')
+if parameter.vie_init.ambFile == 1
     parameter.amb.flag_change_amb = true; %true
 end
-if parameter.lsmopt.res_compute
-    parameter.amb.flag_change_amb = true; %true
-end
-if parameter.lsmopt.res_apply
+if parameter.lsmopt.res_compute == 1
     parameter.amb.flag_change_amb = true; %true
 end
 
-checkPath = ['../DATA/AMB/', parameter.filepath(end-4:end-1), '/'];
+if strcmp(parameter.vie_init.AmbDir, parameter.vie_init.level0OutDir)
+    AmbDir = parameter.vie_init.level0OutDir;
+elseif isempty(parameter.vie_init.AmbDir)
+    AmbDir = parameter.vie_init.level0OutDir;
+else
+    AmbDir = parameter.vie_init.AmbDir;
+end
+
+checkPath = ['../DATA/AMB/', AmbDir, '/'];
 if ~exist(checkPath,'dir')
     mkdir(checkPath);
 end
 
 % Ambiguity file
-amb_filename_path = ['../DATA/AMB/', parameter.filepath(end-4:end-1), '/', [parameter.session_name '_' parameter.vie_init.vgosDb_observation_parameter(end) ], '.AMB'];
+amb_filename_path = ['../DATA/AMB/', AmbDir, '/', [parameter.session_name '_' parameter.vie_init.vgosDb_observation_parameter(end) ], '.AMB'];
 if parameter.amb.flag_change_amb 
     if exist(amb_filename_path, 'file')
         fprintf('Ambiguities from .AMB file are applied:\n');
@@ -1792,7 +1797,7 @@ if opt.global_solve == 1 || opt.ascii_snx ==1 % +hana 05Oct10
 end
 
 % Compute Ambiguities based on the Residuals of the First Solution
-if parameter.lsmopt.res_compute
+if parameter.lsmopt.res_compute == 1
     [amb2] = vievs_amb_Res(parameter, antenna, sources, scan, res);
 end
 

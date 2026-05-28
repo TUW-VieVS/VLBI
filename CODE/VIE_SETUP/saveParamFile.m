@@ -70,7 +70,6 @@ else
     parameter.opt.opt_file_dir = '';
 end
 
-
 % ===========================
 % Outlier files
 % ===========================
@@ -121,6 +120,12 @@ parameter.obs_restrictions.suppression_flags=get(handles.checkbox_parameter_obsR
 allOptDirs=get(handles.popupmenu_setInput_optDir, 'String');
 if ~isempty(allOptDirs)
     parameter.vie_init.diropt=allOptDirs{get(handles.popupmenu_setInput_optDir, 'Value')};
+end
+
+% amb directory
+allAmbDirs=get(handles.popupmenu_AmbDir, 'String');
+if ~isempty(allAmbDirs)
+    parameter.vie_init.AmbDir=allAmbDirs{get(handles.popupmenu_AmbDir, 'Value')};
 end
 
 % use OPT file option
@@ -215,15 +220,11 @@ else % external file was chosen
     end
 end
 
-% ambiguity correction
-if get(handles.radiobutton_obsFile, 'Value')
-    parameter.vie_init.amb='observation_database_amb';
-elseif get(handles.radiobutton_vievsAmb, 'Value')
-    parameter.vie_init.amb='vievscalc';
-elseif get(handles.radiobutton_useAmbFile, 'Value')
-    parameter.vie_init.amb='useAmbFile';
-end
-
+% ambiguity correction 
+parameter.lsmopt.res_compute = get(handles.checkbox_residual_compute, 'Value');
+parameter.vie_init.ambObs= get(handles.radiobutton_obsFile, 'Value');
+parameter.vie_init.ambClosure= get(handles.radiobutton_vievsAmb, 'Value');
+parameter.vie_init.ambFile= get(handles.radiobutton_useAmbFile, 'Value');
 
 % load orbit data file
 
@@ -503,6 +504,15 @@ if get(handles.checkbox_run_outDirs_diffSubs, 'Value')
 else
     % One sub-directory
     parameter.lsmopt.level1OutDir=get(handles.edit_run_outDirs_oneSub, 'String');
+end
+
+% LEVEL 0 output sub-directory
+if get(handles.checkbox_run_outDirs_diffSubs, 'Value')
+    % different subs were chosen
+    parameter.vie_init.level0OutDir=get(handles.edit_run_outDirs_level0, 'String');
+else
+    % One sub-directory
+    parameter.vie_init.level0OutDir=get(handles.edit_run_outDirs_oneSub, 'String');
 end
 
 % opt and outlier directory (copied)
@@ -1100,10 +1110,6 @@ parameter.lsmopt.est_singleses=get(handles.checkbox_run_estParameters, 'Value');
 
 % allow station/sessionwise parameterization
 parameter.lsmopt.control_gui_vie_lsm=get(handles.checkbox_run_allowStationwise, 'Value');
-
-% ambiguity correction with Residuals
-parameter.lsmopt.res_compute = get(handles.checkbox_residual_compute, 'Value');
-parameter.lsmopt.res_apply = get(handles.checkbox_residual_apply, 'Value');
 
 
 % save the parameter file to file (before: create path if not exists)
