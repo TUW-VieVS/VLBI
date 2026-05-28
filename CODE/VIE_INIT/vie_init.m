@@ -252,7 +252,7 @@ switch(parameter.data_type)
         % Automatic Ambiguity Resolution based on multiband-singleband
         % delay differences with triangle delay closures
         fband_amb = fb{:}(end);
-        if strcmp(parameter.vie_init.amb, 'vievscalc')  
+        if parameter.vie_init.ambClosure == 1 
             [amb1] = vievs_amb(out_struct,wrapper_data, parameter, antenna, sources, scan, fband_amb);
         end
 
@@ -283,7 +283,7 @@ antenna(1).samplerate = out_struct.Observables.ChannelInfo_bX.SampleRate.val;
             refFreq='missingInvgosDB';
         end
 
-        if strcmp(parameter.vie_init.amb, 'useAmbFile')  
+        if parameter.vie_init.ambFile == 1
             fprintf('\t Ambig corr: used from .amb-file \n')
         end
 

@@ -330,44 +330,7 @@ end
 %     set(handles.edit_models_sc_sp3_file, 'String', parameter.vie_init.sc_orbit_file_path_name)
 % end
 
-% Ambiguity Correction
-if isfield(parameter.vie_init, 'amb') 
-    switch parameter.vie_init.amb
-        case 'observation_database_amb'
-            set(handles.radiobutton_obsFile, 'Value', 1) 
-            set(handles.radiobutton_vievsAmb, 'Value', 0) 
-            set(handles.radiobutton_useAmbFile, 'Value', 0);
-            set(handles.radiobutton_obsFile, 'Enable', 'on')
-            set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
-            set(handles.radiobutton_useAmbFile, 'Enable', 'on')
-            set(handles.checkbox_residual_compute, 'Enable', 'on') 
-            set(handles.checkbox_residual_apply, 'Enable', 'on') 
-            set(handles.checkbox_residual_compute, 'Value', 0) 
-            set(handles.checkbox_residual_apply, 'Value', 0) 
-        case 'vievscalc'
-            set(handles.radiobutton_obsFile, 'Value', 0);
-            set(handles.radiobutton_vievsAmb, 'Value', 1);   
-            set(handles.radiobutton_useAmbFile, 'Value', 0);
-            set(handles.radiobutton_obsFile, 'Enable', 'on')
-            set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
-            set(handles.radiobutton_useAmbFile, 'Enable', 'on')
-            set(handles.checkbox_residual_compute, 'Enable', 'on') 
-            set(handles.checkbox_residual_apply, 'Enable', 'on') 
-            set(handles.checkbox_residual_compute, 'Value', 0) 
-            set(handles.checkbox_residual_apply, 'Value', 0) 
-        case 'useAmbFile'
-            set(handles.radiobutton_obsFile, 'Value', 0);
-            set(handles.radiobutton_vievsAmb, 'Value', 0);   
-            set(handles.radiobutton_useAmbFile, 'Value', 1);
-            set(handles.radiobutton_obsFile, 'Enable', 'on')
-            set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
-            set(handles.radiobutton_useAmbFile, 'Enable', 'on')
-            set(handles.checkbox_residual_compute, 'Enable', 'on') 
-            set(handles.checkbox_residual_apply, 'Enable', 'on') 
-            set(handles.checkbox_residual_compute, 'Value', 0) 
-            set(handles.checkbox_residual_apply, 'Value', 0) 
-    end
-end
+% % Ambiguity Correction
 if isfield(parameter.vie_init, 'ambiguity_correction') 
      set(handles.checkbox_ambiguity_correction, 'Value', parameter.vie_init.ambiguity_correction)
      if parameter.vie_init.ambiguity_correction == 0
@@ -375,12 +338,19 @@ if isfield(parameter.vie_init, 'ambiguity_correction')
         set(handles.radiobutton_vievsAmb, 'Enable', 'off') 
         set(handles.radiobutton_useAmbFile, 'Enable', 'off')
         set(handles.checkbox_residual_compute, 'Enable', 'off') 
-        set(handles.checkbox_residual_apply, 'Enable', 'off') 
         set(handles.checkbox_residual_compute, 'Value', 0) 
-        set(handles.checkbox_residual_apply, 'Value', 0) 
         set(handles.radiobutton_obsFile, 'Value', 0) 
         set(handles.radiobutton_vievsAmb, 'Value', 0) 
         set(handles.radiobutton_useAmbFile, 'Value', 0) 
+     elseif parameter.vie_init.ambiguity_correction == 1
+        set(handles.radiobutton_obsFile, 'Value', 1) 
+        set(handles.radiobutton_vievsAmb, 'Value', 0) 
+        set(handles.radiobutton_useAmbFile, 'Value', 0);
+        set(handles.radiobutton_obsFile, 'Enable', 'on')
+        set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
+        set(handles.radiobutton_useAmbFile, 'Enable', 'on')
+        set(handles.checkbox_residual_compute, 'Enable', 'on') 
+        set(handles.checkbox_residual_compute, 'Value', 0) 
      end
 end
 
@@ -1609,9 +1579,19 @@ set(handles.checkbox_estimation_leastSquares_clocks_useClockBreaks, 'Value', par
 if isfield(parameter.lsmopt, 'res_compute')
     set(handles.checkbox_residual_compute, 'Value', parameter.lsmopt.res_compute);
 end
-if isfield(parameter.lsmopt, 'res_apply')
-    set(handles.checkbox_residual_apply, 'Value', parameter.lsmopt.res_apply);    
+
+if isfield(parameter.vie_init, 'ambObs')
+    set(handles.radiobutton_obsFile, 'Value', parameter.vie_init.ambObs);
 end
+
+if isfield(parameter.vie_init, 'ambClosure')
+    set(handles.radiobutton_vievsAmb, 'Value', parameter.vie_init.ambClosure);
+end
+
+if isfield(parameter.vie_init, 'ambFile')
+    set(handles.radiobutton_useAmbFile, 'Value', parameter.vie_init.ambFile);
+end
+
 
 % Satellite - Orbit Data Input
 set(handles.input_model_orbit_data, 'String', parameter.vie_init.sc_orbit_file_path_name);
