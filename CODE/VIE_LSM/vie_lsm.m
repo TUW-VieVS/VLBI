@@ -428,11 +428,6 @@ else
     AmbDir = parameter.vie_init.AmbDir;
 end
 
-checkPath = ['../DATA/AMB/', AmbDir, '/'];
-if ~exist(checkPath,'dir')
-    mkdir(checkPath);
-end
-
 % Ambiguity file
 amb_filename_path = ['../DATA/AMB/', AmbDir, '/', [parameter.session_name '_' parameter.vie_init.vgosDb_observation_parameter(end) ], '.AMB'];
 if parameter.amb.flag_change_amb 
