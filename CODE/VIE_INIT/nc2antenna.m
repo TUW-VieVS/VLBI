@@ -127,9 +127,9 @@ for iStat=1:nStat
     
     % set in_trf
     % if user has chosen vievsTrf
-    if strcmp(chosenTrf, 'manualTrf')  % Johannes 6 Dec 2020
-        antenna(iStat).in_trf=trf(indCurStatInTrf).(chosenTrf).break(bnr).indatum; % Johannes 6 Dec 2020
-    else % Johannes 6 Dec 2020
+    %if strcmp(chosenTrf, 'manualTrf')  % Johannes 6 Dec 2020
+    %    antenna(iStat).in_trf=trf(indCurStatInTrf).(chosenTrf).break(bnr).indatum; % Johannes 6 Dec 2020
+    %else % Johannes 6 Dec 2020
         if strcmp(chosenTrf, 'vievsTrf')
             antenna(iStat).in_trf=trf(indCurStatInTrf).(chosenTrf).break(bnr).indatum;
         else
@@ -139,7 +139,7 @@ for iStat=1:nStat
                 antenna(iStat).in_trf=1;
             end
         end
-    end    % Johannes 6 Dec 2020
+    %end    % Johannes 6 Dec 2020
     
     antenna(iStat).x=curBreak.x;
     antenna(iStat).y=curBreak.y;
