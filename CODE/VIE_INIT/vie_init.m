@@ -346,6 +346,11 @@ antenna(1).samplerate = out_struct.Observables.ChannelInfo_bX.SampleRate.val;
             sat_orbit_file_type = '';
         end
         
+        % If ionospheric delay is to be computed from dual-band data but
+        % NGS files are used, set the parameter to from observation file.
+        if strcmp(parameter.vie_init.iono, 'vievs2bands')
+            parameter.vie_init.iono = 'observation_database';
+        end
         % this is necessary in read_NGS, for whatever reason
         ini_opt.iono = parameter.vie_init.iono; % Use Iono. corrections from NGS file or from .ion files?
         
