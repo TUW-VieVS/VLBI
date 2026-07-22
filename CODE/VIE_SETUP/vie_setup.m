@@ -1218,11 +1218,11 @@ switch(datatype_str)
             optFileName = [session, '.OPT']; % non-conventional ngs file name
         end
     case 'vso'
-        optFileName = [session(1 : (strfind(session, ' [VSO]')-1)), '.OPT'];
+        optFileName = [deblank(session(1 : (strfind(session, ' [VSO]')-1))), '.OPT'];
     case 'vgosdb'
-        optFileName = [session(1 : (strfind(session, ' [vgosDB]')-1)), '.OPT'];
+        optFileName = [deblank(session(1 : (strfind(session, ' [vgosDB]')-1))), '.OPT'];
     case 'vda'
-        optFileName = [session(1 : (strfind(session, ' [VDA]')-1)), '.OPT'];
+        optFileName = [deblank(session(1 : (strfind(session, ' [VDA]')-1))), '.OPT'];
 end % switch(datatype_str)
 
 wantedOPTfile = ['../../VLBI_OPT/', selectedOPTdir, '/', optFileName];
