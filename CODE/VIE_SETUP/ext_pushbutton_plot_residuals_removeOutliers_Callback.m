@@ -280,7 +280,7 @@ else
             end
             fclose(fid);
             
-            % sucessful msgbox
-            msgbox('Outlier(s) sucessfully written to OUTLIER file', 'Done', 'help');               
+            % % sucessful msgbox
+            % msgbox('Outlier(s) sucessfully written to OUTLIER file', 'Done', 'help');               
     end
 end
