@@ -189,7 +189,13 @@ for pl=1:size(process_list,1)
         load(eval(curFileVar));
     end
     clear files curFileVar fieldn
-    load(parameter.vie_init.trf{1});
+
+    trffile = parameter.vie_init.trf;
+    if strcmp(trffile{1}(end-3:end), '.mat')
+        load(trffile{1});
+    else % a manual trf file is given -> load superstation.mat for SITE info (DOMES, CDP, ...)
+        load('../TRF/superstation.mat');
+    end
     
     outsnx=col_sinex.outsnx;
     
