@@ -62,30 +62,58 @@ function [prn, fso] = get_prn(name, id)
     'GSAT0227','59600U','24079C','E06';
     'GSAT0232','61182U','24167A','E16';
     'GSAT0226','61183U','24167B','E23'};
+    Galileo = cell2table(Galileo, 'VariableNames', {'Name','NORAD','ID','PRN'});
 
-[numRowsGalileo, ~] = size(Galileo);
+    Sentinel = {'SENTI-6A', '46984C', '20086A', 'L40'};
+    Sentinel = cell2table(Sentinel, 'VariableNames', {'Name','NORAD','ID','PRN'});
 
-    if contains(name, 'GSAT') 
-        idx1 = find(ismember(Galileo(:,1),name(1:8)));
-        idx2 = find(ismember(Galileo(:,2),id));
-        if isempty(idx1) || isempty(idx2)
-            fprintf('%-10s %-10s %-10s %-10s\n', 'Name', 'NORAD', 'ID', 'PRN');
-            for i = 1:numRowsGalileo
-                fprintf('%-10s %-10s %-10s %-10s\n', Galileo{i, :});
+    Lageos = {'LAGEOS-1', '08820U', '76039A', 'L51'};
+    Lageos = cell2table(Lageos, 'VariableNames', {'Name','NORAD','ID','PRN'});
+
+    Genesis = {'GEN-01', '11111U', '22001A', 'L01'};
+    Genesis = cell2table(Genesis, 'VariableNames', {'Name','NORAD','ID','PRN'});
+
+    if startsWith(name, "GSAT", 'IgnoreCase', true)
+            prn = checkEntry(Galileo, false, id, name(1:8));
+            % Galileo: PRN z.B. 'E11' -> number 11, FSO = 200 + 11
+            num = sscanf(prn, '%*1c%d'); 
+            if isempty(num)
+                fso = "";
+            else
+                fso = num + 200;
             end
-            error(' *** There is no satellite found which matches with an entry in Galileo satellite list (see above). Please check the name and id of the satellite used for scheduling.')
-        elseif idx1 ~= idx2
-            fprintf('%-10s %-10s %-10s %-10s\n', 'Name', 'NORAD', 'ID', 'PRN');
-            for i = 1:numRowsGalileo
-                fprintf('%-10s %-10s %-10s %-10s\n', Galileo{i, :});
-            end
-            error('The name of the satellite and the id of this satellite do not match with an entry in the Galileo satellite list (see above). Please check the name and id of the satellite used for scheduling.')
+    
+        elseif startsWith(name, "SENT", 'IgnoreCase', true) || startsWith(name, "SENTI", 'IgnoreCase', true)
+            prn = checkEntry(Sentinel, true, id, name);
+            fso = "";  
+        elseif startsWith(name, "LAGEOS", 'IgnoreCase', true)
+            prn = checkEntry(Lageos, true, id, name);
+            fso = "";
+        elseif startsWith(name, "GEN", 'IgnoreCase', true)
+            prn = checkEntry(Genesis, true, id, name);
+            fso = "";
         else
-            prn = char(string(Galileo(idx1,4)));
-            fso = str2double(prn(2:end))+200;
-        end
-	else
-		prn = '';
-		fso = '';
+            prn = "";
+            fso = "";
+     end
+
+end
+
+
+function prnOut = checkEntry(tbl, exactNameMatch, id, name)
+    if exactNameMatch
+        maskName = strcmp(tbl.Name, name);
+    else
+        maskName = startsWith(tbl.Name, name, 'IgnoreCase', true);
     end
+    maskID = strcmp(tbl.NORAD, id) | strcmp(tbl.ID, id);
+
+    if ~any(maskName) && ~any(maskID)
+        error("Keine Übereinstimmung in der Liste. Name oder ID nicht gefunden.");
+    end
+    maskBoth = maskName & maskID;
+    if ~any(maskBoth)
+        error("Name und ID stimmen nicht überein (Liste vorhanden, aber kein passender Eintrag).");
+    end
+    prnOut = string(tbl.PRN{find(maskBoth,1)});
 end

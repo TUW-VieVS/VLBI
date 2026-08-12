@@ -1595,20 +1595,16 @@ end
 
 % Satellite - Orbit Data Input
 set(handles.input_model_orbit_data, 'String', parameter.vie_init.sc_orbit_file_path_name);
-set(handles.rb_sp3, 'Value', 0);
-set(handles.rb_tle, 'Value', 0);
-set(handles.rb_ephem, 'Value', 0);
-set(handles.rb_fso, 'Value', 0);
+fileTypes = {'sp3', 'tle', 'ephem', 'fso'};
+rbHandles = [handles.rb_sp3, handles.rb_tle, handles.rb_ephem, handles.rb_fso];
 
-if strcmp(parameter.vie_init.sc_orbit_file_type, 'sp3')
-    set(handles.rb_sp3, 'Value', 1);
-elseif strcmp(parameter.vie_init.sc_orbit_file_type, 'tle')
-    set(handles.rb_tle, 'Value', 1)
-elseif strcmp(parameter.vie_init.sc_orbit_file_type, 'ephem')
-    set(handles.rb_ephem, 'Value', 1);
-elseif strcmp(parameter.vie_init.sc_orbit_file_type, 'fso')
-    set(handles.rb_fso, 'Value', 1)
+set(rbHandles, 'Value', 0);
+idx = find(strcmp(fileTypes, parameter.vie_init.sc_orbit_file_type));
+
+if ~isempty(idx)
+    set(rbHandles(idx), 'Value', 1);
 end
+
 
 % Satellite Orbit Estimation - Position NTW/RSW/XYZ
 
@@ -1667,154 +1663,121 @@ else
     set(handles.constrRadialComponentWeightValue, 'Enable', 'off');
 end
 
-% Satellite Orbit Estimation - Orbital Elements
-% relative constraints missing - not sure if it will be implemented
-set(handles.cb_estKepEle, 'Value', parameter.lsmopt.KepEle.estKepEle)
-if parameter.lsmopt.KepEle.estKepEle == 1
-set(handles.rb_estKepEle_NumTau, 'Value', parameter.lsmopt.KepEle.estKepEle_NumTau)
-set(handles.rb_estKepEle_NumSatPos, 'Value', parameter.lsmopt.KepEle.estKepEle_NumSatPos)
-set(handles.rb_estKepEle_Ana, 'Value', parameter.lsmopt.KepEle.estKepEle_Ana)
-set(handles.rb_estKepEle_FRP, 'Value', parameter.lsmopt.KepEle.estKepEle_FRP)
-set(handles.edit_pathFRPFile, 'String', parameter.lsmopt.KepEle.FRPFile)
+% Orbital Elements
+cbHandles = [handles.cb_estKepEle1, handles.cb_estKepEle2, ...
+             handles.cb_estKepEle3, handles.cb_estKepEle4, ...
+             handles.cb_estKepEle5, handles.cb_estKepEle6];
 
-set(handles.cb_estKepEle1, 'Value', parameter.lsmopt.KepEle.estKepEle1)
-set(handles.cb_estKepEle2, 'Value', parameter.lsmopt.KepEle.estKepEle2)
-set(handles.cb_estKepEle3, 'Value', parameter.lsmopt.KepEle.estKepEle3)
-set(handles.cb_estKepEle4, 'Value', parameter.lsmopt.KepEle.estKepEle4)
-set(handles.cb_estKepEle5, 'Value', parameter.lsmopt.KepEle.estKepEle5)
-set(handles.cb_estKepEle6, 'Value', parameter.lsmopt.KepEle.estKepEle6)
+estIntHandles = [handles.estIntValKepEle1, handles.estIntValKepEle2, ...
+                           handles.estIntValKepEle3, handles.estIntValKepEle4, ...
+                           handles.estIntValKepEle5, handles.estIntValKepEle6];
 
-set(handles.estIntValKepEle1, 'String', parameter.lsmopt.KepEle.estIntKepEle1)
-set(handles.estIntValKepEle2, 'String', parameter.lsmopt.KepEle.estIntKepEle2)
-set(handles.estIntValKepEle3, 'String', parameter.lsmopt.KepEle.estIntKepEle3)
-set(handles.estIntValKepEle4, 'String', parameter.lsmopt.KepEle.estIntKepEle4)
-set(handles.estIntValKepEle5, 'String', parameter.lsmopt.KepEle.estIntKepEle5)
-set(handles.estIntValKepEle6, 'String', parameter.lsmopt.KepEle.estIntKepEle6)
-end
-if parameter.lsmopt.KepEle.estKepEle == 1
-    set(handles.rb_estKepEle_NumTau, 'Enable', 'on')
-    set(handles.rb_estKepEle_NumSatPos, 'Enable', 'on')    
-    set(handles.rb_estKepEle_Ana, 'Enable', 'on')
-    set(handles.rb_estKepEle_FRP, 'Enable', 'on')
-    if parameter.lsmopt.KepEle.estKepEle_FRP == 1
-        set(handles.pb_browseFRPFile, 'Enable', 'on')
-        set(handles.edit_pathFRPFile, 'Enable', 'on')
-    else
-        set(handles.pb_browseFRPFile, 'Enable', 'off')
-        set(handles.edit_pathFRPFile, 'Enable', 'off')
+snxButtons = [handles.radiobutton_run_sinex_orb_incl, handles.radiobutton_run_sinex_orb_excl, handles.text_run_sinex_orb];
+
+set(handles.cb_estKepEle, 'Value', parameter.lsmopt.ORB.estORB)
+
+isEstORB = parameter.lsmopt.ORB.estORB;
+orbParams = parameter.lsmopt.ORB;
+
+if isEstORB
+    set([handles.popupmenu_kepler, handles.text_orb_der, handles.text_kep, handles.text_kepint], 'Enable', 'on');
+    set([handles.pb_browseFRPFile, handles.edit_pathFRPFile], 'Enable', 'off');
+    set(handles.edit_pathFRPFile, 'String', orbParams.FRPFile);
+
+    if orbParams.estorb_NumTau, val = 1;
+    elseif orbParams.estorb_NumPos, val = 2;
+    elseif orbParams.estorb_Ana,   val = 3;
+    else,                          val = 4; 
     end
+    set(handles.popupmenu_kepler, 'Value', val);
 
-    set(handles.cb_estKepEle1, 'Enable', 'on')
-    set(handles.cb_estKepEle2, 'Enable', 'on')
-    set(handles.cb_estKepEle3, 'Enable', 'on')
-    set(handles.cb_estKepEle4, 'Enable', 'on')
-    set(handles.cb_estKepEle5, 'Enable', 'on')
-    set(handles.cb_estKepEle6, 'Enable', 'on')
+    if val == 4
+        set([handles.pb_browseFRPFile, handles.edit_pathFRPFile], 'Enable', 'on');
+    end
+    
+    for i = 1:length(cbHandles)
+        set(cbHandles(i), 'Enable', 'on', 'Value', orbParams.params(i).estimate);
+        set(estIntHandles(i), 'String', orbParams.params(i).interval);
+        status = 'on';
+        if orbParams.params(i).estimate == 0, status = 'off'; end
+        set(estIntHandles(i), 'Enable', status);
+    end
+   
+else
+     allOff = [handles.popupmenu_kepler, handles.text_orb_der, handles.edit_pathFRPFile, ...
+              handles.pb_browseFRPFile, handles.text_kep, handles.text_kepint];
+    
+    set(allOff, 'Enable', 'off');
+    set(cbHandles, 'Enable', 'off');
+    set(estIntHandles, 'Enable', 'off');
+end
 
-    set(handles.estIntStrKepEle1, 'Enable', 'on')
-    set(handles.estIntStrKepEle2, 'Enable', 'on')
-    set(handles.estIntStrKepEle3, 'Enable', 'on')
-    set(handles.estIntStrKepEle4, 'Enable', 'on')
-    set(handles.estIntStrKepEle5, 'Enable', 'on')
-    set(handles.estIntStrKepEle6, 'Enable', 'on')
+% SRP Parameters
 
-    set(handles.estIntValKepEle1, 'Enable', 'on')
-    set(handles.estIntValKepEle2, 'Enable', 'on')
-    set(handles.estIntValKepEle3, 'Enable', 'on')
-    set(handles.estIntValKepEle4, 'Enable', 'on')
-    set(handles.estIntValKepEle5, 'Enable', 'on')
-    set(handles.estIntValKepEle6, 'Enable', 'on')
+cbHandles_ecom9 = [handles.cb_D0_ecom9, handles.cb_Y0_ecom9, handles.cb_B0_ecom9, ...
+             handles.cb_DC_ecom9, handles.cb_YC_ecom9, handles.cb_BC_ecom9, ...
+             handles.cb_DS_ecom9, handles.cb_YS_ecom9, handles.cb_BS_ecom9];
 
-    if sum([parameter.lsmopt.KepEle.estKepEle1; parameter.lsmopt.KepEle.estKepEle2; parameter.lsmopt.KepEle.estKepEle3; parameter.lsmopt.KepEle.estKepEle4; parameter.lsmopt.KepEle.estKepEle5; parameter.lsmopt.KepEle.estKepEle6]) ~= 0 
-        set(handles.radiobutton_run_sinex_orb_incl, 'Enable', 'on');
-        set(handles.radiobutton_run_sinex_orb_excl, 'Enable', 'on');
-        set(handles.text_run_sinex_orb, 'Enable', 'on')
+estIntHandles_ecom9 = [handles.int_D0_ecom9, handles.int_Y0_ecom9, handles.int_B0_ecom9 ...
+                 handles.int_DC_ecom9, handles.int_YC_ecom9, handles.int_BC_ecom9 ...
+                 handles.int_DS_ecom9, handles.int_YS_ecom9, handles.int_BS_ecom9];
+
+cbHandles_ecom5 = [handles.cb_D0_ecom5, handles.cb_Y0_ecom5, handles.cb_B0_ecom5, ...
+                   handles.cb_BC_ecom5,  handles.cb_BS_ecom5];
+
+estIntHandles_ecom5 = [handles.int_D0_ecom5, handles.int_Y0_ecom5, handles.int_B0_ecom5 ...
+                       handles.int_BC_ecom5, handles.int_BS_ecom5];
+
+isEstSRP = parameter.lsmopt.SRP.estSRP;
+srpParams = parameter.lsmopt.SRP;
+
+set(handles.cb_estSRP, 'Value', parameter.lsmopt.SRP.estSRP)
+
+if isEstSRP
+    set([handles.popupmenu_srp, handles.text_SRP_model, handles.text_srp, handles.text_srpint, handles.pb_browseSRPFile, handles.edit_pathSRPFile], 'Enable', 'on');
+    set(handles.edit_pathSRPFile, 'String', srpParams.SRPFile);
+
+    if strcmp(srpParams.method,'ecom9') , val = 1;
+    elseif strcmp(srpParams.method,'ecom5'), val = 2;
+    end
+    set(handles.popupmenu_srp, 'Value', val);
+
+    if val==1 
+        set(handles.uipanel_ecom9, 'Visible', 'on');
+        set(handles.uipanel_ecom5, 'Visible', 'off');
+
+        for i = 1:length(cbHandles_ecom9)
+            set(cbHandles_ecom9(i), 'Enable', 'on', 'Value', srpParams.params(i).estimate);
+            set(estIntHandles_ecom9(i), 'String', srpParams.params(i).interval);
+            status = 'on';
+        if srpParams.params(i).estimate == 0, status = 'off'; end
+            set(estIntHandles_ecom9(i), 'Enable', status);
+        end
+
+    elseif val==2
+        set(handles.uipanel_ecom9, 'Visible', 'off');
+        set(handles.uipanel_ecom5, 'Visible', 'on');
+
+        for i = 1:length(cbHandles_ecom5)
+            set(cbHandles_ecom5(i), 'Enable', 'off', 'Value', srpParams.params(i).estimate);
+            set(estIntHandles_ecom5(i), 'String', srpParams.params(i).interval);
+            status = 'on';
+        if srpParams.params(i).estimate == 0, status = 'off'; end
+            set(estIntHandles_ecom5(i), 'Enable', status);
+        end
     end
 else
-    set(handles.rb_estKepEle_NumTau, 'Enable', 'off')
-    set(handles.rb_estKepEle_NumSatPos, 'Enable', 'off')    
-    set(handles.rb_estKepEle_Ana, 'Enable', 'off')
-    set(handles.rb_estKepEle_FRP, 'Enable', 'off')
-    set(handles.pb_browseFRPFile, 'Enable', 'off')
-    set(handles.edit_pathFRPFile, 'Enable', 'off')
-    
-    set(handles.cb_estKepEle1, 'Enable', 'off')
-    set(handles.cb_estKepEle2, 'Enable', 'off')
-    set(handles.cb_estKepEle3, 'Enable', 'off')
-    set(handles.cb_estKepEle4, 'Enable', 'off')
-    set(handles.cb_estKepEle5, 'Enable', 'off')
-    set(handles.cb_estKepEle6, 'Enable', 'off')
+     allOff = [handles.popupmenu_srp, handles.text_SRP_model, handles.edit_pathSRPFile, ...
+              handles.pb_browseSRPFile, handles.text_srp, handles.text_srpint];
 
-    set(handles.estIntStrKepEle1, 'Enable', 'off')
-    set(handles.estIntStrKepEle2, 'Enable', 'off')
-    set(handles.estIntStrKepEle3, 'Enable', 'off')
-    set(handles.estIntStrKepEle4, 'Enable', 'off')
-    set(handles.estIntStrKepEle5, 'Enable', 'off')
-    set(handles.estIntStrKepEle6, 'Enable', 'off')
-
-    set(handles.estIntValKepEle1, 'Enable', 'off')
-    set(handles.estIntValKepEle2, 'Enable', 'off')
-    set(handles.estIntValKepEle3, 'Enable', 'off')
-    set(handles.estIntValKepEle4, 'Enable', 'off')
-    set(handles.estIntValKepEle5, 'Enable', 'off')
-    set(handles.estIntValKepEle6, 'Enable', 'off')
-
-    set(handles.radiobutton_run_sinex_orb_incl, 'Enable', 'off');
-    set(handles.radiobutton_run_sinex_orb_excl, 'Enable', 'off');
-    set(handles.text_run_sinex_orb, 'Enable', 'off')
+    set(allOff, 'Enable', 'off');
+    set(cbHandles, 'Enable', 'off');
+    set(estIntHandles, 'Enable', 'off');
 end
-if parameter.lsmopt.KepEle.estKepEle == 1
-    if parameter.lsmopt.KepEle.estKepEle1 == 0
-        set(handles.estIntStrKepEle1, 'Enable', 'off');
-        set(handles.estIntValKepEle1, 'Enable', 'off');
-        set(handles.cb_relConstrKepEle1, 'Enable', 'off'); 
-        set(handles.cb_relConstrKepEle1, 'Value', 0); 
-        set(handles.relConstrValKepEle1, 'Enable', 'off');
-        set(handles.text_relConstrKepEle1, 'Enable', 'off');
-    end
-    
-    if parameter.lsmopt.KepEle.estKepEle2 == 0
-        set(handles.estIntStrKepEle2, 'Enable', 'off');
-        set(handles.estIntValKepEle2, 'Enable', 'off');
-        set(handles.cb_relConstrKepEle2, 'Enable', 'off'); 
-        set(handles.cb_relConstrKepEle2, 'Value', 0); 
-        set(handles.relConstrValKepEle2, 'Enable', 'off');
-        set(handles.text_relConstrKepEle2, 'Enable', 'off');
-    end
-    
-    if parameter.lsmopt.KepEle.estKepEle3 == 0
-        set(handles.estIntStrKepEle3, 'Enable', 'off');
-        set(handles.estIntValKepEle3, 'Enable', 'off');
-        set(handles.cb_relConstrKepEle3, 'Enable', 'off'); 
-        set(handles.cb_relConstrKepEle3, 'Value', 0); 
-        set(handles.relConstrValKepEle3, 'Enable', 'off');
-        set(handles.text_relConstrKepEle3, 'Enable', 'off');
-    end
-    
-    if parameter.lsmopt.KepEle.estKepEle4 == 0
-        set(handles.estIntStrKepEle4, 'Enable', 'off');
-        set(handles.estIntValKepEle4, 'Enable', 'off');
-        set(handles.cb_relConstrKepEle4, 'Enable', 'off'); 
-        set(handles.cb_relConstrKepEle4, 'Value', 0); 
-        set(handles.relConstrValKepEle4, 'Enable', 'off');
-        set(handles.text_relConstrKepEle4, 'Enable', 'off');
-    end
-    
-    if parameter.lsmopt.KepEle.estKepEle5 == 0
-        set(handles.estIntStrKepEle5, 'Enable', 'off');
-        set(handles.estIntValKepEle5, 'Enable', 'off');
-        set(handles.cb_relConstrKepEle5, 'Enable', 'off'); 
-        set(handles.cb_relConstrKepEle5, 'Value', 0); 
-        set(handles.relConstrValKepEle5, 'Enable', 'off');
-        set(handles.text_relConstrKepEle5, 'Enable', 'off');
-    end
-    
-    if parameter.lsmopt.KepEle.estKepEle6 == 0
-        set(handles.estIntStrKepEle6, 'Enable', 'off');
-        set(handles.estIntValKepEle6, 'Enable', 'off');
-        set(handles.cb_relConstrKepEle6, 'Enable', 'off'); 
-        set(handles.cb_relConstrKepEle6, 'Value', 0); 
-        set(handles.relConstrValKepEle6, 'Enable', 'off');
-        set(handles.text_relConstrKepEle6, 'Enable', 'off');
-    end
+
+snxButtons = [handles.radiobutton_run_sinex_orb_incl, handles.radiobutton_run_sinex_orb_excl, handles.text_run_sinex_orb];
+if ((isEstSRP && sum([srpParams.params.estimate])) ~= 0 ||  (isEstORB && sum([orbParams.params.estimate]) ~= 0 )) && parameter.lsmopt.ascii_snx
+    set(snxButtons, 'Enable', 'on');
+else
+    set(snxButtons, 'Enable', 'off');
 end

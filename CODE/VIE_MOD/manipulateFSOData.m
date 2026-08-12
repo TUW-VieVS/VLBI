@@ -32,18 +32,12 @@
 %
 % ************************************************************************
 
-function [sourceChanged, dKepEle] = manipulateFSOData(GM, source, parameter, T2C_s, numKepEle)
+function [sourceChanged, dKepEle] = manipulateFSOData(GM, source, T2C_s, numKepEle)
     
     sourceChanged = source;
     for k=1:length(source.x_crf)
         time = source.mjd(k);
         tosc = source.tosc;
-        if strcmp(parameter.vie_init.sc_orbit_file_type, 'sp3') && (k <102 || k>700)
-            sourceChanged.x_crf(k) = 0;
-            sourceChanged.y_crf(k) = 0;
-            sourceChanged.z_crf(k) = 0;
-            continue;
-        end
         r = [source.x_crf(k), source.y_crf(k), source.z_crf(k)];
         v = [source.vx_crf(k), source.vy_crf(k), source.vz_crf(k)];
 

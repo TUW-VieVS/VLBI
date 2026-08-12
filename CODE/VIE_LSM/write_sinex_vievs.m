@@ -304,7 +304,8 @@ for pl=1:size(process_list,1)
     numDut1=size(col_sinex.dut1,2);
     numXnut=size(col_sinex.dX,2);
     numYnut=size(col_sinex.dY,2);
-    numOrb = size(col_sinex.KepEle1,2) + size(col_sinex.KepEle2,2) + size(col_sinex.KepEle3,2) + size(col_sinex.KepEle4,2) + size(col_sinex.KepEle5,2) + size(col_sinex.KepEle6,2);
+    numOrb = size(col_sinex.orb_sma,2) + size(col_sinex.orb_ecc,2) + size(col_sinex.orb_inc,2) + size(col_sinex.orb_raan,2) + size(col_sinex.orb_argp,2) + size(col_sinex.orb_argl,2);
+    numSRP = size(col_sinex.srp_D0,2) + size(col_sinex.srp_Y0,2) + size(col_sinex.srp_B0,2) + size(col_sinex.srp_DC,2) + size(col_sinex.srp_YC,2) + size(col_sinex.srp_BC,2) + size(col_sinex.srp_DS,2) + size(col_sinex.srp_YS,2) + size(col_sinex.srp_BS,2);
     %numEstEOPs=numXpol+numYpol+numDut1+numXnut+numYnut;
     %numEOPs=size(eop_matrix,1);
     numStat=size(antenna, 2);
@@ -600,11 +601,13 @@ for pl=1:size(process_list,1)
         ' vT*P*v = lT*P*l_red - xT*b';
         ' lT*P*l_red = lT*P*l - b2T*inv(N22)*b2';
         '';
-        ['13. Station coordinates are based on ' stacoord_text];
-        '';
         ['Cut-off elevation angle: ' num2str(cutoff) ' degree'];
         };
     
+
+    if parameter.lsmopt.stc
+        comment{end+1} = ['Station coordinates are based on ' stacoord_text];
+    end
     
     %write data
     fprintf(fid, '+%s\n', blockName);
@@ -1222,36 +1225,66 @@ for pl=1:size(process_list,1)
             end
         end
 
+        orb = {'sma', 'ecc', 'inc', 'raan', 'argp', 'argl'};
+        srp = {'D0', 'Y0', 'B0', 'DC', 'YC', 'BC', 'DS', 'YS', 'BS'}; 
+        orbname = {'ORBSMA', 'ORBECC', 'ORBINC', 'ORBRAN', 'ORBAOP', 'ORBAOL'}; 
+        orbunit= {'m', '-', 'mas', 'mas', 'mas', 'mas'};
+        srpname = {'ORB_D0', 'ORB_Y0', 'ORB_B0', 'ORB_DC', 'ORB_YC', 'ORB_BC', 'ORB_DS', 'ORB_YS', 'ORB_BS'}; 
+        srpunit= {'nm s-2', 'nm s-2', 'nm s-2', 'nm s-2', 'nm s-2', 'nm s-2', 'nm s-2', 'nm s-2', 'nm s-2'};
+        est_iorb = find([opt_.ORB.params(:).estimate]);
+        est_orb = numel(est_iorb);
+        est_isrp = find([opt_.SRP.params(:).estimate]);
+        est_srp = numel(est_isrp);
+        
         %ORBIT - ESTIMATES
-        if outsnx.orb==1
+        if outsnx.orb==1     
             for k=1:numSat
                 constrOrb=2; %no absolute constraints
-                for iKep=1:numOrb % Keplerelemente
-                    KepEleTime=mjd2yydoysecod(col_sinex.('mjd_KepEle' + string(iKep))(k));
+                for n=1:est_orb % Keplerelemente
+                    iorb = est_iorb(n);
+                    KepEleTime=mjd2yydoysecod(col_sinex.('mjd_orb_' + string(orb{iorb}))(k));
                     KepEleTimeYrStr=num2str(KepEleTime(:,1));
-                    numKepEle=length(col_sinex.('KepEle' + string(iKep))(k));
-                    unit= {'m', '-', 'mas', 'mas', 'mas', 'mas'};
+                    numKepEle=length(col_sinex.('orb_'+ string(orb{iorb}))(k));
+
                     %aprKepEle=sources(k).('apriori_KepEle' + string(iKep));
                     aprKepEle=0;
-                    totKepEle=aprKepEle + x_.('KepEle' + string(iKep))(k).val;
-                    totKepEleStdDev= x_.('KepEle' + string(iKep))(k).mx;
-                    if iKep==1 %cm in m 
+                    totKepEle = aprKepEle + x_.ORB.(orb{iorb})(k).val;
+                    totKepEleStdDev= x_.ORB.(orb{iorb})(k).mx;
+                    if iorb==1 %cm in m 
                         totKepEle = totKepEle/100;
                         totKepEleStdDev = totKepEleStdDev/100;
                     end
-                    orbname = {'ORBSMA', 'ORBECC', 'ORBINC', 'ORBRAN', 'ORBAOP', 'ORBAOL'}; 
+                    
                     for j=1:numKepEle
                         totKepEle=sprintf(formatEstVal, totKepEle(j));
                         if ispc, totKepEle = strrep(totKepEle, 'e+0', 'e+'); totKepEle = strrep(totKepEle, 'e-0', 'e-');   end
                         totKepEleStdDev=sprintf(formatStDev, totKepEleStdDev(j));
                         if ispc, totKepEleStdDev = strrep(totKepEleStdDev, 'e+0', 'e+'); totKepEleStdDev = strrep(totKepEleStdDev, 'e-0', 'e-');  end
-                        fprintf(fid, writeFormat, curIndex, orbname{iKep}, num2str(sources(k).s.siteCode), '--', soln, KepEleTimeYrStr(j,3:end), KepEleTime(j,2), KepEleTime(j,3), unit{iKep}, constrOrb, totKepEle, totKepEleStdDev);
+                        fprintf(fid, writeFormat, curIndex, orbname{iorb}, num2str(sources(k).s.siteCode), '--', soln, KepEleTimeYrStr(j,3:end), KepEleTime(j,2), KepEleTime(j,3), orbunit{iorb}, constrOrb, totKepEle, totKepEleStdDev);
                         curIndex=curIndex+1;
                     end   
                 end
             end
+            for m=1:est_srp
+                isrp = est_isrp(m);
+                fieldname = ['mjd_srp_' srp{isrp}];
+                SRPTime=mjd2yydoysecod(col_sinex.(fieldname)(k));
+                SRPTimeYrStr=num2str(SRPTime(:,1));
+                nSRP=length(col_sinex.(fieldname)(k));
+
+                aprSRP=0;
+                totSRP=aprSRP+ x_.SRP.(srp{isrp})(k).val;
+                totSRPStdDev= x_.SRP.(srp{isrp})(k).mx;
+                for j=1:nSRP
+                        totSRP=sprintf(formatEstVal, totSRP(j));
+                        if ispc, totSRP = strrep(totSRP, 'e+0', 'e+'); totSRP = strrep(totSRP, 'e-0', 'e-');   end
+                        totSRPStdDev=sprintf(formatStDev, totSRPStdDev(j));
+                        if ispc, totSRPStdDev = strrep(totSRPStdDev, 'e+0', 'e+'); totSRPStdDev = strrep(totSRPStdDev, 'e-0', 'e-');  end
+                        fprintf(fid, writeFormat, curIndex, srpname{isrp}, num2str(sources(k).s.siteCode), '--', soln, SRPTimeYrStr(j,3:end), SRPTime(j,2), SRPTime(j,3), srpunit{isrp}, constrOrb, totSRP, totSRPStdDev);
+                        curIndex=curIndex+1;
+                end 
+            end
         end
-        
         
         % write blockend line to file
         fprintf(fid, '-%s\n', blockName);
@@ -1478,23 +1511,40 @@ for pl=1:size(process_list,1)
     if outsnx.orb==1
         for k=1:numSat
             constrOrb=2; %no absolute constraints
-            for iKep=1:numOrb % Keplerelemente
-                KepEleTime=mjd2yydoysecod(col_sinex.('mjd_KepEle' + string(iKep))(k));
+            for n=1:est_orb % Keplerelemente
+                iorb = est_iorb(n);
+                KepEleTime=mjd2yydoysecod(col_sinex.('mjd_orb_' + string(orb{iorb}))(k));
                 KepEleTimeYrStr=num2str(KepEleTime(:,1));
-                numKepEle=length(col_sinex.('KepEle' + string(iKep))(k));
-                unit= {'m', '-', 'mas', 'mas', 'mas', 'mas'};
+                numKepEle=length(col_sinex.('orb_' + string(orb{iorb}))(k));
                 %aprKepEle=sources(k).('apriori_KepEle' + string(iKep));
                 aprKepEle=0;
                 aprKepEleStdDev=0;
-                orbname = {'ORBSMA', 'ORBECC', 'ORBINC', 'ORBRAN', 'ORBAOP', 'ORBAOL'}; 
+
                 for j=1:numKepEle
                     if ispc, aprKepEle = strrep(aprKepEle, 'e+0', 'e+'); aprKepEle = strrep(aprKepEle, 'e-0', 'e-');   end
                     if ispc, aprKepEleStdDev = strrep(aprKepEleStdDev, 'e+0', 'e+'); aprKepEleStdDev = strrep(aprKepEleStdDev, 'e-0', 'e-');  end
                     aprKepEle=sprintf(formatAprVal, aprKepEle);
                     aprKepEleStdDev=sprintf(formatStDev, 0);
-                    fprintf(fid, writeFormat, curIndex, orbname{iKep}, num2str(sources(k).s.siteCode), '--', soln, KepEleTimeYrStr(j,3:end), KepEleTime(j,2), KepEleTime(j,3), unit{iKep}, constrOrb, aprKepEle, aprKepEleStdDev);
+                    fprintf(fid, writeFormat, curIndex, orbname{iorb}, num2str(sources(k).s.siteCode), '--', soln, KepEleTimeYrStr(j,3:end), KepEleTime(j,2), KepEleTime(j,3), orbunit{iorb}, constrOrb, aprKepEle, aprKepEleStdDev);
                     curIndex=curIndex+1;
                 end   
+            end
+            for m=1:est_srp
+                isrp = est_isrp(m);
+                fieldname = ['mjd_srp_' srp{isrp}];
+                SRPTime=mjd2yydoysecod(col_sinex.(fieldname)(k));
+                SRPTimeYrStr=num2str(SRPTime(:,1));
+                nSRP=length(col_sinex.(fieldname)(k));
+                aprSRP=0;
+                aprSRPStdDev=0;
+                for j=1:nSRP
+                    if ispc, aprSRP = strrep(aprSRP, 'e+0', 'e+'); aprSRP = strrep(aprSRP, 'e-0', 'e-');   end
+                    if ispc, aprSRPStdDev = strrep(aprSRPStdDev, 'e+0', 'e+'); aprSRPStdDev = strrep(aprSRPStdDev, 'e-0', 'e-');  end
+                    aprSRP=sprintf(formatAprVal, aprSRP);
+                    aprSRPStdDev=sprintf(formatStDev, 0);
+                    fprintf(fid, writeFormat, curIndex, srpname{isrp}, num2str(sources(k).s.siteCode), '--', soln, SRPTimeYrStr(j,3:end), SRPTime(j,2), SRPTime(j,3), srpunit{isrp}, constrOrb, aprSRP, aprSRPStdDev);
+                    curIndex=curIndex+1;
+                end
             end
         end
     end
@@ -1675,25 +1725,46 @@ for pl=1:size(process_list,1)
 
     %ORBIT - write b vector for orbit
     if outsnx.orb==1
+        orbname = {'ORBSMA', 'ORBECC', 'ORBINC', 'ORBRAN', 'ORBAOP', 'ORBAOL'};
+        unit= {'m', '-', 'mas', 'mas', 'mas', 'mas'};
+        constrKepEle=2; %no absolute constraints
+
+        srp = {'D0', 'Y0', 'B0', 'DC', 'YC', 'BC', 'DS', 'YS', 'BS'}; 
+        unit_srp= {'nm/s2', 'nm/s2', 'nm/s2', 'nm/s2', 'nm/s2', 'nm/s2', 'nm/s2', 'nm/s2', 'nm/s2'};
+        srpname = {'ORB_D0', 'ORB_Y0', 'ORB_B0', 'ORB_DC', 'ORB_YC', 'ORB_BC', 'ORB_DS', 'ORB_YS', 'ORB_BS'};
+        constrSRP = 2; %no absolute constraints
         for k=1:numSat
-            constrKepEle=2; %no absolute constraints
-            orbname = {'ORBSMA', 'ORBECC', 'ORBINC', 'ORBRAN', 'ORBAOP', 'ORBAOL'};
-            unit= {'m', '-', 'mas', 'mas', 'mas', 'mas'};
-            for iKep=1:numOrb % Keplerelemente
-                KepEleTime=mjd2yydoysecod(col_sinex.('mjd_KepEle' + string(iKep))(k));
+            for n=1:est_orb % Keplerelemente
+                iorb = est_iorb(n);
+                KepEleTime=mjd2yydoysecod(col_sinex.('mjd_orb_' + string(orb{iorb}))(k));
                 KepEleTimeYrStr=num2str(KepEleTime(:,1));
-                numKepEle=length(col_sinex.('KepEle' + string(iKep))(k));
+                numKepEle=length(col_sinex.('orb_' + string(orb{iorb}))(k));
 
                 for j=1:length(numKepEle)   
-                    KepEle_b=sprintf(formatVectorValue, b_sinex(col_sinex.('KepEle' + string(iKep))(k)));
+                    KepEle_b=sprintf(formatVectorValue, b_sinex(col_sinex.('orb_' + string(orb{iorb}))(k)));
                     if ispc, KepEle_b = strrep(KepEle_b, 'e+0', 'e+'); KepEle_b = strrep(KepEle_b, 'e-0', 'e-');   end
-    
-                    fprintf(fid, writeFormat, curIndex, orbname{iKep}, num2str(sources(k).s.siteCode), '--', soln, KepEleTimeYrStr(j,3:end), KepEleTime(j,2), KepEleTime(j,3), unit{iKep}, constrKepEle, KepEle_b);                   
+                    fprintf(fid, writeFormat, curIndex, orbname{iorb}, num2str(sources(k).s.siteCode), '--', soln, KepEleTimeYrStr(j,3:end), KepEleTime(j,2), KepEleTime(j,3), unit{iorb}, constrKepEle, KepEle_b);                   
+                    curIndex=curIndex+1;
+                end
+            end
+            for m=1:est_srp
+                isrp = est_isrp(m);
+                fieldname = ['mjd_srp_' srp{isrp}];
+                SRPTime=mjd2yydoysecod(col_sinex.(fieldname)(k));
+                SRPTimeYrStr=num2str(SRPTime(:,1));
+                nSRP=length(col_sinex.(fieldname)(k));
+
+                for j=1:length(nSRP)
+                    fieldname = ['srp_' srp{isrp}];
+                    SRP_b=sprintf(formatVectorValue, b_sinex(col_sinex.(fieldname)(k)));
+                    if ispc, SRP_b = strrep(SRP_b, 'e+0', 'e+'); SRP_b = strrep(SRP_b, 'e-0', 'e-');   end
+                    fprintf(fid, writeFormat, curIndex, srpname{isrp}, num2str(sources(k).s.siteCode), '--', soln, SRPTimeYrStr(j,3:end), SRPTime(j,2), SRPTime(j,3), unit_srp{isrp}, constrKepEle, SRP_b);                   
                     curIndex=curIndex+1;
                 end
             end
         end
     end
+
 
     
     % write blockend line to file
@@ -1740,8 +1811,6 @@ for pl=1:size(process_list,1)
         tmpMatCoor = [col_sinex.coorx_qu; col_sinex.coory_qu; col_sinex.coorz_qu];
     end
 
-
-
     tmpMatEop(1:numXpol, 1)=col_sinex.xp;
     tmpMatEop(1:numYpol, 2)=col_sinex.yp;
     tmpMatEop(1:numDut1, 3)=col_sinex.dut1;
@@ -1750,10 +1819,10 @@ for pl=1:size(process_list,1)
     tmpMatSou=[col_sinex.ra; col_sinex.de];
     tmpMatZwd=[col_sinex.zwd.col];
     tmpMatTgr=[col_sinex.ngr.col; col_sinex.egr.col];
-    tmpMatOrb=[col_sinex.KepEle1; col_sinex.KepEle2; col_sinex.KepEle3; col_sinex.KepEle4; col_sinex.KepEle5; col_sinex.KepEle6];
-    
+    tmpMatOrb=[col_sinex.orb_sma; col_sinex.orb_ecc; col_sinex.orb_inc; col_sinex.orb_raan; col_sinex.orb_argp; col_sinex.orb_argl];
+    tmpMatSRP = [col_sinex.srp_D0; col_sinex.srp_Y0; col_sinex.srp_B0; col_sinex.srp_DC; col_sinex.srp_YC; col_sinex.srp_BC; col_sinex.srp_DS; col_sinex.srp_YS; col_sinex.srp_BS];
     % make one vector out of it...
-    tmpMat=[tmpMatCoor(:); tmpMatEop(:); tmpMatSou(:); tmpMatZwd(:); tmpMatTgr(:); tmpMatOrb(:)];
+    tmpMat=[tmpMatCoor(:); tmpMatEop(:); tmpMatSou(:); tmpMatZwd(:); tmpMatTgr(:); tmpMatOrb(:); tmpMatSRP(:)];
     
     % ... and delete zeros
     tmpMat(tmpMat==0)=[];
@@ -1808,8 +1877,11 @@ for pl=1:size(process_list,1)
             N(numStatEst*length(cx)*3+numXpol+numYpol+numDut1+numXnut+numYnut+numSou*2+numZwdAll +(tgr-1)*2+1, col)=N_sinex(tmpMatNgr(tgr), tmpMat(col)); %north
             N(numStatEst*length(cx)*3+numXpol+numYpol+numDut1+numXnut+numYnut+numSou*2+numZwdAll +(tgr-1)*2+2, col)=N_sinex(tmpMatEgr(tgr), tmpMat(col)); %east
         end
-        for iKep=1:numOrb
-            N(numStatEst*length(cx)*3+numXpol+numYpol+numDut1+numXnut+numYnut+numSou*2+numZwdAll+numNgrAll*2 +iKep, col)=N_sinex(tmpMatOrb(iKep), tmpMat(col)); %orbital element
+        for iorb=1:numOrb
+            N(numStatEst*length(cx)*3+numXpol+numYpol+numDut1+numXnut+numYnut+numSou*2+numZwdAll+numNgrAll*2 +iorb, col)=N_sinex(tmpMatOrb(iorb), tmpMat(col)); %orbital element
+        end
+        for isrp=1:numSRP
+            N(numStatEst*length(cx)*3+numXpol+numYpol+numDut1+numXnut+numYnut+numSou*2+numZwdAll+numNgrAll*2+numOrb+isrp, col)=N_sinex(tmpMatSRP(isrp), tmpMat(col)); %orbital element
         end
         
 %         for eop=1:numEOPs
@@ -2010,15 +2082,28 @@ for pl=1:size(process_list,1)
     % ORBIT - write orbit
     if outsnx.orb==1
         for k=1:numSat         
-            for iKep=1:numOrb % Keplerelemente
+            for n=1:est_orb % Keplerelemente
+                iorb = est_iorb(n);
                 %KepEleTime=mjd2yydoysecod(col_sinex.('mjd_KepEle' + string(iKep))(k));
                 %KepEleTimeYrStr=num2str(KepEleTime(:,1));
-                numKepEle=length(col_sinex.('KepEle' + string(iKep))(k));
+                numKepEle=length(col_sinex.('orb_' + string(orb{iorb}))(k));
     
                 for j=1:numKepEle
-                    KepEle_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.('KepEle' + string(iKep))(k)));               
+                    KepEle_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.('orb_' + string(orb{iorb}))(k)));               
                     if ispc, KepEle_b_cal = strrep(KepEle_b_cal, 'e+0', 'e+'); KepEle_b_cal = strrep(KepEle_b_cal, 'e-0', 'e-');   end              
                     fprintf(fid, writeFormat, curIndex, KepEle_b_cal);
+                    curIndex=curIndex+1;
+                end
+            end
+            for m=1:est_srp
+                isrp = est_isrp(m);
+                fieldname = ['srp_' srp{isrp}];
+                nSRP=length(col_sinex.(fieldname)(k));
+
+                for i=1:nSRP
+                    SRP_b_cal=sprintf(formatVectorValue, b_sinex_cal(col_sinex.(fieldname)(k)));               
+                    if ispc, SRP_b_cal = strrep(SRP_b_cal, 'e+0', 'e+'); SRP_b_cal = strrep(SRP_b_cal, 'e-0', 'e-');   end              
+                    fprintf(fid, writeFormat, curIndex, SRP_b_cal);
                     curIndex=curIndex+1;
                 end
             end

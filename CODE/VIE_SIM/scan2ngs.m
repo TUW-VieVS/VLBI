@@ -129,11 +129,11 @@ for iday = 1:nday
     fprintf(fid2,'%s\n','$END');
     
     % write radio source position card
-    for i = 1:length(sources)
+    for i = 1:length(sources.q)
         % convert to h/min/sec or deg/min/sec respectively
-        [dra mra sra] = rad2houminsec(sources(i).ra2000);
-        [dde mde sde] = rad2degminsec(sources(i).de2000);
-        if (sources(i).de2000 < 0.0)   %%% 201212 12 Jing SUN%if (dde < 0.0)
+        [dra mra sra] = rad2houminsec(sources.q(i).ra2000);
+        [dde mde sde] = rad2degminsec(sources.q(i).de2000);
+        if (sources.q(i).de2000 < 0.0)   %%% 201212 12 Jing SUN%if (dde < 0.0)
             sign = '-';
         else
             sign = ' ';
@@ -146,11 +146,18 @@ for iday = 1:nday
         end
         strde = [sign, sdde];
         % write data to file
-        line = ([sources(i).name,'  ',sprintf('%2.0f',dra),' ',...
+        line = ([sources.q(i).name,'  ',sprintf('%2.0f',dra),' ',...
             sprintf('%2.0f',mra),' ',sprintf('%12.6f',sra),' ',...
             sprintf('%s',strde),' ',sprintf('%2.0f',mde),' ',...
             sprintf('%12.6f',sde)]);
         fprintf(fid2,'%s\n',line);
+    end
+    % write satellite information to card
+    for i = 1:length(sources.s)
+        fprintf(fid2,'satellite %s\n',sources.s(i).name);
+        fprintf(fid2,'%s\n',string(sources.s(i).tle_name_ngs));
+        fprintf(fid2,'%s\n',string(sources.s(i).tle1_ngs));
+        fprintf(fid2,'%s\n',string(sources.s(i).tle2_ngs));
     end
     fprintf(fid2,'%s\n','$END');
     
@@ -160,6 +167,11 @@ for iday = 1:nday
     % write data cards
     seqnum = 0;
     for iscan = 1:length(scan)
+        if scan(iscan).obs_type == 'q'
+            source_tag = 'q';
+        elseif scan(iscan).obs_type == 's'
+            source_tag = 's';
+        end
         for iobs = 1:scan(iscan).nobs
             % sequence number
             seqnum = seqnum + 1;
@@ -192,7 +204,7 @@ for iday = 1:nday
             %------------------------
             line = ([antenna(scan(iscan).obs(iobs).i1).name,'  ',...   % name of first station
                 antenna(scan(iscan).obs(iobs).i2).name,'  ',...        % name of second station
-                sources(scan(iscan).iso).name,' ',...                  % name of source
+                sources.(source_tag)(scan(iscan).iso).name,' ',...                  % name of source
                 timyr,' ',...                                          % year of obs
                 timmo,' ',...                                          % month
                 timda,' ',...                                          % day

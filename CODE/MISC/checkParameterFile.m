@@ -65,9 +65,12 @@ function [parameter] = checkParameterFile(parameter)
         parameter.lsmopt.SatPos.sat_pos_est_ref_frame='';
 
     end
-    if ~isfield(parameter.lsmopt, 'KepEle')
-        parameter.lsmopt.KepEle.estKepEle=0;
-        parameter.lsmopt.KepEle.estKepEle_FRP=0;
+    if ~isfield(parameter.lsmopt, 'ORB')
+        parameter.lsmopt.ORB.estORB=0;
+        parameter.lsmopt.ORB.estorb_FRP=0;
+    end
+    if ~isfield(parameter.lsmopt, 'SRP')
+        parameter.lsmopt.SRP.estSRP=0;
     end
     if ~isfield(parameter.lsmopt, 'trf_excldatum')
         parameter.lsmopt.trf_excldatum = 0;
@@ -138,5 +141,4 @@ function [parameter] = checkParameterFile(parameter)
     if ~isfield(parameter.vie_init, 'level0OutDir')
         parameter.vie_init.level0OutDir = '';
     end
- 
 end

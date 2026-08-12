@@ -559,9 +559,6 @@ function [opt] = lsmopt(antenna, sources, na, ns_q, ns_s, obs_per_source, obs_pe
         %         opt.source(ids(i)).rade_inc = 1; % estimate non-defining
         %     end
         % end
-
-
-
     end
 
     % - Satellites
@@ -573,36 +570,14 @@ function [opt] = lsmopt(antenna, sources, na, ns_q, ns_s, obs_per_source, obs_pe
             opt.satellite(isou).SatPos.sat_pos_int      = opt.SatPos.sat_pos_int;                          % estimation intervals for satellite positions as pwl offsets [minutes] 
             opt.satellite(isou).SatPos.pos_inc          = opt.SatPos.pw_sat;% flag: 1 => estimate satellite position as PWL offsets
             
-            if opt.KepEle.estKepEle == 1
-                opt.satellite(isou).KepEle.estKepEle4       = opt.KepEle.estKepEle4;
-                opt.satellite(isou).KepEle.estIntKepEle4    = opt.KepEle.estIntKepEle4;
-                opt.satellite(isou).KepEle.relConstrKepEle4 = opt.KepEle.relConstrKepEle4;
-                opt.satellite(isou).KepEle.relContrValKepEle4 = opt.KepEle.relConstrValKepEle4;
-    
-                opt.satellite(isou).KepEle.estKepEle1 = opt.KepEle.estKepEle1;
-                opt.satellite(isou).KepEle.estIntKepEle1 = opt.KepEle.estIntKepEle1;
-                opt.satellite(isou).KepEle.relConstrKepEle1 = opt.KepEle.relConstrKepEle1;
-                opt.satellite(isou).KepEle.relContrValKepEle1 = opt.KepEle.relConstrValKepEle1;
-    
-                opt.satellite(isou).KepEle.estKepEle2 = opt.KepEle.estKepEle2;
-                opt.satellite(isou).KepEle.estIntKepEle2 = opt.KepEle.estIntKepEle2;
-                opt.satellite(isou).KepEle.relConstrKepEle2 = opt.KepEle.relConstrKepEle2;
-                opt.satellite(isou).KepEle.relContrValKepEle2 = opt.KepEle.relConstrValKepEle2;
-    
-                opt.satellite(isou).KepEle.estKepEle3 = opt.KepEle.estKepEle3;
-                opt.satellite(isou).KepEle.estIntKepEle3 = opt.KepEle.estIntKepEle3;
-                opt.satellite(isou).KepEle.relConstrKepEle3 = opt.KepEle.relConstrKepEle3;
-                opt.satellite(isou).KepEle.relContrValKepEle3 = opt.KepEle.relConstrValKepEle3;
-    
-                opt.satellite(isou).KepEle.estKepEle5 = opt.KepEle.estKepEle5;
-                opt.satellite(isou).KepEle.estIntKepEle5 = opt.KepEle.estIntKepEle5;
-                opt.satellite(isou).KepEle.relConstrKepEle5 = opt.KepEle.relConstrKepEle5;
-                opt.satellite(isou).KepEle.relContrValKepEle5 = opt.KepEle.relConstrValKepEle5;
-    
-                opt.satellite(isou).KepEle.estKepEle6 = opt.KepEle.estKepEle6;
-                opt.satellite(isou).KepEle.estIntKepEle6 = opt.KepEle.estIntKepEle6;
-                opt.satellite(isou).KepEle.relConstrKepEle6 = opt.KepEle.relConstrKepEle6;
-                opt.satellite(isou).KepEle.relContrValKepEle6 = opt.KepEle.relConstrValKepEle6;
+            for i=1:length(opt.ORB.params)
+                opt.satellite(isou).ORB.params(i).estimate = opt.ORB.params(i).estimate;
+                opt.satellite(isou).ORB.params(i).interval = opt.ORB.params(i).interval;
+            end
+
+            for i=1:length(opt.SRP.params)
+                opt.satellite(isou).SRP.params(i).estimate = opt.SRP.params(i).estimate;
+                opt.satellite(isou).SRP.params(i).interval = opt.SRP.params(i).interval;
             end
         end
     end

@@ -51,7 +51,7 @@ subStruct_stat=struct('x', [], 'temp', [], 'pres', [], 'e', [], 'az', ...
 subStruct_obs=struct('i1', [], 'i2', [], 'obs', [], 'sig', [], 'com', ...
     [], 'delion', [], 'sgdion', [], 'q_flag', [], 'q_flag_ion', [], 'q_code_X', [], 'q_code_S', []);
 scan(nScans+1)=struct('mjd', [], 'stat', [], 'tim', [], ...
-    'nobs', [], 'space', [], 'obs', [], 'iso', []); % +1: not working otherwise - is deleted after loop
+    'nobs', [], 'space', [], 'obs', [], 'iso', [], 'NDOP', [], 'TDOP', [], 'WDOP', []); % +1: not working otherwise - is deleted after loop
 space0.source = zeros(3,3);
 space0.xp=0; space0.yp=0; space0.era=0; space0.xnut=0; space0.ynut=0;
 space0.t2c=zeros(3,3);
@@ -200,9 +200,6 @@ fprintf('\t sigma:\t\t %s/%s, nc field: %s\n', sigma_tau_folder, sigma_tau_file,
         sMBD2obs = num2cell(out_struct.Observables.GroupDelay_bX.GroupDelaySig.val);
     end
 
-
-
-
 %% QUALITY CODES FOR X-BAND and S-BAND: 
 % only used for sessions prior to 2001 in cleanScan.m 
 nc_filename = get_nc_filename({['QualityCode_' freqband]}, wrapper_data.Observation.Observables.files, 0);
@@ -249,6 +246,7 @@ if strcmp(freqband,'bX') & strcmp(parameter.vie_init.iono, 'vievs2bands') & para
             MBD1 = num2cell(out_struct.Observables.GroupDelay_bS.GroupDelay.val);
             MBD1badAmb = true;
         end
+
     
         tfl2 = get_nc_filename({ observation , '_bX'}, wrapper_data.Observation.ObsEdit.files, 1);
         MBD2 = num2cell(out_struct.ObsEdit.(tfl2).GroupDelayFull.val); % amb. included
@@ -583,7 +581,6 @@ if strcmp(ioncorr,'on')
                 warning('Ionospheric delay can not be used because was not found\n')
             end
         end
-
     elseif strcmp(parameter.vie_init.iono, 'vievs2bands') &  isfield(out_struct.Observables, {['GroupDelay' , '_bS']}) &  ~isempty(MBD1) &  ~isempty(MBD2)% observation instead of 'GroupDelay'       
         %[iono_val_vievs, sigma_iono_vievs, qflag_ion_vievs] = vievs_iono(out_struct,wrapper_data,MBD1,MBD2,sMBD1,sMBD2,parameter); 
         %iono_val_vievs=iono_val_vievs.*1e9; % ns

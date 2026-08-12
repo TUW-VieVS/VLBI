@@ -54,10 +54,10 @@ function [parameter,DUT1, XP, YP, DX, DY] = interpolateEOP(parameter, MJDeop, UT
     % Interpolation:
     % Linear
     if parameter.vie_mod.linear == 1
-        disp('linear interpolation of EOP')
+        fprintf('linear interpolation of EOP ...')
         parameter.eop.interp = 'linear';
         if parameter.vie_mod.linear48h && strcmp(epoch_type,'observation')
-            disp('special linear interpolation for IVS SINEX submission with 48h EOP interval')
+            fprintf(' special linear interpolation for IVS SINEX submission with 48h EOP interval ...')
             % find index of MJDeop that lies within the 48 hour estimation interval
             midof48h = find(MJDeop==floor(min(MJD))+1);
             % remove this midnight point from a priori time series

@@ -17,6 +17,7 @@
 %
 %   Revision: 
 %  - 2024-12-13, Helene Wolf: changed the sat name to use the full name
+%  - 2026-06-22, Helene Wolf: convert tle positions from teme to eci system
 %
 % ************************************************************************
 
@@ -26,7 +27,7 @@ function [sources] = sat_data2sources(sat_data, sources)
     ids = strings(length(sat_data.sat),1);
     for i=1:length(sat_data.sat)
         sat_names(i) = regexprep(string(sat_data.sat(i).TLE_header_line(1:end)), ' ', '_');
-        ids(i) = string(sat_data.sat(i).sat_number);
+        ids(i) = sprintf('%05d', sat_data.sat(i).sat_number);
     end
     
     for iSat = 1 : length(sources.s)
@@ -36,18 +37,34 @@ function [sources] = sat_data2sources(sat_data, sources)
         if isempty(orbit_data_ind)
             error(fprintf(' *** Satellite %s is not included in TLE file.', regexprep(string(sources.s(iSat).name), '_', ' ') ))
         end
-        r = [sat_data.sat(orbit_data_ind).prop(:).r];
+        r = [sat_data.sat(orbit_data_ind).prop(:).r]; %in teme
         r = reshape(r,3,[]);
         r = r';
-        v = [sat_data.sat(orbit_data_ind).prop(:).v];
+        v = [sat_data.sat(orbit_data_ind).prop(:).v]; %in teme
         v = reshape(v,3,[]);
         v = v';
-        sources.s(iSat).x_crf      = r(:, 1)*1000;
-        sources.s(iSat).y_crf      = r(:, 2)*1000;
-        sources.s(iSat).z_crf      = r(:, 3)*1000;
-        sources.s(iSat).vx_crf     = v(:, 1)*1000;
-        sources.s(iSat).vy_crf     = v(:, 2)*1000;
-        sources.s(iSat).vz_crf     = v(:, 3)*1000;
+      
+        num = length([sat_data.sat(orbit_data_ind).prop(:).jd]);
+        reci_all = zeros(num,3);
+        veci_all = zeros(num,3);
+        for k=1:num
+            utc = datetime(sat_data.sat(orbit_data_ind).prop(k).year,sat_data.sat(orbit_data_ind).prop(k).mon,sat_data.sat(orbit_data_ind).prop(k).day,sat_data.sat(orbit_data_ind).prop(k).h, sat_data.sat(orbit_data_ind).prop(k).min, sat_data.sat(orbit_data_ind).prop(k).sec);
+            jd = [sat_data.sat(orbit_data_ind).prop(k).jd]; 
+            mjd = mjuliandate(utc);
+            leap = tai_utc(mjd); 
+            jdtt = jd + (32.184 + leap)./86400; % [JD TT]
+            ttt = (jdtt - 2451545.0)/36525;
+            [reci, veci] = teme2eci(r(k,:)', v(k,:)', ttt, 106, 2, 'a');
+            reci_all(k,:) = reci';
+            veci_all(k,:) = veci';
+        end
+
+        sources.s(iSat).x_crf      = reci_all(:, 1)*1000; % [m]
+        sources.s(iSat).y_crf      = reci_all(:, 2)*1000; % [m]
+        sources.s(iSat).z_crf      = reci_all(:, 3)*1000; % [m]
+        sources.s(iSat).vx_crf     = veci_all(:, 1)*1000; % [m/s]
+        sources.s(iSat).vy_crf     = veci_all(:, 2)*1000; % [m/s]
+        sources.s(iSat).vz_crf     = veci_all(:, 3)*1000; % [m/s]
         sources.s(iSat).flag_v_crf = 1;
         sources.s(iSat).mjd        = [sat_data.sat(orbit_data_ind).prop.jd]' - 2400000.5 .* ones(length([sat_data.sat(orbit_data_ind).prop.jd]),1);
         sources.s(iSat).year       = [sat_data.sat(orbit_data_ind).prop.year]';

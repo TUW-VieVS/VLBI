@@ -262,7 +262,11 @@ if ~isempty(process_list)
                             if (length(ind_tmp) == 1) && (length(session_name(1:min(ind_tmp-1))) == 4)
                                 % Format: yyyy/<session_name>
                                 if ~isnan(str2double(session_name(1:4)))
+																													   
                                     parameter.filepath =  ['../DATA/NGS/', session_name(1:4), '/'];
+										
+																 
+									   
                                 else
                                     flag_absolut_path = true;
                                 end
@@ -278,6 +282,8 @@ if ~isempty(process_list)
                         
                         if contains(parameter.session_name, '-') % new NGS/vgosDB name YYYYMMDD-SSSSS
                             parameter.year = parameter.session_name(1:4);
+										  
+																																																 
                         else
                             year_tmp = str2double(parameter.session_name(1:2));
                             % Check if converversion was sucessfull:
@@ -293,6 +299,7 @@ if ~isempty(process_list)
                             end
                             parameter.year = num2str(year_tmp); % year has to be saved as string!
                         end
+																							 
                         fprintf(' Input file format: NGS\n');
 
                     case 'vso'
@@ -333,6 +340,7 @@ if ~isempty(process_list)
                             % Get year:
                             if (length(ind_tmp) >= 2) && (length(session_name(ind_tmp(end-1)+1 : ind_tmp(end)-1)) == 4)
                                 if ~isnan(str2double(session_name(ind_tmp(end-1)+1 : ind_tmp(end)-1)))
+																				  
                                     if (str2double(session_name(ind_tmp(end-1)+1 : ind_tmp(end)-1)) < 2025) && (str2double(session_name(ind_tmp(end-1)+1 : ind_tmp(end)-1)) > 1979)
                                         parameter.year = session_name(ind_tmp(end-1)+1 : ind_tmp(end)-1);
                                     else
@@ -465,11 +473,11 @@ if ~isempty(process_list)
                                 tmp=load([fil '_sources.mat']);sources=tmp.sources;
                             end
                             sources = vie_lsm(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path);
+                           
                         else
                             fprintf('You need to run VIE_MOD for session %s before you can run VIE_LSM\n', session);
                         end
                        
-
                     elseif runp.lsm_scanwise %Claudia 22/10/2012
 
                         fil=[pthDALE 'DATA/LEVEL1/' runp.mod_path '/' session];
@@ -721,8 +729,14 @@ if ~isempty(process_list)
                                 tmp=load([fil '_scan.mat']);scan=tmp.scan;
                                 tmp=load([fil '_antenna.mat']);antenna=tmp.antenna;
                                 tmp=load([fil '_sources.mat']);sources=tmp.sources;
+								tmp=load([fil '_parameter.mat']); parameter.vie_init=tmp.parameter.vie_init; 
+                                parameter.eop =tmp.parameter.eop;
+                                parameter.vie_mod.eophf =tmp.parameter.vie_mod.eophf;																										 
+																 
+																					 
                             end
                             [antenna,scan,sources,session,parameter] = vie_sim(antenna,scan,sources,session,runp.mod_path,parameter);   % Jing SUN, Jan 10, 2012
+							savestruct(fil,parameter,antenna,scan,sources);											   
                         else
                             fprintf('You need to run VIE_MOD for session %s before you can run VIE_SIM\n',session);
                         end
@@ -748,6 +762,7 @@ if ~isempty(process_list)
                                 tmp=load([fil '_sources.mat']);sources=tmp.sources;
                             end
                             sources = vie_lsm(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
+                           																													   
                         else
                             fprintf('You need to run VIE_MOD for session %s before you can run VIE_LSM\n', session);
                         end
@@ -819,6 +834,7 @@ if ~isempty(process_list)
     if exist('process_list', 'var')
         process_list_orig = process_list;
 		clear process_list;
+	  
         flag = 0;
         process_list = sess_err;
         emptyCells = cellfun('isempty', process_list);
@@ -828,6 +844,8 @@ if ~isempty(process_list)
         for i_err = 1: length(sess_err) % display failed sessions
             if ~isempty(sess_err{i_err})
                 fprintf(2, 'session %s produced an error\n', sess_err{i_err});
+			  
+		  
                 flag = 1;
             end
         end
@@ -870,10 +888,15 @@ end % function vie_batch
 
 %% ##### local functions #####
 
-function savestruct(fil,parameter,antenna,scan,sources)
+function savestruct(fil,parameter,antenna,scan,sources)   
+    dataSize = whos('scan').bytes;
+    if dataSize > 1.5 * 1024^3
+        save([fil '_scan.mat'],'scan', '-v7.3');
+    else
+        save([fil '_scan.mat'],'scan');
+    end
     save([fil '_antenna.mat'],'antenna');
     save([fil '_sources.mat'],'sources');
-    save([fil '_scan.mat'],'scan');
     save([fil '_parameter.mat'],'parameter');
 end
 

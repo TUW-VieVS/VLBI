@@ -91,6 +91,15 @@ function [orbit_data] = read_sp3(sp3_file_path, sp3_file_name, varargin)
     epoch_rec_ind = strncmp(sp3_data, '*', 1);
     epoch_rec_cell = sp3_data(epoch_rec_ind);
     epoch_rec_char = char(epoch_rec_cell);
+
+    %time system
+    time_sys_idx = strncmp(sp3_data, '%c', 2);
+    time_sys = sp3_data(time_sys_idx);
+    time_sys = time_sys(1);
+    time_sys = time_sys{1}(1,10:12);
+    
+    isGPStime = strcmp(time_sys, 'GPS');
+    isUTCtime = strcmp(time_sys, 'UTC');
     
     year    = str2double(cellstr(epoch_rec_char(:, 4:7)));
     mon     = str2double(cellstr(epoch_rec_char(:, 9:10)));
@@ -101,14 +110,18 @@ function [orbit_data] = read_sp3(sp3_file_path, sp3_file_name, varargin)
     
     mjd_tmp    = modjuldat(year, mon, day, hour, min, sec);
     
-    % Convert GPS time to UTC: get time diff. between UTC and GPS time:
-    % tgps = UTC + leap_sec_tai_utc - 19 sec  => UTC = tgps + 19 sec - leap_sec_tai_utc
-    leap_sec_tai_utc = tai_utc(mjd_tmp);
-    leap_sec_gps_utc = 19 - leap_sec_tai_utc;
-    sec = sec + leap_sec_gps_utc;
-     
-    unique_leap_sec_gps_utc = unique(leap_sec_gps_utc);
-    
+    if isGPStime
+        % Convert GPS time to UTC
+        % Formula: UTC = GPS + 19 - leap_sec_tai_utc
+        % Note: 19 is the constant offset (GPS epoch to UTC epoch)
+        leap_sec_tai_utc = tai_utc(mjd_tmp);
+        leap_sec_gps_utc = 19 - leap_sec_tai_utc;
+        sec = sec + leap_sec_gps_utc;
+    elseif ~isUTCtime
+        % If it's neither GPS nor UTC, throw error
+        error('Invalid time system in sp3 file detected: %s', time_sys);
+    end
+        
     % Convert epochs to MJD:
     orbit_data.epoch_mjd = modjuldat(year, mon, day, hour, min, sec);
     
@@ -147,6 +160,11 @@ function [orbit_data] = read_sp3(sp3_file_path, sp3_file_name, varargin)
     
     sp3_pos_rec_data = sp3_data(pos_rec_ind);
     pos_rec_char = char(sp3_pos_rec_data);
+
+    vel_rec_ind = strncmp(sp3_data, 'V', 1);
+    number_of_vel_rec = sum(vel_rec_ind);
+    sp3_vel_rec_data = sp3_data(vel_rec_ind);
+    vel_rec_char = char(sp3_vel_rec_data);
     
     number_of_sat = length(orbit_data.sat_name_list);
     
@@ -168,12 +186,21 @@ function [orbit_data] = read_sp3(sp3_file_path, sp3_file_name, varargin)
         sat_name_list = orbit_data.sat_name_list;
         % Exclude data (from sp3_pos_rec_data):
         incl_pos_rec_ind = false(number_of_pos_rec, 1);
+        incl_vel_rec_ind = false(number_of_vel_rec, 1);
         for i_sat = 1 : length(sat_name_list)
-            incl_pos_rec_ind = incl_pos_rec_ind | strcmp(string(orbit_data.sat(i_sat).prn),cellstr(sat_names_char));  
+            incl_pos_rec_ind = incl_pos_rec_ind | strcmp(string(orbit_data.sat(i_sat).prn),cellstr(sat_names_char));
+            if number_of_vel_rec~= 0 
+                incl_vel_rec_ind = incl_vel_rec_ind | strcmp(string(orbit_data.sat(i_sat).prn),cellstr(sat_names_char));
+            end
         end    
         sp3_pos_rec_data    = sp3_pos_rec_data(incl_pos_rec_ind);
         pos_rec_char        = char(sp3_pos_rec_data);
         sat_names_char      = pos_rec_char(:, 2:4);
+
+        if number_of_vel_rec ~= 0
+            sp3_vel_rec_data    = sp3_vel_rec_data(incl_vel_rec_ind);
+            vel_rec_char        = char(sp3_vel_rec_data);
+        end
     end
     
     % If a time window to read data is defined, exclude pos. records out of this time range:
@@ -182,6 +209,11 @@ function [orbit_data] = read_sp3(sp3_file_path, sp3_file_name, varargin)
         sp3_pos_rec_data = sp3_pos_rec_data(~excl_pos_rec_ind);
         pos_rec_char = char(sp3_pos_rec_data);
         sat_names_char = pos_rec_char(:, 2:4);
+
+        if number_of_vel_rec ~= 0
+            sp3_vel_rec_data    = sp3_vel_rec_data(~excl_pos_rec_ind);
+            vel_rec_char        = char(sp3_vel_rec_data);
+        end
     end
     
     % Positions:
@@ -192,12 +224,32 @@ function [orbit_data] = read_sp3(sp3_file_path, sp3_file_name, varargin)
     x = x * 1e3; % [m]
     y = y * 1e3; % [m]
     z = z * 1e3; % [m]
+
+    if number_of_vel_rec ~= 0
+        % Velocity:
+        vx = str2double(cellstr(vel_rec_char(:, 5:18)));  % [dm/s]
+        vy = str2double(cellstr(vel_rec_char(:, 19:32))); % [dm/s]
+        vz = str2double(cellstr(vel_rec_char(:, 33:46))); % [dm/s]
+    
+        vx = vx /10; % [m/s]
+        vy = vy /10; % [m/S]
+        vz = vz /10; % [m/s]
+    end
     
     for i_sat = 1 : number_of_sat
         sat_ind = strcmp(cellstr(sat_names_char), orbit_data.sat(i_sat).prn);
         orbit_data.sat(i_sat).x_trf         = x(sat_ind); % [m]
         orbit_data.sat(i_sat).y_trf         = y(sat_ind); % [m]
         orbit_data.sat(i_sat).z_trf         = z(sat_ind); % [m]
+
+        if number_of_vel_rec ~=0
+            orbit_data.sat(i_sat).vx_trf         = vx(sat_ind); % [m]
+            orbit_data.sat(i_sat).vy_trf         = vy(sat_ind); % [m]
+            orbit_data.sat(i_sat).vz_trf         = vz(sat_ind); % [m]
+            orbit_data.vel_from_file = 1;
+        else 
+            orbit_data.vel_from_file = 0;
+        end
     end
     
     if flag_read_all_epochs

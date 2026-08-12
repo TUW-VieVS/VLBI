@@ -542,11 +542,8 @@ disp 'saving simulated data...'
 
 % ### write NGS files ###
 if (flag_write_ngs_file == 1)     
-    if flag_sim_satellite_obs
-       fprintf('WARNING: Session %s contains observations to satellites. The NGS format is not suitable for this observation type!\n', session) 
-    end
     fprintf('Writing NGS files...\n') 
-    scan2ngs(session,antenna,scan,sources.q,scan(1).tim(1),zinp,sind,sim_idays,dirpt0); 
+    scan2ngs(session,antenna,scan,sources,scan(1).tim(1),zinp,sind,sim_idays,dirpt0); 
     fprintf('...finished\n') 
 end
 
@@ -568,10 +565,6 @@ for iscan = 1:length(scan)
             scan(iscan).obs(iobs).obs = scan(iscan).obs(iobs).com;
         else
             scan(iscan).obs(iobs).obs = scan(iscan).obs(iobs).com + [scan(iscan).obs(iobs).obs]';
-            %scan(iscan).obs(iobs).obs = scan(iscan).obs(iobs).comChanged1 + [scan(iscan).obs(iobs).obs]'; % Orbital error ADDED
-            %temp1 = scan(iscan).obs(iobs).com + [scan(iscan).obs(iobs).obs]';
-            %temp1 = scan(iscan).obs(iobs).comChanged + [scan(iscan).obs(iobs).obs]';
-
         end
         % the sigma of the simulated delay observable is set to
         % the value of the simulated thermal noise, ionospheric formal

@@ -62,6 +62,7 @@ function [sources] = fso_data2sources(fso_data,sources)
         sources.s(i_sat).minu = minute';
         sources.s(i_sat).sec = sec';
         sources.s(i_sat).mjd = time_utc_again';
+        sources.s(i_sat).mjd_gps = time_gps';
     
         sources.s(i_sat).sec_of_day = mod(time_utc_again, 1)'*24*60*60;
         sources.s(i_sat).flag_v_crf = 1;

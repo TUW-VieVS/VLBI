@@ -35,7 +35,7 @@ function [sources] = getTRF_PosVelSatellites(sources, T2C_s)
             R = T2C_s(:, :, iOrbitEpoch)';
             xyzTRFtmp(iOrbitEpoch, :) = (R * [src.x_crf(iOrbitEpoch); src.y_crf(iOrbitEpoch); src.z_crf(iOrbitEpoch)])';
             if  sources.s(iSc).flag_v_crf
-                v_xyzTRFtmp(iOrbitEpoch, :) = R * ([src.vx_crf(iOrbitEpoch); src.vy_crf(iOrbitEpoch); src.vz_crf(iOrbitEpoch)] + cross([0; 0; omega], [src.x_crf(iOrbitEpoch); src.y_crf(iOrbitEpoch); src.z_crf(iOrbitEpoch)]));
+                v_xyzTRFtmp(iOrbitEpoch, :) = R * [src.vx_crf(iOrbitEpoch); src.vy_crf(iOrbitEpoch); src.vz_crf(iOrbitEpoch)] - cross([0; 0; omega], R*[src.x_crf(iOrbitEpoch); src.y_crf(iOrbitEpoch); src.z_crf(iOrbitEpoch)]);
             end
         end
         sources.s(iSc).x_trf = xyzTRFtmp(:, 1);

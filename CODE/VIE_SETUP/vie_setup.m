@@ -22,7 +22,7 @@ function varargout = vie_setup(varargin)
 
 % Edit the above text to modify the response to help vie_setup
 
-% Last Modified by GUIDE v2.5 26-May-2026 10:39:34
+% Last Modified by GUIDE v2.5 11-Aug-2026 10:22:10
 
 
 % 07 Jan 2014 by Matthias Madzak: LEVEL2 bug corrected
@@ -335,6 +335,9 @@ else
     set(handles.popupmenu_setInput_outDir, 'string', {'', dirsInOutlierFolder.name});
 end
 
+set(handles.popupmenu_kepler, 'String', {'numerically using time delay', 'numerically using satellite position', 'analytically'});
+set(handles.popupmenu_srp, 'String', {'ECOM9', 'ECOM5'});
+
 % set new entries for ambiguity popup menu
 set(handles.popupmenu_AmbDir, 'String', {dirsInAmbFolder.name})
 if isempty({dirsInAmbFolder.name})
@@ -609,7 +612,7 @@ end
 set(handles.radiobutton_obsFile, 'Value', 1);
 set(handles.radiobutton_vievsAmb, 'Value', 0);
 set(handles.radiobutton_useAmbFile, 'Value', 0); 
-set(handles.checkbox_residual_compute, 'Value', 0); 
+set(handles.radiobutton_vievsAmb, 'Value', 0); 
 set(handles.popupmenu_AmbDir, 'Enable', 'off')
 
 
@@ -4209,8 +4212,12 @@ if get(handles.checkbox_run_sinex_sources, 'Value')==0
     set(handles.radiobutton_run_sinex_sources_incl, 'Enable', 'off')
 end
 
-% if orbital elements are not estimated -> disable option
-if get(handles.cb_estKepEle, 'Value')==0
+% if orbital elements are not estimated
+if get(handles.cb_estKepEle, 'Value') || get(handles.cb_estSRP, 'Value') 
+    set(handles.text_run_sinex_orb, 'Enable', newState)
+    set(handles.radiobutton_run_sinex_orb_incl, 'Enable', newState)
+    set(handles.radiobutton_run_sinex_orb_excl, 'Enable', newState)
+else
     set(handles.text_run_sinex_orb, 'Enable', 'off')
     set(handles.radiobutton_run_sinex_orb_incl, 'Enable', 'off')
     set(handles.radiobutton_run_sinex_orb_excl, 'Enable', 'off')
@@ -11603,8 +11610,8 @@ if get(handles.checkbox_ambiguity_correction, 'Value') == 0
     set(handles.radiobutton_obsFile, 'Enable', 'off')
     set(handles.radiobutton_vievsAmb, 'Enable', 'off') 
     set(handles.radiobutton_useAmbFile, 'Enable', 'off') 
-    set(handles.checkbox_residual_compute, 'Enable', 'off') 
-    set(handles.checkbox_residual_compute, 'Value', 0) 
+    set(handles.radiobutton_vievsAmb, 'Enable', 'off') 
+    set(handles.radiobutton_vievsAmb, 'Value', 0) 
     set(handles.radiobutton_obsFile, 'Value', 0) 
     set(handles.radiobutton_vievsAmb, 'Value', 0) 
     set(handles.radiobutton_useAmbFile, 'Value', 0);
@@ -11612,8 +11619,8 @@ else
     set(handles.radiobutton_obsFile, 'Enable', 'on')
     set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
     set(handles.radiobutton_useAmbFile, 'Enable', 'on') 
-    set(handles.checkbox_residual_compute, 'Enable', 'on') 
-    set(handles.checkbox_residual_compute, 'Value', 0) 
+    set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
+    set(handles.radiobutton_vievsAmb, 'Value', 0) 
     set(handles.radiobutton_obsFile, 'Value', 1) 
     set(handles.radiobutton_vievsAmb, 'Value', 0) 
     set(handles.radiobutton_useAmbFile, 'Value', 0);
@@ -11775,148 +11782,52 @@ function cb_estKepEle_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+orbHandles = [handles.text_orb_der, handles.popupmenu_kepler, handles.text_kep, handles.text_kepint ];
+
+orbCheckboxes = [ handles.cb_estKepEle1, handles.cb_estKepEle2, handles.cb_estKepEle3, ... 
+                    handles.cb_estKepEle4, handles.cb_estKepEle5, handles.cb_estKepEle6];
+
+orbInputs = [handles.estIntValKepEle1, handles.estIntValKepEle2, handles.estIntValKepEle3, ...
+               handles.estIntValKepEle4, handles.estIntValKepEle5, handles.estIntValKepEle6];
+
+runButtons = [handles.text_run_sinex_orb, handles.radiobutton_run_sinex_orb_incl, ...
+              handles.radiobutton_run_sinex_orb_excl];
+
+
 % Hint: get(hObject,'Value') returns toggle state of cb_estKepEle
 if get(hObject, 'Value')
-    set(handles.ui_estKepEle_Elements, 'Enable', 'on')
-    set(handles.rb_estKepEle_NumTau, 'Enable', 'on');
-    set(handles.rb_estKepEle_NumSatPos, 'Enable', 'on');
-    set(handles.rb_estKepEle_Ana, 'Enable', 'on');
-    set(handles.rb_estKepEle_FRP, 'Enable', 'on');
-    if get(handles.rb_estKepEle_FRP, 'Value')
-        set(handles.edit_pathFRPFile, 'Enable', 'on');
-        set(handles.pb_browseFRPFile, 'Enable', 'on');
-    end
-    set(handles.cb_estKepEle1, 'Enable', 'on');
-    set(handles.cb_estKepEle2, 'Enable', 'on');
-    set(handles.cb_estKepEle3, 'Enable', 'on');
-    set(handles.cb_estKepEle4, 'Enable', 'on');
-    set(handles.cb_estKepEle5, 'Enable', 'on');
-    set(handles.cb_estKepEle6, 'Enable', 'on');
 
-    if get(handles.rb_estKepEle_FRP, 'Value')
-        set(handles.edit_pathFRPFile, 'Enable', 'on');
-        set(handles.pb_browseFRPFile, 'Enable', 'on');
+    set(orbHandles, 'Enable', 'on');
+    set(orbCheckboxes, 'Enable', 'on');
+    set(runButtons, 'Enable', 'on');
+
+    val = get(handles.popupmenu_kepler, 'Value');
+    str = get(handles.popupmenu_kepler, 'String');
+    
+    if strcmp(str{val}, 'from FRP-File')
+        set([handles.edit_pathFRPFile, handles.pb_browseFRPFile], 'Enable', 'on');
     else
-        set(handles.edit_pathFRPFile, 'Enable', 'off');
-        set(handles.pb_browseFRPFile, 'Enable', 'off');
+        set([handles.edit_pathFRPFile, handles.pb_browseFRPFile], 'Enable', 'off');
     end
 
-    if get(handles.cb_estKepEle1, 'Value')    
-        set(handles.estIntStrKepEle1, 'Enable', 'on');
-        set(handles.estIntValKepEle1, 'Enable', 'on');
+    for i = 1:length(orbCheckboxes)
+        if get(orbCheckboxes(i), 'Value')
+            set(orbInputs(i), 'Enable', 'on');
+        else
+            set(orbInputs(i), 'Enable', 'off');
+        end
     end
-    if  get(handles.cb_estKepEle2, 'Value')
-        set(handles.estIntStrKepEle2, 'Enable', 'on');
-        set(handles.estIntValKepEle2, 'Enable', 'on');
-    end
-    if get(handles.cb_estKepEle3, 'Value')
-        set(handles.estIntStrKepEle3, 'Enable', 'on');
-        set(handles.estIntValKepEle3, 'Enable', 'on');
-    end
-    if get(handles.cb_estKepEle4, 'Value')
-        set(handles.estIntStrKepEle4, 'Enable', 'on');
-        set(handles.estIntValKepEle4, 'Enable', 'on');
-    end
-    if get(handles.cb_estKepEle5, 'Value')
-        set(handles.estIntStrKepEle5, 'Enable', 'on');
-        set(handles.estIntValKepEle5, 'Enable', 'on');
-    end
-    if get(handles.cb_estKepEle6, 'Value')
-        set(handles.estIntStrKepEle6, 'Enable', 'on');
-        set(handles.estIntValKepEle6, 'Enable', 'on');
-    end
-    set(handles.text_run_sinex_orb, 'Enable', 'on')
-    set(handles.radiobutton_run_sinex_orb_incl, 'Enable', 'on')
-    set(handles.radiobutton_run_sinex_orb_excl, 'Enable', 'on')
 else
-    set(handles.rb_estKepEle_NumTau, 'Enable', 'off');
-    set(handles.rb_estKepEle_NumSatPos, 'Enable', 'off');
-    set(handles.rb_estKepEle_Ana, 'Enable', 'off');
-    set(handles.rb_estKepEle_FRP, 'Enable', 'off');
-    if get(handles.rb_estKepEle_FRP, 'Value')
-        set(handles.edit_pathFRPFile, 'Enable', 'off');
-        set(handles.pb_browseFRPFile, 'Enable', 'off');
-    end
-    set(handles.cb_estKepEle1, 'Enable', 'off');
-    set(handles.cb_estKepEle2, 'Enable', 'off');
-    set(handles.cb_estKepEle3, 'Enable', 'off');
-    set(handles.cb_estKepEle4, 'Enable', 'off');
-    set(handles.cb_estKepEle5, 'Enable', 'off');
-    set(handles.cb_estKepEle6, 'Enable', 'off');
-
-    set(handles.estIntStrKepEle1, 'Enable', 'off');
-    set(handles.estIntStrKepEle2, 'Enable', 'off');
-    set(handles.estIntStrKepEle3, 'Enable', 'off');
-    set(handles.estIntStrKepEle4, 'Enable', 'off');
-    set(handles.estIntStrKepEle5, 'Enable', 'off');
-    set(handles.estIntStrKepEle6, 'Enable', 'off');
-
-    set(handles.estIntValKepEle1, 'Enable', 'off');
-    set(handles.estIntValKepEle2, 'Enable', 'off');
-    set(handles.estIntValKepEle3, 'Enable', 'off');
-    set(handles.estIntValKepEle4, 'Enable', 'off');
-    set(handles.estIntValKepEle5, 'Enable', 'off');
-    set(handles.estIntValKepEle6, 'Enable', 'off');
-
-    set(handles.text_run_sinex_orb, 'Enable', 'off')
-    set(handles.radiobutton_run_sinex_orb_incl, 'Enable', 'off')
-    set(handles.radiobutton_run_sinex_orb_excl, 'Enable', 'off')
-end
-
-
-% --- Executes on button press in rb_estKepEle_NumTau.
-function rb_estKepEle_NumTau_Callback(hObject, eventdata, handles)
-% hObject    handle to rb_estKepEle_NumTau (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of rb_estKepEle_NumTau
-if get(hObject, 'Value')
+    set(orbHandles, 'Enable', 'off');
+    set(runButtons, 'Enable', 'off');
+    set(orbCheckboxes, 'Enable', 'off');
+    set(orbInputs, 'Enable', 'off');
+    
+    set(handles.text_orb_der, 'Enable', 'off');
+    set(handles.popupmenu_kepler, 'Enable', 'off');
     set(handles.edit_pathFRPFile, 'Enable', 'off');
     set(handles.pb_browseFRPFile, 'Enable', 'off');
 end
-
-% --- Executes on button press in rb_estKepEle_NumSatPos.
-function rb_estKepEle_NumSatPos_Callback(hObject, eventdata, handles)
-% hObject    handle to rb_estKepEle_NumSatPos (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of rb_estKepEle_NumSatPos
-if get(hObject, 'Value')
-    set(handles.edit_pathFRPFile, 'Enable', 'off');
-    set(handles.pb_browseFRPFile, 'Enable', 'off');
-end
-
-% --- Executes on button press in rb_estKepEle_Ana.
-function rb_estKepEle_Ana_Callback(hObject, eventdata, handles)
-% hObject    handle to rb_estKepEle_Ana (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of rb_estKepEle_Ana
-if get(hObject, 'Value')
-    set(handles.edit_pathFRPFile, 'Enable', 'off');
-    set(handles.pb_browseFRPFile, 'Enable', 'off');
-end
-
-% --- Executes on button press in rb_estKepEle_FRP.
-function rb_estKepEle_FRP_Callback(hObject, eventdata, handles)
-% hObject    handle to rb_estKepEle_FRP (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of rb_estKepEle_FRP
-if get(hObject, 'Value')
-    set(handles.edit_pathFRPFile, 'Enable', 'on');
-    set(handles.pb_browseFRPFile, 'Enable', 'on');
-else
-    set(handles.edit_pathFRPFile, 'Enable', 'off');
-    set(handles.pb_browseFRPFile, 'Enable', 'off');
-end
-
-
-
 
 
 function edit_pathFRPFile_Callback(hObject, eventdata, handles)
@@ -11969,10 +11880,8 @@ function cb_estKepEle1_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of cb_estKepEle1
 if get(hObject, 'Value') == 1
-    set(handles.estIntStrKepEle1, 'Enable', 'on');
     set(handles.estIntValKepEle1, 'Enable', 'on');
 else
-    set(handles.estIntStrKepEle1, 'Enable', 'off');
     set(handles.estIntValKepEle1, 'Enable', 'off');
 end
 auto_save_parameterfile(hObject, handles)
@@ -11985,10 +11894,8 @@ function cb_estKepEle2_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of cb_estKepEle2
 if get(hObject, 'Value') == 1
-    set(handles.estIntStrKepEle2, 'Enable', 'on');
     set(handles.estIntValKepEle2, 'Enable', 'on');
 else
-    set(handles.estIntStrKepEle2, 'Enable', 'off');
     set(handles.estIntValKepEle2, 'Enable', 'off');
 end
 auto_save_parameterfile(hObject, handles)
@@ -12001,10 +11908,8 @@ function cb_estKepEle3_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of cb_estKepEle3
 if get(hObject, 'Value') == 1
-    set(handles.estIntStrKepEle3, 'Enable', 'on');
     set(handles.estIntValKepEle3, 'Enable', 'on');
 else
-    set(handles.estIntStrKepEle3, 'Enable', 'off');
     set(handles.estIntValKepEle3, 'Enable', 'off');
 end
 auto_save_parameterfile(hObject, handles)
@@ -12017,10 +11922,8 @@ function cb_estKepEle4_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of cb_estKepEle4
 if get(hObject, 'Value') == 1
-    set(handles.estIntStrKepEle4, 'Enable', 'on');
     set(handles.estIntValKepEle4, 'Enable', 'on');
 else
-    set(handles.estIntStrKepEle4, 'Enable', 'off');
     set(handles.estIntValKepEle4, 'Enable', 'off');
 end
 auto_save_parameterfile(hObject, handles)
@@ -12033,10 +11936,8 @@ function cb_estKepEle5_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of cb_estKepEle5
 if get(hObject, 'Value') == 1
-    set(handles.estIntStrKepEle5, 'Enable', 'on');
     set(handles.estIntValKepEle5, 'Enable', 'on');
 else
-    set(handles.estIntStrKepEle5, 'Enable', 'off');
     set(handles.estIntValKepEle5, 'Enable', 'off');
 end
 auto_save_parameterfile(hObject, handles)
@@ -12050,10 +11951,8 @@ function cb_estKepEle6_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of cb_estKepEle6
 if get(hObject, 'Value') == 1
-    set(handles.estIntStrKepEle6, 'Enable', 'on');
     set(handles.estIntValKepEle6, 'Enable', 'on');
 else
-    set(handles.estIntStrKepEle6, 'Enable', 'off');
     set(handles.estIntValKepEle6, 'Enable', 'off');
 end
 auto_save_parameterfile(hObject, handles)
@@ -12066,7 +11965,6 @@ function estIntValKepEle1_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of estIntValKepEle1 as text
 %        str2double(get(hObject,'String')) returns contents of estIntValKepEle1 as a double
-set(handles.text_relConstrKepEle1, 'String', sprintf('after %s minutes', get(hObject, 'String')))
 auto_save_parameterfile(hObject, handles)
 
 
@@ -12077,7 +11975,6 @@ function estIntValKepEle2_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of estIntValKepEle2 as text
 %        str2double(get(hObject,'String')) returns contents of estIntValKepEle2 as a double
-set(handles.text_relConstrKepEle2, 'String', sprintf('after %s minutes', get(hObject, 'String')))
 auto_save_parameterfile(hObject, handles)
 
 
@@ -12088,7 +11985,6 @@ function estIntValKepEle3_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of estIntValKepEle3 as text
 %        str2double(get(hObject,'String')) returns contents of estIntValKepEle3 as a double
-set(handles.text_relConstrKepEle3, 'String', sprintf('after %s minutes', get(hObject, 'String')))
 auto_save_parameterfile(hObject, handles)
 
 
@@ -12099,7 +11995,6 @@ function estIntValKepEle4_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of estIntValKepEle4 as text
 %        str2double(get(hObject,'String')) returns contents of estIntValKepEle4 as a double
-set(handles.text_relConstrKepEle4, 'String', sprintf('after %s minutes', get(hObject, 'String')))
 auto_save_parameterfile(hObject, handles)
 
 
@@ -12110,7 +12005,6 @@ function estIntValKepEle5_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of estIntValKepEle5 as text
 %        str2double(get(hObject,'String')) returns contents of estIntValKepEle5 as a double
-set(handles.text_relConstrKepEle5, 'String', sprintf('after %s minutes', get(hObject, 'String')))
 auto_save_parameterfile(hObject, handles)
 
 
@@ -12121,204 +12015,7 @@ function estIntValKepEle6_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of estIntValKepEle6 as text
 %        str2double(get(hObject,'String')) returns contents of estIntValKepEle6 as a double
-set(handles.text_relConstrKepEle6, 'String', sprintf('after %s minutes', get(hObject, 'String')))
 auto_save_parameterfile(hObject, handles)
-
-% --- Executes on button press in cb_relConstrKepEle1.
-function cb_relConstrKepEle1_Callback(hObject, eventdata, handles)
-% hObject    handle to cb_relConstrKepEle1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of cb_relConstrKepEle1
-
-
-% --- Executes on button press in cb_relConstrKepEle2.
-function cb_relConstrKepEle2_Callback(hObject, eventdata, handles)
-% hObject    handle to cb_relConstrKepEle2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of cb_relConstrKepEle2
-
-
-% --- Executes on button press in cb_relConstrKepEle3.
-function cb_relConstrKepEle3_Callback(hObject, eventdata, handles)
-% hObject    handle to cb_relConstrKepEle3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of cb_relConstrKepEle3
-
-
-% --- Executes on button press in cb_relConstrKepEle4.
-function cb_relConstrKepEle4_Callback(hObject, eventdata, handles)
-% hObject    handle to cb_relConstrKepEle4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of cb_relConstrKepEle4
-
-
-% --- Executes on button press in cb_relConstrKepEle5.
-function cb_relConstrKepEle5_Callback(hObject, eventdata, handles)
-% hObject    handle to cb_relConstrKepEle5 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of cb_relConstrKepEle5
-
-
-% --- Executes on button press in cb_relConstrKepEle6.
-function cb_relConstrKepEle6_Callback(hObject, eventdata, handles)
-% hObject    handle to cb_relConstrKepEle6 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of cb_relConstrKepEle6
-
-
-
-
-
-
-
-
-function relConstrValKepEle1_Callback(hObject, eventdata, handles)
-% hObject    handle to relConstrValKepEle1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of relConstrValKepEle1 as text
-%        str2double(get(hObject,'String')) returns contents of relConstrValKepEle1 as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function relConstrValKepEle1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to relConstrValKepEle1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function relConstrValKepEle2_Callback(hObject, eventdata, handles)
-% hObject    handle to relConstrValKepEle2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of relConstrValKepEle2 as text
-%        str2double(get(hObject,'String')) returns contents of relConstrValKepEle2 as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function relConstrValKepEle2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to relConstrValKepEle2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function relConstrValKepEle3_Callback(hObject, eventdata, handles)
-% hObject    handle to relConstrValKepEle3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of relConstrValKepEle3 as text
-%        str2double(get(hObject,'String')) returns contents of relConstrValKepEle3 as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function relConstrValKepEle3_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to relConstrValKepEle3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function relConstrValKepEle4_Callback(hObject, eventdata, handles)
-% hObject    handle to relConstrValKepEle4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of relConstrValKepEle4 as text
-%        str2double(get(hObject,'String')) returns contents of relConstrValKepEle4 as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function relConstrValKepEle4_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to relConstrValKepEle4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function relConstrValKepEle5_Callback(hObject, eventdata, handles)
-% hObject    handle to relConstrValKepEle5 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of relConstrValKepEle5 as text
-%        str2double(get(hObject,'String')) returns contents of relConstrValKepEle5 as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function relConstrValKepEle5_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to relConstrValKepEle5 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function relConstrValKepEle6_Callback(hObject, eventdata, handles)
-% hObject    handle to relConstrValKepEle6 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of relConstrValKepEle6 as text
-%        str2double(get(hObject,'String')) returns contents of relConstrValKepEle6 as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function relConstrValKepEle6_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to relConstrValKepEle6 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
 
 
 % --- Executes during object creation, after setting all properties.
@@ -12477,7 +12174,9 @@ function pb_browse_orbit_data_Callback(hObject, eventdata, handles)
 % hObject    handle to pb_browse_orbit_data (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
 basepath = fileparts(pwd);  
+
 startpath = fullfile(basepath, 'ORBIT');
 [FileName, PathName] = uigetfile('*.*','Select orbit data file', startpath, 'multiselect', 'off');
 if endsWith(PathName, filesep)
@@ -12643,13 +12342,13 @@ if get(handles.radiobutton_obsFile, 'Value') ==1
     set(handles.radiobutton_obsFile, 'Enable', 'on')
     set(handles.radiobutton_vievsAmb, 'Enable', 'off') 
     set(handles.radiobutton_useAmbFile, 'Enable', 'on') 
-    set(handles.checkbox_residual_compute, 'Enable', 'on') 
+    set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
 elseif get(handles.radiobutton_obsFile, 'Value') ==1 && get(handles.radiobutton_useAmbFile, 'Value') ==1 
     set(handles.radiobutton_obsFile, 'Enable', 'on')
     set(handles.radiobutton_vievsAmb, 'Enable', 'off') 
     set(handles.radiobutton_vievsAmb, 'Value', 0) 
     set(handles.radiobutton_useAmbFile, 'Enable', 'on') 
-    set(handles.checkbox_residual_compute, 'Enable', 'on') 
+    set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
 else
     set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
     set(handles.radiobutton_vievsAmb, 'Value', 0) 
@@ -12690,7 +12389,7 @@ function radiobutton_useAmbFile_Callback(hObject, eventdata, handles)
 if get(handles.radiobutton_useAmbFile, 'Value') == 0
     set(handles.popupmenu_AmbDir, 'Enable', 'off')
     set(handles.radiobutton_vievsAmb, 'Value', 0);
-    set(handles.checkbox_residual_compute, 'Value', 0);
+    set(handles.radiobutton_vievsAmb, 'Value', 0);
 else
     set(handles.popupmenu_AmbDir, 'Enable', 'on')
     set(handles.radiobutton_vievsAmb, 'Enable', 'on')
@@ -12700,7 +12399,7 @@ if get(handles.radiobutton_obsFile, 'Value') ==1 && get(handles.radiobutton_useA
     set(handles.radiobutton_vievsAmb, 'Enable', 'off') 
     set(handles.radiobutton_vievsAmb, 'Value', 0) 
     set(handles.radiobutton_useAmbFile, 'Enable', 'on') 
-    set(handles.checkbox_residual_compute, 'Enable', 'on') 
+    set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
 else
     set(handles.radiobutton_vievsAmb, 'Enable', 'on') 
     set(handles.radiobutton_vievsAmb, 'Value', 0) 
@@ -12712,13 +12411,13 @@ guidata(hObject, handles);
 % Hint: get(hObject,'Value') returns toggle state of radiobutton_useAmbFile
 
 
-% --- Executes on button press in checkbox_residual_compute.
+% --- Executes on button press in radiobutton_vievsAmb.
 function checkbox_residual_compute_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox_residual_compute (see GCBO)
+% hObject    handle to radiobutton_vievsAmb (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if get(handles.checkbox_residual_compute, 'Value') ==1
+if get(handles.radiobutton_vievsAmb, 'Value') ==1
    set(handles.radiobutton_useAmbFile, 'Value', 1);
    set(handles.popupmenu_AmbDir, 'Enable', 'on') 
 end
@@ -12727,7 +12426,7 @@ end
 guidata(hObject, handles);
 
 
-% Hint: get(hObject,'Value') returns toggle state of checkbox_residual_compute
+% Hint: get(hObject,'Value') returns toggle state of radiobutton_vievsAmb
 
 
 % --- Executes on selection change in popupmenu_removeSou_file.
@@ -12893,6 +12592,35 @@ function uitoggletool1_OffCallback(hObject, eventdata, handles)
  %handles=plotResidualsToAxes(handles);
  %guidata(hObject, handles)
 
+% --- Executes on selection change in popupmenu_kepler.
+function popupmenu_kepler_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_kepler (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_kepler contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_kepler
+
+val = get(hObject, 'Value');
+str = get(hObject, 'String');
+
+selected = str{val};
+
+if strcmp(selected, 'from FRP-File')
+    set(handles.edit_pathFRPFile, 'Enable', 'on');
+    set(handles.pb_browseFRPFile, 'Enable', 'on');
+else
+    set(handles.edit_pathFRPFile, 'Enable', 'off');
+    set(handles.pb_browseFRPFile, 'Enable', 'off');
+    %set(handles.edit_pathFRPFile, 'String', '');
+end
+
+handles.selectedModelKepler = str{val};
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_kepler_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_kepler (see GCBO)
+
 
 % --- Executes on selection change in popupmenu_AmbDir.
 function popupmenu_AmbDir_Callback(hObject, eventdata, handles)
@@ -12922,3 +12650,679 @@ end
 % get currently selected OPT directory
 % AMBdirs=get(handles.popupmenu_AmbDir, 'String');
 % selectedAMBdir=AMBdirs{get(handles.popupmenu_AmbDir, 'value')};
+
+function edit605_Callback(hObject, eventdata, handles)
+% hObject    handle to edit605 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit605 as text
+%        str2double(get(hObject,'String')) returns contents of edit605 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit605_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit605 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pb_browseFRPFile.
+function pushbutton162_Callback(hObject, eventdata, handles)
+% hObject    handle to pb_browseFRPFile (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in cb_estSRP.
+function cb_estSRP_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_estSRP (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_estSRP
+srpHandles = [handles.uipanel_srp, handles.popupmenu_srp, handles.text_SRP_model, ...
+              handles.edit_pathSRPFile, handles.pb_browseSRPFile, handles.text_srp, ...
+              handles.text_srpint, handles.text_srp_ecom5, handles.text_srpint_ecom5];
+
+ecom9Checkboxes = [ handles.cb_D0_ecom9, handles.cb_Y0_ecom9, handles.cb_B0_ecom9, ... 
+                    handles.cb_DC_ecom9, handles.cb_YC_ecom9, handles.cb_BC_ecom9, ...
+                   handles.cb_DS_ecom9, handles.cb_YS_ecom9, handles.cb_BS_ecom9 ];
+
+ecom9Inputs = [handles.int_D0_ecom9, handles.int_Y0_ecom9, handles.int_B0_ecom9, ...
+               handles.int_DC_ecom9, handles.int_YC_ecom9, handles.int_BC_ecom9, ...
+               handles.int_DS_ecom9, handles.int_YS_ecom9, handles.int_BS_ecom9];
+
+ecom5Checkboxes = [handles.cb_D0_ecom5, handles.cb_Y0_ecom5, handles.cb_B0_ecom5, ...
+                   handles.cb_BC_ecom5, handles.cb_BS_ecom5];
+               
+ecom5Inputs = [handles.int_D0_ecom5, handles.int_Y0_ecom5, handles.int_B0_ecom5, ...
+               handles.int_BC_ecom5, handles.int_BS_ecom5];
+
+
+if get(hObject, 'Value')
+    set(srpHandles, 'Enable', 'on');
+    set(ecom9Checkboxes, 'Enable', 'on');
+    
+    for i = 1:length(ecom9Checkboxes)
+        cb = ecom9Checkboxes(i);
+        inp = ecom9Inputs(i);
+        status = 'off';
+        if get(cb, 'Value'), status = 'on'; end
+        set(inp, 'Enable', status);
+    end
+
+    set(ecom5Checkboxes, 'Enable', 'off');
+
+    for i = 1:length(ecom5Checkboxes)
+        status = 'off';
+        if get(ecom5Checkboxes(i), 'Value'), status = 'on'; end
+        set(ecom5Inputs(i), 'Enable', status);
+    end
+
+else
+    set(srpHandles, 'Enable', 'off'); 
+    set(ecom9Checkboxes, 'Enable', 'off');  
+    set(ecom9Inputs, 'Enable', 'off');
+    set(ecom5Checkboxes, 'Enable', 'off');
+    set(ecom5Inputs, 'Enable', 'off');
+end
+
+
+% --- Executes on selection change in popupmenu_srp.
+function popupmenu_srp_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_srp (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_srp contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_srp
+
+val = get(hObject, 'Value');
+str = get(hObject, 'String');
+
+selected = str{val};
+
+if strcmp(selected, 'ECOM5')
+    set(handles.uipanel_ecom5, 'Visible', 'on');
+    set(handles.uipanel_ecom9, 'Visible', 'off');
+elseif strcmp(selected, 'ECOM9')
+    set(handles.uipanel_ecom9, 'Visible', 'on');
+    set(handles.uipanel_ecom5, 'Visible', 'off');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_srp_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_srp (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in cb_D0_ecom9.
+function cb_D0_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_D0_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_D0_ecom9
+if get(hObject, 'Value')
+    set(handles.int_D0_ecom9, 'Enable', 'on');
+else
+    set(handles.int_D0_ecom9, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in cb_B0_ecom9.
+function cb_B0_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_B0_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_B0_ecom9
+if get(hObject, 'Value') == 1
+    set(handles.int_B0_ecom9, 'Enable', 'on');
+else
+    set(handles.int_B0_ecom9, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in cb_Y0_ecom9.
+function cb_Y0_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_Y0_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_Y0_ecom9
+if get(hObject, 'Value') == 1
+    set(handles.int_Y0_ecom9, 'Enable', 'on');
+else
+    set(handles.int_Y0_ecom9, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+
+function edit_pathSRPFile_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_pathSRPFile (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_pathSRPFile as text
+%        str2double(get(hObject,'String')) returns contents of edit_pathSRPFile as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_pathSRPFile_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_pathSRPFile (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pb_browseSRPFile.
+function pb_browseSRPFile_Callback(hObject, eventdata, handles)
+% hObject    handle to pb_browseSRPFile (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+basepath = fileparts(pwd);
+startpath = fullfile(basepath, 'ORBIT', 'FRP');
+if ~isfolder(startpath)
+    warning('Folder not found, open Default-Folder.');
+    startpath = pwd;
+end
+[FileName, PathName] = uigetfile('*.*','Select FRP file', startpath, 'multiselect', 'off');
+
+if ischar(FileName) && ischar(PathName)
+    set(handles.edit_pathSRPFile, 'String', ['../ORBIT/FRP/', FileName])
+    auto_save_parameterfile(hObject, handles)
+end
+
+function int_BS_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to int_BS_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of int_BS_ecom9 as text
+%        str2double(get(hObject,'String')) returns contents of int_BS_ecom9 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function int_BS_ecom9_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to int_BS_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function int_YS_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to int_YS_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of int_YS_ecom9 as text
+%        str2double(get(hObject,'String')) returns contents of int_YS_ecom9 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function int_YS_ecom9_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to int_YS_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function int_DS_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to int_DS_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of int_DS_ecom9 as text
+%        str2double(get(hObject,'String')) returns contents of int_DS_ecom9 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function int_DS_ecom9_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to int_DS_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function int_BC_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to int_BC_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of int_BC_ecom9 as text
+%        str2double(get(hObject,'String')) returns contents of int_BC_ecom9 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function int_BC_ecom9_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to int_BC_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function int_YC_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to int_YC_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of int_YC_ecom9 as text
+%        str2double(get(hObject,'String')) returns contents of int_YC_ecom9 as a double
+
+% --- Executes during object creation, after setting all properties.
+function int_YC_ecom9_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to int_YC_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function int_DC_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to int_DC_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of int_DC_ecom9 as text
+%        str2double(get(hObject,'String')) returns contents of int_DC_ecom9 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function int_DC_ecom9_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to int_DC_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in cb_BS_ecom9.
+function cb_BS_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_BS_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_BS_ecom9
+
+if get(hObject, 'Value') == 1
+    set(handles.int_BS_ecom9, 'Enable', 'on');
+else
+    set(handles.int_BS_ecom9, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in cb_YS_ecom9.
+function cb_YS_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_YS_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_YS_ecom9
+
+if get(hObject, 'Value') == 1
+    set(handles.int_YS_ecom9, 'Enable', 'on');
+else
+    set(handles.int_YS_ecom9, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in cb_DS_ecom9.
+function cb_DS_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_DS_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_DS_ecom9
+if get(hObject, 'Value') == 1
+    set(handles.int_DS_ecom9, 'Enable', 'on');
+else
+    set(handles.int_DS_ecom9, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in cb_BC_ecom9.
+function cb_BC_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_BC_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_BC_ecom9
+if get(hObject, 'Value') == 1
+    set(handles.int_BC_ecom9, 'Enable', 'on');
+else
+    set(handles.int_BC_ecom9, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in cb_YC_ecom9.
+function cb_YC_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_YC_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_YC_ecom9
+
+if get(hObject, 'Value') == 1
+    set(handles.int_YC_ecom9, 'Enable', 'on');
+else
+    set(handles.int_YC_ecom9, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in cb_DC_ecom9.
+function cb_DC_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_DC_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_DC_ecom9
+
+if get(hObject, 'Value') == 1
+    set(handles.int_DC_ecom9, 'Enable', 'on');
+else
+    set(handles.int_DC_ecom9, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+
+function int_B0_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to int_B0_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of int_B0_ecom9 as text
+%        str2double(get(hObject,'String')) returns contents of int_B0_ecom9 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function int_B0_ecom9_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to int_B0_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function int_Y0_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to int_Y0_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of int_Y0_ecom9 as text
+%        str2double(get(hObject,'String')) returns contents of int_Y0_ecom9 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function int_Y0_ecom9_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to int_Y0_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function int_D0_ecom9_Callback(hObject, eventdata, handles)
+% hObject    handle to int_D0_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of int_D0_ecom9 as text
+%        str2double(get(hObject,'String')) returns contents of int_D0_ecom9 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function int_D0_ecom9_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to int_D0_ecom9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in cb_D0_ecom5.
+function cb_D0_ecom5_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_D0_ecom5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_D0_ecom5
+if get(hObject, 'Value') == 1
+    set(handles.int_D0_ecom5, 'Enable', 'on');
+else
+    set(handles.int_D0_ecom5, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+
+% --- Executes on button press in cb_B0_ecom5.
+function cb_B0_ecom5_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_B0_ecom5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_B0_ecom5
+if get(hObject, 'Value') == 1
+    set(handles.int_B0_ecom5, 'Enable', 'on');
+else
+    set(handles.int_B0_ecom5, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in cb_Y0_ecom5.
+function cb_Y0_ecom5_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_Y0_ecom5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_Y0_ecom5
+if get(hObject, 'Value') == 1
+    set(handles.int_Y0_ecom5, 'Enable', 'on');
+else
+    set(handles.int_Y0_ecom5, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+
+function int_D0_ecom5_Callback(hObject, eventdata, handles)
+% hObject    handle to int_D0_ecom5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of int_D0_ecom5 as text
+%        str2double(get(hObject,'String')) returns contents of int_D0_ecom5 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function int_D0_ecom5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to int_D0_ecom5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function int_Y0_ecom5_Callback(hObject, eventdata, handles)
+% hObject    handle to int_Y0_ecom5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of int_Y0_ecom5 as text
+%        str2double(get(hObject,'String')) returns contents of int_Y0_ecom5 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function int_Y0_ecom5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to int_Y0_ecom5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function int_B0_ecom5_Callback(hObject, eventdata, handles)
+% hObject    handle to int_B0_ecom5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of int_B0_ecom5 as text
+%        str2double(get(hObject,'String')) returns contents of int_B0_ecom5 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function int_B0_ecom5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to int_B0_ecom5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in cb_BC_ecom5.
+function cb_BC_ecom5_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_BC_ecom5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_BC_ecom5
+if get(hObject, 'Value') == 1
+    set(handles.int_BC_ecom5, 'Enable', 'on');
+else
+    set(handles.int_BC_ecom5, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in cb_BS_ecom5.
+function cb_BS_ecom5_Callback(hObject, eventdata, handles)
+% hObject    handle to cb_BS_ecom5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of cb_BS_ecom5
+if get(hObject, 'Value') == 1
+    set(handles.int_BS_ecom5, 'Enable', 'on');
+else
+    set(handles.int_BS_ecom5, 'Enable', 'off');
+end
+auto_save_parameterfile(hObject, handles)
+
+
+function int_BC_ecom5_Callback(hObject, eventdata, handles)
+% hObject    handle to int_BC_ecom5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of int_BC_ecom5 as text
+%        str2double(get(hObject,'String')) returns contents of int_BC_ecom5 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function int_BC_ecom5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to int_BC_ecom5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function int_BS_ecom5_Callback(hObject, eventdata, handles)
+% hObject    handle to int_BS_ecom5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of int_BS_ecom5 as text
+%        str2double(get(hObject,'String')) returns contents of int_BS_ecom5 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function int_BS_ecom5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to int_BS_ecom5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+

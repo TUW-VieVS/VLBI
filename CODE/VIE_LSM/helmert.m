@@ -110,12 +110,18 @@ function [N] = helmert(n_,na,xo,yo,zo,opt,sum_dj,N) % Generalized Inverse for an
         B  = horzcat(B2,B1);
         B  = horzcat(B, zeros(size(B, 1), (size(N, 2) - size(B, 2))));
     else
-        B1_nnr = B1;
-        B1_nnr (1:3, :) = zeros(3, size(B1,2));
-        B_qs  = horzcat(B1_nnr,B1);
-        B2 = zeros(size(B_qs,1),sum_dj(27));
-        B  = horzcat(B2,B_qs);
-        B  = horzcat(B, zeros(size(B, 1), (size(N, 2) - size(B, 2))));
+        Bb_zeros = zeros(size(B1,1),sum_dj(30));
+        B_qu = horzcat(Bb_zeros,B1);
+        Ba_zeros = zeros(size(B1, 1), (size(N, 2) - size(B_qu, 2)));
+        B = horzcat(B_qu, Ba_zeros);
+        if sum(nnr) ~= na
+            B1_sat = B1(4:6,:);
+            Bb_zeros = zeros(size(B1_sat,1),sum_dj(27));
+            B_sat = horzcat(Bb_zeros,B1_sat);
+            Ba_zeros = zeros(size(B1_sat, 1), (size(N, 2) - size(B_sat, 2)));
+            B_sat = horzcat(B_sat, Ba_zeros);
+            B  = vertcat(B,B_sat);
+        end
     end
     
     if ~isempty(B)

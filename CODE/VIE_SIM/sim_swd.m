@@ -67,11 +67,15 @@ num = length(mjd);
 
 % time epochs of the observations in hours
 t = mjd - floor(mjd);
+t_ = t;
+shift = 0;
 for i = 2:num
     if t(i) < t(i-1)
-        t(i) = t(i) + 1;
+        shift = shift + 1;
     end
+    t_(i) = t(i) + shift;
 end
+t = t_;
 t = t*24;
 
 ri = zeros(num,3);
