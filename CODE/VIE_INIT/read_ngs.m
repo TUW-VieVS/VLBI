@@ -239,6 +239,9 @@ while idx_line <= nlines
         tle_line1(strcmp('',tle_line1)) = [];
         id = char(tle_line1(2));
         sat_names{num_of_sat,2} = id; %id(1:end-1);
+        sat_names{num_of_sat,3} = wholeFile{idx_line+1};
+        sat_names{num_of_sat,4} = wholeFile{idx_line+2};
+        sat_names{num_of_sat,5} = wholeFile{idx_line+3};
     end
     if length(strtrim(wholeFile{idx_line}))>= 80 || idx_line == nlines % strtrim added because of Oleg's ngs files
         break;
@@ -763,6 +766,9 @@ while (idx_line <= nlines)
                    [prn, fso] = get_prn(source_name, id);
                    sources.s(num_s).prn_name = prn;
                    sources.s(num_s).fso_name = fso;
+                   sources.s(num_s).tle_name_ngs = sat_names(idx,3);
+                   sources.s(num_s).tle1_ngs = sat_names(idx,4);
+                   sources.s(num_s).tle2_ngs = sat_names(idx,5);
                 else
                    sindOfNewSourceInSources = find(sfoundSource);
                    sources.s(sindOfNewSourceInSources).lastObsMjd = mjd;
@@ -1016,7 +1022,6 @@ while (idx_line <= nlines)
     end % if ngs_card_num == 1
 end
 
-
 if strcmp(trffil{2},'jtrf2020')
     for iStat=1:length(antenna)
         trf_id = find(strcmpi({trf.name}, antenna(iStat).name));
@@ -1039,8 +1044,6 @@ if strcmp(trffil{2},'jtrf2020')
         antenna(iStat).z = antenna(iStat).z + dz;
     end
 end
-
-
 
 
 
@@ -1112,6 +1115,11 @@ if num_s ~= 0
                         orbit_data.sat(i).x_trf  = [ orbit_data1.sat(i).x_trf(1:end-1);  orbit_data2.sat(i).x_trf(1:end-1);  orbit_data3.sat(i).x_trf];
                         orbit_data.sat(i).y_trf  = [ orbit_data1.sat(i).y_trf(1:end-1);  orbit_data2.sat(i).y_trf(1:end-1);  orbit_data3.sat(i).y_trf];
                         orbit_data.sat(i).z_trf  = [ orbit_data1.sat(i).z_trf(1:end-1);  orbit_data2.sat(i).z_trf(1:end-1);  orbit_data3.sat(i).z_trf];
+                        if orbit_data.vel_from_file
+                            orbit_data.sat(i).vx_trf  = [ orbit_data1.sat(i).vx_trf(1:end-1);  orbit_data2.sat(i).vx_trf(1:end-1);  orbit_data3.sat(i).vx_trf];
+                            orbit_data.sat(i).vy_trf  = [ orbit_data1.sat(i).vy_trf(1:end-1);  orbit_data2.sat(i).vy_trf(1:end-1);  orbit_data3.sat(i).vy_trf];
+                            orbit_data.sat(i).vz_trf  = [ orbit_data1.sat(i).vz_trf(1:end-1);  orbit_data2.sat(i).vz_trf(1:end-1);  orbit_data3.sat(i).vz_trf];
+                        end
                     end
                 end
 
@@ -1122,14 +1130,15 @@ if num_s ~= 0
                 [sources.s.orbit_file_type] = deal('sat_ephem_trf');
             
             case 'tle'
-                mjd_firstSatObs = min([sources.s.firstObsMjd]);
-                mjd_lastSatObs = max([sources.s.lastObsMjd]);
-                jd_firstSatObs = mjd_firstSatObs +  2400000.5;
-                jd_lastSatObs = mjd_lastSatObs +  2400000.5;
                 [TLE, ~, ~ ] = read_tle(satOrbitFilePath, satOrbitFileName);
-                interval = 5; % [min]
-                [sat_data, ~, ~] = tle_propagation(jd_firstSatObs - 2/24, jd_lastSatObs + 2/24, interval, TLE);
-                [sources.s.orbit_file_type] = deal('tle');
+                
+                session_start = scan(1).mjd +  2400000.5;
+                session_end = scan(end).mjd +  2400000.5;
+                interval = 1; % [min]
+
+                [sat_data, ~, ~] = tle_propagation(session_start - 2/24, session_end + 2/24, interval, TLE);
+                [sources.s.orbit_file_type] = deal('tle');             
+
             case 'fso'
                 satOrbitFileName1 = satOrbitFileName;
                 satOrbitFileName3 = satOrbitFileName;
@@ -1190,13 +1199,33 @@ if num_s ~= 0
             sources.s(iSat).year  = [ sources1.s(iSat).year(1:end-1);  sources2.s(iSat).year(1:end-1);  sources3.s(iSat).year];
             sources.s(iSat).month = [ sources1.s(iSat).month(1:end-1); sources2.s(iSat).month(1:end-1); sources3.s(iSat).month];
             sources.s(iSat).day   = [ sources1.s(iSat).day(1:end-1);   sources2.s(iSat).day(1:end-1);   sources3.s(iSat).day];
-        
+
             sources.s(iSat).hour  = [ sources1.s(iSat).hour(1:end-1); sources2.s(iSat).hour(1:end-1); sources3.s(iSat).hour];
             sources.s(iSat).minu  = [ sources1.s(iSat).minu(1:end-1); sources2.s(iSat).minu(1:end-1); sources3.s(iSat).minu];
             sources.s(iSat).sec   = [ sources1.s(iSat).sec(1:end-1);  sources2.s(iSat).sec(1:end-1);  sources3.s(iSat).sec];
 
             sources.s(iSat).mjd   = [ sources1.s(iSat).mjd(1:end-1);  sources2.s(iSat).mjd(1:end-1);  sources3.s(iSat).mjd];
             sources.s(iSat).sec_of_day = [ sources1.s(iSat).sec_of_day(1:end-1);  sources2.s(iSat).sec_of_day(1:end-1);  sources3.s(iSat).sec_of_day];
+            sources.s(iSat).mjd_gps   = [ sources1.s(iSat).mjd_gps(1:end-1);  sources2.s(iSat).mjd_gps(1:end-1);  sources3.s(iSat).mjd_gps];
+			
+            % sources.s(iSat).x_crf   = [ sources2.s(iSat).x_crf(1:end-1)];
+            % sources.s(iSat).y_crf   = [ sources2.s(iSat).y_crf(1:end-1)];
+            % sources.s(iSat).z_crf   = [ sources2.s(iSat).z_crf(1:end-1)];
+            % sources.s(iSat).vx_crf  = [ sources2.s(iSat).vx_crf(1:end-1)];
+            % sources.s(iSat).vy_crf  = [ sources2.s(iSat).vy_crf(1:end-1)];
+            % sources.s(iSat).vz_crf  = [ sources2.s(iSat).vz_crf(1:end-1)];
+            % 
+            % sources.s(iSat).year  = [ sources2.s(iSat).year(1:end-1)];
+            % sources.s(iSat).month = [ sources2.s(iSat).month(1:end-1)];
+            % sources.s(iSat).day   = [ sources2.s(iSat).day(1:end-1)];
+            % 
+            % sources.s(iSat).hour  = [ sources2.s(iSat).hour(1:end-1)];
+            % sources.s(iSat).minu  = [ sources2.s(iSat).minu(1:end-1)];
+            % sources.s(iSat).sec   = [ sources2.s(iSat).sec(1:end-1)];
+            % 
+            % sources.s(iSat).mjd   = [ sources2.s(iSat).mjd(1:end-1)];
+            % sources.s(iSat).sec_of_day = [   sources2.s(iSat).sec_of_day(1:end-1)];
+            % sources.s(iSat).mjd_gps   = [  sources2.s(iSat).mjd_gps(1:end-1)];
 
             sources.s(iSat).tosc = sources2.s(iSat).tosc;
             sources.s(iSat).flag_v_crf = sources2.s(iSat).flag_v_crf; 

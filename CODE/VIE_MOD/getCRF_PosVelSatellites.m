@@ -30,7 +30,7 @@ function [sources] = getCRF_PosVelSatellites(sources, T2C_s)
             v_xyzCRFtmp   = zeros(numberOfOrbitEpochs, 3);
         end
         % loop over all orbit pos. epochs:
-        for iOrbitEpoch = 1 : numberOfOrbitEpochs-1
+        for iOrbitEpoch = 1 : numberOfOrbitEpochs
             % Position:
             xyzCRFtmp(iOrbitEpoch, :) = (T2C_s(:, :, iOrbitEpoch) * [sources.s(iSc).x_trf(iOrbitEpoch); sources.s(iSc).y_trf(iOrbitEpoch); sources.s(iSc).z_trf(iOrbitEpoch)])';
             % Velocity:

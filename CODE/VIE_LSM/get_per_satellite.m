@@ -20,169 +20,169 @@
 %   17 Dec 2024 by Helene Wolf
 %
 %   Revision: 
-%
+%   28-05-2026: changed the start and end to the session start and end
+%   rather than first and last satellite observation; code optimization
 %
 % ************************************************************************
 
-function [per_satellite] = get_per_satellite(opt, scan, obs_per_satellite, mjd0, name_orb)
-
-    n_sat = length(opt.satellite);
-
+function [per_satellite] = get_per_satellite(opt, scan, mjd0, name_orb)
+    obs_types      = {scan.obs_type};
+    src_indices    = [scan.iso];
+    is_sat         = strcmp(obs_types, 's');
+    nsat = length(opt.satellite);
     per_satellite =struct();
 
-    for iSat = 1 : n_sat    
-        mjd_sat = obs_per_satellite(iSat).mjd;
-        per_satellite(iSat).name = opt.satellite(iSat).name;
-        mjd1 = min(mjd_sat);    % time of the first scan of the current source in mjd [days]
-        mjd2 = max(mjd_sat);    % time of the last scan of the current sourc in mjd [days]
-        
-        flag_within_interval = false;
-        
-        % mjd0(midnight)--------mjd1(start)------(Session)------mjd2(end)-----
-        t1 = (mjd1-mjd0)*24*60; % time between first scan of this source and mjd0 [minutes] 
-        t2 = (mjd2-mjd0)*24*60; % time between last scan of this source and mjd0 [minutes]
-        
-        if abs(t1 - round(t1)) < 0.0001
-            t1 = round(t1);
+    n_scans_total = length(scan);
+    scan_start_global = zeros(n_scans_total, 1);
+    if n_scans_total > 0
+        scan_start_global(1) = 1;
+        for k = 2:n_scans_total
+            scan_start_global(k) = scan_start_global(k-1) + scan(k-1).nobs;
         end
-        if abs(t2 - round(t2)) < 0.0001
-            t2 = round(t2);
-        end
+    end
+
+    mjd_start = scan(1).mjd;
+    mjd_end = scan(end).mjd;
+    session_duration = ceil((mjd_end - mjd_start)*24*60);
+
+    est_mask_orb = [opt.ORB.params(:).estimate];
+    est_mask_srp = [opt.SRP.params(:).estimate];
+    est_orb  = find(est_mask_orb);
+    est_srp  = find(est_mask_srp);
+
+    tstart = (mjd_start - mjd0)*24*60;
+    tend = ceil((mjd_end - mjd0)*24*60);
     
+
+    for isat = 1 : nsat
+        is_target_src  = ismember(src_indices, isat);
+        mask = is_sat & is_target_src;
+        orig_scan_idx = find(mask);
+        selected_scans = scan(mask);
+
+        per_satellite(isat).name = opt.satellite(isat).name;
+                  
         if opt.SatPos.pw_sat
-            % Estimation intervals of satellite pos.
-            t10 = floor(t1/opt.SatPos.sat_pos_int) * opt.SatPos.sat_pos_int;
-            t20 = ceil(t2/opt.SatPos.sat_pos_int)  * opt.SatPos.sat_pos_int;
+            int_min = opt.SatPos.sat_pos_int;
        
-            if opt.SatPos.sat_pos_int == 1440
-                T = t1+(t2 - t1)/2; % one value
-                per_satellite(iSat).est_int_id_sat_pos = 0;
-            elseif (t2 - t1) < opt.SatPos.sat_pos_int +2 && (t2 - t1) > opt.SatPos.sat_pos_int -2
-               T = [t1, t1+opt.SatPos.sat_pos_int];
-               per_satellite(iSat).est_int_id_sat_pos = 0;
+            if int_min == session_duration
+                T = (tend-tstart)/2; %one value at mid of session
+            elseif tstart + int_min >= tend
+                T = [tstart, tend];
             else
-                if t10 + opt.SatPos.sat_pos_int >= t20
-                    t10 = t1;
-                    t20 = t2;
-                    T = [t10, t20];
-                else
-                    T = t10 : opt.SatPos.sat_pos_int : t20;   % Estimation epochs for sat. coor.
-                end
+                T = tstart : int_min : tend;  
             end             
-            per_satellite(iSat).T_sat_pos = T;
-            per_satellite(iSat).n_unk_sat_pos = length(T) - 1; % Number of estimation intervals for sat. coor.
+            per_satellite(isat).T_pos = T;
+            per_satellite(isat).n_unk_pos = length(T); % number of piecewise linear offsets
         end
 
-
-        if opt.KepEle.estKepEle  
-            for iKepEle = 1:6
-                if opt.KepEle.('estKepEle' + string(iKepEle))
-                    % Estimation intervals of satellite pos.
-                    int_min = opt.KepEle.('estIntKepEle' + string(iKepEle));
-                    t10 = floor(t1/int_min) * int_min;
-                    t20 = ceil(t2/int_min) * int_min;
+        if opt.ORB.estORB
+            for iorb = est_orb
+                int_min = opt.ORB.params(iorb).interval; 
                 
-                    if int_min == 1440
-                        T = t1+(t2 - t1)/2; %1 value
-                        per_satellite(iSat).('est_int_id_KepEle' + string(iKepEle)) = 0; 
-                    elseif (t2 - t1) < int_min +2 && (t2 - t1) > int_min -2
-                        T = [t1, t1+int_min];
-                        per_satellite(iSat).('est_int_id_KepEle' + string(iKepEle))  = 0;
-                    else
-                        if t10 + int_min >= t20
-                            t10 = t1;
-                            t20 = t2;
-                            T = [t10, t20];
-                        else
-                            T = t10 : int_min : t20;   % Estimation epochs for sat. coor.
-                        end
-                    end
-                    per_satellite(iSat).('T_KepEle' + string(iKepEle)) = T;
-                    per_satellite(iSat).('n_unk_KepEle' + string(iKepEle)) = length(T) - 1; % Number of estimation intervals for sat. coor.
+                if int_min == session_duration || int_min == 0 
+                    T = (tend-tstart)/2; %one value at mid of session
+                elseif tstart + int_min >= tend
+                    T = [tstart, tend];
+                else
+                    T = tstart : int_min : tend;  
                 end
+                per_satellite(isat).('T_orb' + string(iorb)) = T;
+                per_satellite(isat).('n_unk_orb' + string(iorb)) = length(T); % number of offsets
             end
         end
 
-        i_obs_in_sess   = 0; % observation index in this session (absolut!)
-        n_obs_of_sat    = 0; % observation index of the current source
-        for iScan = 1 : opt.scans_total
-            for iObs = 1 : scan(iScan).nobs    
-                i_obs_in_sess = i_obs_in_sess + 1; 
+        if opt.SRP.estSRP  
+            for isrp = est_srp
+                int_min = opt.SRP.params(isrp).interval;
+
+                if int_min == session_duration || int_min == 0 
+                   T = (tend-tstart)/2; %one value at mid of session 
+                elseif tstart + int_min >= tend
+                    T = [tstart, tend];
+                else    
+                   T = tstart : int_min : tend; 
+                end
+                per_satellite(isat).('T_srp' + string(isrp)) = T;
+                per_satellite(isat).('n_unk_srp' + string(isrp)) = length(T); % number of offsets
+            end
+        end
+
+        nobs_sat    = 0; % observation index of the current source
+         
+        for k = 1:numel(selected_scans)
+            s_cur = selected_scans(k);
+            base_global_idx = scan_start_global(orig_scan_idx(k));
+
+            for iObs = 1 : s_cur.nobs    
+                nobs_sat = nobs_sat + 1;
                 
-                if strcmp(scan(iScan).obs_type, 's') 
-                    if scan(iScan).iso == iSat
-                        n_obs_of_sat = n_obs_of_sat + 1;
-                        
-                        per_satellite(iSat).mjd(n_obs_of_sat) = scan(iScan).mjd;     % time of the observations per source [day]
-                        per_satellite(iSat).nob(n_obs_of_sat) = i_obs_in_sess;       % row number of observation in o-c per source
-                        
-                        if opt.SatPos.pw_sat
-                            % Assign partial derivarives:
-                            switch(opt.SatPos.sat_pos_est_ref_frame)
-                                case 'gcrf'     % GCRF [sec/m]
-                                    per_satellite(iSat).pd_pos1(n_obs_of_sat)    = scan(iScan).obs(iObs).psat_gcrf(1);
-                                    per_satellite(iSat).pd_pos2(n_obs_of_sat)    = scan(iScan).obs(iObs).psat_gcrf(2);
-                                    per_satellite(iSat).pd_pos3(n_obs_of_sat)    = scan(iScan).obs(iObs).psat_gcrf(3);
-                                case 'trf'      % TRF [sec/m]
-                                    per_satellite(iSat).pd_pos1(n_obs_of_sat)    = scan(iScan).obs(iObs).psat_trf(1);
-                                    per_satellite(iSat).pd_pos2(n_obs_of_sat)    = scan(iScan).obs(iObs).psat_trf(2);
-                                    per_satellite(iSat).pd_pos3(n_obs_of_sat)    = scan(iScan).obs(iObs).psat_trf(3);
-                                case 'rsw'      % RSW system ("satellite coord. sys.") [sec/m]
-                                    per_satellite(iSat).pd_pos1(n_obs_of_sat)    = scan(iScan).obs(iObs).psat_rsw(1);
-                                    per_satellite(iSat).pd_pos2(n_obs_of_sat)    = scan(iScan).obs(iObs).psat_rsw(2);
-                                    per_satellite(iSat).pd_pos3(n_obs_of_sat)    = scan(iScan).obs(iObs).psat_rsw(3);
-                                case 'ntw'      % NTW system [sec/m]
-                                    per_satellite(iSat).pd_pos1(n_obs_of_sat)    = scan(iScan).obs(iObs).psat_ntw(1);
-                                    per_satellite(iSat).pd_pos2(n_obs_of_sat)    = scan(iScan).obs(iObs).psat_ntw(2);
-                                    per_satellite(iSat).pd_pos3(n_obs_of_sat)    = scan(iScan).obs(iObs).psat_ntw(3);
-                            end
-                            per_satellite(iSat).minute_sat_pos(n_obs_of_sat) = (scan(iScan).mjd - mjd0) * 24*60; % time reference in minutes since epoch mjd0
-                            if abs(per_satellite(iSat).minute_sat_pos(n_obs_of_sat) - round(per_satellite(iSat).minute_sat_pos(n_obs_of_sat))) < 0.0001
-                                per_satellite(iSat).minute_sat_pos(n_obs_of_sat)  = round(per_satellite(iSat).minute_sat_pos(n_obs_of_sat) );
-                            end
+                per_satellite(isat).mjd(nobs_sat) = s_cur.mjd;     % time of the observations per source [day]
+                per_satellite(isat).nob(nobs_sat) = base_global_idx + iObs - 1;
+                      
+                t_minutes   = (s_cur.mjd - mjd0) * 24 * 60;
+                round_mask = abs(t_minutes - round(t_minutes)) < 1e-4;
+                t_minutes(round_mask) = round(t_minutes(round_mask));
+                per_satellite(isat).minute(nobs_sat) = t_minutes;
 
-                            % Loop over all estimation intervals of the current obs. target:
-                            for i_int = 1 : per_satellite(iSat).n_unk_sat_pos
-                                if i_int == per_satellite(iSat).n_unk_sat_pos  % Last interval
-                                    flag_within_interval = (per_satellite(iSat).minute_sat_pos(n_obs_of_sat) >= per_satellite(iSat).T_sat_pos(i_int)) && (per_satellite(iSat).minute_sat_pos(n_obs_of_sat) <= per_satellite(iSat).T_sat_pos(i_int+1));
-                                else                % All other intervals
-                                    flag_within_interval = (per_satellite(iSat).minute_sat_pos(n_obs_of_sat) >= per_satellite(iSat).T_sat_pos(i_int)) && (per_satellite(iSat).minute_sat_pos(n_obs_of_sat) < per_satellite(iSat).T_sat_pos(i_int+1));
-                                end
-                                if flag_within_interval
-                                    per_satellite(iSat).est_int_id_sat_pos(n_obs_of_sat) = i_int; % Index of estimation interval that contains the current observation of the source
-                                end
-                            end
-
-                       end
-
-                       if opt.KepEle.estKepEle
-                            for iKepEle = 1:6
-                                if opt.KepEle.('estKepEle' + string(iKepEle))
-                                    per_satellite(iSat).('pd_KepEle' + string(iKepEle))(n_obs_of_sat) = scan(iScan).obs(iObs).(name_orb)(iKepEle);
-                                
-                                    per_satellite(iSat).('minute_KepEle' + string(iKepEle))(n_obs_of_sat) = (scan(iScan).mjd - mjd0) * 24*60; % time reference in minutes since epoch mjd0
-                                    if abs(per_satellite(iSat).('minute_KepEle' + string(iKepEle))(n_obs_of_sat) - round(per_satellite(iSat).('minute_KepEle' + string(iKepEle))(n_obs_of_sat))) < 0.0001
-                                        per_satellite(iSat).('minute_KepEle' + string(iKepEle))(n_obs_of_sat)  = round(per_satellite(iSat).('minute_KepEle' + string(iKepEle))(n_obs_of_sat) );
-                                    end
-                            
-                                    % Loop over all estimation intervals of the current obs. target:
-                                    for i_int = 1 : per_satellite(iSat).('n_unk_KepEle' + string(iKepEle))
-                                        if i_int == per_satellite(iSat).('n_unk_KepEle' + string(iKepEle))  % Last interval
-                                            flag_within_interval = (per_satellite(iSat).('minute_KepEle' + string(iKepEle))(n_obs_of_sat) >= per_satellite(iSat).('T_KepEle' + string(iKepEle))(i_int)) && (per_satellite(iSat).('minute_KepEle' + string(iKepEle))(n_obs_of_sat) <= per_satellite(iSat).('T_KepEle' + string(iKepEle))(i_int+1));
-                                        else                % All other intervals
-                                            flag_within_interval = (per_satellite(iSat).('minute_KepEle' + string(iKepEle))(n_obs_of_sat) >= per_satellite(iSat).('T_KepEle' + string(iKepEle))(i_int)) && (per_satellite(iSat).('minute_KepEle' + string(iKepEle))(n_obs_of_sat) < per_satellite(iSat).('T_KepEle' + string(iKepEle))(i_int+1));
-                                        end
-                                        if flag_within_interval
-                                            per_satellite(iSat).('est_int_id_KepEle' + string(iKepEle))(n_obs_of_sat) = i_int; % Index of estimation interval that contains the current observation of the source
-                                        end
-                                    end
-                                end
-                            end
+                if opt.SatPos.pw_sat
+                    
+                    T = per_satellite(isat).T_pos;
+                    n_unk = numel(T);
+                    switch opt.SatPos.sat_pos_est_ref_frame
+                        case 'gcrf', obs_fld = 'psat_gcrf';
+                        case 'trf',  obs_fld = 'psat_trf';
+                        case 'rsw',  obs_fld = 'psat_rsw';
+                        case 'ntw',  obs_fld = 'psat_ntw';
+                        otherwise,  error('Undefined Reference Frame: %s', opt.SatPos.sat_pos_est_ref_frame);
+                    end
+                    pos_vec = s_cur.obs(iObs).(obs_fld);
+                    per_satellite(isat).pd_pos1(nobs_sat) = pos_vec(1);
+                    per_satellite(isat).pd_pos2(nobs_sat) = pos_vec(2);
+                    per_satellite(isat).pd_pos3(nobs_sat) = pos_vec(3);
+                    
+                    if n_unk > 1
+                        int_ids = discretize(t_minutes, T);
+                    else
+                        int_ids = 1;
+                    end
+                    per_satellite(isat).est_int_id_pos(nobs_sat) = int_ids;
+                end  
+   
+                if opt.ORB.estORB
+                    for iorb = est_orb
+                        T = per_satellite(isat).('T_orb' + string(iorb));
+                        n_unk = numel(T);
+                        raw_pd      = s_cur.obs(iObs).(name_orb)(iorb);
+                        per_satellite(isat).('pd_orb' + string(iorb))(nobs_sat) = raw_pd;
+                       
+                        if n_unk > 1
+                            int_ids = discretize(t_minutes, T);
+                        else
+                            int_ids = 1;
                         end
-                    end 
-                end 
-            end 
-        end     
-        per_satellite(iSat).total = n_obs_of_sat;
+                        per_satellite(isat).('est_int_id_orb'+ string(iorb))(nobs_sat) = int_ids;
+                    end
+                 end
+
+                if opt.SRP.estSRP
+                    for isrp = est_srp
+                        T = per_satellite(isat).('T_srp' + string(isrp));
+                        n_unk = numel(T);
+                        raw_pd      = s_cur.obs(iObs).('dsrp')(isrp); 
+                        
+                        per_satellite(isat).('pd_srp' + string(isrp))(nobs_sat) = raw_pd;
+     
+                        if n_unk > 1
+                            int_ids = discretize(t_minutes, T);
+                        else
+                            int_ids = 1;
+                        end
+                        per_satellite(isat).('est_int_id_srp'+ string(isrp))(nobs_sat) = int_ids;           
+                    end
+                end
+            end
+        end 
+        per_satellite(isat).total = nobs_sat;
     end
 end

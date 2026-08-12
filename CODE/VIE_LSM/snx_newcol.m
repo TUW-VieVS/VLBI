@@ -45,6 +45,9 @@ function col_sinex=snx_newcol(col_est,x_,antenna,outsnx, parameter)
         cz = [];
     end
 
+    SRP_Names = ["D0"; "Y0"; "B0"; "DC"; "YC"; "BC"; "DS"; "YS"; "BS"];
+    ORB_Names = ["sma"; "ecc"; "inc"; "raan"; "argp"; "argl"];
+
     % x-coordinate
     newcol_x=[];
     for j=1:length(cx)
@@ -164,54 +167,130 @@ function col_sinex=snx_newcol(col_est,x_,antenna,outsnx, parameter)
     if outsnx.orb==1
         % KepEle1
         clear old
-        old=[x_.KepEle1.col]; newcol_KepEle1=[];
+        old=[x_.ORB.sma.col]; newcol_sma=[];
         for i=1:length(old)
-            [a,newcol_KepEle1(i)]=find(old(i)==col_est);
+            [a,newcol_sma(i)]=find(old(i)==col_est);
         end
 
         % KepEle2
         clear old
-        old=[x_.KepEle2.col]; newcol_KepEle2=[];
+        old=[x_.ORB.ecc.col]; newcol_ecc=[];
         for i=1:length(old)
-            [a,newcol_KepEle2(i)]=find(old(i)==col_est);
+            [a,newcol_ecc(i)]=find(old(i)==col_est);
         end
 
         % KepEle3
         clear old
-        old=[x_.KepEle3.col]; newcol_KepEle3=[];
+        old=[x_.ORB.inc.col]; newcol_inc=[];
         for i=1:length(old)
-            [a,newcol_KepEle3(i)]=find(old(i)==col_est);
+            [a,newcol_inc(i)]=find(old(i)==col_est);
         end
 
         % KepEle4
         clear old
-        old=[x_.KepEle4.col]; newcol_KepEle4=[];
+        old=[x_.ORB.raan.col]; newcol_raan=[];
         for i=1:length(old)
-            [a,newcol_KepEle4(i)]=find(old(i)==col_est);
+            [a,newcol_raan(i)]=find(old(i)==col_est);
         end
 
         % KepEle5
         clear old
-        old=[x_.KepEle5.col]; newcol_KepEle5=[];
+        old=[x_.ORB.argp.col]; newcol_argp=[];
         for i=1:length(old)
-            [a,newcol_KepEle5(i)]=find(old(i)==col_est);
+            [a,newcol_argp(i)]=find(old(i)==col_est);
         end
 
         % KepEle6
         clear old
-        old=[x_.KepEle6.col]; newcol_KepEle6=[];
+        old=[x_.ORB.argl.col]; newcol_argl=[];
         for i=1:length(old)
-            [a,newcol_KepEle6(i)]=find(old(i)==col_est);
+            [a,newcol_argl(i)]=find(old(i)==col_est);
         end
 
-        % satellite name
+        % SRP D0
         clear old
-        satnames = strings(length(x_.KepEle1), 1);
-        for i=1:length(x_.KepEle1)
-            satnames(i)=[x_.KepEle1(1).name];
+        old=[x_.SRP.D0.col]; newcol_srp_D0=[];
+        for i=1:length(old)
+            [a,newcol_srp_D0(i)]=find(old(i)==col_est);
         end
 
+        % SRP Y0
+        clear old
+        old=[x_.SRP.Y0.col]; newcol_srp_Y0=[];
+        for i=1:length(old)
+            [a,newcol_srp_Y0(i)]=find(old(i)==col_est);
+        end
+
+        % SRP B0
+        clear old
+        old=[x_.SRP.B0.col]; newcol_srp_B0=[];
+        for i=1:length(old)
+            [a,newcol_srp_B0(i)]=find(old(i)==col_est);
+        end
+
+        % SRP DC
+        clear old
+        old=[x_.SRP.DC.col]; newcol_srp_DC=[];
+        for i=1:length(old)
+            [a,newcol_srp_DC(i)]=find(old(i)==col_est);
+        end
+
+        % SRP YC
+        clear old
+        old=[x_.SRP.YC.col]; newcol_srp_YC=[];
+        for i=1:length(old)
+            [a,newcol_srp_YC(i)]=find(old(i)==col_est);
+        end
+
+        % SRP BC
+        clear old
+        old=[x_.SRP.BC.col]; newcol_srp_BC=[];
+        for i=1:length(old)
+            [a,newcol_srp_BC(i)]=find(old(i)==col_est);
+        end
+
+        % SRP DS
+        clear old
+        old=[x_.SRP.DS.col]; newcol_srp_DS=[];
+        for i=1:length(old)
+            [a,newcol_srp_DS(i)]=find(old(i)==col_est);
+        end
+
+        % SRP YS
+        clear old
+        old=[x_.SRP.YS.col]; newcol_srp_YS=[];
+        for i=1:length(old)
+            [a,newcol_srp_YS(i)]=find(old(i)==col_est);
+        end
+
+        % SRP BS
+        clear old
+        old=[x_.SRP.BS.col]; newcol_srp_BS=[];
+        for i=1:length(old)
+            [a,newcol_srp_BS(i)]=find(old(i)==col_est);
+        end
+
+        satnames = {};
+        for i = 1:length(ORB_Names)
+            v = x_.ORB.(ORB_Names{i});
+            if ~isempty(v.val)
+                for j=1:length(v.val)
+                    satnames = [satnames; {v.name}];  % Vektorisierte Extraktion aller Names auf einmal
+                end
+            end
+        end
+        for i = 1:length(SRP_Names)
+            v = x_.SRP.(SRP_Names{i});
+            if ~isempty(v.val)
+                for j=1:length(v.val)
+                    satnames = [satnames; {v.name}];  % Vektorisierte Extraktion aller Names auf einmal
+                end
+            end
+        end
+        satnames = unique(satnames, 'stable'); 
     end
+
+    
     
     %%
     
@@ -285,32 +364,56 @@ function col_sinex=snx_newcol(col_est,x_,antenna,outsnx, parameter)
         col_sinex.de=newcol_de;
     end
 
-    col_sinex.KepEle1=[];
-    col_sinex.KepEle2=[];
-    col_sinex.KepEle3=[];
-    col_sinex.KepEle4=[];
-    col_sinex.KepEle5=[];
-    col_sinex.KepEle6=[];
-    col_sinex.satnames=[];
-    if outsnx.orb==1
-        col_sinex.KepEle1=newcol_KepEle1;
-        col_sinex.KepEle2=newcol_KepEle2;
-        col_sinex.KepEle3=newcol_KepEle3;
-        col_sinex.KepEle4=newcol_KepEle4;
-        col_sinex.KepEle5=newcol_KepEle5;
-        col_sinex.KepEle6=newcol_KepEle6;
+    col_sinex.orb_sma=[];
+    col_sinex.orb_ecc=[];
+    col_sinex.orb_inc=[];
+    col_sinex.orb_raan=[];
+    col_sinex.orb_argp=[];
+    col_sinex.orb_argl=[];
+    col_sinex.srp_D0=[];
+    col_sinex.srp_Y0=[];
+    col_sinex.srp_B0=[];
+    col_sinex.srp_DC=[];
+    col_sinex.srp_YC=[];
+    col_sinex.srp_BC=[];
+    col_sinex.srp_DS=[];
+    col_sinex.srp_YS=[];
+    col_sinex.srp_BS=[];
 
-        col_sinex.mjd_KepEle1=x_.KepEle1.mjd;
-        col_sinex.mjd_KepEle2=x_.KepEle2.mjd;
-        col_sinex.mjd_KepEle3=x_.KepEle3.mjd;
-        col_sinex.mjd_KepEle4=x_.KepEle4.mjd;
-        col_sinex.mjd_KepEle5=x_.KepEle5.mjd;
-        col_sinex.mjd_KepEle6=x_.KepEle6.mjd;
+    col_sinex.satnames=[];
+    if outsnx.orb
+        col_sinex.orb_sma=newcol_sma;
+        col_sinex.orb_ecc=newcol_ecc;
+        col_sinex.orb_inc=newcol_inc;
+        col_sinex.orb_raan=newcol_raan;
+        col_sinex.orb_argp=newcol_argp;
+        col_sinex.orb_argl=newcol_argl;
+        col_sinex.srp_D0=newcol_srp_D0;
+        col_sinex.srp_Y0=newcol_srp_Y0;
+        col_sinex.srp_B0=newcol_srp_B0;
+        col_sinex.srp_DC=newcol_srp_DC;
+        col_sinex.srp_YC=newcol_srp_YC;
+        col_sinex.srp_BC=newcol_srp_BC;
+        col_sinex.srp_DS=newcol_srp_DS;
+        col_sinex.srp_YS=newcol_srp_YS;
+        col_sinex.srp_BS=newcol_srp_BS;
+
+        col_sinex.mjd_orb_sma=x_.ORB.sma.mjd;
+        col_sinex.mjd_orb_ecc=x_.ORB.ecc.mjd;
+        col_sinex.mjd_orb_inc=x_.ORB.inc.mjd;
+        col_sinex.mjd_orb_raan=x_.ORB.raan.mjd;
+        col_sinex.mjd_orb_argp=x_.ORB.argp.mjd;
+        col_sinex.mjd_orb_argl=x_.ORB.argl.mjd;
+
+        col_sinex.mjd_srp_D0=x_.SRP.D0.mjd;
+        col_sinex.mjd_srp_Y0=x_.SRP.Y0.mjd;
+        col_sinex.mjd_srp_B0=x_.SRP.B0.mjd;
+        col_sinex.mjd_srp_DC=x_.SRP.DC.mjd;
+        col_sinex.mjd_srp_YC=x_.SRP.YC.mjd;
+        col_sinex.mjd_srp_BC=x_.SRP.BC.mjd;
+        col_sinex.mjd_srp_DS=x_.SRP.DS.mjd;
+        col_sinex.mjd_srp_YS=x_.SRP.YS.mjd;
+        col_sinex.mjd_srp_BS=x_.SRP.BS.mjd;
+
         col_sinex.satnames = satnames;
     end
-     
-    
-    
-    
-    
-    

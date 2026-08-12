@@ -170,7 +170,6 @@
 % ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 function [antenna, sources, scan, parameter] = vie_mod(antenna, sources, scan, parameter)
-
 rad2mas = (180/pi)*3600*1000; % radian to milli arc second
 constants
 global c omega
@@ -179,7 +178,6 @@ GM = 3.986004418*10^14; %m3/s2
 
 % Set flag = true to save results in variable "erg" ("erg" = "Ergebnisse" = "results") for debugging, etc.
 flag_save_results = false;
-flag_fix_sat_pos_to_stat1 = 0;
 
 % Check special handling tag in parameter structure:
 % => initialize it, if it does not exist
@@ -204,10 +202,6 @@ delModQ = 1;
 % Select delay model for space crafts:
 %   1 = Light time equation (geocentric model)
 delModS = 1;
-
-% Options for iteration of sat. velocity and position:
-ddt_threshold           = 1e-12;    % Iteration ends, if the change in "dt" is less than this value [sec]
-max_iterations          = 10;       % Max. number of iterations
 
 disp('---------------------------------------------------------------')
 disp('|                     Welcome to VIE_MOD                      |')
@@ -335,6 +329,8 @@ if sum(obsTypeQidx) ~= 0
         [DE2000, RA2000] = correct_GA(DE2000,RA2000,mean([scan(:).mjd]), GA_ref,GA_val);
         fprintf(1, 'Manual CRF is used --> GA will be corrected to 2015 using 5.8 muas/year\n');
     end
+    RA2000(obsTypeQidx == 0) = NaN;
+    DE2000(obsTypeQidx == 0) = NaN;
 
     [sources.q.GAref] = deal(GA_ref); % reference epoch of a priori catalog [mjd]
     [sources.q.GAval] = deal(GA_val); %muas/year
@@ -382,13 +378,13 @@ end
 % -------------------------------
 
 % ##### Interpolate EOP values for observation epochs: #####
-fprintf('Interpolate EOP values for observation epochs...')
+fprintf('Interpolate EOP values for observation epochs... \n')
 [parameter,DUT1, XP, YP, DX, DY] = interpolateEOP(parameter, MJDeop, UT1eop, XPeop, YPeop, dXeop, dYeop, MJD, TT, 'observation');
-fprintf('  done.\n')
+fprintf(' done.\n')
 
 % ##### Interpolate EOP values for orbit data epochs: #####
 if ~isempty(sources.s) 
-    fprintf('Interpolate EOP values for satellite orbit epochs...')
+    fprintf('Interpolate EOP values for satellite orbit epochs... \n')
     [parameter, DUT1_s,XP_s, YP_s,DX_s, DY_s] = interpolateEOP(parameter,MJDeop_s,UT1eop_s,XPeop_s,YPeop_s,dXeop_s,dYeop_s,MJD_s, TT_s, 'orbit');
     fprintf('  done.\n')
 end
@@ -553,37 +549,23 @@ if strcmp(parameter.vie_init.iono, 'ext') & parameter.vie_init.iono_correction==
     [iondata, ionFileFoundLog] = load_ionfile(parameter,session);
 end 
 
+ 
 if isfield(sources, 's')
-    for isat=1:length(sources.s)
-        if  strcmp(parameter.vie_init.sc_orbit_file_type, 'tle')
-            [sourcesChanged_KepEle1.s(isat), dKepEle1] = manipulateTLEData(sources.s(isat), parameter, T2C_s, 1);
-            [sourcesChanged_KepEle2.s(isat), dKepEle2] = manipulateTLEData(sources.s(isat), parameter, T2C_s, 2);
-            [sourcesChanged_KepEle3.s(isat), dKepEle3] = manipulateTLEData(sources.s(isat), parameter, T2C_s, 3);
-            [sourcesChanged_KepEle4.s(isat), dKepEle4] = manipulateTLEData(sources.s(isat), parameter, T2C_s, 4);
-            [sourcesChanged_KepEle5.s(isat), dKepEle5] = manipulateTLEData(sources.s(isat), parameter, T2C_s, 5);
-            [sourcesChanged_KepEle6.s(isat), dKepEle6] = manipulateTLEData(sources.s(isat), parameter, T2C_s, 6);
-        elseif (strcmp(parameter.vie_init.sc_orbit_file_type, 'fso') || strcmp(parameter.vie_init.sc_orbit_file_type, 'sp3'))
-            [sourcesChanged_KepEle1.s(isat), dKepEle1] = manipulateFSOData(GM, sources.s(isat), parameter, T2C_s, 1);
-            [sourcesChanged_KepEle2.s(isat), dKepEle2] = manipulateFSOData(GM, sources.s(isat), parameter, T2C_s, 2);
-            [sourcesChanged_KepEle3.s(isat), dKepEle3] = manipulateFSOData(GM, sources.s(isat), parameter, T2C_s, 3);
-            [sourcesChanged_KepEle4.s(isat), dKepEle4] = manipulateFSOData(GM, sources.s(isat), parameter, T2C_s, 4);
-            [sourcesChanged_KepEle5.s(isat), dKepEle5] = manipulateFSOData(GM, sources.s(isat), parameter, T2C_s, 5);
-            [sourcesChanged_KepEle6.s(isat), dKepEle6] = manipulateFSOData(GM, sources.s(isat), parameter, T2C_s, 6);
+    sourcesChanged_orb = cell(1, 6);
+   
+    for isat = 1:length(sources.s)
+        dorb = zeros(1, 6); 
+        
+        for k = 1:6
+            sourcesChanged_orb{k} = struct('s', cell(1, length(sources.s))); 
+            if strcmp(parameter.vie_init.sc_orbit_file_type, 'tle')
+                [sourcesChanged_orb{k}.s(isat), dorb(k)] = manipulateTLEData(sources.s(isat), parameter, T2C_s, k);
+            elseif ismember(parameter.vie_init.sc_orbit_file_type, {'fso', 'sp3'})
+                [sourcesChanged_orb{k}.s(isat), dorb(k)] = manipulateFSOData(GM, sources.s(isat), T2C_s, k);
+            end
         end
-        dKepEle = [dKepEle1, dKepEle2, dKepEle3, dKepEle4, dKepEle5, dKepEle6];
-        clear dKepEle1 dKepEle2 dKepEle3 dKepEle4 dKepEle5 dKepEle6
     end
 end
-
-if ~parameter.lsmopt.KepEle.estKepEle_FRP
-    coerpr = 0;
-    trpr = 0;
-    hrpr = 0;
-    tbnd = 0;
-    sclpar = 0;
-    satnum=0;
-end
-
 
 % *************************
 %  loop over scans
@@ -593,7 +575,7 @@ fprintf('Process Scans ... \n');
 fprintf('Progress: [');
 next_print = 10;
 
-for iSc = 1:number_of_all_scans   
+for iSc = 1:number_of_all_scans  
     % running variables for active scan
     mjd   = MJD(iSc);
     tim   = scan(iSc).tim;
@@ -604,9 +586,7 @@ for iSc = 1:number_of_all_scans
     dQdut = DQDUT(:,:,iSc);
     dQddX = DQDDX(:,:,iSc);
     dQddY = DQDDY(:,:,iSc);
-    
-    sec_of_day = scan(iSc).tim(4)*3600 + scan(iSc).tim(5)*60 + scan(iSc).tim(6);
-    
+       
     % tidal ERP variations
     if opt.est_erpsp==1
         PNn     = PNN(:,:,iSc);
@@ -672,16 +652,21 @@ for iSc = 1:number_of_all_scans
     % ****************************************************
     counter = 0;
 
+    pd4NDOP=[];
+    pd4TDOP=[];
+    pd4WDOP=[];
+
     for iobs = 1:length(scan(iSc).obs)
         % Partial derivatives of the delay w.r.t. the position of space crafts (different ref. frames)           
-        pdSatPosGCRF  = [];
-        pdSatPosTRF   = [];
-        pdSatPosRSW   = [];
-        pdSatPosNTW   = [];
-        pdKepEle_dT = zeros(6,1);
-        pdKepEle_dR = zeros(6,1);
-        pdKepEle_ana = zeros(6,1);
-        pdKepEle_FRP = zeros(6,1);
+        dsat_gcrf  = [];
+        dsat_trf   = [];
+        dsat_rsw   = [];
+        dsat_ntw   = [];
+        dorb_dt = zeros(6,1);
+        dorb_dr = zeros(6,1);
+        dorb_ana = zeros(6,1);
+        dorb_frp = zeros(6,1);
+        dsrp = zeros(9,1);
         
         % get station IDs of the current baseline:
         idStation1  = scan(iSc).obs(iobs).i1;
@@ -701,7 +686,7 @@ for iSc = 1:number_of_all_scans
         rqu = rq / norm(rq);                            % unit source vector barycentrum-source, only valid for quasar obs.! For spacecrafts = [1,0,0]
 
         crsBaseline  = crsStation2 - crsStation1;       % baseline vector CRS
-        trsBaseline  = trsStation2 - trsStation1;         % baseline vector TRS
+        trsBaseline  = trsStation2 - trsStation1;       % baseline vector TRS
                 
         % station velocity due to earth rotation
         v1 = t2c *[-omega*trsStation1(2);omega*trsStation1(1);0];  % [CRS]
@@ -709,7 +694,7 @@ for iSc = 1:number_of_all_scans
         % w/o ntsl for sinex calibration block
         v1_noNtsl = t2c *[-omega*trsStation1_noNtsl(2);omega*trsStation1_noNtsl(1);0];  % [CRS]
         v2_noNtsl = t2c *[-omega*trsStation2_noNtsl(2);omega*trsStation2_noNtsl(1);0];  % [CRS]
-             
+          
         % ##### Distinguish between source types (quasar/spacecraft) #####
         delModQ = 1;
         switch(scan(iSc).obs_type)
@@ -717,13 +702,9 @@ for iSc = 1:number_of_all_scans
                 switch delModQ
                     case 1 %consensus        
                         [tau, pGammaSun, k1a, k2a, fac1] = consensusModelQuasar(iSc, crsStation1,crsStation2, idStation1, idStation2, rqu, ephem, opt, antenna, v1, v2);
-                        tauC_KepEle1 = tau;
-                        tauC_KepEle2 = tau;
-                        tauC_KepEle3 = tau;
-                        tauC_KepEle4 = tau;
-                        tauC_KepEle5 = tau;
-                        tauC_KepEle6 = tau;
- 
+                                             
+                        tau_mod_orb = repmat(tau,6,1); 
+
                         % w/o ntsl for sinex calibration block
                         [tau_noNtsl, ~, k1a_noNtsl, k2a_noNtsl, ~] = consensusModelQuasar(iSc, crsStation1_noNtsl, crsStation2_noNtsl, idStation1, idStation2, rqu, ephem, opt, antenna, v1_noNtsl, v2_noNtsl);
 
@@ -740,51 +721,46 @@ for iSc = 1:number_of_all_scans
             case 's'
                 switch(delModS)                
                     case 1 % Light time equation
-                                               
-                        [ps1, ps2, pdSatPosRSW, pdSatPosNTW, pdSatPosGCRF, pdSatPosTRF, tau, scan, k1a, k2a, pGammaSun, fac1] = calcDelaySatellite(sources, iSc, scan, idStation1, idStation2, flag_fix_sat_pos_to_stat1, ddt_threshold, crsStation1, crsStation2, antenna, sec_of_day, mjd, max_iterations, ephem, v2, t2c);
+                        pGammaSun = 0;
+                        fac1 = 0;
+                        tau_mod_orb = NaN(6,1); 
+                        [tau, scan, crfScPos, crfScVel, k1a, k2a] = calcDelaySatellite(sources, iSc, scan, crsStation1, crsStation2, t2c);
+
                         % w/o ntsl for sinex calibration block
-                        [~, ~, ~, ~, ~, ~, tau_noNtsl, ~,k1a_noNtsl,k2a_noNtsl,~,~] = calcDelaySatellite(sources, iSc, scan, idStation1, idStation2, flag_fix_sat_pos_to_stat1, ddt_threshold, crsStation1_noNtsl, crsStation2_noNtsl, antenna, sec_of_day, mjd, max_iterations, ephem, v2_noNtsl, t2c);
+                        [tau_noNtsl, ~, ~, ~, k1a_noNtsl,k2a_noNtsl] = calcDelaySatellite(sources, iSc, scan, crsStation1_noNtsl, crsStation2_noNtsl, t2c);
                               
                         %compute delay for satellite with changed orbit
-                        [~, ~, ~, ~, ~, ~, tauC_KepEle1, ~, ~, ~, ~, ~] = calcDelaySatellite(sourcesChanged_KepEle1, iSc, scan, idStation1, idStation2, flag_fix_sat_pos_to_stat1, ddt_threshold, crsStation1, crsStation2, antenna, sec_of_day, mjd, max_iterations, ephem, v2, t2c);
-                        [~, ~, ~, ~, ~, ~, tauC_KepEle2, ~, ~, ~, ~, ~] = calcDelaySatellite(sourcesChanged_KepEle2, iSc, scan, idStation1, idStation2, flag_fix_sat_pos_to_stat1, ddt_threshold, crsStation1, crsStation2, antenna, sec_of_day, mjd, max_iterations, ephem, v2, t2c);
-                        [~, ~, ~, ~, ~, ~, tauC_KepEle3, ~, ~, ~, ~, ~] = calcDelaySatellite(sourcesChanged_KepEle3, iSc, scan, idStation1, idStation2, flag_fix_sat_pos_to_stat1, ddt_threshold, crsStation1, crsStation2, antenna, sec_of_day, mjd, max_iterations, ephem, v2, t2c);
-                        [~, ~, ~, ~, ~, ~, tauC_KepEle4, ~, ~, ~, ~, ~] = calcDelaySatellite(sourcesChanged_KepEle4, iSc, scan, idStation1, idStation2, flag_fix_sat_pos_to_stat1, ddt_threshold, crsStation1, crsStation2, antenna, sec_of_day, mjd, max_iterations, ephem, v2, t2c);
-                        [~, ~, ~, ~, ~, ~, tauC_KepEle5, ~, ~, ~, ~, ~] = calcDelaySatellite(sourcesChanged_KepEle5, iSc, scan, idStation1, idStation2, flag_fix_sat_pos_to_stat1, ddt_threshold, crsStation1, crsStation2, antenna, sec_of_day, mjd, max_iterations, ephem, v2, t2c);
-                        [~, ~, ~, ~, ~, ~, tauC_KepEle6, ~, ~, ~, ~, ~] = calcDelaySatellite(sourcesChanged_KepEle6, iSc, scan, idStation1, idStation2, flag_fix_sat_pos_to_stat1, ddt_threshold, crsStation1, crsStation2, antenna, sec_of_day, mjd, max_iterations, ephem, v2, t2c);
-                        [pdeop] = getSatelliteDelayPartials_dEOP(scan(iSc).crfSat, trsStation1, trsStation2, crsStation1, crsStation2, dQdxp, dQdyp, dQdut, dQddX, dQddY, v2);
+                        for i = 1:6
+                            [tau_mod_orb(i), ~, ~, ~, ~, ~] = calcDelaySatellite(sourcesChanged_orb{i}, iSc, scan, crsStation1, crsStation2, t2c);  
+                        end
+                        % tau_mod_orb = repmat(tau,6,1); 
+                 
+                        % partial derivatives wrt to eop, satellite position, orbital elements, srp parameter
+                        [deop] = nfd_deop(scan(iSc).crfSat, trsStation1, trsStation2, crsStation1, crsStation2, dQdxp, dQdyp, dQdut, dQddX, dQddY, v2);
+                        [dsat_gcrf, dsat_rsw, dsat_ntw, dsat_trf, ps1, ps2] = nfd_dpos(crsStation1, crsStation2, t2c, crfScPos, crfScVel);
+                        [dorb_dt, dorb_dr, dorb_ana, dorb_frp, dsrp] = dtau_dorb(GM, scan(iSc), sources.s(scan(iSc).iso), dorb, tau, tau_mod_orb, rad2mas, dsat_gcrf);      
+
                 end
         end
         
         % further corrections (same for both models (Sekido & Fukushima, p.141))
         [a_ngr, a_egr, scan, antenna, tau]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tau, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
-        
-        [~, ~, ~, ~, tauC_KepEle1]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle1, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
-        [~, ~, ~, ~, tauC_KepEle2]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle2, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
-        [~, ~, ~, ~, tauC_KepEle3]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle3, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
-        [~, ~, ~, ~, tauC_KepEle4]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle4, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
-        [~, ~, ~, ~, tauC_KepEle5]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle5, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
-        [~, ~, ~, ~, tauC_KepEle6]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tauC_KepEle6, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
-
-        scan(iSc).obs(iobs).comCKepEle1 = tauC_KepEle1; %[sec]
-        scan(iSc).obs(iobs).comCKepEle2 = tauC_KepEle2; %[sec]
-        scan(iSc).obs(iobs).comCKepEle3 = tauC_KepEle3; %[sec]
-        scan(iSc).obs(iobs).comCKepEle4 = tauC_KepEle4; %[sec]
-        scan(iSc).obs(iobs).comCKepEle5 = tauC_KepEle5; %[sec]
-        scan(iSc).obs(iobs).comCKepEle6 = tauC_KepEle6; %[sec]
-        
-        if scan(iSc).obs_type == 's' 
-            [pdKepEle_dT, pdKepEle_dR, pdKepEle_ana, pdKepEle_FRP] = compute_pd_KepEle(GM, scan(iSc), sources.s(scan(iSc).iso), satnum, dKepEle, tau, tauC_KepEle1, tauC_KepEle2, tauC_KepEle3, tauC_KepEle4, tauC_KepEle5, tauC_KepEle6, rad2mas, coerpr,trpr,hrpr,tbnd,sclpar, pdSatPosGCRF, parameter);      
-        end
-    
+ 
         % w/o ntsl for sinex calibration block
         scan_noNtsl = scan;
         scan_noNtsl(iSc).stat(iStat).x = scan(iSc).stat(iStat).x_noNtsl;
         scan_noNtsl(iSc).stat(iStat).xcrs = scan(iSc).stat(iStat).xcrs_noNtsl;
-    
+        
         [~, ~, ~, ~, tau_noNtsl]  = correctionBaseline(scan_noNtsl, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a_noNtsl, k2a_noNtsl, rqu, v2_noNtsl, v1_noNtsl, tau_noNtsl, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
         clear scan_noNtsl;
-    
+        
+        scan(iSc).obs(iobs).com_orb1 = tau_mod_orb(1); %[sec]
+        scan(iSc).obs(iobs).com_orb2 = tau_mod_orb(2); %[sec]
+        scan(iSc).obs(iobs).com_orb3 = tau_mod_orb(3); %[sec]
+        scan(iSc).obs(iobs).com_orb4 = tau_mod_orb(4); %[sec]
+        scan(iSc).obs(iobs).com_orb5 = tau_mod_orb(5); %[sec]
+        scan(iSc).obs(iobs).com_orb6 = tau_mod_orb(6); %[sec]
+        
         % SOURCE STRUCTURE +
         if parameter.vie_mod.ssou==1 || parameter.vie_mod.write_jet==1
             ind=strcmp(sources.q(scan(iSc).iso).name,cat_comp.name,'exact');
@@ -854,11 +830,11 @@ for iSc = 1:number_of_all_scans
             pdX = K'* (dQddX * trsBaseline')/c;
             pdY = K'* (dQddY * trsBaseline')/c;
         else %satellite observation
-            pdx = pdeop(1);
-            pdy = pdeop(2);
-            put = pdeop(3);
-            pdX = pdeop(4);
-            pdY = pdeop(5);
+            pdx = deop(1);
+            pdy = deop(2);
+            put = deop(3);
+            pdX = deop(4);
+            pdY = deop(5);
         end
         
         % wrt source coordinates [cm/mas]
@@ -955,7 +931,7 @@ for iSc = 1:number_of_all_scans
         % ############################
         % ###  5. STORE RESULTS   #### 
         % ############################
-        
+       
         scan(iSc).obs(iobs).com = tau; %[sec]
 		
         scan(iSc).obs(iobs).counter = counter; 
@@ -964,21 +940,21 @@ for iSc = 1:number_of_all_scans
     
         % partial derivatives of the delay  w.r.t.: 
         scan(iSc).obs(iobs).psou                = psou;             % source coordinates [cm/mas]; =[0,0], if no quasar was observed
-        scan(iSc).obs(iobs).psat_gcrf           = pdSatPosGCRF;     % satellite coordinates in GCRF [sec/m] or actually due to *c [] --> estimates will be in cm
-        scan(iSc).obs(iobs).psat_trf            = pdSatPosTRF;      % satellite coordinates in TRF [sec/m]
-        scan(iSc).obs(iobs).psat_rsw            = pdSatPosRSW;      % satellite coordinates in RSW system ("satellite coord. sys.") [sec/m]
-        scan(iSc).obs(iobs).psat_ntw            = pdSatPosNTW;      % satellite coordinates in NTW system 
+        scan(iSc).obs(iobs).psat_gcrf           = dsat_gcrf;        % satellite coordinates in GCRF [sec/m] or actually due to *c [] --> estimates will be in cm
+        scan(iSc).obs(iobs).psat_trf            = dsat_trf;         % satellite coordinates in TRF [sec/m]
+        scan(iSc).obs(iobs).psat_rsw            = dsat_rsw;         % satellite coordinates in RSW system ("satellite coord. sys.") [sec/m]
+        scan(iSc).obs(iobs).psat_ntw            = dsat_ntw;         % satellite coordinates in NTW system 
         scan(iSc).obs(iobs).pnut                = [pdX,pdY];        % dX, dY [sec/rad]
         scan(iSc).obs(iobs).ppol                = [pdx,pdy,put];    % xpol, ypol, dut1 [sec/rad]
         scan(iSc).obs(iobs).pstat1              = ps1;              % station1
         scan(iSc).obs(iobs).pstat2              = ps2;              % station2
-        scan(iSc).obs(iobs).pAO_st1             = paxktStation1;    % Axis offset at station 1 [-]
-        scan(iSc).obs(iobs).pAO_st2             = paxktStation2;    % Axis offset at station 2 [-]
-        scan(iSc).obs(iobs).psat_orb_dT(:,1)    = [pdKepEle_dT(:,1)];    %Keplerian Elements
-        scan(iSc).obs(iobs).psat_orb_dR(:,1)    = [pdKepEle_dR(:,1)];    %Keplerian Elements
-        scan(iSc).obs(iobs).psat_orb_ana(:,1)   = [pdKepEle_ana(:,1)];   %Keplerian Elements
-        scan(iSc).obs(iobs).psat_orb_FRP(:,1)   = [pdKepEle_FRP(:,1)];   %Keplerian Elements
-        scan(iSc).obs(iobs).psat_orb(:,1)       = [pdKepEle_ana(:,1)];    %Keplerian Elements
+        scan(iSc).obs(iobs).pAO_st1             = paxktStation1;    % axis offset at station 1 [-]
+        scan(iSc).obs(iobs).pAO_st2             = paxktStation2;    % axis offset at station 2 [-]
+        scan(iSc).obs(iobs).dorb_dt(:,1)        = [dorb_dt(:,1)];   % orbital elements
+        scan(iSc).obs(iobs).dorb_dr(:,1)        = [dorb_dr(:,1)];   % orbital elements
+        scan(iSc).obs(iobs).dorb_ana(:,1)       = [dorb_ana(:,1)];  % orbital elements
+        scan(iSc).obs(iobs).dorb_frp(:,1)       = [dorb_frp(:,1)];  % orbital elements
+        scan(iSc).obs(iobs).dsrp(:,1)           = [dsrp(:,1)];      % srp parameters
           
         scan(iSc).obs(iobs).pAcr_st1 = pAcrStation1;  % Amplitudes of the seasonal variation in station pos.
         scan(iSc).obs(iobs).pAce_st1 = pAceStation1;  % [-]
@@ -1000,6 +976,11 @@ for iSc = 1:number_of_all_scans
         scan(iSc).obs(iobs).prg_st1  = prgStation1; %[hPa]  APL RG
         scan(iSc).obs(iobs).prg_st2  = prgStation2; %[hPa]	APL RG
         
+        if length(dsat_ntw)>0
+            pd4NDOP(end+1)=dsat_ntw(1)^2;
+            pd4TDOP(end+1)=dsat_ntw(2)^2;
+            pd4WDOP(end+1)=dsat_ntw(3)^2;
+        end
         % tidal ERP
         if opt.est_erpsp == 1
             scan(iSc).obs(iobs).ppap  = pap;  % prograde pm cos
@@ -1032,6 +1013,7 @@ for iSc = 1:number_of_all_scans
         scan(iSc).obs(iobs).pscale   = -fac1;       % [sec] Correction to the scale factor
         scan(iSc).obs(iobs).pscalesou   = -fac1*delt_accSSB/(86400*365.25);         % [sec.yr], tau = F.b.s/c , F = 1, scale; results (a,s)/c;     
        
+        
         if flag_save_results
             i_result = i_result + 1;
             result.com(i_result)   = tau; % Computed delay
@@ -1048,6 +1030,13 @@ for iSc = 1:number_of_all_scans
     %         results.c_trop(i_result)       = c_trop;
     %         results.c_therm(i_result)      = c_therm;
     %         results.c_axis(i_result)       = c_axis;
+        end
+
+        % calculation of NDOP, TDOP, WDOP and saving to scan struct    
+        if length(pd4NDOP)>0
+            scan(iSc).NDOP=sqrt(1/sum(pd4NDOP));
+            scan(iSc).TDOP=sqrt(1/sum(pd4TDOP));
+            scan(iSc).WDOP=sqrt(1/sum(pd4WDOP));
         end
     end
     scan(iSc).space.source =        rq;         % source vector

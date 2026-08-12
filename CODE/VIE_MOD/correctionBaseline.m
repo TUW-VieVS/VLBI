@@ -305,26 +305,26 @@ function [a_ngr, a_egr, scan, antenna, tau] = correctionBaseline(scan, antenna, 
         scan(iSc).stat(idStation2).trop = atm2;
     end
 
-    tpd_g = atm1*(rqu*(v2-v1))/c;  
-    tau   = tau + tpd_g;         %(eq. 11)
+    if  all(~isnan(rqu))
+        tpd_g = atm1*(rqu*(v2-v1))/c;  
 
-    %(9) total delay
-    c_trop = atm2 - atm1;
-    tau    = tau + c_trop; %(eq. 12)
+        %(9) total delay
+        c_trop = atm2 - atm1;
+    
+        % further corrections:
+        % axis offset correction
+        c_axis  = scan(iSc).stat(idStation2).axkt - scan(iSc).stat(idStation1).axkt; %[sec]
+    
+        % thermal deformation (Attention: Station1 - Station2)
+        c_therm = scan(iSc).stat(idStation1).therm - scan(iSc).stat(idStation2).therm; % [sec]
+    
+        % gravitational deformation correction
+        c_gravdef = scan(iSc).stat(idStation2).gravdef - scan(iSc).stat(idStation1).gravdef; % [sec]
 
-    % further corrections:
-    % axis offset correction
-    c_axis  = scan(iSc).stat(idStation2).axkt - scan(iSc).stat(idStation1).axkt; %[sec]
-
-    % thermal deformation (Attention: Station1 - Station2)
-    c_therm = scan(iSc).stat(idStation1).therm - scan(iSc).stat(idStation2).therm; % [sec]
-
-    % gravitational deformation correction
-    c_gravdef = scan(iSc).stat(idStation2).gravdef - scan(iSc).stat(idStation1).gravdef; % [sec]
-
-    % add
-    tau = c_axis + c_therm + c_gravdef + tau; % [sec]
-
+        % add
+        tau = c_axis + c_therm + c_gravdef + + c_trop + tpd_g + tau; % [sec]
+    end
+   
     % + EXTERNAL IONOSPERIC DELAY +
     if strcmp(parameter.vie_init.iono, 'ext') 
         % use iono delay from external file and add it

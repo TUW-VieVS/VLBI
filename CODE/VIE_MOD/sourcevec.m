@@ -8,6 +8,7 @@ function [RQ,DRQDRA,DRQDDE] = sourcevec(decl,ra)
 %           DRQDRA            partial derivative after ra [:,3]
 %           DRQDDE            partial derivative after de [:,3]
 %
+
       SID = sin(decl);             
       COD = cos(decl);             
       SIR = sin(ra);
@@ -19,7 +20,7 @@ function [RQ,DRQDRA,DRQDDE] = sourcevec(decl,ra)
      
       DRQDRA(:,1) = -COD.* SIR;
       DRQDRA(:,2) =  COD.* COR;
-      DRQDRA(:,3) =  0;
+      DRQDRA(:,3) =  0.* decl;
       
       DRQDDE(:,1) = -SID.* COR;
       DRQDDE(:,2) = -SID.* SIR;

@@ -25,13 +25,13 @@
 %
 %
 % ************************************************************************
-function [sources] = addSatellitePositionAtEstimationInterval(sources, estInt, i_sat, mjd0, scan, type, numKepEle)
+function [sources] = calc_sat_positions(sources, estInt, i_sat, mjd0, scan, type, numKepEle)
 
     mjdsat = sources.s(i_sat).mjd;
     if strcmp(type, 'position')
             sources.s(i_sat).posEstIntXtrf = zeros(length(estInt),3);
             sources.s(i_sat).posEstIntXcrf = zeros(length(estInt),3);
-    elseif strcmp(type, 'KepEle')
+    elseif strcmp(type, 'orb')
             textInt = 'EstIntXtrfKepEle' + string(numKepEle);
             textIntcrf = 'EstIntXcrfKepEle' + string(numKepEle);
             textMjd = 'EstIntMjdKepEle' + string(numKepEle);
@@ -69,7 +69,7 @@ function [sources] = addSatellitePositionAtEstimationInterval(sources, estInt, i
             sources.s(i_sat).posEstIntXtrf(i, :) = [trfScPosX trfScPosY trfScPosZ];
             sources.s(i_sat).posEstIntXcrf(i, :) = [crfScPosX crfScPosY crfScPosZ];
             sources.s(i_sat).posEstIntMjd(i,1) = mjd_est;
-        elseif strcmp(type, 'KepEle') || strcmp(type, 'SatPara')
+        elseif strcmp(type, 'orb') || strcmp(type, 'SatPara')
             sources.s(i_sat).(textInt)(i, :) = [trfScPosX trfScPosY trfScPosZ];
             sources.s(i_sat).(textIntcrf)(i, :) = [crfScPosX crfScPosY crfScPosZ];
             sources.s(i_sat).(textMjd)(i,1) = mjd_est;

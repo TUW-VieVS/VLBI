@@ -827,79 +827,98 @@ parameter.lsmopt.SatPos.constrRadialComponentValue = str2double(get(handles.cons
 
 % Orbital Elements
 
-parameter.lsmopt.KepEle.estKepEle = get(handles.cb_estKepEle, 'Value');
+parameter.lsmopt.ORB.estORB = get(handles.cb_estKepEle, 'Value');
 
-% Keplerian Element 1 - semimajor axis A
-parameter.lsmopt.KepEle.estKepEle1 = get(handles.cb_estKepEle1, 'Value');
-parameter.lsmopt.KepEle.estIntKepEle1    = str2double(get(handles.estIntValKepEle1, 'String'));  
-parameter.lsmopt.KepEle.relConstrKepEle1 = get(handles.cb_relConstrKepEle1, 'Value');  
-parameter.lsmopt.KepEle.relConstrValKepEle1 = str2double(get(handles.relConstrValKepEle1, 'String'));
+names_orb = {'sma','e', 'i','raan','argp','argl'};
+for i = 1:length(names_orb)
+    name = names_orb{i};
+    parameter.lsmopt.ORB.params(i).name = name;
 
-if parameter.lsmopt.KepEle.estKepEle1 == 0
-    parameter.lsmopt.KepEle.relConstrKepEle1 = 0;
+    cb_name  = ['cb_estKepEle' num2str(i)];
+    int_name = ['estIntValKepEle' num2str(i)];
+
+    parameter.lsmopt.ORB.params(i).estimate = get(handles.(cb_name), 'Value');
+
+    parameter.lsmopt.ORB.params(i).interval = str2double( ...
+        get(handles.(int_name), 'String') );
 end
 
-% Keplerian Element 2 - eccentricity
-parameter.lsmopt.KepEle.estKepEle2 = get(handles.cb_estKepEle2, 'Value');
-parameter.lsmopt.KepEle.estIntKepEle2   = str2double(get(handles.estIntValKepEle2, 'String'));  
-parameter.lsmopt.KepEle.relConstrKepEle2 = get(handles.cb_relConstrKepEle2, 'Value');  
-parameter.lsmopt.KepEle.relConstrValKepEle2 = str2double(get(handles.relConstrValKepEle2, 'String'));
+%Method
+val = get(handles.popupmenu_kepler, 'Value');
+str = get(handles.popupmenu_kepler, 'String');
 
-if parameter.lsmopt.KepEle.estKepEle2 == 0
-    parameter.lsmopt.KepEle.relConstrKepEle2 = 0;
+selected = str{val};
+
+parameter.lsmopt.ORB.estorb_NumTau = 0;
+parameter.lsmopt.ORB.estorb_NumPos = 0;
+parameter.lsmopt.ORB.estorb_Ana = 0;
+parameter.lsmopt.ORB.estorb_FRP = 0;
+if strcmp(selected, 'numerically using time delay')
+    parameter.lsmopt.ORB.estorb_NumTau = 1;
+elseif strcmp(selected, 'numerically using satellite position')
+    parameter.lsmopt.ORB.estorb_NumPos = 1;  
+elseif strcmp(selected, 'analytically')
+    parameter.lsmopt.ORB.estorb_Ana = 1;
+elseif strcmp(selected, 'from FRP-File')
+    parameter.lsmopt.ORB.estorb_FRP = 1;
 end
-
-% Keplerian Element 3 - inclination
-parameter.lsmopt.KepEle.estKepEle3 = get(handles.cb_estKepEle3, 'Value');
-parameter.lsmopt.KepEle.estIntKepEle3    = str2double(get(handles.estIntValKepEle3, 'String'));  
-parameter.lsmopt.KepEle.relConstrKepEle3 = get(handles.cb_relConstrKepEle3, 'Value');  
-parameter.lsmopt.KepEle.relConstrValKepEle3 = str2double(get(handles.relConstrValKepEle3, 'String'));
-
-if parameter.lsmopt.KepEle.estKepEle3 == 0
-    parameter.lsmopt.KepEle.relConstrKepEle3 = 0;
-end
-
-% Keplerian Element 4 - RAAN (Omega)  
-parameter.lsmopt.KepEle.estKepEle4 = get(handles.cb_estKepEle4, 'Value');
-parameter.lsmopt.KepEle.estIntKepEle4    = str2double(get(handles.estIntValKepEle4, 'String'));  
-parameter.lsmopt.KepEle.relConstrKepEle4 = get(handles.cb_relConstrKepEle4, 'Value');  
-parameter.lsmopt.KepEle.relConstrValKepEle4 = str2double(get(handles.relConstrValKepEle4, 'String'));
-
-if parameter.lsmopt.KepEle.estKepEle4 == 0
-    parameter.lsmopt.KepEle.relConstrKepEle4 = 0;
-end
-
-% Keplerian Element 5 
-parameter.lsmopt.KepEle.estKepEle5 = get(handles.cb_estKepEle5, 'Value');
-parameter.lsmopt.KepEle.estIntKepEle5    = str2double(get(handles.estIntValKepEle5, 'String'));  
-parameter.lsmopt.KepEle.relConstrKepEle5 = get(handles.cb_relConstrKepEle5, 'Value');  
-parameter.lsmopt.KepEle.relConstrValKepEle5 = str2double(get(handles.relConstrValKepEle5, 'String'));
-
-if parameter.lsmopt.KepEle.estKepEle5 == 0
-    parameter.lsmopt.KepEle.relConstrKepEle5 = 0;
-end
-
-% Keplerian Element 6 
-parameter.lsmopt.KepEle.estKepEle6 = get(handles.cb_estKepEle6, 'Value');
-parameter.lsmopt.KepEle.estIntKepEle6    = str2double(get(handles.estIntValKepEle6, 'String'));  
-parameter.lsmopt.KepEle.relConstrKepEle6 = get(handles.cb_relConstrKepEle6, 'Value');  
-parameter.lsmopt.KepEle.relConstrValKepEle6 = str2double(get(handles.relConstrValKepEle6, 'String'));
-
-if parameter.lsmopt.KepEle.estKepEle6 == 0
-    parameter.lsmopt.KepEle.relConstrKepEle6 = 0;
-end
-
+parameter.lsmopt.ORB.FRPFile = get(handles.edit_pathFRPFile, 'String'); 
 
 %if parameter.lsmopt.KepEle.estKepEle1 || parameter.lsmopt.KepEle.estKepEle2 || parameter.lsmopt.KepEle.estKepEle3 || parameter.lsmopt.KepEle.estKepEle4 || parameter.lsmopt.KepEle.estKepEle5 || parameter.lsmopt.KepEle.estKepEle6
 %    parameter.lsmopt.KepEle.estKepEle = 1;
 %else
 %    parameter.lsmopt.KepEle.estKepEle = 0;
 %end
-parameter.lsmopt.KepEle.estKepEle_NumTau = get(handles.rb_estKepEle_NumTau, 'Value');
-parameter.lsmopt.KepEle.estKepEle_NumSatPos = get(handles.rb_estKepEle_NumSatPos, 'Value');
-parameter.lsmopt.KepEle.estKepEle_Ana = get(handles.rb_estKepEle_Ana, 'Value');
-parameter.lsmopt.KepEle.estKepEle_FRP = get(handles.rb_estKepEle_FRP, 'Value');
-parameter.lsmopt.KepEle.FRPFile = get(handles.edit_pathFRPFile, 'String'); 
+
+%SRP Parameter
+parameter.lsmopt.SRP.estSRP = get(handles.cb_estSRP, 'Value');
+
+%Method
+val = get(handles.popupmenu_srp, 'Value');
+str = get(handles.popupmenu_srp, 'String');
+
+selected = str{val};
+parameter.lsmopt.SRP.method = '';
+if strcmp(selected, 'ECOM5')
+    parameter.lsmopt.SRP.method = 'ecom5';
+elseif strcmp(selected, 'ECOM9')
+    parameter.lsmopt.SRP.method = 'ecom9';  
+end
+parameter.lsmopt.SRP.SRPFile = get(handles.edit_pathSRPFile, 'String');
+
+if strcmp(parameter.lsmopt.SRP.method, 'ecom5')
+
+    names = {'D0','Y0','B0','BC','BS'};
+    for i = 1:length(names)
+        name = names{i};
+        parameter.lsmopt.SRP.params(i).name = name;
+    
+        cb_name  = ['cb_'  name '_ecom5'];
+        int_name = ['int_' name '_ecom5'];
+    
+        parameter.lsmopt.SRP.params(i).estimate = get(handles.(cb_name), 'Value');
+    
+        parameter.lsmopt.SRP.params(i).interval = str2double( ...
+            get(handles.(int_name), 'String') );
+    end
+    
+elseif strcmp(parameter.lsmopt.SRP.method, 'ecom9')
+
+    names = {'D0','Y0','B0', 'DC', 'YC', 'BC','DS', 'YS', 'BS'};
+    for i = 1:length(names)
+        name = names{i};
+        parameter.lsmopt.SRP.params(i).name = name;
+    
+        cb_name  = ['cb_'  name '_ecom9'];
+        int_name = ['int_' name '_ecom9'];
+    
+        parameter.lsmopt.SRP.params(i).estimate = get(handles.(cb_name), 'Value');
+    
+        parameter.lsmopt.SRP.params(i).interval = str2double( ...
+            get(handles.(int_name), 'String') );
+    end 
+end
+
 
 % prepare N and b for global solution
 parameter.lsmopt.global_solve=get(handles.checkbox_run_prepareGlobParam, 'Value');
@@ -982,11 +1001,8 @@ else
     parameter.lsmopt.outsnx.eop=get(handles.radiobutton_run_sinex_eop_incl, 'Value');
 end
 
-if get(handles.rb_estKepEle_NumTau, 'Value') || get(handles.rb_estKepEle_FRP, 'Value') 
-    parameter.lsmopt.outsnx.orb=get(handles.radiobutton_run_sinex_orb_incl, 'Value');
-else
-    parameter.lsmopt.outsnx.orb=0;
-end
+
+parameter.lsmopt.outsnx.orb=get(handles.radiobutton_run_sinex_orb_incl, 'Value');
 
 parameter.lsmopt.outsnx.bdco = 0; % 0 = reduce bas-dep clk offset in sinex
 

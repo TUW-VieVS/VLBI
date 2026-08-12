@@ -34,7 +34,6 @@
 
 function [sourcesChanged_KepEle, dKepEle] = manipulateTLEData(sources, parameter, T2C_s, numKepEle)
 
-    
     sources_c = sources;
     mjd_firstSatObs = min([sources.firstObsMjd]);
     mjd_lastSatObs = max([sources.lastObsMjd]);
