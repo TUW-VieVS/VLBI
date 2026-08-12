@@ -1140,12 +1140,11 @@ if opt.est_singleses
     end
 
     %Covariance matrix a posteriori, Cvv = sigma_0^2 * Qvv, Qvv=Qll-Q~ll, Qll= inv(P), Q~ll=A*Qxx*A'
-    % Qll = inv(Pobserv(1:n_observ,1:n_observ));
-    % Qlldach = A(1:n_observ,:)*Qxx*A(1:n_observ,:)';
-    % Qvv = Qll-Qlldach;
-    % Cvv = mo.^2 .* diag(Qvv);
-    % sigma_residuals_aposteriori = sqrt(Cvv);
-    sigma_residuals_aposteriori = [];
+    Qll = inv(Pobserv(1:n_observ,1:n_observ));
+    Qlldach = A(1:n_observ,:)*Qxx*A(1:n_observ,:)';
+    Qvv = Qll-Qlldach;
+    Cvv = mo.^2 .* diag(Qvv);
+    sigma_residuals_aposteriori = sqrt(Cvv);
 
     % DETECTING OUTLIERS
     if opt.basic_outlier == 1
