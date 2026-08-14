@@ -51,6 +51,7 @@ mjdData  = cell(nSta,1);
 cableData = cell(nSta,1);
 cableCalData = cell(nSta,1);
 cableCDMSData = cell(nSta,1);
+cablePcmtData = cell(nSta,1);
 
 for i = 1:nScan
 
@@ -76,9 +77,30 @@ for i = 1:nScan
                 else
                     cableCDMSData{k}(end+1,1) =NaN;
                 end
+                
+                if isfield(st,'cab_Pcmt')
+                    cablePcmtData{k}(end+1,1) = double(st.cab_Pcmt);
+                else
+                    cablePcmtData{k}(end+1,1) =NaN;
+                end
             end
         end
     end
+end
+
+for k=1:nSta
+        if sum(cableData{k})==0
+            cableData{k}(:) =NaN;
+        end
+        if sum(cableCalData{k})==0
+            cableCalData{k}(:) =NaN;
+        end
+        if sum(cableCDMSData{k})==0
+            cableCDMSData{k}(:) =NaN;
+        end
+        if sum(cablePcmtData{k})==0
+            cablePcmtData{k}(:) =NaN;
+        end
 end
 
 minmjd=min(cell2mat(mjdData));
@@ -91,7 +113,7 @@ maxmjd=max(cell2mat(mjdData));
 fig = figure('Color',[1 1 1], ...
              'Position',[50 00 1400 900]);
 
-sgtitle('VLBI Scan Meteorological Data', ...
+sgtitle('VLBI Scan Cable calibration', ...
         'FontWeight','bold');
 
 %% Temperature
@@ -107,10 +129,15 @@ for k = 1:nSta
         hold on
         plot(mjdData{k}, cableCalData{k}, ...
              '.', ...
-             'Color',colors(2,:), ...
+             'Color',colors(1,:), ...
              'LineWidth',1.0);
         hold on
         plot(mjdData{k}, cableCDMSData{k}, ...
+             '.', ...
+             'Color',colors(2,:), ...
+             'LineWidth',1.0);
+        hold on
+        plot(mjdData{k}, cablePcmtData{k}, ...
              '.', ...
              'Color',colors(3,:), ...
              'LineWidth',1.0);
@@ -123,7 +150,7 @@ end
 
 
 
-lgd = legend([{'VieVS applied'}; {'Cal-Cable'}; {'CDMS'}]);
+lgd = legend([{'VieVS applied'}; {'Cal-Cable'}; {'CDMS'}; {'Pcmt'}]);
 lgd.Layout.Tile = 'east';  
 
 
