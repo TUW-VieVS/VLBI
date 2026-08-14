@@ -54,6 +54,7 @@ if plotScanRes
     exportFigureToPDF(wrmsfig6,outPdf,true)
     fprintf('\nSaved combined PDF:\n')
     fprintf('  %s\n',outPdf)
+    close all
 end
 
 
@@ -71,6 +72,7 @@ if plotX
     exportFigureToPDF(xfig5,outPdfEst,true)
     fprintf('\nSaved combined PDF:\n')
     fprintf('  %s\n',outPdfEst)
+    close all
 end
 
 function exportFigureToPDF(fig,outPdf,appendFlag)
