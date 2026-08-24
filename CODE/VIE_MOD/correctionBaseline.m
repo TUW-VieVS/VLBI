@@ -322,7 +322,7 @@ function [a_ngr, a_egr, scan, antenna, tau] = correctionBaseline(scan, antenna, 
         c_gravdef = scan(iSc).stat(idStation2).gravdef - scan(iSc).stat(idStation1).gravdef; % [sec]
 
         % add
-        tau = c_axis + c_therm + c_gravdef + + c_trop + tpd_g + tau; % [sec]
+        tau = c_axis + c_therm + c_gravdef + c_trop + tpd_g + tau; % [sec]
     end
    
     % + EXTERNAL IONOSPERIC DELAY +

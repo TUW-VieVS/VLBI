@@ -52,14 +52,14 @@ function [tau, scan, crfScPos, crfScVel, k1a, k2a] = calcDelaySatellite(sources,
     vel_trf = [s_cur.vx_trf(refidx), s_cur.vy_trf(refidx), s_cur.vz_trf(refidx)];
 
     % Get spacecraft position at time of observation (CRF):
-    crfScPos = lagint9_ultra_fast(tRefSecInterpol, pos_crf, u1);
+    crfScPos = lagint9_fast(tRefSecInterpol, pos_crf, u1);
     
     if s_cur.flag_v_crf
-        crfScVel = lagint9_ultra_fast(tRefSecInterpol, vel_crf, u1);
+        crfScVel = lagint9_fast(tRefSecInterpol, vel_crf, u1);
     end
 
     if s_cur.flag_v_trf
-        trfScVel = lagint9_ultra_fast(tRefSecInterpol, vel_trf, u1);
+        trfScVel = lagint9_fast(tRefSecInterpol, vel_trf, u1);
     end
    
     scan(iSc).trfSat = t2c' * crfScPos;
@@ -83,8 +83,8 @@ function [tau, scan, crfScPos, crfScVel, k1a, k2a] = calcDelaySatellite(sources,
         u0 = vpa(u0_old - f/df);
 
         % Get spacecraft position and velocity at time at current estimated emission time u0
-        crfScPos = lagint9_ultra_fast(tRefSecInterpol, pos_crf, u0);
-        crfScVel = lagint9_ultra_fast(tRefSecInterpol, vel_crf, u0);
+        crfScPos = lagint9_fast(tRefSecInterpol, pos_crf, u0);
+        crfScVel = lagint9_fast(tRefSecInterpol, vel_crf, u0);
         
         [dugr1, ~] = get_dugr(crsStation1, crfScPos, crfScVel);
     
