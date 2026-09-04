@@ -812,14 +812,15 @@ clear Apwclk Arqclk Azwd Apwegr Apwngr Apwx Apwy Apwz Ax Ay Az a A_ao istat Ax_s
 
 % -------------------------------------------------------------------------
 % FORMING DESIGN MATRICES FOR SOURCE COORDINATES (QUASARS)
-if (opt.global_solve==1 && opt.est_source==1) || (opt.ascii_snx==1 && opt.est_source==1) || opt.est_sourceNNR==1 || opt.pw_sou == 1
-    A_ra_glob       = [];               % For global parameter estimation in vie_glob
-    A_de_glob       = [];               % For global parameter estimation in vie_glob
-    A_vra_glob      = [];               % For global parameter estimation in vie_glob
-    A_vde_glob      = [];               % For global parameter estimation in vie_glob
-    sumso.sources   = zeros(1,ns_q);    % total vector of source coor. estimates after eliminating non-observed sources
-    A_scale_glob =[]; %scale
+A_ra_glob       = [];               % For global parameter estimation in vie_glob
+A_de_glob       = [];               % For global parameter estimation in vie_glob
+A_vra_glob      = [];               % For global parameter estimation in vie_glob
+A_vde_glob      = [];               % For global parameter estimation in vie_glob
+A_scale_glob =[]; %scale
 
+if (opt.global_solve==1 && opt.est_source==1) || (opt.ascii_snx==1 && opt.est_source==1) || opt.est_sourceNNR==1 || opt.pw_sou == 1
+    sumso.sources   = zeros(1,ns_q);    % total vector of source coor. estimates after eliminating non-observed sources
+    
     tso(ns_q,1).sources = [];
     a(1,ns_q).ra = [];
     a(1,ns_q).de = [];

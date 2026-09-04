@@ -29,7 +29,7 @@ function [cosag1, sinag1, cosag2, sinag2] = par_tiderp(rjd)
 %   tidal terms as in IERS Conventions 2010: GMST+pi l l' F D OM
 	
      fileID = fopen('../DATA/GLOB/tidalERPvar_list.txt');
-     C = textscan(fileID,'%s %d %d %d %d %d %d %d','Delimiter',',','CommentStyle','%');
+     C = textscan(fileID,'%4s %d %d %d %d %d %d %d','Delimiter',',','CommentStyle','%');
      fclose(fileID);
      
      tide.name = cell2mat(C{1,1});

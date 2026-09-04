@@ -111,8 +111,8 @@ diary
 save_intermediate_results_flag = 1;
 path_level='../';
 
-rms_check = 0;
-del_ses = 1;
+rms_check = 1;
+del_ses = 0;
 flname_del_ses='bad_ses.txt';
 special_EOP = 0;
 special_EOP_file = 'fix_EOP.txt';

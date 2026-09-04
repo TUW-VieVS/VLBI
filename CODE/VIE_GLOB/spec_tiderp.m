@@ -28,12 +28,12 @@ load([path_level 'DATA/GLOB/tide'],'tide');
 
 % initialize special tide parameters 'spectid,-ret' for tidal ERP terms
     ret = find(tide.gmstpi>=2); 
-    parGS(g.g_tidpm).spectid = (1:size(tide.num))';
+    parGS(g.g_tidpm).spectid = (1:size(tide.num,1))';
     parGS(g.g_tidpm).spectidret = (1:length(ret))';
-    parGS(g.g_tidut).spectid = (1:size(tide.num))';
+    parGS(g.g_tidut).spectid = (1:size(tide.num,1))';
     
      fileID = fopen([path_level 'DATA/GLOB/tidalERPvar_globest.txt']);
-     C = textscan(fileID,'%s %d %d %d %d %d %d %d','Delimiter',',','CommentStyle','%');
+     C = textscan(fileID,'%4s %d %d %d %d %d %d %d','Delimiter',',','CommentStyle','%');
      fclose(fileID);
      
      t.name = cell2mat(C{1,1});
