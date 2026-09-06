@@ -46,6 +46,7 @@ function varargout=createExtIonoFiles(sessionName, ionSubDir, azelFile, ionoMode
 % ref_freq_Hz = 24.0e9; % Kband
 
 % Status Msg.:
+clc
 fprintf('Creating ion. file for session: %s\n', sessionName);
 
 %~~~~~~~~~~~~~~~~~~~~~~~~ DEFINITIONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -223,8 +224,8 @@ for k = 1 : 2 % loop over 2 days
                 ionoFilename{k,1} = ['COD0OPSFIN_', sprintf('%04.0f', curYr(k)), sprintf('%03.0f', yyDoySecod(k,2)), '0000_01D_01H_GIM.INX']; % 1h time interval
                 sfx = '.gz';
             end
-             %url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
-             url = ['http://ftp.aiub.unibe.ch/CODE/', num2str(curYr(k)), '/', ionoFilename{k,1}, sfx]; 
+             url=['https://cddis.nasa.gov/archive/gnss/products/ionex/', num2str(curYr(k)), '/', sprintf('%03.0f', yyDoySecod(k,2)), '/', ionoFilename{k,1}, sfx];
+             %url = ['http://ftp.aiub.unibe.ch/CODE/', num2str(curYr(k)), '/', ionoFilename{k,1}, sfx]; 
     
         elseif strcmp(ionoModel, 'IGS') == 1 
             if yrdec < 2022+331/365 % old naming convention till 2022, doy 330
@@ -311,18 +312,18 @@ for k = 1 : 2 % loop over 2 days
             if ~exist(zippedFile, 'file') % if zipped file does not exist in folder -> download
                 fprintf('Compressed %s TEC map file does not exist: (%s)\n', ionoModel, zippedFile);
 
-                if strcmp(ionoModel, 'CODE') == 1
-                    urlwrite(url, zippedFile);
-                    %            untar('example/example.tar','example');
-                    fprintf(' ...finished downloading.\n');
+                % if strcmp(ionoModel, 'CODE') == 1
+                %     urlwrite(url, zippedFile);
+                %     %            untar('example/example.tar','example');
+                %     fprintf(' ...finished downloading.\n');
 
-                elseif strcmp(ionoModel, 'ETH') == 1
+                if strcmp(ionoModel, 'ETH') == 1
                     fprintf('\n => Please, save the ETH iono file to %s: \n', [ionoPath(k,:), num2str(curYr(k)), '/']); % private
                     
                 else
                     fprintf('\n => Please, download the file from CDDIS webpage to %s: \n', [ionoPath(k,:), num2str(curYr(k)), '/']); % download from CDDIS is not set
                     fprintf('%s\n', url);
-                    fprintf(fidURLs,  'curl -b ~/.urs_cookies -L -n %s -o %s;\n', url, [ionoFilename{k,1}, sfx])
+                    fprintf(fidURLs,  'curl -b ~/.urs_cookies -L -n %s -o %s;\n', url, [ionoFilename{k,1}, sfx]);
                 end
 
 
@@ -353,7 +354,7 @@ for k = 1 : 2 % loop over 2 days
 end
 
 
-display('Uncompress the files in ../ION/MAPS/') 
+fprintf('\nUncompress the files in ../ION/MAPS/') 
 
 if runComputeION 
     %~~~~~~~~~~~~~~~~~~~~~~~~~ READ IONEX FILES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -473,8 +474,7 @@ if runComputeION
     % Petrov (2023), https://iopscience.iop.org/article/10.3847/1538-3881/acc174
     dh = 56.7; %km
     alpha = 0.9782;
-    kscale = 1; %0.85
-    
+    kscale = 1; %0.85     
     
     % calculation of M(zd), STEC
     Mzd                                 = zeros(size(azel_data{1},1),1);
