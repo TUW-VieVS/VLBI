@@ -33,6 +33,11 @@ function [scan, sources, antenna]=cleanScan(scan, sources, antenna, parameter)
 %% Options
 flag_pring_debug_info = false;
 nocablegeneral = false;
+IonoFlag = true; % true SX
+%%
+if ~IonoFlag
+    disp('Iono-flag is not checked!')
+end
 %% Precalculations
 nScans = size(scan,2);
 
@@ -504,7 +509,11 @@ if parameter.obs_restrictions.suppression_flags
         %     obs2Delete = obs2Delete_deluflag | obs2Delete_IonFlag | obs2Delete_q_code_X | obs2Delete_q_code_S;
         %     code_print_info = 1;
         % else
+        if IonoFlag
             obs2Delete = obs2Delete_deluflag | obs2Delete_IonFlag;
+        else
+            obs2Delete = obs2Delete_deluflag ;
+        end
         % end
     
         if sum(obs2Delete) > 0

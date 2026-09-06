@@ -335,7 +335,7 @@ else
 
     % ERROR=0: sucessful
     if runDownloadGIM
-    fprintf('%1.0f file(s): GIMs successfully downloaded\n', sum(errorMsgs == 0))
+    %fprintf('%1.0f file(s): GIMs successfully downloaded\n', sum(errorMsgs == 0))
     elseif runComputeION
     fprintf('%1.0f file(s): .ion successfully created\n', sum(errorMsgs == 0))
     end
