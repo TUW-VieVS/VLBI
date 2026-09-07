@@ -752,11 +752,11 @@ while (idx_line <= nlines)
         
         switch source_type
             case 's' 
-                sfoundSource = strcmp(source_name, {sources.s.name});
+                sfoundSource = strcmp(pad(source_name,8), {sources.s.name});
                 if sum(sfoundSource) == 0
                    %satellite is observed for the first time
                    num_s = num_s + 1;
-                   sources.s(num_s).name = source_name;
+                   sources.s(num_s).name = pad(source_name, 8);
                    sources.s(num_s).numobs = 0;
                    sources.s(num_s).firstObsMjd = mjd;
                    sindOfNewSourceInSources = num_s;

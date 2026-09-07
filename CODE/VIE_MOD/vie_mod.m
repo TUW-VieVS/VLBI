@@ -567,6 +567,35 @@ if isfield(sources, 's')
     end
 end
 
+[coerpr, trpr, hrpr, tbnd, sclpar, satnum] = deal(0, 0, 0, 0, 0, 0);
+
+fileORB = "";
+if parameter.lsmopt.ORB.estORB && parameter.lsmopt.ORB.estorb_FRP
+    fileORB = string(parameter.lsmopt.ORB.FRPFile);
+end
+
+fileSRP = "";
+if parameter.lsmopt.SRP.estSRP
+    fileSRP = string(parameter.lsmopt.SRP.SRPFile);
+end
+
+if fileORB ~= "" && fileSRP ~= ""
+    if strcmp(fileORB, fileSRP)
+        finalFile = fileSRP;
+    else
+        error('Error: Both ORB and SRP estimation are enabled, but there are different FRP Files provided! Currently, processing works only with the same file! \nORB file: %s\nSRP file: %s', ...
+            fileORB, fileSRP);
+    end
+elseif fileORB ~= ""
+    finalFile = fileORB;
+elseif fileSRP ~= ""
+    finalFile = fileSRP;
+else
+    if parameter.lsmopt.ORB.estORB || parameter.lsmopt.SRP.estSRP
+        error('Error: FRP file is missing!');
+    end
+end
+
 % *************************
 %  loop over scans
 % *************************
@@ -586,7 +615,7 @@ for iSc = 1:number_of_all_scans
     dQdut = DQDUT(:,:,iSc);
     dQddX = DQDDX(:,:,iSc);
     dQddY = DQDDY(:,:,iSc);
-       
+     
     % tidal ERP variations
     if opt.est_erpsp==1
         PNn     = PNN(:,:,iSc);
@@ -639,8 +668,9 @@ for iSc = 1:number_of_all_scans
     % ************************************
     %  loop over stations in current scan
     % ************************************
+    
     for iStat = 1 : length(scan(iSc).stat)
-       [scan, flgm_ctp] = antennaCorrections(iSc, iStat, scan, antenna, opt, parameter, session, mjd, ANT, VEL, t2c, leap, cto_F, cto_P, cto_TAMP, cto_IDD1, PHI, LAM, tim, xp, yp, cpsd_all, ephem, sourceNames);    
+       [scan, flgm_ctp] = antennaCorrections(iSc, iStat, scan, antenna, opt, parameter, session, mjd, ANT, VEL, t2c, leap, cto_F, cto_P, cto_TAMP, cto_IDD1, PHI, LAM, tim, xp, yp, cpsd_all, ephem, sourceNames);
     end 
     
     % ############################
@@ -683,27 +713,32 @@ for iSc = 1:number_of_all_scans
         trsStation1_noNtsl  = scan(iSc).stat(idStation1).x_noNtsl;       % station1 position TRS
         trsStation2_noNtsl  = scan(iSc).stat(idStation2).x_noNtsl;       % station2 position TRS
         
-        rqu = rq / norm(rq);                            % unit source vector barycentrum-source, only valid for quasar obs.! For spacecrafts = [1,0,0]
-
         crsBaseline  = crsStation2 - crsStation1;       % baseline vector CRS
         trsBaseline  = trsStation2 - trsStation1;       % baseline vector TRS
                 
         % station velocity due to earth rotation
         v1 = t2c *[-omega*trsStation1(2);omega*trsStation1(1);0];  % [CRS]
         v2 = t2c *[-omega*trsStation2(2);omega*trsStation2(1);0];  % [CRS]
+
         % w/o ntsl for sinex calibration block
         v1_noNtsl = t2c *[-omega*trsStation1_noNtsl(2);omega*trsStation1_noNtsl(1);0];  % [CRS]
         v2_noNtsl = t2c *[-omega*trsStation2_noNtsl(2);omega*trsStation2_noNtsl(1);0];  % [CRS]
-          
+
         % ##### Distinguish between source types (quasar/spacecraft) #####
         delModQ = 1;
         switch(scan(iSc).obs_type)
             case 'q'
+                rqu = rq / norm(rq);  % unit source vector barycentrum-source, only valid for quasar obs!
+
                 switch delModQ
                     case 1 %consensus        
                         [tau, pGammaSun, k1a, k2a, fac1] = consensusModelQuasar(iSc, crsStation1,crsStation2, idStation1, idStation2, rqu, ephem, opt, antenna, v1, v2);
                                              
                         tau_mod_orb = repmat(tau,6,1); 
+                        % tau_mod_srp = repmat(tau,9,1); 
+                        % tauC_N = tau; 
+                        % tauC_T = tau; 
+                        % tauC_W = tau; 
 
                         % w/o ntsl for sinex calibration block
                         [tau_noNtsl, ~, k1a_noNtsl, k2a_noNtsl, ~] = consensusModelQuasar(iSc, crsStation1_noNtsl, crsStation2_noNtsl, idStation1, idStation2, rqu, ephem, opt, antenna, v1_noNtsl, v2_noNtsl);
@@ -720,32 +755,37 @@ for iSc = 1:number_of_all_scans
                 end
             case 's'
                 switch(delModS)                
-                    case 1 % Light time equation
+                    case 1 
                         pGammaSun = 0;
                         fac1 = 0;
-                        tau_mod_orb = NaN(6,1); 
-                        [tau, scan, crfScPos, crfScVel, k1a, k2a] = calcDelaySatellite(sources, iSc, scan, crsStation1, crsStation2, t2c);
+                        % tau_mod_orb = NaN(6,1); 
+                        [tau, scan, crfScPos, crfScVel, k1a, k2a] = calc_nfd(sources, iSc, scan, crsStation1, crsStation2, t2c, v2);
 
                         % w/o ntsl for sinex calibration block
-                        [tau_noNtsl, ~, ~, ~, k1a_noNtsl,k2a_noNtsl] = calcDelaySatellite(sources, iSc, scan, crsStation1_noNtsl, crsStation2_noNtsl, t2c);
+                        [tau_noNtsl, ~, ~, ~, k1a_noNtsl,k2a_noNtsl] = calc_nfd(sources, iSc, scan, crsStation1_noNtsl, crsStation2_noNtsl, t2c, v2);
                               
                         %compute delay for satellite with changed orbit
                         for i = 1:6
-                            [tau_mod_orb(i), ~, ~, ~, ~, ~] = calcDelaySatellite(sourcesChanged_orb{i}, iSc, scan, crsStation1, crsStation2, t2c);  
+                            [tau_mod_orb(i), ~, ~, ~, ~, ~] = calc_nfd(sourcesChanged_orb{i}, iSc, scan, crsStation1, crsStation2, t2c, v2);  
                         end
                         % tau_mod_orb = repmat(tau,6,1); 
                  
                         % partial derivatives wrt to eop, satellite position, orbital elements, srp parameter
                         [deop] = nfd_deop(scan(iSc).crfSat, trsStation1, trsStation2, crsStation1, crsStation2, dQdxp, dQdyp, dQdut, dQddX, dQddY, v2);
-                        [dsat_gcrf, dsat_rsw, dsat_ntw, dsat_trf, ps1, ps2] = nfd_dpos(crsStation1, crsStation2, t2c, crfScPos, crfScVel);
+                        [dsat_gcrf, dsat_rsw, dsat_ntw, dsat_trf, ps1, ps2] = nfd_dpos(crsStation1, crsStation2, t2c, crfScPos, crfScVel, v2);
                         [dorb_dt, dorb_dr, dorb_ana, dorb_frp, dsrp] = dtau_dorb(GM, scan(iSc), sources.s(scan(iSc).iso), dorb, tau, tau_mod_orb, rad2mas, dsat_gcrf);      
 
+                        rqu = crfScPos' / norm(crfScPos); % unit source vector for satellite in gcrs!
                 end
         end
         
         % further corrections (same for both models (Sekido & Fukushima, p.141))
         [a_ngr, a_egr, scan, antenna, tau]  = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tau, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
  
+        for i = 1:6
+            [~, ~, ~, ~, tau_mod_orb(i)] = correctionBaseline(scan, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a, k2a, rqu, v2, v1, tau_mod_orb(i), cell_grid_GPT3, iobs, iondata, ionFileFoundLog);  
+        end
+
         % w/o ntsl for sinex calibration block
         scan_noNtsl = scan;
         scan_noNtsl(iSc).stat(iStat).x = scan(iSc).stat(iStat).x_noNtsl;
@@ -753,14 +793,14 @@ for iSc = 1:number_of_all_scans
         
         [~, ~, ~, ~, tau_noNtsl]  = correctionBaseline(scan_noNtsl, antenna, parameter, t2c, mjd, iSc, idStation1, idStation2, k1a_noNtsl, k2a_noNtsl, rqu, v2_noNtsl, v1_noNtsl, tau_noNtsl, cell_grid_GPT3, iobs, iondata, ionFileFoundLog);
         clear scan_noNtsl;
-        
+       
         scan(iSc).obs(iobs).com_orb1 = tau_mod_orb(1); %[sec]
         scan(iSc).obs(iobs).com_orb2 = tau_mod_orb(2); %[sec]
         scan(iSc).obs(iobs).com_orb3 = tau_mod_orb(3); %[sec]
         scan(iSc).obs(iobs).com_orb4 = tau_mod_orb(4); %[sec]
         scan(iSc).obs(iobs).com_orb5 = tau_mod_orb(5); %[sec]
-        scan(iSc).obs(iobs).com_orb6 = tau_mod_orb(6); %[sec]
-        
+        scan(iSc).obs(iobs).com_orb6 = tau_mod_orb(6); %[sec] 
+
         % SOURCE STRUCTURE +
         if parameter.vie_mod.ssou==1 || parameter.vie_mod.write_jet==1
             ind=strcmp(sources.q(scan(iSc).iso).name,cat_comp.name,'exact');
@@ -791,10 +831,12 @@ for iSc = 1:number_of_all_scans
         end
         
         % correct for source structure
-        if parameter.vie_mod.ssou==1
-            tau=tau+soucorr;
-            % w/o ntsl for sinex calibration block
-            tau_noNtsl = tau_noNtsl + soucorr_noNtsl;
+        if scan(iSc).obs_type == 'q'
+            if parameter.vie_mod.ssou==1
+                tau=tau+soucorr;
+                % w/o ntsl for sinex calibration block
+                tau_noNtsl = tau_noNtsl + soucorr_noNtsl;
+            end
         end
         
         % writing jetang to external file

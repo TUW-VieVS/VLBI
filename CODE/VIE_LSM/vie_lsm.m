@@ -491,7 +491,7 @@ if isfield(sources, 's') && ~isempty([sources.s])
     ns_s = length(sources.s);
 end
 if isfield(sources, 'q') && ~isempty([sources.q])
-    ns_q = length(sources.q);
+    ns_q = length({sources.q.name});
 end
 
 % Write info to CW:

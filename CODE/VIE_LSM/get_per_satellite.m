@@ -65,7 +65,7 @@ function [per_satellite] = get_per_satellite(opt, scan, mjd0, name_orb)
         if opt.SatPos.pw_sat
             int_min = opt.SatPos.sat_pos_int;
        
-            if int_min == session_duration
+            if abs(int_min - session_duration) <= 10
                 T = (tend-tstart)/2; %one value at mid of session
             elseif tstart + int_min >= tend
                 T = [tstart, tend];
@@ -80,7 +80,7 @@ function [per_satellite] = get_per_satellite(opt, scan, mjd0, name_orb)
             for iorb = est_orb
                 int_min = opt.ORB.params(iorb).interval; 
                 
-                if int_min == session_duration || int_min == 0 
+                if abs(int_min - session_duration) <= 10 || int_min == 0 
                     T = (tend-tstart)/2; %one value at mid of session
                 elseif tstart + int_min >= tend
                     T = [tstart, tend];
@@ -96,7 +96,7 @@ function [per_satellite] = get_per_satellite(opt, scan, mjd0, name_orb)
             for isrp = est_srp
                 int_min = opt.SRP.params(isrp).interval;
 
-                if int_min == session_duration || int_min == 0 
+                if abs(int_min - session_duration) <= 10 || int_min == 0 
                    T = (tend-tstart)/2; %one value at mid of session 
                 elseif tstart + int_min >= tend
                     T = [tstart, tend];

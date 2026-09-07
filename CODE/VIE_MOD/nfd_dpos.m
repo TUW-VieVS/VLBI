@@ -7,18 +7,19 @@
 %   Reference:
 %
 %   Input:
-%       crsStation1             (3,1)           station coordinates of station 1 (CRS)
-%       crsStation2             (3,1)           station coordinates of station 2 (CRS)
-%       t2c                     (3,1)           transformation matrix 
-%       crfScPos                (3,1)           satellite position (CRS)
-%       crfScVel                (3,1)           satelltie velocity (CRS)
+%       'crsStation1'             (3,1)           station coordinates of station 1 (CRS)
+%       'crsStation2'             (3,1)           station coordinates of station 2 (CRS)
+%       't2c'                     (3,1)           transformation matrix 
+%       'crfScPos'                (3,1)           satellite position (CRS)
+%       'crfScVel'                (3,1)           satellite velocity (CRS)
+%       'v2'                      (3,1)           velocity of station 2 (CRS)
 %  
 %
 %   Output:
-%       'psat_rsw'              (3,1)           partial derivatives of delay wrt satellite position in RSW-frame
-%       'psat_gcrf'             (3,1)           partial derivatives of delay wrt satellite position in GCRF-frame
-%       'psat_ntw'              (3,1)           partial derivatives of delay wrt satellite position in NTW-frame
-%       'psat_trf'              (3,3)           partial derivatives of delay wrt satellite position in TRF-frame
+%       'psat_rsw'              (3,1)           partial derivative of delay wrt satellite position in RSW-frame
+%       'psat_gcrf'             (3,1)           partial derivative of delay wrt satellite position in GCRF-frame
+%       'psat_ntw'              (3,1)           partial derivative of delay wrt satellite position in NTW-frame
+%       'psat_trf'              (3,3)           partial derivative of delay wrt satellite position in TRF-frame
 %       'ps1'                   (3,1)           partial derivative of delay wrt to coord of station1 in TRF
 %       'ps2'                   (3,1)           partial derivative of delay wrt to coord of station2 in TRF
 %
@@ -30,8 +31,7 @@
 %   Revision:
 %
 % ************************************************************************
-function [psat_gcrf, psat_rsw, psat_ntw, psat_trf, ps1, ps2] = nfd_dpos(crsStation1, crsStation2, t2c, crfScPos, crfScVel)
-    global omega
+function [psat_gcrf, psat_rsw, psat_ntw, psat_trf, ps1, ps2] = nfd_dpos(crsStation1, crsStation2, t2c, crfScPos, crfScVel, v2)
     global c
 
     L1  = crfScPos' - crsStation1';
@@ -39,10 +39,6 @@ function [psat_gcrf, psat_rsw, psat_ntw, psat_trf, ps1, ps2] = nfd_dpos(crsStati
 
     nL1 = norm(L1);
     nL2 = norm(L2);
-
-    v2 = [-omega*crsStation2(2);
-           omega*crsStation2(1);
-           0];
 
     % analytical PD in GCRF:
     dudws_part1 = (crfScPos - crsStation2) ./ nL2   -  (crfScPos - crsStation1) ./ nL1; 
@@ -61,7 +57,7 @@ function [psat_gcrf, psat_rsw, psat_ntw, psat_trf, ps1, ps2] = nfd_dpos(crsStati
     % Rotation of PD to TRF system:
     psat_trf = t2c' * psat_gcrf;
 
-    %changed: partial derivative of du0 w.r.t. station coordinates (in TRF!)
+    %partial derivative of du0 w.r.t. station coordinates (in TRF!)
     ps1 = +t2c'*(L1'/norm(L1));  % partial derivative wrt to station 1, unit: [] => estimates will be in [cm]
     ps2 = -t2c'*(L2'/norm(L2));  % partial derivative wrt to station 2, unit: [] => estimates will be in [cm]
     

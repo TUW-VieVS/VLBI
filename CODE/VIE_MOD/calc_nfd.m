@@ -7,12 +7,14 @@
 %   Reference:
 %
 %   Input:
-%       'sources'                    structure array   sources structure array
-%       'iSc'                        (1,1)             index of current scan
-%       'scan'                       structure array   scan structral array
-%       'crsStation1'               (3,1)              CRS coordiantes of station 1
-%       'crsStation2'               (3,1)              CRS coordinates of station 2
-%       't2c'                        (3,3)             terrrestrial to celestial matrices   
+%       'sources'                   structure array   sources structure array
+%       'iSc'                       (1,1)             index of current scan
+%       'scan'                      structure array   scan structral array
+%       'crsStation1'               (3,1)             CRS coordiantes of station 1
+%       'crsStation2'               (3,1)             CRS coordinates of station 2
+%       't2c'                       (3,3)             terrrestrial to celestial matrices
+%       'v2'                        (3,3)             velocity of station 2 (CRS)
+%       
 %
 %   Output:
 %       'tau'                        (1,1)             time delay in TT (Klioner)
@@ -28,16 +30,19 @@
 %   22 November 2021 by H. Wolf - created as external function of vie_mod
 %
 %   Revision:
-%   17 July 2027 by H. Wolf - revised the implmentation of Klioner; added Duev 
+%   17 July 2026 by H. Wolf - revised the implmentation of Klioner; added Duev 
 %
 % ************************************************************************
 
 
-function [tau, scan, crfScPos, crfScVel, k1a, k2a] = calcDelaySatellite(sources, iSc, scan, crsStation1, crsStation2, t2c)
+function [tau, scan, crfScPos, crfScVel, k1a, k2a] = calc_nfd(sources, iSc, scan, crsStation1, crsStation2, t2c, v2)
     global c
     global gme
     global omega
     LG = 6.969290134 *10^(-10);
+
+    omega_trf = [0,0,omega]';
+    omega_crf = t2c * omega_trf;
 
     ddtThreshold  = 1e-16;     % thresholds for Duev 
     maxIterations = 25;        % max number of iteratoins for Duev
@@ -71,7 +76,7 @@ function [tau, scan, crfScPos, crfScVel, k1a, k2a] = calcDelaySatellite(sources,
     numberOfIterations = 0;
     ddu0 = 999999;
     u0 = u1 - norm(crsStation1 - crfScPos)/c;
-    digits(20)
+    digits(15)
     while(abs(ddu0) > ddtThreshold) 
         numberOfIterations = numberOfIterations + 1;
         u0_old = u0;
@@ -98,7 +103,7 @@ function [tau, scan, crfScPos, crfScVel, k1a, k2a] = calcDelaySatellite(sources,
 
     % for checks:
     % res = u1 - u0 - norm(crsStation1 - crfScPos)/c - dugr1;
-    % res_range = res*c;
+    % res_range1 = res*c;
 
     %% Iteration Light time equation 2 
     numberOfIterations_u2 = 0;
@@ -107,9 +112,7 @@ function [tau, scan, crfScPos, crfScVel, k1a, k2a] = calcDelaySatellite(sources,
 
     crsStation2_u2 = crsStation2;
 
-    stationVel = [-omega*crsStation2_u2(2);
-                   omega*crsStation2_u2(1);
-                   0];
+    stationVel = cross(omega_crf, crsStation2_u2);
 
     while(abs(ddu2) > ddtThreshold)
         numberOfIterations_u2 = numberOfIterations_u2 + 1;
@@ -128,11 +131,9 @@ function [tau, scan, crfScPos, crfScVel, k1a, k2a] = calcDelaySatellite(sources,
               sin(omega*delta_t)  cos(omega*delta_t) 0;
                0                   0                  1];
 
-        crsStation2_u2 = Rz * crsStation2;
+        crsStation2_u2 = t2c * (Rz * (t2c' * crsStation2));
 
-        stationVel = [-omega*crsStation2_u2(2);
-                       omega*crsStation2_u2(1);
-                       0];
+        stationVel = cross(omega_crf, crsStation2_u2);
 
         [dugr2, ~] = get_dugr(crsStation2_u2, crfScPos, crfScVel);
         ddu2 = u2 - u0 - norm(crsStation2_u2 - crfScPos)/c - dugr2;
@@ -145,7 +146,7 @@ function [tau, scan, crfScPos, crfScVel, k1a, k2a] = calcDelaySatellite(sources,
  
     % for checks:
     % res = u2 - u0 - norm(crsStation2_u2 - crfScPos)/c - dugr2;
-    % res_range = res*c;
+    % res_range2 = res*c;
 
     R1 = norm(crfScPos - crsStation1);
     R2 = norm(crfScPos - crsStation2_u2);
@@ -154,10 +155,6 @@ function [tau, scan, crfScPos, crfScVel, k1a, k2a] = calcDelaySatellite(sources,
     L1  = crfScPos' - crsStation1';
     L2  = crfScPos' - crsStation2';
     
-    v2 = [-omega*crsStation2(2);
-           omega*crsStation2(1);
-           0];
-
     We = gme/norm(crsStation2);
 
     du0     = (norm(L2) - norm(L1))/c; % Difference in travel time not considering retarded BL effect [sec]
@@ -186,8 +183,8 @@ function [tau, scan, crfScPos, crfScVel, k1a, k2a] = calcDelaySatellite(sources,
     end
 
     % Source vectors:
-    k1a = double(L1); % Source vector station 1
-    k2a = double(L2); % Source vector station 2
+    k1a = double(crfScPos' - crsStation1');    % Source vector station 1
+    k2a = double(crfScPos' - crsStation2_u2'); % Source vector station 2
 end
 
 function [dugr, dDelay_dt] = get_dugr(crsStation, crfScPos, crfScVel)
