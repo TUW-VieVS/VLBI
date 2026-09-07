@@ -1575,6 +1575,7 @@ set(handles.checkbox_run_allowStationwise, 'Value', parameter.lsmopt.control_gui
 % set use of clock breaks and manually finding breaks
 set(handles.checkbox_estimation_leastSquares_clocks_useClockBreaks, 'Value', parameter.lsmopt.treat_breaks)
 
+
 % ambiguity residual correction
 if isfield(parameter.lsmopt, 'res_compute')
     set(handles.checkbox_residual_compute, 'Value', parameter.lsmopt.res_compute);

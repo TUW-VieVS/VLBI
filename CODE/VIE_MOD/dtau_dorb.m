@@ -6,6 +6,38 @@
 %   Reference:
 %
 %   Input:
+%       GM                  - gravity constant
+%       scan                - scan struct
+%       sat                 - satellite struct
+%       satnum(m)           - satellite number
+%                             m=1,...,nsat - satellite nr
+%                             nn: GPS
+%                             1nn: GLONASS
+%                             2nn: Galileo
+%                             3nn: SBAS
+%                             4nn: BeiDou
+%                             5nn: QZSS
+%       dorb                - change in orbital elements
+%       tau                 - time delay tau
+%       tauC_orb            - time delay for changed orbits
+%       rad2mas             - conversion from rad to mas
+%       coerpr(i,j,k,m,n)   - Polynomial coefficients
+%                             i=1,...,nint - integration interval
+%                             j=1,...,nsat - satellite nr
+%                             k=1,...,nvar - parameter
+%                             m=1,...,nq+1 - degree
+%                             n=1,2,3,     - component
+%       trpr(i)             - epoch expansion point (mjd)
+%                             i=1,...,nrpr - integration interval
+%       hrpr(i)             - integration interval (sec)
+%                             i=1,...,nrpr - integration interval
+%       tbnd(i)             - integration interval boundaries
+%                             i=1,...,nint+1
+%       sclpar(i,j)         - parameter scaling
+%                             i=1,...,nsat - satellite nr
+%                             j=1,...,nvar - parameters
+%       dsat_gcrf           - partial derivative of time delay wrt satellite position in grcf
+%       parameter           - parameter struct
 %  
 %
 %   Output:
@@ -29,7 +61,7 @@ function [dorb_dt, dorb_dr, dorb_ana, dorb_frp, dsrp] = dtau_dorb(GM, scan, sat,
     r = scan.crfSat;
     v = scan.v_crfSat;
 
-    %numerical dT
+    %numerical dt
     dorb_dt(1,1) = (tauC_orb(1) - tau) / (dorb(1)) *c ;                % [s/m]*[m/s] -> [] estimates in cm
     dorb_dt(2,1) = (tauC_orb(2) - tau) / (dorb(2)) *c*100;             % [cm]   
     dorb_dt(3,1) = (tauC_orb(3) - tau) / (dorb(3)) *c*100*(1/rad2mas); % [cm/mas]
@@ -38,15 +70,12 @@ function [dorb_dt, dorb_dr, dorb_ana, dorb_frp, dsrp] = dtau_dorb(GM, scan, sat,
     dorb_dt(6,1) = (tauC_orb(6) - tau) / (dorb(6)) *c*100*(1/rad2mas); % [cm/mas]
 
     %analytically
-    [a,e,i,Omega,argp,t00] = xyzele(GM,scan.mjd,r,v);
-    [drdorb_ana] = rpartn(GM, scan.mjd, sat.tosc, a, e, i, Omega, argp, t00);
+    [a,e,i,kn,per,t0] = xyzele(GM,scan.mjd,r,v);
+    [drdorb_ana] = rpartn(GM, scan.mjd, sat.tosc, a, e, i, kn, per, t0);
 
-    %numerical dR
+    %numerical dr
     [drdorb_dr] = drdorb_num(GM, scan.mjd, tosc, r, v);  %numerical drdpar
 
-    %FRP
-    dorb_frp = zeros(6,3);
-    dsrp = zeros(9,3);
 
     %transform units
     dorb_dr(1,1) = dot(dsat_gcrf',drdorb_dr(1,:)');                    % [m/m]     -> [] estimates in cm
@@ -63,4 +92,6 @@ function [dorb_dt, dorb_dr, dorb_ana, dorb_frp, dsrp] = dtau_dorb(GM, scan, sat,
     dorb_ana(5,1) = dot(dsat_gcrf',drdorb_ana(5,:)') *100*(1/rad2mas) ;  % [cm/mas]  -> estimates in mas
     dorb_ana(6,1) = dot(dsat_gcrf',drdorb_ana(6,:)') *100*(1/rad2mas);   % [cm/mas]  -> estimates in mas 
 
+    dorb_frp = zeros(6,3);
+    dsrp = zeros(9,3);
 end

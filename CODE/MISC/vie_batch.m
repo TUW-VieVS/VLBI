@@ -761,8 +761,7 @@ if ~isempty(process_list)
                                 tmp=load([fil '_antenna.mat']);antenna=tmp.antenna;
                                 tmp=load([fil '_sources.mat']);sources=tmp.sources;
                             end
-                            sources = vie_lsm(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)
-                           																													   
+                            sources = vie_lsm(antenna,sources,scan,parameter,runp.lsm_path,runp.glob_path)																												   
                         else
                             fprintf('You need to run VIE_MOD for session %s before you can run VIE_LSM\n', session);
                         end

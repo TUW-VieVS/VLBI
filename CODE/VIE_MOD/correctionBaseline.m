@@ -323,6 +323,8 @@ function [a_ngr, a_egr, scan, antenna, tau] = correctionBaseline(scan, antenna, 
 
         % add
         tau = c_axis + c_therm + c_gravdef + c_trop + tpd_g + tau; % [sec]
+    else
+        error('Error with vector to source or satellite!')
     end
    
     % + EXTERNAL IONOSPERIC DELAY +
