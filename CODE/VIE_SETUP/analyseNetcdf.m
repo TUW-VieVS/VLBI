@@ -309,6 +309,10 @@ set(fig,'Visible','on')
         
         if ~isempty(indices_variabTab)
             out_struct=getappdata(fig,'out_struct');
+            test = out_struct.Apriori.Station.AprioriStationList.val;
+            strings = string(test);
+            names = string(char(strings).');
+            out_struct.Apriori.Station.AprioriStationList.val = names; 
             
             [db,st,so,fo,fi,wr,va] = getGUIselections(varargin);
             
