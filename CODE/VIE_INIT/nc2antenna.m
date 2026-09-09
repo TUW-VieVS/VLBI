@@ -115,11 +115,15 @@ for iStat=1:nStat
         fprintf('No valid %s coordinates for %s => get vievsTrf coordinates (no NNT/NNR conditions applied!)\n', chosenTrf, curName)
         % so: no valid epoch for official (e.g.. VTRF2008) TRF -> get vievsTrf break
         trfToTake='vievsTrf';
-        
-        bnr=find(antenna(iStat).firstObsMjd>=[trf(indCurStatInTrf).(trfToTake).break.start] & antenna(iStat).firstObsMjd<=[trf(indCurStatInTrf).(trfToTake).break.end]);
 
+        if ~isempty(trf(indCurStatInTrf).(trfToTake))
+            bnr=find(antenna(iStat).firstObsMjd>=[trf(indCurStatInTrf).(trfToTake).break.start] & antenna(iStat).firstObsMjd<=[trf(indCurStatInTrf).(trfToTake).break.end]);
+        else
+            bnr = [];
+        end
+      
         if isempty(bnr)
-            error('Station %s not found in the superstation file (vievsTRF). Add this station to the superstation file by following the steps described at %s\n', antenna(iStat).name, url_vievswiki_create_superstation);
+            error('Station %s not found in the superstation file (vievsTRF). \n Add this station to the superstation file by following the steps described at %s\n', antenna(iStat).name, url_vievswiki_create_superstation);
         end
     end
     
