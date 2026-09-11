@@ -76,7 +76,6 @@ function [tau, scan, crfScPos, crfScVel, k1a, k2a] = calc_nfd(sources, iSc, scan
     numberOfIterations = 0;
     ddu0 = 999999;
     u0 = u1 - norm(crsStation1 - crfScPos)/c;
-    digits(15)
     while(abs(ddu0) > ddtThreshold) 
         numberOfIterations = numberOfIterations + 1;
         u0_old = u0;
@@ -85,7 +84,7 @@ function [tau, scan, crfScPos, crfScVel, k1a, k2a] = calc_nfd(sources, iSc, scan
   
         f = u1 - u0 - norm(crsStation1 - crfScPos)/c - dugr1;
         df = crfScVel'*(crsStation1 - crfScPos)/(c*norm(crsStation1 - crfScPos)) -1 - dDelay_dt;
-        u0 = vpa(u0_old - f/df);
+        u0 = u0_old - f/df;
 
         % Get spacecraft position and velocity at time at current estimated emission time u0
         crfScPos = lagint9_fast(tRefSecInterpol, pos_crf, u0);

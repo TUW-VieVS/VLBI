@@ -223,8 +223,8 @@ function write_sinex_vie_glob_CRFTRF(globsol,paths,trf,crf)
     approxLon(approxLon<0)=approxLon(approxLon<0)+360;
 
     % ° -> dms
-    dmsLat=degrees2dms(approxLat);
-    dmsLon=degrees2dms(approxLon);
+    dmsLat=deg2dms(approxLat);
+    dmsLon=deg2dms(approxLon);
 
     % write blockstart line to file
     fprintf(fid, '+%s\n', blockName);

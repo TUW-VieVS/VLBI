@@ -74,8 +74,8 @@ for i_src = 1 : length(vgosdb_src_name_list)
         
         ra_hr  = vgosdb_src_ra(i_src)*180/pi/15;
         dec_deg = vgosdb_src_dec(i_src)*180/pi;
-        dec_dms = degrees2dms(dec_deg);
-        ra_hms = degrees2dms(ra_hr);
+        dec_dms = deg2dms(dec_deg);
+        ra_hms = deg2dms(ra_hr);
         dec_ms_neg = dec_dms<0;
         if ((dec_dms(1)==0) && ((dec_ms_neg(2)) || (dec_ms_neg(3))))
             dec_dms(dec_ms_neg)=dec_dms(dec_ms_neg)*(-1);
