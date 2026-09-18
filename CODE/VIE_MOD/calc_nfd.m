@@ -44,7 +44,7 @@ function [tau, scan, crfScPos, crfScVel, k1a, k2a] = calc_nfd(sources, iSc, scan
     omega_trf = [0,0,omega]';
     omega_crf = t2c * omega_trf;
 
-    ddtThreshold  = 1e-16;     % thresholds for Duev 
+    ddtThreshold  = 1e-13;     % thresholds for Duev 
     maxIterations = 25;        % max number of iteratoins for Duev
            
     scan_cur = scan(iSc);
@@ -95,7 +95,7 @@ function [tau, scan, crfScPos, crfScVel, k1a, k2a] = calc_nfd(sources, iSc, scan
         ddu0 = u1 - u0 - norm(crsStation1 - crfScPos)/c - dugr1;
 
         if numberOfIterations >= maxIterations
-            fprintf(' Warning: Max. number of iterations (%d) for near field delay reached! ddt = %f ps', maxIterations, ddu0*10^(12));
+            fprintf(' Warning: Max. number of iterations (%d) for near field delay reached! ddt = %f ps \n', maxIterations, ddu0*10^(12));
             break;
         end
     end
