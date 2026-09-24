@@ -317,18 +317,18 @@ ordsou=[1:nSou];
 
 
 
-if opt_.pw_sou
-    souNames = {x.soura.name};
-    for i=1:nSou
-        idsou=strcmp(souNames(i),{sources.q.name});
-        RAapr(i) = [sources.q(idsou).ra2000];
-        DEapr(i) = [sources.q(idsou).de2000];
-    end
-else
+%if opt_.pw_sou
+%    souNames = {x.soura.name};
+%    for i=1:nSou
+%        idsou=strcmp(souNames(i),{sources.q.name});
+%        RAapr(i) = [sources.q(idsou).ra2000];
+%        DEapr(i) = [sources.q(idsou).de2000];
+%    end
+%else
     RAapr = [sources.q.ra2000];
     DEapr = [sources.q.de2000];
     souNames = {sources.q.name};
-end
+%end
 
 
 
@@ -360,7 +360,7 @@ for p = 1:2
             vals = vals.*cos(DEapr)'.*15;
             errs = errs.*cos(DEapr)'.*15;
         end
-    
+
         hold on;
         errorbar(DEapr, ...
                  vals, ...
@@ -382,7 +382,7 @@ for p = 1:2
     set(gca, ...
         'XTick',[-pi/2:pi/6:pi/2], ...
         'XTickLabel',[-90:30:90])
-    
+
 
     xlabel('De')
     ylabel(coordLabels{p});

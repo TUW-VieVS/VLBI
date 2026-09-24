@@ -41,9 +41,18 @@ if plotScanRes
     fig1 = plot_scan_meteo(antenna, scan);
     exportFigureToPDF(fig1,outPdf,false)
     
-    fig2 = plot_scan_cable(antenna, scan);
-    exportFigureToPDF(fig2,outPdf,true)
-    
+    nst=length(antenna);
+    nstgroup = ceil(nst/5);
+    for i=1:nstgroup
+        if i==nstgroup
+            idstat=[5*i-4 :1: nst];
+        else
+            idstat=[5*i-4 :1: 5*i];
+        end
+        fig2 = plot_scan_cable(antenna, scan,idstat);
+        exportFigureToPDF(fig2,outPdf,true)
+    end
+
     % Plot wrms from res
     [wrmsfig1, wrmsfig2, wrmsfig3, wrmsfig4, wrmsfig5, wrmsfig6] = plot_res_wrms(res, opt_,tableout);
     exportFigureToPDF(wrmsfig1,outPdf,true)
