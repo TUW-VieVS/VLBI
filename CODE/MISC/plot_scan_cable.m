@@ -1,13 +1,13 @@
 % called by L3plot.m
 
-function fig = plot_scan_cable(antenna, scan)
+function fig = plot_scan_cable(antenna, scan,idstat)
 
 
 nSta = numel(antenna);
 nScan = numel(scan);
 
 antNames = cell(nSta,1);
-for k = 1:nSta
+for k = idstat
     antNames{k} = strtrim(antenna(k).name);
 end
 
@@ -23,26 +23,8 @@ colors1 = [55,126,184;
           228,26,28;
           222,222,0] ./ 255;
 
-colors2 = ([55,126,184;
-          255,127,0;
-          77,175,74;
-          247,129,191;
-          166,86,40;
-          152,78,163;
-          153,153,153;
-          228,26,28;
-          222,222,0] +...
-          [50 50 50
-          0 50 50
-          50 50 50
-          0 50 50
-          50 50 50
-          50 50 50
-          50 50 50
-          10 50 50
-          10 10 50])./ 255;
 
-colors=[colors1;colors2]; % 18 ant max
+colors=[colors1]; 
 
 
 %% Collect scan meteorological data
@@ -57,7 +39,7 @@ for i = 1:nScan
 
     mjd = double(scan(i).mjd);
 
-    for k = 1:nSta
+    for k = idstat
 
         if k <= numel(scan(i).stat)
 
@@ -88,7 +70,7 @@ for i = 1:nScan
     end
 end
 
-for k=1:nSta
+for k=idstat
         if sum(cableData{k})==0
             cableData{k}(:) =NaN;
         end
@@ -116,10 +98,10 @@ fig = figure('Color',[1 1 1], ...
 sgtitle('VLBI Scan Cable calibration', ...
         'FontWeight','bold');
 
-%% Temperature
+
 tiledlayout("vertical");
 
-for k = 1:nSta
+for k = idstat
     nexttile;
 
     if ~isempty(mjdData{k})
