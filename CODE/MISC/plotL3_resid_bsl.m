@@ -84,6 +84,14 @@ for i = 1:numel(uniqueBase)
     plot(mjd_datetime, resbsl,'o','Color',[55./255,  126./255, 184./255],'Markersize',3,'MarkerEdgeColor','k','MarkerFaceColor',[55./255,  126./255, 184./255],'LineWidth',0.1)
     hold off
     ylabel('residuals (mm)')
+    
+    % Get the current tick locations
+    ticksy = get(gca, 'YTick');
+    % Convert those numbers to strings
+    la = string(num2str(ticksy', '%.0f'));
+    % Apply the labels
+    yticklabels(la)
+
     title([char(uniqueBase(i))])
 
 text(0.05, 0.98, ['obs: ', num2str(length(resbsl)) ], ...
@@ -113,6 +121,13 @@ text(0.05, 0.93, ['wrms: ', num2str(wrms1,'%6.2f'), ' mm (' num2str(wrms1*mm2ps,
     % Set the right axis limits by multiplying the left limits by 1e12
     ylim([yl(1)*mm2ps, yl(2)*mm2ps]); 
     ylabel('residuals (ps)');
+
+    % Get the current tick locations
+    ticksy = get(gca, 'YTick');
+    % Convert those numbers to strings
+    la = string(num2str(ticksy', '%.0f'));
+    % Apply the labels
+    yticklabels(la)
 
     % Use datetick or xtickformat to make the date display readable
     xtickformat('HH:mm'); 
