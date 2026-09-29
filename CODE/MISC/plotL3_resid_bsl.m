@@ -2,11 +2,12 @@
 % Creates .pdf file with post-fit residual plots from the main solution per
 % baselines
 
+% sol = 'first', 'main'
 
-function plotL3_resid_bsl(L3,ses)
+function plotL3_resid_bsl(L3,ses,sol)
 
-pdf_filename = ['../OUT/' ses '_postfitresid.pdf'];
-txt_filename = ['../OUT/' ses '_resid.txt'];
+pdf_filename = ['../OUT/' ses '_' sol '_postfitresid.pdf'];
+txt_filename = ['../OUT/' ses '_' sol '_resid.txt'];
 
 load(['../DATA/LEVEL3/' L3 '/res_' ses '.mat' ]);
 
@@ -14,8 +15,13 @@ mm2ps = 1/299792458*10^9;
 
 % residuals per baseline
 baselines = double(res.baselineOfObs);
-x  = double(res.mainVal(:));
-mx = double(res.sigma_residuals_aposteriori(:));
+if strcmp(sol,'main')
+    x  = double(res.mainVal(:));
+    mx = double(res.sigma_residuals_aposteriori(:));
+else
+    x  = double(res.firstVal(:));
+    mx = double(res.sigma_from_fringe_fitting(:))./mm2ps .*10^12 .*10; %cm
+end
 mjd  = double(res.mjd(:));
 sourceNames = cellstr(strtrim(res.allSourceNames));
 statNames   = cellstr(strtrim(res.allStatNames));
@@ -152,7 +158,8 @@ close(fig);
 fid=fopen(txt_filename,'wt');
 fprintf(fid,'#  baseline          mjd                 date-time               source         resid (mm)    sigma (mm) \n');
 for i=1:length(mjd)
-fprintf(fid,'%-17s    %15.10f    %s     %s    %10.2f    %10.2f  \n',...
-             baselineID_all(i), mjd(i), mjd_datetimeALL(i), string(sourceNames(res.source(i))), x(i)*10, mx(i)*10 );
+    parts = strsplit(baselineID_all(i), '-');
+    fprintf(fid,'%-8s %-8s    %17.12f    %s     %s    %10.2f    %10.2f  \n',...
+             parts{1}, parts{2}, mjd(i), mjd_datetimeALL(i), string(sourceNames(res.source(i))), x(i)*10, mx(i)*10 );
 end
 fclose(fid);
