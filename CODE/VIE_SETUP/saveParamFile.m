@@ -529,6 +529,9 @@ parameter.lsmopt.bsldep=get(handles.checkbox_run_bslDepWeights, 'Value');
 % elevation dependent noise
 parameter.lsmopt.eldep_noise=get(handles.checkbox_run_ElevDepNoise, 'Value');
 
+% turbulence model
+parameter.lsmopt.turb_model=get(handles.checkbox_run_TurbModel, 'Value');
+
 % add constant noise [cm]
 parameter.lsmopt.add_const_noise_cm = str2double(get(handles.edit_run_add_noise, 'String'));
 

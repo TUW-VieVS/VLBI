@@ -855,8 +855,17 @@ end
 % elevation dependent noise
 if isfield(parameter.lsmopt, 'eldep_noise')
     set(handles.checkbox_run_ElevDepNoise, 'Value', parameter.lsmopt.eldep_noise)
+    set(handles.checkbox_run_ElevDepNoise, 'Enable', 'on'); 
 else
     set(handles.checkbox_run_ElevDepNoise, 'Value', 0)
+end
+
+% turbulence model
+if isfield(parameter.lsmopt, 'turb_model')
+    set(handles.checkbox_run_TurbModel, 'Value', parameter.lsmopt.turb_model)
+    set(handles.checkbox_run_TurbModel, 'Enable', 'on'); 
+else
+    set(handles.checkbox_run_TurbModel, 'Value', 0)
 end
 
 % add constant noise [cm]
