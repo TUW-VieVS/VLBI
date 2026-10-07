@@ -542,6 +542,9 @@ if opt.eldep_noise==1 % Elevation dependent noise
             addnoise(k)=sqrt(addnoise_ps2*(10^(-24))) * c; % m
         end
     end
+elseif parameter.lsmopt.turb_model == 1
+    fprintf('INTRODUCING ATMOSPHERIC TURBULENCE MODEL \n');
+    [addnoise, Sigma_turb_all] = vievs_turb_model(parameter, mi_observ, c, antenna, sources, scan);
 else
     % add constant noise (noise level defined in GUI -> VieVS estimation settings; default: 0.5 cm)
     addnoise = opt.add_const_noise_cm * 1e-2;
@@ -589,6 +592,11 @@ so = sqrt(((nmi_observ.*c*100)*(nmi_observ.*c*100)')/n_observ); % [cm] apriori s
 opt.so = so;
 Pobserv = diag(sparse(1./((nmi_observ.^2).*c^2*100^2))); % [1/cm^2]
 %Qll = diag(sparse((nmi_observ.^2).*c^2*100^2)); % [cm^2]
+
+if parameter.lsmopt.turb_model == 1 
+    Pobserv = inv((Sigma_turb_all));
+end
+
 fprintf('apriori std. dev. of unit weight. : %3.4f\n',so);
 
 [per_stat, obs_mjd] = scan2obsPerStation(scan, na, opt, mjd0, antenna);

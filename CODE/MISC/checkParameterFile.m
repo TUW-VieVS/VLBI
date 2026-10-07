@@ -141,4 +141,9 @@ function [parameter] = checkParameterFile(parameter)
     if ~isfield(parameter.vie_init, 'level0OutDir')
         parameter.vie_init.level0OutDir = '';
     end
+
+    % turbulence model parameter
+    if ~isfield(parameter.lsmopt, 'turb_model')
+        parameter.lsmopt.turb_model = 0;
+    end
 end

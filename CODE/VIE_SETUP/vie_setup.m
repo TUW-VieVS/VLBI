@@ -22,7 +22,7 @@ function varargout = vie_setup(varargin)
 
 % Edit the above text to modify the response to help vie_setup
 
-% Last Modified by GUIDE v2.5 11-Aug-2026 10:22:10
+% Last Modified by GUIDE v2.5 06-Oct-2026 09:46:47
 
 
 % 07 Jan 2014 by Matthias Madzak: LEVEL2 bug corrected
@@ -4768,9 +4768,30 @@ function checkbox_run_ElevDepNoise_Callback(hObject, eventdata, handles)
 if get(handles.checkbox_run_ElevDepNoise, 'Value')
     set(handles.edit_run_add_noise, 'Enable', 'off'); 
     set(handles.text_run_add_noise, 'Enable', 'off');
+    set(handles.checkbox_run_TurbModel, 'Enable', 'off');
+    set(handles.checkbox_run_TurbModel, 'Value', 0) 
 else
     set(handles.edit_run_add_noise, 'Enable', 'on');
     set(handles.text_run_add_noise, 'Enable', 'on');
+    set(handles.checkbox_run_TurbModel, 'Enable', 'on'); 
+end
+auto_save_parameterfile(hObject, handles)
+
+% --- Executes on button press in checkbox_run_TurbModel.
+function checkbox_run_TurbModel_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_run_TurbModel (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hint: get(hObject,'Value') returns toggle state of checkbox_run_TurbModel
+if get(handles.checkbox_run_TurbModel, 'Value')
+    set(handles.edit_run_add_noise, 'Enable', 'off'); 
+    set(handles.text_run_add_noise, 'Enable', 'off');
+    set(handles.checkbox_run_ElevDepNoise, 'Enable', 'off'); 
+    set(handles.checkbox_run_ElevDepNoise, 'Value', 0) 
+else
+    set(handles.edit_run_add_noise, 'Enable', 'on');
+    set(handles.text_run_add_noise, 'Enable', 'on');
+    set(handles.checkbox_run_ElevDepNoise, 'Enable', 'on'); 
 end
 auto_save_parameterfile(hObject, handles)
 
@@ -13325,4 +13346,3 @@ function int_BS_ecom5_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
