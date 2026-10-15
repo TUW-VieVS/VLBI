@@ -589,6 +589,9 @@ end
 %-------------------
 
 so = sqrt(((nmi_observ.*c*100)*(nmi_observ.*c*100)')/n_observ); % [cm] apriori std. dev. of unit weight
+if parameter.lsmopt.turb_model == 1
+    so = sqrt(trace(Sigma_turb_all) / n_observ);   % [cm] apriori std. dev. of unit weight
+end
 opt.so = so;
 Pobserv = diag(sparse(1./((nmi_observ.^2).*c^2*100^2))); % [1/cm^2]
 %Qll = diag(sparse((nmi_observ.^2).*c^2*100^2)); % [cm^2]
