@@ -85,8 +85,8 @@ for i = 1:numel(uniqueBase)
     clf(fig);
     
     yyaxis left
-    errorbar(mjd_datetime, resbsl, mresbsl,'.','color',[0.7 0.7 0.7])
-    hold on
+    %errorbar(mjd_datetime, resbsl, mresbsl,'.','color',[0.7 0.7 0.7])
+    %hold on
     plot(mjd_datetime, resbsl,'o','Color',[55./255,  126./255, 184./255],'Markersize',3,'MarkerEdgeColor','k','MarkerFaceColor',[55./255,  126./255, 184./255],'LineWidth',0.1)
     hold off
     ylabel('residuals (mm)')

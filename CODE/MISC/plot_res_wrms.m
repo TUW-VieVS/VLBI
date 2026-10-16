@@ -558,7 +558,7 @@ end
 
 fig6 = figure('Color','w','Position',[50 50 1800 900]);
 
-boxplot(stationResiduals,stationGroup)
+%boxplot(stationResiduals,stationGroup)
 
 %xlabel('Station')
 ylabel('Residual [cm]')
