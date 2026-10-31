@@ -49,19 +49,31 @@ for i = 1:nScan
                 mjdData{k}(end+1,1)  = mjd;
                 cableData{k}(end+1,1) = double(st.cab);
                 if isfield(st,'cab_cablecal')
-                    cableCalData{k}(end+1,1) = double(st.cab_cablecal);
+                    if ~isempty(double(st.cab_cablecal))
+                        cableCalData{k}(end+1,1) = double(st.cab_cablecal);
+                    else
+                        cableCalData{k}(end+1,1) = NaN;
+                    end
                 else
                     cableCalData{k}(end+1,1) =NaN;
                 end
 
                 if isfield(st,'cab_CDMS')
-                    cableCDMSData{k}(end+1,1) = double(st.cab_CDMS);
+                    if ~isempty(double(st.cab_CDMS))
+                        cableCDMSData{k}(end+1,1) = double(st.cab_CDMS);
+                    else
+                        cableCDMSData{k}(end+1,1) = NaN;
+                    end
                 else
                     cableCDMSData{k}(end+1,1) =NaN;
                 end
                 
                 if isfield(st,'cab_Pcmt')
-                    cablePcmtData{k}(end+1,1) = double(st.cab_Pcmt);
+                    if ~isempty(double(st.cab_Pcmt))
+                        cablePcmtData{k}(end+1,1) = double(st.cab_Pcmt);
+                    else
+                        cablePcmtData{k}(end+1,1) = NaN;
+                    end
                 else
                     cablePcmtData{k}(end+1,1) =NaN;
                 end
