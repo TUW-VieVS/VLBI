@@ -302,12 +302,8 @@ HKupd = false;
                else
                    mjdu(abs(mjdu-mjdsesmid)>1)=[];
                end
-           elseif (flag_intensive && length(mjdu)==3) % sometimes also intensives have three values
-               if mjdu(2)==mjdsesmid
-                   mjdu(3)=[];
-               else
-                   mjdu(abs(mjdu-mjdsesmid)>dmjdu)=[];
-               end
+           elseif (flag_intensive && length(mjdu)<=3)
+               mjdu = mjdsesmid;
            elseif (flag_intensive && length(mjdu)>3) % if there are more than three values it is probably not an intensive
                fprintf('ERROR: Session %s is probably not an Intensive, it is skipped for the eopi file!\n',IVSsesnam);
                continue
@@ -385,8 +381,13 @@ HKupd = false;
         end
         
         if ut1_est
-	       ut   = x_.dut1.val(ismember(x_.dut1.mjd,mjdu))';   
-	       ut_e = x_.dut1.mx(ismember(x_.dut1.mjd,mjdu))';  
+           if ~flag_intensive
+	           ut   = x_.dut1.val(ismember(x_.dut1.mjd,mjdu))';   
+	           ut_e = x_.dut1.mx(ismember(x_.dut1.mjd,mjdu))';  
+           else
+               ut   = x_.dut1.val(2);
+               ut_e = x_.dut1.mx(2);
+           end
            if ~flag_incloutl
            % skip sessions if formal error/estimate is above threshold (0.67ms)
            if any(ut_e>0.67) || any(abs(ut)>0.67) 
@@ -519,7 +520,7 @@ HKupd = false;
             end
         end
         
-        if (dmjdu>=1 && flag_offsrate) || flag_intensive || flag_ut1tight
+        if ((dmjdu>=1 && flag_offsrate) || flag_ut1tight) && ~flag_intensive
             mjdu2_mid = mjdu(2)-mjdsesmid;
             mid_mjdu1 = mjdsesmid-mjdu(1);
             [leapsec,~]  = tai_utc([mjdu(1) mjdu(2) mjdsesmid],1);       % get difference TAI-UTC [s]
