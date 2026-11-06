@@ -186,6 +186,10 @@ for iScan = 1 : size(scan, 2)
     % get baselines, mjd and sources of observations
     res.baselineOfObs(curInd:nObsOfThisScan+curInd-1,1:2) = statOfCurScan;
     res.mjd(curInd:nObsOfThisScan+curInd-1) = repmat(scan(iScan).mjd, nObsOfThisScan,1);
+
+    res.snrX(curInd:nObsOfThisScan+curInd-1)  = [scan(iScan).obs.snr_X];
+    res.frngErrX(curInd:nObsOfThisScan+curInd-1)  = {scan(iScan).obs.frngErr_X};
+
     curInd = curInd + nObsOfThisScan;
 end
 res.obs_type = res.obs_type';

@@ -1245,6 +1245,8 @@ if opt.est_singleses
                     mjdOfObs(runningInd,1)=scan(iscan).mjd;
                     runningInd=runningInd+1;
                 end
+                res.snrX(runningInd:runningInd+lengthOfScans(iscan)-1, :) = [scan(iscan).obs.snr_X];
+                res.frngErrX(runningInd:runningInd+lengthOfScans(iscan)-1, :) = [scan(iscan).obs.frngErr_X];
             end
             res.obs_type = res.obs_type';
 

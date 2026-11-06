@@ -222,6 +222,33 @@ else
     qualityCode_S = {0};
 end
 
+%% SNR
+nc_filename = get_nc_filename({['SNR_' freqband]}, wrapper_data.Observation.Observables.files, 0);
+if ~isempty(nc_filename) % not mathc found in wrapper data
+    snr_X = num2cell(out_struct.Observables.(nc_filename).SNR.val);
+    noValX = cellfun(@isspace,snr_X);
+    snr_X(noValX) = num2cell(NaN);
+else
+    fprintf(' - No SNR for X-band defined in wrapper file: SNR is set to "NaN" for all X-band observations!\n')
+    snr_X = {NaN};
+end
+
+%% Fringe fitting error code
+nc_filename = get_nc_filename({['CorrInfo-difx_' freqband]}, wrapper_data.Observation.Observables.files, 0);
+if ~isempty(nc_filename) % not mathc found in wrapper data
+    if contains(nc_filename,'-')
+        idm=nc_filename=='-';
+        nc_filename(idm)='_';
+    end
+    frngErr_X = num2cell(out_struct.Observables.(nc_filename).FRNGERR.val);
+    noValX = cellfun(@isspace,frngErr_X);
+    frngErr_X(noValX) = num2cell(NaN);
+else
+    fprintf(' - No FRNGERR for X-band defined in wrapper file: FRNGERR is set to "NaN" for all X-band observations!\n')
+    frngErr_X = {NaN};
+end
+
+
 
 %%
 MBD1=[]; MBD2=[]; sMBD1=[]; sMBD2=[]; 
@@ -917,7 +944,19 @@ for iScan=1:nScans
     else
         [scan(iScan).obs.q_code_S] = deal(qualityCode_S{obsI1Index:obsI1Index+scan(iScan).nobs-1});   
     end
-    
+
+    if length(snr_X)==1  
+        [scan(iScan).obs.snr_X] = deal(double(snr_X{1}));          
+    else
+        [scan(iScan).obs.snr_X] = deal(snr_X{obsI1Index:obsI1Index+scan(iScan).nobs-1});   
+    end    
+
+    if length(frngErr_X)==1  
+        [scan(iScan).obs.frngErr_X] = deal(double(frngErr_X{1}));          
+    else
+        [scan(iScan).obs.frngErr_X] = deal(frngErr_X{obsI1Index:obsI1Index+scan(iScan).nobs-1});   
+    end   
+
     obsI1Index=obsI1Index+scan(iScan).nobs;
 
     % add cable delay
