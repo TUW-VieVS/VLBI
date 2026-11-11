@@ -18,9 +18,9 @@
 %
 %   Output:
 %       'tau'                        (1,1)             time delay in TT (Klioner)
-%       'scan'                       structure array   scan structral array
-%       'crfScPos'                   (3,1)             satellite position at emission time u0
-%       'crfScVel'                   (3,1)             satellite velocity at emission time u0
+%       'scan'                       structure array   scan structural array
+%       'crfSatPos'                   (3,1)             satellite position at emission time u0
+%       'crfSatVel'                   (3,1)             satellite velocity at emission time u0
 %       'k1a'                        (3,1)             source vector station 1
 %       'k2a'                        (3,1)             source vector station 2
 %
@@ -30,178 +30,132 @@
 %   22 November 2021 by H. Wolf - created as external function of vie_mod
 %
 %   Revision:
-%   17 July 2026 by H. Wolf - revised the implmentation of Klioner; added Duev 
+%   17 July 2026 by H. Wolf - revised the implementation of Klioner; added Duev 
+%   11 Nov  2026 by H. Wolf - revised the code; fixed TCG and TT inconsistency
 %
 % ************************************************************************
 
 
-function [tau, scan, crfScPos, crfScVel, k1a, k2a] = calc_nfd(sources, iSc, scan, crsStation1, crsStation2, t2c, v2)
-    global c
-    global gme
-    global omega
-    LG = 6.969290134 *10^(-10);
+function [tau, scan, crfSatPos, crfSatVel, k1a, k2a] = calc_nfd(sources, iSc, scan, crsStation1, crsStation2, t2c, v2)
+    global c omega
+    gme_tt = 3.986004415e14; % [m^3/s^2], TT-compatible
+    omegaCrf = t2c * [0; 0; omega];
 
-    omega_trf = [0,0,omega]';
-    omega_crf = t2c * omega_trf;
-
-    ddtThreshold  = 1e-13;     % thresholds for Duev 
-    maxIterations = 25;        % max number of iteratoins for Duev
+    RESIDUAL_TOL = 1e-14;      % [s]  convergence threshold of light-time equations
+    MAX_ITER     = 25;         % max number of iterations for lighttime equation of Duev
+    MAX_DIFF_PS  = 1;          % [ps] allowed deviation analytic vs. iterative
            
-    scan_cur = scan(iSc);
-    s_cur = sources.s(scan_cur.iso);
-  
-    [tRefSecInterpol, u1, refidx] = get_reference_epoch_satellite(scan_cur, s_cur);
+    curScan = scan(iSc);
+    sat = sources.s(curScan.iso);
+    [tRefInterp, u1, refIdx] = get_reference_epoch_satellite(curScan, sat);
 
-    pos_crf = [s_cur.x_crf(refidx), s_cur.y_crf(refidx), s_cur.z_crf(refidx)];
-    vel_crf = [s_cur.vx_crf(refidx), s_cur.vy_crf(refidx), s_cur.vz_crf(refidx)];
-    vel_trf = [s_cur.vx_trf(refidx), s_cur.vy_trf(refidx), s_cur.vz_trf(refidx)];
+    posCrf = [sat.x_crf(refIdx), sat.y_crf(refIdx), sat.z_crf(refIdx)];
+    velCrf = [sat.vx_crf(refIdx), sat.vy_crf(refIdx), sat.vz_crf(refIdx)];
+    velTrf = [sat.vx_trf(refIdx), sat.vy_trf(refIdx), sat.vz_trf(refIdx)];
 
     % Get spacecraft position at time of observation (CRF):
-    crfScPos = lagint9_fast(tRefSecInterpol, pos_crf, u1);
+    crfSatPos = lagint9_fast(tRefInterp, posCrf, u1);
     
-    if s_cur.flag_v_crf
-        crfScVel = lagint9_fast(tRefSecInterpol, vel_crf, u1);
+    if sat.flag_v_crf
+        crfSatVel = lagint9_fast(tRefInterp, velCrf, u1);
     end
-
-    if s_cur.flag_v_trf
-        trfScVel = lagint9_fast(tRefSecInterpol, vel_trf, u1);
+    if sat.flag_v_trf
+        trfSatVel = lagint9_fast(tRefInterp, velTrf, u1);
     end
    
-    scan(iSc).trfSat = t2c' * crfScPos;
-    scan(iSc).crfSat = 1*crfScPos;
-    scan(iSc).v_crfSat = crfScVel;
-    scan(iSc).v_trfSat = trfScVel;
+    scan(iSc).trfSat = t2c' * crfSatPos;
+    scan(iSc).crfSat = crfSatPos;
+    scan(iSc).v_crfSat = crfSatVel;
+    scan(iSc).v_trfSat = trfSatVel;
 
-    % Get spacecraft position at the time of emission u0 (CRF)
-    numberOfIterations = 0;
-    ddu0 = 999999;
-    u0 = u1 - norm(crsStation1 - crfScPos)/c;
-    while(abs(ddu0) > ddtThreshold) 
-        numberOfIterations = numberOfIterations + 1;
-        u0_old = u0;
-
-        [dugr1, dDelay_dt] = get_dugr(crsStation1, crfScPos, crfScVel);
-  
-        f = u1 - u0 - norm(crsStation1 - crfScPos)/c - dugr1;
-        df = crfScVel'*(crsStation1 - crfScPos)/(c*norm(crsStation1 - crfScPos)) -1 - dDelay_dt;
-        u0 = u0_old - f/df;
-
-        % Get spacecraft position and velocity at time at current estimated emission time u0
-        crfScPos = lagint9_fast(tRefSecInterpol, pos_crf, u0);
-        crfScVel = lagint9_fast(tRefSecInterpol, vel_crf, u0);
-        
-        [dugr1, ~] = get_dugr(crsStation1, crfScPos, crfScVel);
+    %% Light-time equation 1: lightTime1 = u1 - u0 
+    % Get spacecraft position at the time of emission u0 (station1 fixed)
+    lightTime1   = norm(crsStation1 - crfSatPos)/c;
     
-        ddu0 = u1 - u0 - norm(crsStation1 - crfScPos)/c - dugr1;
+    for iter1 = 1:MAX_ITER
+        u0     = u1 - lightTime1;
+        crfSatPos = lagint9_fast(tRefInterp, posCrf, u0);
+        crfSatVel = lagint9_fast(tRefInterp, velCrf, u0);
 
-        if numberOfIterations >= maxIterations
-            fprintf(' Warning: Max. number of iterations (%d) for near field delay reached! ddt = %f ps \n', maxIterations, ddu0*10^(12));
-            break;
-        end
+        rangeVec = crsStation1 - crfSatPos;
+        rho      = norm(rangeVec);
+        [shapiro1, dShapiroDt] = get_shapiro_delay(crsStation1, crfSatPos, crfSatVel, gme_tt);
+
+        residual1 = lightTime1 - rho/c - shapiro1;
+        if abs(residual1) <= RESIDUAL_TOL, break; end
+
+        fDeriv     = crfSatVel' * rangeVec / (c*rho) - 1 - dShapiroDt;
+        lightTime1 = lightTime1 + residual1 / fDeriv;
+
     end
-
-    % for checks:
-    % res = u1 - u0 - norm(crsStation1 - crfScPos)/c - dugr1;
-    % res_range1 = res*c;
+    if abs(residual1) > RESIDUAL_TOL
+        warning('calc_nfd:noConvergence', 'Light Time Equation 1: %d iterations reached, residual = %.3f ps', MAX_ITER, residual1*1e12);
+    end
 
     %% Iteration Light time equation 2 
-    numberOfIterations_u2 = 0;
-    ddu2 = 999999;
-    u2 = u0 + norm(crfScPos - crsStation2)/c;
-
-    crsStation2_u2 = crsStation2;
-
-    stationVel = cross(omega_crf, crsStation2_u2);
-
-    while(abs(ddu2) > ddtThreshold)
-        numberOfIterations_u2 = numberOfIterations_u2 + 1;
-        u2_old = u2;
-
-        [dugr2, dDelay_dt] = get_dugr(crsStation2_u2, crfScPos, crfScVel);
-
-        f = u2 - u0 - norm(crsStation2_u2 - crfScPos)/c - dugr2;
-        df = 1 - stationVel'*(crsStation2_u2-crfScPos)/(c*norm(crsStation2_u2-crfScPos)) - dDelay_dt;
-        u2 = u2_old - f/df;
-
-        delta_t = u2 - u1;
-
-        % Earth rotation during signal propagation
-        Rz = [ cos(omega*delta_t)  -sin(omega*delta_t) 0;
-              sin(omega*delta_t)  cos(omega*delta_t) 0;
-               0                   0                  1];
-
+    lightTime2  = norm(crfSatPos - crsStation2) / c;
+    for iter2 = 1:MAX_ITER
+        rotAngle = omega * (lightTime2 - lightTime1);  % Earth rotation u1 -> u2
+        Rz = [cos(rotAngle) -sin(rotAngle) 0;
+              sin(rotAngle)  cos(rotAngle) 0;
+              0              0             1];
         crsStation2_u2 = t2c * (Rz * (t2c' * crsStation2));
+        stationVel     = cross(omegaCrf, crsStation2_u2);
 
-        stationVel = cross(omega_crf, crsStation2_u2);
+        rangeVec = crsStation2_u2 - crfSatPos;
+        rho      = norm(rangeVec);
+        [shapiro2, ~] = get_shapiro_delay(crsStation2_u2, crfSatPos, crfSatVel, gme_tt);
 
-        [dugr2, ~] = get_dugr(crsStation2_u2, crfScPos, crfScVel);
-        ddu2 = u2 - u0 - norm(crsStation2_u2 - crfScPos)/c - dugr2;
+        residual2 = lightTime2 - rho/c - shapiro2;
+        if abs(residual2) <= RESIDUAL_TOL, break; end
 
-        if numberOfIterations_u2 >= maxIterations
-            fprintf(' Warning: Max. number of iterations (%d) for near field delay reached! ddu2 = %f ps \n', maxIterations, ddu2*10^(12));
-            break;
-        end
+        fDeriv     = 1 - stationVel' * rangeVec / (c*rho); 
+        lightTime2 = lightTime2 - residual2 / fDeriv;
     end
- 
-    % for checks:
-    % res = u2 - u0 - norm(crsStation2_u2 - crfScPos)/c - dugr2;
-    % res_range2 = res*c;
+    if abs(residual2) > RESIDUAL_TOL
+        warning('calc_nfd:noConvergence', 'Light Time Equation 2: %d iterations reached, residual = %.3f ps', MAX_ITER, residual2*1e12);
+    end
+     
+    %% Analytic formula (Klioner)
+    L1  = crfSatPos' - crsStation1';
+    L2  = crfSatPos' - crsStation2';
+    du0     = (norm(L2) - norm(L1))/c; 
+    dugr    = 2*gme_tt/c^3*log(...
+                ((norm(crsStation2_u2) + norm(crfSatPos) + norm(crsStation2_u2 - crfSatPos)) * (norm(crsStation1) + norm(crfSatPos) - norm(crsStation1 - crfSatPos)))...
+                /((norm(crsStation2_u2) + norm(crfSatPos) - norm(crsStation2_u2 - crfSatPos)) * (norm(crsStation1) + norm(crfSatPos) + norm(crsStation1 - crfSatPos)))); % Gravitational effect on travel time [sec]
+    tauKlioner = du0 * (1 - dot(L2/norm(L2), v2)/c) + dugr; % [sec] in TT
 
-    R1 = norm(crfScPos - crsStation1);
-    R2 = norm(crfScPos - crsStation2_u2);
-
-    % Vector station-spacecraft (source vectors) at the time of signal emission (spacecraft) and reception at station one (stations)
-    L1  = crfScPos' - crsStation1';
-    L2  = crfScPos' - crsStation2';
+    %% Duev
+    tauDuev = lightTime2-lightTime1; % [sec] in TT
     
-    We = gme/norm(crsStation2);
-
-    du0     = (norm(L2) - norm(L1))/c; % Difference in travel time not considering retarded BL effect [sec]
-    n       = L2/norm(L2);
-    dugr    = 2*gme/c^3*log(...
-                ((norm(crsStation2_u2) + norm(crfScPos) + norm(crsStation2_u2 - crfScPos)) * (norm(crsStation1) + norm(crfScPos) - norm(crsStation1 - crfScPos)))...
-                /((norm(crsStation2_u2) + norm(crfScPos) - norm(crsStation2_u2 - crfScPos)) * (norm(crsStation1) + norm(crfScPos) + norm(crsStation1 - crfScPos)))); % Gravitaional effect on travel time [sec]
-
-    du_klioner_tcg  = du0*(1-n*v2/c) + dugr;
-    du_klioner_tt0  = du0*(1-n*v2/c) - 1/c^2*((v2'*v2)/2+We) * du0  + dugr ; % in TT
-
-    % Duev
-    tau_duev_tcg = u2-u1;
-    tau_duev_geom_tcg = (R2 - R1)/c  - dugr1 + dugr2;
-    tau_duev_geom_tt = tau_duev_geom_tcg * (1 - LG);
-    tau_duev_tt = tau_duev_tcg * (1 - LG);
-
-    % Vacuum delay:
-    tau = double(du_klioner_tt0);
-  
-    % diff_duev = (tau_duev_geom_tt - tau_duev_tt)*1e12;
-    diff_duev_klioner = (du_klioner_tt0 - tau_duev_tt)*1e12;
-
-    if diff_duev_klioner > 1
-        error(' Difference between Klioner and Duev is more than 1 ps! The exact value is: %.8f ps', diff_duev_klioner);
+    %% Consistency check
+    diffPs = (tauKlioner - tauDuev)*1e12;
+    if abs(diffPs) > MAX_DIFF_PS
+         warning('calcNfd:modelMismatch', ...
+        'Scan %d: analytic (Klioner) and iterative (Duev) delay differ by %.8f ps (limit %g ps).', ...
+        iSc, diffPs, MAX_DIFF_PS);
     end
 
-    % Source vectors:
-    k1a = double(crfScPos' - crsStation1');    % Source vector station 1
-    k2a = double(crfScPos' - crsStation2_u2'); % Source vector station 2
+    tau = tauKlioner;
+    k1a = crfSatPos' - crsStation1';    % Source vector station 1
+    k2a = crfSatPos' - crsStation2_u2'; % Source vector station 2
 end
 
-function [dugr, dDelay_dt] = get_dugr(crsStation, crfScPos, crfScVel)
+function [shapiro, dShapiroDt] = get_shapiro_delay(crsStation, crfSatPos, crfSatVel, gme_tt)
     global c
-    global gme
     rSta = norm(crsStation);
-    rSc  = norm(crfScPos);
-    rho  = norm(crsStation - crfScPos);
+    rSat  = norm(crfSatPos);
+    rho  = norm(crsStation - crfSatPos);
     
-    dr_dt   = dot(crfScPos, crfScVel) / rSc;
-    drho_dt = dot(crfScPos - crsStation, crfScVel) / rho;
+    drSat   = dot(crfSatPos, crfSatVel) / rSat;
+    dRho = dot(crfSatPos - crsStation, crfSatVel) / rho;
     
-    dDelay_dt = 2*gme/c^3 * ( ...
-        (dr_dt + drho_dt)/(rSta + rSc + rho) ...
-      - (dr_dt - drho_dt)/(rSta + rSc - rho) );
+    dShapiroDt = 2*gme_tt/c^3 * ( ...
+        (drSat + dRho)/(rSta + rSat + rho) ...
+      - (drSat - dRho)/(rSta + rSat - rho) );
 
-    dugr    = 2*gme/c^3*log(...
-            (rSta + rSc + rho )...
-            /((rSta + rSc - rho))); 
+    shapiro    = 2*gme_tt/c^3*log(...
+            (rSta + rSat + rho )...
+            /((rSta + rSat - rho))); 
 end
   

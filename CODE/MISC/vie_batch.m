@@ -64,6 +64,7 @@
 function vie_batch(varargin)
 
 %% load('currentf_pa.mat','parameter');
+warning('off', 'backtrace');
 load('process_list','process_list');
 load('runp','runp')
 load('guiparameter.mat');
