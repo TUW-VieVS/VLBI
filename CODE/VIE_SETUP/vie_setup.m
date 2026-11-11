@@ -12204,9 +12204,9 @@ if endsWith(PathName, filesep)
     PathName = PathName(1:end-1);
 end
 [~, folder1] = fileparts(PathName(1:end));
-relpath = fullfile('..', 'ORBIT', folder1, '\');
+relpath = fullfile('..', 'ORBIT', folder1);
 if ischar(FileName) && ischar(PathName)
-    set(handles.input_model_orbit_data, 'String', [relpath, FileName])
+    set(handles.input_model_orbit_data, 'String', [relpath, filesep, FileName])
     auto_save_parameterfile(hObject, handles)
 end
 

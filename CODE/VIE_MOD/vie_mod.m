@@ -551,17 +551,22 @@ end
 
  
 if isfield(sources, 's')
-    sourcesChanged_orb = cell(1, 6);
-   
-    for isat = 1:length(sources.s)
-        dorb = zeros(1, 6); 
-        
+    nSat = length(sources.s);
+    dorb = zeros(nSat, 6);
+
+    s_orb = cell(1, 6);
+    for k = 1:6
+        s_orb{k}.s = sources.s; 
+    end
+
+    for isat = 1:nSat
         for k = 1:6
-            sourcesChanged_orb{k} = struct('s', cell(1, length(sources.s))); 
             if strcmp(parameter.vie_init.sc_orbit_file_type, 'tle')
-                [sourcesChanged_orb{k}.s(isat), dorb(k)] = manipulateTLEData(sources.s(isat), parameter, T2C_s, k);
+                [s_orb{k}.s(isat), dorb(isat, k)] = ...
+                    manipulateTLEData(sources.s(isat), parameter, T2C_s, k);
             elseif ismember(parameter.vie_init.sc_orbit_file_type, {'fso', 'sp3'})
-                [sourcesChanged_orb{k}.s(isat), dorb(k)] = manipulateFSOData(GM, sources.s(isat), T2C_s, k);
+                [s_orb{k}.s(isat), dorb(isat, k)] = ...
+                    manipulateFSOData(GM, sources.s(isat), T2C_s, k);
             end
         end
     end
@@ -766,7 +771,7 @@ for iSc = 1:number_of_all_scans
                               
                         %compute delay for satellite with changed orbit
                         for i = 1:6
-                            [tau_mod_orb(i), ~, ~, ~, ~, ~] = calc_nfd(sourcesChanged_orb{i}, iSc, scan, crsStation1, crsStation2, t2c, v2);  
+                            [tau_mod_orb(i), ~, ~, ~, ~, ~] = calc_nfd(s_orb{i}, iSc, scan, crsStation1, crsStation2, t2c, v2);  
                         end
                         % tau_mod_orb = repmat(tau,6,1); 
                  
