@@ -108,7 +108,7 @@ function vie_glob
 % close all
 % clc
 diary
-save_intermediate_results_flag = 1;
+save_intermediate_results_flag = 0;
 path_level='../';
 
 rms_check = 1;

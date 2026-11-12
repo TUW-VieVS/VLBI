@@ -544,8 +544,8 @@ end
 
 
 if parGS(g.g_gamma).id==1
-    globsol.gamma.val=x(parGS(g.g_gamma).newcol);
-    globsol.gamma.sigma=varpar(parGS(g.g_gamma).newcol);
+    globsol.gamma.val=x(parGS(g.g_gamma).newcol); %./c; % ./c only for GCacc
+    globsol.gamma.sigma=varpar(parGS(g.g_gamma).newcol)./c;
     globsol.gamma.col=parGS(g.g_gamma).newcol;
 end
 

@@ -180,6 +180,8 @@
 function sources = vie_lsm(antenna, sources, scan, parameter, dirpth, dirpthL2)
 
 tic 
+parameter.lsmopt.est_scale=0;
+
 fprintf('---------------------------------------------------------------\n')
 fprintf('|                   Welcome to VIE_LSM!!!!!                   |\n')
 fprintf('---------------------------------------------------------------\n\n')
@@ -532,12 +534,13 @@ downdepbsl = 0; % down-weigthing of non-independent baselines (only baselines to
 % Add noise
 if opt.eldep_noise==1 % Elevation dependent noise
     fprintf('INTRODUCING ELEVATION DEPENDENT NOISE \n');
+    xps=6; %ps
     k = 0;
     for j = 1 : length(scan)
         for i = 1 : scan(j).nobs
             e1 = pi/2-scan(j).stat(scan(j).obs(i).i1).zd;
             e2 = pi/2-scan(j).stat(scan(j).obs(i).i2).zd;
-            addnoise_ps2= (6/sin(e1))^2 + (6/sin(e2))^2; % ps^2
+            addnoise_ps2= (xps/sin(e1))^2 + (xps/sin(e2))^2; % ps^2
             k = k + 1;
             addnoise(k)=sqrt(addnoise_ps2*(10^(-24))) * c; % m
         end

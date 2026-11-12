@@ -21,7 +21,7 @@
 %   06 Sep 2019 by David Mayer
 
 
-function [de_GA, ra_GA] = correct_GA(de, ra, ave_date_session,GA_ref,GA_val)
+function [de_GA, ra_GA, GA_vec] = correct_GA(de, ra, ave_date_session,GA_ref,GA_val)
 
     RA_Gal = deg2rad(266.4); % coordinates of galactic center
     DE_Gal = deg2rad(-28.94);

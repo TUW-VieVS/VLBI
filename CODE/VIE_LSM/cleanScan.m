@@ -95,6 +95,7 @@ end
 % (1a) No cable calibration
 
 if scan(1).mjd>58181 & nocablegeneral
+% if  nocablegeneral
     disp('no cable cal for VLBA since 2018-Mar-04')
     parameter.opt.options.no_cab = [parameter.opt.options.no_cab;
     'BR-VLBA '
