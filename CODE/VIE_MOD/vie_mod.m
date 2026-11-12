@@ -316,7 +316,7 @@ if sum(obsTypeQidx) ~= 0
         GA_val = 5.8; %muas/year
         GA_ref = date2mjd([2015 1 1]); %reference epoch of icrf3
 
-        [DE2000, RA2000] = correct_GA(DE2000,RA2000,mean([scan(:).mjd]), GA_ref,GA_val);
+        [DE2000, RA2000,GA0] = correct_GA(DE2000,RA2000,mean([scan(:).mjd]), GA_ref,GA_val);
         fprintf(1, 'ICRF3 is used --> GA will be corrected to 2015 using 5.8 muas/year\n');
     end
 
@@ -326,7 +326,7 @@ if sum(obsTypeQidx) ~= 0
         GA_val = 5.8; %muas/year
         GA_ref = date2mjd([2015 1 1]); %reference epoch of icrf3
 
-        [DE2000, RA2000] = correct_GA(DE2000,RA2000,mean([scan(:).mjd]), GA_ref,GA_val);
+        [DE2000, RA2000,GA0] = correct_GA(DE2000,RA2000,mean([scan(:).mjd]), GA_ref,GA_val);
         fprintf(1, 'Manual CRF is used --> GA will be corrected to 2015 using 5.8 muas/year\n');
     end
     RA2000(obsTypeQidx == 0) = NaN;
@@ -974,6 +974,10 @@ for iSc = 1:number_of_all_scans
             -delt_accSSB/c^3*((rq*(vearth+v2))*crsBaseline...
             +((rq*vearth)*crsBaseline)/2 - (crsBaseline'*vearth)*rq'); %[sec^3/m]
         pacc = pacc'./100; %[sec^3/cm]
+
+        % SBB transform in the amplitude in the GC direction
+        % g vector  [-0.05487556, -0.87343709, -0.48383502])  # ICRF unit vector
+        pgGC = pacc*GA0; %sec^3/cm
         
         % ############################
         % ###  5. STORE RESULTS   #### 
@@ -1056,6 +1060,7 @@ for iSc = 1:number_of_all_scans
         scan(iSc).obs(iobs).pFCN     = pFCN_bl;     % [cm] for FCN
         scan(iSc).obs(iobs).pacc     = pacc;        % dt/dacc SSB acceleration [sec^3/cm]
         scan(iSc).obs(iobs).pGamma   = pGammaSun;   % [sec]       
+        %scan(iSc).obs(iobs).pGamma   = pgGC;   % [sec^3/cm] 
 
         scan(iSc).obs(iobs).pscale   = -fac1;       % [sec] Correction to the scale factor
         scan(iSc).obs(iobs).pscalesou   = -fac1*delt_accSSB/(86400*365.25);         % [sec.yr], tau = F.b.s/c , F = 1, scale; results (a,s)/c;     

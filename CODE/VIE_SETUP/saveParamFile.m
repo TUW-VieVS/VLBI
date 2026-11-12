@@ -1146,7 +1146,7 @@ end
 parameter.vie_mod.aoaltcorr = 0;
 
 % estimation of single session parameters in VIE_LSM
-parameter.lsmopt.est_scale = 0;
+parameter.lsmopt.est_scale = 1;
 
 
 % for which parameters which are not in GUI yet should the NEQ be prepared for the estimation in VIE_GLOB? (1) / (0)?
