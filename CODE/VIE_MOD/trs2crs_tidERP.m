@@ -115,18 +115,19 @@ for i=1:n
     R     = rotm(-era(i),3);
     dRdut = - drotm(-era(i),3)*(fac+1);
     % precession/nutation matrix:
-    v     = -sqrt(X(i)^2+Y(i)^2);
-    E     = atan2((Y(i)/v),(X(i)/v));
+    v     = sqrt(X(i)^2+Y(i)^2);
+    E     = atan2(Y(i),X(i));
     z     = sqrt(1-(X(i)^2+Y(i)^2));
     d     = atan2(v,z);
     PN    = rotm(-E,3)*rotm(-d,2)*rotm(E,3)*rotm(S(i),3);
     dEdX  = -Y(i)/(X(i)^2+Y(i)^2);
-    dSdX  = -Y(i)/2;
-   
-    dddX  = -X(i)/(z*sqrt(X(i)^2+Y(i)^2)); 
     dEdY  =  X(i)/(X(i)^2+Y(i)^2);
+        
+    dddX  =  X(i)/(z*v); 
+    dddY  =  Y(i)/(z*v); 
+
+    dSdX  = -Y(i)/2;
     dSdY  = -X(i)/2;
-    dddY  = -Y(i)/(z*sqrt(X(i)^2+Y(i)^2)); 
 
     dPNdX = drotm(-E,3)* rotm(-d,2)* rotm(E,3)* rotm(S(i),3)* -dEdX + ...
              rotm(-E,3)*drotm(-d,2)* rotm(E,3)* rotm(S(i),3)* -dddX + ...
@@ -147,7 +148,7 @@ for i=1:n
 %                -1                     , 0                      , -X(i)-X(i)^3/2];
 %     dMciodY = [-X(i)^2*Y(i)/4   , -X(i)/2-X(i)^3/8   , 0;...
 %                -X(i)/2-X(i)^3/8 , -Y(i)-X(i)^2*Y(i)/4, 1;...
-%                0                , -1                 , -Y(i)-X(i)^2*Y(i)/4];
+%                0                , -1                 , -Y(i)-X(i)^2*Y(i)/2];
   
 %     dPNdXneu= dMciodX * rotm(S(i),3) + Mcio*drotm(S(i),3)*dSdX
 %     dPNdX
